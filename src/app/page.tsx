@@ -1,14 +1,18 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import { CardImage, RankList, SuitList } from "./card";
 
-export default function Home() {
+export default function Page() {
   return (
     <main className={styles.main}>
+      <div className={styles.playingcards}>
+        {SuitList.map((suit) => (
+          RankList.map((rank) => (
+            <CardImage key={`${rank}-${suit}`} rank={rank} suit={suit} width={80} />
+          ))
+        ))}
+      </div>
       <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
         <div>
           <a
             href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"

@@ -7,9 +7,17 @@
   min-height: 100vh;
 }
 
+.playingcards {
+  display: grid;
+  grid-template-columns: repeat(13, 1fr);
+  grid-template-rows: auto;
+  gap: 2px;
+  padding: 2px;
+}
+
 .description {
   display: inherit;
-  justify-content: inherit;
+  justify-content: flex-end;
   align-items: inherit;
   font-size: 0.85rem;
   max-width: var(--max-width);
@@ -32,11 +40,6 @@
   background-color: rgba(var(--callout-rgb), 0.5);
   border: 1px solid rgba(var(--callout-border-rgb), 0.3);
   border-radius: var(--border-radius);
-}
-
-.code {
-  font-weight: 700;
-  font-family: var(--font-mono);
 }
 
 .grid {
