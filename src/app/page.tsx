@@ -11,7 +11,11 @@ export default function Page() {
             <CardImage key={`${rank}-${suit}`} rank={rank} suit={suit} width={80} />
           ))
         ))}
-      </div>
+        <CardImage rank="joker" suit="clubs" width={80} />
+        <CardImage rank="joker" suit="diamonds" width={80} />
+        <CardImage rank="joker" suit="hearts" width={80} />
+        <CardImage rank="joker" suit="spades" width={80} />
+        </div>
       <div className={styles.description}>
         <div>
           <a
