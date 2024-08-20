@@ -15,8 +15,6 @@ TODO main development tasks:
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 
-- TODO replace or remove `public/next.svg`
-- TODO replace or remove `public/vercel.svg`
 - TODO replace `src/app/favicon.ico`
 - REVIEW `src/app/globals.css`
 - REVIEW `src/app/common.module.css`

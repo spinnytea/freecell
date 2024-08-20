@@ -6,7 +6,9 @@ import Link from 'next/link';
 export default function Page() {
 	return (
 		<main className={styles_common.main}>
-			<Link href="/">⬅ Back to game</Link>
+			<Link href="/">
+				<span>&lt;-</span> Back to game
+			</Link>
 			<h1>Cards</h1>
 			<div className={styles_manualtesting.allplayingcards}>
 				{SuitList.map((suit) =>
