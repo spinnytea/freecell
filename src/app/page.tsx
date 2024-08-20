@@ -1,10 +1,11 @@
+import classNames from "classnames";
 import Image from "next/image";
-import styles from "@/app/page.module.css";
 import Link from "next/link";
+import styles from "@/app/page.module.css";
 
 export default function Page() {
   return (
-    <main className={styles.main}>
+    <main className={classNames(styles.main, styles.felt)}>
       <div className={styles.description}>
         <Link href="/manualtesting">Manual Testing</Link>
         <div>

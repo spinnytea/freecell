@@ -19,6 +19,7 @@ TODO main development tasks:
 - TODO replace or remove `public/vercel.svg`
 - TODO replace `src/app/favicon.ico`
 - REVIEW `src/app/globals.css`
+- REVIEW `src/app/page.module.css`
 - REVIEW what are the names of the things (foundation? cascade? cell?)
 - TODO configure eslint
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump

@@ -1,10 +1,11 @@
+import classNames from "classnames";
 import styles from "@/app/page.module.css";
 import { CardImage, RankList, SuitList } from "@/app/components/cards/card";
 
 export default function Page() {
   return (
     <main className={styles.main}>
-      <div className={styles.playingcards}>
+      <div className={classNames(styles.playingcards, styles.felt)}>
         {SuitList.map((suit) => (
           RankList.map((rank) => (
             <CardImage key={`${rank}-${suit}`} rank={rank} suit={suit} width={80} />

@@ -34,17 +34,41 @@
     #00000080
   );
 
-  --callout-rgb: 238, 240, 241;
-  --callout-border-rgb: 172, 175, 176;
   --card-rgb: 180, 185, 188;
   --card-border-rgb: 131, 134, 135;
+
+  --felt--basic-green: rgb(51, 110, 78); /* poker-green */
+  --felt--championship-green: rgb(43, 100, 49);
+  --felt--dark-green: rgb(29, 66, 44);
+  --felt--bottle-green: rgb(40, 60, 33);
+  --felt--caramel: rgb(165, 135, 77);
+  --felt--euro-blue: rgb(40, 41, 126);
+  --felt--navy: rgb(30, 37, 49);
+  --felt--burgundy: rgb(125, 51, 47);
+  --felt--wine: rgb(100, 50, 49);
+  --felt--black: rgb(30, 30, 30);
+  --felt--red: rgb(133, 35, 29);
+  --felt--olive: rgb(79, 74, 53);
+  --felt--taupe: rgb(108, 87, 71);
+  --felt--electric-blue: rgb(59, 66, 166); /* poker-blue */
+  --felt--golden: rgb(177, 153, 69);
+  --felt--khaki: rgb(160, 133, 95);
+  --felt--achademy-blue: rgb(98, 99, 117);
+  --felt--purple: rgb(64, 22, 104);
+  --felt--brown: rgb(45, 3, 2);
+  --felt--steel-gray: rgb(123, 123, 132);
+  --felt--titanium: rgb(35, 37, 45);
+  --felt--charcoal: rgb(53, 52, 58);
+  --felt--aztec: rgb(131, 75, 36);
+  --felt--brick: rgb(108, 50, 43);
+
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-end-rgb: 30, 30, 30;
 
     --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
     --secondary-glow: linear-gradient(
@@ -66,8 +90,6 @@
       #ffffff80
     );
 
-    --callout-rgb: 20, 20, 20;
-    --callout-border-rgb: 108, 108, 108;
     --card-rgb: 100, 100, 100;
     --card-border-rgb: 200, 200, 200;
   }
@@ -98,6 +120,12 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.tile-border {
+  border: 25px solid;
+  border-image-slice: 1;
+  border-image-source: var(--tile-border);
 }
 
 @media (prefers-color-scheme: dark) {
