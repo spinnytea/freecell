@@ -7,7 +7,7 @@ card game
 
 TODO main development tasks:
 1. ~~Render cards~~
-1. Render playing field
+1. Render playing field, card back(s)
 1. shuffle/deal cards [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 1. click select -> click move
 1. win state
@@ -19,10 +19,12 @@ TODO main development tasks:
 - TODO replace or remove `public/vercel.svg`
 - TODO replace `src/app/favicon.ico`
 - REVIEW `src/app/globals.css`
+- REVIEW what are the names of the things (foundation? cascade? cell?)
+- TODO configure eslint
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
 - TODO failed moves shake
-- TODO single click to move: one vs multiple - move to next option?
-- TODO undo (move history)
+- TODO single click to move: one vs multiple - move to next option? - identify the _types_ of moves, not just _isAllowed_ - different moves have different priorities? (render debug info)
+- TODO undo (move history) - all, few, one, none
 - TODO run drag/drop (drop target is entire stack, drag waggles the stack)
 - TODO hard vs medium vs easy
 - TODO auto-solver stops when a) all cards that can go up b) current rank + 1 c) current rank

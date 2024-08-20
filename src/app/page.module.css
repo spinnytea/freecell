@@ -17,7 +17,7 @@
 
 .description {
   display: inherit;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: inherit;
   font-size: 0.85rem;
   max-width: var(--max-width);
