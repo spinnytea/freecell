@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import { CardImage, RankList, SuitList, units } from "./card";
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { CardImage, RankList, SuitList, units } from './card';
 
 describe('card', () => {
 	test('first', () => {

@@ -1,3 +1,33 @@
 {
-  "extends": "next/core-web-vitals"
+	"extends": [
+		"eslint:recommended",
+		"next/core-web-vitals",
+		"plugin:@typescript-eslint/strict-type-checked",
+		"plugin:@typescript-eslint/stylistic-type-checked",
+		"prettier"
+	],
+	"globals": {
+		"React": "readonly"
+	},
+	"overrides": [
+		{
+			"files": ["*.ts", "*.tsx"],
+			"env": {
+				"browser": true
+			},
+			"parserOptions": {
+				"project": true,
+				"tsconfigRootDir": "src"
+			},
+			"plugins": ["@typescript-eslint"]
+		},
+		{
+			"files": "*.test.tsx",
+			"env": {
+				"browser": false,
+				"jest": true,
+				"node": true
+			}
+		}
+	]
 }

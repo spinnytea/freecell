@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
     "lint": "next lint",
+    "format": "prettier --write --list-different .",
     "test": "jest --watch",
     "test:cov": "jest --coverage"
   },
@@ -25,11 +25,14 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@typescript-eslint/typescript-estree": "^8.1.0",
+    "@typescript-eslint/eslint-plugin": "^7",
+    "@typescript-eslint/typescript-estree": "^7",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
+    "eslint-config-prettier": "^9.1.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "prettier": "^3.3.3",
     "typescript": "^5"
   }
 }

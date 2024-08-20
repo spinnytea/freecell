@@ -2,10 +2,10 @@
 
 card game
 
-
 ## Code TODOs
 
 TODO main development tasks:
+
 1. ~~Render cards~~
 1. Render playing field, card back(s)
 1. shuffle/deal cards [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
@@ -21,7 +21,6 @@ TODO main development tasks:
 - REVIEW `src/app/globals.css`
 - REVIEW `src/app/page.module.css`
 - REVIEW what are the names of the things (foundation? cascade? cell?)
-- TODO configure eslint
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
 - TODO failed moves shake
 - TODO single click to move: one vs multiple - move to next option? - identify the _types_ of moves, not just _isAllowed_ - different moves have different priorities? (render debug info)
@@ -35,11 +34,9 @@ TODO main development tasks:
 - IDEA implement War? just so it's flexible?
 - IDEA implement Spider Solitaire, that could be fun
 
-
 ## Technicals
 
 Run the dev server: `npm run dev` and go to [http://localhost:3000](http://localhost:3000).
-
 
 # Resource
 
