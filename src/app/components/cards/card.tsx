@@ -42,17 +42,21 @@ const scale_height = (width: number) => Math.floor((width / ORIG_WIDTH) * ORIG_H
 
 const FANCY_DECK = true;
 
+// TODO https://cardmeister.github.io/
+// TODO https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
 export function CardImage({
-	width = ORIG_WIDTH,
+	hidden = false,
 	rank,
 	suit,
+	width = ORIG_WIDTH,
 }: {
-	width?: number;
+	hidden?: boolean;
 	rank: Rank;
 	suit: Suit;
+	width?: number;
 }) {
 	// REVIEW do we need `priority` - it's complaining because i'm rendering the whole deck on init
-	const filename = getFilename(rank, suit);
+	const filename = getFilename(rank, suit, hidden);
 	const height = scale_height(width);
 	return (
 		<Image
@@ -60,13 +64,19 @@ export function CardImage({
 			alt={`${rank} of ${suit}`}
 			width={Math.floor(width)}
 			height={height}
+			draggable={false}
 			priority
 		/>
 	);
 }
 
-// TODO toggle fancy (also ace of spades)
-function getFilename(rank: Rank, suit: Suit, useFancyDeck = FANCY_DECK) {
+// TODO option to toggle fancy
+// TODO alternate card backs?
+function getFilename(rank: Rank, suit: Suit, hidden: boolean, useFancyDeck = FANCY_DECK) {
+	if (hidden) {
+		return 'Card_back_10.svg';
+	}
+
 	if (rank === 'joker') {
 		if (isRed(suit)) return `/SVG-cards-1.3/red_joker.svg`;
 		return `/SVG-cards-1.3/black_joker.svg`;

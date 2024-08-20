@@ -19,7 +19,7 @@ TODO main development tasks:
 - TODO replace or remove `public/vercel.svg`
 - TODO replace `src/app/favicon.ico`
 - REVIEW `src/app/globals.css`
-- REVIEW `src/app/page.module.css`
+- REVIEW `src/app/common.module.css`
 - REVIEW what are the names of the things (foundation? cascade? cell?)
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
 - TODO failed moves shake
@@ -33,6 +33,7 @@ TODO main development tasks:
 - IDEA toggle for: move stack as one vs animate in-between steps (stack moves vs each card moves)
 - IDEA implement War? just so it's flexible?
 - IDEA implement Spider Solitaire, that could be fun
+- TODO keyboard input (tab index, pick/place card/stack, inspect card, shortcuts for top row)
 
 ## Technicals
 
@@ -42,3 +43,4 @@ Run the dev server: `npm run dev` and go to [http://localhost:3000](http://local
 
 - Playing Card Deck https://code.google.com/archive/p/vector-playing-cards/
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) | [Next.js Documentation](https://nextjs.org/docs)
+- Card Back: https://commons.wikimedia.org/wiki/File:Card_back_10.svg

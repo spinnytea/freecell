@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "npm run format && npm run lint && npm run test:cov",
     "build": "next build",
     "lint": "next lint",
     "format": "prettier --write --list-different .",

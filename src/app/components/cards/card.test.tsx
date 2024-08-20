@@ -14,9 +14,14 @@ describe('card', () => {
 
 			SuitList.forEach((suit) => {
 				RankList.forEach((rank) => {
-					allNames.push(`${rank} of ${suit} → ${units.getFilename(rank, suit, true)}`);
+					allNames.push(`${rank} of ${suit} → ${units.getFilename(rank, suit, false, true)}`);
 				});
 			});
+			SuitList.forEach((suit) => {
+				const rank = 'joker';
+				allNames.push(`${rank} of ${suit} → ${units.getFilename(rank, suit, false, true)}`);
+			});
+			allNames.push(`card back → ${units.getFilename('ace', 'spades', true, true)}`);
 
 			expect(allNames).toMatchSnapshot();
 		});
@@ -26,9 +31,14 @@ describe('card', () => {
 
 			SuitList.forEach((suit) => {
 				RankList.forEach((rank) => {
-					allNames.push(`${rank} of ${suit} → ${units.getFilename(rank, suit, false)}`);
+					allNames.push(`${rank} of ${suit} → ${units.getFilename(rank, suit, false, false)}`);
 				});
 			});
+			SuitList.forEach((suit) => {
+				const rank = 'joker';
+				allNames.push(`${rank} of ${suit} → ${units.getFilename(rank, suit, false, false)}`);
+			});
+			allNames.push(`card back → ${units.getFilename('ace', 'spades', true, false)}`);
 
 			expect(allNames).toMatchSnapshot();
 		});

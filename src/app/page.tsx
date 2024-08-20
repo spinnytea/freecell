@@ -1,12 +1,11 @@
-import classNames from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
-import styles from '@/app/page.module.css';
+import styles_common from '@/app/common.module.css';
 
 export default function Page() {
 	return (
-		<main className={classNames(styles.main, styles.felt)}>
-			<div className={styles.description}>
+		<main className={styles_common.main}>
+			<div className={styles_common.description}>
 				<Link href="/manualtesting">Manual Testing</Link>
 				<div>
 					<a
@@ -18,7 +17,7 @@ export default function Page() {
 						<Image
 							src="/vercel.svg"
 							alt="Vercel Logo"
-							className={styles.vercelLogo}
+							className={styles_common.vercelLogo}
 							width={100}
 							height={24}
 							priority
@@ -27,9 +26,9 @@ export default function Page() {
 				</div>
 			</div>
 
-			<div className={styles.center}>
+			<div className={styles_common.center}>
 				<Image
-					className={styles.logo}
+					className={styles_common.logo}
 					src="/next.svg"
 					alt="Next.js Logo"
 					width={180}
@@ -38,10 +37,10 @@ export default function Page() {
 				/>
 			</div>
 
-			<div className={styles.grid}>
+			<div className={styles_common.grid}>
 				<a
 					href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-					className={styles.card}
+					className={styles_common.card}
 					target="_blank"
 					rel="noopener noreferrer"
 				>
@@ -53,7 +52,7 @@ export default function Page() {
 
 				<a
 					href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-					className={styles.card}
+					className={styles_common.card}
 					target="_blank"
 					rel="noopener noreferrer"
 				>
@@ -65,7 +64,7 @@ export default function Page() {
 
 				<a
 					href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-					className={styles.card}
+					className={styles_common.card}
 					target="_blank"
 					rel="noopener noreferrer"
 				>
@@ -77,7 +76,7 @@ export default function Page() {
 
 				<a
 					href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-					className={styles.card}
+					className={styles_common.card}
 					target="_blank"
 					rel="noopener noreferrer"
 				>
