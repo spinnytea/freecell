@@ -61,7 +61,7 @@ export function CardImage({
 	return (
 		<Image
 			src={filename}
-			alt={`${rank} of ${suit}`}
+			alt={hidden ? 'card back' : `${rank} of ${suit}`}
 			width={Math.floor(width)}
 			height={height}
 			draggable={false}
@@ -74,23 +74,23 @@ export function CardImage({
 // TODO alternate card backs?
 function getFilename(rank: Rank, suit: Suit, hidden: boolean, useFancyDeck = FANCY_DECK) {
 	if (hidden) {
-		return 'Card_back_10.svg';
+		return '/i/Card_back_10.svg';
 	}
 
 	if (rank === 'joker') {
-		if (isRed(suit)) return `/SVG-cards-1.3/red_joker.svg`;
-		return `/SVG-cards-1.3/black_joker.svg`;
+		if (isRed(suit)) return `/i/SVG-cards-1.3/red_joker.svg`;
+		return `/i/SVG-cards-1.3/black_joker.svg`;
 	}
 	if (rank === 'ace' && suit === 'spades') {
-		if (useFancyDeck) return `/SVG-cards-1.3/ace_of_spades.svg`;
-		return `/SVG-cards-1.3/ace_of_spades2.svg`;
+		if (useFancyDeck) return `/i/SVG-cards-1.3/ace_of_spades.svg`;
+		return `/i/SVG-cards-1.3/ace_of_spades2.svg`;
 	}
 	const fancy = useFancyDeck
 		? rank === 'jack' || rank === 'queen' || rank === 'king'
 			? '2'
 			: ''
 		: '';
-	return `/SVG-cards-1.3/${rank}_of_${suit}${fancy}.svg`;
+	return `/i/SVG-cards-1.3/${rank}_of_${suit}${fancy}.svg`;
 }
 
 /** stuff exported for testing, not meant to be used directly */
