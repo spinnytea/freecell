@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`useFixtureSizes basic 1`] = `
+{
+  "boardWidth": 800,
+  "cardHeight": 78,
+  "cardWidth": 54,
+  "home": {
+    "cellLeft": [
+      80,
+      142,
+      204,
+      266,
+    ],
+    "foundationLeft": [
+      480,
+      542,
+      604,
+      666,
+    ],
+    "top": 30,
+  },
+  "tableau": {
+    "columnLeft": [
+      114,
+      188,
+      262,
+      336,
+      410,
+      484,
+      558,
+      632,
+    ],
+    "top": 153,
+  },
+}
+`;

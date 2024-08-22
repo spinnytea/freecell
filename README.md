@@ -26,10 +26,10 @@ TODO main development tasks:
 - TODO run drag/drop (drop target is entire stack, drag waggles the stack)
 - TODO hard vs medium vs easy
 - TODO auto-solver stops when
-	- (bad) all cards that can go up
-	- all not needed for stacking (rank-opp+1?) (e.g. 0222, 1333)
-	- current rank + 1
-	- current rank
+  - (bad) all cards that can go up
+  - all not needed for stacking (rank-opp+1?) (e.g. 0222, 1333)
+  - current rank + 1
+  - current rank
 - IDEA auto-solve gets faster the longer it runs
 - TODO can move cards during auto-solver, stops when it gets to a card the user has moved (can start with: stops as soon as a user does a thing)
 - IDEA toggle for: move stack as one vs animate in-between steps (stack moves vs each card moves)

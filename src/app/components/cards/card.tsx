@@ -38,7 +38,7 @@ export const RankList: Rank[] = [
 
 const ORIG_WIDTH = 167.0869141;
 const ORIG_HEIGHT = 242.6669922;
-const scale_height = (width: number) => Math.floor((width / ORIG_WIDTH) * ORIG_HEIGHT);
+export const scale_height = (width: number) => Math.floor((width / ORIG_WIDTH) * ORIG_HEIGHT);
 
 const FANCY_DECK = true;
 
