@@ -25,12 +25,17 @@ TODO main development tasks:
 - TODO undo (move history) - all, few, one, none
 - TODO run drag/drop (drop target is entire stack, drag waggles the stack)
 - TODO hard vs medium vs easy
-- TODO auto-solver stops when a) all cards that can go up b) current rank + 1 c) current rank
+- TODO auto-solver stops when
+	- (bad) all cards that can go up
+	- all not needed for stacking (rank-opp+1?) (e.g. 0222, 1333)
+	- current rank + 1
+	- current rank
 - IDEA auto-solve gets faster the longer it runs
 - TODO can move cards during auto-solver, stops when it gets to a card the user has moved (can start with: stops as soon as a user does a thing)
 - IDEA toggle for: move stack as one vs animate in-between steps (stack moves vs each card moves)
 - IDEA implement War? just so it's flexible?
 - IDEA implement Spider Solitaire, that could be fun
+- IDEA learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
 - TODO keyboard input (tab index, pick/place card/stack, inspect card, shortcuts for top row)
 
 ## Technicals

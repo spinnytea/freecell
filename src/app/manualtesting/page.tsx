@@ -9,7 +9,7 @@ export default function Page() {
 			<Link href="/">
 				<span>&lt;-</span> Back to game
 			</Link>
-			<h1>Cards</h1>
+			<div className="instruction">Spot check all the cards.</div>
 			<div className={styles_manualtesting.allplayingcards}>
 				{SuitList.map((suit) =>
 					RankList.map((rank) => (
@@ -22,6 +22,7 @@ export default function Page() {
 				<CardImage rank="joker" suit="spades" width={80} />
 				<CardImage rank="joker" suit="spades" width={80} hidden />
 			</div>
+			<div className="instruction">Background texture scrolls (it&apos;s not fixed in place).</div>
 		</main>
 	);
 }

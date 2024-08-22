@@ -72,6 +72,7 @@ export function CardImage({
 
 // TODO option to toggle fancy
 // TODO alternate card backs?
+// TODO deck w/ kings are lions?
 function getFilename(rank: Rank, suit: Suit, hidden: boolean, useFancyDeck = FANCY_DECK) {
 	if (hidden) {
 		return '/i/Card_back_10.svg';
