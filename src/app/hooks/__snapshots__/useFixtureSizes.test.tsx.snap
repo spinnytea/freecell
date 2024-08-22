@@ -2,36 +2,41 @@
 
 exports[`useFixtureSizes basic 1`] = `
 {
+  "boardHeight": 600,
   "boardWidth": 800,
-  "cardHeight": 78,
-  "cardWidth": 54,
+  "cardHeight": 54,
+  "cardWidth": 37.5,
+  "deck": {
+    "left": 80,
+    "top": 516,
+  },
   "home": {
     "cellLeft": [
       80,
-      142,
-      204,
-      266,
+      147.5,
+      215,
+      282.5,
     ],
     "foundationLeft": [
       480,
-      542,
-      604,
-      666,
+      547.5,
+      615,
+      682.5,
     ],
     "top": 30,
   },
   "tableau": {
-    "columnLeft": [
-      114,
-      188,
-      262,
-      336,
-      410,
-      484,
-      558,
-      632,
+    "cascadeLeft": [
+      145,
+      212.5,
+      280,
+      347.5,
+      415,
+      482.5,
+      550,
+      617.5,
     ],
-    "top": 153,
+    "top": 129,
   },
 }
 `;

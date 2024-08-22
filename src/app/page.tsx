@@ -1,15 +1,17 @@
 'use client';
 
-import styles_gameboard from '@/app/gameboard.module.css';
+import { useRef } from 'react';
+import { CardImage, Rank } from '@/app/components/cards/card';
 import { StatusBar } from '@/app/components/statusbar';
+import styles_gameboard from '@/app/gameboard.module.css';
 import { useFixtureSizes } from '@/app/hooks/useFixtureSizes';
-import { CardImage, Rank } from './components/cards/card';
 
 export default function Page() {
-	const fixtureSizes = useFixtureSizes();
+	const gameBoardRef = useRef<HTMLElement | null>(null);
+	const fixtureSizes = useFixtureSizes(gameBoardRef);
 
 	return (
-		<main className={styles_gameboard.main}>
+		<main ref={gameBoardRef} className={styles_gameboard.main}>
 			{/* FIXME temp */}
 			{(['2', '3', '4', '5'] as Rank[]).map((rank, idx) => (
 				<div
@@ -40,13 +42,23 @@ export default function Page() {
 					key={`cell-${idx.toString()}`}
 					style={{
 						position: 'absolute',
-						left: fixtureSizes.tableau.columnLeft[idx],
+						left: fixtureSizes.tableau.cascadeLeft[idx],
 						top: fixtureSizes.tableau.top,
 					}}
 				>
 					<CardImage rank={rank} suit="clubs" width={fixtureSizes.cardWidth} />
 				</div>
 			))}
+				<div
+					style={{
+						position: 'absolute',
+						left: fixtureSizes.deck.left,
+						top: fixtureSizes.deck.top,
+					}}
+				>
+					<CardImage rank="king" suit="diamonds" hidden width={fixtureSizes.cardWidth} />
+				</div>
+
 			<StatusBar />
 		</main>
 	);

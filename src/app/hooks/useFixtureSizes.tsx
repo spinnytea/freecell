@@ -1,15 +1,23 @@
-import { useEffect, useState } from 'react';
+import { MutableRefObject, useEffect, useState } from 'react';
 import { scale_height } from '../components/cards/card';
 
-// REVIEW good start, needs work
+// REVIEW portrait vs landscape
+//  - the main issue with lanscape is vertical height, tall stacks
+//  - portrait we can afford to have much smaller margins, because it has enough height
+//  - maybe that's what should determine the cardHeight?
+// IDEA (bad) free cells on left (top down), foundation on right (top down)
+//  - so tableau can start at the top of the screen?
+//  - it's a layout
 const DEFAULT_CLIENT_WIDTH = 800;
+const DEFAULT_CLIENT_HEIGHT = 600;
 const HOME_TOP = 30;
-const HOME_CARD_SPACING = 8;
+const HOME_CARD_SPACING = 30;
 const TABLEAU_TOP = HOME_TOP * 1.5;
-const TABLEAU_CARD_SPACING = 20;
+const TABLEAU_CARD_SPACING = 30;
 
 interface FixtureSizes {
 	boardWidth: number;
+	boardHeight: number;
 	cardWidth: number;
 	cardHeight: number;
 
@@ -21,11 +29,19 @@ interface FixtureSizes {
 
 	tableau: {
 		top: number;
-		columnLeft: number[];
+		cascadeLeft: number[];
+	};
+
+	deck: {
+		top: number;
+		left: number;
 	};
 }
 
-export function calcFixtureSizes(boardWidth: number = DEFAULT_CLIENT_WIDTH): FixtureSizes {
+export function calcFixtureSizes(
+	boardWidth: number = DEFAULT_CLIENT_WIDTH,
+	boardHeight: number = DEFAULT_CLIENT_HEIGHT
+): FixtureSizes {
 	const HOME_LR = boardWidth / 10;
 	const HOME_GAP = HOME_LR * 2;
 
@@ -40,6 +56,7 @@ export function calcFixtureSizes(boardWidth: number = DEFAULT_CLIENT_WIDTH): Fix
 
 	return {
 		boardWidth,
+		boardHeight,
 		cardWidth,
 		cardHeight,
 
@@ -65,7 +82,7 @@ export function calcFixtureSizes(boardWidth: number = DEFAULT_CLIENT_WIDTH): Fix
 
 		tableau: {
 			top: HOME_TOP + cardHeight + TABLEAU_TOP,
-			columnLeft: [
+			cascadeLeft: [
 				(cardWidth + TABLEAU_CARD_SPACING) * 0 + TABLEAU_LR,
 				(cardWidth + TABLEAU_CARD_SPACING) * 1 + TABLEAU_LR,
 				(cardWidth + TABLEAU_CARD_SPACING) * 2 + TABLEAU_LR,
@@ -76,18 +93,27 @@ export function calcFixtureSizes(boardWidth: number = DEFAULT_CLIENT_WIDTH): Fix
 				(cardWidth + TABLEAU_CARD_SPACING) * 7 + TABLEAU_LR,
 			],
 		},
+
+		// REVIEW sort of arbitrary place to deal from
+		deck: {
+			top: boardHeight - cardHeight - HOME_TOP,
+			left: HOME_LR,
+		},
 	};
 }
 
-export function useFixtureSizes(): FixtureSizes {
+// FIXME this component is all wrong; we need a single global one for the whole site
+//  - also, why are we using react??
+export function useFixtureSizes(gameBoardRef: MutableRefObject<HTMLElement | null>): FixtureSizes {
 	const [fixtureSizes, setFixtureSizes] = useState(() => calcFixtureSizes());
 
 	useEffect(() => {
 		function updateSize() {
-			const screenWidth = document.body.clientWidth || DEFAULT_CLIENT_WIDTH;
+			const screenWidth = gameBoardRef.current?.offsetWidth ?? DEFAULT_CLIENT_WIDTH;
+			const screenHeight = gameBoardRef.current?.offsetHeight ?? DEFAULT_CLIENT_HEIGHT;
 			setFixtureSizes((fs) => {
-				if (fs.boardWidth !== screenWidth) {
-					return calcFixtureSizes(screenWidth);
+				if (fs.boardWidth !== screenWidth || fs.boardHeight !== screenHeight) {
+					return calcFixtureSizes(screenWidth, screenHeight);
 				}
 				return fs;
 			});
@@ -97,7 +123,7 @@ export function useFixtureSizes(): FixtureSizes {
 		return () => {
 			window.removeEventListener('resize', updateSize);
 		};
-	}, []);
+	}, [gameBoardRef]);
 
 	return fixtureSizes;
 }
