@@ -1,5 +1,5 @@
 import { MutableRefObject, useEffect, useState } from 'react';
-import { scale_height } from '../components/cards/card';
+import { scale_height } from '@/app/components/CardImage';
 
 // REVIEW portrait vs landscape
 //  - the main issue with lanscape is vertical height, tall stacks

@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { CardImage, RankList, SuitList, units } from './card';
+import { CardImage, units } from '@/app/components/CardImage';
+import { RankList, SuitList } from '@/app/game/card';
 
-describe('card', () => {
+describe('CardImage', () => {
 	test('first', () => {
 		render(<CardImage rank="5" suit="hearts" />);
 		expect(screen.getByAltText('5 of hearts')).toMatchSnapshot();

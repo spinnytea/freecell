@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`game init 1`] = `
+FreeCell {
+  "cascades": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+  ],
+  "deck": [],
+  "foundations": [
+    null,
+    null,
+    null,
+    null,
+  ],
+  "freecells": [
+    null,
+    null,
+    null,
+    null,
+  ],
+}
+`;

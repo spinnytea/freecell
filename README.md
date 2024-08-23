@@ -8,7 +8,7 @@ TODO main development tasks:
 
 1. ~~Render cards~~
 1. Render playing field, card back(s)
-1. shuffle/deal cards [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
+1. shuffle/deal cards
 1. click select -> click move
 1. win state
 1. everything (core game) is tested
@@ -37,6 +37,7 @@ TODO main development tasks:
 - IDEA implement Spider Solitaire, that could be fun
 - IDEA learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
 - TODO keyboard input (tab index, pick/place card/stack, inspect card, shortcuts for top row)
+- IDEA [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 
 ## Technicals
 

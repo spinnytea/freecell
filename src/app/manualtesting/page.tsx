@@ -1,7 +1,8 @@
-import styles_common from '@/app/common.module.css';
-import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
-import { CardImage, RankList, SuitList } from '@/app/components/cards/card';
 import Link from 'next/link';
+import styles_common from '@/app/common.module.css';
+import { CardImage } from '@/app/components/CardImage';
+import { RankList, SuitList } from '@/app/game/card';
+import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 
 export default function Page() {
 	return (

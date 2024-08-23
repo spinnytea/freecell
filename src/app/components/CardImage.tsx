@@ -1,40 +1,5 @@
 import Image from 'next/image';
-
-// TODO red & black joker
-export type Suit = 'clubs' | 'diamonds' | 'hearts' | 'spades';
-export const SuitList: Suit[] = ['clubs', 'diamonds', 'hearts', 'spades'];
-const isRed = (suit: Suit) => suit === 'diamonds' || suit === 'hearts';
-
-export type Rank =
-	| 'ace'
-	| '2'
-	| '3'
-	| '4'
-	| '5'
-	| '6'
-	| '7'
-	| '8'
-	| '9'
-	| '10'
-	| 'jack'
-	| 'queen'
-	| 'king'
-	| 'joker';
-export const RankList: Rank[] = [
-	'ace',
-	'2',
-	'3',
-	'4',
-	'5',
-	'6',
-	'7',
-	'8',
-	'9',
-	'10',
-	'jack',
-	'queen',
-	'king',
-];
+import { isRed, Rank, Suit } from '@/app/game/card';
 
 const ORIG_WIDTH = 167.0869141;
 const ORIG_HEIGHT = 242.6669922;

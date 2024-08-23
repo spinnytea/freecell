@@ -110,7 +110,7 @@ const config = {
 		'^.+\\.(png|jpg|jpeg|gif|webp|avif|ico|bmp|svg)$/i': `<rootDir>/__mocks__/fileMock.js`,
 
 		// Handle module aliases
-		'^@/components/(.*)$': '<rootDir>/components/$1',
+		'^@/(.*)$': '<rootDir>/src/$1',
 
 		// Handle @next/font
 		'@next/font/(.*)': `<rootDir>/__mocks__/nextFontMock.js`,

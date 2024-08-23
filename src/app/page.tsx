@@ -1,8 +1,9 @@
 'use client';
 
 import { useRef } from 'react';
-import { CardImage, Rank } from '@/app/components/cards/card';
-import { StatusBar } from '@/app/components/statusbar';
+import { CardImage } from '@/app/components/CardImage';
+import { StatusBar } from '@/app/components/StatusBar';
+import { Rank } from '@/app/game/card';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { useFixtureSizes } from '@/app/hooks/useFixtureSizes';
 
@@ -49,15 +50,15 @@ export default function Page() {
 					<CardImage rank={rank} suit="clubs" width={fixtureSizes.cardWidth} />
 				</div>
 			))}
-				<div
-					style={{
-						position: 'absolute',
-						left: fixtureSizes.deck.left,
-						top: fixtureSizes.deck.top,
-					}}
-				>
-					<CardImage rank="king" suit="diamonds" hidden width={fixtureSizes.cardWidth} />
-				</div>
+			<div
+				style={{
+					position: 'absolute',
+					left: fixtureSizes.deck.left,
+					top: fixtureSizes.deck.top,
+				}}
+			>
+				<CardImage rank="king" suit="diamonds" hidden width={fixtureSizes.cardWidth} />
+			</div>
 
 			<StatusBar />
 		</main>
