@@ -39,4 +39,9 @@ export interface Card {
 	suit: Suit;
 }
 
-export type CardNullable = Card | null;
+export function shorthand(card: Card | null | undefined) {
+	if (!card) return '  ';
+	const r = card.rank === '10' ? 'T' : card.rank[0];
+	const s = card.suit[0];
+	return (r + s).toUpperCase();
+}

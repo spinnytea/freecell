@@ -37,7 +37,6 @@ TODO main development tasks:
 - IDEA implement Spider Solitaire, that could be fun
 - IDEA learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
 - TODO keyboard input (tab index, pick/place card/stack, inspect card, shortcuts for top row)
-- IDEA [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 
 ## Technicals
 
