@@ -15,7 +15,6 @@ TODO main development tasks:
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 
-- TODO replace `src/app/favicon.ico`
 - REVIEW `src/app/globals.css`
 - REVIEW `src/app/common.module.css`
 - REVIEW what are the names of the things (foundation? cascade? cell?)
@@ -47,3 +46,4 @@ Run the dev server: `npm run dev` and go to [http://localhost:3000](http://local
 - Playing Card Deck https://code.google.com/archive/p/vector-playing-cards/
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) | [Next.js Documentation](https://nextjs.org/docs)
 - Card Back: https://commons.wikimedia.org/wiki/File:Card_back_10.svg
+- [Generate favicon from svg](https://svg2ico.com/)
