@@ -17,7 +17,7 @@ TODO main development tasks:
 
 - REVIEW `src/app/globals.css`
 - REVIEW `src/app/common.module.css`
-- REVIEW what are the names of the things (foundation? cascade? cell?)
+- IDEA if we put the selection handler within the game, then we can render that in `print`
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
 - TODO failed moves shake
 - TODO single click to move: one vs multiple - move to next option? - identify the _types_ of moves, not just _isAllowed_ - different moves have different priorities? (render debug info)
@@ -41,9 +41,17 @@ TODO main development tasks:
 
 Run the dev server: `npm run dev` and go to [http://localhost:3000](http://localhost:3000).
 
+## Terms
+
+**Foundation** - The four spaces to place cards, in order, from Ace - King. \
+**Free Cells** - Four empty spaces to temporarily hold any card. \
+**Tableau/Cascade** - The eight columns of cards on the playing board. Each column is a cascade, the whole lot is the tableau. \
+**Run/Sequence** - Sequences are built downward in decreasing rank, for example 4-3-2-A, 10-9-8-7-6, K-Q-J, etc.
+
 # Resource
 
 - Playing Card Deck https://code.google.com/archive/p/vector-playing-cards/
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) | [Next.js Documentation](https://nextjs.org/docs)
 - Card Back: https://commons.wikimedia.org/wiki/File:Card_back_10.svg
 - [Generate favicon from svg](https://svg2ico.com/)
+- [Definitions of terms used in FreeCell](https://mobilityware.helpshift.com/hc/en/12-freecell/faq/3459-definitions-of-terms-used-in-freecell/)

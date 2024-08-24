@@ -63,28 +63,28 @@ describe('game', () => {
 			game = game.dealAll();
 			expect(game.deck.length).toBe(0);
 			expect(game).toMatchSnapshot();
-			expect(game.cascades[0].length).toBe(7);
-			expect(game.cascades[1].length).toBe(7);
-			expect(game.cascades[2].length).toBe(7);
-			expect(game.cascades[3].length).toBe(7);
-			expect(game.cascades[4].length).toBe(6);
-			expect(game.cascades[5].length).toBe(6);
-			expect(game.cascades[6].length).toBe(6);
-			expect(game.cascades[7].length).toBe(6);
-			expect(shorthand(game.cascades[0][0])).toBe('JD');
-			expect(shorthand(game.cascades[1][0])).toBe('2D');
-			expect(shorthand(game.cascades[2][0])).toBe('9H');
-			expect(shorthand(game.cascades[3][0])).toBe('JC');
-			expect(shorthand(game.cascades[0][6])).toBe('6S');
-			expect(shorthand(game.cascades[1][6])).toBe('9C');
-			expect(shorthand(game.cascades[2][6])).toBe('2H');
-			expect(shorthand(game.cascades[3][6])).toBe('6H');
-			expect(game.cascades[0][0]).toEqual({
+			expect(game.tableau[0].length).toBe(7);
+			expect(game.tableau[1].length).toBe(7);
+			expect(game.tableau[2].length).toBe(7);
+			expect(game.tableau[3].length).toBe(7);
+			expect(game.tableau[4].length).toBe(6);
+			expect(game.tableau[5].length).toBe(6);
+			expect(game.tableau[6].length).toBe(6);
+			expect(game.tableau[7].length).toBe(6);
+			expect(shorthand(game.tableau[0][0])).toBe('JD');
+			expect(shorthand(game.tableau[1][0])).toBe('2D');
+			expect(shorthand(game.tableau[2][0])).toBe('9H');
+			expect(shorthand(game.tableau[3][0])).toBe('JC');
+			expect(shorthand(game.tableau[0][6])).toBe('6S');
+			expect(shorthand(game.tableau[1][6])).toBe('9C');
+			expect(shorthand(game.tableau[2][6])).toBe('2H');
+			expect(shorthand(game.tableau[3][6])).toBe('6H');
+			expect(game.tableau[0][0]).toEqual({
 				rank: 'jack',
 				suit: 'diamonds',
 				location: { fixture: 'cascade', data: [0, 0] },
 			});
-			expect(game.cascades[3][6]).toEqual({
+			expect(game.tableau[3][6]).toEqual({
 				rank: '6',
 				suit: 'hearts',
 				location: { fixture: 'cascade', data: [3, 6] },
