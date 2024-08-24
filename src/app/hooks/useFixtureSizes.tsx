@@ -15,7 +15,7 @@ const HOME_CARD_SPACING = 30;
 const TABLEAU_TOP = HOME_TOP * 1.5;
 const TABLEAU_CARD_SPACING = 30;
 
-interface FixtureSizes {
+export interface FixtureSizes {
 	boardWidth: number;
 	boardHeight: number;
 	cardWidth: number;

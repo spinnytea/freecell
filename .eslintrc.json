@@ -11,6 +11,7 @@
 		"React": "readonly"
 	},
 	"rules": {
+		"@typescript-eslint/switch-exhaustiveness-check": "error",
 		"import/order": [
 			"warn",
 			{

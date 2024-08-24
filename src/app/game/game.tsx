@@ -5,12 +5,14 @@ const NUMBER_OF_FOUNDATIONS = SuitList.length;
 const NUMBER_OF_CASCADES = 8;
 
 export class FreeCell {
+	cards: Card[];
 	deck: Card[];
 	freecells: (Card | null)[];
 	foundations: (Card | null)[];
 	cascades: Card[][];
 
 	constructor() {
+		this.cards = [];
 		this.deck = [];
 		this.freecells = new Array<null>(NUMBER_OF_FREE_CELLS).fill(null);
 		this.foundations = new Array<null>(NUMBER_OF_FOUNDATIONS).fill(null);
@@ -20,9 +22,13 @@ export class FreeCell {
 		// initialize deck
 		RankList.forEach((rank) => {
 			SuitList.forEach((suit) => {
-				this.deck.push({ rank, suit });
+				const card: Card = { rank, suit, location: { fixture: 'deck', data: [this.deck.length] } };
+				this.cards.push(card);
+				this.deck.push(card);
 			});
 		});
+
+		// this.shuffle32(1); // left for debugging initial states
 	}
 
 	/**
@@ -40,6 +46,11 @@ export class FreeCell {
 			swap(this.deck, idx, i - 1);
 			i--;
 		}
+
+		// update card locations
+		this.deck.forEach((c, idx) => {
+			c.location = { fixture: 'deck', data: [idx] };
+		});
 	}
 
 	dealAll() {
@@ -47,22 +58,35 @@ export class FreeCell {
 		while (this.deck.length > 0) {
 			c++;
 			if (c >= NUMBER_OF_CASCADES) c = 0;
-			this.cascades[c].push(this.deck.pop()!); // eslint-disable-line @typescript-eslint/no-non-null-assertion
+			const card = this.deck.pop();
+			if (card) {
+				card.location = { fixture: 'cascade', data: [c, this.cascades[c].length] };
+				this.cascades[c].push(card);
+			}
 		}
 	}
 
 	print() {
 		let str = this.freecells
 			.concat(this.foundations)
-			.map((c) => shorthand(c))
+			.map((card) => shorthand(card))
 			.join(' ');
-		const max = Math.max(...this.cascades.map((c) => c.length));
+		const max = Math.max(...this.cascades.map((cascade) => cascade.length));
 		for (let i = 0; i < max; i++) {
 			const line = [];
 			for (let c = 0; c < NUMBER_OF_CASCADES; c++) {
 				line.push(shorthand(this.cascades[c][i]));
 			}
 			str += '\n' + line.join(' ');
+		}
+		if (this.deck.length) {
+			str +=
+				'\nd' +
+				this.deck
+					.slice(0)
+					.reverse()
+					.map((card) => shorthand(card))
+					.join(' ');
 		}
 		return str;
 	}

@@ -5,11 +5,35 @@ describe('game', () => {
 	test('init', () => {
 		const game = new FreeCell();
 		expect(game).toMatchSnapshot();
-		expect(game.deck[0]).toEqual({ rank: 'ace', suit: 'clubs' });
-		expect(game.deck[1]).toEqual({ rank: 'ace', suit: 'diamonds' });
-		expect(game.deck[2]).toEqual({ rank: 'ace', suit: 'hearts' });
-		expect(game.deck[3]).toEqual({ rank: 'ace', suit: 'spades' });
-		expect(game.deck[51]).toEqual({ rank: 'king', suit: 'spades' });
+		expect(game.deck[0]).toEqual({
+			rank: 'ace',
+			suit: 'clubs',
+			location: { fixture: 'deck', data: [0] },
+		});
+		expect(game.deck[1]).toEqual({
+			rank: 'ace',
+			suit: 'diamonds',
+			location: { fixture: 'deck', data: [1] },
+		});
+		expect(game.deck[2]).toEqual({
+			rank: 'ace',
+			suit: 'hearts',
+			location: { fixture: 'deck', data: [2] },
+		});
+		expect(game.deck[3]).toEqual({
+			rank: 'ace',
+			suit: 'spades',
+			location: { fixture: 'deck', data: [3] },
+		});
+		expect(game.deck[51]).toEqual({
+			rank: 'king',
+			suit: 'spades',
+			location: { fixture: 'deck', data: [51] },
+		});
+		expect(game.print()).toBe(
+			'                       \n' +
+				`dKS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC`
+		);
 	});
 
 	describe('shuffle32', () => {
@@ -26,9 +50,19 @@ describe('game', () => {
 			expect(shorthand(game.deck[2])).toBe('9C');
 			expect(shorthand(game.deck[1])).toBe('2H');
 			expect(shorthand(game.deck[0])).toBe('6H');
+			expect(game.deck[51]).toEqual({
+				rank: 'jack',
+				suit: 'diamonds',
+				location: { fixture: 'deck', data: [51] },
+			});
+			expect(game.deck[0]).toEqual({
+				rank: '6',
+				suit: 'hearts',
+				location: { fixture: 'deck', data: [0] },
+			});
 			game.dealAll();
 			expect(game.deck.length).toBe(0);
-			expect(game.cascades).toMatchSnapshot();
+			expect(game).toMatchSnapshot();
 			expect(game.cascades[0].length).toBe(7);
 			expect(game.cascades[1].length).toBe(7);
 			expect(game.cascades[2].length).toBe(7);
@@ -45,6 +79,16 @@ describe('game', () => {
 			expect(shorthand(game.cascades[1][6])).toBe('9C');
 			expect(shorthand(game.cascades[2][6])).toBe('2H');
 			expect(shorthand(game.cascades[3][6])).toBe('6H');
+			expect(game.cascades[0][0]).toEqual({
+				rank: 'jack',
+				suit: 'diamonds',
+				location: { fixture: 'cascade', data: [0, 0] },
+			});
+			expect(game.cascades[3][6]).toEqual({
+				rank: '6',
+				suit: 'hearts',
+				location: { fixture: 'cascade', data: [3, 6] },
+			});
 			expect(game.print()).toBe(
 				'                       \n' +
 					`JD 2D 9H JC 5D 7H 7C 5H

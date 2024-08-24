@@ -1,4 +1,3 @@
-// TODO red & black joker
 export type Suit = 'clubs' | 'diamonds' | 'hearts' | 'spades';
 export const SuitList: Suit[] = ['clubs', 'diamonds', 'hearts', 'spades'];
 export const isRed = (suit: Suit) => suit === 'diamonds' || suit === 'hearts';
@@ -34,9 +33,16 @@ export const RankList: Rank[] = [
 	'king',
 ];
 
+export type Fixture = 'deck' | 'freecell' | 'foundation' | 'cascade';
+export interface CardLocation {
+	fixture: Fixture;
+	data: number[];
+}
+
 export interface Card {
 	rank: Rank;
 	suit: Suit;
+	location: CardLocation;
 }
 
 export function shorthand(card: Card | null | undefined) {
