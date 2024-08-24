@@ -36,6 +36,7 @@ exports[`useFixtureSizes basic 1`] = `
       550,
       617.5,
     ],
+    "offsetTop": 20,
     "top": 129,
   },
 }

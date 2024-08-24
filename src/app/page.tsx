@@ -17,6 +17,7 @@ export default function Page() {
 	return (
 		<main ref={gameBoardRef} className={styles_gameboard.main}>
 			<GameContext.Provider value={gameState}>
+				{/* TODO empty fixtures */}
 				<CardsOnBoard fixtureSizes={fixtureSizes} />
 				<TextBoard />
 				<StatusBar />

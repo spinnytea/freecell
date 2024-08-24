@@ -29,6 +29,7 @@ export class FreeCell {
 		});
 
 		// this.shuffle32(1); // left for debugging initial states
+		// this.dealAll(); // left for debugging initial states
 	}
 
 	/**

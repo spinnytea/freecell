@@ -14,6 +14,7 @@ const HOME_TOP = 30;
 const HOME_CARD_SPACING = 30;
 const TABLEAU_TOP = HOME_TOP * 1.5;
 const TABLEAU_CARD_SPACING = 30;
+const CASCADE_OFFSET = 20; // kinda dependent on the cards themselves
 
 export interface FixtureSizes {
 	boardWidth: number;
@@ -30,6 +31,7 @@ export interface FixtureSizes {
 	tableau: {
 		top: number;
 		cascadeLeft: number[];
+		offsetTop: number;
 	};
 
 	deck: {
@@ -92,6 +94,7 @@ export function calcFixtureSizes(
 				(cardWidth + TABLEAU_CARD_SPACING) * 6 + TABLEAU_LR,
 				(cardWidth + TABLEAU_CARD_SPACING) * 7 + TABLEAU_LR,
 			],
+			offsetTop: CASCADE_OFFSET,
 		},
 
 		// REVIEW sort of arbitrary place to deal from

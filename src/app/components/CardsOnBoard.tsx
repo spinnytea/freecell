@@ -60,7 +60,12 @@ function calcTopLeftZ(
 			};
 		case 'freecell':
 		case 'foundation':
-		case 'cascade':
 			throw new Error('not implemented yet');
+		case 'cascade':
+			return {
+				top: fixtureSizes.tableau.top + (fixtureSizes.tableau.offsetTop * data[1]),
+				left: fixtureSizes.tableau.cascadeLeft[data[0]],
+				zIndex: data[1], // we don't really need to make one cascade strictly above another
+			};
 	}
 }
