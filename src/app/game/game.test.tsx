@@ -38,9 +38,9 @@ describe('game', () => {
 
 	describe('shuffle32', () => {
 		test('Game #1', () => {
-			const game = new FreeCell();
+			let game = new FreeCell();
 			expect(game.deck.length).toBe(52);
-			game.shuffle32(1);
+			game = game.shuffle32(1);
 			expect(game.deck.length).toBe(52);
 			expect(shorthand(game.deck[51])).toBe('JD');
 			expect(shorthand(game.deck[50])).toBe('2D');
@@ -60,7 +60,7 @@ describe('game', () => {
 				suit: 'hearts',
 				location: { fixture: 'deck', data: [0] },
 			});
-			game.dealAll();
+			game = game.dealAll();
 			expect(game.deck.length).toBe(0);
 			expect(game).toMatchSnapshot();
 			expect(game.cascades[0].length).toBe(7);
@@ -102,9 +102,9 @@ KD KC 9S 5S AD QC KH 3H
 		});
 
 		test('Game #617', () => {
-			const game = new FreeCell();
-			game.shuffle32(617);
-			game.dealAll();
+			let game = new FreeCell();
+			game = game.shuffle32(617);
+			game = game.dealAll();
 			expect(game.print()).toBe(
 				'                       \n' +
 					`7D AD 5C 3S 5S 8C 2D AH

@@ -10,12 +10,17 @@ import { GameContext } from '@/app/hooks/GameContext';
 import { useFixtureSizes } from '@/app/hooks/useFixtureSizes';
 
 export default function Page() {
-	const gameState = useState(() => new FreeCell());
+	const gameState = useState(() => new FreeCell().shuffle32(1));
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	const fixtureSizes = useFixtureSizes(gameBoardRef);
 
+	/** @deprecated TODO just for initial testing */
+	function onClick() {
+		gameState[1](gameState[0].dealAll());
+	}
+
 	return (
-		<main ref={gameBoardRef} className={styles_gameboard.main}>
+		<main ref={gameBoardRef} className={styles_gameboard.main} onClick={onClick}>
 			<GameContext.Provider value={gameState}>
 				{/* TODO empty fixtures */}
 				<CardsOnBoard fixtureSizes={fixtureSizes} />

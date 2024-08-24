@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { CardImage } from '@/app/components/CardImage';
+import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
 import { CardLocation, Rank, Suit } from '@/app/game/card';
 import { GameContext } from '@/app/hooks/GameContext';
 import { FixtureSizes } from '@/app/hooks/useFixtureSizes';
@@ -7,8 +8,9 @@ import { FixtureSizes } from '@/app/hooks/useFixtureSizes';
 export default function CardsOnBoard({ fixtureSizes }: { fixtureSizes: FixtureSizes }) {
 	const [game] = useContext(GameContext);
 
+	// wrapper to make the dom more legible
 	return (
-		<>
+		<div>
 			{game.cards.map(({ rank, suit, location }) => (
 				<CardOnBoard
 					key={`${rank} of ${suit}`}
@@ -18,7 +20,7 @@ export default function CardsOnBoard({ fixtureSizes }: { fixtureSizes: FixtureSi
 					fixtureSizes={fixtureSizes}
 				/>
 			))}
-		</>
+		</div>
 	);
 }
 
@@ -36,7 +38,7 @@ function CardOnBoard({
 	const { top, left, zIndex } = calcTopLeftZ(fixtureSizes, location);
 
 	return (
-		<div style={{ position: 'absolute', top, left, zIndex }}>
+		<div className={styles_cardsonboard.card} style={{ top, left, zIndex }}>
 			<CardImage
 				rank={rank}
 				suit={suit}
@@ -63,7 +65,7 @@ function calcTopLeftZ(
 			throw new Error('not implemented yet');
 		case 'cascade':
 			return {
-				top: fixtureSizes.tableau.top + (fixtureSizes.tableau.offsetTop * data[1]),
+				top: fixtureSizes.tableau.top + fixtureSizes.tableau.offsetTop * data[1],
 				left: fixtureSizes.tableau.cascadeLeft[data[0]],
 				zIndex: data[1], // we don't really need to make one cascade strictly above another
 			};

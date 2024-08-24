@@ -6,30 +6,58 @@ const NUMBER_OF_CASCADES = 8;
 
 export class FreeCell {
 	cards: Card[];
+
+	// structure to make the logic easier
 	deck: Card[];
 	freecells: (Card | null)[];
 	foundations: (Card | null)[];
 	cascades: Card[][];
 
-	constructor() {
-		this.cards = [];
-		this.deck = [];
-		this.freecells = new Array<null>(NUMBER_OF_FREE_CELLS).fill(null);
-		this.foundations = new Array<null>(NUMBER_OF_FOUNDATIONS).fill(null);
-		this.cascades = [];
-		while (this.cascades.length < NUMBER_OF_CASCADES) this.cascades.push([]);
+	constructor(prev?: FreeCell) {
+		if (prev) {
+			this.cards = prev.cards.map((card) => ({ ...card }));
+			this.deck = new Array<Card>(prev.deck.length);
+			this.freecells = new Array<null>(NUMBER_OF_FREE_CELLS).fill(null);
+			this.foundations = new Array<null>(NUMBER_OF_FOUNDATIONS).fill(null);
+			this.cascades = prev.cascades.map((cascade) => new Array<Card>(cascade.length));
 
-		// initialize deck
-		RankList.forEach((rank) => {
-			SuitList.forEach((suit) => {
-				const card: Card = { rank, suit, location: { fixture: 'deck', data: [this.deck.length] } };
-				this.cards.push(card);
-				this.deck.push(card);
+			this.cards.forEach((card) => {
+				switch (card.location.fixture) {
+					case 'deck':
+						this.deck[card.location.data[0]] = card;
+						break;
+					case 'freecell':
+						this.freecells[card.location.data[0]] = card;
+						break;
+					case 'foundation':
+						this.foundations[card.location.data[0]] = card;
+						break;
+					case 'cascade':
+						this.cascades[card.location.data[0]][card.location.data[1]] = card;
+						break;
+				}
 			});
-		});
+		} else {
+			this.cards = [];
+			this.deck = [];
+			this.freecells = new Array<null>(NUMBER_OF_FREE_CELLS).fill(null);
+			this.foundations = new Array<null>(NUMBER_OF_FOUNDATIONS).fill(null);
+			this.cascades = [];
+			while (this.cascades.length < NUMBER_OF_CASCADES) this.cascades.push([]);
 
-		// this.shuffle32(1); // left for debugging initial states
-		// this.dealAll(); // left for debugging initial states
+			// initialize deck
+			RankList.forEach((rank) => {
+				SuitList.forEach((suit) => {
+					const card: Card = {
+						rank,
+						suit,
+						location: { fixture: 'deck', data: [this.deck.length] },
+					};
+					this.cards.push(card);
+					this.deck.push(card);
+				});
+			});
+		}
 	}
 
 	/**
@@ -37,34 +65,43 @@ export class FreeCell {
 
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/
-	shuffle32(seed: number) {
-		if (this.deck.length !== RankList.length * SuitList.length)
+	shuffle32(seed: number): FreeCell {
+		const game = new FreeCell(this);
+
+		if (game.deck.length !== RankList.length * SuitList.length)
 			throw new Error('can only shuffle full decks');
-		let i = this.deck.length;
+		let i = game.deck.length;
 		while (i > 0) {
 			seed = (214013 * seed + 2531011) % Math.pow(2, 31);
 			const idx = Math.floor(seed / Math.pow(2, 16)) % i;
-			swap(this.deck, idx, i - 1);
+			swap(game.deck, idx, i - 1);
 			i--;
 		}
 
 		// update card locations
-		this.deck.forEach((c, idx) => {
+		game.deck.forEach((c, idx) => {
 			c.location = { fixture: 'deck', data: [idx] };
 		});
+
+		return game;
 	}
 
+	/** @deprecated this is just for getting started; we want to animate each card delt */
 	dealAll() {
+		const game = new FreeCell(this);
+
 		let c = -1;
-		while (this.deck.length > 0) {
+		while (game.deck.length > 0) {
 			c++;
 			if (c >= NUMBER_OF_CASCADES) c = 0;
-			const card = this.deck.pop();
+			const card = game.deck.pop();
 			if (card) {
-				card.location = { fixture: 'cascade', data: [c, this.cascades[c].length] };
-				this.cascades[c].push(card);
+				card.location = { fixture: 'cascade', data: [c, game.cascades[c].length] };
+				game.cascades[c].push(card);
 			}
 		}
+
+		return game;
 	}
 
 	print() {
