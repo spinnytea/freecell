@@ -17,11 +17,12 @@ TODO main development tasks:
 
 - REVIEW `src/app/globals.css`
 - REVIEW `src/app/common.module.css`
+- XXX actually check static export, because Chrome/Safari have permissions issues, we need to serve the folder
 - IDEA if we put the selection handler within the game, then we can render that in `print`
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
 - TODO failed moves shake
 - TODO single click to move: one vs multiple - move to next option? - identify the _types_ of moves, not just _isAllowed_ - different moves have different priorities? (render debug info)
-- TODO undo (move history) - all, few, one, none
+- TODO undo (move history) - all, few, one, none (should allow at least one undo, misclicks)
 - TODO run drag/drop (drop target is entire stack, drag waggles the stack)
 - TODO hard vs medium vs easy
 - TODO auto-solver stops when
@@ -29,6 +30,7 @@ TODO main development tasks:
   - all not needed for stacking (rank-opp+1?) (e.g. 0222, 1333)
   - current rank + 1
   - current rank
+  - option to dis/enable until all cascades are in order (all are a single sequence, or all are ascending)
 - IDEA auto-solve gets faster the longer it runs
 - TODO can move cards during auto-solver, stops when it gets to a card the user has moved (can start with: stops as soon as a user does a thing)
 - IDEA toggle for: move stack as one vs animate in-between steps (stack moves vs each card moves)
@@ -36,6 +38,7 @@ TODO main development tasks:
 - IDEA implement Spider Solitaire, that could be fun
 - IDEA learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
 - TODO keyboard input (tab index, pick/place card/stack, inspect card, shortcuts for top row)
+- IDEA UI render for all options, hidden options, controls (keyboard + mouse)
 
 ## Technicals
 
@@ -55,3 +58,4 @@ Run the dev server: `npm run dev` and go to [http://localhost:3000](http://local
 - Card Back: https://commons.wikimedia.org/wiki/File:Card_back_10.svg
 - [Generate favicon from svg](https://svg2ico.com/)
 - [Definitions of terms used in FreeCell](https://mobilityware.helpshift.com/hc/en/12-freecell/faq/3459-definitions-of-terms-used-in-freecell/)
+- [FreeCell - Wikipedia](https://en.wikipedia.org/wiki/FreeCell)

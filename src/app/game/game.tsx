@@ -1,8 +1,8 @@
 import { Card, RankList, shorthand, SuitList } from '@/app/game/card';
 
-const NUMBER_OF_FREE_CELLS = 4;
+const NUMBER_OF_FREE_CELLS = 4; // TODO test: Some alternative rules use between one and ten cells.
 const NUMBER_OF_FOUNDATIONS = SuitList.length;
-const NUMBER_OF_CASCADES = 8;
+const NUMBER_OF_CASCADES = 8; // TODO test: Some alternate rules use from four to ten cascades.
 
 export class FreeCell {
 	cards: Card[];

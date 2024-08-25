@@ -11,9 +11,9 @@ import { GameContext } from '@/app/hooks/GameContext';
 import { useFixtureSizes } from '@/app/hooks/useFixtureSizes';
 
 export default function Page() {
-	const gameState = useState(() => new FreeCell().shuffle32(1)); // TODO move to redux
+	const gameState = useState(() => new FreeCell().shuffle32(1)); // TODO just use redux
 	const gameBoardRef = useRef<HTMLElement | null>(null);
-	const fixtureSizes = useFixtureSizes(gameBoardRef); // TODO init as undefined, don't use default sizes
+	const fixtureSizes = useFixtureSizes(gameBoardRef); // TODO just make the game board a component (not hook), use redux
 
 	/** @deprecated TODO just for initial testing */
 	function onClick() {
