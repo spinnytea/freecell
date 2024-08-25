@@ -17,7 +17,6 @@ TODO main development tasks:
 
 - REVIEW `src/app/globals.css`
 - REVIEW `src/app/common.module.css`
-- XXX actually check static export, because Chrome/Safari have permissions issues, we need to serve the folder
 - IDEA if we put the selection handler within the game, then we can render that in `print`
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
 - TODO failed moves shake
