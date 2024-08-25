@@ -90,7 +90,7 @@ export class FreeCell {
 	}
 
 	/** @deprecated this is just for getting started; we want to animate each card delt */
-	dealAll() {
+	dealAll(): FreeCell {
 		const game = new FreeCell(this);
 
 		let c = -1;
@@ -107,7 +107,7 @@ export class FreeCell {
 		return game;
 	}
 
-	print() {
+	print(): string {
 		let str = this.cells
 			.concat(this.foundations)
 			.map((card) => shorthand(card))

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import CardsOnBoard from '@/app/components/CardsOnBoard';
+import { PileMarkers } from '@/app/components/PileMarkers';
 import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
 import { FreeCell } from '@/app/game/game';
@@ -10,9 +11,9 @@ import { GameContext } from '@/app/hooks/GameContext';
 import { useFixtureSizes } from '@/app/hooks/useFixtureSizes';
 
 export default function Page() {
-	const gameState = useState(() => new FreeCell().shuffle32(1));
+	const gameState = useState(() => new FreeCell().shuffle32(1)); // TODO move to redux
 	const gameBoardRef = useRef<HTMLElement | null>(null);
-	const fixtureSizes = useFixtureSizes(gameBoardRef);
+	const fixtureSizes = useFixtureSizes(gameBoardRef); // TODO init as undefined, don't use default sizes
 
 	/** @deprecated TODO just for initial testing */
 	function onClick() {
@@ -22,7 +23,7 @@ export default function Page() {
 	return (
 		<main ref={gameBoardRef} className={styles_gameboard.main} onClick={onClick}>
 			<GameContext.Provider value={gameState}>
-				{/* TODO empty fixtures */}
+				<PileMarkers fixtureSizes={fixtureSizes} />
 				<CardsOnBoard fixtureSizes={fixtureSizes} />
 				<TextBoard />
 				<StatusBar />

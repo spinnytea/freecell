@@ -1,0 +1,13 @@
+.pile {
+	position: absolute;
+
+	background: rgba(var(--card-rgb), 0.1);
+	border: 3px solid rgba(var(--card-border-rgb), 0.3);
+	border-radius: 4px;
+}
+
+.pile:hover,
+.pile:focus {
+	background: rgba(var(--card-rgb), 0.3);
+	border-color: rgba(var(--card-border-rgb), 0.5);
+}
