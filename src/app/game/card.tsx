@@ -33,7 +33,7 @@ export const RankList: Rank[] = [
 	'king',
 ];
 
-export type Fixture = 'deck' | 'freecell' | 'foundation' | 'cascade';
+export type Fixture = 'deck' | 'cell' | 'foundation' | 'cascade';
 export interface CardLocation {
 	fixture: Fixture;
 	data: number[];

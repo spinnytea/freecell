@@ -15,7 +15,6 @@ TODO main development tasks:
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 
-- REVIEW `src/app/globals.css`
 - REVIEW `src/app/common.module.css`
 - IDEA if we put the selection handler within the game, then we can render that in `print`
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump

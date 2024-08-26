@@ -117,4 +117,187 @@ JD KS KC 4H            `
 			);
 		});
 	});
+
+	describe('various sizes', () => {
+		test('4 cells, 8 cascades', () => {
+			let game: FreeCell | null | undefined = new FreeCell({ cellCount: 4, cascadeCount: 8 });
+			game = game.dealAll();
+			game = game._moveCard(
+				{ fixture: 'cascade', data: [1, 6] },
+				{ fixture: 'foundation', data: [0] }
+			);
+			game = game?._moveCard(
+				{ fixture: 'cascade', data: [3, 6] },
+				{ fixture: 'foundation', data: [1] }
+			);
+			game = game?._moveCard(
+				{ fixture: 'cascade', data: [2, 6] },
+				{ fixture: 'foundation', data: [2] }
+			);
+			game = game?._moveCard(
+				{ fixture: 'cascade', data: [0, 6] },
+				{ fixture: 'foundation', data: [3] }
+			);
+			game = game?._moveCard({ fixture: 'cascade', data: [7, 5] }, { fixture: 'cell', data: [3] });
+			expect(game?.print()).toBe(
+				'         2C AH AC AD AS\n' +
+					`KS KH KD KC QS QH QD QC
+JS JH JD JC TS TH TD TC
+9S 9H 9D 9C 8S 8H 8D 8C
+7S 7H 7D 7C 6S 6H 6D 6C
+5S 5H 5D 5C 4S 4H 4D 4C
+3S 3H 3D 3C 2S 2H 2D   `
+			);
+			expect(game?.cells.length).toBe(4);
+			expect(game?.foundations.length).toBe(4);
+			expect(game?.tableau.length).toBe(8);
+		});
+
+		test('4 cells, 4 cascades', () => {
+			let game: FreeCell | null | undefined = new FreeCell({ cellCount: 4, cascadeCount: 4 });
+			game = game.dealAll();
+			game = game._moveCard(
+				{ fixture: 'cascade', data: [1, 12] },
+				{ fixture: 'foundation', data: [0] }
+			);
+			game = game?._moveCard(
+				{ fixture: 'cascade', data: [3, 12] },
+				{ fixture: 'foundation', data: [1] }
+			);
+			game = game?._moveCard(
+				{ fixture: 'cascade', data: [2, 12] },
+				{ fixture: 'foundation', data: [2] }
+			);
+			game = game?._moveCard(
+				{ fixture: 'cascade', data: [0, 12] },
+				{ fixture: 'foundation', data: [3] }
+			);
+			game = game?._moveCard({ fixture: 'cascade', data: [3, 11] }, { fixture: 'cell', data: [3] });
+			expect(game?.print()).toBe(
+				'         2C AH AC AD AS\n' +
+					`KS KH KD KC
+QS QH QD QC
+JS JH JD JC
+TS TH TD TC
+9S 9H 9D 9C
+8S 8H 8D 8C
+7S 7H 7D 7C
+6S 6H 6D 6C
+5S 5H 5D 5C
+4S 4H 4D 4C
+3S 3H 3D 3C
+2S 2H 2D   `
+			);
+			expect(game?.cells.length).toBe(4);
+			expect(game?.foundations.length).toBe(4);
+			expect(game?.tableau.length).toBe(4);
+		});
+
+		test('1 cells, 10 cascades', () => {
+			let game: FreeCell | null | undefined = new FreeCell({ cellCount: 1, cascadeCount: 10 });
+			game = game.dealAll();
+			game = game._moveCard(
+				{ fixture: 'cascade', data: [9, 4] },
+				{ fixture: 'foundation', data: [0] }
+			);
+			game = game?._moveCard(
+				{ fixture: 'cascade', data: [1, 5] },
+				{ fixture: 'foundation', data: [1] }
+			);
+			game = game?._moveCard(
+				{ fixture: 'cascade', data: [0, 5] },
+				{ fixture: 'foundation', data: [2] }
+			);
+			game = game?._moveCard(
+				{ fixture: 'cascade', data: [8, 4] },
+				{ fixture: 'foundation', data: [3] }
+			);
+			game = game?._moveCard({ fixture: 'cascade', data: [7, 4] }, { fixture: 'cell', data: [0] });
+			expect(game?.print()).toBe(
+				'2C AH AC AD AS\n' +
+					`KS KH KD KC QS QH QD QC JS JH
+JD JC TS TH TD TC 9S 9H 9D 9C
+8S 8H 8D 8C 7S 7H 7D 7C 6S 6H
+6D 6C 5S 5H 5D 5C 4S 4H 4D 4C
+3S 3H 3D 3C 2S 2H 2D         `
+			);
+			expect(game?.cells.length).toBe(1);
+			expect(game?.foundations.length).toBe(4);
+			expect(game?.tableau.length).toBe(10);
+		});
+
+		test('0 cells', () => {
+			expect(() => new FreeCell({ cellCount: 0 })).toThrow(
+				'Must have between 1 and 4 cells; requested "0".'
+			);
+		});
+
+		test('5 cells', () => {
+			expect(() => new FreeCell({ cellCount: 5 })).toThrow(
+				'Must have between 1 and 4 cells; requested "5".'
+			);
+		});
+
+		test('3 cascades', () => {
+			expect(() => new FreeCell({ cascadeCount: 3 })).toThrow(
+				'Must have at least 4 cascades; requested "3".'
+			);
+		});
+
+		// REVIEW is there a max number of cascades?
+	});
+
+	describe('move', () => {
+		describe('from: deck', () => {
+			test.todo('to: deck');
+
+			test.todo('to: cell');
+
+			test.todo('to: foundation');
+
+			test.todo('to: cascade');
+		});
+
+		describe('from: freecell', () => {
+			test.todo('to: deck');
+
+			test.todo('to: cell');
+
+			test.todo('to: foundation');
+
+			test.todo('to: cascade');
+		});
+
+		describe('from: foundation', () => {
+			test.todo('to: deck');
+
+			test.todo('to: cell');
+
+			test.todo('to: foundation');
+
+			test.todo('to: cascade');
+		});
+
+		describe('from: cascade', () => {
+			describe('Card', () => {
+				test.todo('to: deck');
+
+				test.todo('to: cell');
+
+				test.todo('to: foundation');
+
+				test.todo('to: cascade');
+			});
+
+			describe('CardSequence', () => {
+				test.todo('to: deck');
+
+				test.todo('to: cell');
+
+				test.todo('to: foundation');
+
+				test.todo('to: cascade');
+			});
+		});
+	});
 });

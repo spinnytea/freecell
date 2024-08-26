@@ -60,7 +60,7 @@ function calcTopLeftZ(
 				left: fixtureSizes.deck.left,
 				zIndex: data[0],
 			};
-		case 'freecell':
+		case 'cell':
 		case 'foundation':
 			throw new Error('not implemented yet');
 		case 'cascade':

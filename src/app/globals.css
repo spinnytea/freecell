@@ -13,6 +13,7 @@
 		#ffffff18 100%
 	);
 
+	/* REVIEW do we still need the glow on the demo page? (do we still need the demo page) */
 	--primary-glow: conic-gradient(
 		from 180deg at 50% 50%,
 		#16abff33 0deg,
