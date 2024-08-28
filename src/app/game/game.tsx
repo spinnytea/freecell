@@ -196,7 +196,11 @@ export class FreeCell {
 		// }
 	}
 
-	// REVIEW should print verify the card.location? this.cards? if not here then where?
+	/**
+	  - IDEA if we put the selection handler within the game, then we can render that in `print`
+	  - TODO make a `FreeCell.parse` that … `const game = FreeCell.parse(new FreeCell().print())`
+	  - REVIEW should print verify the card.location? this.cards? if not here then where?
+	*/
 	print(): string {
 		let str = this.cells
 			.concat(this.foundations)
