@@ -105,7 +105,7 @@ export function calcFixtureSizes(
 	};
 }
 
-// FIXME this component is all wrong; we need a single global one for the whole site
+// TODO this component is all wrong; we need a single global one for the whole site
 //  - also, why are we using react??
 export function useFixtureSizes(gameBoardRef: MutableRefObject<HTMLElement | null>): FixtureSizes {
 	const [fixtureSizes, setFixtureSizes] = useState(() => calcFixtureSizes());

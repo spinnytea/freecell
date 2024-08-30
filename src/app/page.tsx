@@ -20,6 +20,10 @@ export default function Page() {
 		gameState[1](gameState[0].dealAll());
 	}
 
+	// TODO keys
+	// TODO render game.cursor (+ debug view)
+	// TODO render game.selection (+ debug view)
+
 	return (
 		<main ref={gameBoardRef} className={styles_gameboard.main} onClick={onClick}>
 			<GameContext.Provider value={gameState}>
