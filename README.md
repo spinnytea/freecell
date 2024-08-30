@@ -15,7 +15,6 @@ TODO main development tasks:
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 
-- REVIEW `src/app/common.module.css`
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
 - TODO failed moves shake
 - TODO single click to move: one vs multiple - move to next option? - identify the _types_ of moves, not just _isAllowed_ - different moves have different priorities? (render debug info)
@@ -41,6 +40,8 @@ TODO main development tasks:
 ## Technicals
 
 Run the dev server: `npm run dev` and go to [http://localhost:3000](http://localhost:3000).
+
+Ready to release: `npm run build` and `npm run serve` (prebuild will `format`, `lint`, and `test`)
 
 ## Terms
 

@@ -13,6 +13,10 @@ export class FreeCell {
 	foundations: (Card | null)[];
 	tableau: Card[][];
 
+	// controls
+	// cursor: CardLocation
+	// selected: CardSequence
+
 	constructor({
 		cellCount = DEFAULT_NUMBER_OF_CELLS,
 		cascadeCount = DEFAULT_NUMBER_OF_CASCADES,
@@ -73,7 +77,7 @@ export class FreeCell {
 		}
 	}
 
-	_clone(cards: Card[] = this.cards): FreeCell {
+	_clone({ cards = this.cards }: { cards?: Card[] } = {}): FreeCell {
 		return new FreeCell({
 			cellCount: this.cells.length,
 			cascadeCount: this.tableau.length,
@@ -91,12 +95,15 @@ export class FreeCell {
 
 		if (game.deck.length !== RankList.length * SuitList.length)
 			throw new Error('can only shuffle full decks');
-		let i = game.deck.length;
-		while (i > 0) {
+		let temp: Card;
+		for (let i = game.deck.length; i > 0; i--) {
 			seed = (214013 * seed + 2531011) % Math.pow(2, 31);
-			const idx = Math.floor(seed / Math.pow(2, 16)) % i;
-			swap(game.deck, idx, i - 1);
-			i--;
+			const j = Math.floor(seed / Math.pow(2, 16)) % i;
+
+			// swap
+			temp = game.deck[i - 1];
+			game.deck[i - 1] = game.deck[j];
+			game.deck[j] = temp;
 		}
 
 		// update card locations
@@ -111,6 +118,7 @@ export class FreeCell {
 	dealAll(): FreeCell {
 		const game = this._clone();
 
+		// deal across tableau columns, until the deck is empty
 		let c = -1;
 		while (game.deck.length > 0) {
 			c++;
@@ -170,7 +178,7 @@ export class FreeCell {
 				location.data[1] === from_location.data[1]
 		) as Card;
 		next_from_card.location = to_location;
-		return this._clone(next);
+		return this._clone({ cards: next });
 
 		// const game = this._clone();
 
@@ -225,11 +233,4 @@ export class FreeCell {
 		}
 		return str;
 	}
-}
-
-// FIXME remove
-function swap<T>(array: T[], i: number, j: number) {
-	const temp = array[i];
-	array[i] = array[j];
-	array[j] = temp;
 }
