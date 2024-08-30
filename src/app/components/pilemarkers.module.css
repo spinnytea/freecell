@@ -7,7 +7,24 @@
 }
 
 .pile:hover,
-.pile:focus {
+.pile:focus,
+.cursorPile {
 	background: rgba(var(--pile-rgb), 0.3);
 	border-color: rgba(var(--pile-border-rgb), 0.5);
+}
+
+.cursorBox {
+	--movement-time: 0.3s;
+
+	position: absolute;
+
+	/* REVIEW just a basic movement transition to get things moving (started) */
+	transition:
+		top var(--movement-time) ease 0s,
+		left var(--movement-time) ease 0s,
+		height var(--movement-time) ease 0s;
+
+	z-index: 1000;
+	border: 2px solid magenta;
+	border-radius: 5px;
 }

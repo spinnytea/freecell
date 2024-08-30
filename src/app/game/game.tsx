@@ -6,6 +6,13 @@ const DEFAULT_NUMBER_OF_CASCADES = 8;
 
 const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 const PRINT_CURSOR_CHAR = '>';
+/**
+	large enough that clampCursor will always put this at the bottom
+	- 52 cards in the deck
+	- 26 is probably safe
+	- 999 is definately safe
+*/
+const BOTTOM_OF_CASCADE = 52;
 
 export class FreeCell {
 	cards: Card[];
@@ -102,6 +109,7 @@ export class FreeCell {
 			cursor,
 		});
 		game.previousAction = action;
+		// REVIEW if (game.cursor !== cursor) game.previousAction += ' (cursor clamped)';
 		return game;
 	}
 
@@ -144,14 +152,14 @@ export class FreeCell {
 				case 'up':
 					break;
 				case 'left':
-					if (d0 === 0)
+					if (d0 <= 0)
 						return this.__clone({
 							action: 'cursor left',
 							cursor: { fixture: 'foundation', data: [this.foundations.length - 1] },
 						});
 					return this.__clone({ action: 'cursor left', cursor: { fixture, data: [d0 - 1] } });
 				case 'right': {
-					if (d0 === this.cells.length - 1)
+					if (d0 >= this.cells.length - 1)
 						return this.__clone({
 							action: 'cursor right',
 							cursor: { fixture: 'foundation', data: [0] },
@@ -161,7 +169,7 @@ export class FreeCell {
 				case 'down':
 					return this.__clone({
 						action: 'cursor down',
-						cursor: { fixture: 'cascade', data: [d0, 0] },
+						cursor: { fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] },
 					});
 			}
 		} else if (fixture === 'foundation') {
@@ -169,14 +177,14 @@ export class FreeCell {
 				case 'up':
 					break;
 				case 'left':
-					if (d0 === 0)
+					if (d0 <= 0)
 						return this.__clone({
 							action: 'cursor left',
 							cursor: { fixture: 'cell', data: [this.cells.length - 1] },
 						});
 					return this.__clone({ action: 'cursor left', cursor: { fixture, data: [d0 - 1] } });
 				case 'right': {
-					if (d0 === this.foundations.length - 1)
+					if (d0 >= this.foundations.length - 1)
 						return this.__clone({
 							action: 'cursor right',
 							cursor: { fixture: 'cell', data: [0] },
@@ -186,38 +194,84 @@ export class FreeCell {
 				case 'down':
 					return this.__clone({
 						action: 'cursor down',
-						cursor: { fixture: 'cascade', data: [this.cells.length + d0, 0] },
+						cursor: { fixture: 'cascade', data: [this.cells.length + d0, BOTTOM_OF_CASCADE] },
 					});
 			}
 		} else if (fixture === 'cascade') {
 			switch (dir) {
 				case 'up':
+					if (d1 <= 0) {
+						// REVIEW (card | stop | fond) vs (ccaarrdd | fond)
+						//         0123   4567   89ab      01234567   89ab
+						if (d0 < this.cells.length) {
+							return this.__clone({ action: 'cursor up', cursor: { fixture: 'cell', data: [d0] } });
+						}
+						if (this.tableau.length - 1 - d0 < this.foundations.length) {
+							return this.__clone({
+								action: 'cursor up',
+								cursor: {
+									fixture: 'foundation',
+									data: [this.foundations.length - (this.tableau.length - d0)],
+								},
+							});
+						}
+					}
 					return this.__clone({ action: 'cursor up', cursor: { fixture, data: [d0, d1 - 1] } });
 				case 'left':
+					// if d1 is too large, it will be fixed with __clampCursor
+					if (d0 <= 0)
+						return this.__clone({
+							action: 'cursor left',
+							cursor: { fixture: 'cascade', data: [this.tableau.length - 1, d1] },
+						});
 					return this.__clone({ action: 'cursor left', cursor: { fixture, data: [d0 - 1, d1] } });
 				case 'right':
+					// if d1 is too large, it will be fixed with __clampCursor
+					if (d0 >= this.tableau.length - 1)
+						return this.__clone({
+							action: 'cursor right',
+							cursor: { fixture: 'cascade', data: [0, d1] },
+						});
 					return this.__clone({ action: 'cursor right', cursor: { fixture, data: [d0 + 1, d1] } });
 				case 'down':
+					if (d1 >= this.tableau[d0].length - 1) {
+						if (this.deck.length) {
+							// deck is rendered in reverse
+							return this.__clone({
+								action: 'cursor down',
+								cursor: { fixture: 'deck', data: [this.deck.length - 1 - d0] },
+							});
+						}
+						break;
+					}
 					return this.__clone({ action: 'cursor down', cursor: { fixture, data: [d0, d1 + 1] } });
 			}
 		} else {
 			switch (dir) {
 				case 'up':
-					break;
+					// if d0 is wrong, it will be fixed with __clampCursor
+					// d1 will be fixed with __clampCursor
+					// REVIEW spread up/down between cascade and deck?
+					//  - i.e. use the cascade to jump multiple cards in the deck
+					return this.__clone({
+						action: 'cursor up',
+						cursor: { fixture: 'cascade', data: [this.deck.length - 1 - d0, BOTTOM_OF_CASCADE] },
+					});
 				case 'left':
-					// REVIEW deck is rendered in reverse… does left need to be + ?
-					//  - check the print
-					if (d0 === 0) {
-						return this.__clone({ action: 'cursor left', cursor: { fixture, data: [this.deck.length - 1] } });
-					}
-					return this.__clone({ action: 'cursor left', cursor: { fixture, data: [d0 - 1] } });
-				case 'right':
-					// REVIEW deck is rendered in reverse… does right need to be - ?
-					//  - check the print
+					// left and right are reversed in the deck
 					if (d0 === this.deck.length - 1) {
 						return this.__clone({ action: 'cursor left', cursor: { fixture, data: [0] } });
 					}
-					return this.__clone({ action: 'cursor right', cursor: { fixture, data: [d0 + 1] } });
+					return this.__clone({ action: 'cursor left', cursor: { fixture, data: [d0 + 1] } });
+				case 'right':
+					// left and right are reversed in the deck
+					if (d0 === 0) {
+						return this.__clone({
+							action: 'cursor right',
+							cursor: { fixture, data: [this.deck.length - 1] },
+						});
+					}
+					return this.__clone({ action: 'cursor right', cursor: { fixture, data: [d0 - 1] } });
 				case 'down':
 					break;
 			}
@@ -257,7 +311,10 @@ export class FreeCell {
 	}
 
 	/** @deprecated this is just for getting started; we want to animate each card delt */
-	dealAll({ demo = false }: { demo?: boolean } = {}): FreeCell {
+	dealAll({
+		demo = false,
+		keepDeck = false,
+	}: { demo?: boolean; keepDeck?: boolean } = {}): FreeCell {
 		const game = this.__clone({ action: 'deal all cards' });
 
 		const remaining = demo ? game.cells.length + game.foundations.length : 0;
@@ -274,7 +331,7 @@ export class FreeCell {
 			}
 		}
 
-		if (demo) {
+		if (demo && !keepDeck) {
 			game.cells.forEach((ignore, idx) => {
 				const card = game.deck.pop();
 				if (card) {
@@ -292,7 +349,14 @@ export class FreeCell {
 		}
 
 		if (game.cursor.fixture === 'deck') {
-			game.cursor = DEFAULT_CURSOR_LOCATION;
+			if (game.deck.length) {
+				const reversePrevD0 = this.deck.length - this.cursor.data[0] - 1;
+				const clampD0 = Math.max(0, Math.min(reversePrevD0, game.deck.length));
+				const nextD0 = game.deck.length - 1 - clampD0;
+				game.cursor.data[0] = nextD0;
+			} else {
+				game.cursor = DEFAULT_CURSOR_LOCATION;
+			}
 		}
 
 		return game;
@@ -416,14 +480,14 @@ export class FreeCell {
 		if (this.deck.length) {
 			if (this.cursor.fixture === 'deck') {
 				str +=
-					'\nd' +
+					'\n' +
 					this.deck
 						.map((card, idx) => `${idx === d0 ? PRINT_CURSOR_CHAR : ' '}${shorthand(card)}`)
 						.reverse()
 						.join('');
 			} else {
 				str +=
-					'\nd ' +
+					'\n ' +
 					this.deck
 						.map((card) => shorthand(card))
 						.reverse()
