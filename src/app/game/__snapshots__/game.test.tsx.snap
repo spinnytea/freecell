@@ -1065,6 +1065,7 @@ FreeCell {
     null,
   ],
   "previousAction": "init",
+  "selection": null,
   "tableau": [
     [],
     [],
@@ -1674,6 +1675,7 @@ FreeCell {
     null,
   ],
   "previousAction": "deal all cards",
+  "selection": null,
   "tableau": [
     [
       {

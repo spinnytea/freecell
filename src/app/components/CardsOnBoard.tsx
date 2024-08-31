@@ -56,6 +56,8 @@ function calcTopLeftZ(
 		case 'foundation':
 			throw new Error('not implemented yet');
 		case 'cascade':
+			// TODO everything after cursor/selection should slide down a little
+			//  - "inspect" card
 			return {
 				top: fixtureSizes.tableau.top + fixtureSizes.tableau.offsetTop * data[1],
 				left: fixtureSizes.tableau.cascadeLeft[data[0]],

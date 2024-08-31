@@ -45,6 +45,23 @@ export interface Card {
 	location: CardLocation;
 }
 
+export interface CardSequence {
+	/**
+		the first card in the sequence
+		(cursor, selection)
+	*/
+	location: CardLocation;
+
+	/**
+		the list of cards in the sequence
+		(alternates red/black, rank descends by one)
+	*/
+	cards: Card[];
+
+	/** aka "can this be moved" */
+	isTail: boolean;
+}
+
 export function shorthand(card: Card | null | undefined) {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank[0];

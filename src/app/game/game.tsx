@@ -1,4 +1,4 @@
-import { Card, CardLocation, RankList, shorthand, SuitList } from '@/app/game/card';
+import { Card, CardLocation, CardSequence, RankList, shorthand, SuitList } from '@/app/game/card';
 
 const DEFAULT_NUMBER_OF_CELLS = 4;
 const NUMBER_OF_FOUNDATIONS = SuitList.length;
@@ -24,8 +24,8 @@ export class FreeCell {
 	tableau: Card[][];
 
 	// controls
-	cursor: CardLocation;
-	// selected: CardSequence
+	cursor: CardLocation; // TODO cursor should be a CardSequence
+	selection: CardSequence | null;
 	previousAction: string;
 
 	constructor({
@@ -33,11 +33,13 @@ export class FreeCell {
 		cascadeCount = DEFAULT_NUMBER_OF_CASCADES,
 		cards,
 		cursor,
+		selection,
 	}: {
 		cellCount?: number;
 		cascadeCount?: number;
 		cards?: Card[];
 		cursor?: CardLocation;
+		selection?: CardSequence | null;
 	} = {}) {
 		this.deck = [];
 		this.cells = new Array<null>(cellCount).fill(null);
@@ -90,6 +92,7 @@ export class FreeCell {
 		}
 
 		this.cursor = this.__clampCursor(cursor);
+		this.selection = selection ?? null; // REVIEW do we need to validate this every time?
 		this.previousAction = 'init';
 	}
 
@@ -97,16 +100,19 @@ export class FreeCell {
 		action,
 		cards = this.cards,
 		cursor = this.cursor,
+		selection = this.selection,
 	}: {
 		action: string;
 		cards?: Card[];
 		cursor?: CardLocation;
+		selection?: CardSequence | null;
 	}): FreeCell {
 		const game = new FreeCell({
 			cellCount: this.cells.length,
 			cascadeCount: this.tableau.length,
 			cards,
 			cursor,
+			selection,
 		});
 		game.previousAction = action;
 		// REVIEW if (game.cursor !== cursor) game.previousAction += ' (cursor clamped)';

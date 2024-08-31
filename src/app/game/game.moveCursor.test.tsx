@@ -1,7 +1,7 @@
 import { FreeCell } from '@/app/game/game';
 
 describe('moveCursor', () => {
-	describe('nothing selected', () => {
+	describe('selection empty', () => {
 		describe('cell', () => {
 			test('within left and right', () => {
 				let game = new FreeCell({ cursor: { fixture: 'cell', data: [0] } });
@@ -423,7 +423,7 @@ describe('moveCursor', () => {
 		});
 	});
 
-	describe('selected', () => {
+	describe('has selection', () => {
 		// only cycle between places that the selection can move
 		test.todo('arrow move to valid locations');
 	});

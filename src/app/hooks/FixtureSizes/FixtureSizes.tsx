@@ -1,7 +1,7 @@
 import { scale_height } from '@/app/components/CardImage';
 
 // REVIEW portrait vs landscape
-//  - the main issue with lanscape is vertical height, tall stacks
+//  - the main issue with lanscape is vertical height, tall cascades
 //  - portrait we can afford to have much smaller margins, because it has enough height
 //  - maybe that's what should determine the cardHeight?
 // IDEA (bad) free cells on left (top down), foundation on right (top down)
