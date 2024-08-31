@@ -1,8 +1,8 @@
 import { CardImage } from '@/app/components/CardImage';
 import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
 import { CardLocation, Rank, Suit } from '@/app/game/card';
-import { FixtureSizes } from '@/app/hooks/useFixtureSizes';
-import { useGame } from '@/app/hooks/useGame';
+import { FixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
+import { useGame } from '@/app/hooks/Game/useGame';
 
 export default function CardsOnBoard({ fixtureSizes }: { fixtureSizes: FixtureSizes }) {
 	const { cards } = useGame();

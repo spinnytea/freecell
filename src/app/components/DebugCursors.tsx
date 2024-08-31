@@ -1,6 +1,6 @@
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { FixtureSizes } from '@/app/hooks/useFixtureSizes';
-import { useGame } from '@/app/hooks/useGame';
+import { FixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
+import { useGame } from '@/app/hooks/Game/useGame';
 
 const OVERLAY_MARGINS = 4;
 

@@ -1,5 +1,5 @@
 import styles_textboard from '@/app/components/textboard.module.css';
-import { useGame } from '@/app/hooks/useGame';
+import { useGame } from '@/app/hooks/Game/useGame';
 
 export function TextBoard() {
 	const game = useGame();

@@ -8,11 +8,12 @@ import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
 import { FreeCell } from '@/app/game/game';
 import styles_gameboard from '@/app/gameboard.module.css';
-import { GameContext } from '@/app/hooks/GameContext';
-import { useFixtureSizes } from '@/app/hooks/useFixtureSizes';
+import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
+import { GameContext } from '@/app/hooks/Game/GameContext';
 
 export default function Page() {
 	const [game, setGame] = useState(() => new FreeCell().shuffle32(1));
+
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	const fixtureSizes = useFixtureSizes(gameBoardRef); // TODO just make the game board a component (not hook), use redux
 
