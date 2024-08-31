@@ -126,32 +126,15 @@ describe('game', () => {
 	describe('various sizes', () => {
 		test('4 cells, 8 cascades', () => {
 			let game: FreeCell | null | undefined = new FreeCell({ cellCount: 4, cascadeCount: 8 });
-			game = game.dealAll();
-			game = game._moveCard(
-				{ fixture: 'cascade', data: [1, 6] },
-				{ fixture: 'foundation', data: [0] }
-			);
-			game = game?._moveCard(
-				{ fixture: 'cascade', data: [3, 6] },
-				{ fixture: 'foundation', data: [1] }
-			);
-			game = game?._moveCard(
-				{ fixture: 'cascade', data: [2, 6] },
-				{ fixture: 'foundation', data: [2] }
-			);
-			game = game?._moveCard(
-				{ fixture: 'cascade', data: [0, 6] },
-				{ fixture: 'foundation', data: [3] }
-			);
-			game = game?._moveCard({ fixture: 'cascade', data: [7, 5] }, { fixture: 'cell', data: [3] });
+			game = game.dealAll({ demo: true });
 			expect(game?.print()).toBe(
-				'>         2C AH AC AD AS\n' +
+				'>2S 2H 2D 2C AS AH AD AC\n' +
 					` KS KH KD KC QS QH QD QC
  JS JH JD JC TS TH TD TC
  9S 9H 9D 9C 8S 8H 8D 8C
  7S 7H 7D 7C 6S 6H 6D 6C
  5S 5H 5D 5C 4S 4H 4D 4C
- 3S 3H 3D 3C 2S 2H 2D   `
+ 3S 3H 3D 3C            `
 			);
 			expect(game?.cells.length).toBe(4);
 			expect(game?.foundations.length).toBe(4);
@@ -160,26 +143,9 @@ describe('game', () => {
 
 		test('4 cells, 4 cascades', () => {
 			let game: FreeCell | null | undefined = new FreeCell({ cellCount: 4, cascadeCount: 4 });
-			game = game.dealAll();
-			game = game._moveCard(
-				{ fixture: 'cascade', data: [1, 12] },
-				{ fixture: 'foundation', data: [0] }
-			);
-			game = game?._moveCard(
-				{ fixture: 'cascade', data: [3, 12] },
-				{ fixture: 'foundation', data: [1] }
-			);
-			game = game?._moveCard(
-				{ fixture: 'cascade', data: [2, 12] },
-				{ fixture: 'foundation', data: [2] }
-			);
-			game = game?._moveCard(
-				{ fixture: 'cascade', data: [0, 12] },
-				{ fixture: 'foundation', data: [3] }
-			);
-			game = game?._moveCard({ fixture: 'cascade', data: [3, 11] }, { fixture: 'cell', data: [3] });
+			game = game.dealAll({ demo: true });
 			expect(game?.print()).toBe(
-				'>         2C AH AC AD AS\n' +
+				'>2S 2H 2D 2C AS AH AD AC\n' +
 					` KS KH KD KC
  QS QH QD QC
  JS JH JD JC
@@ -190,8 +156,7 @@ describe('game', () => {
  6S 6H 6D 6C
  5S 5H 5D 5C
  4S 4H 4D 4C
- 3S 3H 3D 3C
- 2S 2H 2D   `
+ 3S 3H 3D 3C`
 			);
 			expect(game?.cells.length).toBe(4);
 			expect(game?.foundations.length).toBe(4);
@@ -200,26 +165,9 @@ describe('game', () => {
 
 		test('1 cells, 10 cascades', () => {
 			let game: FreeCell | null | undefined = new FreeCell({ cellCount: 1, cascadeCount: 10 });
-			game = game.dealAll();
-			game = game._moveCard(
-				{ fixture: 'cascade', data: [9, 4] },
-				{ fixture: 'foundation', data: [0] }
-			);
-			game = game?._moveCard(
-				{ fixture: 'cascade', data: [1, 5] },
-				{ fixture: 'foundation', data: [1] }
-			);
-			game = game?._moveCard(
-				{ fixture: 'cascade', data: [0, 5] },
-				{ fixture: 'foundation', data: [2] }
-			);
-			game = game?._moveCard(
-				{ fixture: 'cascade', data: [8, 4] },
-				{ fixture: 'foundation', data: [3] }
-			);
-			game = game?._moveCard({ fixture: 'cascade', data: [7, 4] }, { fixture: 'cell', data: [0] });
+			game = game.dealAll({ demo: true });
 			expect(game?.print()).toBe(
-				'>2C AH AC AD AS\n' +
+				'>2C AS AH AD AC\n' +
 					` KS KH KD KC QS QH QD QC JS JH
  JD JC TS TH TD TC 9S 9H 9D 9C
  8S 8H 8D 8C 7S 7H 7D 7C 6S 6H

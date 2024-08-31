@@ -310,7 +310,7 @@ export class FreeCell {
 		return game;
 	}
 
-	/** @deprecated this is just for getting started; we want to animate each card delt */
+	/** @deprecated this is just for testing; we want to animate each card delt */
 	dealAll({
 		demo = false,
 		keepDeck = false,
@@ -349,94 +349,18 @@ export class FreeCell {
 		}
 
 		if (game.cursor.fixture === 'deck') {
-			if (game.deck.length) {
+			if (!game.deck.length) {
+				game.cursor = DEFAULT_CURSOR_LOCATION;
+			} else {
+				// we could just subtract one every time we deal a card
 				const reversePrevD0 = this.deck.length - this.cursor.data[0] - 1;
 				const clampD0 = Math.max(0, Math.min(reversePrevD0, game.deck.length));
 				const nextD0 = game.deck.length - 1 - clampD0;
 				game.cursor.data[0] = nextD0;
-			} else {
-				game.cursor = DEFAULT_CURSOR_LOCATION;
 			}
 		}
 
 		return game;
-	}
-
-	/** @deprecated this is too naive */
-	_getCardAt(location: CardLocation): Card | null | undefined {
-		return this.cards.find(
-			({ location: at }) =>
-				location.fixture === at.fixture &&
-				location.data[0] === at.data[0] &&
-				location.data[1] === at.data[1]
-		);
-		// switch (location.fixture) {
-		// 	case 'deck':
-		// 		return this.deck[location.data[0]];
-		// 	case 'cell':
-		// 		return this.cells[location.data[0]];
-		// 	case 'foundation':
-		// 		return this.foundations[location.data[0]];
-		// 	case 'cascade':
-		// 		return this.tableau[location.data[0]][location.data[1]];
-		// }
-	}
-
-	/**
-		FIXME remove
-		@deprecated @use {@link dealAll}({ demo: true })
-	*/
-	_moveCard(from_location: CardLocation, to_location: CardLocation): FreeCell | null {
-		// TODO this should return a CardSequence (cascade -> down to end) and only if it is the end
-		//  - change this to a "selection" in game
-		const from_card = this._getCardAt(from_location);
-
-		// TODO we don't need the card per say, but we do need to see if the spot can accept a card
-		const to_card = this._getCardAt(to_location);
-
-		if (!from_card) return null;
-		if (to_card) return null;
-		if (from_location.fixture === 'deck') return null;
-		if (from_location.fixture === 'foundation') return null;
-		if (to_location.fixture === 'deck') return null;
-
-		// REVIEW we need more rules about what can/not be moved
-		// REVIEW this doesn't handle CardSequence
-		const next = this.cards.map((card) => ({ ...card }));
-		const next_from_card = next.find(
-			({ location }) =>
-				location.fixture === from_location.fixture &&
-				location.data[0] === from_location.data[0] &&
-				location.data[1] === from_location.data[1]
-		) as Card;
-		next_from_card.location = to_location;
-		return this.__clone({
-			cards: next,
-			action: `Move ${shorthand(next_from_card)} to ${to_location.fixture} ${to_location.data[0].toString(10)}`,
-		});
-
-		// const game = this.__clone();
-
-		// switch (to_location.fixture) {
-		// 	case 'cell':
-		// 		game.cells[to_location.data[0]] = from_card;
-		// 		break;
-		// 	case 'foundation':
-		// 		game.foundations[to_location.data[0]] = from_card;
-		// 		break;
-		// 	case 'cascade':
-		// 		game.tableau[to_location.data[0]][to_location.data[1]] = from_card;
-		// 		break;
-		// }
-
-		// switch (from_location.fixture) {
-		// 	case 'cell':
-		// 		game.cells[from_location.data[0]] = null;
-		// 		break;
-		// 	case 'cascade':
-		// 		game.tableau[from_location.data[0]].pop();
-		// 		break;
-		// }
 	}
 
 	/**
