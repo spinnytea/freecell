@@ -1,11 +1,10 @@
-import { useContext } from 'react';
 import classNames from 'classnames';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { GameContext } from '@/app/hooks/GameContext';
 import { FixtureSizes } from '@/app/hooks/useFixtureSizes';
+import { useGame } from '@/app/hooks/useGame';
 
 export function PileMarkers({ fixtureSizes }: { fixtureSizes: FixtureSizes }) {
-	const [{ cursor }] = useContext(GameContext);
+	const { cursor } = useGame();
 	const homeTop = fixtureSizes.home.top;
 	const tableauTop = fixtureSizes.tableau.top;
 	return (

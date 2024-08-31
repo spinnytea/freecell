@@ -125,9 +125,9 @@ describe('game', () => {
 
 	describe('various sizes', () => {
 		test('4 cells, 8 cascades', () => {
-			let game: FreeCell | null | undefined = new FreeCell({ cellCount: 4, cascadeCount: 8 });
+			let game = new FreeCell({ cellCount: 4, cascadeCount: 8 });
 			game = game.dealAll({ demo: true });
-			expect(game?.print()).toBe(
+			expect(game.print()).toBe(
 				'>2S 2H 2D 2C AS AH AD AC\n' +
 					` KS KH KD KC QS QH QD QC
  JS JH JD JC TS TH TD TC
@@ -136,15 +136,15 @@ describe('game', () => {
  5S 5H 5D 5C 4S 4H 4D 4C
  3S 3H 3D 3C            `
 			);
-			expect(game?.cells.length).toBe(4);
-			expect(game?.foundations.length).toBe(4);
-			expect(game?.tableau.length).toBe(8);
+			expect(game.cells.length).toBe(4);
+			expect(game.foundations.length).toBe(4);
+			expect(game.tableau.length).toBe(8);
 		});
 
 		test('4 cells, 4 cascades', () => {
-			let game: FreeCell | null | undefined = new FreeCell({ cellCount: 4, cascadeCount: 4 });
+			let game = new FreeCell({ cellCount: 4, cascadeCount: 4 });
 			game = game.dealAll({ demo: true });
-			expect(game?.print()).toBe(
+			expect(game.print()).toBe(
 				'>2S 2H 2D 2C AS AH AD AC\n' +
 					` KS KH KD KC
  QS QH QD QC
@@ -158,15 +158,15 @@ describe('game', () => {
  4S 4H 4D 4C
  3S 3H 3D 3C`
 			);
-			expect(game?.cells.length).toBe(4);
-			expect(game?.foundations.length).toBe(4);
-			expect(game?.tableau.length).toBe(4);
+			expect(game.cells.length).toBe(4);
+			expect(game.foundations.length).toBe(4);
+			expect(game.tableau.length).toBe(4);
 		});
 
 		test('1 cells, 10 cascades', () => {
-			let game: FreeCell | null | undefined = new FreeCell({ cellCount: 1, cascadeCount: 10 });
+			let game = new FreeCell({ cellCount: 1, cascadeCount: 10 });
 			game = game.dealAll({ demo: true });
-			expect(game?.print()).toBe(
+			expect(game.print()).toBe(
 				'>2C AS AH AD AC\n' +
 					` KS KH KD KC QS QH QD QC JS JH
  JD JC TS TH TD TC 9S 9H 9D 9C
@@ -174,9 +174,9 @@ describe('game', () => {
  6D 6C 5S 5H 5D 5C 4S 4H 4D 4C
  3S 3H 3D 3C 2S 2H 2D         `
 			);
-			expect(game?.cells.length).toBe(1);
-			expect(game?.foundations.length).toBe(4);
-			expect(game?.tableau.length).toBe(10);
+			expect(game.cells.length).toBe(1);
+			expect(game.foundations.length).toBe(4);
+			expect(game.tableau.length).toBe(10);
 		});
 
 		test('0 cells', () => {

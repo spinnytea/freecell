@@ -1,8 +1,7 @@
-import { useContext } from 'react';
 import styles_textboard from '@/app/components/textboard.module.css';
-import { GameContext } from '@/app/hooks/GameContext';
+import { useGame } from '@/app/hooks/useGame';
 
 export function TextBoard() {
-	const [game] = useContext(GameContext);
+	const game = useGame();
 	return <pre className={styles_textboard.textboard}>{game.print()}</pre>;
 }

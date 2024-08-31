@@ -1,17 +1,16 @@
-import { useContext } from 'react';
 import { CardImage } from '@/app/components/CardImage';
 import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
 import { CardLocation, Rank, Suit } from '@/app/game/card';
-import { GameContext } from '@/app/hooks/GameContext';
 import { FixtureSizes } from '@/app/hooks/useFixtureSizes';
+import { useGame } from '@/app/hooks/useGame';
 
 export default function CardsOnBoard({ fixtureSizes }: { fixtureSizes: FixtureSizes }) {
-	const [game] = useContext(GameContext);
+	const { cards } = useGame();
 
 	// wrapper to make the dom more legible
 	return (
 		<div>
-			{game.cards.map(({ rank, suit, location }) => (
+			{cards.map(({ rank, suit, location }) => (
 				<CardOnBoard
 					key={`${rank} of ${suit}`}
 					rank={rank}

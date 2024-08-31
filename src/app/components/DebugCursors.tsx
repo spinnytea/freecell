@@ -1,7 +1,6 @@
-import { useContext } from 'react';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { GameContext } from '@/app/hooks/GameContext';
 import { FixtureSizes } from '@/app/hooks/useFixtureSizes';
+import { useGame } from '@/app/hooks/useGame';
 
 const OVERLAY_MARGINS = 4;
 
@@ -14,15 +13,13 @@ export function DebugCursors({ fixtureSizes }: { fixtureSizes: FixtureSizes }) {
 }
 
 function CursorBox({ fixtureSizes }: { fixtureSizes: FixtureSizes }) {
-	const [
-		{
-			cursor: {
-				fixture,
-				data: [d0, d1],
-			},
-			tableau,
+	const {
+		cursor: {
+			fixture,
+			data: [d0, d1],
 		},
-	] = useContext(GameContext);
+		tableau,
+	} = useGame();
 
 	const style = {
 		top: 0,
