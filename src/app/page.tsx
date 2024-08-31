@@ -17,7 +17,9 @@ export default function Page() {
 
 	function onClick() {
 		// TODO just for initial testing
-		setGame((g) => g.dealAll());
+		if (game.deck.length) {
+			setGame(game.dealAll());
+		}
 	}
 
 	useEffect(() => {
