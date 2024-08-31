@@ -54,7 +54,9 @@ describe('moveCursor', () => {
 					expect(game.previousAction).toBe('cursor down w');
 				});
 
-				test.todo('sequence');
+				test.skip('sequence', () => {
+					// not implemented yet
+				});
 
 				test('empty', () => {
 					const game = new FreeCell({ cursor: { fixture: 'cell', data: [2] } }).moveCursor('down');
@@ -64,7 +66,13 @@ describe('moveCursor', () => {
 				});
 			});
 
-			test.todo('size mismatch: cell + foundation !== tableau');
+			test.skip('size mismatch: cell + foundation < tableau', () => {
+				// just excited for other things
+				// (card | stop | fond)
+				//  0123   4567   89ab
+			});
+
+			test.todo('size mismatch: cell + foundation > tableau');
 		});
 
 		describe('foundation', () => {
@@ -125,7 +133,9 @@ describe('moveCursor', () => {
 					expect(game.previousAction).toBe('cursor down w');
 				});
 
-				test.todo('sequence');
+				test.skip('sequence', () => {
+					// not implemented yet
+				});
 
 				test('empty', () => {
 					const game = new FreeCell({ cursor: { fixture: 'foundation', data: [1] } }).moveCursor(
@@ -137,7 +147,13 @@ describe('moveCursor', () => {
 				});
 			});
 
-			test.todo('size mismatch: cell + foundation !== tableau');
+			test.skip('size mismatch: cell + foundation < tableau', () => {
+				// just excited for other things
+				// (card | stop | fond)
+				//  0123   4567   89ab
+			});
+
+			test.todo('size mismatch: cell + foundation > tableau');
 		});
 
 		describe('cascade', () => {
@@ -175,7 +191,9 @@ describe('moveCursor', () => {
 					expect(game.previousAction).toBe('cursor left');
 				});
 
-				test.todo('sequence');
+				test.skip('sequence', () => {
+					// not implemented yet
+				});
 
 				test('empty', () => {
 					let game = new FreeCell().setCursor({ fixture: 'cascade', data: [0, 2] });
@@ -255,7 +273,9 @@ describe('moveCursor', () => {
 					expect(game.previousAction).toBe('cursor up');
 				});
 
-				test.todo('sequence');
+				test.skip('sequence', () => {
+					// not implemented yet
+				});
 			});
 
 			test('going off-left wraps', () => {
@@ -299,7 +319,13 @@ describe('moveCursor', () => {
 					expect(game.previousAction).toBe('cursor up w');
 				});
 
-				test.todo('size mismatch: cell + foundation !== tableau');
+				test.skip('size mismatch: cell + foundation < tableau', () => {
+					// just excited for other things
+					// (card | stop | fond)
+					//  0123   4567   89ab
+				});
+
+				test.todo('size mismatch: cell + foundation > tableau');
 			});
 
 			describe('going off-bottom', () => {
@@ -389,14 +415,15 @@ describe('moveCursor', () => {
 
 					game = game.dealAll({ demo: true, keepDeck: true });
 					expect(game.print()).toBe(
-						'                        \n' +
-							' KS KH KD KC QS QH QD QC\n' +
-							' JS JH JD JC TS TH TD TC\n' +
-							' 9S 9H 9D 9C 8S 8H 8D 8C\n' +
-							' 7S 7H 7D 7C 6S 6H 6D 6C\n' +
-							' 5S 5H 5D 5C 4S 4H 4D 4C\n' +
-							' 3S 3H 3D 3C            \n' +
-							' 2S 2H>2D 2C AS AH AD AC\n' +
+						'' +
+							'                         \n' +
+							' KS KH KD KC QS QH QD QC \n' +
+							' JS JH JD JC TS TH TD TC \n' +
+							' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+							' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+							' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+							' 3S 3H 3D 3C             \n' +
+							' 2S 2H>2D 2C AS AH AD AC \n' +
 							' deal most cards'
 					);
 					expect(game.cursor).toEqual({ fixture: 'deck', data: [5] });
@@ -406,7 +433,9 @@ describe('moveCursor', () => {
 					expect(game.previousAction).toBe('cursor up w');
 				});
 
-				test.todo('sequence');
+				test.skip('sequence', () => {
+					// not implemented yet
+				});
 
 				test('empty', () => {
 					const game = new FreeCell({ cursor: { fixture: 'deck', data: [49] } }).moveCursor('up');
@@ -425,6 +454,8 @@ describe('moveCursor', () => {
 
 	describe('has selection', () => {
 		// only cycle between places that the selection can move
-		test.todo('arrow move to valid locations');
+		test.skip('only moves to valid locations', () => {
+			// not implemented yet
+		});
 	});
 });

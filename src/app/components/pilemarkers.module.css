@@ -17,6 +17,7 @@
 	--movement-time: 0.3s;
 
 	position: absolute;
+	pointer-events: none;
 
 	/* REVIEW just a basic movement transition to get things moving (started) */
 	transition:
@@ -25,6 +26,13 @@
 		height var(--movement-time) ease 0s;
 
 	z-index: 1000;
-	border: 2px solid magenta;
 	border-radius: 5px;
+}
+
+.cursor {
+	border: 2px solid magenta;
+}
+
+.selection {
+	border: 2px solid yellow;
 }

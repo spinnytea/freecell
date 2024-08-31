@@ -26,7 +26,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	const { top, left, zIndex } = calcTopLeftZ(fixtureSizes, location);
 
 	function onClick() {
-		setGame(game.setCursor(location));
+		setGame(game.setCursor(location).touch());
 	}
 
 	return (
@@ -53,9 +53,19 @@ function calcTopLeftZ(
 				zIndex: data[0],
 			};
 		case 'cell':
+			return {
+				top: fixtureSizes.home.top,
+				left: fixtureSizes.home.cellLeft[data[0]],
+				zIndex: data[0],
+			};
 		case 'foundation':
-			throw new Error('not implemented yet');
+			return {
+				top: fixtureSizes.home.top,
+				left: fixtureSizes.home.foundationLeft[data[0]],
+				zIndex: data[0],
+			};
 		case 'cascade':
+			// FIXME render card selection
 			// TODO everything after cursor/selection should slide down a little
 			//  - "inspect" card
 			return {

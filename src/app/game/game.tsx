@@ -1,11 +1,20 @@
-import { Card, CardLocation, CardSequence, RankList, shorthand, SuitList } from '@/app/game/card';
+import {
+	Card,
+	CardLocation,
+	CardSequence,
+	isLocationEqual,
+	RankList,
+	shorthandCard,
+	shorthandSequence,
+	SuitList,
+} from '@/app/game/card';
+import { getPrintSeparator, getSequenceAt } from '@/app/game/game-utils';
 
 const DEFAULT_NUMBER_OF_CELLS = 4;
 const NUMBER_OF_FOUNDATIONS = SuitList.length;
 const DEFAULT_NUMBER_OF_CASCADES = 8;
 
 const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
-const PRINT_CURSOR_CHAR = '>';
 /**
 	large enough that clampCursor will always put this at the bottom
 	- 52 cards in the deck
@@ -14,6 +23,8 @@ const PRINT_CURSOR_CHAR = '>';
 */
 const BOTTOM_OF_CASCADE = 52;
 
+// REVIEW `game = this.__clone` right at the start is confusing
+//  - it's supposed to be one-liners
 export class FreeCell {
 	cards: Card[];
 
@@ -119,6 +130,7 @@ export class FreeCell {
 		return game;
 	}
 
+	/** TODO move to game-utils */
 	__clampCursor(location?: CardLocation): CardLocation {
 		if (!location) return DEFAULT_CURSOR_LOCATION;
 
@@ -251,7 +263,7 @@ export class FreeCell {
 								cursor: { fixture: 'deck', data: [this.deck.length - 1 - d0] },
 							});
 						}
-						// FIXME same as up (from top)
+						// TODO same as up (from top)
 						break;
 					}
 					return this.__clone({ action: 'cursor down', cursor: { fixture, data: [d0, d1 + 1] } });
@@ -289,6 +301,35 @@ export class FreeCell {
 
 		// noop
 		return this.__clone({ action: 'cursor stop' });
+	}
+
+	/**
+		interact with the cursor
+
+		e.g. select cursor, deselect cursor, move selection
+	*/
+	touch(): FreeCell {
+		const game = this.__clone({ action: 'touch' });
+
+		// REVIEW if (!game.selection || !game.selection.canMove) {
+		if (!game.selection) {
+			const selection = getSequenceAt(game, this.cursor);
+			if (selection.cards.length) {
+				game.selection = selection;
+				game.previousAction = 'select ' + shorthandSequence(selection);
+				return game;
+			}
+		} else if (isLocationEqual(game.selection.location, this.cursor)) {
+			game.previousAction = 'deselect ' + shorthandSequence(game.selection);
+			game.selection = null;
+			return game;
+		}
+
+		// TODO invalid move
+		// TODO move card
+
+		game.previousAction = 'touch stop';
+		return game;
 	}
 
 	/**
@@ -375,41 +416,48 @@ export class FreeCell {
 	}
 
 	/**
-	  - IDEA if we put the selection handler within the game, then we can render that in `print`
+	  - FIXME render selection
 	  - TODO make a `FreeCell.parse` that … `const game = FreeCell.parse(new FreeCell().print())`
 	  - REVIEW should print verify the card.location? this.cards? if not here then where?
 	*/
 	print(): string {
-		const [d0, d1] = this.cursor.data;
 		let str = '';
 		if (this.cursor.fixture === 'cell') {
 			str += this.cells
-				.map((card, idx) => `${idx === d0 ? PRINT_CURSOR_CHAR : ' '}${shorthand(card)}`)
+				.map(
+					(card, idx) =>
+						`${getPrintSeparator({ fixture: 'cell', data: [idx] }, this.cursor)}${shorthandCard(card)}`
+				)
 				.join('');
 		} else {
-			str += ' ' + this.cells.map((card) => shorthand(card)).join(' ');
+			str += ' ' + this.cells.map((card) => shorthandCard(card)).join(' ');
 		}
 		if (this.cursor.fixture === 'foundation') {
 			str += this.foundations
-				.map((card, idx) => `${idx === d0 ? PRINT_CURSOR_CHAR : ' '}${shorthand(card)}`)
+				.map(
+					(card, idx) =>
+						`${getPrintSeparator({ fixture: 'foundation', data: [idx] }, this.cursor)}${shorthandCard(card)}`
+				)
 				.join('');
 		} else {
-			str += ' ' + this.foundations.map((card) => shorthand(card)).join(' ');
+			str += ' ' + this.foundations.map((card) => shorthandCard(card)).join(' ');
 		}
+		str += ' ';
 
 		const max = Math.max(...this.tableau.map((cascade) => cascade.length));
 		for (let i = 0; i === 0 || i < max; i++) {
-			if (this.cursor.fixture === 'cascade' && d1 === i) {
+			if (this.cursor.fixture === 'cascade' && this.cursor.data[1] === i) {
 				str +=
 					'\n' +
 					this.tableau
 						.map((cascade, idx) => {
-							const c = idx === d0 ? PRINT_CURSOR_CHAR : ' ';
-							return c + shorthand(cascade[i]);
+							const c = getPrintSeparator({ fixture: 'cascade', data: [idx, i] }, this.cursor);
+							return c + shorthandCard(cascade[i]);
 						})
-						.join('');
+						.join('') +
+					' ';
 			} else {
-				str += '\n ' + this.tableau.map((cascade) => shorthand(cascade[i])).join(' ');
+				str += '\n ' + this.tableau.map((cascade) => shorthandCard(cascade[i])).join(' ') + ' ';
 			}
 		}
 		if (this.deck.length) {
@@ -417,16 +465,21 @@ export class FreeCell {
 				str +=
 					'\n' +
 					this.deck
-						.map((card, idx) => `${idx === d0 ? PRINT_CURSOR_CHAR : ' '}${shorthand(card)}`)
+						.map(
+							(card, idx) =>
+								`${getPrintSeparator({ fixture: 'deck', data: [idx] }, this.cursor)}${shorthandCard(card)}`
+						)
 						.reverse()
-						.join('');
+						.join('') +
+					' ';
 			} else {
 				str +=
 					'\n ' +
 					this.deck
-						.map((card) => shorthand(card))
+						.map((card) => shorthandCard(card))
 						.reverse()
-						.join(' ');
+						.join(' ') +
+					' ';
 			}
 		}
 		str += '\n ' + this.previousAction;

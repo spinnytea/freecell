@@ -1,4 +1,4 @@
-import { shorthand } from '@/app/game/card';
+import { shorthandCard } from '@/app/game/card';
 import { FreeCell } from '@/app/game/game';
 
 describe('game', () => {
@@ -31,9 +31,10 @@ describe('game', () => {
 			location: { fixture: 'deck', data: [51] },
 		});
 		expect(game.print()).toBe(
-			'>                       \n' +
-				'                        \n' +
-				' KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC\n' +
+			'' +
+				'>                        \n' +
+				'                         \n' +
+				' KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
 				' init'
 		);
 	});
@@ -45,14 +46,14 @@ describe('game', () => {
 			game = game.shuffle32(1);
 			expect(game.deck.length).toBe(52);
 			expect(game.previousAction).toBe('shuffle deck');
-			expect(shorthand(game.deck[51])).toBe('JD');
-			expect(shorthand(game.deck[50])).toBe('2D');
-			expect(shorthand(game.deck[49])).toBe('9H');
-			expect(shorthand(game.deck[48])).toBe('JC');
-			expect(shorthand(game.deck[3])).toBe('6S');
-			expect(shorthand(game.deck[2])).toBe('9C');
-			expect(shorthand(game.deck[1])).toBe('2H');
-			expect(shorthand(game.deck[0])).toBe('6H');
+			expect(shorthandCard(game.deck[51])).toBe('JD');
+			expect(shorthandCard(game.deck[50])).toBe('2D');
+			expect(shorthandCard(game.deck[49])).toBe('9H');
+			expect(shorthandCard(game.deck[48])).toBe('JC');
+			expect(shorthandCard(game.deck[3])).toBe('6S');
+			expect(shorthandCard(game.deck[2])).toBe('9C');
+			expect(shorthandCard(game.deck[1])).toBe('2H');
+			expect(shorthandCard(game.deck[0])).toBe('6H');
 			expect(game.deck[51]).toEqual({
 				rank: 'jack',
 				suit: 'diamonds',
@@ -75,14 +76,14 @@ describe('game', () => {
 			expect(game.tableau[5].length).toBe(6);
 			expect(game.tableau[6].length).toBe(6);
 			expect(game.tableau[7].length).toBe(6);
-			expect(shorthand(game.tableau[0][0])).toBe('JD');
-			expect(shorthand(game.tableau[1][0])).toBe('2D');
-			expect(shorthand(game.tableau[2][0])).toBe('9H');
-			expect(shorthand(game.tableau[3][0])).toBe('JC');
-			expect(shorthand(game.tableau[0][6])).toBe('6S');
-			expect(shorthand(game.tableau[1][6])).toBe('9C');
-			expect(shorthand(game.tableau[2][6])).toBe('2H');
-			expect(shorthand(game.tableau[3][6])).toBe('6H');
+			expect(shorthandCard(game.tableau[0][0])).toBe('JD');
+			expect(shorthandCard(game.tableau[1][0])).toBe('2D');
+			expect(shorthandCard(game.tableau[2][0])).toBe('9H');
+			expect(shorthandCard(game.tableau[3][0])).toBe('JC');
+			expect(shorthandCard(game.tableau[0][6])).toBe('6S');
+			expect(shorthandCard(game.tableau[1][6])).toBe('9C');
+			expect(shorthandCard(game.tableau[2][6])).toBe('2H');
+			expect(shorthandCard(game.tableau[3][6])).toBe('6H');
 			expect(game.tableau[0][0]).toEqual({
 				rank: 'jack',
 				suit: 'diamonds',
@@ -94,14 +95,16 @@ describe('game', () => {
 				location: { fixture: 'cascade', data: [3, 6] },
 			});
 			expect(game.print()).toBe(
-				'>                       \n' +
-					` JD 2D 9H JC 5D 7H 7C 5H
- KD KC 9S 5S AD QC KH 3H
- 2S KS 9D QD JS AS AH 3C
- 4C 5C TS QH 4H AC 4D 7S
- 3S TD 4S TH 8H 2C JH 7D
- 6D 8S 8D QS 6C 3D 8C TC
- 6S 9C 2H 6H            \n deal all cards`
+				'' +
+					'>                        \n' +
+					' JD 2D 9H JC 5D 7H 7C 5H \n' +
+					' KD KC 9S 5S AD QC KH 3H \n' +
+					' 2S KS 9D QD JS AS AH 3C \n' +
+					' 4C 5C TS QH 4H AC 4D 7S \n' +
+					' 3S TD 4S TH 8H 2C JH 7D \n' +
+					' 6D 8S 8D QS 6C 3D 8C TC \n' +
+					' 6S 9C 2H 6H             \n' +
+					' deal all cards'
 			);
 		});
 
@@ -112,14 +115,16 @@ describe('game', () => {
 			game = game.dealAll();
 			expect(game.previousAction).toBe('deal all cards');
 			expect(game.print()).toBe(
-				'>                       \n' +
-					` 7D AD 5C 3S 5S 8C 2D AH
- TD 7S QD AC 6D 8H AS KH
- TH QC 3H 9D 6S 8D 3D TC
- KD 5H 9S 3C 8S 7H 4D JS
- 4C QS 9C 9H 7C 6H 2C 2S
- 4S TS 2H 5D JC 6C JH QH
- JD KS KC 4H            \n deal all cards`
+				'' +
+					'>                        \n' +
+					' 7D AD 5C 3S 5S 8C 2D AH \n' +
+					' TD 7S QD AC 6D 8H AS KH \n' +
+					' TH QC 3H 9D 6S 8D 3D TC \n' +
+					' KD 5H 9S 3C 8S 7H 4D JS \n' +
+					' 4C QS 9C 9H 7C 6H 2C 2S \n' +
+					' 4S TS 2H 5D JC 6C JH QH \n' +
+					' JD KS KC 4H             \n' +
+					' deal all cards'
 			);
 		});
 	});
@@ -129,13 +134,15 @@ describe('game', () => {
 			let game = new FreeCell({ cellCount: 4, cascadeCount: 8 });
 			game = game.dealAll({ demo: true });
 			expect(game.print()).toBe(
-				'>2S 2H 2D 2C AS AH AD AC\n' +
-					` KS KH KD KC QS QH QD QC
- JS JH JD JC TS TH TD TC
- 9S 9H 9D 9C 8S 8H 8D 8C
- 7S 7H 7D 7C 6S 6H 6D 6C
- 5S 5H 5D 5C 4S 4H 4D 4C
- 3S 3H 3D 3C            \n deal all cards`
+				'' +
+					'>2S 2H 2D 2C AS AH AD AC \n' +
+					' KS KH KD KC QS QH QD QC \n' +
+					' JS JH JD JC TS TH TD TC \n' +
+					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C             \n' +
+					' deal all cards'
 			);
 			expect(game.cells.length).toBe(4);
 			expect(game.foundations.length).toBe(4);
@@ -146,19 +153,20 @@ describe('game', () => {
 			let game = new FreeCell({ cellCount: 4, cascadeCount: 4 });
 			game = game.dealAll({ demo: true });
 			expect(game.print()).toBe(
-				'>2S 2H 2D 2C AS AH AD AC\n' +
-					` KS KH KD KC
- QS QH QD QC
- JS JH JD JC
- TS TH TD TC
- 9S 9H 9D 9C
- 8S 8H 8D 8C
- 7S 7H 7D 7C
- 6S 6H 6D 6C
- 5S 5H 5D 5C
- 4S 4H 4D 4C
- 3S 3H 3D 3C
- deal all cards`
+				'' +
+					'>2S 2H 2D 2C AS AH AD AC \n' +
+					' KS KH KD KC \n' +
+					' QS QH QD QC \n' +
+					' JS JH JD JC \n' +
+					' TS TH TD TC \n' +
+					' 9S 9H 9D 9C \n' +
+					' 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C \n' +
+					' 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C \n' +
+					' 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C \n' +
+					' deal all cards'
 			);
 			expect(game.cells.length).toBe(4);
 			expect(game.foundations.length).toBe(4);
@@ -169,12 +177,14 @@ describe('game', () => {
 			let game = new FreeCell({ cellCount: 1, cascadeCount: 10 });
 			game = game.dealAll({ demo: true });
 			expect(game.print()).toBe(
-				'>2C AS AH AD AC\n' +
-					` KS KH KD KC QS QH QD QC JS JH
- JD JC TS TH TD TC 9S 9H 9D 9C
- 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H
- 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C
- 3S 3H 3D 3C 2S 2H 2D         \n deal all cards`
+				'' +
+					'>2C AS AH AD AC \n' +
+					' KS KH KD KC QS QH QD QC JS JH \n' +
+					' JD JC TS TH TD TC 9S 9H 9D 9C \n' +
+					' 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H \n' +
+					' 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C 2S 2H 2D          \n' +
+					' deal all cards'
 			);
 			expect(game.cells.length).toBe(1);
 			expect(game.foundations.length).toBe(4);
@@ -200,59 +210,5 @@ describe('game', () => {
 		});
 
 		// REVIEW is there a max number of cascades?
-	});
-
-	describe('move card', () => {
-		describe('from: deck', () => {
-			test.todo('to: deck');
-
-			test.todo('to: cell');
-
-			test.todo('to: foundation');
-
-			test.todo('to: cascade');
-		});
-
-		describe('from: freecell', () => {
-			test.todo('to: deck');
-
-			test.todo('to: cell');
-
-			test.todo('to: foundation');
-
-			test.todo('to: cascade');
-		});
-
-		describe('from: foundation', () => {
-			test.todo('to: deck');
-
-			test.todo('to: cell');
-
-			test.todo('to: foundation');
-
-			test.todo('to: cascade');
-		});
-
-		describe('from: cascade', () => {
-			describe('single', () => {
-				test.todo('to: deck');
-
-				test.todo('to: cell');
-
-				test.todo('to: foundation');
-
-				test.todo('to: cascade');
-			});
-
-			describe('sequence', () => {
-				test.todo('to: deck');
-
-				test.todo('to: cell');
-
-				test.todo('to: foundation');
-
-				test.todo('to: cascade');
-			});
-		});
 	});
 });

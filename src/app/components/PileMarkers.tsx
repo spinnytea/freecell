@@ -64,7 +64,7 @@ function Pile({
 	const [game, setGame] = useContext(GameContext);
 
 	function onClick() {
-		setGame(game.setCursor(location));
+		setGame(game.setCursor(location).touch());
 	}
 
 	const style = {

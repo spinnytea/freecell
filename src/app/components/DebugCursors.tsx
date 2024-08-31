@@ -1,27 +1,52 @@
+import classNames from 'classnames';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
+import { CardLocation, CardSequence } from '@/app/game/card';
 import { FixtureSizes } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/Game/useGame';
 
 const OVERLAY_MARGINS = 4;
 
+/** @deprecated temp, until we convert a cursor to a sequence */
+function locationToSequence(location: CardLocation): CardSequence {
+	return {
+		location,
+		cards: [{ rank: 'joker', suit: 'spades', location }],
+		canMove: false,
+	};
+}
+
 export function DebugCursors() {
 	const fixtureSizes = useFixtureSizes();
+	const game = useGame();
+	const cursor = locationToSequence(game.cursor);
 	return (
 		<>
-			<CursorBox fixtureSizes={fixtureSizes} />
+			{game.selection && (
+				<CursorBox className="selection" fixtureSizes={fixtureSizes} sequence={game.selection} />
+			)}
+			<CursorBox className="cursor" fixtureSizes={fixtureSizes} sequence={cursor} />
 		</>
 	);
 }
 
-function CursorBox({ fixtureSizes }: { fixtureSizes: FixtureSizes }) {
+function CursorBox({
+	className,
+	fixtureSizes,
+	sequence,
+}: {
+	className: string;
+	fixtureSizes: FixtureSizes;
+	sequence: CardSequence;
+}) {
 	const {
-		cursor: {
+		location: {
 			fixture,
 			data: [d0, d1],
 		},
-		tableau,
-	} = useGame();
+		cards: { length },
+		canMove,
+	} = sequence;
 
 	const style = {
 		top: 0,
@@ -46,9 +71,10 @@ function CursorBox({ fixtureSizes }: { fixtureSizes: FixtureSizes }) {
 		case 'cascade':
 			style.top = fixtureSizes.tableau.top + d1 * fixtureSizes.tableau.offsetTop;
 			style.left = fixtureSizes.tableau.cascadeLeft[d0];
-			if (d1 < tableau[d0].length - 1) {
+			if (!canMove) {
 				style.height = fixtureSizes.tableau.offsetTop;
 			}
+			style.height += fixtureSizes.tableau.offsetTop * (length - 1);
 			break;
 	}
 
@@ -57,5 +83,10 @@ function CursorBox({ fixtureSizes }: { fixtureSizes: FixtureSizes }) {
 	style.width += OVERLAY_MARGINS * 2;
 	style.height += OVERLAY_MARGINS * 2;
 
-	return <div className={styles_pilemarkers.cursorBox} style={style} />;
+	return (
+		<div
+			className={classNames(styles_pilemarkers[className], styles_pilemarkers.cursorBox)}
+			style={style}
+		/>
+	);
 }

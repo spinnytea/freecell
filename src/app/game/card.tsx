@@ -32,6 +32,8 @@ export const RankList: Rank[] = [
 	'queen',
 	'king',
 ];
+export const isAdjacent = (min: Rank, max: Rank) =>
+	RankList.indexOf(min) === RankList.indexOf(max) - 1;
 
 export type Fixture = 'deck' | 'cell' | 'foundation' | 'cascade';
 export interface CardLocation {
@@ -58,13 +60,37 @@ export interface CardSequence {
 	*/
 	cards: Card[];
 
-	/** aka "can this be moved" */
-	isTail: boolean;
+	/** since we are allowing any card to be selected or inspected, not all of them are movable */
+	canMove: boolean;
 }
 
-export function shorthand(card: Card | null | undefined) {
+export function isLocationEqual(a: CardLocation, b: CardLocation) {
+	return a.fixture === b.fixture && a.data[0] === b.data[0] && a.data[1] === b.data[1];
+}
+
+export function shorthandCard(card: Card | null | undefined) {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank[0];
 	const s = card.suit[0];
 	return (r + s).toUpperCase();
+}
+
+export function shorthandSequence(sequence: CardSequence) {
+	const cards = sequence.cards.map((card) => shorthandCard(card)).join('-');
+
+	let position = ''; // REVIEW "Standard FreeCell Notation"
+	if (sequence.canMove) {
+		if (sequence.location.fixture === 'foundation') {
+			position = 'h';
+		} else if (sequence.location.fixture === 'cascade') {
+			position = (sequence.location.data[0] + 1).toString(10);
+		} else if (sequence.location.fixture === 'cell') {
+			position = (sequence.location.data[0] + 10).toString(16);
+		}
+	}
+
+	if (position) {
+		return position + ' ' + cards;
+	}
+	return cards;
 }

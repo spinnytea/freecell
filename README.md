@@ -16,6 +16,10 @@ TODO main development tasks:
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
+  - deal all cards
+  - cursor
+  - selection
+  - card movement
 - TODO failed moves shake
 - TODO single click to move: one vs multiple - move to next option? - identify the _types_ of moves, not just _isAllowed_ - different moves have different priorities? (render debug info)
 - TODO undo (move history) - all, few, one, none (should allow at least one undo, misclicks)

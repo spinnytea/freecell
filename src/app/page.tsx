@@ -22,10 +22,10 @@ import { GameContext } from '@/app/hooks/Game/GameContext';
 
 export default function Page() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
-	const [game, setGame] = useState(() => new FreeCell().shuffle32(1));
+	const [game, setGame] = useState(() => new FreeCell().shuffle32(12411).dealAll({ demo: true }));
 
+	/** @deprecated just for testing */
 	function onClick() {
-		// TODO just for initial testing
 		if (game.deck.length) {
 			setGame(game.dealAll());
 		}
