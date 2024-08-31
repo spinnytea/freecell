@@ -40,11 +40,13 @@
 	--felt--charcoal: rgb(53, 52, 58);
 	--felt--aztec: rgb(131, 75, 36);
 	--felt--brick: rgb(108, 50, 43);
+	--felt--selected: var(--felt--basic-green);
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--foreground-rgb: 33, 33, 33;
+		/* TODO dark text should be based on --felt--selected */
+		/* --foreground-rgb: 33, 33, 33; */
 		--background-glow: radial-gradient(
 			circle at center,
 			transparent 0,
@@ -52,8 +54,11 @@
 			#00000040 100%
 		);
 
-		--pile-rgb: 30, 30, 30;
-		--pile-border-rgb: 50, 50, 50;
+		/* TODO pile colors should be based on --felt--selected */
+		/* --pile-rgb: 30, 30, 30; */
+		/* --pile-border-rgb: 50, 50, 50; */
+
+		--felt--selected: var(--felt--bottle-green);
 	}
 }
 
@@ -72,7 +77,7 @@ body {
 body {
 	/* REVIEW drag scrolling moves background glow (but not the noise or background color) */
 	color: rgb(var(--foreground-rgb));
-	background: var(--background-glow), var(--felt--basic-green);
+	background: var(--background-glow), var(--felt--selected);
 	background-attachment: fixed;
 	position: relative;
 
