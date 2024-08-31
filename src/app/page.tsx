@@ -11,6 +11,15 @@ import styles_gameboard from '@/app/gameboard.module.css';
 import { FixtureSizesContextProvider } from '@/app/hooks/FixtureSizes/FixtureSizesContextProvider';
 import { GameContext } from '@/app/hooks/Game/GameContext';
 
+// let idx = 0;
+// /** @deprecated just for testing */
+// function trySeed(): number {
+// 	const list = getSeedsByTag('zero cell');
+// 	const seed = list[idx];
+// 	console.log('trySeed', idx, '->', seed);
+// 	return seed ?? 1;
+// }
+
 export default function Page() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	const [game, setGame] = useState(() => new FreeCell().shuffle32(1));

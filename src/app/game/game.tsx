@@ -25,7 +25,7 @@ export class FreeCell {
 
 	// controls
 	cursor: CardLocation; // TODO cursor should be a CardSequence
-	selection: CardSequence | null;
+	selection: CardSequence | null; // TODO test seeds: 5907, 11863, 12411
 	previousAction: string;
 
 	constructor({

@@ -19,6 +19,7 @@ TODO main development tasks:
 - TODO failed moves shake
 - TODO single click to move: one vs multiple - move to next option? - identify the _types_ of moves, not just _isAllowed_ - different moves have different priorities? (render debug info)
 - TODO undo (move history) - all, few, one, none (should allow at least one undo, misclicks)
+  - "Standard FreeCell Notation" (cell: a-d, foundation: h(ome), cascades: 1-8)
 - TODO run drag/drop (drop target is entire cascade, drag waggles the sequence)
 - TODO hard vs medium vs easy
   - [FreeCell lists of difficult (and extra easy) deals](https://www.solitairelaboratory.com/fclists.html)
