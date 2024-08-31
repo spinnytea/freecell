@@ -33,7 +33,8 @@ describe('game', () => {
 		expect(game.print()).toBe(
 			'>                       \n' +
 				'                        \n' +
-				` KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC`
+				' KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC\n' +
+				' init'
 		);
 	});
 
@@ -100,7 +101,7 @@ describe('game', () => {
  4C 5C TS QH 4H AC 4D 7S
  3S TD 4S TH 8H 2C JH 7D
  6D 8S 8D QS 6C 3D 8C TC
- 6S 9C 2H 6H            `
+ 6S 9C 2H 6H            \n deal all cards`
 			);
 		});
 
@@ -118,7 +119,7 @@ describe('game', () => {
  KD 5H 9S 3C 8S 7H 4D JS
  4C QS 9C 9H 7C 6H 2C 2S
  4S TS 2H 5D JC 6C JH QH
- JD KS KC 4H            `
+ JD KS KC 4H            \n deal all cards`
 			);
 		});
 	});
@@ -134,7 +135,7 @@ describe('game', () => {
  9S 9H 9D 9C 8S 8H 8D 8C
  7S 7H 7D 7C 6S 6H 6D 6C
  5S 5H 5D 5C 4S 4H 4D 4C
- 3S 3H 3D 3C            `
+ 3S 3H 3D 3C            \n deal all cards`
 			);
 			expect(game.cells.length).toBe(4);
 			expect(game.foundations.length).toBe(4);
@@ -156,7 +157,8 @@ describe('game', () => {
  6S 6H 6D 6C
  5S 5H 5D 5C
  4S 4H 4D 4C
- 3S 3H 3D 3C`
+ 3S 3H 3D 3C
+ deal all cards`
 			);
 			expect(game.cells.length).toBe(4);
 			expect(game.foundations.length).toBe(4);
@@ -172,7 +174,7 @@ describe('game', () => {
  JD JC TS TH TD TC 9S 9H 9D 9C
  8S 8H 8D 8C 7S 7H 7D 7C 6S 6H
  6D 6C 5S 5H 5D 5C 4S 4H 4D 4C
- 3S 3H 3D 3C 2S 2H 2D         `
+ 3S 3H 3D 3C 2S 2H 2D         \n deal all cards`
 			);
 			expect(game.cells.length).toBe(1);
 			expect(game.foundations.length).toBe(4);
