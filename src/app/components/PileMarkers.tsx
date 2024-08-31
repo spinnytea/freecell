@@ -1,10 +1,12 @@
 import classNames from 'classnames';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { FixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
+import { FixtureSizes } from '@/app/hooks/FixtureSizes/FixtureSizes';
+import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/Game/useGame';
 
-export function PileMarkers({ fixtureSizes }: { fixtureSizes: FixtureSizes }) {
+export function PileMarkers() {
 	const { cursor } = useGame();
+	const fixtureSizes = useFixtureSizes();
 	const homeTop = fixtureSizes.home.top;
 	const tableauTop = fixtureSizes.tableau.top;
 	return (

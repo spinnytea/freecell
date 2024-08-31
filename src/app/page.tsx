@@ -8,14 +8,19 @@ import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
 import { FreeCell } from '@/app/game/game';
 import styles_gameboard from '@/app/gameboard.module.css';
-import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
+import {
+	calcFixtureSizes,
+	DEFAULT_CLIENT_HEIGHT,
+	DEFAULT_CLIENT_WIDTH,
+} from '@/app/hooks/FixtureSizes/FixtureSizes';
+import { FixtureSizesContext } from '@/app/hooks/FixtureSizes/FixtureSizesContext';
 import { GameContext } from '@/app/hooks/Game/GameContext';
 
 export default function Page() {
-	const [game, setGame] = useState(() => new FreeCell().shuffle32(1));
-
 	const gameBoardRef = useRef<HTMLElement | null>(null);
-	const fixtureSizes = useFixtureSizes(gameBoardRef); // TODO just make the game board a component (not hook), use redux
+	const [game, setGame] = useState(() => new FreeCell().shuffle32(1));
+	// REVIEW wait until we have an actual value init
+	const [fixtureSizes, setFixtureSizes] = useState(() => calcFixtureSizes());
 
 	function onClick() {
 		// TODO just for initial testing
@@ -58,18 +63,38 @@ export default function Page() {
 		};
 	}, []);
 
+	useEffect(() => {
+		function updateSize() {
+			const screenWidth = gameBoardRef.current?.offsetWidth ?? DEFAULT_CLIENT_WIDTH;
+			const screenHeight = gameBoardRef.current?.offsetHeight ?? DEFAULT_CLIENT_HEIGHT;
+			setFixtureSizes((fs) => {
+				if (fs.boardWidth !== screenWidth || fs.boardHeight !== screenHeight) {
+					return calcFixtureSizes(screenWidth, screenHeight);
+				}
+				return fs;
+			});
+		}
+		window.addEventListener('resize', updateSize);
+		updateSize();
+		return () => {
+			window.removeEventListener('resize', updateSize);
+		};
+	}, [gameBoardRef]);
+
 	// TODO render game.cursor (+ debug view)
 	// TODO render game.selection (+ debug view)
 
 	return (
 		<main ref={gameBoardRef} className={styles_gameboard.main} onClick={onClick}>
-			<GameContext.Provider value={[game, setGame]}>
-				<PileMarkers fixtureSizes={fixtureSizes} />
-				<CardsOnBoard fixtureSizes={fixtureSizes} />
-				<DebugCursors fixtureSizes={fixtureSizes} />
-				<TextBoard />
-				<StatusBar />
-			</GameContext.Provider>
+			<FixtureSizesContext.Provider value={fixtureSizes}>
+				<GameContext.Provider value={[game, setGame]}>
+					<PileMarkers />
+					<CardsOnBoard />
+					<DebugCursors />
+					<TextBoard />
+					<StatusBar />
+				</GameContext.Provider>
+			</FixtureSizesContext.Provider>
 		</main>
 	);
 }

@@ -1,10 +1,12 @@
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { FixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
+import { FixtureSizes } from '@/app/hooks/FixtureSizes/FixtureSizes';
+import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/Game/useGame';
 
 const OVERLAY_MARGINS = 4;
 
-export function DebugCursors({ fixtureSizes }: { fixtureSizes: FixtureSizes }) {
+export function DebugCursors() {
+	const fixtureSizes = useFixtureSizes();
 	return (
 		<>
 			<CursorBox fixtureSizes={fixtureSizes} />
