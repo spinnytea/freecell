@@ -8,7 +8,7 @@ import {
 	shorthandSequence,
 	SuitList,
 } from '@/app/game/card';
-import { getPrintSeparator, getSequenceAt } from '@/app/game/game-utils';
+import { findAvailableMoves, getPrintSeparator, getSequenceAt } from '@/app/game/game-utils';
 
 const DEFAULT_NUMBER_OF_CELLS = 4;
 const NUMBER_OF_FOUNDATIONS = SuitList.length;
@@ -33,8 +33,9 @@ export class FreeCell {
 	tableau: Card[][];
 
 	// controls
-	cursor: CardLocation; // TODO cursor should be a CardSequence
+	cursor: CardLocation;
 	selection: CardSequence | null; // REVIEW none, single, sequence
+	availableMoves: CardLocation[] | null;
 	previousAction: string;
 
 	constructor({
@@ -43,12 +44,14 @@ export class FreeCell {
 		cards,
 		cursor,
 		selection,
+		availableMoves,
 	}: {
 		cellCount?: number;
 		cascadeCount?: number;
 		cards?: Card[];
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
+		availableMoves?: CardLocation[] | null;
 	} = {}) {
 		this.deck = [];
 		this.cells = new Array<null>(cellCount).fill(null);
@@ -102,6 +105,7 @@ export class FreeCell {
 
 		this.cursor = this.__clampCursor(cursor);
 		this.selection = selection ?? null; // REVIEW do we need to validate this every time?
+		this.availableMoves = availableMoves ?? null;
 		this.previousAction = 'init';
 	}
 
@@ -116,11 +120,13 @@ export class FreeCell {
 		cards = this.cards,
 		cursor = this.cursor,
 		selection = this.selection,
+		availableMoves = this.availableMoves,
 	}: {
 		action: string;
 		cards?: Card[];
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
+		availableMoves?: CardLocation[] | null;
 	}): FreeCell {
 		const game = new FreeCell({
 			cellCount: this.cells.length,
@@ -128,6 +134,7 @@ export class FreeCell {
 			cards,
 			cursor,
 			selection,
+			availableMoves,
 		});
 		game.previousAction = action;
 		// REVIEW if (game.cursor !== cursor) game.previousAction += ' (cursor clamped)';
@@ -318,6 +325,7 @@ export class FreeCell {
 		if (game.selection && isLocationEqual(game.selection.location, this.cursor)) {
 			game.previousAction = 'deselect ' + shorthandSequence(game.selection);
 			game.selection = null;
+			game.availableMoves = null;
 			return game;
 		}
 
@@ -327,6 +335,7 @@ export class FreeCell {
 			// IDEA config for allow select !canMove (peek)
 			if (selection.cards.length) {
 				game.selection = selection;
+				game.availableMoves = findAvailableMoves(game);
 				game.previousAction = 'select ' + shorthandSequence(selection);
 				return game;
 			}
@@ -423,6 +432,14 @@ export class FreeCell {
 	}
 
 	/**
+		print the game board
+		 - all card locations
+		 - current cursor (keyboard)
+		 - current selection (helps debug peek, needed for canMove)
+
+		we do not print the "available moves", that's important for good gameplay
+		(and this print function is complicated enough, we don't want more complexity just for a debug visualization)
+
 	  - TODO make a `FreeCell.parse` that … `const game = FreeCell.parse(new FreeCell().print())`
 	  - REVIEW should print verify the card.location? this.cards? if not here then where?
 	  - XXX print is super messy, can we clean this up?

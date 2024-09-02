@@ -2,6 +2,7 @@
 
 exports[`game init 1`] = `
 FreeCell {
+  "availableMoves": null,
   "cards": [
     {
       "location": {
@@ -1081,6 +1082,7 @@ FreeCell {
 
 exports[`game shuffle32 Game #1 1`] = `
 FreeCell {
+  "availableMoves": null,
   "cards": [
     {
       "location": {

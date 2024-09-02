@@ -41,6 +41,31 @@ export interface CardLocation {
 	data: number[];
 }
 
+/**
+	foundation: h
+	cells: a - d
+	cascades: 1 - 9, t (1-8, but we allow 9 and 10 columns)
+
+	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
+*/
+export type Position =
+	| 'a'
+	| 'b'
+	| 'c'
+	| 'd'
+	| 'h'
+	| '1'
+	| '2'
+	| '3'
+	| '4'
+	| '5'
+	| '6'
+	| '7'
+	| '8'
+	| '9'
+	| 't'
+	| null;
+
 export interface Card {
 	rank: Rank;
 	suit: Suit;
@@ -78,14 +103,19 @@ export function shorthandCard(card: Card | null | undefined) {
 export function shorthandSequence(sequence: CardSequence) {
 	const cards = sequence.cards.map((card) => shorthandCard(card)).join('-');
 
-	let position = ''; // REVIEW "Standard FreeCell Notation"
+	// XXX abstract this out
+	let position: Position = null;
 	if (sequence.canMove) {
 		if (sequence.location.fixture === 'foundation') {
 			position = 'h';
 		} else if (sequence.location.fixture === 'cascade') {
-			position = (sequence.location.data[0] + 1).toString(10);
+			if (sequence.location.data[0] === 9) {
+				position = 't';
+			} else {
+				position = (sequence.location.data[0] + 1).toString(10) as Position;
+			}
 		} else if (sequence.location.fixture === 'cell') {
-			position = (sequence.location.data[0] + 10).toString(16);
+			position = (sequence.location.data[0] + 10).toString(16) as Position;
 		}
 	}
 

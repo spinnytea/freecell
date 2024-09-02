@@ -63,6 +63,18 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 	return { location, cards: [], canMove: false };
 }
 
+export function findAvailableMoves(game: FreeCell): CardLocation[] {
+	// FIXME finish
+
+	return [
+		...game.cells.map((_, idx): CardLocation => ({ fixture: 'cell', data: [idx] })),
+		...game.foundations.map((_, idx): CardLocation => ({ fixture: 'foundation', data: [idx] })),
+		...game.tableau.map(
+			(cascade, idx): CardLocation => ({ fixture: 'cascade', data: [idx, cascade.length - 1] })
+		),
+	];
+}
+
 export function getPrintSeparator(
 	location: CardLocation,
 	cursor: CardLocation | null,
