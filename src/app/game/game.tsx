@@ -421,36 +421,49 @@ export class FreeCell {
 	/**
 	  - TODO make a `FreeCell.parse` that … `const game = FreeCell.parse(new FreeCell().print())`
 	  - REVIEW should print verify the card.location? this.cards? if not here then where?
+	  - XXX print is super messy, can we clean this up?
 	*/
 	print(): string {
 		let str = '';
-		str += this.cells
-			.map(
-				(card, idx) =>
-					`${getPrintSeparator({ fixture: 'cell', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`
-			)
-			.join('');
-		if (isLocationEqual(this.cursor, { fixture: 'foundation', data: [0] })) {
-			str += '>';
-		} else if (
-			this.selection &&
-			isLocationEqual(this.selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
+		if (
+			this.cursor.fixture === 'cell' ||
+			this.selection?.location.fixture === 'cell' ||
+			this.cursor.fixture === 'foundation' ||
+			this.selection?.location.fixture === 'foundation'
 		) {
-			str += '|';
+			str += this.cells
+				.map(
+					(card, idx) =>
+						`${getPrintSeparator({ fixture: 'cell', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`
+				)
+				.join('');
+			if (isLocationEqual(this.cursor, { fixture: 'foundation', data: [0] })) {
+				str += '>';
+			} else if (
+				this.selection &&
+				isLocationEqual(this.selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
+			) {
+				str += '|';
+			} else {
+				str += ' ';
+			}
+			str += this.foundations
+				.map(
+					(card, idx) =>
+						`${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`
+				)
+				.join('');
+			str += getPrintSeparator(
+				{ fixture: 'foundation', data: [this.foundations.length - 1] },
+				null,
+				this.selection
+			);
 		} else {
+			// if no cursor/selection in home row
+			str += ' ' + this.cells.map((card) => shorthandCard(card)).join(' ');
+			str += ' ' + this.foundations.map((card) => shorthandCard(card)).join(' ');
 			str += ' ';
 		}
-		str += this.foundations
-			.map(
-				(card, idx) =>
-					`${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`
-			)
-			.join('');
-		str += getPrintSeparator(
-			{ fixture: 'foundation', data: [this.foundations.length - 1] },
-			null,
-			this.selection
-		);
 
 		const max = Math.max(...this.tableau.map((cascade) => cascade.length));
 		for (let i = 0; i === 0 || i < max; i++) {
@@ -473,6 +486,7 @@ export class FreeCell {
 						this.selection
 					);
 			} else {
+				// if no cursor/selection in this row
 				str += '\n ' + this.tableau.map((cascade) => shorthandCard(cascade[i])).join(' ') + ' ';
 			}
 		}
@@ -489,6 +503,7 @@ export class FreeCell {
 						.join('') +
 					getPrintSeparator({ fixture: 'deck', data: [-1] }, null, this.selection);
 			} else {
+				// if no cursor/selection in deck
 				str +=
 					'\n ' +
 					this.deck

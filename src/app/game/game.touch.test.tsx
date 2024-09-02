@@ -1,6 +1,7 @@
 import { FreeCell } from '@/app/game/game';
 
 describe('game.touch', () => {
+	// also tests print, since select is rendered
 	describe('select', () => {
 		let game: FreeCell;
 		beforeEach(() => {

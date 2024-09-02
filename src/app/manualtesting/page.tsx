@@ -4,6 +4,17 @@ import { CardImage } from '@/app/components/CardImage';
 import { RankList, SuitList } from '@/app/game/card';
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 
+/*
+	TODO manual tests for cursor/selection
+	+-----------+
+	| _ a c _ _ |
+	|   a d     |
+	|   a       |
+	|   b       |
+	|   b       |
+	|   b       |
+	+-----------+
+*/
 export default function Page() {
 	return (
 		<main className={styles_common.main}>

@@ -44,6 +44,12 @@ TODO main development tasks:
 - IDEA learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
 - TODO keyboard input (tab index, pick&place card&sequence, inspect card, shortcuts for top row)
 - IDEA UI render for all options, hidden options, controls (keyboard + mouse)
+- TODO rules page (SUG)
+- IDEA joker
+  - high - any rank can stack onto them, they cannot be stacked on anything (color-fixed cascade)
+  - low - they can stack onto any rank, but nothing can stack onto them (moving dead space)
+  - wild - they can stack onto any rank, any rank can stack onto them
+  - could have various counts 1-8; or maybe just 2 & 4
 
 ## Technicals
 
