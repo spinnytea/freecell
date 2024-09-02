@@ -103,24 +103,31 @@ export function shorthandCard(card: Card | null | undefined) {
 export function shorthandSequence(sequence: CardSequence) {
 	const cards = sequence.cards.map((card) => shorthandCard(card)).join('-');
 
-	// XXX abstract this out
 	let position: Position = null;
 	if (sequence.canMove) {
-		if (sequence.location.fixture === 'foundation') {
-			position = 'h';
-		} else if (sequence.location.fixture === 'cascade') {
-			if (sequence.location.data[0] === 9) {
-				position = 't';
-			} else {
-				position = (sequence.location.data[0] + 1).toString(10) as Position;
-			}
-		} else if (sequence.location.fixture === 'cell') {
-			position = (sequence.location.data[0] + 10).toString(16) as Position;
-		}
+		position = shorthandPosition(sequence.location);
 	}
 
 	if (position) {
 		return position + ' ' + cards;
 	}
 	return cards;
+}
+
+export function shorthandPosition(location: CardLocation): Position {
+	if (location.fixture === 'foundation') {
+		return 'h';
+	} else if (location.fixture === 'cascade') {
+		// this doesn't check data[1], it assumes it's the final row
+		// sequences would need to check data[1] + card.length, not just the location
+		// (could pass in a optional canMove with default of true)
+		if (location.data[0] === 9) {
+			return 't';
+		} else {
+			return (location.data[0] + 1).toString(10) as Position;
+		}
+	} else if (location.fixture === 'cell') {
+		return (location.data[0] + 10).toString(16) as Position;
+	}
+	return null;
 }

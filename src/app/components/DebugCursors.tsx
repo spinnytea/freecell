@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { CardLocation, CardSequence } from '@/app/game/card';
+import { CardLocation, CardSequence, shorthandPosition } from '@/app/game/card';
 import { FixtureSizes, PEEK_DOWN, PEEK_UP } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/Game/useGame';
@@ -16,28 +16,28 @@ export function DebugCursors() {
 	// wrapper to make the dom more legible
 	return (
 		<div id="cursors">
-			{game.selection && game.selection.canMove && (
-				<SequenceBox className="selection" fixtureSizes={fixtureSizes} sequence={game.selection} />
-			)}
 			{game.availableMoves?.map((location) => (
 				<LocationBox
-					key={`${location.fixture}-${location.data[0].toString(10)}`}
-					className="available"
+					key={`available-${shorthandPosition(location) ?? 'invalid'}-${location.data[0].toString(10)}`}
+					type="available"
 					fixtureSizes={fixtureSizes}
 					location={location}
 				/>
 			))}
-			<LocationBox className="cursor" fixtureSizes={fixtureSizes} location={game.cursor} />
+			{game.selection && (
+				<SequenceBox type="selection" fixtureSizes={fixtureSizes} sequence={game.selection} />
+			)}
+			<LocationBox type="cursor" fixtureSizes={fixtureSizes} location={game.cursor} />
 		</div>
 	);
 }
 
 function LocationBox({
-	className,
+	type,
 	fixtureSizes,
 	location,
 }: {
-	className: string;
+	type: string;
 	fixtureSizes: FixtureSizes;
 	location: CardLocation;
 }) {
@@ -81,18 +81,18 @@ function LocationBox({
 
 	return (
 		<div
-			className={classNames(styles_pilemarkers[className], styles_pilemarkers.cursorBox)}
+			className={classNames(styles_pilemarkers[type], styles_pilemarkers.cursorBox)}
 			style={style}
 		/>
 	);
 }
 
 function SequenceBox({
-	className,
+	type,
 	fixtureSizes,
 	sequence,
 }: {
-	className: string;
+	type: string;
 	fixtureSizes: FixtureSizes;
 	sequence: CardSequence;
 }) {
@@ -114,9 +114,16 @@ function SequenceBox({
 
 	switch (fixture) {
 		case 'cell':
+			style.top = fixtureSizes.home.top;
+			style.left = fixtureSizes.home.cellLeft[d0];
+			break;
 		case 'foundation':
+			style.top = fixtureSizes.home.top;
+			style.left = fixtureSizes.home.foundationLeft[d0];
+			break;
 		case 'deck':
-			// these cannot be sequences
+			style.top = fixtureSizes.deck.top;
+			style.left = fixtureSizes.deck.left;
 			break;
 		case 'cascade':
 			style.top = fixtureSizes.tableau.top + d1 * fixtureSizes.tableau.offsetTop;
@@ -143,7 +150,7 @@ function SequenceBox({
 
 	return (
 		<div
-			className={classNames(styles_pilemarkers[className], styles_pilemarkers.cursorBox)}
+			className={classNames(styles_pilemarkers[type], styles_pilemarkers.cursorBox)}
 			style={style}
 		/>
 	);
