@@ -505,7 +505,7 @@ export class FreeCell {
 						})
 						.join('') +
 					getPrintSeparator(
-						{ fixture: 'cascade', data: [this.tableau.length - 1, i] },
+						{ fixture: 'cascade', data: [this.tableau.length, i] },
 						null,
 						this.selection
 					);

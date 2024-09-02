@@ -22,7 +22,8 @@ import { GameContext } from '@/app/hooks/Game/GameContext';
 
 export default function Page() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
-	const [game, setGame] = useState(() => new FreeCell().shuffle32(12411).dealAll({ demo: true }));
+	// 1, 5907, 11863, 12411
+	const [game, setGame] = useState(() => new FreeCell().shuffle32(11863).dealAll({ demo: false }));
 
 	/** @deprecated just for testing */
 	function onClick() {

@@ -32,7 +32,7 @@ export const RankList: Rank[] = [
 	'queen',
 	'king',
 ];
-export const isAdjacent = (min: Rank, max: Rank) =>
+export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	RankList.indexOf(min) === RankList.indexOf(max) - 1;
 
 export type Fixture = 'deck' | 'cell' | 'foundation' | 'cascade';

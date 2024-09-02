@@ -43,7 +43,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 
 				while (
 					idx < cascade.length - 1 &&
-					isAdjacent(cascade[idx + 1].rank, cascade[idx].rank) &&
+					isAdjacent({ min: cascade[idx + 1].rank, max: cascade[idx].rank }) &&
 					isRed(cascade[idx].suit) !== isRed(cascade[idx + 1].suit)
 				) {
 					idx++;
@@ -64,15 +64,38 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 }
 
 export function findAvailableMoves(game: FreeCell): CardLocation[] {
-	// FIXME finish
+	const availableMoves: CardLocation[] = [];
 
-	return [
-		...game.cells.map((_, idx): CardLocation => ({ fixture: 'cell', data: [idx] })),
-		...game.foundations.map((_, idx): CardLocation => ({ fixture: 'foundation', data: [idx] })),
-		...game.tableau.map(
-			(cascade, idx): CardLocation => ({ fixture: 'cascade', data: [idx, cascade.length - 1] })
-		),
-	];
+	if (!game.selection?.canMove) {
+		return availableMoves;
+	}
+
+	if (game.selection.cards.length === 1) {
+		// REVIEW: if multiple, move last card?
+		const card_to_move = game.selection.cards[0];
+
+		game.cells.forEach((card, idx) => {
+			if (!card) {
+				availableMoves.push({ fixture: 'cell', data: [idx] });
+			}
+		});
+
+		game.foundations.forEach((card, idx) => {
+			if (!card && card_to_move.rank === 'ace') {
+				availableMoves.push({ fixture: 'foundation', data: [idx] });
+			} else if (
+				card &&
+				card.suit === card_to_move.suit &&
+				isAdjacent({ min: card.rank, max: card_to_move.rank })
+			) {
+				availableMoves.push({ fixture: 'foundation', data: [idx] });
+			}
+		});
+	}
+
+	// FIXME cascades
+
+	return availableMoves;
 }
 
 export function getPrintSeparator(
