@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { CardLocation, CardSequence } from '@/app/game/card';
-import { FixtureSizes } from '@/app/hooks/FixtureSizes/FixtureSizes';
+import { CardLocation, CardSequence, isLocationEqual } from '@/app/game/card';
+import { FixtureSizes, PEEK_DOWN, PEEK_UP } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/Game/useGame';
 
@@ -19,10 +19,13 @@ function locationToSequence(location: CardLocation): CardSequence {
 export function DebugCursors() {
 	const fixtureSizes = useFixtureSizes();
 	const game = useGame();
-	const cursor = locationToSequence(game.cursor);
+	const cursor =
+		game.selection && isLocationEqual(game.selection.location, game.cursor)
+			? game.selection
+			: locationToSequence(game.cursor);
 	return (
 		<>
-			{game.selection && (
+			{game.selection && game.selection.canMove && (
 				<CursorBox className="selection" fixtureSizes={fixtureSizes} sequence={game.selection} />
 			)}
 			<CursorBox className="cursor" fixtureSizes={fixtureSizes} sequence={cursor} />
@@ -73,6 +76,16 @@ function CursorBox({
 			style.left = fixtureSizes.tableau.cascadeLeft[d0];
 			if (!canMove) {
 				style.height = fixtureSizes.tableau.offsetTop;
+			}
+			// TODO only the selection slides the cards, and only if present
+			if (className === 'selection') {
+				if (sequence.cards.length > 1 || !sequence.canMove) {
+					if (d1 > 0) {
+						style.top -= fixtureSizes.tableau.offsetTop * PEEK_UP;
+						style.height += fixtureSizes.tableau.offsetTop * PEEK_UP;
+					}
+					style.height += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
+				}
 			}
 			style.height += fixtureSizes.tableau.offsetTop * (length - 1);
 			break;

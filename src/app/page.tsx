@@ -52,9 +52,14 @@ export default function Page() {
 					consumed = true;
 					setGame((g) => g.moveCursor('down'));
 					break;
-				default:
-					// console.log(`unused key: "${key}"`);
+				case ' ':
+				case 'Enter':
+					consumed = true;
+					setGame((g) => g.touch());
 					break;
+				// default:
+				// 	console.log(`unused key: "${key}"`);
+				// 	break;
 			}
 			if (consumed) {
 				event.stopPropagation();

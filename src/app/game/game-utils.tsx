@@ -20,6 +20,9 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 			if (game.cells[d0]) {
 				return {
 					location,
+					// REVIEW remove ts-ignore
+					// eslint-disable-next-line
+					// @ts-ignore
 					cards: [game.cells[d0]],
 					canMove: true,
 				};
@@ -59,9 +62,41 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 	return { location, cards: [], canMove: false };
 }
 
-export function getPrintSeparator(location: CardLocation, cursor: CardLocation) {
-	if (isLocationEqual(location, cursor)) {
+export function getPrintSeparator(
+	location: CardLocation,
+	cursor: CardLocation | null,
+	selection: CardSequence | null
+) {
+	if (cursor && isLocationEqual(location, cursor)) {
 		return '>';
+	}
+	if (selection) {
+		if (isLocationEqual(location, selection.location)) {
+			return '|';
+		}
+		if (location.fixture !== 'cascade') {
+			const shift = location.fixture === 'deck' ? 1 : -1;
+			if (
+				isLocationEqual(
+					{ fixture: location.fixture, data: [location.data[0] + shift] },
+					selection.location
+				)
+			) {
+				return '|';
+			}
+		} else {
+			if (
+				location.data[0] === selection.location.data[0] ||
+				location.data[0] - 1 === selection.location.data[0]
+			) {
+				if (
+					location.data[1] >= selection.location.data[1] &&
+					location.data[1] < selection.location.data[1] + selection.cards.length
+				) {
+					return '|';
+				}
+			}
+		}
 	}
 	return ' ';
 }

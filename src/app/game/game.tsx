@@ -36,7 +36,7 @@ export class FreeCell {
 
 	// controls
 	cursor: CardLocation; // TODO cursor should be a CardSequence
-	selection: CardSequence | null; // TODO test seeds: 5907, 11863, 12411
+	selection: CardSequence | null; // REVIEW none, single, sequence
 	previousAction: string;
 
 	constructor({
@@ -311,18 +311,21 @@ export class FreeCell {
 	touch(): FreeCell {
 		const game = this.__clone({ action: 'touch' });
 
-		// REVIEW if (!game.selection || !game.selection.canMove) {
-		if (!game.selection) {
+		if (game.selection && isLocationEqual(game.selection.location, this.cursor)) {
+			game.previousAction = 'deselect ' + shorthandSequence(game.selection);
+			game.selection = null;
+			return game;
+		}
+
+		// TODO allow "move selection without deselect IF growing/shrinking sequence"
+		if (!game.selection?.canMove) {
 			const selection = getSequenceAt(game, this.cursor);
+			// IDEA config for allow select !canMove (peek)
 			if (selection.cards.length) {
 				game.selection = selection;
 				game.previousAction = 'select ' + shorthandSequence(selection);
 				return game;
 			}
-		} else if (isLocationEqual(game.selection.location, this.cursor)) {
-			game.previousAction = 'deselect ' + shorthandSequence(game.selection);
-			game.selection = null;
-			return game;
 		}
 
 		// TODO invalid move
@@ -416,62 +419,75 @@ export class FreeCell {
 	}
 
 	/**
-	  - FIXME render selection
 	  - TODO make a `FreeCell.parse` that … `const game = FreeCell.parse(new FreeCell().print())`
 	  - REVIEW should print verify the card.location? this.cards? if not here then where?
 	*/
 	print(): string {
 		let str = '';
-		if (this.cursor.fixture === 'cell') {
-			str += this.cells
-				.map(
-					(card, idx) =>
-						`${getPrintSeparator({ fixture: 'cell', data: [idx] }, this.cursor)}${shorthandCard(card)}`
-				)
-				.join('');
+		str += this.cells
+			.map(
+				(card, idx) =>
+					`${getPrintSeparator({ fixture: 'cell', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`
+			)
+			.join('');
+		if (isLocationEqual(this.cursor, { fixture: 'foundation', data: [0] })) {
+			str += '>';
+		} else if (
+			this.selection &&
+			isLocationEqual(this.selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
+		) {
+			str += '|';
 		} else {
-			str += ' ' + this.cells.map((card) => shorthandCard(card)).join(' ');
+			str += ' ';
 		}
-		if (this.cursor.fixture === 'foundation') {
-			str += this.foundations
-				.map(
-					(card, idx) =>
-						`${getPrintSeparator({ fixture: 'foundation', data: [idx] }, this.cursor)}${shorthandCard(card)}`
-				)
-				.join('');
-		} else {
-			str += ' ' + this.foundations.map((card) => shorthandCard(card)).join(' ');
-		}
-		str += ' ';
+		str += this.foundations
+			.map(
+				(card, idx) =>
+					`${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`
+			)
+			.join('');
+		str += getPrintSeparator(
+			{ fixture: 'foundation', data: [this.foundations.length - 1] },
+			null,
+			this.selection
+		);
 
 		const max = Math.max(...this.tableau.map((cascade) => cascade.length));
 		for (let i = 0; i === 0 || i < max; i++) {
-			if (this.cursor.fixture === 'cascade' && this.cursor.data[1] === i) {
+			if (this.cursor.fixture === 'cascade' || this.selection?.location.fixture === 'cascade') {
 				str +=
 					'\n' +
 					this.tableau
 						.map((cascade, idx) => {
-							const c = getPrintSeparator({ fixture: 'cascade', data: [idx, i] }, this.cursor);
+							const c = getPrintSeparator(
+								{ fixture: 'cascade', data: [idx, i] },
+								this.cursor,
+								this.selection
+							);
 							return c + shorthandCard(cascade[i]);
 						})
 						.join('') +
-					' ';
+					getPrintSeparator(
+						{ fixture: 'cascade', data: [this.tableau.length - 1, i] },
+						null,
+						this.selection
+					);
 			} else {
 				str += '\n ' + this.tableau.map((cascade) => shorthandCard(cascade[i])).join(' ') + ' ';
 			}
 		}
 		if (this.deck.length) {
-			if (this.cursor.fixture === 'deck') {
+			if (this.cursor.fixture === 'deck' || this.selection?.location.fixture === 'deck') {
 				str +=
 					'\n' +
 					this.deck
 						.map(
 							(card, idx) =>
-								`${getPrintSeparator({ fixture: 'deck', data: [idx] }, this.cursor)}${shorthandCard(card)}`
+								`${getPrintSeparator({ fixture: 'deck', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`
 						)
 						.reverse()
 						.join('') +
-					' ';
+					getPrintSeparator({ fixture: 'deck', data: [-1] }, null, this.selection);
 			} else {
 				str +=
 					'\n ' +

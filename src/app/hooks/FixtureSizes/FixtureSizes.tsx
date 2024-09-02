@@ -14,6 +14,8 @@ const HOME_CARD_SPACING = 30;
 const TABLEAU_TOP = HOME_TOP * 1.5;
 const TABLEAU_CARD_SPACING = 30;
 const CASCADE_OFFSET = 20; // kinda dependent on the cards themselves
+export const PEEK_UP = 0.25;
+export const PEEK_DOWN = 0.5;
 
 export interface FixtureSizes {
 	boardWidth: number;
