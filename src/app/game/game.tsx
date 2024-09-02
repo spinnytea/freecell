@@ -431,12 +431,13 @@ export class FreeCell {
 			this.cursor.fixture === 'foundation' ||
 			this.selection?.location.fixture === 'foundation'
 		) {
+			// cells
+			// prettier-ignore
 			str += this.cells
-				.map(
-					(card, idx) =>
-						`${getPrintSeparator({ fixture: 'cell', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`
-				)
+				.map((card, idx) => `${getPrintSeparator({ fixture: 'cell', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`)
 				.join('');
+
+			// collapsed col between
 			if (isLocationEqual(this.cursor, { fixture: 'foundation', data: [0] })) {
 				str += '>';
 			} else if (
@@ -447,12 +448,14 @@ export class FreeCell {
 			} else {
 				str += ' ';
 			}
+
+			// foundation (minus first col)
+			// prettier-ignore
 			str += this.foundations
-				.map(
-					(card, idx) =>
-						`${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`
-				)
+				.map((card, idx) => `${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`)
 				.join('');
+
+			// last col
 			str += getPrintSeparator(
 				{ fixture: 'foundation', data: [this.foundations.length - 1] },
 				null,
@@ -490,29 +493,26 @@ export class FreeCell {
 				str += '\n ' + this.tableau.map((cascade) => shorthandCard(cascade[i])).join(' ') + ' ';
 			}
 		}
+
 		if (this.deck.length) {
 			if (this.cursor.fixture === 'deck' || this.selection?.location.fixture === 'deck') {
-				str +=
-					'\n' +
-					this.deck
-						.map(
-							(card, idx) =>
-								`${getPrintSeparator({ fixture: 'deck', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`
-						)
-						.reverse()
-						.join('') +
-					getPrintSeparator({ fixture: 'deck', data: [-1] }, null, this.selection);
+				// prettier-ignore
+				const deckStr = this.deck
+					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`)
+					.reverse()
+					.join('');
+				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, this.selection);
+				str += `\n${deckStr}${lastCol}`;
 			} else {
 				// if no cursor/selection in deck
-				str +=
-					'\n ' +
-					this.deck
-						.map((card) => shorthandCard(card))
-						.reverse()
-						.join(' ') +
-					' ';
+				const deckStr = this.deck
+					.map((card) => shorthandCard(card))
+					.reverse()
+					.join(' ');
+				str += `\n ${deckStr} `;
 			}
 		}
+
 		str += '\n ' + this.previousAction;
 		return str;
 	}
