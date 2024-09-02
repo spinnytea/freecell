@@ -23,8 +23,6 @@ const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 */
 const BOTTOM_OF_CASCADE = 52;
 
-// REVIEW `game = this.__clone` right at the start is confusing
-//  - it's supposed to be one-liners
 export class FreeCell {
 	cards: Card[];
 
@@ -107,6 +105,12 @@ export class FreeCell {
 		this.previousAction = 'init';
 	}
 
+	/**
+		REVIEW uses of __clone right at the start of functions
+		 - it's supposed to be for one-liners
+		 - it's supposed to be returned immediately
+		 - needing to remember to use "game" instead of "this" is a problem
+	*/
 	__clone({
 		action,
 		cards = this.cards,

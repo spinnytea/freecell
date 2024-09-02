@@ -50,6 +50,7 @@ TODO main development tasks:
   - low - they can stack onto any rank, but nothing can stack onto them (moving dead space)
   - wild - they can stack onto any rank, any rank can stack onto them
   - could have various counts 1-8; or maybe just 2 & 4
+- IDEA stats: # attempts (i don't like timers or move counts, but tracking resets is fine)
 
 ## Technicals
 

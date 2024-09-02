@@ -15,6 +15,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 			}
 			break;
 		case 'foundation':
+			// IDEA config for "allow foundation selection"
 			break;
 		case 'cell':
 			if (game.cells[d0]) {
