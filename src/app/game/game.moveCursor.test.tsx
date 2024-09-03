@@ -55,7 +55,7 @@ describe('moveCursor', () => {
 				});
 
 				test.skip('sequence', () => {
-					// not implemented yet
+					// tbd
 				});
 
 				test('empty', () => {
@@ -134,7 +134,7 @@ describe('moveCursor', () => {
 				});
 
 				test.skip('sequence', () => {
-					// not implemented yet
+					// tbd
 				});
 
 				test('empty', () => {
@@ -192,7 +192,7 @@ describe('moveCursor', () => {
 				});
 
 				test.skip('sequence', () => {
-					// not implemented yet
+					// tbd
 				});
 
 				test('empty', () => {
@@ -274,7 +274,7 @@ describe('moveCursor', () => {
 				});
 
 				test.skip('sequence', () => {
-					// not implemented yet
+					// tbd
 				});
 			});
 
@@ -434,7 +434,7 @@ describe('moveCursor', () => {
 				});
 
 				test.skip('sequence', () => {
-					// not implemented yet
+					// tbd
 				});
 
 				test('empty', () => {
