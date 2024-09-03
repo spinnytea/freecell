@@ -70,10 +70,10 @@ export function findAvailableMoves(game: FreeCell): CardLocation[] {
 		return availableMoves;
 	}
 
+	const head_card = game.selection.cards[0];
+
 	if (game.selection.cards.length === 1) {
 		// REVIEW: if multiple, move last card?
-		const card_to_move = game.selection.cards[0];
-
 		game.cells.forEach((card, idx) => {
 			if (!card) {
 				availableMoves.push({ fixture: 'cell', data: [idx] });
@@ -81,19 +81,29 @@ export function findAvailableMoves(game: FreeCell): CardLocation[] {
 		});
 
 		game.foundations.forEach((card, idx) => {
-			if (!card && card_to_move.rank === 'ace') {
+			if (!card && head_card.rank === 'ace') {
 				availableMoves.push({ fixture: 'foundation', data: [idx] });
 			} else if (
 				card &&
-				card.suit === card_to_move.suit &&
-				isAdjacent({ min: card.rank, max: card_to_move.rank })
+				card.suit === head_card.suit &&
+				isAdjacent({ min: card.rank, max: head_card.rank })
 			) {
 				availableMoves.push({ fixture: 'foundation', data: [idx] });
 			}
 		});
 	}
 
-	// FIXME cascades
+	game.tableau.forEach((cascade, idx) => {
+		const tail_card = cascade[cascade.length - 1];
+		if (!cascade.length) {
+			availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length] });
+		} else if (
+			isRed(tail_card.suit) !== isRed(head_card.suit) &&
+			isAdjacent({ min: head_card.rank, max: tail_card.rank })
+		) {
+			availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length - 1] });
+		}
+	});
 
 	return availableMoves;
 }
