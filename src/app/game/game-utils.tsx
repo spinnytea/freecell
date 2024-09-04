@@ -99,6 +99,8 @@ export function findAvailableMoves(game: FreeCell): CardLocation[] {
 		});
 	}
 
+	// FIXME limit sequence max height (2^m * (n + 1), m = empty cascades, n = empty cells)
+	//  - max to empty cascade is m/2 (since the target cannot be used for stacks)
 	game.tableau.forEach((cascade, idx) => {
 		const tail_card = cascade[cascade.length - 1];
 		if (!cascade.length) {
@@ -146,6 +148,10 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 			from.cards[0].location = to;
 			break;
 		case 'cascade':
+			// move the selection to the end of the cascade
+			from.cards.forEach((card, idx) => {
+				card.location = { fixture: 'cascade', data: [to.data[0], game.tableau[to.data[0]].length + idx] };
+			});
 			break;
 	}
 

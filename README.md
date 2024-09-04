@@ -31,7 +31,7 @@ TODO main development tasks:
   - Same with a list for solvable 1-cell games
 - TODO auto-solver stops when
   - (bad) all cards that can go up (i.e. 2229)
-  - current rank + 1.5 (3s are set, all the 4s and 5s, red 6s IFF black 5s are up, i.e. 3565) (all not needed for developing sequences, opp rank + 1))
+  - current rank + 1.5 (3s are set, all the 4s and 5s, red 6s IFF black 5s are up, i.e. 3565, 0342) (all not needed for developing sequences, opp rank + 1))
   - current rank + 1 (3s are set, all the 4s and 5s, but not 6s, i.e. 3555)
   - current rank (3s are set, all the 4s before any 5, i.e. 3444)
   - option to dis/enable until all cascades are in order (all are a single sequence, or all are ascending)

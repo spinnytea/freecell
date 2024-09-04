@@ -610,7 +610,56 @@ describe('game.touch', () => {
 				});
 
 				describe('to: cascade', () => {
-					test.todo('single');
+					test('single', () => {
+						game = game
+							.dealAll()
+							.setCursor({ fixture: 'cascade', data: [0, 6] })
+							.touch()
+							.setCursor({ fixture: 'cascade', data: [6, 5] });
+						expect(game.print()).toBe(
+							'' +
+								'                         \n' +
+								' 8H 5D KS 3C 3S 3H JD AC \n' +
+								' 9H 7D KC 5C 9D 5H 2C 2H \n' +
+								' 6D TC 4H TS 3D 8S QH 4S \n' +
+								' 6S 2S 5S 7H QD 8C JC 8D \n' +
+								' AS 6H 9S 4C KD TD 6C 9C \n' +
+								' 7C JH 7S TH QS AD>KH 2D \n' +
+								'|QC|AH JS 4D             \n' +
+								' cursor set'
+						);
+						expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 5] });
+						expect(game.selection).toEqual({
+							location: { fixture: 'cascade', data: [0, 6] },
+							cards: [
+								{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [0, 6] } },
+							],
+							canMove: true,
+						});
+						expect(game.availableMoves).toEqual([
+							{ fixture: 'cell', data: [0] },
+							{ fixture: 'cell', data: [1] },
+							{ fixture: 'cell', data: [2] },
+							{ fixture: 'cell', data: [3] },
+							{ fixture: 'cascade', data: [6, 5] },
+						]);
+						game = game.touch();
+						expect(game.print()).toBe(
+							'' +
+								'                         \n' +
+								' 8H 5D KS 3C 3S 3H JD AC \n' +
+								' 9H 7D KC 5C 9D 5H 2C 2H \n' +
+								' 6D TC 4H TS 3D 8S QH 4S \n' +
+								' 6S 2S 5S 7H QD 8C JC 8D \n' +
+								' AS 6H 9S 4C KD TD 6C 9C \n' +
+								' 7C JH 7S TH QS AD>KH 2D \n' +
+								'    AH JS 4D       QC    \n' +
+								' move 17 QC→KH'
+						);
+						expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 5] });
+						expect(game.selection).toEqual(null);
+						expect(game.availableMoves).toEqual(null);
+					});
 
 					test.todo('sequence');
 
