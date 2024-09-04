@@ -5,6 +5,7 @@ import {
 	isLocationEqual,
 	RankList,
 	shorthandCard,
+	shorthandPosition,
 	shorthandSequence,
 	SuitList,
 } from '@/app/game/card';
@@ -322,7 +323,7 @@ export class FreeCell {
 	touch(): FreeCell {
 		const game = this.__clone({ action: 'touch' });
 
-		if (game.selection && isLocationEqual(game.selection.location, this.cursor)) {
+		if (game.selection && isLocationEqual(game.selection.location, game.cursor)) {
 			game.previousAction = 'deselect ' + shorthandSequence(game.selection);
 			game.selection = null;
 			game.availableMoves = null;
@@ -331,20 +332,38 @@ export class FreeCell {
 
 		// TODO allow "move selection without deselect IF growing/shrinking sequence"
 		if (!game.selection?.canMove) {
-			const selection = getSequenceAt(game, this.cursor);
+			const selection = getSequenceAt(game, game.cursor);
 			// IDEA config for allow select !canMove (peek)
-			if (selection.cards.length) {
+			// IDEA config for "allow foundation selection"
+			if (selection.cards.length && game.cursor.fixture !== 'foundation') {
 				game.selection = selection;
-				game.availableMoves = findAvailableMoves(game);
+				game.availableMoves = findAvailableMoves(game); // XXX defer until later? unless we have debug render on
 				game.previousAction = 'select ' + shorthandSequence(selection);
 				return game;
 			}
 		}
 
-		// TODO invalid move
-		// TODO move card
+		if (!game.availableMoves || !game.selection?.cards.length) {
+			// XXX test? remove?
+			game.previousAction = 'touch stop';
+			return game;
+		}
 
-		game.previousAction = 'touch stop';
+		const cursorSequence = getSequenceAt(game, game.cursor);
+		const from_card = game.selection.cards[0];
+		const to_card = cursorSequence.cards[cursorSequence.cards.length - 1];
+		const move = `${shorthandPosition(from_card.location)!}${shorthandPosition(to_card.location)!}`; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+
+		const valid = game.availableMoves.some((location) => isLocationEqual(game.cursor, location));
+		if (valid) {
+			// FIXME move
+
+			game.previousAction = `move ${move} ${shorthandCard(from_card)}→${shorthandCard(to_card)}`;
+			return game;
+		}
+
+		// TODO animate invalid move
+		game.previousAction = `invalid move ${move} ${shorthandCard(from_card)}→${shorthandCard(to_card)}`;
 		return game;
 	}
 

@@ -425,54 +425,134 @@ describe('game.touch', () => {
 
 	describe('move card', () => {
 		describe('from: deck', () => {
-			test.todo('to: deck');
+			test.todo('to: deck invalid');
 
-			test.todo('to: cell');
+			describe('to: cell', () => {
+				test.todo('invalid');
 
-			test.todo('to: foundation');
+				test.todo('valid');
+			});
 
-			test.todo('to: cascade');
+			describe('to: foundation', () => {
+				test.todo('invalid');
+
+				test.todo('valid');
+			});
+
+			describe('to: cascade', () => {
+				test.todo('invalid');
+
+				test.todo('single');
+
+				test.todo('sequence');
+
+				test.todo('empty');
+			});
 		});
 
 		describe('from: freecell', () => {
-			test.todo('to: deck');
+			test.todo('to: deck invalid');
 
-			test.todo('to: cell');
+			describe('to: cell', () => {
+				test.todo('invalid');
 
-			test.todo('to: foundation');
+				test.todo('valid');
+			});
 
-			test.todo('to: cascade');
+			describe('to: foundation', () => {
+				test.todo('invalid');
+
+				test.todo('valid');
+			});
+
+			describe('to: cascade', () => {
+				test.todo('invalid');
+
+				test.todo('single');
+
+				test.todo('sequence');
+
+				test.todo('empty');
+			});
 		});
 
 		describe('from: foundation', () => {
-			test.todo('to: deck');
+			test.todo('to: deck invalid');
 
-			test.todo('to: cell');
+			describe('to: cell', () => {
+				test.todo('invalid');
 
-			test.todo('to: foundation');
+				test.todo('valid');
+			});
 
-			test.todo('to: cascade');
+			describe('to: foundation', () => {
+				test.todo('invalid');
+
+				test.todo('valid');
+			});
+
+			describe('to: cascade', () => {
+				test.todo('invalid');
+
+				test.todo('single');
+
+				test.todo('sequence');
+
+				test.todo('empty');
+			});
 		});
 
 		describe('from: cascade', () => {
 			describe('single', () => {
-				test.todo('to: deck');
+				test.todo('to: deck invalid');
 
-				test.todo('to: cell');
+				describe('to: cell', () => {
+					test.todo('invalid');
 
-				test.todo('to: foundation');
+					test.todo('valid');
+				});
 
-				test.todo('to: cascade');
+				describe('to: foundation', () => {
+					test.todo('invalid');
+
+					test.todo('valid');
+				});
+
+				describe('to: cascade', () => {
+					test.todo('invalid');
+
+					test.todo('single');
+
+					test.todo('sequence');
+
+					test.todo('empty');
+				});
 			});
 
 			describe('sequence', () => {
-				test.todo('to: deck');
+				test.todo('to: deck invalid');
 
-				test.todo('to: cell');
+				describe('to: cell', () => {
+					test.todo('invalid');
 
-				test.todo('to: foundation');
+					test.todo('valid');
+				});
 
-				test.todo('to: cascade');
+				describe('to: foundation', () => {
+					test.todo('invalid');
+
+					test.todo('valid');
+				});
+
+				describe('to: cascade', () => {
+					test.todo('invalid');
+
+					test.todo('single');
+
+					test.todo('sequence');
+
+					test.todo('empty');
+				});
 			});
 		});
 	});
