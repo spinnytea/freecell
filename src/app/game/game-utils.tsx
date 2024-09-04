@@ -114,6 +114,44 @@ export function findAvailableMoves(game: FreeCell): CardLocation[] {
 	return availableMoves;
 }
 
+/**
+	TODO use this for dealing
+	TODO use this for auto-foundation
+	TODO use this for animate-move
+*/
+export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation): Card[] {
+	if (from.cards.length === 0) {
+		return game.cards;
+	}
+	if (to.fixture === 'deck') {
+		// XXX can we, in theory, move a card to the deck? what does that look like
+		//  - we should be able to move them to the bottom of the deck
+		//  - or move them to the top of the deck
+		return game.cards;
+	}
+	if (to.fixture !== 'cascade' && from.cards.length > 1) {
+		return game.cards;
+	}
+
+	game = game.__clone({ action: 'noop' }); // clones the cards/table so we can safely make changes
+	from = getSequenceAt(game, from.location);
+
+	switch (to.fixture) {
+		case 'cell':
+			from.cards[0].location = to;
+			break;
+		case 'foundation':
+			// REVIEW if there is already a card at this location, then we will eat it?
+			//  - foundation needs to moved "off the board" (or at least a z-index negative enough that they are stacked correctly)
+			from.cards[0].location = to;
+			break;
+		case 'cascade':
+			break;
+	}
+
+	return game.cards;
+}
+
 export function getPrintSeparator(
 	location: CardLocation,
 	cursor: CardLocation | null,

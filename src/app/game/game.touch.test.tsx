@@ -424,103 +424,192 @@ describe('game.touch', () => {
 	});
 
 	describe('move card', () => {
+		let game: FreeCell;
+		beforeEach(() => {
+			// #11863 has a few good moves we can test
+			// XXX maybe we should hand-craft one instead of shuffle (needs FreeCell.parse -> game)
+			game = new FreeCell().shuffle32(11863);
+		});
+
+		test('preview', () => {
+			expect(game.dealAll().print()).toBe(
+				'' +
+					'>                        \n' +
+					' 8H 5D KS 3C 3S 3H JD AC \n' +
+					' 9H 7D KC 5C 9D 5H 2C 2H \n' +
+					' 6D TC 4H TS 3D 8S QH 4S \n' +
+					' 6S 2S 5S 7H QD 8C JC 8D \n' +
+					' AS 6H 9S 4C KD TD 6C 9C \n' +
+					' 7C JH 7S TH QS AD KH 2D \n' +
+					' QC AH JS 4D             \n' +
+					' deal all cards'
+			);
+		});
+
 		describe('from: deck', () => {
-			test.todo('to: deck invalid');
+			test.todo('to: deck');
 
-			describe('to: cell', () => {
-				test.todo('invalid');
+			test.todo('to: cell');
 
-				test.todo('valid');
-			});
-
-			describe('to: foundation', () => {
-				test.todo('invalid');
-
-				test.todo('valid');
-			});
+			test.todo('to: foundation');
 
 			describe('to: cascade', () => {
-				test.todo('invalid');
-
 				test.todo('single');
 
 				test.todo('sequence');
 
 				test.todo('empty');
 			});
+
+			test.todo('cannot move empty selection');
 		});
 
 		describe('from: freecell', () => {
-			test.todo('to: deck invalid');
+			test.todo('to: deck');
 
-			describe('to: cell', () => {
-				test.todo('invalid');
+			test.todo('to: cell');
 
-				test.todo('valid');
-			});
-
-			describe('to: foundation', () => {
-				test.todo('invalid');
-
-				test.todo('valid');
-			});
+			test.todo('to: foundation');
 
 			describe('to: cascade', () => {
-				test.todo('invalid');
-
 				test.todo('single');
 
 				test.todo('sequence');
 
 				test.todo('empty');
 			});
+
+			test.todo('cannot move empty selection');
 		});
 
 		describe('from: foundation', () => {
-			test.todo('to: deck invalid');
+			test.todo('to: deck');
 
-			describe('to: cell', () => {
-				test.todo('invalid');
+			test.todo('to: cell');
 
-				test.todo('valid');
-			});
-
-			describe('to: foundation', () => {
-				test.todo('invalid');
-
-				test.todo('valid');
-			});
+			test.todo('to: foundation');
 
 			describe('to: cascade', () => {
-				test.todo('invalid');
-
 				test.todo('single');
 
 				test.todo('sequence');
 
 				test.todo('empty');
 			});
+
+			test.todo('cannot move empty selection');
 		});
 
 		describe('from: cascade', () => {
 			describe('single', () => {
-				test.todo('to: deck invalid');
+				test.todo('to: deck');
 
-				describe('to: cell', () => {
-					test.todo('invalid');
-
-					test.todo('valid');
+				test('to: cell', () => {
+					game = game
+						.dealAll()
+						.setCursor({ fixture: 'cascade', data: [0, 6] })
+						.touch()
+						.setCursor({ fixture: 'cell', data: [1] });
+					expect(game.print()).toBe(
+						'' +
+							'   >                     \n' +
+							' 8H 5D KS 3C 3S 3H JD AC \n' +
+							' 9H 7D KC 5C 9D 5H 2C 2H \n' +
+							' 6D TC 4H TS 3D 8S QH 4S \n' +
+							' 6S 2S 5S 7H QD 8C JC 8D \n' +
+							' AS 6H 9S 4C KD TD 6C 9C \n' +
+							' 7C JH 7S TH QS AD KH 2D \n' +
+							'|QC|AH JS 4D             \n' +
+							' cursor set'
+					);
+					expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+					expect(game.selection).toEqual({
+						location: { fixture: 'cascade', data: [0, 6] },
+						cards: [
+							{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [0, 6] } },
+						],
+						canMove: true,
+					});
+					expect(game.availableMoves).toEqual([
+						{ fixture: 'cell', data: [0] },
+						{ fixture: 'cell', data: [1] },
+						{ fixture: 'cell', data: [2] },
+						{ fixture: 'cell', data: [3] },
+						{ fixture: 'cascade', data: [6, 5] },
+					]);
+					game = game.touch();
+					expect(game.print()).toBe(
+						'' +
+							'   >QC                   \n' +
+							' 8H 5D KS 3C 3S 3H JD AC \n' +
+							' 9H 7D KC 5C 9D 5H 2C 2H \n' +
+							' 6D TC 4H TS 3D 8S QH 4S \n' +
+							' 6S 2S 5S 7H QD 8C JC 8D \n' +
+							' AS 6H 9S 4C KD TD 6C 9C \n' +
+							' 7C JH 7S TH QS AD KH 2D \n' +
+							'    AH JS 4D             \n' +
+							' move 1b QC→cell'
+					);
+					expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+					expect(game.selection).toEqual(null);
+					expect(game.availableMoves).toEqual(null);
 				});
 
-				describe('to: foundation', () => {
-					test.todo('invalid');
-
-					test.todo('valid');
+				test('to: foundation', () => {
+					game = game
+						.dealAll()
+						.setCursor({ fixture: 'cascade', data: [1, 6] })
+						.touch()
+						.setCursor({ fixture: 'foundation', data: [0] });
+					expect(game.print()).toBe(
+						'' +
+							'            >            \n' +
+							' 8H 5D KS 3C 3S 3H JD AC \n' +
+							' 9H 7D KC 5C 9D 5H 2C 2H \n' +
+							' 6D TC 4H TS 3D 8S QH 4S \n' +
+							' 6S 2S 5S 7H QD 8C JC 8D \n' +
+							' AS 6H 9S 4C KD TD 6C 9C \n' +
+							' 7C JH 7S TH QS AD KH 2D \n' +
+							' QC|AH|JS 4D             \n' +
+							' cursor set'
+					);
+					expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
+					expect(game.selection).toEqual({
+						location: { fixture: 'cascade', data: [1, 6] },
+						cards: [
+							{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 6] } },
+						],
+						canMove: true,
+					});
+					expect(game.availableMoves).toEqual([
+						{ fixture: 'cell', data: [0] },
+						{ fixture: 'cell', data: [1] },
+						{ fixture: 'cell', data: [2] },
+						{ fixture: 'cell', data: [3] },
+						{ fixture: 'foundation', data: [0] },
+						{ fixture: 'foundation', data: [1] },
+						{ fixture: 'foundation', data: [2] },
+						{ fixture: 'foundation', data: [3] },
+					]);
+					game = game.touch();
+					expect(game.print()).toBe(
+						'' +
+							'            >AH          \n' +
+							' 8H 5D KS 3C 3S 3H JD AC \n' +
+							' 9H 7D KC 5C 9D 5H 2C 2H \n' +
+							' 6D TC 4H TS 3D 8S QH 4S \n' +
+							' 6S 2S 5S 7H QD 8C JC 8D \n' +
+							' AS 6H 9S 4C KD TD 6C 9C \n' +
+							' 7C JH 7S TH QS AD KH 2D \n' +
+							' QC    JS 4D             \n' +
+							' move 2h AH→foundation'
+					);
+					expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
+					expect(game.selection).toEqual(null);
+					expect(game.availableMoves).toEqual(null);
 				});
 
 				describe('to: cascade', () => {
-					test.todo('invalid');
-
 					test.todo('single');
 
 					test.todo('sequence');
@@ -530,23 +619,13 @@ describe('game.touch', () => {
 			});
 
 			describe('sequence', () => {
-				test.todo('to: deck invalid');
+				test.todo('to: deck');
 
-				describe('to: cell', () => {
-					test.todo('invalid');
+				test.todo('to: cell');
 
-					test.todo('valid');
-				});
-
-				describe('to: foundation', () => {
-					test.todo('invalid');
-
-					test.todo('valid');
-				});
+				test.todo('to: foundation');
 
 				describe('to: cascade', () => {
-					test.todo('invalid');
-
 					test.todo('single');
 
 					test.todo('sequence');
@@ -554,6 +633,10 @@ describe('game.touch', () => {
 					test.todo('empty');
 				});
 			});
+
+			test.todo('cannot move empty selection');
+
+			test.todo('cannot move middle of cascade');
 		});
 	});
 });

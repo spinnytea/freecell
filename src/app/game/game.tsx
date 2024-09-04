@@ -9,7 +9,12 @@ import {
 	shorthandSequence,
 	SuitList,
 } from '@/app/game/card';
-import { findAvailableMoves, getPrintSeparator, getSequenceAt } from '@/app/game/game-utils';
+import {
+	findAvailableMoves,
+	getPrintSeparator,
+	getSequenceAt,
+	moveCards,
+} from '@/app/game/game-utils';
 
 const DEFAULT_NUMBER_OF_CELLS = 4;
 const NUMBER_OF_FOUNDATIONS = SuitList.length;
@@ -343,28 +348,26 @@ export class FreeCell {
 			}
 		}
 
-		if (!game.availableMoves || !game.selection?.cards.length) {
+		if (!this.availableMoves || !this.selection?.cards.length) {
 			// XXX test? remove?
-			game.previousAction = 'touch stop';
-			return game;
+			return this.__clone({ action: 'touch stop' });
 		}
 
-		const cursorSequence = getSequenceAt(game, game.cursor);
-		const from_card = game.selection.cards[0];
-		const to_card = cursorSequence.cards[cursorSequence.cards.length - 1];
-		const move = `${shorthandPosition(from_card.location)!}${shorthandPosition(to_card.location)!}`; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+		const cursorSequence = getSequenceAt(this, this.cursor);
+		const from_card = this.selection.cards[0];
+		const to_card: Card | undefined = cursorSequence.cards[cursorSequence.cards.length - 1];
+		const to_card_location = to_card?.location || this.cursor; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+		const move = `${shorthandPosition(from_card.location)!}${shorthandPosition(to_card_location)!}`; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+		const action = `move ${move} ${shorthandCard(from_card)}→${to_card ? shorthandCard(to_card) : to_card_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
 
-		const valid = game.availableMoves.some((location) => isLocationEqual(game.cursor, location));
+		const valid = this.availableMoves.some((location) => isLocationEqual(this.cursor, location));
 		if (valid) {
-			// FIXME move
-
-			game.previousAction = `move ${move} ${shorthandCard(from_card)}→${shorthandCard(to_card)}`;
-			return game;
+			const cards = moveCards(this, this.selection, this.cursor);
+			return this.__clone({ action, cards, selection: null, availableMoves: null });
 		}
 
 		// TODO animate invalid move
-		game.previousAction = `invalid move ${move} ${shorthandCard(from_card)}→${shorthandCard(to_card)}`;
-		return game;
+		return this.__clone({ action: 'invalid ' + action });
 	}
 
 	/**

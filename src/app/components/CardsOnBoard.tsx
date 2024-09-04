@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { CardImage } from '@/app/components/CardImage';
 import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
-import { CardLocation, CardSequence, Rank, Suit } from '@/app/game/card';
+import { CardLocation, CardSequence, Rank, RankList, Suit } from '@/app/game/card';
 import { FixtureSizes, PEEK_DOWN, PEEK_UP } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/Game/GameContext';
@@ -23,7 +23,7 @@ export default function CardsOnBoard() {
 function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; location: CardLocation }) {
 	const fixtureSizes = useFixtureSizes();
 	const [game, setGame] = useContext(GameContext);
-	const { top, left, zIndex } = calcTopLeftZ(fixtureSizes, location, game.selection);
+	const { top, left, zIndex } = calcTopLeftZ(fixtureSizes, location, game.selection, rank);
 
 	function onClick() {
 		setGame(game.setCursor(location).touch());
@@ -44,7 +44,8 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 function calcTopLeftZ(
 	fixtureSizes: FixtureSizes,
 	{ fixture, data }: CardLocation,
-	selection: CardSequence | null
+	selection: CardSequence | null,
+	rank: Rank
 ): { top: number; left: number; zIndex: number } {
 	switch (fixture) {
 		case 'deck':
@@ -63,7 +64,7 @@ function calcTopLeftZ(
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.foundationLeft[data[0]],
-				zIndex: data[0],
+				zIndex: RankList.indexOf(rank),
 			};
 		case 'cascade': {
 			const ret = {
