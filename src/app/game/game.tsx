@@ -3,10 +3,13 @@ import {
 	CardLocation,
 	CardSequence,
 	isLocationEqual,
+	parseShorthandCard,
+	Rank,
 	RankList,
 	shorthandCard,
 	shorthandPosition,
 	shorthandSequence,
+	Suit,
 	SuitList,
 } from '@/app/game/card';
 import {
@@ -540,6 +543,7 @@ export class FreeCell {
 			}
 		}
 
+		// REVIEW can we get rid of `d:` prefix (bcuz parse)
 		if (this.deck.length) {
 			if (this.cursor.fixture === 'deck' || this.selection?.location.fixture === 'deck') {
 				// prettier-ignore
@@ -548,18 +552,123 @@ export class FreeCell {
 					.reverse()
 					.join('');
 				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, this.selection);
-				str += `\n${deckStr}${lastCol}`;
+				str += `\nd:${deckStr}${lastCol}`;
 			} else {
 				// if no cursor/selection in deck
 				const deckStr = this.deck
 					.map((card) => shorthandCard(card))
 					.reverse()
 					.join(' ');
-				str += `\n ${deckStr} `;
+				str += `\nd: ${deckStr} `;
 			}
 		}
 
+		// XXX print and parse move history?
+
 		str += '\n ' + this.previousAction;
 		return str;
+	}
+
+	/**
+		parse a board position
+
+		this isn't fully tested, it's mostly just for setting up board positions for unit tests
+		it's _probably_ correct, but it's not bullet proof
+
+		must be a valid output of game.print(), there isn't much error correction/detection
+		i.e. must `game.print() === FreeCell.parse(game.print()).print()`
+
+		XXX detect cursor
+		XXX detect selection
+		XXX detect unused cards?
+		XXX detect duplicate cards?
+	*/
+	static parse(print: string): FreeCell {
+		const cards = new FreeCell().cards;
+		const remaining = cards.slice(0);
+
+		const lines = print.split('\n');
+		let line: string[];
+
+		const getCard = ({ rank, suit }: { rank: Rank; suit: Suit }) => {
+			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
+			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`); // FIXME test with a joker, duplicate card
+			remaining.splice(remaining.indexOf(card), 1);
+			return card;
+		};
+
+		const nextLine = () => lines.shift()?.split('').reverse() ?? [];
+		const nextCard = () => {
+			// TODO test invalid card rank
+			// TODO test invalid card suit
+			if (line.length < 3) throw new Error('not enough tokens');
+			line.pop();
+			const r = line.pop();
+			const s = line.pop();
+			const rs = parseShorthandCard(r, s);
+			if (!rs) return null;
+			return getCard(rs);
+		};
+
+		// TODO test if first line isn't present
+		line = nextLine();
+
+		// parse cells
+		const cellCount = (line.length - 1 - 3 * NUMBER_OF_FOUNDATIONS) / 3;
+		for (let i = 0; i < cellCount; i++) {
+			const card = nextCard();
+			if (card) {
+				card.location = { fixture: 'cell', data: [i] };
+			}
+		}
+
+		// parse foundations
+		for (let i = 0; i < NUMBER_OF_FOUNDATIONS; i++) {
+			const card = nextCard();
+			if (card) {
+				card.location = { fixture: 'foundation', data: [i] };
+
+				// …and all cards of lesser rank
+				const ranks = RankList.slice(0);
+				while (ranks.pop() !== card.rank); // pull off all the ranks we do not want
+				ranks.forEach((r) => {
+					getCard({ rank: r, suit: card.suit }).location = { fixture: 'foundation', data: [i] };
+				});
+			}
+		}
+
+		// parse cascades
+		let row = 0;
+		// TODO test if first line isn't present
+		line = nextLine();
+		const cascadeLineLength = line.length;
+		const cascadeCount = (cascadeLineLength - 1) / 3;
+		while (line.length === cascadeLineLength) {
+			// FIXME come up with a better metric than 25 (actions can be 25 chars, decks could be too)
+			for (let i = 0; i < cascadeCount; i++) {
+				const card = nextCard();
+				if (card) {
+					card.location = { fixture: 'cascade', data: [i, row] };
+				}
+			}
+			row++;
+			// TODO test if line isn't present
+			line = nextLine();
+		}
+
+		// TODO handle deck
+		const deckLength = 0;
+
+		// add the remaining cards to the deck
+		remaining.forEach((card, idx) => {
+			card.location = { fixture: 'deck', data: [deckLength + idx] };
+		});
+
+		line.pop();
+		const action = line.reverse().join('');
+
+		const game = new FreeCell({ cellCount, cascadeCount, cards });
+		game.previousAction = action;
+		return game;
 	}
 }

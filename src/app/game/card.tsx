@@ -95,9 +95,70 @@ export function isLocationEqual(a: CardLocation, b: CardLocation) {
 
 export function shorthandCard(card: Card | null | undefined) {
 	if (!card) return '  ';
-	const r = card.rank === '10' ? 'T' : card.rank[0];
+	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
 	const s = card.suit[0];
 	return (r + s).toUpperCase();
+}
+
+export function parseShorthandCard(
+	r: string | undefined,
+	s: string | undefined
+): { rank: Rank; suit: Suit } | null {
+	if (r === ' ' && s === ' ') return null;
+
+	let rank: Rank;
+	let suit: Suit;
+	switch (r) {
+		case 'A':
+			rank = 'ace';
+			break;
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			rank = r;
+			break;
+		case 'T':
+			rank = '10';
+			break;
+		case 'J':
+			rank = 'jack';
+			break;
+		case 'Q':
+			rank = 'queen';
+			break;
+		case 'K':
+			rank = 'king';
+			break;
+		case 'W':
+			rank = 'joker';
+			break;
+		default:
+			throw new Error(`invalid rank shorthand: ${r ?? 'undefined'}`);
+	}
+
+	switch (s) {
+		case 'C':
+			suit = 'clubs';
+			break;
+		case 'D':
+			suit = 'diamonds';
+			break;
+		case 'H':
+			suit = 'hearts';
+			break;
+		case 'S':
+			suit = 'spades';
+			break;
+		default:
+			throw new Error(`invalid suit shorthand: ${s ?? 'undefined'}`);
+	}
+
+	return { rank, suit };
 }
 
 export function shorthandSequence(sequence: CardSequence) {
