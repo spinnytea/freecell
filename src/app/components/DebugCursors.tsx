@@ -1,44 +1,98 @@
 import classNames from 'classnames';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { CardLocation, CardSequence, isLocationEqual } from '@/app/game/card';
+import { CardLocation, CardSequence, shorthandPosition } from '@/app/game/card';
 import { FixtureSizes, PEEK_DOWN, PEEK_UP } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/Game/useGame';
 
 const OVERLAY_MARGINS = 4;
 
-/** @deprecated temp, until we convert a cursor to a sequence */
-function locationToSequence(location: CardLocation): CardSequence {
-	return {
-		location,
-		cards: [{ rank: 'joker', suit: 'spades', location }],
-		canMove: false,
-	};
-}
-
+// REVIEW which of these are necessary? move them somewhere else
+//  - or make the main game not need them (keyboard needs a cursor, but does it need a canMove selection?)
 export function DebugCursors() {
 	const fixtureSizes = useFixtureSizes();
 	const game = useGame();
-	const cursor =
-		game.selection && isLocationEqual(game.selection.location, game.cursor)
-			? game.selection
-			: locationToSequence(game.cursor);
+
+	// wrapper to make the dom more legible
 	return (
-		<>
-			{game.selection && game.selection.canMove && (
-				<CursorBox className="selection" fixtureSizes={fixtureSizes} sequence={game.selection} />
+		<div id="cursors">
+			{game.availableMoves?.map((location) => (
+				<LocationBox
+					key={`available-${shorthandPosition(location) ?? 'invalid'}-${location.data[0].toString(10)}`}
+					type="available"
+					fixtureSizes={fixtureSizes}
+					location={location}
+				/>
+			))}
+			{game.selection && (
+				<SequenceBox type="selection" fixtureSizes={fixtureSizes} sequence={game.selection} />
 			)}
-			<CursorBox className="cursor" fixtureSizes={fixtureSizes} sequence={cursor} />
-		</>
+			<LocationBox type="cursor" fixtureSizes={fixtureSizes} location={game.cursor} />
+		</div>
 	);
 }
 
-function CursorBox({
-	className,
+function LocationBox({
+	type,
+	fixtureSizes,
+	location,
+}: {
+	type: string;
+	fixtureSizes: FixtureSizes;
+	location: CardLocation;
+}) {
+	const {
+		fixture,
+		data: [d0, d1],
+	} = location;
+
+	const style = {
+		top: 0,
+		left: 0,
+		width: fixtureSizes.cardWidth,
+		height: fixtureSizes.cardHeight,
+	};
+
+	switch (fixture) {
+		case 'cell':
+			style.top = fixtureSizes.home.top;
+			style.left = fixtureSizes.home.cellLeft[d0];
+			break;
+		case 'foundation':
+			style.top = fixtureSizes.home.top;
+			style.left = fixtureSizes.home.foundationLeft[d0];
+			break;
+		case 'deck':
+			style.top = fixtureSizes.deck.top;
+			style.left = fixtureSizes.deck.left;
+			break;
+		case 'cascade':
+			// TODO height of card if tail
+			style.top = fixtureSizes.tableau.top + d1 * fixtureSizes.tableau.offsetTop;
+			style.left = fixtureSizes.tableau.cascadeLeft[d0];
+			style.height = fixtureSizes.tableau.offsetTop;
+			break;
+	}
+
+	style.top -= OVERLAY_MARGINS;
+	style.left -= OVERLAY_MARGINS;
+	style.width += OVERLAY_MARGINS * 2;
+	style.height += OVERLAY_MARGINS * 2;
+
+	return (
+		<div
+			className={classNames(styles_pilemarkers[type], styles_pilemarkers.cursorBox)}
+			style={style}
+		/>
+	);
+}
+
+function SequenceBox({
+	type,
 	fixtureSizes,
 	sequence,
 }: {
-	className: string;
+	type: string;
 	fixtureSizes: FixtureSizes;
 	sequence: CardSequence;
 }) {
@@ -78,14 +132,12 @@ function CursorBox({
 				style.height = fixtureSizes.tableau.offsetTop;
 			}
 			// TODO only the selection slides the cards, and only if present
-			if (className === 'selection') {
-				if (sequence.cards.length > 1 || !sequence.canMove) {
-					if (d1 > 0) {
-						style.top -= fixtureSizes.tableau.offsetTop * PEEK_UP;
-						style.height += fixtureSizes.tableau.offsetTop * PEEK_UP;
-					}
-					style.height += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
+			if (sequence.cards.length > 1 || !sequence.canMove) {
+				if (d1 > 0) {
+					style.top -= fixtureSizes.tableau.offsetTop * PEEK_UP;
+					style.height += fixtureSizes.tableau.offsetTop * PEEK_UP;
 				}
+				style.height += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
 			}
 			style.height += fixtureSizes.tableau.offsetTop * (length - 1);
 			break;
@@ -98,7 +150,7 @@ function CursorBox({
 
 	return (
 		<div
-			className={classNames(styles_pilemarkers[className], styles_pilemarkers.cursorBox)}
+			className={classNames(styles_pilemarkers[type], styles_pilemarkers.cursorBox)}
 			style={style}
 		/>
 	);

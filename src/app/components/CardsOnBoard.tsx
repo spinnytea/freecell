@@ -12,7 +12,7 @@ export default function CardsOnBoard() {
 
 	// wrapper to make the dom more legible
 	return (
-		<div>
+		<div id="cards">
 			{cards.map(({ rank, suit, location }) => (
 				<CardOnBoard key={`${rank} of ${suit}`} rank={rank} suit={suit} location={location} />
 			))}

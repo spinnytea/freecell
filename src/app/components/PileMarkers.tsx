@@ -12,8 +12,10 @@ export function PileMarkers() {
 	const fixtureSizes = useFixtureSizes();
 	const homeTop = fixtureSizes.home.top;
 	const tableauTop = fixtureSizes.tableau.top;
+
+	// wrapper to make the dom more legible
 	return (
-		<>
+		<div id="piles">
 			{fixtureSizes.home.cellLeft.map((left, idx) => (
 				<Pile
 					key={`cell-${idx.toString(10)}`}
@@ -44,7 +46,7 @@ export function PileMarkers() {
 					location={{ fixture: 'cascade', data: [idx, 0] }}
 				/>
 			))}
-		</>
+		</div>
 	);
 }
 

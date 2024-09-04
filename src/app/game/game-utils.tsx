@@ -43,7 +43,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 
 				while (
 					idx < cascade.length - 1 &&
-					isAdjacent(cascade[idx + 1].rank, cascade[idx].rank) &&
+					isAdjacent({ min: cascade[idx + 1].rank, max: cascade[idx].rank }) &&
 					isRed(cascade[idx].suit) !== isRed(cascade[idx + 1].suit)
 				) {
 					idx++;
@@ -61,6 +61,51 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 
 	// no cards at selection
 	return { location, cards: [], canMove: false };
+}
+
+export function findAvailableMoves(game: FreeCell): CardLocation[] {
+	const availableMoves: CardLocation[] = [];
+
+	if (!game.selection?.canMove) {
+		return availableMoves;
+	}
+
+	const head_card = game.selection.cards[0];
+
+	if (game.selection.cards.length === 1) {
+		// REVIEW: if multiple, move last card?
+		game.cells.forEach((card, idx) => {
+			if (!card) {
+				availableMoves.push({ fixture: 'cell', data: [idx] });
+			}
+		});
+
+		game.foundations.forEach((card, idx) => {
+			if (!card && head_card.rank === 'ace') {
+				availableMoves.push({ fixture: 'foundation', data: [idx] });
+			} else if (
+				card &&
+				card.suit === head_card.suit &&
+				isAdjacent({ min: card.rank, max: head_card.rank })
+			) {
+				availableMoves.push({ fixture: 'foundation', data: [idx] });
+			}
+		});
+	}
+
+	game.tableau.forEach((cascade, idx) => {
+		const tail_card = cascade[cascade.length - 1];
+		if (!cascade.length) {
+			availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length] });
+		} else if (
+			isRed(tail_card.suit) !== isRed(head_card.suit) &&
+			isAdjacent({ min: head_card.rank, max: tail_card.rank })
+		) {
+			availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length - 1] });
+		}
+	});
+
+	return availableMoves;
 }
 
 export function getPrintSeparator(

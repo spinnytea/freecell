@@ -375,7 +375,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual(null);
 			});
 
-			test('last', () => {
+			test('last 1', () => {
 				game = game
 					.dealAll({ demo: true })
 					.setCursor({ fixture: 'cascade', data: [7, 1] })
@@ -395,6 +395,27 @@ describe('game.touch', () => {
 						' QH 5S KH 3H 4S 2C QC 2H \n' +
 						' JC KC 3D AC             \n' +
 						' select AS'
+				);
+			});
+
+			test('last 2', () => {
+				game = new FreeCell()
+					.shuffle32(11863)
+					.dealAll({ demo: false })
+					.setCursor({ fixture: 'cascade', data: [6, 2] })
+					.touch();
+
+				expect(game.print()).toBe(
+					'' +
+						'                         \n' +
+						' 8H 5D KS 3C 3S 3H JD AC \n' +
+						' 9H 7D KC 5C 9D 5H 2C 2H \n' +
+						' 6D TC 4H TS 3D 8S>QH|4S \n' +
+						' 6S 2S 5S 7H QD 8C|JC|8D \n' +
+						' AS 6H 9S 4C KD TD 6C 9C \n' +
+						' 7C JH 7S TH QS AD KH 2D \n' +
+						' QC AH JS 4D             \n' +
+						' select QH-JC'
 				);
 			});
 		});

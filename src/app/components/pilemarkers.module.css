@@ -36,3 +36,7 @@
 .selection {
 	border: 2px solid yellow;
 }
+
+.available {
+	border: 2px solid cyan;
+}
