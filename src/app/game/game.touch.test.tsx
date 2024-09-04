@@ -358,6 +358,8 @@ describe('game.touch', () => {
 				expect(game.previousAction).toBe('deselect 1 QH-JC');
 			});
 
+			test.todo('sequence too tall');
+
 			test('empty', () => {
 				game = game.setCursor({ fixture: 'cell', data: [2] }).touch();
 				expect(game.selection).toEqual(null);
@@ -423,6 +425,7 @@ describe('game.touch', () => {
 		test.todo('select when current select cannot move');
 	});
 
+	// FIXME test.skip
 	describe('move card', () => {
 		let game: FreeCell;
 		beforeEach(() => {
@@ -464,22 +467,34 @@ describe('game.touch', () => {
 			test.todo('cannot move empty selection');
 		});
 
-		describe('from: freecell', () => {
+		describe('from: cell', () => {
 			test.todo('to: deck');
 
-			test.todo('to: cell');
-
-			test.todo('to: foundation');
-
-			describe('to: cascade', () => {
-				test.todo('single');
-
-				test.todo('sequence');
-
-				test.todo('empty');
+			test.skip('to: cell', () => {
+				// XXX
 			});
 
-			test.todo('cannot move empty selection');
+			test.skip('to: foundation', () => {
+				// XXX
+			});
+
+			describe('to: cascade', () => {
+				test.skip('single', () => {
+					// XXX
+				});
+
+				test.skip('sequence', () => {
+					// XXX
+				});
+
+				test.skip('empty', () => {
+					// XXX
+				});
+			});
+
+			test.skip('cannot move empty selection', () => {
+				// XXX
+			});
 		});
 
 		describe('from: foundation', () => {
@@ -661,9 +676,13 @@ describe('game.touch', () => {
 						expect(game.availableMoves).toEqual(null);
 					});
 
-					test.todo('sequence');
+					test.skip('sequence', () => {
+						// XXX
+					});
 
-					test.todo('empty');
+					test.skip('empty', () => {
+						// XXX
+					});
 				});
 			});
 
@@ -675,17 +694,89 @@ describe('game.touch', () => {
 				test.todo('to: foundation');
 
 				describe('to: cascade', () => {
-					test.todo('single');
+					test.skip('single', () => {
+						// XXX
+					});
 
-					test.todo('sequence');
+					test.skip('sequence', () => {
+						// XXX
+					});
 
-					test.todo('empty');
+					test('empty', () => {
+						game = game.dealAll();
+						game.tableau[7].forEach((card) => {
+							card.location = { fixture: 'cell', data: [0] };
+						});
+						game.tableau[1][6].location = { fixture: 'foundation', data: [0] };
+						game.tableau[1][5].location = { fixture: 'cascade', data: [4, 6] };
+						game = game.__clone({ action: 'hand-jam', cards: game.cards });
+						expect(game.print()).toBe(
+							'' +
+								'>9C          AH          \n' +
+								' 8H 5D KS 3C 3S 3H JD    \n' +
+								' 9H 7D KC 5C 9D 5H 2C    \n' +
+								' 6D TC 4H TS 3D 8S QH    \n' +
+								' 6S 2S 5S 7H QD 8C JC    \n' +
+								' AS 6H 9S 4C KD TD 6C    \n' +
+								' 7C    7S TH QS AD KH    \n' +
+								' QC    JS 4D JH          \n' +
+								' hand-jam'
+						);
+
+						game = game
+							.setCursor({ fixture: 'cascade', data: [4, 4] })
+							.touch()
+							.setCursor({ fixture: 'cascade', data: [7, 0] });
+						expect(game.print()).toBe(
+							'' +
+								' 9C          AH          \n' +
+								' 8H 5D KS 3C 3S 3H JD>   \n' +
+								' 9H 7D KC 5C 9D 5H 2C    \n' +
+								' 6D TC 4H TS 3D 8S QH    \n' +
+								' 6S 2S 5S 7H QD 8C JC    \n' +
+								' AS 6H 9S 4C|KD|TD 6C    \n' +
+								' 7C    7S TH|QS|AD KH    \n' +
+								' QC    JS 4D|JH|         \n' +
+								' cursor set'
+						);
+						expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
+						expect(game.selection).toEqual({
+							location: { fixture: 'cascade', data: [4, 4] },
+							cards: [
+								{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 4] } },
+								{ rank: 'queen', suit: 'spades', location: { fixture: 'cascade', data: [4, 5] } },
+								{ rank: 'jack', suit: 'hearts', location: { fixture: 'cascade', data: [4, 6] } },
+							],
+							canMove: true,
+						});
+						expect(game.availableMoves).toEqual([{ fixture: 'cascade', data: [7, 0] }]);
+						game = game.touch();
+						expect(game.print()).toBe(
+							'' +
+								' 9C          AH          \n' +
+								' 8H 5D KS 3C 3S 3H JD>KD \n' +
+								' 9H 7D KC 5C 9D 5H 2C QS \n' +
+								' 6D TC 4H TS 3D 8S QH JH \n' +
+								' 6S 2S 5S 7H QD 8C JC    \n' +
+								' AS 6H 9S 4C    TD 6C    \n' +
+								' 7C    7S TH    AD KH    \n' +
+								' QC    JS 4D             \n' +
+								' move 58 KD→cascade'
+						);
+						expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
+						expect(game.selection).toEqual(null);
+						expect(game.availableMoves).toEqual(null);
+					});
 				});
 			});
 
-			test.todo('cannot move empty selection');
+			test.skip('cannot move empty selection', () => {
+				// XXX
+			});
 
-			test.todo('cannot move middle of cascade');
+			test.skip('cannot move middle of cascade', () => {
+				// XXX
+			});
 		});
 	});
 });

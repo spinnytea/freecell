@@ -88,10 +88,13 @@ export class FreeCell {
 				}
 			});
 		} else {
+			// REVIEW why 1-4 cells? why not, say, 10?
 			if (cellCount < 1 || cellCount > 4)
 				throw new Error(`Must have between 1 and 4 cells; requested "${cellCount.toString(10)}".`);
-			if (cascadeCount < 4)
-				throw new Error(`Must have at least 4 cascades; requested "${cascadeCount.toString(10)}".`);
+			if (cascadeCount < this.foundations.length)
+				throw new Error(
+					`Must have at least as many cascades as foundations (${this.foundations.length.toString(10)}); requested "${cascadeCount.toString(10)}".`
+				);
 
 			this.cards = new Array<Card>();
 

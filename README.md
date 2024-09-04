@@ -9,12 +9,14 @@ TODO main development tasks:
 1. ~~Render cards~~
 1. ~~Render playing field, card back(s)~~
 1. ~~shuffle/deal cards~~
-1. click select -> click move (one card at a time, ¿no sequences?)
+1. ~~click select -> click move (one card at a time, ¿no sequences?)~~
 1. win state
+1. quick and dirty loop (new -> shuffle -> deal -> play -> win -> <<-- new -> shuffle -> …)
 1. everything (core game) is tested
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 
+- TODO rename `game/*.tsx` to `game/*.ts`
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
   - deal all cards
   - cursor

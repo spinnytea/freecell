@@ -205,7 +205,7 @@ describe('game', () => {
 
 		test('3 cascades', () => {
 			expect(() => new FreeCell({ cascadeCount: 3 })).toThrow(
-				'Must have at least 4 cascades; requested "3".'
+				'Must have at least as many cascades as foundations (4); requested "3".'
 			);
 		});
 

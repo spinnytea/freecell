@@ -150,7 +150,10 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 		case 'cascade':
 			// move the selection to the end of the cascade
 			from.cards.forEach((card, idx) => {
-				card.location = { fixture: 'cascade', data: [to.data[0], game.tableau[to.data[0]].length + idx] };
+				card.location = {
+					fixture: 'cascade',
+					data: [to.data[0], game.tableau[to.data[0]].length + idx],
+				};
 			});
 			break;
 	}
