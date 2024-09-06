@@ -1072,7 +1072,7 @@ describe('game.touch', () => {
 								'          QC    9D       \n' + //
 								'          JD    8C       \n' + //
 								'd: KH KC QH QD JC TD 9C \n' + //
-								' move 26 TC→cascade'
+								' move 26 TC-9D-8C→cascade'
 						);
 						expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
 						expect(game.selection).toEqual(null);

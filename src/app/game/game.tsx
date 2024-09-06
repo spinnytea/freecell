@@ -335,7 +335,7 @@ export class FreeCell {
 		const game = this.__clone({ action: 'touch' });
 
 		if (game.selection && isLocationEqual(game.selection.location, game.cursor)) {
-			game.previousAction = 'deselect ' + shorthandSequence(game.selection);
+			game.previousAction = 'deselect ' + shorthandSequence(game.selection, true);
 			game.selection = null;
 			game.availableMoves = null;
 			return game;
@@ -349,7 +349,7 @@ export class FreeCell {
 			if (selection.cards.length && game.cursor.fixture !== 'foundation') {
 				game.selection = selection;
 				game.availableMoves = findAvailableMoves(game); // XXX defer until later? unless we have debug render on
-				game.previousAction = 'select ' + shorthandSequence(selection);
+				game.previousAction = 'select ' + shorthandSequence(selection, true);
 				return game;
 			}
 		}
@@ -363,8 +363,8 @@ export class FreeCell {
 		const from_card = this.selection.cards[0];
 		const to_card: Card | undefined = cursorSequence.cards[cursorSequence.cards.length - 1];
 		const to_card_location = to_card?.location || this.cursor; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-		const move = `${shorthandPosition(from_card.location)!}${shorthandPosition(to_card_location)!}`; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-		const action = `move ${move} ${shorthandCard(from_card)}→${to_card ? shorthandCard(to_card) : to_card_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+		const move = `${shorthandPosition(from_card.location)}${shorthandPosition(to_card_location)}`;
+		const action = `move ${move} ${shorthandSequence(this.selection)}→${to_card ? shorthandCard(to_card) : to_card_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
 
 		const valid = this.availableMoves.some((location) => isLocationEqual(this.cursor, location));
 		if (valid) {

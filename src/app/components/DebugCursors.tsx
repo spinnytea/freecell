@@ -18,7 +18,7 @@ export function DebugCursors() {
 		<div id="cursors">
 			{game.availableMoves?.map((location) => (
 				<LocationBox
-					key={`available-${shorthandPosition(location) ?? 'invalid'}-${location.data[0].toString(10)}`}
+					key={`available-${shorthandPosition(location)}-${location.data[0].toString(10)}`}
 					type="available"
 					fixtureSizes={fixtureSizes}
 					location={location}

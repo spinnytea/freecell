@@ -63,8 +63,7 @@ export type Position =
 	| '7'
 	| '8'
 	| '9'
-	| 't'
-	| null;
+	| 't';
 
 export interface Card {
 	rank: Rank;
@@ -161,17 +160,13 @@ export function parseShorthandCard(
 	return { rank, suit };
 }
 
-export function shorthandSequence(sequence: CardSequence) {
+export function shorthandSequence(sequence: CardSequence, includePosition: boolean = false) {
 	const cards = sequence.cards.map((card) => shorthandCard(card)).join('-');
 
-	let position: Position = null;
-	if (sequence.canMove) {
-		position = shorthandPosition(sequence.location);
+	if (sequence.canMove && includePosition) {
+		return shorthandPosition(sequence.location) + ' ' + cards;
 	}
 
-	if (position) {
-		return position + ' ' + cards;
-	}
 	return cards;
 }
 
@@ -190,5 +185,5 @@ export function shorthandPosition(location: CardLocation): Position {
 	} else if (location.fixture === 'cell') {
 		return (location.data[0] + 10).toString(16) as Position;
 	}
-	return null;
+	throw new Error(`invalid position: ${JSON.stringify(location)}`);
 }
