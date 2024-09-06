@@ -256,6 +256,14 @@ describe('game', () => {
 			);
 		});
 
+		test('win state', () => {
+			const print =
+				'>            KC KD KH KS \n' + //
+				'                         \n' + //
+				' hand-jammed';
+			expect(FreeCell.parse(print).print()).toBe(print);
+		});
+
 		test.todo('test the state');
 
 		test.todo('more cases?');
