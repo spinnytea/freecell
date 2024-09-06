@@ -3,12 +3,21 @@ import {
 	CardLocation,
 	CardSequence,
 	isLocationEqual,
+	parseShorthandCard,
+	Rank,
 	RankList,
 	shorthandCard,
+	shorthandPosition,
 	shorthandSequence,
+	Suit,
 	SuitList,
 } from '@/app/game/card';
-import { findAvailableMoves, getPrintSeparator, getSequenceAt } from '@/app/game/game-utils';
+import {
+	findAvailableMoves,
+	getPrintSeparator,
+	getSequenceAt,
+	moveCards,
+} from '@/app/game/game-utils';
 
 const DEFAULT_NUMBER_OF_CELLS = 4;
 const NUMBER_OF_FOUNDATIONS = SuitList.length;
@@ -82,10 +91,13 @@ export class FreeCell {
 				}
 			});
 		} else {
+			// REVIEW why 1-4 cells? why not, say, 10?
 			if (cellCount < 1 || cellCount > 4)
 				throw new Error(`Must have between 1 and 4 cells; requested "${cellCount.toString(10)}".`);
-			if (cascadeCount < 4)
-				throw new Error(`Must have at least 4 cascades; requested "${cascadeCount.toString(10)}".`);
+			if (cascadeCount < this.foundations.length)
+				throw new Error(
+					`Must have at least as many cascades as foundations (${this.foundations.length.toString(10)}); requested "${cascadeCount.toString(10)}".`
+				);
 
 			this.cards = new Array<Card>();
 
@@ -223,7 +235,10 @@ export class FreeCell {
 				case 'down':
 					return this.__clone({
 						action: 'cursor down w',
-						cursor: { fixture: 'cascade', data: [this.cells.length + d0, BOTTOM_OF_CASCADE] },
+						cursor: {
+							fixture: 'cascade',
+							data: [this.tableau.length - this.foundations.length + d0, BOTTOM_OF_CASCADE],
+						},
 					});
 			}
 		} else if (fixture === 'cascade') {
@@ -322,30 +337,45 @@ export class FreeCell {
 	touch(): FreeCell {
 		const game = this.__clone({ action: 'touch' });
 
-		if (game.selection && isLocationEqual(game.selection.location, this.cursor)) {
-			game.previousAction = 'deselect ' + shorthandSequence(game.selection);
+		if (game.selection && isLocationEqual(game.selection.location, game.cursor)) {
+			game.previousAction = 'deselect ' + shorthandSequence(game.selection, true);
 			game.selection = null;
 			game.availableMoves = null;
 			return game;
 		}
 
-		// TODO allow "move selection without deselect IF growing/shrinking sequence"
+		// TODO allow "growing/shrinking sequence of current selection"
 		if (!game.selection?.canMove) {
-			const selection = getSequenceAt(game, this.cursor);
-			// IDEA config for allow select !canMove (peek)
-			if (selection.cards.length) {
+			const selection = getSequenceAt(game, game.cursor);
+			// IDEA config for "allow foundation selection"
+			if (selection.cards.length && game.cursor.fixture !== 'foundation') {
 				game.selection = selection;
-				game.availableMoves = findAvailableMoves(game);
-				game.previousAction = 'select ' + shorthandSequence(selection);
+				game.availableMoves = findAvailableMoves(game); // XXX defer until later? unless we have debug render on
+				game.previousAction = 'select ' + shorthandSequence(selection, true);
 				return game;
 			}
 		}
 
-		// TODO invalid move
-		// TODO move card
+		if (!this.availableMoves || !this.selection?.cards.length) {
+			// XXX test? remove?
+			return this.__clone({ action: 'touch stop' });
+		}
 
-		game.previousAction = 'touch stop';
-		return game;
+		const cursorSequence = getSequenceAt(this, this.cursor);
+		const from_card = this.selection.cards[0];
+		const to_card: Card | undefined = cursorSequence.cards[cursorSequence.cards.length - 1];
+		const to_card_location = to_card?.location || this.cursor; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+		const move = `${shorthandPosition(from_card.location)}${shorthandPosition(to_card_location)}`;
+		const action = `move ${move} ${shorthandSequence(this.selection)}→${to_card ? shorthandCard(to_card) : to_card_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+
+		const valid = this.availableMoves.some((location) => isLocationEqual(this.cursor, location));
+		if (valid) {
+			const cards = moveCards(this, this.selection, this.cursor);
+			return this.__clone({ action, cards, selection: null, availableMoves: null });
+		}
+
+		// TODO animate invalid move
+		return this.__clone({ action: 'invalid ' + action });
 	}
 
 	/**
@@ -515,6 +545,7 @@ export class FreeCell {
 			}
 		}
 
+		// REVIEW can we get rid of `d:` prefix (bcuz parse)
 		if (this.deck.length) {
 			if (this.cursor.fixture === 'deck' || this.selection?.location.fixture === 'deck') {
 				// prettier-ignore
@@ -523,18 +554,123 @@ export class FreeCell {
 					.reverse()
 					.join('');
 				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, this.selection);
-				str += `\n${deckStr}${lastCol}`;
+				str += `\nd:${deckStr}${lastCol}`;
 			} else {
 				// if no cursor/selection in deck
 				const deckStr = this.deck
 					.map((card) => shorthandCard(card))
 					.reverse()
 					.join(' ');
-				str += `\n ${deckStr} `;
+				str += `\nd: ${deckStr} `;
 			}
 		}
 
+		// XXX print and parse move history?
+
 		str += '\n ' + this.previousAction;
 		return str;
+	}
+
+	/**
+		parse a board position
+
+		this isn't fully tested, it's mostly just for setting up board positions for unit tests
+		it's _probably_ correct, but it's not bullet proof
+
+		must be a valid output of game.print(), there isn't much error correction/detection
+		i.e. must `game.print() === FreeCell.parse(game.print()).print()`
+
+		XXX detect cursor
+		XXX detect selection
+		XXX detect unused cards?
+		XXX detect duplicate cards?
+	*/
+	static parse(print: string): FreeCell {
+		const cards = new FreeCell().cards;
+		const remaining = cards.slice(0);
+
+		const lines = print.split('\n');
+		let line: string[];
+
+		const getCard = ({ rank, suit }: { rank: Rank; suit: Suit }) => {
+			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
+			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`); // FIXME test with a joker, duplicate card
+			remaining.splice(remaining.indexOf(card), 1);
+			return card;
+		};
+
+		const nextLine = () => lines.shift()?.split('').reverse() ?? [];
+		const nextCard = () => {
+			// TODO test invalid card rank
+			// TODO test invalid card suit
+			if (line.length < 3) throw new Error('not enough tokens');
+			line.pop();
+			const r = line.pop();
+			const s = line.pop();
+			const rs = parseShorthandCard(r, s);
+			if (!rs) return null;
+			return getCard(rs);
+		};
+
+		// TODO test if first line isn't present
+		line = nextLine();
+
+		// parse cells
+		const cellCount = (line.length - 1 - 3 * NUMBER_OF_FOUNDATIONS) / 3;
+		for (let i = 0; i < cellCount; i++) {
+			const card = nextCard();
+			if (card) {
+				card.location = { fixture: 'cell', data: [i] };
+			}
+		}
+
+		// parse foundations
+		for (let i = 0; i < NUMBER_OF_FOUNDATIONS; i++) {
+			const card = nextCard();
+			if (card) {
+				card.location = { fixture: 'foundation', data: [i] };
+
+				// …and all cards of lesser rank
+				const ranks = RankList.slice(0);
+				while (ranks.pop() !== card.rank); // pull off all the ranks we do not want
+				ranks.forEach((r) => {
+					getCard({ rank: r, suit: card.suit }).location = { fixture: 'foundation', data: [i] };
+				});
+			}
+		}
+
+		// parse cascades
+		let row = 0;
+		// TODO test if first line isn't present
+		line = nextLine();
+		const cascadeLineLength = line.length;
+		const cascadeCount = (cascadeLineLength - 1) / 3;
+		while (line.length === cascadeLineLength) {
+			// FIXME come up with a better metric than 25 (actions can be 25 chars, decks could be too)
+			for (let i = 0; i < cascadeCount; i++) {
+				const card = nextCard();
+				if (card) {
+					card.location = { fixture: 'cascade', data: [i, row] };
+				}
+			}
+			row++;
+			// TODO test if line isn't present
+			line = nextLine();
+		}
+
+		// TODO handle deck
+		const deckLength = 0;
+
+		// add the remaining cards to the deck
+		remaining.forEach((card, idx) => {
+			card.location = { fixture: 'deck', data: [deckLength + idx] };
+		});
+
+		line.pop();
+		const action = line.reverse().join('');
+
+		const game = new FreeCell({ cellCount, cascadeCount, cards });
+		game.previousAction = action;
+		return game;
 	}
 }

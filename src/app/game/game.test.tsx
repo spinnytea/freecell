@@ -34,7 +34,7 @@ describe('game', () => {
 			'' +
 				'>                        \n' +
 				'                         \n' +
-				' KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
+				'd: KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
 				' init'
 		);
 	});
@@ -205,10 +205,67 @@ describe('game', () => {
 
 		test('3 cascades', () => {
 			expect(() => new FreeCell({ cascadeCount: 3 })).toThrow(
-				'Must have at least 4 cascades; requested "3".'
+				'Must have at least as many cascades as foundations (4); requested "3".'
 			);
 		});
 
 		// REVIEW is there a max number of cascades?
+	});
+
+	describe('parse', () => {
+		test('first (stock)', () => {
+			const game = new FreeCell().dealAll({ demo: true }).setCursor({ fixture: 'cell', data: [1] });
+			expect(game.print()).toBe(
+				'' +
+					' 2S>2H 2D 2C AS AH AD AC \n' +
+					' KS KH KD KC QS QH QD QC \n' +
+					' JS JH JD JC TS TH TD TC \n' +
+					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C             \n' +
+					' cursor set'
+			);
+			expect(FreeCell.parse(game.print()).print()).toBe(
+				'' +
+					'>2S 2H 2D 2C AS AH AD AC \n' +
+					' KS KH KD KC QS QH QD QC \n' +
+					' JS JH JD JC TS TH TD TC \n' +
+					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C             \n' +
+					' cursor set'
+			);
+		});
+
+		test('second (hand-crafted)', () => {
+			const print =
+				'>            KD AC       \n' +
+				' 2C 3C 4C 5C 6C 7C 8C    \n' +
+				' KH                      \n' +
+				' QS                      \n' +
+				' JH                      \n' +
+				' 5S                      \n' +
+				' 4H                      \n' +
+				' 2S                      \n';
+			expect(FreeCell.parse(print + ' hand-jammed').print()).toBe(
+				print +
+					'd: KS KC QH QC JS JC TS TH TC 9S 9H 9C 8S 8H 7S 7H 6S 6H 5H 4S 3S 3H 2H AS AH \n' +
+					' hand-jammed'
+			);
+		});
+
+		test('win state', () => {
+			const print =
+				'>            KC KD KH KS \n' + //
+				'                         \n' + //
+				' hand-jammed';
+			expect(FreeCell.parse(print).print()).toBe(print);
+		});
+
+		test.todo('test the state');
+
+		test.todo('more cases?');
 	});
 });

@@ -1,4 +1,11 @@
-import { CardLocation, CardSequence, isAdjacent, isLocationEqual, isRed } from '@/app/game/card';
+import {
+	Card,
+	CardLocation,
+	CardSequence,
+	isAdjacent,
+	isLocationEqual,
+	isRed,
+} from '@/app/game/card';
 import { FreeCell } from '@/app/game/game';
 
 export function getSequenceAt(game: FreeCell, location: CardLocation): CardSequence {
@@ -6,27 +13,40 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 
 	switch (location.fixture) {
 		case 'deck':
-			if (game.deck[d0]) {
-				return {
-					location,
-					cards: [game.deck[d0]],
-					canMove: false,
-				};
+			{
+				const card = game.deck[d0];
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+				if (card) {
+					return {
+						location,
+						cards: [card],
+						canMove: false,
+					};
+				}
 			}
 			break;
 		case 'foundation':
-			// IDEA config for "allow foundation selection"
+			{
+				const card = game.foundations[d0];
+				if (card) {
+					return {
+						location,
+						cards: [card],
+						canMove: false,
+					};
+				}
+			}
 			break;
 		case 'cell':
-			if (game.cells[d0]) {
-				return {
-					location,
-					// REVIEW remove ts-ignore
-					// eslint-disable-next-line
-					// @ts-ignore
-					cards: [game.cells[d0]],
-					canMove: true,
-				};
+			{
+				const card = game.cells[d0];
+				if (card) {
+					return {
+						location,
+						cards: [card],
+						canMove: true,
+					};
+				}
 			}
 			break;
 		case 'cascade':
@@ -63,6 +83,25 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 	return { location, cards: [], canMove: false };
 }
 
+export function countEmptyCells(game: FreeCell): number {
+	return game.cells.reduce((ret, card) => ret + (card ? 0 : 1), 0);
+}
+
+export function countEmptyCascades(game: FreeCell): number {
+	return game.tableau.reduce((ret, cascade) => ret + (cascade.length ? 0 : 1), 0);
+}
+
+/**
+	To move a sequence, you need to be able to move all of the cards individually.
+	But that's lame, so we can "pretend" to move them for you using empty cells and empty cascades.
+
+	max sequence height:
+	`2^m * (n + 1)`, `m` = empty cascades, `n` = empty cells
+*/
+export function maxMovableSequenceLength(game: FreeCell): number {
+	return Math.pow(2, countEmptyCascades(game)) * (countEmptyCells(game) + 1);
+}
+
 export function findAvailableMoves(game: FreeCell): CardLocation[] {
 	const availableMoves: CardLocation[] = [];
 
@@ -93,19 +132,71 @@ export function findAvailableMoves(game: FreeCell): CardLocation[] {
 		});
 	}
 
+	const mmsl = maxMovableSequenceLength(game);
 	game.tableau.forEach((cascade, idx) => {
-		const tail_card = cascade[cascade.length - 1];
-		if (!cascade.length) {
-			availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length] });
-		} else if (
-			isRed(tail_card.suit) !== isRed(head_card.suit) &&
-			isAdjacent({ min: head_card.rank, max: tail_card.rank })
-		) {
-			availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length - 1] });
+		// typescript is confused, we need to gaurd against game.selection even though we did it above
+		if (game.selection) {
+			const tail_card = cascade[cascade.length - 1];
+			if (!cascade.length) {
+				if (game.selection.cards.length <= mmsl / 2) {
+					availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length] });
+				}
+			} else if (
+				isRed(tail_card.suit) !== isRed(head_card.suit) &&
+				isAdjacent({ min: head_card.rank, max: tail_card.rank }) &&
+				game.selection.cards.length <= mmsl
+			) {
+				availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length - 1] });
+			}
 		}
 	});
 
 	return availableMoves;
+}
+
+/**
+	TODO use this for dealing
+	TODO use this for auto-foundation
+	TODO use this for animate-move
+*/
+export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation): Card[] {
+	if (from.cards.length === 0) {
+		return game.cards;
+	}
+	if (to.fixture === 'deck') {
+		// XXX can we, in theory, move a card to the deck? what does that look like
+		//  - we should be able to move them to the bottom of the deck
+		//  - or move them to the top of the deck
+		return game.cards;
+	}
+	if (to.fixture !== 'cascade' && from.cards.length > 1) {
+		return game.cards;
+	}
+
+	game = game.__clone({ action: 'noop' }); // clones the cards/table so we can safely make changes
+	from = getSequenceAt(game, from.location);
+
+	switch (to.fixture) {
+		case 'cell':
+			from.cards[0].location = to;
+			break;
+		case 'foundation':
+			// REVIEW if there is already a card at this location, then we will eat it?
+			//  - foundation needs to moved "off the board" (or at least a z-index negative enough that they are stacked correctly)
+			from.cards[0].location = to;
+			break;
+		case 'cascade':
+			// move the selection to the end of the cascade
+			from.cards.forEach((card, idx) => {
+				card.location = {
+					fixture: 'cascade',
+					data: [to.data[0], game.tableau[to.data[0]].length + idx],
+				};
+			});
+			break;
+	}
+
+	return game.cards;
 }
 
 export function getPrintSeparator(

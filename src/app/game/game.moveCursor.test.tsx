@@ -1,3 +1,4 @@
+import { CardLocation } from '@/app/game/card';
 import { FreeCell } from '@/app/game/game';
 
 describe('moveCursor', () => {
@@ -45,6 +46,7 @@ describe('moveCursor', () => {
 			});
 
 			describe('going off-bottom moves to cascade', () => {
+				// moves to last card of cascade
 				test('single', () => {
 					const game = new FreeCell({ cursor: { fixture: 'cell', data: [2] } })
 						.dealAll()
@@ -54,9 +56,9 @@ describe('moveCursor', () => {
 					expect(game.previousAction).toBe('cursor down w');
 				});
 
-				test.skip('sequence', () => {
-					// tbd
-				});
+				// moves to top of sequence (at the bottom of the cascade)
+				// 3-2-A,9-8-7
+				test.todo('sequence');
 
 				test('empty', () => {
 					const game = new FreeCell({ cursor: { fixture: 'cell', data: [2] } }).moveCursor('down');
@@ -66,10 +68,20 @@ describe('moveCursor', () => {
 				});
 			});
 
-			test.skip('size mismatch: cell + foundation < tableau', () => {
-				// just excited for other things
-				// (card | stop | fond)
-				//  0123   4567   89ab
+			test('size mismatch: cell + foundation < tableau', () => {
+				// (cd | stop | fond)
+				//  01   2345   6789
+				let game = new FreeCell({ cascadeCount: 10, cellCount: 2 }).dealAll();
+
+				game = game.setCursor({ fixture: 'cell', data: [0] }).moveCursor('down');
+				expect(game.tableau[0].length).toBe(6);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 5] });
+				expect(game.previousAction).toBe('cursor down w');
+
+				game = game.setCursor({ fixture: 'cell', data: [1] }).moveCursor('down');
+				expect(game.tableau[1].length).toBe(6);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [1, 5] });
+				expect(game.previousAction).toBe('cursor down w');
 			});
 
 			test.todo('size mismatch: cell + foundation > tableau');
@@ -133,9 +145,9 @@ describe('moveCursor', () => {
 					expect(game.previousAction).toBe('cursor down w');
 				});
 
-				test.skip('sequence', () => {
-					// tbd
-				});
+				// moves to top of sequence (at the bottom of the cascade)
+				// 3-2-A,9-8-7
+				test.todo('sequence');
 
 				test('empty', () => {
 					const game = new FreeCell({ cursor: { fixture: 'foundation', data: [1] } }).moveCursor(
@@ -147,10 +159,30 @@ describe('moveCursor', () => {
 				});
 			});
 
-			test.skip('size mismatch: cell + foundation < tableau', () => {
-				// just excited for other things
-				// (card | stop | fond)
-				//  0123   4567   89ab
+			test('size mismatch: cell + foundation < tableau', () => {
+				// (cd | stop | fond)
+				//  01   2345   6789
+				let game = new FreeCell({ cascadeCount: 10, cellCount: 2 }).dealAll();
+
+				game = game.setCursor({ fixture: 'foundation', data: [0] }).moveCursor('down');
+				expect(game.tableau[6].length).toBe(5);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 4] });
+				expect(game.previousAction).toBe('cursor down w');
+
+				game = game.setCursor({ fixture: 'foundation', data: [1] }).moveCursor('down');
+				expect(game.tableau[6].length).toBe(5);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 4] });
+				expect(game.previousAction).toBe('cursor down w');
+
+				game = game.setCursor({ fixture: 'foundation', data: [2] }).moveCursor('down');
+				expect(game.tableau[8].length).toBe(5);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [8, 4] });
+				expect(game.previousAction).toBe('cursor down w');
+
+				game = game.setCursor({ fixture: 'foundation', data: [3] }).moveCursor('down');
+				expect(game.tableau[9].length).toBe(5);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [9, 4] });
+				expect(game.previousAction).toBe('cursor down w');
 			});
 
 			test.todo('size mismatch: cell + foundation > tableau');
@@ -189,10 +221,6 @@ describe('moveCursor', () => {
 						.moveCursor('left');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 2] });
 					expect(game.previousAction).toBe('cursor left');
-				});
-
-				test.skip('sequence', () => {
-					// tbd
 				});
 
 				test('empty', () => {
@@ -241,41 +269,35 @@ describe('moveCursor', () => {
 				});
 			});
 
-			describe('within up and down', () => {
-				test('single', () => {
-					let game = new FreeCell().dealAll().setCursor({ fixture: 'cascade', data: [2, 0] });
-					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] });
+			test('within up and down', () => {
+				let game = new FreeCell().dealAll().setCursor({ fixture: 'cascade', data: [2, 0] });
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] });
 
-					game = game.moveCursor('down');
-					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 1] });
-					expect(game.previousAction).toBe('cursor down');
+				game = game.moveCursor('down');
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 1] });
+				expect(game.previousAction).toBe('cursor down');
 
-					game = game
-						.moveCursor('down') // 2
-						.moveCursor('down') // 3
-						.moveCursor('down') // 4
-						.moveCursor('down') // 5
-						.moveCursor('down');
-					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
-					expect(game.previousAction).toBe('cursor down');
+				game = game
+					.moveCursor('down') // 2
+					.moveCursor('down') // 3
+					.moveCursor('down') // 4
+					.moveCursor('down') // 5
+					.moveCursor('down');
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
+				expect(game.previousAction).toBe('cursor down');
 
-					game = game.moveCursor('up');
-					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 5] });
-					expect(game.previousAction).toBe('cursor up');
+				game = game.moveCursor('up');
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 5] });
+				expect(game.previousAction).toBe('cursor up');
 
-					game = game
-						.moveCursor('up') // 4
-						.moveCursor('up') // 3
-						.moveCursor('up') // 2
-						.moveCursor('up') // 1
-						.moveCursor('up');
-					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] });
-					expect(game.previousAction).toBe('cursor up');
-				});
-
-				test.skip('sequence', () => {
-					// tbd
-				});
+				game = game
+					.moveCursor('up') // 4
+					.moveCursor('up') // 3
+					.moveCursor('up') // 2
+					.moveCursor('up') // 1
+					.moveCursor('up');
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] });
+				expect(game.previousAction).toBe('cursor up');
 			});
 
 			test('going off-left wraps', () => {
@@ -319,10 +341,40 @@ describe('moveCursor', () => {
 					expect(game.previousAction).toBe('cursor up w');
 				});
 
-				test.skip('size mismatch: cell + foundation < tableau', () => {
-					// just excited for other things
-					// (card | stop | fond)
-					//  0123   4567   89ab
+				describe('size mismatch: cell + foundation < tableau', () => {
+					// (cd | stop | fond)
+					//  01   2345   6789
+					test.each`
+						col  | location                                | action
+						${0} | ${{ fixture: 'cell', data: [0] }}       | ${'cursor up w'}
+						${1} | ${{ fixture: 'cell', data: [1] }}       | ${'cursor up w'}
+						${2} | ${{ fixture: 'cascade', data: [2, 0] }} | ${'cursor up'}
+						${3} | ${{ fixture: 'cascade', data: [3, 0] }} | ${'cursor up'}
+						${4} | ${{ fixture: 'cascade', data: [4, 0] }} | ${'cursor up'}
+						${5} | ${{ fixture: 'cascade', data: [5, 0] }} | ${'cursor up'}
+						${6} | ${{ fixture: 'foundation', data: [0] }} | ${'cursor up w'}
+						${7} | ${{ fixture: 'foundation', data: [1] }} | ${'cursor up w'}
+						${8} | ${{ fixture: 'foundation', data: [2] }} | ${'cursor up w'}
+						${9} | ${{ fixture: 'foundation', data: [3] }} | ${'cursor up w'}
+					`(
+						'col $col',
+						({
+							col,
+							location,
+							action,
+						}: {
+							col: number;
+							location: CardLocation;
+							action: string;
+						}) => {
+							const game = new FreeCell({ cascadeCount: 10, cellCount: 2 })
+								.dealAll()
+								.setCursor({ fixture: 'cascade', data: [col, 0] })
+								.moveCursor('up');
+							expect(game.cursor).toEqual(location);
+							expect(game.previousAction).toBe(action);
+						}
+					);
 				});
 
 				test.todo('size mismatch: cell + foundation > tableau');
@@ -423,7 +475,7 @@ describe('moveCursor', () => {
 							' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
 							' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
 							' 3S 3H 3D 3C             \n' +
-							' 2S 2H>2D 2C AS AH AD AC \n' +
+							'd: 2S 2H>2D 2C AS AH AD AC \n' +
 							' deal most cards'
 					);
 					expect(game.cursor).toEqual({ fixture: 'deck', data: [5] });
@@ -433,9 +485,9 @@ describe('moveCursor', () => {
 					expect(game.previousAction).toBe('cursor up w');
 				});
 
-				test.skip('sequence', () => {
-					// tbd
-				});
+				// moves to top of sequence (at the bottom of the cascade)
+				// 3-2-A,9-8-7
+				test.todo('sequence');
 
 				test('empty', () => {
 					const game = new FreeCell({ cursor: { fixture: 'deck', data: [49] } }).moveCursor('up');
@@ -452,10 +504,46 @@ describe('moveCursor', () => {
 		});
 	});
 
-	describe('has selection', () => {
+	describe('has selection only moves to valid locations', () => {
 		// only cycle between places that the selection can move
-		test.skip('only moves to valid locations', () => {
-			// not implemented yet
+		describe('cell', () => {
+			test.todo('with left and right');
+
+			test.todo('going off-right wraps to foundation');
+
+			test.todo('going off-left wraps to cascade');
+
+			test.todo('going off-top stops');
+
+			test.todo('gogin off-bottom wraps to cascade');
+		});
+
+		describe('foundation', () => {
+			test.todo('with left and right');
+
+			test.todo('going off-right wraps to cascade');
+
+			test.todo('going off-left wraps to cell');
+
+			test.todo('going off-top stops');
+
+			test.todo('gogin off-bottom wraps to cascade');
+		});
+
+		describe('cascade', () => {
+			test.todo('with left and right');
+
+			test.todo('going off-right wraps to cell');
+
+			test.todo('going off-left wraps to foundation');
+
+			describe('going off-top', () => {
+				test.todo('wraps to cell');
+
+				test.todo('wraps to foundation');
+			});
+
+			test.todo('gogin off-bottom stops');
 		});
 	});
 });
