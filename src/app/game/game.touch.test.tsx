@@ -430,7 +430,6 @@ describe('game.touch', () => {
 		test.todo('select when current select cannot move'); // select
 	});
 
-	// FIXME test.skip
 	describe('move card', () => {
 		let game: FreeCell;
 		beforeEach(() => {
@@ -1020,8 +1019,50 @@ describe('game.touch', () => {
 							.touch();
 					});
 
-					test.skip('single', () => {
-						// XXX
+					test('single', () => {
+						game = game.setCursor({ fixture: 'cascade', data: [4, 0] });
+						expect(game.print()).toBe(
+							'' + //
+								'             7C 8D TH KS \n' + //
+								'   |TC|   KD>JH          \n' + //
+								'   |9D|   QC             \n' + //
+								'   |8C|   JD             \n' + //
+								'd: KH KC QH QD JC TD 9C \n' + //
+								' cursor set'
+						);
+						expect(game.cursor).toEqual({ fixture: 'cascade', data: [4, 0] });
+						expect(game.selection).toEqual({
+							location: { fixture: 'cascade', data: [1, 0] },
+							cards: [
+								{ rank: '10', suit: 'clubs', location: { fixture: 'cascade', data: [1, 0] } },
+								{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 1] } },
+								{ rank: '8', suit: 'clubs', location: { fixture: 'cascade', data: [1, 2] } },
+							],
+							canMove: true,
+						});
+						expect(game.availableMoves).toEqual([
+							{ fixture: 'cascade', data: [0, 0] },
+							{ fixture: 'cascade', data: [2, 0] },
+							{ fixture: 'cascade', data: [3, 2] },
+							{ fixture: 'cascade', data: [4, 0] },
+							{ fixture: 'cascade', data: [5, 0] },
+							{ fixture: 'cascade', data: [6, 0] },
+							{ fixture: 'cascade', data: [7, 0] },
+						]);
+						game = game.touch();
+						expect(game.print()).toBe(
+							'' + //
+								'             7C 8D TH KS \n' + //
+								'          KD>JH          \n' + //
+								'          QC TC          \n' + //
+								'          JD 9D          \n' + //
+								'             8C          \n' + //
+								'd: KH KC QH QD JC TD 9C \n' + //
+								' move 25 TC-9D-8C→JH'
+						);
+						expect(game.cursor).toEqual({ fixture: 'cascade', data: [4, 0] });
+						expect(game.selection).toEqual(null);
+						expect(game.availableMoves).toEqual(null);
 					});
 
 					describe('sequence', () => {
@@ -1029,8 +1070,52 @@ describe('game.touch', () => {
 
 						test.todo('middle');
 
-						test.skip('bottom', () => {
-							// XXX
+						test('bottom', () => {
+							game = game.setCursor({ fixture: 'cascade', data: [3, 2] });
+							expect(game.print()).toBe(
+								'' + //
+									'             7C 8D TH KS \n' + //
+									'   |TC|   KD JH          \n' + //
+									'   |9D|   QC             \n' + //
+									'   |8C|  >JD             \n' + //
+									'd: KH KC QH QD JC TD 9C \n' + //
+									' cursor set'
+							);
+							expect(game.cursor).toEqual({ fixture: 'cascade', data: [3, 2] });
+							expect(game.selection).toEqual({
+								location: { fixture: 'cascade', data: [1, 0] },
+								cards: [
+									{ rank: '10', suit: 'clubs', location: { fixture: 'cascade', data: [1, 0] } },
+									{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 1] } },
+									{ rank: '8', suit: 'clubs', location: { fixture: 'cascade', data: [1, 2] } },
+								],
+								canMove: true,
+							});
+							expect(game.availableMoves).toEqual([
+								{ fixture: 'cascade', data: [0, 0] },
+								{ fixture: 'cascade', data: [2, 0] },
+								{ fixture: 'cascade', data: [3, 2] },
+								{ fixture: 'cascade', data: [4, 0] },
+								{ fixture: 'cascade', data: [5, 0] },
+								{ fixture: 'cascade', data: [6, 0] },
+								{ fixture: 'cascade', data: [7, 0] },
+							]);
+							game = game.touch();
+							expect(game.print()).toBe(
+								'' + //
+									'             7C 8D TH KS \n' + //
+									'          KD JH          \n' + //
+									'          QC             \n' + //
+									'         >JD             \n' + //
+									'          TC             \n' + //
+									'          9D             \n' + //
+									'          8C             \n' + //
+									'd: KH KC QH QD JC TD 9C \n' + //
+									' move 24 TC-9D-8C→JD'
+							);
+							expect(game.cursor).toEqual({ fixture: 'cascade', data: [3, 2] });
+							expect(game.selection).toEqual(null);
+							expect(game.availableMoves).toEqual(null);
 						});
 					});
 
@@ -1082,8 +1167,55 @@ describe('game.touch', () => {
 			});
 		});
 
-		test.skip('cannot move to invalid location', () => {
-			// XXX
+		test('cannot move to invalid location', () => {
+			game = game
+				.dealAll({ demo: true })
+				.setCursor({ fixture: 'cascade', data: [7, 4] })
+				.touch()
+				.setCursor({ fixture: 'cascade', data: [4, 4] });
+			expect(game.print()).toBe(
+				'' +
+					' QS AD KH 2D QC AH JS 4D \n' +
+					' 8H 5D KS 3C 3S 3H JD AC \n' +
+					' 9H 7D KC 5C 9D 5H 2C 2H \n' +
+					' 6D TC 4H TS 3D 8S QH 4S \n' +
+					' 6S 2S 5S 7H QD 8C JC 8D \n' +
+					' AS 6H 9S 4C>KD TD 6C|9C|\n' +
+					' 7C JH 7S TH             \n' +
+					' cursor set'
+			);
+			expect(game.cursor).toEqual({ fixture: 'cascade', data: [4, 4] });
+			expect(game.selection).toEqual({
+				location: { fixture: 'cascade', data: [7, 4] },
+				cards: [{ rank: '9', suit: 'clubs', location: { fixture: 'cascade', data: [7, 4] } }],
+				canMove: true,
+			});
+			expect(game.availableMoves).toEqual([
+				{ fixture: 'cascade', data: [3, 5] },
+				{ fixture: 'cascade', data: [5, 4] },
+			]);
+			game = game.touch();
+			expect(game.print()).toBe(
+				'' +
+					' QS AD KH 2D QC AH JS 4D \n' +
+					' 8H 5D KS 3C 3S 3H JD AC \n' +
+					' 9H 7D KC 5C 9D 5H 2C 2H \n' +
+					' 6D TC 4H TS 3D 8S QH 4S \n' +
+					' 6S 2S 5S 7H QD 8C JC 8D \n' +
+					' AS 6H 9S 4C>KD TD 6C|9C|\n' +
+					' 7C JH 7S TH             \n' +
+					' invalid move 85 9C→KD'
+			);
+			expect(game.cursor).toEqual({ fixture: 'cascade', data: [4, 4] });
+			expect(game.selection).toEqual({
+				location: { fixture: 'cascade', data: [7, 4] },
+				cards: [{ rank: '9', suit: 'clubs', location: { fixture: 'cascade', data: [7, 4] } }],
+				canMove: true,
+			});
+			expect(game.availableMoves).toEqual([
+				{ fixture: 'cascade', data: [3, 5] },
+				{ fixture: 'cascade', data: [5, 4] },
+			]);
 		});
 	});
 });
