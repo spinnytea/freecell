@@ -1,4 +1,9 @@
 import { FreeCell } from '@/app/game/game';
+import {
+	countEmptyCascades,
+	countEmptyCells,
+	maxMovableSequenceLength,
+} from '@/app/game/game-utils';
 
 describe('game.touch', () => {
 	// also tests print, since select is rendered
@@ -359,8 +364,52 @@ describe('game.touch', () => {
 				expect(game.previousAction).toBe('deselect 1 QH-JC');
 			});
 
-			test.skip('sequence too tall', () => {
-				// XXX
+			test('sequence too tall', () => {
+				game = FreeCell.parse(
+					'' + //
+						'>         2D             \n' + //
+						' AS AH KC KD AD AC    2C \n' + //
+						'       QD QC             \n' + //
+						'       JC JD             \n' + //
+						'       TD TC             \n' + //
+						'       9C 9D             \n' + //
+						'       8D 8C             \n' + //
+						'       7C 7D             \n' + //
+						' hand-jammed'
+				)
+					.setCursor({ fixture: 'cascade', data: [2, 1] })
+					.touch();
+				expect(game.print()).toBe(
+					'' + //
+						'          2D             \n' + //
+						' AS AH KC KD AD AC    2C \n' + //
+						'      >QD|QC             \n' + //
+						'      |JC|JD             \n' + //
+						'      |TD|TC             \n' + //
+						'      |9C|9D             \n' + //
+						'      |8D|8C             \n' + //
+						'      |7C|7D             \n' + //
+						'd: KS KH QS QH JS JH TS TH 9S 9H 8S 8H 7S 7H 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H \n' +
+						' select 3 QD-JC-TD-9C-8D-7C'
+				);
+				expect(game.selection?.cards.length).toBe(6);
+				expect(countEmptyCells(game)).toBe(3);
+				expect(countEmptyCascades(game)).toBe(1);
+				expect(maxMovableSequenceLength(game)).toBe(8); // if we were to move to filled cascade
+				expect(maxMovableSequenceLength(game) / 2).toBe(4); // since we are moving to an empty cascade
+				expect(game.selection).toEqual({
+					location: { fixture: 'cascade', data: [2, 1] },
+					cards: [
+						{ rank: 'queen', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 1] } },
+						{ rank: 'jack', suit: 'clubs', location: { fixture: 'cascade', data: [2, 2] } },
+						{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 3] } },
+						{ rank: '9', suit: 'clubs', location: { fixture: 'cascade', data: [2, 4] } },
+						{ rank: '8', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 5] } },
+						{ rank: '7', suit: 'clubs', location: { fixture: 'cascade', data: [2, 6] } },
+					],
+					canMove: true,
+				});
+				expect(game.availableMoves).toEqual([]);
 			});
 
 			test('empty', () => {
@@ -479,7 +528,7 @@ describe('game.touch', () => {
 			test.todo('to: deck');
 
 			test('to: cell', () => {
-				let game = FreeCell.parse(
+				game = FreeCell.parse(
 					'' + //
 						'>KS          JC JD JH TS \n' + //
 						' KC KD KH JS QC QD QH QS \n' + //
@@ -517,7 +566,7 @@ describe('game.touch', () => {
 			});
 
 			test('to: foundation', () => {
-				let game = FreeCell.parse(
+				game = FreeCell.parse(
 					'' + //
 						'>KS          JC JD JH QS \n' + //
 						' KC KD KH    QC QD QH   \n' + //
@@ -559,7 +608,7 @@ describe('game.touch', () => {
 
 			describe('to: cascade', () => {
 				test('single', () => {
-					let game = FreeCell.parse(
+					game = FreeCell.parse(
 						'' + //
 							'>QC QD QH QS TC TD TH TS \n' + //
 							' KC KD KH KS JC JD JH JS \n' + //
@@ -597,7 +646,6 @@ describe('game.touch', () => {
 				});
 
 				describe('sequence', () => {
-					let game: FreeCell;
 					beforeEach(() => {
 						game = FreeCell.parse(
 							'' + //
@@ -659,7 +707,7 @@ describe('game.touch', () => {
 				});
 
 				test('empty', () => {
-					let game = FreeCell.parse(
+					game = FreeCell.parse(
 						'' + //
 							'>QC QD QH QS TC TD TH TS \n' + //
 							' KC       KS JC JD JH JS \n' + //
@@ -888,7 +936,7 @@ describe('game.touch', () => {
 						test.todo('middle');
 
 						test('bottom', () => {
-							let game = FreeCell.parse(
+							game = FreeCell.parse(
 								'' + //
 									'>            TC 8D KH KS \n' + //
 									'    TD KC KD    9D       \n' + //
@@ -943,7 +991,7 @@ describe('game.touch', () => {
 					});
 
 					test('empty', () => {
-						let game = FreeCell.parse(
+						game = FreeCell.parse(
 							'' + //
 								'>            TC 8D KH KS \n' + //
 								'    TD KC KD    9D       \n' + //
@@ -1005,7 +1053,6 @@ describe('game.touch', () => {
 				test.todo('to: foundation');
 
 				describe('to: cascade', () => {
-					let game: FreeCell;
 					beforeEach(() => {
 						game = FreeCell.parse(
 							'' + //
@@ -1162,6 +1209,15 @@ describe('game.touch', () => {
 						expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
 						expect(game.selection).toEqual(null);
 						expect(game.availableMoves).toEqual(null);
+					});
+
+					describe('too tall', () => {
+						// same as ^^ game.touch > select > cascade > sequence too tall
+						test.todo('too tall for anything');
+
+						test.todo('too tall for target cascade');
+
+						test.todo('enough for cascade, but not for empty cascade');
 					});
 				});
 			});

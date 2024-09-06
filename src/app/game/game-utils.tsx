@@ -1,4 +1,11 @@
-import { CardLocation, CardSequence, isAdjacent, isLocationEqual, isRed } from '@/app/game/card';
+import {
+	Card,
+	CardLocation,
+	CardSequence,
+	isAdjacent,
+	isLocationEqual,
+	isRed,
+} from '@/app/game/card';
 import { FreeCell } from '@/app/game/game';
 
 export function getSequenceAt(game: FreeCell, location: CardLocation): CardSequence {
@@ -69,6 +76,25 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 	return { location, cards: [], canMove: false };
 }
 
+export function countEmptyCells(game: FreeCell): number {
+	return game.cells.reduce((ret, card) => ret + (card ? 0 : 1), 0);
+}
+
+export function countEmptyCascades(game: FreeCell): number {
+	return game.tableau.reduce((ret, cascade) => ret + (cascade.length ? 0 : 1), 0);
+}
+
+/**
+	To move a sequence, you need to be able to move all of the cards individually.
+	But that's lame, so we can "pretend" to move them for you using empty cells and empty cascades.
+
+	max sequence height:
+	`2^m * (n + 1)`, `m` = empty cascades, `n` = empty cells
+*/
+export function maxMovableSequenceLength(game: FreeCell): number {
+	return Math.pow(2, countEmptyCascades(game)) * (countEmptyCells(game) + 1);
+}
+
 export function findAvailableMoves(game: FreeCell): CardLocation[] {
 	const availableMoves: CardLocation[] = [];
 
@@ -99,17 +125,22 @@ export function findAvailableMoves(game: FreeCell): CardLocation[] {
 		});
 	}
 
-	// FIXME limit sequence max height (2^m * (n + 1), m = empty cascades, n = empty cells)
-	//  - max to empty cascade is m/2 (since the target cannot be used for stacks)
+	const mmsl = maxMovableSequenceLength(game);
 	game.tableau.forEach((cascade, idx) => {
-		const tail_card = cascade[cascade.length - 1];
-		if (!cascade.length) {
-			availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length] });
-		} else if (
-			isRed(tail_card.suit) !== isRed(head_card.suit) &&
-			isAdjacent({ min: head_card.rank, max: tail_card.rank })
-		) {
-			availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length - 1] });
+		// typescript is confused, we need to gaurd against game.selection even though we did it above
+		if (game.selection) {
+			const tail_card = cascade[cascade.length - 1];
+			if (!cascade.length) {
+				if (game.selection.cards.length <= mmsl / 2) {
+					availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length] });
+				}
+			} else if (
+				isRed(tail_card.suit) !== isRed(head_card.suit) &&
+				isAdjacent({ min: head_card.rank, max: tail_card.rank }) &&
+				game.selection.cards.length <= mmsl
+			) {
+				availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length - 1] });
+			}
 		}
 	});
 

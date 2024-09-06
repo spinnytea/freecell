@@ -160,7 +160,7 @@ export function parseShorthandCard(
 	return { rank, suit };
 }
 
-export function shorthandSequence(sequence: CardSequence, includePosition: boolean = false) {
+export function shorthandSequence(sequence: CardSequence, includePosition = false) {
 	const cards = sequence.cards.map((card) => shorthandCard(card)).join('-');
 
 	if (sequence.canMove && includePosition) {
