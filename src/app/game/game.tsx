@@ -235,7 +235,10 @@ export class FreeCell {
 				case 'down':
 					return this.__clone({
 						action: 'cursor down w',
-						cursor: { fixture: 'cascade', data: [this.cells.length + d0, BOTTOM_OF_CASCADE] },
+						cursor: {
+							fixture: 'cascade',
+							data: [this.tableau.length - this.foundations.length + d0, BOTTOM_OF_CASCADE],
+						},
 					});
 			}
 		} else if (fixture === 'cascade') {
