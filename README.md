@@ -16,7 +16,6 @@ TODO main development tasks:
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 
-- TODO rename `game/*.tsx` to `game/*.ts`
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
   - deal all cards
   - cursor
