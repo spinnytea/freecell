@@ -344,10 +344,9 @@ export class FreeCell {
 			return game;
 		}
 
-		// TODO allow "move selection without deselect IF growing/shrinking sequence"
+		// TODO allow "growing/shrinking sequence of current selection"
 		if (!game.selection?.canMove) {
 			const selection = getSequenceAt(game, game.cursor);
-			// IDEA config for allow select !canMove (peek)
 			// IDEA config for "allow foundation selection"
 			if (selection.cards.length && game.cursor.fixture !== 'foundation') {
 				game.selection = selection;

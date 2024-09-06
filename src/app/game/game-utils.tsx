@@ -13,33 +13,40 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 
 	switch (location.fixture) {
 		case 'deck':
-			if (game.deck[d0]) {
-				return {
-					location,
-					cards: [game.deck[d0]],
-					canMove: false,
-				};
+			{
+				const card = game.deck[d0];
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+				if (card) {
+					return {
+						location,
+						cards: [card],
+						canMove: false,
+					};
+				}
 			}
 			break;
 		case 'foundation':
-			if (game.foundations[d0]) {
-				return {
-					location,
-					cards: [game.foundations[d0]],
-					canMove: false,
-				};
+			{
+				const card = game.foundations[d0];
+				if (card) {
+					return {
+						location,
+						cards: [card],
+						canMove: false,
+					};
+				}
 			}
 			break;
 		case 'cell':
-			if (game.cells[d0]) {
-				return {
-					location,
-					// REVIEW remove ts-ignore
-					// eslint-disable-next-line
-					// @ts-ignore
-					cards: [game.cells[d0]],
-					canMove: true,
-				};
+			{
+				const card = game.cells[d0];
+				if (card) {
+					return {
+						location,
+						cards: [card],
+						canMove: true,
+					};
+				}
 			}
 			break;
 		case 'cascade':
