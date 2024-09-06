@@ -47,7 +47,7 @@ describe('game.touch', () => {
 						'd:>KS|4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' select KS'
 				);
-				// FIXME expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 
 				game = game.setCursor({ fixture: 'deck', data: [42] });
 				expect(game.print()).toBe(
@@ -57,12 +57,12 @@ describe('game.touch', () => {
 						'd:|KS|4D 9C 5C 8H 7S 7H AD 5D>3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' cursor set'
 				);
-				// FIXME expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 
 				game = game.setCursor({ fixture: 'deck', data: [51] }).touch();
 				expect(game.previousAction).toBe('deselect KS');
 				expect(game.selection).toEqual(null);
-				// FIXME expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 			});
 
 			test('empty', () => {
@@ -72,7 +72,21 @@ describe('game.touch', () => {
 					.touch();
 				expect(game.previousAction).toBe('touch stop');
 				expect(game.selection).toEqual(null);
-				// FIXME expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(
+					game.print()
+				);
+				expect(game.print()).toBe(
+					'' +
+						' 4C QD 8S 6S TH 7C 9S 9D \n' +
+						' KS 4D 9C 5C 8H 7S 7H AD \n' +
+						' 5D 3S KD TC 3C TD JH AS \n' +
+						' JS 2D 6C 4H 7D QS 2S TS \n' +
+						' 9H AH 6D JD 8C 5H 6H 8D \n' +
+						' QH 5S KH 3H 4S 2C QC 2H \n' +
+						' JC KC 3D AC             \n' +
+						'd:>   \n' +
+						' touch stop'
+				);
 			});
 
 			test('last', () => {
@@ -89,7 +103,32 @@ describe('game.touch', () => {
 						'd: KS 4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S>9D|\n' +
 						' select 9D'
 				);
-				// FIXME expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+			});
+
+			describe('cursor x selection', () => {
+				test.each`
+					d0    | printSubstr
+					${44} | ${'7S 7H>AD 5D|3S|KD TC 3C TD'}
+					${43} | ${'7S 7H AD>5D|3S|KD TC 3C TD'}
+					${42} | ${'7S 7H AD 5D>3S|KD TC 3C TD'}
+					${41} | ${'7S 7H AD 5D|3S>KD TC 3C TD'}
+					${40} | ${'7S 7H AD 5D|3S|KD>TC 3C TD'}
+					${39} | ${'7S 7H AD 5D|3S|KD TC>3C TD'}
+				`('$d0', ({ d0, printSubstr }: { d0: number; printSubstr: string }) => {
+					game = game
+						.setCursor({ fixture: 'deck', data: [42] })
+						.touch()
+						.setCursor({ fixture: 'deck', data: [d0] });
+					expect(game.print()).toBe(
+						'' +
+							'                         \n' +
+							'                         \n' +
+							`d: KS 4D 9C 5C 8H ${printSubstr} JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n` +
+							' cursor set'
+					);
+					expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				});
 			});
 		});
 

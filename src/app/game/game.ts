@@ -564,6 +564,8 @@ export class FreeCell {
 					.join(' ');
 				str += `\nd: ${deckStr} `;
 			}
+		} else if (this.cursor.fixture === 'deck') {
+			str += `\nd:>   `;
 		}
 
 		// TODO " Y O U W I N ! "
@@ -671,7 +673,7 @@ export class FreeCell {
 			line.pop(); // d
 			line.pop(); // :
 			while (line.length >= 3) {
-				const card = nextCard(tableau_spaces);
+				const card = nextCard(deck_spaces);
 				if (card) {
 					card.location = { fixture: 'deck', data: [deckLength] };
 					deckLength++;
@@ -679,7 +681,9 @@ export class FreeCell {
 			}
 			deck_spaces.push(line.pop());
 			line = nextLine();
+		}
 
+		if (deckLength > 0) {
 			// now, reverse the deck
 			cards.forEach((card) => {
 				if (card.location.fixture === 'deck') {
@@ -740,6 +744,24 @@ export class FreeCell {
 					tableau_selection_index % (cascadeCount + 1),
 					Math.floor(tableau_selection_index / (cascadeCount + 1)),
 				],
+			};
+		}
+		const deck_cursor_index = deck_spaces.indexOf('>');
+		let deck_selection_index = deck_spaces.indexOf('|');
+		if (deck_cursor_index > -1) {
+			cursor = {
+				fixture: 'deck',
+				data: [deckLength - deck_cursor_index - 1],
+			};
+			const onlyOne = !deck_spaces.includes('|', deck_selection_index + 1);
+			if (deck_selection_index > -1 && onlyOne && deck_cursor_index === deck_selection_index - 1) {
+				deck_selection_index--;
+			}
+		}
+		if (deck_selection_index > -1) {
+			selection_location = {
+				fixture: 'deck',
+				data: [deckLength - deck_selection_index - 1],
 			};
 		}
 
