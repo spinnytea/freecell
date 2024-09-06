@@ -147,7 +147,7 @@ describe('game.touch', () => {
 				game = game.setCursor({ fixture: 'cell', data: [1] }).touch();
 				expect(game.selection).toEqual(null);
 				expect(game.previousAction).toBe('touch stop');
-				// FIXME expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 			});
 		});
 
@@ -468,7 +468,7 @@ describe('game.touch', () => {
 						'd: KS KH QS QH JS JH TS TH 9S 9H 8S 8H 7S 7H 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H \n' +
 						' select 3 QD-JC-TD-9C-8D-7C'
 				);
-				// FIXME expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 				expect(game.selection?.cards.length).toBe(6);
 				expect(countEmptyCells(game)).toBe(3);
 				expect(countEmptyCascades(game)).toBe(1);
@@ -500,12 +500,12 @@ describe('game.touch', () => {
 						'd: KS 4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' touch stop'
 				);
-				// FIXME expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 
 				game = game.setCursor({ fixture: 'cell', data: [2] }).touch();
 				expect(game.previousAction).toBe('touch stop');
 				expect(game.selection).toEqual(null);
-				// FIXME expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 			});
 
 			test('last 1', () => {

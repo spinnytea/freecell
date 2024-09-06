@@ -665,8 +665,28 @@ export class FreeCell {
 			line = nextLine();
 		}
 
-		// TODO handle deck
-		const deckLength = 0;
+		// handle deck
+		let deckLength = 0;
+		if (line[line.length - 1] === 'd' && line[line.length - 2] === ':') {
+			line.pop(); // d
+			line.pop(); // :
+			while (line.length >= 3) {
+				const card = nextCard(tableau_spaces);
+				if (card) {
+					card.location = { fixture: 'deck', data: [deckLength] };
+					deckLength++;
+				}
+			}
+			deck_spaces.push(line.pop());
+			line = nextLine();
+
+			// now, reverse the deck
+			cards.forEach((card) => {
+				if (card.location.fixture === 'deck') {
+					card.location.data[0] = deckLength - card.location.data[0] - 1;
+				}
+			});
+		}
 
 		// add the remaining cards to the deck
 		remaining.forEach((card, idx) => {
