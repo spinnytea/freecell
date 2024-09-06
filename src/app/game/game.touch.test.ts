@@ -215,6 +215,27 @@ describe('game.touch', () => {
 			expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(game.print());
 		});
 
+		test('foundation last', () => {
+			game = game
+				.dealAll({ demo: true })
+				.setCursor({ fixture: 'foundation', data: [3] })
+				.touch();
+			expect(game.selection).toEqual(null);
+			expect(game.cursor).toEqual({ fixture: 'foundation', data: [3] });
+			expect(game.print()).toBe(
+				'' +
+					' 4C QD 8S 6S TH 7C 9S>9D \n' +
+					' KS 4D 9C 5C 8H 7S 7H AD \n' +
+					' 5D 3S KD TC 3C TD JH AS \n' +
+					' JS 2D 6C 4H 7D QS 2S TS \n' +
+					' 9H AH 6D JD 8C 5H 6H 8D \n' +
+					' QH 5S KH 3H 4S 2C QC 2H \n' +
+					' JC KC 3D AC             \n' +
+					' touch stop'
+			);
+			expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(game.print());
+		});
+
 		describe('cascade', () => {
 			test('single cannot move', () => {
 				game = game
@@ -508,7 +529,9 @@ describe('game.touch', () => {
 						' JC KC 3D AC             \n' +
 						' select AS'
 				);
-				// FIXME expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(game.print());
+				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(
+					game.print()
+				);
 			});
 
 			test('last 2', () => {
@@ -530,7 +553,7 @@ describe('game.touch', () => {
 						' QC AH JS 4D             \n' +
 						' select QH-JC'
 				);
-				// FIXME expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 			});
 		});
 
