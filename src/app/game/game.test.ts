@@ -228,7 +228,7 @@ describe('game', () => {
 			);
 			expect(FreeCell.parse(game.print()).print()).toBe(
 				'' +
-					'>2S 2H 2D 2C AS AH AD AC \n' +
+					' 2S>2H 2D 2C AS AH AD AC \n' +
 					' KS KH KD KC QS QH QD QC \n' +
 					' JS JH JD JC TS TH TD TC \n' +
 					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
