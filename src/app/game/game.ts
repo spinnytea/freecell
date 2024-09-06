@@ -74,6 +74,7 @@ export class FreeCell {
 			this.cards = cards.map((card) => ({ ...card }));
 
 			// we want the objects in "cards" and there rest of the game board
+			// IDEA can we calc cells/foundations/tableau/deck on demand instead of in the constructor?
 			this.cards.forEach((card) => {
 				switch (card.location.fixture) {
 					case 'deck':
@@ -565,6 +566,7 @@ export class FreeCell {
 			}
 		}
 
+		// TODO " Y O U W I N ! "
 		// XXX print and parse move history?
 
 		str += '\n ' + this.previousAction;
@@ -580,8 +582,7 @@ export class FreeCell {
 		must be a valid output of game.print(), there isn't much error correction/detection
 		i.e. must `game.print() === FreeCell.parse(game.print()).print()`
 
-		XXX detect cursor
-		XXX detect selection
+		TODO Parse cursor, selection: collect spaces, indexOf, % 9 and / 9
 		XXX detect unused cards?
 		XXX detect duplicate cards?
 	*/
@@ -594,7 +595,7 @@ export class FreeCell {
 
 		const getCard = ({ rank, suit }: { rank: Rank; suit: Suit }) => {
 			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
-			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`); // FIXME test with a joker, duplicate card
+			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`); // XXX test with a joker, duplicate card
 			remaining.splice(remaining.indexOf(card), 1);
 			return card;
 		};
@@ -646,7 +647,7 @@ export class FreeCell {
 		const cascadeLineLength = line.length;
 		const cascadeCount = (cascadeLineLength - 1) / 3;
 		while (line.length === cascadeLineLength) {
-			// FIXME come up with a better metric than 25 (actions can be 25 chars, decks could be too)
+			// TODO come up with a better metric than 25 (actions can be 25 chars, decks could be too)
 			for (let i = 0; i < cascadeCount; i++) {
 				const card = nextCard();
 				if (card) {

@@ -52,6 +52,7 @@ TODO main development tasks:
   - wild - they can stack onto any rank, any rank can stack onto them
   - could have various counts 1-8; or maybe just 2 & 4
 - IDEA stats: # attempts (i don't like timers or move counts, but tracking resets is fine)
+- IDEA comments for all the rules? (or maybe that's too late now?)
 
 ## Technicals
 
