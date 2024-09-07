@@ -579,7 +579,7 @@ export class FreeCell {
 		if (this.win) {
 			const msg = this.tableau.length > 5 ? 'Y O U   W I N !' : 'YOU WIN !';
 			const lineLength = this.tableau.length * 3 + 1;
-			const paddingLength = (lineLength - msg.length - 2) / 2; // FIXME test with various cascadeCount
+			const paddingLength = (lineLength - msg.length - 2) / 2;
 			const spaces = '                               '; // XXX enough spaces for 10 cascadeCount
 			const padding = '                            '.substring(0, paddingLength);
 			str += '\n:' + padding + msg + padding + (paddingLength === padding.length ? '' : ' ') + ':';
