@@ -30,12 +30,15 @@ import { GameContext } from '@/app/hooks/Game/GameContext';
 
 export default function Page() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
-	// 1, 5907, 11863, 12411
-	const [game, setGame] = useState(() => new FreeCell().shuffle32(11863).dealAll({ demo: false }));
+	const [game, setGame] = useState(() => new FreeCell().shuffle32());
 
 	/** @deprecated just for testing */
 	function onClick() {
-		if (game.deck.length) {
+		if (game.win) {
+			// click to reset
+			setGame(new FreeCell().shuffle32());
+		} else if (game.deck.length) {
+			// click to deal
 			setGame(game.dealAll());
 		}
 	}

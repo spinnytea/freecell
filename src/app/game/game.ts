@@ -389,8 +389,11 @@ export class FreeCell {
 
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/
-	shuffle32(seed: number): FreeCell {
-		const game = this.__clone({ action: 'shuffle deck' });
+	shuffle32(seed?: number): FreeCell {
+		if (seed === undefined) {
+			seed = Math.floor(Math.random() * 32000) + 1;
+		}
+		const game = this.__clone({ action: `shuffle deck (${seed.toString(10)})` });
 
 		if (game.deck.length !== RankList.length * SuitList.length)
 			throw new Error('can only shuffle full decks');

@@ -45,7 +45,7 @@ describe('game', () => {
 			expect(game.deck.length).toBe(52);
 			game = game.shuffle32(1);
 			expect(game.deck.length).toBe(52);
-			expect(game.previousAction).toBe('shuffle deck');
+			expect(game.previousAction).toBe('shuffle deck (1)');
 			expect(shorthandCard(game.deck[51])).toBe('JD');
 			expect(shorthandCard(game.deck[50])).toBe('2D');
 			expect(shorthandCard(game.deck[49])).toBe('9H');
@@ -111,7 +111,7 @@ describe('game', () => {
 		test('Game #617', () => {
 			let game = new FreeCell();
 			game = game.shuffle32(617);
-			expect(game.previousAction).toBe('shuffle deck');
+			expect(game.previousAction).toBe('shuffle deck (617)');
 			game = game.dealAll();
 			expect(game.previousAction).toBe('deal all cards');
 			expect(game.print()).toBe(

@@ -11,7 +11,7 @@ TODO main development tasks:
 1. ~~shuffle/deal cards~~
 1. ~~click select -> click move (one card at a time, ¿no sequences?)~~
 1. ~~win state~~
-1. quick and dirty loop (new -> shuffle -> deal -> play -> win -> <<-- new -> shuffle -> …)
+1. ~~quick and dirty loop (new -> shuffle -> deal -> play -> win -> <<-- new -> shuffle -> …)~~
 1. everything (core game) is tested (ui selection -> move, all the way to winning)
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
