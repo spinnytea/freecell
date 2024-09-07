@@ -7,7 +7,7 @@ import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/Game/GameContext';
 import { useGame } from '@/app/hooks/Game/useGame';
 
-export default function CardsOnBoard() {
+export function CardsOnBoard() {
 	const { cards } = useGame();
 
 	// wrapper to make the dom more legible

@@ -14,12 +14,12 @@ export function CardImage({
 	rank,
 	suit,
 	width = ORIG_WIDTH,
-}: {
+}: Readonly<{
 	hidden?: boolean;
 	rank: Rank;
 	suit: Suit;
 	width?: number;
-}) {
+}>) {
 	// REVIEW do we need `priority` - it's complaining because i'm rendering the whole deck on init
 	const filename = getFilename(rank, suit, hidden);
 	const height = scale_height(width);

@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import CardsOnBoard from '@/app/components/CardsOnBoard';
+import { CardsOnBoard } from '@/app/components/CardsOnBoard';
 import { DebugCursors } from '@/app/components/DebugCursors';
 import { PileMarkers } from '@/app/components/PileMarkers';
 import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
-import WinMessage from '@/app/components/WinMessage';
+import { WinMessage } from '@/app/components/WinMessage';
 import { FreeCell } from '@/app/game/game';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { FixtureSizesContextProvider } from '@/app/hooks/FixtureSizes/FixtureSizesContextProvider';

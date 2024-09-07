@@ -10,10 +10,10 @@ import { FixtureSizesContext } from '@/app/hooks/FixtureSizes/FixtureSizesContex
 export function FixtureSizesContextProvider({
 	gameBoardRef,
 	children,
-}: {
+}: Readonly<{
 	gameBoardRef: MutableRefObject<HTMLElement | null>;
 	children: ReactNode;
-}) {
+}>) {
 	const [fixtureSizes, setFixtureSizes] = useState<FixtureSizes | null>(null);
 
 	useEffect(() => {

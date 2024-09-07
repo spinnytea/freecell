@@ -2,7 +2,7 @@ import styles_gameboard from '@/app/gameboard.module.css';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/Game/useGame';
 
-export default function WinMessage() {
+export function WinMessage() {
 	const { win } = useGame();
 	const fixtureSizes = useFixtureSizes();
 
