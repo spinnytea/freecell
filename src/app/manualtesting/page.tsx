@@ -5,6 +5,8 @@ import { RankList, SuitList } from '@/app/game/card';
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 
 /*
+	TODO much needed style overhaul
+
 	TODO manual tests for cursor/selection
 	+-----------+
 	| _ a c _ _ |
@@ -14,6 +16,10 @@ import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 	|   b       |
 	|   b       |
 	+-----------+
+
+	TODO invalid move animation
+
+	TODO animate moving a sequence
 */
 export default function Page() {
 	return (
@@ -21,7 +27,8 @@ export default function Page() {
 			<Link href="/">
 				<span>&lt;-</span> Back to game
 			</Link>
-			<div className="instruction">Spot check all the cards.</div>
+			<div className="instruction">Visual check on all Suit x Rank.</div>
+			<div className="instruction">Visual check on red/black jokers.</div>
 			<div className={styles_manualtesting.allplayingcards}>
 				{SuitList.map((suit) =>
 					RankList.map((rank) => (

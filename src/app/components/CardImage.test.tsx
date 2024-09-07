@@ -43,10 +43,4 @@ describe('CardImage', () => {
 			expect(allNames).toMatchSnapshot();
 		});
 	});
-
-	describe('manual checks', () => {
-		test.todo('visual check on all Suit x Rank');
-
-		test.todo('visual check on red/black jokers');
-	});
 });
