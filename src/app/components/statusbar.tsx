@@ -4,6 +4,8 @@ import { Checkbox } from '@/app/components/element/Checkbox';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
 
+const version = `v${process.env.version ?? 'Unknown'}`;
+
 export function StatusBar() {
 	const [settings, setSettings] = useContext(SettingsContext);
 
@@ -23,7 +25,8 @@ export function StatusBar() {
 				onChange={handleShowDebugInfoChange}
 			/>
 			<span className={styles_gameboard.statusspacer} />
-			<Link href="/manualtesting">Manual Testing</Link>
+			<Link href="/manualtesting">↗ Manual Testing</Link>
+			<span>{version}</span>
 		</section>
 	);
 }

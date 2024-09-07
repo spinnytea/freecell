@@ -47,6 +47,7 @@ export default function Page() {
 	}
 
 	useEffect(() => {
+		// FIXME keyboard events for win/deal
 		function handleKey(event: KeyboardEvent) {
 			const { key } = event;
 			let consumed = false;
@@ -87,7 +88,6 @@ export default function Page() {
 		};
 	}, []);
 
-	// FIXME render game.cursor (separate from debug view; try with debug view off)
 	// TODO render game.selection ? (separate from debug view; try with debug view off; at least it's visible)
 
 	return (

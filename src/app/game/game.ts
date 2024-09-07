@@ -190,6 +190,7 @@ export class FreeCell {
 	}
 
 	// REVIEW controls - actually play the game and see what's not quite right
+	// REVIEW refactor moveCursor out of game? setCursor yes, but move cursor?
 	moveCursor(dir: 'up' | 'right' | 'left' | 'down'): FreeCell {
 		const {
 			fixture,

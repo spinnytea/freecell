@@ -115,6 +115,7 @@ export function calcTopLeftZ(
 ): { top: number; left: number; zIndex: number } {
 	switch (fixture) {
 		case 'deck':
+			// TODO animate cursor (selection?) within deck
 			return {
 				top: fixtureSizes.deck.top,
 				left: fixtureSizes.deck.left,
@@ -130,7 +131,9 @@ export function calcTopLeftZ(
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.foundationLeft[data[0]],
-				zIndex: rank ? RankList.indexOf(rank) : 0,
+				// above the cell/cascade
+				// REVIEW cards in flight
+				zIndex: (rank ? RankList.indexOf(rank) : 0) + 100,
 			};
 		case 'cascade': {
 			const ret = {

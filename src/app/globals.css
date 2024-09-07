@@ -100,12 +100,13 @@ body::before {
 
 a {
 	color: inherit;
-	text-decoration: none;
+	text-decoration: underline;
+	text-decoration-color: rgba(var(--foreground-rgb), 0.2);
 }
 a:hover,
 a:focus,
 a:focus-within {
-	text-decoration: underline;
+	text-decoration-color: rgb(var(--foreground-rgb));
 }
 
 @media (prefers-color-scheme: dark) {
