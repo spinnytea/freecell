@@ -6,6 +6,14 @@
 	height: 100vh;
 }
 
+.winmessage {
+	position: absolute;
+	left: 0;
+	right: 0;
+
+	text-align: center;
+}
+
 .status {
 	position: fixed;
 	bottom: 0;

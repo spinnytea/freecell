@@ -10,7 +10,7 @@ TODO main development tasks:
 1. ~~Render playing field, card back(s)~~
 1. ~~shuffle/deal cards~~
 1. ~~click select -> click move (one card at a time, ¿no sequences?)~~
-1. win state
+1. ~~win state~~
 1. quick and dirty loop (new -> shuffle -> deal -> play -> win -> <<-- new -> shuffle -> …)
 1. everything (core game) is tested
 
@@ -44,6 +44,7 @@ TODO main development tasks:
   - demo these with solved-sorted (4 full sequences, but H & S, D & C)
 - IDEA auto-foundation gets faster the longer it runs
 - TODO can move cards during auto-foundation, stops when it gets to a card the user has moved (can start with: stops as soon as a user does a thing)
+- TODO animations after/during win state
 - IDEA toggle for: move sequence as one vs animate in-between steps (sequence moves vs each card moves)
 - IDEA implement War? just so it's flexible?
 - IDEA implement Spider Solitaire, that could be fun

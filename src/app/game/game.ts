@@ -34,6 +34,7 @@ const BOTTOM_OF_CASCADE = 52;
 
 export class FreeCell {
 	cards: Card[];
+	readonly win: boolean;
 
 	// structure to make the logic easier
 	deck: Card[];
@@ -91,6 +92,8 @@ export class FreeCell {
 						break;
 				}
 			});
+
+			this.win = this.cards.every((card) => card.location.fixture === 'foundation');
 		} else {
 			// REVIEW why 1-4 cells? why not, say, 10?
 			if (cellCount < 1 || cellCount > 4)
@@ -114,6 +117,8 @@ export class FreeCell {
 					this.deck.push(card);
 				});
 			});
+
+			this.win = false;
 		}
 
 		this.cursor = this.__clampCursor(cursor);
@@ -568,7 +573,16 @@ export class FreeCell {
 			str += `\nd:>   `;
 		}
 
-		// TODO " Y O U W I N ! "
+		if (this.win) {
+			const msg = this.tableau.length > 5 ? 'Y O U   W I N !' : 'YOU WIN !';
+			const lineLength = this.tableau.length * 3 + 1;
+			const paddingLength = (lineLength - msg.length - 2) / 2; // FIXME test with various cascadeCount
+			const spaces = '                               '; // XXX enough spaces for 10 cascadeCount
+			const padding = '                            '.substring(0, paddingLength);
+			str += '\n:' + padding + msg + padding + (paddingLength === padding.length ? '' : ' ') + ':';
+			str += '\n' + spaces.substring(0, lineLength);
+		}
+
 		// XXX print and parse move history?
 
 		str += '\n ' + this.previousAction;
@@ -650,7 +664,7 @@ export class FreeCell {
 		line = nextLine();
 		const cascadeLineLength = line.length;
 		const cascadeCount = (cascadeLineLength - 1) / 3;
-		while (line.length === cascadeLineLength) {
+		while (line.length === cascadeLineLength && line[0] !== ':') {
 			// TODO come up with a better metric than 25 (actions can be 25 chars, decks could be too)
 			for (let i = 0; i < cascadeCount; i++) {
 				const card = nextCard(tableau_spaces);
@@ -677,6 +691,14 @@ export class FreeCell {
 				}
 			}
 			deck_spaces.push(line.pop());
+			line = nextLine();
+		}
+
+		// handle win
+		if (line[0] === ':' && line[line.length - 1] === ':') {
+			// ignore this line
+			line = nextLine();
+			// ignore the empty line
 			line = nextLine();
 		}
 

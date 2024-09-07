@@ -47,6 +47,7 @@
 	:root {
 		/* TODO dark text should be based on --felt--selected */
 		/* --foreground-rgb: 33, 33, 33; */
+		--foreground-rgb: 212, 212, 212;
 		--background-glow: radial-gradient(
 			circle at center,
 			transparent 0,

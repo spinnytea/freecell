@@ -256,12 +256,44 @@ describe('game', () => {
 			);
 		});
 
-		test('win state', () => {
-			const print =
-				'>            KC KD KH KS \n' + //
-				'                         \n' + //
-				' hand-jammed';
-			expect(FreeCell.parse(print).print()).toBe(print);
+		describe('win state', () => {
+			test('first', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'>            KC KD KH KS \n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
+				expect(game).toMatchSnapshot();
+				expect(game.print()).toBe(
+					'' + //
+						'>            KC KD KH KS \n' + //
+						'                         \n' + //
+						':    Y O U   W I N !    :\n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
+			});
+
+			test.each`
+				cascadeCount | emptyLine
+				${4}         | ${'             '}
+				${5}         | ${'                '}
+				${6}         | ${'                   '}
+				${7}         | ${'                      '}
+				${8}         | ${'                         '}
+				${9}         | ${'                            '}
+				${10}        | ${'                               '}
+			`(
+				'$cascadeCount cascades',
+				({ cascadeCount, emptyLine }: { cascadeCount: number; emptyLine: string }) => {
+					expect(emptyLine.length).toBe(cascadeCount * 3 + 1);
+					const game = FreeCell.parse(`>            KC KD KH KS \n${emptyLine}\n hand-jammed`);
+					expect(game.tableau.length).toBe(cascadeCount);
+					expect(game.print().replaceAll(' ', '·')).toMatchSnapshot();
+					expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				}
+			);
 		});
 
 		test.todo('test the state');

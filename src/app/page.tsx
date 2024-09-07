@@ -6,6 +6,7 @@ import { DebugCursors } from '@/app/components/DebugCursors';
 import { PileMarkers } from '@/app/components/PileMarkers';
 import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
+import WinMessage from '@/app/components/WinMessage';
 import { FreeCell } from '@/app/game/game';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { FixtureSizesContextProvider } from '@/app/hooks/FixtureSizes/FixtureSizesContextProvider';
@@ -19,6 +20,13 @@ import { GameContext } from '@/app/hooks/Game/GameContext';
 // 	console.log('trySeed', idx, '->', seed);
 // 	return seed ?? 1;
 // }
+
+// const almostWin = FreeCell.parse(
+// 	'' + //
+// 		'>            QC KD KH KS \n' + //
+// 		'                KC       \n' + //
+// 		' hand-jammed'
+// );
 
 export default function Page() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
@@ -81,10 +89,12 @@ export default function Page() {
 			<FixtureSizesContextProvider gameBoardRef={gameBoardRef}>
 				<GameContext.Provider value={[game, setGame]}>
 					<PileMarkers />
+					<WinMessage />
 					<CardsOnBoard />
-					<DebugCursors />
-					<TextBoard />
 					<StatusBar />
+
+					<TextBoard />
+					<DebugCursors />
 				</GameContext.Provider>
 			</FixtureSizesContextProvider>
 		</main>
