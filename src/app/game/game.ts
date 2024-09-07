@@ -564,6 +564,8 @@ export class FreeCell {
 					.join(' ');
 				str += `\nd: ${deckStr} `;
 			}
+		} else if (this.cursor.fixture === 'deck') {
+			str += `\nd:>   `;
 		}
 
 		// TODO " Y O U W I N ! "
@@ -581,17 +583,16 @@ export class FreeCell {
 
 		must be a valid output of game.print(), there isn't much error correction/detection
 		i.e. must `game.print() === FreeCell.parse(game.print()).print()`
-
-		TODO Parse cursor, selection: collect spaces, indexOf, % 9 and / 9
-		XXX detect unused cards?
-		XXX detect duplicate cards?
 	*/
-	static parse(print: string): FreeCell {
+	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		const cards = new FreeCell().cards;
 		const remaining = cards.slice(0);
 
 		const lines = print.split('\n');
 		let line: string[];
+		const home_spaces: (string | undefined)[] = [];
+		const tableau_spaces: (string | undefined)[] = [];
+		const deck_spaces: (string | undefined)[] = [];
 
 		const getCard = ({ rank, suit }: { rank: Rank; suit: Suit }) => {
 			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
@@ -601,11 +602,11 @@ export class FreeCell {
 		};
 
 		const nextLine = () => lines.shift()?.split('').reverse() ?? [];
-		const nextCard = () => {
+		const nextCard = (spaces: (string | undefined)[]) => {
 			// TODO test invalid card rank
 			// TODO test invalid card suit
 			if (line.length < 3) throw new Error('not enough tokens');
-			line.pop();
+			spaces.push(line.pop());
 			const r = line.pop();
 			const s = line.pop();
 			const rs = parseShorthandCard(r, s);
@@ -619,7 +620,7 @@ export class FreeCell {
 		// parse cells
 		const cellCount = (line.length - 1 - 3 * NUMBER_OF_FOUNDATIONS) / 3;
 		for (let i = 0; i < cellCount; i++) {
-			const card = nextCard();
+			const card = nextCard(home_spaces);
 			if (card) {
 				card.location = { fixture: 'cell', data: [i] };
 			}
@@ -627,18 +628,21 @@ export class FreeCell {
 
 		// parse foundations
 		for (let i = 0; i < NUMBER_OF_FOUNDATIONS; i++) {
-			const card = nextCard();
+			const card = nextCard(home_spaces);
 			if (card) {
 				card.location = { fixture: 'foundation', data: [i] };
 
-				// …and all cards of lesser rank
-				const ranks = RankList.slice(0);
-				while (ranks.pop() !== card.rank); // pull off all the ranks we do not want
-				ranks.forEach((r) => {
-					getCard({ rank: r, suit: card.suit }).location = { fixture: 'foundation', data: [i] };
-				});
+				if (!invalidFoundations) {
+					// …and all cards of lesser rank
+					const ranks = RankList.slice(0);
+					while (ranks.pop() !== card.rank); // pull off all the ranks we do not want
+					ranks.forEach((r) => {
+						getCard({ rank: r, suit: card.suit }).location = { fixture: 'foundation', data: [i] };
+					});
+				}
 			}
 		}
+		home_spaces.push(line.pop());
 
 		// parse cascades
 		let row = 0;
@@ -649,20 +653,43 @@ export class FreeCell {
 		while (line.length === cascadeLineLength) {
 			// TODO come up with a better metric than 25 (actions can be 25 chars, decks could be too)
 			for (let i = 0; i < cascadeCount; i++) {
-				const card = nextCard();
+				const card = nextCard(tableau_spaces);
 				if (card) {
 					card.location = { fixture: 'cascade', data: [i, row] };
 				}
 			}
 			row++;
 			// TODO test if line isn't present
+			tableau_spaces.push(line.pop());
 			line = nextLine();
 		}
 
-		// TODO handle deck
-		const deckLength = 0;
+		// handle deck
+		let deckLength = 0;
+		if (line[line.length - 1] === 'd' && line[line.length - 2] === ':') {
+			line.pop(); // d
+			line.pop(); // :
+			while (line.length >= 3) {
+				const card = nextCard(deck_spaces);
+				if (card) {
+					card.location = { fixture: 'deck', data: [deckLength] };
+					deckLength++;
+				}
+			}
+			deck_spaces.push(line.pop());
+			line = nextLine();
+		}
 
-		// add the remaining cards to the deck
+		if (deckLength > 0) {
+			// now, reverse the deck
+			cards.forEach((card) => {
+				if (card.location.fixture === 'deck') {
+					card.location.data[0] = deckLength - card.location.data[0] - 1;
+				}
+			});
+		}
+
+		// add the remaining (unused) cards to the deck
 		remaining.forEach((card, idx) => {
 			card.location = { fixture: 'deck', data: [deckLength + idx] };
 		});
@@ -670,7 +697,76 @@ export class FreeCell {
 		line.pop();
 		const action = line.reverse().join('');
 
-		const game = new FreeCell({ cellCount, cascadeCount, cards });
+		// sus out the cursor/selection locations
+		// TODO is there any way to simplify this?
+		let cursor: CardLocation | undefined = undefined;
+		let selection_location: CardLocation | undefined = undefined;
+		const home_cursor_index = home_spaces.indexOf('>');
+		let home_selection_index = home_spaces.indexOf('|');
+		if (home_cursor_index > -1) {
+			if (home_cursor_index < cellCount) {
+				cursor = { fixture: 'cell', data: [home_cursor_index] };
+			} else {
+				cursor = { fixture: 'foundation', data: [home_cursor_index - cellCount] };
+			}
+			if (home_selection_index > -1 && home_cursor_index === home_selection_index - 1) {
+				home_selection_index--;
+			}
+		}
+		if (home_selection_index > -1) {
+			if (home_selection_index < cellCount) {
+				selection_location = { fixture: 'cell', data: [home_selection_index] };
+			} else {
+				selection_location = { fixture: 'foundation', data: [home_selection_index - cellCount] };
+			}
+		}
+		const tableau_cursor_index = tableau_spaces.indexOf('>');
+		let tableau_selection_index = tableau_spaces.indexOf('|');
+		if (tableau_cursor_index > -1) {
+			cursor = {
+				fixture: 'cascade',
+				data: [
+					tableau_cursor_index % (cascadeCount + 1),
+					Math.floor(tableau_cursor_index / (cascadeCount + 1)),
+				],
+			};
+			if (tableau_selection_index > -1 && tableau_cursor_index === tableau_selection_index - 1) {
+				tableau_selection_index--;
+			}
+		}
+		if (tableau_selection_index > -1) {
+			selection_location = {
+				fixture: 'cascade',
+				data: [
+					tableau_selection_index % (cascadeCount + 1),
+					Math.floor(tableau_selection_index / (cascadeCount + 1)),
+				],
+			};
+		}
+		const deck_cursor_index = deck_spaces.indexOf('>');
+		let deck_selection_index = deck_spaces.indexOf('|');
+		if (deck_cursor_index > -1) {
+			cursor = {
+				fixture: 'deck',
+				data: [deckLength - deck_cursor_index - 1],
+			};
+			const onlyOne = !deck_spaces.includes('|', deck_selection_index + 1);
+			if (deck_selection_index > -1 && onlyOne && deck_cursor_index === deck_selection_index - 1) {
+				deck_selection_index--;
+			}
+		}
+		if (deck_selection_index > -1) {
+			selection_location = {
+				fixture: 'deck',
+				data: [deckLength - deck_selection_index - 1],
+			};
+		}
+
+		const game = new FreeCell({ cellCount, cascadeCount, cards, cursor });
+		if (selection_location) {
+			game.selection = getSequenceAt(game, selection_location);
+			game.availableMoves = findAvailableMoves(game);
+		}
 		game.previousAction = action;
 		return game;
 	}
