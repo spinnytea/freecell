@@ -583,9 +583,6 @@ export class FreeCell {
 
 		must be a valid output of game.print(), there isn't much error correction/detection
 		i.e. must `game.print() === FreeCell.parse(game.print()).print()`
-
-		XXX detect unused cards?
-		XXX detect duplicate cards?
 	*/
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		const cards = new FreeCell().cards;
@@ -692,7 +689,7 @@ export class FreeCell {
 			});
 		}
 
-		// add the remaining cards to the deck
+		// add the remaining (unused) cards to the deck
 		remaining.forEach((card, idx) => {
 			card.location = { fixture: 'deck', data: [deckLength + idx] };
 		});

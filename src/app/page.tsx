@@ -73,8 +73,8 @@ export default function Page() {
 		};
 	}, []);
 
-	// TODO render game.cursor (+ debug view)
-	// TODO render game.selection (+ debug view)
+	// TODO render game.cursor (separate from debug view; try with debug view off)
+	// TODO render game.selection (separate from debug view; try with debug view off)
 
 	return (
 		<main ref={gameBoardRef} className={styles_gameboard.main} onClick={onClick}>
