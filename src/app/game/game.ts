@@ -189,6 +189,7 @@ export class FreeCell {
 		return this.__clone({ action: 'cursor set', cursor });
 	}
 
+	// REVIEW controls - actually play the game and see what's not quite right
 	moveCursor(dir: 'up' | 'right' | 'left' | 'down'): FreeCell {
 		const {
 			fixture,

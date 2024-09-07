@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { CardsOnBoard } from '@/app/components/CardsOnBoard';
 import { DebugCursors } from '@/app/components/DebugCursors';
+import { KeyboardCursor } from '@/app/components/KeyboardCursor';
 import { PileMarkers } from '@/app/components/PileMarkers';
 import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
@@ -11,6 +12,8 @@ import { FreeCell } from '@/app/game/game';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { FixtureSizesContextProvider } from '@/app/hooks/FixtureSizes/FixtureSizesContextProvider';
 import { GameContext } from '@/app/hooks/Game/GameContext';
+import { SettingsContextProvider } from '@/app/hooks/Settings/SettingsContextProvider';
+import { useSettings } from '@/app/hooks/Settings/useSettings';
 
 // let idx = 0;
 // /** @deprecated just for testing */
@@ -84,22 +87,39 @@ export default function Page() {
 		};
 	}, []);
 
-	// TODO render game.cursor (separate from debug view; try with debug view off)
-	// TODO render game.selection (separate from debug view; try with debug view off)
+	// FIXME render game.cursor (separate from debug view; try with debug view off)
+	// TODO render game.selection ? (separate from debug view; try with debug view off; at least it's visible)
 
 	return (
 		<main ref={gameBoardRef} className={styles_gameboard.main} onClick={onClick}>
 			<FixtureSizesContextProvider gameBoardRef={gameBoardRef}>
 				<GameContext.Provider value={[game, setGame]}>
-					<PileMarkers />
-					<WinMessage />
-					<CardsOnBoard />
-					<StatusBar />
-
-					<TextBoard />
-					<DebugCursors />
+					<SettingsContextProvider>
+						<BoardLayout />
+					</SettingsContextProvider>
 				</GameContext.Provider>
 			</FixtureSizesContextProvider>
 		</main>
+	);
+}
+
+function BoardLayout() {
+	const settings = useSettings();
+
+	return (
+		<>
+			<PileMarkers />
+			<WinMessage />
+			<KeyboardCursor />
+			<CardsOnBoard />
+			<StatusBar />
+
+			{settings.showDebugInfo && (
+				<>
+					<TextBoard />
+					<DebugCursors />
+				</>
+			)}
+		</>
 	);
 }

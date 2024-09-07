@@ -138,7 +138,10 @@ function SequenceBox({
 					style.height += fixtureSizes.tableau.offsetTop * PEEK_UP;
 				}
 				style.height += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
+			} else {
+				style.top += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
 			}
+
 			style.height += fixtureSizes.tableau.offsetTop * (length - 1);
 			break;
 	}

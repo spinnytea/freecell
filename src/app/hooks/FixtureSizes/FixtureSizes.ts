@@ -1,4 +1,5 @@
 import { scale_height } from '@/app/components/CardImage';
+import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card';
 
 // REVIEW portrait vs landscape
 //  - the main issue with lanscape is vertical height, tall cascades
@@ -104,4 +105,52 @@ export function calcFixtureSizes(
 			left: HOME_LR,
 		},
 	};
+}
+
+export function calcTopLeftZ(
+	fixtureSizes: FixtureSizes,
+	{ fixture, data }: CardLocation,
+	selection: CardSequence | null,
+	rank?: Rank
+): { top: number; left: number; zIndex: number } {
+	switch (fixture) {
+		case 'deck':
+			return {
+				top: fixtureSizes.deck.top,
+				left: fixtureSizes.deck.left,
+				zIndex: data[0],
+			};
+		case 'cell':
+			return {
+				top: fixtureSizes.home.top,
+				left: fixtureSizes.home.cellLeft[data[0]],
+				zIndex: data[0],
+			};
+		case 'foundation':
+			return {
+				top: fixtureSizes.home.top,
+				left: fixtureSizes.home.foundationLeft[data[0]],
+				zIndex: rank ? RankList.indexOf(rank) : 0,
+			};
+		case 'cascade': {
+			const ret = {
+				top: fixtureSizes.tableau.top + fixtureSizes.tableau.offsetTop * data[1],
+				left: fixtureSizes.tableau.cascadeLeft[data[0]],
+				zIndex: data[1], // we don't really need to make one cascade strictly above another
+			};
+			if (selection?.location.fixture === 'cascade' && selection.location.data[0] === data[0]) {
+				const sd1 = selection.location.data[1];
+				if (selection.cards.length > 1 || !selection.canMove) {
+					if (data[1] > sd1) {
+						ret.top += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
+					} else if (data[1] === sd1 && sd1 > 0) {
+						ret.top -= fixtureSizes.tableau.offsetTop * PEEK_UP;
+					}
+				} else if (data[1] === sd1) {
+					ret.top += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
+				}
+			}
+			return ret;
+		}
+	}
 }
