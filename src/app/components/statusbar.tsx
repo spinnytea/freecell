@@ -4,7 +4,7 @@ import { Checkbox } from '@/app/components/element/Checkbox';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
 
-const version = `v${process.env.version ?? 'Unknown'}`;
+const version = `v${process.env.VERSION ?? 'Unknown'}`;
 
 export function StatusBar() {
 	const [settings, setSettings] = useContext(SettingsContext);

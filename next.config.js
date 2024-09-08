@@ -2,9 +2,12 @@ const packageJson = require('./package.json');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	basePath: '/freecell',
+	distDir: 'out/freecell',
 	output: 'export',
 	env: {
-		version: packageJson.version,
+		VERSION: packageJson.version,
+		BASE_PATH: '/freecell',
 	},
 };
 

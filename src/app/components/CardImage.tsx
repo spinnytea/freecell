@@ -6,6 +6,7 @@ const ORIG_HEIGHT = 242.6669922;
 export const scale_height = (width: number) => Math.floor((width / ORIG_WIDTH) * ORIG_HEIGHT);
 
 const FANCY_DECK = true;
+const assetFolder = process.env.BASE_PATH ?? '';
 
 // TODO https://cardmeister.github.io/
 // TODO https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
@@ -41,23 +42,23 @@ export function CardImage({
 // TODO dark theme cards
 function getFilename(rank: Rank, suit: Suit, hidden: boolean, useFancyDeck = FANCY_DECK) {
 	if (hidden) {
-		return '/i/Card_back_10.svg';
+		return `${assetFolder}/i/Card_back_10.svg`;
 	}
 
 	if (rank === 'joker') {
-		if (isRed(suit)) return `/i/SVG-cards-1.3/red_joker.svg`;
-		return `/i/SVG-cards-1.3/black_joker.svg`;
+		if (isRed(suit)) return `${assetFolder}/i/SVG-cards-1.3/red_joker.svg`;
+		return `${assetFolder}/i/SVG-cards-1.3/black_joker.svg`;
 	}
 	if (rank === 'ace' && suit === 'spades') {
-		if (useFancyDeck) return `/i/SVG-cards-1.3/ace_of_spades.svg`;
-		return `/i/SVG-cards-1.3/ace_of_spades2.svg`;
+		if (useFancyDeck) return `${assetFolder}/i/SVG-cards-1.3/ace_of_spades.svg`;
+		return `${assetFolder}/i/SVG-cards-1.3/ace_of_spades2.svg`;
 	}
 	const fancy = useFancyDeck
 		? rank === 'jack' || rank === 'queen' || rank === 'king'
 			? '2'
 			: ''
 		: '';
-	return `/i/SVG-cards-1.3/${rank}_of_${suit}${fancy}.svg`;
+	return `${assetFolder}/i/SVG-cards-1.3/${rank}_of_${suit}${fancy}.svg`;
 }
 
 /** stuff exported for testing, not meant to be used directly */

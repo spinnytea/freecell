@@ -16,6 +16,7 @@ TODO main development tasks:
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 
+- REVIEW [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
   - deal all cards
   - cursor
