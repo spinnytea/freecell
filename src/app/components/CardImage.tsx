@@ -5,10 +5,10 @@ const ORIG_WIDTH = 167.0869141;
 const ORIG_HEIGHT = 242.6669922;
 export const scale_height = (width: number) => Math.floor((width / ORIG_WIDTH) * ORIG_HEIGHT);
 
-const FANCY_DECK = true;
 const assetFolder = process.env.BASE_PATH ?? '';
 
 // TODO https://cardmeister.github.io/
+//  - https://github.com/cardmeister/cardmeister.github.io/blob/master/elements.cardmeister.full.js
 // TODO https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
 export function CardImage({
 	hidden = false,
@@ -36,11 +36,10 @@ export function CardImage({
 	);
 }
 
-// TODO option to toggle fancy
 // TODO alternate card backs?
 // TODO deck w/ kings are lions?
 // TODO dark theme cards
-function getFilename(rank: Rank, suit: Suit, hidden: boolean, useFancyDeck = FANCY_DECK) {
+function getFilename(rank: Rank, suit: Suit, hidden: boolean, useFancyDeck = true) {
 	if (hidden) {
 		return `${assetFolder}/i/Card_back_10.svg`;
 	}

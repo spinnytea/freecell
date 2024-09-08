@@ -12,13 +12,17 @@ TODO main development tasks:
 1. ~~click select -> click move (one card at a time, ¿no sequences?)~~
 1. ~~win state~~
 1. ~~quick and dirty loop (new -> shuffle -> deal -> play -> win -> <<-- new -> shuffle -> …)~~
+1. auto-foundation
+1. one-click-to-move
 1. everything (core game) is tested (ui selection -> move, all the way to winning)
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 
 - REVIEW [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
+- TODO portrait vs landscape mode (portait on phone is ssoooooo small)
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
   - deal all cards
+  - card flips (back -> face -> back)
   - cursor
   - selection
   - card movement
@@ -60,7 +64,10 @@ TODO main development tasks:
   - wild - they can stack onto any rank, any rank can stack onto them
   - could have various counts 1-8; or maybe just 2 & 4
 - IDEA stats: # attempts (i don't like timers or move counts, but tracking resets is fine)
+  - one set of undos = one restart?
+  - spitball impl: attempts positive and negative, display Math.abs(attempts), set neg when undo, set pos and increase when move
 - IDEA comments for all the rules? (or maybe that's too late now?)
+- IDEA sounds - normally i don't like to, but some folio for moving cards should be okay
 
 ## Technicals
 

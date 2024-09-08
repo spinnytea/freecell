@@ -35,7 +35,7 @@ export default function Page() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	const [game, setGame] = useState(() => new FreeCell().shuffle32());
 
-	/** @deprecated just for testing */
+	/** @deprecated just for getting started */
 	function onClick() {
 		if (game.win) {
 			// click to reset
@@ -48,6 +48,7 @@ export default function Page() {
 
 	useEffect(() => {
 		// FIXME keyboard events for win/deal
+		// TODO keyboard event for deselect (esc?)
 		function handleKey(event: KeyboardEvent) {
 			const { key } = event;
 			let consumed = false;

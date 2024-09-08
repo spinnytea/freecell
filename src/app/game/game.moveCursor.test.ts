@@ -505,7 +505,7 @@ describe('moveCursor', () => {
 	});
 
 	describe('has selection only moves to valid locations', () => {
-		// only cycle between places that the selection can move
+		// TODO only cycle between places that the selection can move
 		describe('cell', () => {
 			test.todo('with left and right');
 

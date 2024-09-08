@@ -122,12 +122,14 @@ export function calcTopLeftZ(
 				zIndex: data[0],
 			};
 		case 'cell':
+			// FIXME visualize selection within cell
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.cellLeft[data[0]],
 				zIndex: data[0],
 			};
 		case 'foundation':
+			// XXX visualize selection within cell?
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.foundationLeft[data[0]],

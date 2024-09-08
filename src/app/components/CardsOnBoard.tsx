@@ -7,6 +7,7 @@ import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/Game/GameContext';
 import { useGame } from '@/app/hooks/Game/useGame';
 
+// IDEA render cursor like a selection when there is none (then leave that render in place once selected)
 export function CardsOnBoard() {
 	const { cards } = useGame();
 

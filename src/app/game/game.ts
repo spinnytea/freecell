@@ -32,11 +32,13 @@ const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 */
 const BOTTOM_OF_CASCADE = 52;
 
+// TODO rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
 export class FreeCell {
 	cards: Card[];
 	readonly win: boolean;
 
 	// structure to make the logic easier
+	// REVIEW consider: preferred foundation suits? (HSDC) - render these?
 	deck: Card[];
 	cells: (Card | null)[];
 	foundations: (Card | null)[];
@@ -190,6 +192,8 @@ export class FreeCell {
 	}
 
 	// REVIEW controls - actually play the game and see what's not quite right
+	//  - left right wraps between home/tableau
+	//  - entering a cascade (l/r, u/d) cascade always moves to the "last sequence"
 	// REVIEW refactor moveCursor out of game? setCursor yes, but move cursor?
 	moveCursor(dir: 'up' | 'right' | 'left' | 'down'): FreeCell {
 		const {
@@ -481,9 +485,8 @@ export class FreeCell {
 		we do not print the "available moves", that's important for good gameplay
 		(and this print function is complicated enough, we don't want more complexity just for a debug visualization)
 
-	  - TODO make a `FreeCell.parse` that … `const game = FreeCell.parse(new FreeCell().print())`
-	  - REVIEW should print verify the card.location? this.cards? if not here then where?
 	  - XXX print is super messy, can we clean this up?
+	  - IDEA render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
 	*/
 	print(): string {
 		let str = '';
@@ -557,6 +560,7 @@ export class FreeCell {
 		}
 
 		// REVIEW can we get rid of `d:` prefix (bcuz parse)
+		// REVIEW should we use `:d` prefix instead?
 		if (this.deck.length) {
 			if (this.cursor.fixture === 'deck' || this.selection?.location.fixture === 'deck') {
 				// prettier-ignore
