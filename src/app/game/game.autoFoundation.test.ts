@@ -1,4 +1,9 @@
+import { FreeCell } from '@/app/game/game';
+import { AutoFoundationMethod } from '@/app/game/game-utils';
+
 describe('game.autoFoundation', () => {
+	test.todo('nothing to move');
+
 	describe('scan methods', () => {
 		// scan across cells -> check if they can move to a foundation -> check if we've reached the limit for that foundation
 		test.todo('cell,cascade can move');
@@ -24,5 +29,22 @@ describe('game.autoFoundation', () => {
 		// 3s are set, all the 4s before any 5
 		// i.e. 3444
 		test.todo('current rank');
+	});
+
+	describe('scenarios', () => {
+		describe.each`
+			name                       | before                                         | after
+			${'nothing to move'}       | ${'>2D                \n             \n init'} | ${'>2D                \n             \n init'}
+			${'move ace from cell'}    | ${'>AS                \n             \n init'} | ${'>      AS          \n             \n auto-foundation AS'}
+			${'move ace from cascade'} | ${'>                  \n    AS       \n init'} | ${'>      AS          \n             \n auto-foundation AS'}
+		`('$name', ({ before, after }: { before: string; after: string }) => {
+			test.each(['cell,cascade', 'foundation'] as AutoFoundationMethod[])('%s', (method) => {
+				expect(
+					FreeCell.parse(before)
+						.autoFoundationAll({ limit: 'none', method })
+						.print({ skipDeck: true })
+				).toBe(after);
+			});
+		});
 	});
 });

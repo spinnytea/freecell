@@ -13,7 +13,11 @@ import {
 	SuitList,
 } from '@/app/game/card';
 import {
+	AutoFoundationLimit,
+	AutoFoundationMethod,
+	canStackFoundation,
 	findAvailableMoves,
+	foundationCanAcceptCards,
 	getPrintSeparator,
 	getSequenceAt,
 	moveCards,
@@ -391,9 +395,119 @@ export class FreeCell {
 	}
 
 	/** @deprecated this is just for testing; we want to animate each card moved */
-	autoFoundationAll(): FreeCell {
-		// FIXME finish
-		return this.__clone({ action: 'auto-foundation noop' });
+	autoFoundationAll({
+		limit = 'none',
+		method = 'foundation',
+	}: {
+		limit: AutoFoundationLimit;
+		method: AutoFoundationMethod;
+	}): FreeCell {
+		void limit; // FIXME use
+		void method; // FIXME use
+		let game = this.__clone({ action: 'auto-foundation setup' });
+		const moved: Card[] = [];
+
+		let didMoveAny = false;
+		let didMove = true;
+		while (didMove) {
+			didMove = false;
+
+			if (method === 'cell,cascade') {
+				game.cells.forEach((c, c_idx) => {
+					const sequenceToMove = getSequenceAt(game, { fixture: 'cell', data: [c_idx] });
+					const availableMove = findAvailableMoves(game, sequenceToMove).find(
+						({ fixture }) => fixture === 'foundation'
+					);
+					if (c && availableMove) {
+						didMove = true;
+						didMoveAny = true;
+						const cards = moveCards(game, sequenceToMove, availableMove);
+						game = game.__clone({ action: 'auto-foundation middle', cards });
+						moved.push(c);
+					}
+				});
+				game.tableau.forEach((cascade, c_idx) => {
+					if (cascade.length) {
+						const sequenceToMove = getSequenceAt(game, {
+							fixture: 'cascade',
+							data: [c_idx, cascade.length - 1],
+						});
+						const availableMove = findAvailableMoves(game, sequenceToMove).find(
+							({ fixture }) => fixture === 'foundation'
+						);
+						if (availableMove) {
+							didMove = true;
+							didMoveAny = true;
+							const cards = moveCards(game, sequenceToMove, availableMove);
+							game = game.__clone({ action: 'auto-foundation middle', cards });
+							moved.push(sequenceToMove.cards[0]);
+						}
+					}
+				});
+			}
+
+			if (method === 'foundation') {
+				game.foundations.forEach((f, f_idx) => {
+					let canAccept = foundationCanAcceptCards(game, f_idx);
+					if (canAccept) {
+						game.cells.forEach((c, c_idx) => {
+							if (canAccept) {
+								const canMove = c && canStackFoundation(f, c);
+								if (canMove) {
+									canAccept = false;
+									didMove = true;
+									didMoveAny = true;
+									const cards = moveCards(
+										game,
+										getSequenceAt(game, { fixture: 'cell', data: [c_idx] }),
+										{
+											fixture: 'foundation',
+											data: [f_idx],
+										}
+									);
+									game = game.__clone({ action: 'auto-foundation middle', cards });
+									moved.push(c);
+								}
+							}
+						});
+					}
+					if (canAccept) {
+						game.tableau.forEach((cascade, c_idx) => {
+							const last_idx = cascade.length - 1;
+							if (canAccept && cascade.length > 0) {
+								const c = cascade[last_idx];
+								const canMove = canStackFoundation(f, c);
+								if (canMove) {
+									canAccept = false;
+									didMove = true;
+									didMoveAny = true;
+									const cards = moveCards(
+										game,
+										getSequenceAt(game, { fixture: 'cascade', data: [c_idx, last_idx] }),
+										{
+											fixture: 'foundation',
+											data: [f_idx],
+										}
+									);
+									game = game.__clone({ action: 'auto-foundation middle', cards });
+									moved.push(c);
+								}
+							}
+						});
+					}
+				});
+			}
+		}
+
+		// XXX can we write this function in a way that doesn't confuse typescript?
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (didMoveAny) {
+			const movedStr = moved.map((card) => shorthandCard(card)).join(',');
+			return game.__clone({ action: `auto-foundation ${movedStr}` });
+		}
+
+		// silent noop
+		return this;
 	}
 
 	/**
@@ -494,7 +608,7 @@ export class FreeCell {
 	  - XXX print is super messy, can we clean this up?
 	  - IDEA render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
 	*/
-	print(): string {
+	print({ skipDeck = false }: { skipDeck?: boolean } = {}): string {
 		let str = '';
 		if (
 			this.cursor.fixture === 'cell' ||
@@ -567,7 +681,7 @@ export class FreeCell {
 
 		// REVIEW can we get rid of `d:` prefix (bcuz parse)
 		// REVIEW should we use `:d` prefix instead?
-		if (this.deck.length) {
+		if (this.deck.length && !skipDeck) {
 			if (this.cursor.fixture === 'deck' || this.selection?.location.fixture === 'deck') {
 				// prettier-ignore
 				const deckStr = this.deck

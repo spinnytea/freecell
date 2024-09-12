@@ -8,6 +8,9 @@ import {
 } from '@/app/game/card';
 import { FreeCell } from '@/app/game/game';
 
+export type AutoFoundationLimit = 'none' | 'rank+1.5' | 'rank+1' | 'rank';
+export type AutoFoundationMethod = 'cell,cascade' | 'foundation';
+
 export function getSequenceAt(game: FreeCell, location: CardLocation): CardSequence {
 	const [d0] = location.data;
 
@@ -102,16 +105,35 @@ export function maxMovableSequenceLength(game: FreeCell): number {
 	return Math.pow(2, countEmptyCascades(game)) * (countEmptyCells(game) + 1);
 }
 
-export function findAvailableMoves(game: FreeCell): CardLocation[] {
-	const availableMoves: CardLocation[] = [];
+export function canStackFoundation(foundation_card: Card | null, moving_card: Card): boolean {
+	if (!foundation_card && moving_card.rank === 'ace') {
+		return true;
+	} else if (
+		foundation_card &&
+		foundation_card.suit === moving_card.suit &&
+		isAdjacent({ min: foundation_card.rank, max: moving_card.rank })
+	) {
+		return true;
+	}
+	return false;
+}
 
-	if (!game.selection?.canMove) {
+export function findAvailableMoves(
+	game: FreeCell,
+	selection?: CardSequence | null
+): CardLocation[] {
+	const availableMoves: CardLocation[] = [];
+	if (!selection) {
+		selection = game.selection;
+	}
+
+	if (!selection?.canMove) {
 		return availableMoves;
 	}
 
-	const head_card = game.selection.cards[0];
+	const head_card = selection.cards[0];
 
-	if (game.selection.cards.length === 1) {
+	if (selection.cards.length === 1) {
 		// REVIEW: if multiple, move last card?
 		game.cells.forEach((card, idx) => {
 			if (!card) {
@@ -120,13 +142,7 @@ export function findAvailableMoves(game: FreeCell): CardLocation[] {
 		});
 
 		game.foundations.forEach((card, idx) => {
-			if (!card && head_card.rank === 'ace') {
-				availableMoves.push({ fixture: 'foundation', data: [idx] });
-			} else if (
-				card &&
-				card.suit === head_card.suit &&
-				isAdjacent({ min: card.rank, max: head_card.rank })
-			) {
+			if (canStackFoundation(card, head_card)) {
 				availableMoves.push({ fixture: 'foundation', data: [idx] });
 			}
 		});
@@ -134,17 +150,17 @@ export function findAvailableMoves(game: FreeCell): CardLocation[] {
 
 	const mmsl = maxMovableSequenceLength(game);
 	game.tableau.forEach((cascade, idx) => {
-		// typescript is confused, we need to gaurd against game.selection even though we did it above
-		if (game.selection) {
+		// typescript is confused, we need to gaurd against selection even though we did it above
+		if (selection) {
 			const tail_card = cascade[cascade.length - 1];
 			if (!cascade.length) {
-				if (game.selection.cards.length <= mmsl / 2) {
+				if (selection.cards.length <= mmsl / 2) {
 					availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length] });
 				}
 			} else if (
 				isRed(tail_card.suit) !== isRed(head_card.suit) &&
 				isAdjacent({ min: head_card.rank, max: tail_card.rank }) &&
-				game.selection.cards.length <= mmsl
+				selection.cards.length <= mmsl
 			) {
 				availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length - 1] });
 			}
@@ -197,6 +213,15 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 	}
 
 	return game.cards;
+}
+
+// FIXME include method (currently just none)
+export function foundationCanAcceptCards(game: FreeCell, index: number): boolean {
+	if (!(index in game.foundations)) return false;
+	const card = game.foundations[index];
+	if (!card) return true;
+	if (card.rank === 'king') return false;
+	return true;
 }
 
 export function getPrintSeparator(
