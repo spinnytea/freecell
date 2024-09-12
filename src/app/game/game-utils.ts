@@ -232,7 +232,6 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 	return game.cards;
 }
 
-// FIXME include method (currently just none)
 export function foundationCanAcceptCards(
 	game: FreeCell,
 	index: number,
@@ -263,7 +262,10 @@ export function foundationCanAcceptCards(
 			);
 		case 'rank+1.5':
 			return game.foundations.every(
-				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) + (c && isRed(c.suit) === isRed(card.suit) ? 2 : 1) >= card_rank_idx
+				(c) =>
+					c === card ||
+					(c ? RankList.indexOf(c.rank) : -1) + (c && isRed(c.suit) === isRed(card.suit) ? 2 : 1) >=
+						card_rank_idx
 			);
 	}
 }

@@ -1,18 +1,7 @@
 import { FreeCell } from '@/app/game/game';
 import { AutoFoundationLimit, AutoFoundationMethod } from '@/app/game/game-utils';
 
-// FIXME test.todo
 describe('game.autoFoundation', () => {
-	test.todo('nothing to move');
-
-	describe('scan methods', () => {
-		// scan across cells -> check if they can move to a foundation -> check if we've reached the limit for that foundation
-		test.todo('cell,cascade can move');
-
-		// scan across foundations -> check if it can accept another card -> look across cells,cascades to see if it can move
-		test.todo('foundation can accept');
-	});
-
 	describe('limits all', () => {
 		describe.each`
 			limit         | homeStr
@@ -86,15 +75,15 @@ describe('game.autoFoundation', () => {
 
 	describe('scenarios', () => {
 		describe.each`
-			name                                    | before                                         | after
-			${'nothing to move'}                    | ${'>2D                \n             \n init'} | ${'>2D                \n             \n init'}
-			${'move ace from cell'}                 | ${'>AS                \n             \n init'} | ${'>      AS          \n             \n auto-foundation AS'}
-			${'move ace from cascade'}              | ${'>                  \n    AS       \n init'} | ${'>      AS          \n             \n auto-foundation AS'}
-			${'move from cell'}                     | ${'>2D    AS AD       \n             \n init'} | ${'>      AS 2D       \n             \n auto-foundation 2D'}
-			${'move from cascade'}                  | ${'>      AS AD       \n    2D       \n init'} | ${'>      AS 2D       \n             \n auto-foundation 2D'}
-			${'cannot move selected cell card'}     | ${'|2D|AD         >   \n             \n init'} | ${'|2D|   AD      >   \n             \n auto-foundation AD'}
-			${'cannot move selected cascade card'}  | ${'               >   \n|2D|AD       \n init'} | ${'       AD      >   \n|2D|         \n auto-foundation AD'}
-			${'cannot move to selected foundation'} | ${' 3H 3S AH|AS|AD>AC \n 2H 2S 2D 2C \n init'} | ${'    3S 3H|AS|2D>2C \n    2S       \n auto-foundation 2H,2D,2C,3H'}
+			name                                    | before                                                | after
+			${'nothing to move'}                    | ${'>2D                \n             \n hand-jammed'} | ${'>2D                \n             \n hand-jammed'}
+			${'move ace from cell'}                 | ${'>AS                \n             \n hand-jammed'} | ${'>      AS          \n             \n auto-foundation AS'}
+			${'move ace from cascade'}              | ${'>                  \n    AS       \n hand-jammed'} | ${'>      AS          \n             \n auto-foundation AS'}
+			${'move from cell'}                     | ${'>2D    AS AD       \n             \n hand-jammed'} | ${'>      AS 2D       \n             \n auto-foundation 2D'}
+			${'move from cascade'}                  | ${'>      AS AD       \n    2D       \n hand-jammed'} | ${'>      AS 2D       \n             \n auto-foundation 2D'}
+			${'cannot move selected cell card'}     | ${'|2D|AD         >   \n             \n hand-jammed'} | ${'|2D|   AD      >   \n             \n auto-foundation AD'}
+			${'cannot move selected cascade card'}  | ${'               >   \n|2D|AD       \n hand-jammed'} | ${'       AD      >   \n|2D|         \n auto-foundation AD'}
+			${'cannot move to selected foundation'} | ${' 3H 3S AH|AS|AD>AC \n 2H 2S 2D 2C \n hand-jammed'} | ${'    3S 3H|AS|2D>2C \n    2S       \n auto-foundation 2H,2D,2C,3H'}
 		`('$name', ({ before, after }: { before: string; after: string }) => {
 			test.each(['cell,cascade', 'foundation'] as AutoFoundationMethod[])('%s', (method) => {
 				expect(
