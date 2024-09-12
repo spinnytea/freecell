@@ -396,14 +396,12 @@ export class FreeCell {
 
 	/** @deprecated this is just for testing; we want to animate each card moved */
 	autoFoundationAll({
-		limit = 'none',
+		limit = 'rank',
 		method = 'foundation',
 	}: {
-		limit: AutoFoundationLimit;
-		method: AutoFoundationMethod;
-	}): FreeCell {
-		void limit; // FIXME use
-		void method; // FIXME use
+		limit?: AutoFoundationLimit;
+		method?: AutoFoundationMethod;
+	} = {}): FreeCell {
 		let game = this.__clone({ action: 'auto-foundation setup' });
 		const moved: Card[] = [];
 
@@ -433,7 +431,7 @@ export class FreeCell {
 							data: [c_idx, cascade.length - 1],
 						});
 						const availableMove = findAvailableMoves(game, sequenceToMove).find(
-							({ fixture }) => fixture === 'foundation'
+							({ fixture, data: [f_idx] }) => fixture === 'foundation' && foundationCanAcceptCards(game, f_idx, limit)
 						);
 						if (availableMove) {
 							didMove = true;
@@ -448,7 +446,7 @@ export class FreeCell {
 
 			if (method === 'foundation') {
 				game.foundations.forEach((f, f_idx) => {
-					let canAccept = foundationCanAcceptCards(game, f_idx);
+					let canAccept = foundationCanAcceptCards(game, f_idx, limit);
 					if (canAccept) {
 						game.cells.forEach((c, c_idx) => {
 							if (canAccept) {

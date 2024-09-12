@@ -5,10 +5,27 @@ import {
 	isAdjacent,
 	isLocationEqual,
 	isRed,
+	RankList,
 } from '@/app/game/card';
 import { FreeCell } from '@/app/game/game';
 
-export type AutoFoundationLimit = 'none' | 'rank+1.5' | 'rank+1' | 'rank';
+export type AutoFoundationLimit =
+	// move all cards that can go up
+	// i.e. 3KKK
+	| 'none'
+
+	// 3s are set, all the 4s and 5s, red 6s IFF black 5s are up
+	// i.e. 3565, 0342
+	// all not needed for developing sequences, opp rank + 1
+	| 'rank+1.5'
+
+	// 3s are set, all the 4s and 5s, but not 6s
+	// i.e. 3555
+	| 'rank+1'
+
+	// 3s are set, all the 4s before any 5
+	// i.e. 3444
+	| 'rank';
 export type AutoFoundationMethod = 'cell,cascade' | 'foundation';
 
 export function getSequenceAt(game: FreeCell, location: CardLocation): CardSequence {
@@ -216,11 +233,32 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 }
 
 // FIXME include method (currently just none)
-export function foundationCanAcceptCards(game: FreeCell, index: number): boolean {
+export function foundationCanAcceptCards(
+	game: FreeCell,
+	index: number,
+	limit: AutoFoundationLimit
+): boolean {
 	if (!(index in game.foundations)) return false;
 	const card = game.foundations[index];
 	if (!card) return true;
 	if (card.rank === 'king') return false;
+	const card_rank_idx = RankList.indexOf(card.rank);
+
+	switch (limit) {
+		case 'none':
+			return true;
+		case 'rank+1.5':
+			// TODO impl
+			break;
+		case 'rank+1':
+			// TODO impl
+			break;
+		case 'rank':
+			return game.foundations.every(
+				(c) => c === card || (c ? RankList.indexOf(c.rank) : 0) >= card_rank_idx
+			);
+	}
+
 	return true;
 }
 
