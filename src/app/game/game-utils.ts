@@ -247,7 +247,6 @@ export function foundationCanAcceptCards(
 	}
 	const card = game.foundations[index];
 	if (!card) return true; // empty can always accept an ace
-	if (card.rank === 'ace') return true; // ace can always accept a 2
 	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
 	const card_rank_idx = RankList.indexOf(card.rank);
 
@@ -256,15 +255,16 @@ export function foundationCanAcceptCards(
 			return true;
 		case 'rank':
 			return game.foundations.every(
-				(c) => c === card || (c ? RankList.indexOf(c.rank) : 0) >= card_rank_idx
+				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) >= card_rank_idx
 			);
 		case 'rank+1':
 			return game.foundations.every(
-				(c) => c === card || (c ? RankList.indexOf(c.rank) : 0) + 1 >= card_rank_idx
+				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) + 1 >= card_rank_idx
 			);
 		case 'rank+1.5':
-			// FIXME impl
-			return true;
+			return game.foundations.every(
+				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) + (c && isRed(c.suit) === isRed(card.suit) ? 2 : 1) >= card_rank_idx
+			);
 	}
 }
 
