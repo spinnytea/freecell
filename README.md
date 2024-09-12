@@ -42,15 +42,9 @@ TODO main development tasks:
   - [FreeCell lists of difficult (and extra easy) deals](https://www.solitairelaboratory.com/fclists.html)
   - Some games require no free cells :D - so make a 0 cells version restricted to these games
   - Same with a list for solvable 1-cell games
-- TODO auto-foundartion stops when
-  - (bad) all cards that can go up (i.e. 2229)
-  - current rank + 1.5 (3s are set, all the 4s and 5s, red 6s IFF black 5s are up, i.e. 3565, 0342) (all not needed for developing sequences, opp rank + 1))
-  - current rank + 1 (3s are set, all the 4s and 5s, but not 6s, i.e. 3555)
-  - current rank (3s are set, all the 4s before any 5, i.e. 3444)
-  - option to dis/enable until all cascades are in order (all are a single sequence, or all are ascending)
-  - demo these with solved-sorted (4 full sequences, but H & S, D & C)
+- IDEA option to dis/enable auto-foundation until all cascades are in order (all are a single sequence, or all are ascending)
 - IDEA auto-foundation gets faster the longer it runs
-- TODO can move cards during auto-foundation, stops when it gets to a card the user has moved (can start with: stops as soon as a user does a thing)
+- TODO can move cards during auto-foundation, stops when it gets to a card the user has moved (currently stops if the user has selected a card)
 - TODO animations after/during win state
 - IDEA toggle for: move sequence as one vs animate in-between steps (sequence moves vs each card moves)
 - IDEA implement War? just so it's flexible?

@@ -239,6 +239,7 @@ export function foundationCanAcceptCards(
 	limit: AutoFoundationLimit
 ): boolean {
 	if (!(index in game.foundations)) return false;
+	if (game.selection?.location.fixture === 'foundation' && game.selection.location.data[0] === index) return false;
 	const card = game.foundations[index];
 	if (!card) return true;
 	if (card.rank === 'king') return false;

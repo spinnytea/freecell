@@ -128,7 +128,7 @@ export class FreeCell {
 		}
 
 		this.cursor = this.__clampCursor(cursor);
-		this.selection = selection ?? null; // REVIEW do we need to validate this every time?
+		this.selection = !selection ? null : getSequenceAt(this, selection.location); // REVIEW do we need to validate this every time?
 		this.availableMoves = availableMoves ?? null;
 		this.previousAction = 'init';
 	}
@@ -416,7 +416,7 @@ export class FreeCell {
 					const availableMove = findAvailableMoves(game, sequenceToMove).find(
 						({ fixture }) => fixture === 'foundation'
 					);
-					if (c && availableMove) {
+					if (c && availableMove && !game.selection?.cards.includes(sequenceToMove.cards[0])) {
 						didMove = true;
 						didMoveAny = true;
 						const cards = moveCards(game, sequenceToMove, availableMove);
@@ -431,9 +431,10 @@ export class FreeCell {
 							data: [c_idx, cascade.length - 1],
 						});
 						const availableMove = findAvailableMoves(game, sequenceToMove).find(
-							({ fixture, data: [f_idx] }) => fixture === 'foundation' && foundationCanAcceptCards(game, f_idx, limit)
+							({ fixture, data: [f_idx] }) =>
+								fixture === 'foundation' && foundationCanAcceptCards(game, f_idx, limit)
 						);
-						if (availableMove) {
+						if (availableMove && !game.selection?.cards.includes(sequenceToMove.cards[0])) {
 							didMove = true;
 							didMoveAny = true;
 							const cards = moveCards(game, sequenceToMove, availableMove);
@@ -450,7 +451,7 @@ export class FreeCell {
 					if (canAccept) {
 						game.cells.forEach((c, c_idx) => {
 							if (canAccept) {
-								const canMove = c && canStackFoundation(f, c);
+								const canMove = c && canStackFoundation(f, c) && !game.selection?.cards.includes(c);
 								if (canMove) {
 									canAccept = false;
 									didMove = true;
@@ -474,7 +475,7 @@ export class FreeCell {
 							const last_idx = cascade.length - 1;
 							if (canAccept && cascade.length > 0) {
 								const c = cascade[last_idx];
-								const canMove = canStackFoundation(f, c);
+								const canMove = canStackFoundation(f, c) && !game.selection?.cards.includes(c);
 								if (canMove) {
 									canAccept = false;
 									didMove = true;
