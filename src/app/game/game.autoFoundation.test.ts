@@ -19,9 +19,10 @@ describe('game.autoFoundation', () => {
 		test.todo('current rank + 1');
 
 		describe.each`
-			limit     | homeStr
-			${'none'} | ${'>            3H KS KD KC '}
-			${'rank'} | ${'>            3H 4S 4D 4C '}
+			limit       | homeStr
+			${'none'}   | ${'>            3H KS KD KC '}
+			${'rank+1'} | ${'>            3H 5S 5D 5C '}
+			${'rank'}   | ${'>            3H 4S 4D 4C '}
 		`('$limit', ({ limit, homeStr }: { limit: AutoFoundationLimit; homeStr: string }) => {
 			test.each(['cell,cascade', 'foundation'] as AutoFoundationMethod[])('%s', (method) => {
 				const print = FreeCell.parse(

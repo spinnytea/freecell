@@ -239,28 +239,33 @@ export function foundationCanAcceptCards(
 	limit: AutoFoundationLimit
 ): boolean {
 	if (!(index in game.foundations)) return false;
-	if (game.selection?.location.fixture === 'foundation' && game.selection.location.data[0] === index) return false;
+	if (
+		game.selection?.location.fixture === 'foundation' &&
+		game.selection.location.data[0] === index
+	) {
+		return false;
+	}
 	const card = game.foundations[index];
-	if (!card) return true;
-	if (card.rank === 'king') return false;
+	if (!card) return true; // empty can always accept an ace
+	if (card.rank === 'ace') return true; // ace can always accept a 2
+	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
 	const card_rank_idx = RankList.indexOf(card.rank);
 
 	switch (limit) {
 		case 'none':
 			return true;
-		case 'rank+1.5':
-			// TODO impl
-			break;
-		case 'rank+1':
-			// TODO impl
-			break;
 		case 'rank':
 			return game.foundations.every(
 				(c) => c === card || (c ? RankList.indexOf(c.rank) : 0) >= card_rank_idx
 			);
+		case 'rank+1':
+			return game.foundations.every(
+				(c) => c === card || (c ? RankList.indexOf(c.rank) : 0) + 1 >= card_rank_idx
+			);
+		case 'rank+1.5':
+			// FIXME impl
+			return true;
 	}
-
-	return true;
 }
 
 export function getPrintSeparator(
