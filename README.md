@@ -21,11 +21,12 @@ TODO main development tasks:
 - REVIEW [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO portrait vs landscape mode (portait on phone is ssoooooo small)
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
-  - deal all cards
+  - deal each card
   - card flips (back -> face -> back)
   - cursor
   - selection
   - card movement
+  - auto-foundation each card
 - TODO failed moves shake
 - TODO mouse controls
   - drag to move

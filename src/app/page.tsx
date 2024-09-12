@@ -72,7 +72,7 @@ export default function Page() {
 				case ' ':
 				case 'Enter':
 					consumed = true;
-					setGame((g) => g.touch());
+					setGame((g) => g.touch().autoFoundationAll());
 					break;
 				// default:
 				// 	console.log(`unused key: "${key}"`);

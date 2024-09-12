@@ -390,6 +390,12 @@ export class FreeCell {
 		return this.__clone({ action: 'invalid ' + action });
 	}
 
+	/** @deprecated this is just for testing; we want to animate each card moved */
+	autoFoundationAll(): FreeCell {
+		// FIXME finish
+		return this.__clone({ action: 'auto-foundation noop' });
+	}
+
 	/**
 		These deals are numbered from 1 to 32000.
 
