@@ -27,7 +27,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	const { top, left, zIndex } = calcTopLeftZ(fixtureSizes, location, game.selection, rank);
 
 	function onClick() {
-		setGame(game.setCursor(location).touch());
+		setGame(game.setCursor(location).touch().autoFoundationAll());
 	}
 
 	return (

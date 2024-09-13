@@ -12,7 +12,7 @@ TODO main development tasks:
 1. ~~click select -> click move (one card at a time, ¿no sequences?)~~
 1. ~~win state~~
 1. ~~quick and dirty loop (new -> shuffle -> deal -> play -> win -> <<-- new -> shuffle -> …)~~
-1. auto-foundation
+1. ~~auto-foundation~~
 1. one-click-to-move
 1. everything (core game) is tested (ui selection -> move, all the way to winning)
 
@@ -21,11 +21,12 @@ TODO main development tasks:
 - REVIEW [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO portrait vs landscape mode (portait on phone is ssoooooo small)
 - TODO movement needs to be fun, animations are important, every time a card moves, it must not jump
-  - deal all cards
+  - deal each card
   - card flips (back -> face -> back)
   - cursor
   - selection
   - card movement
+  - auto-foundation each card
 - TODO failed moves shake
 - TODO mouse controls
   - drag to move
@@ -41,15 +42,9 @@ TODO main development tasks:
   - [FreeCell lists of difficult (and extra easy) deals](https://www.solitairelaboratory.com/fclists.html)
   - Some games require no free cells :D - so make a 0 cells version restricted to these games
   - Same with a list for solvable 1-cell games
-- TODO auto-foundartion stops when
-  - (bad) all cards that can go up (i.e. 2229)
-  - current rank + 1.5 (3s are set, all the 4s and 5s, red 6s IFF black 5s are up, i.e. 3565, 0342) (all not needed for developing sequences, opp rank + 1))
-  - current rank + 1 (3s are set, all the 4s and 5s, but not 6s, i.e. 3555)
-  - current rank (3s are set, all the 4s before any 5, i.e. 3444)
-  - option to dis/enable until all cascades are in order (all are a single sequence, or all are ascending)
-  - demo these with solved-sorted (4 full sequences, but H & S, D & C)
+- IDEA option to dis/enable auto-foundation until all cascades are in order (all are a single sequence, or all are ascending)
 - IDEA auto-foundation gets faster the longer it runs
-- TODO can move cards during auto-foundation, stops when it gets to a card the user has moved (can start with: stops as soon as a user does a thing)
+- TODO can move cards during auto-foundation, stops when it gets to a card the user has moved (currently stops if the user has selected a card)
 - TODO animations after/during win state
 - IDEA toggle for: move sequence as one vs animate in-between steps (sequence moves vs each card moves)
 - IDEA implement War? just so it's flexible?
