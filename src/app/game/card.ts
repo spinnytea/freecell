@@ -137,7 +137,7 @@ export function parseShorthandCard(
 			rank = 'joker';
 			break;
 		default:
-			throw new Error(`invalid rank shorthand: ${r ?? 'undefined'}`);
+			throw new Error(`invalid rank shorthand: "${r ?? 'undefined'}"`);
 	}
 
 	switch (s) {
@@ -154,7 +154,7 @@ export function parseShorthandCard(
 			suit = 'spades';
 			break;
 		default:
-			throw new Error(`invalid suit shorthand: ${s ?? 'undefined'}`);
+			throw new Error(`invalid suit shorthand: "${s ?? 'undefined'}"`);
 	}
 
 	return { rank, suit };

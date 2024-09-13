@@ -26,6 +26,9 @@ import {
 const DEFAULT_NUMBER_OF_CELLS = 4;
 const NUMBER_OF_FOUNDATIONS = SuitList.length;
 const DEFAULT_NUMBER_OF_CASCADES = 8;
+// REVIEW why 1-4 cells? why not, say, 10?
+const MIN_CELL_COUNT = 1;
+const MAX_CELL_COUNT = 4;
 
 const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 /**
@@ -101,10 +104,9 @@ export class FreeCell {
 
 			this.win = this.cards.every((card) => card.location.fixture === 'foundation');
 		} else {
-			// REVIEW why 1-4 cells? why not, say, 10?
-			if (cellCount < 1 || cellCount > 4)
+			if (cellCount < MIN_CELL_COUNT || cellCount > MAX_CELL_COUNT)
 				throw new Error(`Must have between 1 and 4 cells; requested "${cellCount.toString(10)}".`);
-			if (cascadeCount < this.foundations.length)
+			if (cascadeCount < NUMBER_OF_FOUNDATIONS)
 				throw new Error(
 					`Must have at least as many cascades as foundations (${this.foundations.length.toString(10)}); requested "${cascadeCount.toString(10)}".`
 				);
@@ -396,7 +398,7 @@ export class FreeCell {
 
 	/** @deprecated this is just for testing; we want to animate each card moved */
 	autoFoundationAll({
-		limit = 'rank',
+		limit = 'rank+1',
 		method = 'foundation',
 	}: {
 		limit?: AutoFoundationLimit;
@@ -761,6 +763,9 @@ export class FreeCell {
 
 		// parse cells
 		const cellCount = (line.length - 1 - 3 * NUMBER_OF_FOUNDATIONS) / 3;
+		if (cellCount < MIN_CELL_COUNT || cellCount > MAX_CELL_COUNT) {
+			throw new Error(`Must have between 1 and 4 cells; requested "${cellCount.toString(10)}".`);
+		}
 		for (let i = 0; i < cellCount; i++) {
 			const card = nextCard(home_spaces);
 			if (card) {
@@ -792,6 +797,12 @@ export class FreeCell {
 		line = nextLine();
 		const cascadeLineLength = line.length;
 		const cascadeCount = (cascadeLineLength - 1) / 3;
+		if (cascadeCount < NUMBER_OF_FOUNDATIONS) {
+			throw new Error(
+				`Must have at least as many cascades as foundations (${NUMBER_OF_FOUNDATIONS.toString(10)}); requested "${cascadeCount.toString(10)}".`
+			);
+		}
+
 		while (line.length === cascadeLineLength && line[0] !== ':') {
 			// TODO come up with a better metric than 25 (actions can be 25 chars, decks could be too)
 			for (let i = 0; i < cascadeCount; i++) {
