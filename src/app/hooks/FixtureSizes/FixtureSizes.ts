@@ -133,14 +133,16 @@ export function calcTopLeftZ(
 						: undefined,
 			};
 		case 'foundation':
-			// XXX visualize selection within cell?
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.foundationLeft[data[0]],
 				// above the cell/cascade
 				// REVIEW cards in flight
 				zIndex: (rank ? RankList.indexOf(rank) : 0) + 100,
-				transform: undefined,
+				transform:
+					selection?.location.fixture === 'foundation' && selection.location.data[0] === data[0]
+						? 'rotate(10deg)'
+						: undefined,
 			};
 		case 'cascade': {
 			const ret = {

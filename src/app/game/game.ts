@@ -365,7 +365,9 @@ export class FreeCell {
 		// TODO allow "growing/shrinking sequence of current selection"
 		if (!game.selection?.canMove) {
 			const selection = getSequenceAt(game, game.cursor);
-			// IDEA config for "allow foundation selection"
+			// we can't do anything with a foundation (we can move cards off of it)
+			// - therefore it doesn't make sense to select it
+			// - you'd have to deselect it before you can continue with gameplay
 			if (selection.cards.length && game.cursor.fixture !== 'foundation') {
 				game.selection = selection;
 				game.availableMoves = findAvailableMoves(game); // XXX defer until later? unless we have debug render on
