@@ -1,10 +1,12 @@
 .card {
 	--movement-time: 0.3s;
+	--rotation-time: 0.1s;
 
 	position: absolute;
 
 	/* REVIEW just a basic movement transition to get things moving (started) */
 	transition:
 		top var(--movement-time) ease 0s,
-		left var(--movement-time) ease 0s;
+		left var(--movement-time) ease 0s,
+		transform var(--rotation-time) ease 0s;
 }

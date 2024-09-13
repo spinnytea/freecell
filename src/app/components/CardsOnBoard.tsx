@@ -24,14 +24,23 @@ export function CardsOnBoard() {
 function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; location: CardLocation }) {
 	const fixtureSizes = useFixtureSizes();
 	const [game, setGame] = useContext(GameContext);
-	const { top, left, zIndex } = calcTopLeftZ(fixtureSizes, location, game.selection, rank);
+	const { top, left, zIndex, transform } = calcTopLeftZ(
+		fixtureSizes,
+		location,
+		game.selection,
+		rank
+	);
 
 	function onClick() {
 		setGame(game.setCursor(location).touch().autoFoundationAll());
 	}
 
 	return (
-		<div className={styles_cardsonboard.card} style={{ top, left, zIndex }} onClick={onClick}>
+		<div
+			className={styles_cardsonboard.card}
+			style={{ top, left, zIndex, transform }}
+			onClick={onClick}
+		>
 			<CardImage
 				rank={rank}
 				suit={suit}

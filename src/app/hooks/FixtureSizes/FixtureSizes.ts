@@ -112,7 +112,7 @@ export function calcTopLeftZ(
 	{ fixture, data }: CardLocation,
 	selection: CardSequence | null,
 	rank?: Rank
-): { top: number; left: number; zIndex: number } {
+): { top: number; left: number; zIndex: number; transform: string | undefined } {
 	switch (fixture) {
 		case 'deck':
 			// TODO animate cursor (selection?) within deck
@@ -120,13 +120,17 @@ export function calcTopLeftZ(
 				top: fixtureSizes.deck.top,
 				left: fixtureSizes.deck.left,
 				zIndex: data[0],
+				transform: undefined,
 			};
 		case 'cell':
-			// FIXME visualize selection within cell
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.cellLeft[data[0]],
 				zIndex: data[0],
+				transform:
+					selection?.location.fixture === 'cell' && selection.location.data[0] === data[0]
+						? 'rotate(10deg)'
+						: undefined,
 			};
 		case 'foundation':
 			// XXX visualize selection within cell?
@@ -136,12 +140,14 @@ export function calcTopLeftZ(
 				// above the cell/cascade
 				// REVIEW cards in flight
 				zIndex: (rank ? RankList.indexOf(rank) : 0) + 100,
+				transform: undefined,
 			};
 		case 'cascade': {
 			const ret = {
 				top: fixtureSizes.tableau.top + fixtureSizes.tableau.offsetTop * data[1],
 				left: fixtureSizes.tableau.cascadeLeft[data[0]],
 				zIndex: data[1], // we don't really need to make one cascade strictly above another
+				transform: undefined,
 			};
 			if (selection?.location.fixture === 'cascade' && selection.location.data[0] === data[0]) {
 				const sd1 = selection.location.data[1];
