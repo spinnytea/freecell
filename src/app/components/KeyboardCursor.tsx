@@ -3,8 +3,8 @@ import { calcTopLeftZ } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/Game/useGame';
 
-// TODO animate cursor on select/deselect
-// TODO show cursor on keyboard input, hide cursor on mouse input
+// TODO (animation) animate cursor on select/deselect
+// TODO (hid) show cursor on keyboard input, hide cursor on mouse input
 export function KeyboardCursor() {
 	const fixtureSizes = useFixtureSizes();
 	const { cursor, selection } = useGame();

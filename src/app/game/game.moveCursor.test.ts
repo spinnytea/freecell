@@ -256,7 +256,6 @@ describe('moveCursor', () => {
 					expect(game.previousAction).toBe('cursor left');
 				});
 
-				// REVIEW should we remember the "previous" value so we can return to it?
 				test('bottom of cascade when smaller', () => {
 					let game = new FreeCell().dealAll().setCursor({ fixture: 'cascade', data: [3, 6] });
 					expect(game.tableau[3].length).toBe(7);
@@ -505,7 +504,7 @@ describe('moveCursor', () => {
 	});
 
 	describe('has selection only moves to valid locations', () => {
-		// TODO only cycle between places that the selection can move
+		// TODO (controls) only cycle between places that the selection can move
 		describe('cell', () => {
 			test.todo('with left and right');
 

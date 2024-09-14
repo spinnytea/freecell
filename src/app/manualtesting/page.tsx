@@ -5,9 +5,9 @@ import { RankList, SuitList } from '@/app/game/card';
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 
 /*
-	TODO much needed style overhaul
+	TODO (techdebt) much needed style overhaul
 
-	TODO manual tests for cursor/selection
+	TODO (techdebt) manual tests for cursor/selection
 	+-----------+
 	| _ a c _ _ |
 	|   a d     |
@@ -17,9 +17,9 @@ import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 	|   b       |
 	+-----------+
 
-	TODO invalid move animation
+	TODO (animation) invalid move animation
 
-	TODO animate moving a sequence
+	TODO (animation) animate moving a sequence
 */
 export default function Page() {
 	return (
@@ -42,6 +42,10 @@ export default function Page() {
 				<CardImage rank="joker" suit="spades" width={80} hidden />
 			</div>
 			<div className="instruction">Background texture scrolls (it&apos;s not fixed in place).</div>
+			<div className="instruction">
+				Selection is obvious for each of cell, foundation, cascade, deck.
+			</div>
+			<div className="instruction">Foundation always renders highest card.</div>
 		</main>
 	);
 }

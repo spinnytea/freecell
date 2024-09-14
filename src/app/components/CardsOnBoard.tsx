@@ -7,7 +7,11 @@ import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/Game/GameContext';
 import { useGame } from '@/app/hooks/Game/useGame';
 
-// IDEA render cursor like a selection when there is none (then leave that render in place once selected)
+// IDEA (hud) render cursor like a selection when there is none (then leave that render in place once selected)
+//  - i.e. as the cursor moves:
+//    - "peek" at all the cards in cascade, rotate card in cell
+//    - once selected, do not change that
+// IDEA (settings) setting for "reduced movement"
 export function CardsOnBoard() {
 	const { cards } = useGame();
 

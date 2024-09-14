@@ -35,6 +35,7 @@ export const RankList: Rank[] = [
 export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	RankList.indexOf(min) === RankList.indexOf(max) - 1;
 
+// REVIEW (techdebt) is "fixture" the right name?
 export type Fixture = 'deck' | 'cell' | 'foundation' | 'cascade';
 export interface CardLocation {
 	fixture: Fixture;

@@ -7,7 +7,7 @@ import { useGame } from '@/app/hooks/Game/useGame';
 
 const OVERLAY_MARGINS = 4;
 
-// REVIEW which of these are necessary? move them somewhere else
+// REVIEW (hud) which of these are necessary? move them somewhere else
 //  - or make the main game not need them (keyboard needs a cursor, but does it need a canMove selection?)
 export function DebugCursors() {
 	const fixtureSizes = useFixtureSizes();
@@ -67,7 +67,7 @@ function LocationBox({
 			style.left = fixtureSizes.deck.left;
 			break;
 		case 'cascade':
-			// TODO height of card if tail
+			// TODO (hud) height of card if tail
 			style.top = fixtureSizes.tableau.top + d1 * fixtureSizes.tableau.offsetTop;
 			style.left = fixtureSizes.tableau.cascadeLeft[d0];
 			style.height = fixtureSizes.tableau.offsetTop;
@@ -131,7 +131,6 @@ function SequenceBox({
 			if (!canMove) {
 				style.height = fixtureSizes.tableau.offsetTop;
 			}
-			// TODO only the selection slides the cards, and only if present
 			if (sequence.cards.length > 1 || !sequence.canMove) {
 				if (d1 > 0) {
 					style.top -= fixtureSizes.tableau.offsetTop * PEEK_UP;

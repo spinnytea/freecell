@@ -1,11 +1,11 @@
 import { scale_height } from '@/app/components/CardImage';
 import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card';
 
-// REVIEW portrait vs landscape
+// REVIEW (deployment) portrait vs landscape
 //  - the main issue with lanscape is vertical height, tall cascades
 //  - portrait we can afford to have much smaller margins, because it has enough height
 //  - maybe that's what should determine the cardHeight?
-// IDEA (bad) free cells on left (top down), foundation on right (top down)
+// IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)
 //  - so tableau can start at the top of the screen?
 //  - it's a layout
 export const DEFAULT_CLIENT_WIDTH = 800;
@@ -99,7 +99,7 @@ export function calcFixtureSizes(
 			offsetTop: CASCADE_OFFSET,
 		},
 
-		// REVIEW sort of arbitrary place to deal from
+		// REVIEW (hud) this is an arbitrary place to deal from
 		deck: {
 			top: boardHeight - cardHeight - HOME_TOP,
 			left: HOME_LR,
@@ -115,7 +115,7 @@ export function calcTopLeftZ(
 ): { top: number; left: number; zIndex: number; transform: string | undefined } {
 	switch (fixture) {
 		case 'deck':
-			// TODO animate cursor (selection?) within deck
+			// TODO (animation) animate cursor (selection?) within deck
 			return {
 				top: fixtureSizes.deck.top,
 				left: fixtureSizes.deck.left,
@@ -136,8 +136,8 @@ export function calcTopLeftZ(
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.foundationLeft[data[0]],
-				// above the cell/cascade
-				// REVIEW cards in flight
+				// XXX (techdebt) zIndex + 100 so it's above the cell/cascade
+				// REVIEW (animations) cards in flight
 				zIndex: (rank ? RankList.indexOf(rank) : 0) + 100,
 				transform:
 					selection?.location.fixture === 'foundation' && selection.location.data[0] === data[0]

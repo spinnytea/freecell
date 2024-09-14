@@ -8,7 +8,7 @@ export function WinMessage() {
 
 	if (!win) return null;
 
-	// TODO animate entrance
+	// TODO (animation) animate entrance
 	const style = {
 		top: fixtureSizes.tableau.top + fixtureSizes.cardHeight + fixtureSizes.cardWidth / 4,
 		fontSize: fixtureSizes.cardWidth,

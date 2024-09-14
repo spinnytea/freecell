@@ -26,7 +26,7 @@ import {
 const DEFAULT_NUMBER_OF_CELLS = 4;
 const NUMBER_OF_FOUNDATIONS = SuitList.length;
 const DEFAULT_NUMBER_OF_CASCADES = 8;
-// REVIEW why 1-4 cells? why not, say, 10?
+// REVIEW (gameplay) why 1-4 cells? why not, say, 10? @see shorthandPosition
 const MIN_CELL_COUNT = 1;
 const MAX_CELL_COUNT = 4;
 
@@ -39,13 +39,13 @@ const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 */
 const BOTTOM_OF_CASCADE = 52;
 
-// TODO rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
+// TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
 export class FreeCell {
 	cards: Card[];
 	readonly win: boolean;
 
 	// structure to make the logic easier
-	// REVIEW consider: preferred foundation suits? (HSDC) - render these?
+	// REVIEW (motivation) consider: preferred foundation suits? (HSDC) - render these?
 	deck: Card[];
 	cells: (Card | null)[];
 	foundations: (Card | null)[];
@@ -53,9 +53,16 @@ export class FreeCell {
 
 	// controls
 	cursor: CardLocation;
-	selection: CardSequence | null; // REVIEW none, single, sequence
+	selection: CardSequence | null; // REVIEW (techdebt) none, single, sequence
 	availableMoves: CardLocation[] | null;
 	previousAction: string;
+
+	// custom rules
+	// readonly jokers: 'none' | 'low' | 'high' | 'wild' | 'unknown'; // XXX (techdebt) use or remove
+
+	// settings
+	// autoFoundationLimit: AutoFoundationLimit; // XXX (techdebt) use or remove
+	// autoFoundationMethod: AutoFoundationMethod; // XXX (techdebt) use or remove
 
 	constructor({
 		cellCount = DEFAULT_NUMBER_OF_CELLS,
@@ -84,7 +91,7 @@ export class FreeCell {
 			this.cards = cards.map((card) => ({ ...card }));
 
 			// we want the objects in "cards" and there rest of the game board
-			// IDEA can we calc cells/foundations/tableau/deck on demand instead of in the constructor?
+			// IDEA (techdebt) should we calc cells/foundations/tableau/deck on demand instead of in the constructor?
 			this.cards.forEach((card) => {
 				switch (card.location.fixture) {
 					case 'deck':
@@ -130,13 +137,14 @@ export class FreeCell {
 		}
 
 		this.cursor = this.__clampCursor(cursor);
-		this.selection = !selection ? null : getSequenceAt(this, selection.location); // REVIEW do we need to validate this every time?
+		// REVIEW (techdebt) do we need to validate selection & availableMoves every time (like the cursor)?
+		this.selection = !selection ? null : getSequenceAt(this, selection.location);
 		this.availableMoves = availableMoves ?? null;
 		this.previousAction = 'init';
 	}
 
 	/**
-		REVIEW uses of __clone right at the start of functions
+		REVIEW (techdebt) uses of __clone right at the start of functions
 		 - it's supposed to be for one-liners
 		 - it's supposed to be returned immediately
 		 - needing to remember to use "game" instead of "this" is a problem
@@ -163,11 +171,11 @@ export class FreeCell {
 			availableMoves,
 		});
 		game.previousAction = action;
-		// REVIEW if (game.cursor !== cursor) game.previousAction += ' (cursor clamped)';
+		// REVIEW (techdebt) message for: if (game.cursor !== cursor) game.previousAction += ' (cursor clamped)';
 		return game;
 	}
 
-	/** TODO move to game-utils */
+	/** TODO (techdebt) move to game-utils */
 	__clampCursor(location?: CardLocation): CardLocation {
 		if (!location) return DEFAULT_CURSOR_LOCATION;
 
@@ -197,10 +205,10 @@ export class FreeCell {
 		return this.__clone({ action: 'cursor set', cursor });
 	}
 
-	// REVIEW controls - actually play the game and see what's not quite right
+	// REVIEW (controls) actually play the game and see what's not quite right
 	//  - left right wraps between home/tableau
 	//  - entering a cascade (l/r, u/d) cascade always moves to the "last sequence"
-	// REVIEW refactor moveCursor out of game? setCursor yes, but move cursor?
+	// REVIEW (techdebt) refactor moveCursor out of game? setCursor yes, but move cursor?
 	moveCursor(dir: 'up' | 'right' | 'left' | 'down'): FreeCell {
 		const {
 			fixture,
@@ -307,7 +315,7 @@ export class FreeCell {
 								cursor: { fixture: 'deck', data: [this.deck.length - 1 - d0] },
 							});
 						}
-						// TODO same as up (from top)
+						// TODO (controls) same as up (from top)
 						break;
 					}
 					return this.__clone({ action: 'cursor down', cursor: { fixture, data: [d0, d1 + 1] } });
@@ -317,7 +325,7 @@ export class FreeCell {
 				case 'up':
 					// if d0 is wrong, it will be fixed with __clampCursor
 					// d1 will be fixed with __clampCursor
-					// REVIEW spread up/down between cascade and deck?
+					// REVIEW (controls) spread up/down between cascade and deck?
 					//  - i.e. use the cascade to jump multiple cards in the deck
 					return this.__clone({
 						action: 'cursor up w',
@@ -367,7 +375,7 @@ export class FreeCell {
 
 		const game = this.__clone({ action: 'touch' });
 
-		// TODO allow "growing/shrinking sequence of current selection"
+		// TODO (controls) allow "growing/shrinking sequence of current selection"
 		if (!game.selection?.canMove) {
 			const selection = getSequenceAt(game, game.cursor);
 			// we can't do anything with a foundation (we can move cards off of it)
@@ -375,14 +383,14 @@ export class FreeCell {
 			// - you'd have to deselect it before you can continue with gameplay
 			if (selection.cards.length && game.cursor.fixture !== 'foundation') {
 				game.selection = selection;
-				game.availableMoves = findAvailableMoves(game); // XXX defer until later? unless we have debug render on
+				game.availableMoves = findAvailableMoves(game); // XXX (techdebt) defer until later? unless we have debug render on
 				game.previousAction = 'select ' + shorthandSequence(selection, true);
 				return game;
 			}
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length) {
-			// XXX test? remove?
+			// XXX (techdebt) can we test this? should we remove this?
 			return this.__clone({ action: 'touch stop' });
 		}
 
@@ -399,7 +407,7 @@ export class FreeCell {
 			return this.__clone({ action, cards, selection: null, availableMoves: null });
 		}
 
-		// TODO animate invalid move
+		// TODO (animation) animate invalid move
 		return this.__clone({ action: 'invalid ' + action });
 	}
 
@@ -413,6 +421,9 @@ export class FreeCell {
 	} = {}): FreeCell | this {
 		let game = this.__clone({ action: 'auto-foundation setup' });
 		const moved: Card[] = [];
+
+		// TODO (techdebt) don't autoFoundation just _any_ time, only do it after a card moves (check previousAction)
+		// TODO (setting) autoFoundation "only after [any] move" vs "only after move to foundation"
 
 		let didMoveAny = false;
 		let didMove = true;
@@ -507,7 +518,7 @@ export class FreeCell {
 			}
 		}
 
-		// XXX can we write this function in a way that doesn't confuse typescript?
+		// XXX (techdebt) can we write this function in a way that doesn't confuse typescript?
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (didMoveAny) {
 			const movedStr = moved.map((card) => shorthandCard(card)).join(',');
@@ -613,8 +624,8 @@ export class FreeCell {
 		we do not print the "available moves", that's important for good gameplay
 		(and this print function is complicated enough, we don't want more complexity just for a debug visualization)
 
-	  - XXX print is super messy, can we clean this up?
-	  - IDEA render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
+	  - XXX (techdebt) print is super messy, can we clean this up?
+	  - IDEA (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
 	*/
 	print({ skipDeck = false }: { skipDeck?: boolean } = {}): string {
 		let str = '';
@@ -687,8 +698,8 @@ export class FreeCell {
 			}
 		}
 
-		// REVIEW can we get rid of `d:` prefix (bcuz parse)
-		// REVIEW should we use `:d` prefix instead?
+		// REVIEW (print) can we get rid of `d:` prefix (bcuz parse)
+		// REVIEW (print) should we use `:d` prefix instead?
 		if (this.deck.length && !skipDeck) {
 			if (this.cursor.fixture === 'deck' || this.selection?.location.fixture === 'deck') {
 				// prettier-ignore
@@ -714,13 +725,13 @@ export class FreeCell {
 			const msg = this.tableau.length > 5 ? 'Y O U   W I N !' : 'YOU WIN !';
 			const lineLength = this.tableau.length * 3 + 1;
 			const paddingLength = (lineLength - msg.length - 2) / 2;
-			const spaces = '                               '; // XXX enough spaces for 10 cascadeCount
+			const spaces = '                               '; // XXX (techdebt) enough spaces for 10 cascadeCount
 			const padding = '                            '.substring(0, paddingLength);
 			str += '\n:' + padding + msg + padding + (paddingLength === padding.length ? '' : ' ') + ':';
 			str += '\n' + spaces.substring(0, lineLength);
 		}
 
-		// XXX print and parse move history?
+		// XXX (print) print and parse move history?
 
 		str += '\n ' + this.previousAction;
 		return str;
@@ -747,15 +758,15 @@ export class FreeCell {
 
 		const getCard = ({ rank, suit }: { rank: Rank; suit: Suit }) => {
 			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
-			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`); // XXX test with a joker, duplicate card
+			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`); // XXX (print) test with a joker, duplicate card
 			remaining.splice(remaining.indexOf(card), 1);
 			return card;
 		};
 
 		const nextLine = () => lines.shift()?.split('').reverse() ?? [];
 		const nextCard = (spaces: (string | undefined)[]) => {
-			// TODO test invalid card rank
-			// TODO test invalid card suit
+			// TODO (print) test invalid card rank
+			// TODO (print) test invalid card suit
 			if (line.length < 3) throw new Error('not enough tokens');
 			spaces.push(line.pop());
 			const r = line.pop();
@@ -765,7 +776,7 @@ export class FreeCell {
 			return getCard(rs);
 		};
 
-		// TODO test if first line isn't present
+		// TODO (print) test if first line isn't present
 		line = nextLine();
 
 		// parse cells
@@ -800,7 +811,7 @@ export class FreeCell {
 
 		// parse cascades
 		let row = 0;
-		// TODO test if first line isn't present
+		// TODO (print) test if first line isn't present
 		line = nextLine();
 		const cascadeLineLength = line.length;
 		const cascadeCount = (cascadeLineLength - 1) / 3;
@@ -811,7 +822,7 @@ export class FreeCell {
 		}
 
 		while (line.length === cascadeLineLength && line[0] !== ':') {
-			// TODO come up with a better metric than 25 (actions can be 25 chars, decks could be too)
+			// TODO (print) come up with a better metric than 25 (actions can be 25 chars, decks could be too)
 			for (let i = 0; i < cascadeCount; i++) {
 				const card = nextCard(tableau_spaces);
 				if (card) {
@@ -819,7 +830,7 @@ export class FreeCell {
 				}
 			}
 			row++;
-			// TODO test if line isn't present
+			// TODO (print) test if line isn't present
 			tableau_spaces.push(line.pop());
 			line = nextLine();
 		}
@@ -866,7 +877,7 @@ export class FreeCell {
 		const action = line.reverse().join('');
 
 		// sus out the cursor/selection locations
-		// TODO is there any way to simplify this?
+		// TODO (techdebt) is there any way to simplify this?
 		let cursor: CardLocation | undefined = undefined;
 		let selection_location: CardLocation | undefined = undefined;
 		const home_cursor_index = home_spaces.indexOf('>');

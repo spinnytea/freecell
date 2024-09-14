@@ -7,9 +7,9 @@ export const scale_height = (width: number) => Math.floor((width / ORIG_WIDTH) *
 
 const assetFolder = process.env.BASE_PATH ?? '';
 
-// TODO https://cardmeister.github.io/
+// TODO (theme) https://cardmeister.github.io/
 //  - https://github.com/cardmeister/cardmeister.github.io/blob/master/elements.cardmeister.full.js
-// TODO https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
+// TODO (theme) https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
 export function CardImage({
 	hidden = false,
 	rank,
@@ -21,7 +21,6 @@ export function CardImage({
 	suit: Suit;
 	width?: number;
 }>) {
-	// REVIEW do we need `priority` - it's complaining because i'm rendering the whole deck on init
 	const filename = getFilename(rank, suit, hidden);
 	const height = scale_height(width);
 	return (
@@ -36,9 +35,9 @@ export function CardImage({
 	);
 }
 
-// TODO alternate card backs?
-// TODO deck w/ kings are lions?
-// TODO dark theme cards
+// TODO (theme) alternate card backs?
+// TODO (theme) deck w/ kings are lions?
+// TODO (theme) dark theme cards
 function getFilename(rank: Rank, suit: Suit, hidden: boolean, useFancyDeck = true) {
 	if (hidden) {
 		return `${assetFolder}/i/Card_back_10.svg`;

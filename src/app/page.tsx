@@ -100,8 +100,6 @@ export default function Page() {
 		};
 	}, []);
 
-	// TODO render game.selection ? (separate from debug view; try with debug view off; at least it's visible)
-
 	return (
 		<main ref={gameBoardRef} className={styles_gameboard.main} onClick={onClick}>
 			<FixtureSizesContextProvider gameBoardRef={gameBoardRef}>

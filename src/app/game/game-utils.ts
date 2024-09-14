@@ -9,6 +9,7 @@ import {
 } from '@/app/game/card';
 import { FreeCell } from '@/app/game/game';
 
+// TODO (settings) these _exist_, but we need to be able to pick them
 export type AutoFoundationLimit =
 	// move all cards that can go up
 	// i.e. 3KKK
@@ -26,6 +27,8 @@ export type AutoFoundationLimit =
 	// 3s are set, all the 4s before any 5
 	// i.e. 3444
 	| 'rank';
+
+// TODO (settings) these _exist_, but we need to be able to pick them
 export type AutoFoundationMethod = 'cell,cascade' | 'foundation';
 
 export function getSequenceAt(game: FreeCell, location: CardLocation): CardSequence {
@@ -187,16 +190,16 @@ export function findAvailableMoves(
 }
 
 /**
-	TODO use this for dealing
-	TODO use this for auto-foundation
-	TODO use this for animate-move
+	TODO (techdebt) use this for dealing
+	TODO (techdebt) use this for auto-foundation
+	TODO (techdebt) use this for animate-move
 */
 export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation): Card[] {
 	if (from.cards.length === 0) {
 		return game.cards;
 	}
 	if (to.fixture === 'deck') {
-		// XXX can we, in theory, move a card to the deck? what does that look like
+		// XXX (gameplay) can we, in theory, move a card to the deck? what does that look like
 		//  - we should be able to move them to the bottom of the deck
 		//  - or move them to the top of the deck
 		return game.cards;
@@ -213,8 +216,6 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 			from.cards[0].location = to;
 			break;
 		case 'foundation':
-			// REVIEW if there is already a card at this location, then we will eat it?
-			//  - foundation needs to moved "off the board" (or at least a z-index negative enough that they are stacked correctly)
 			from.cards[0].location = to;
 			break;
 		case 'cascade':

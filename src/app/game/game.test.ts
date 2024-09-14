@@ -209,7 +209,17 @@ describe('game', () => {
 			);
 		});
 
-		// REVIEW is there a max number of cascades?
+		test.todo('11 cascades'); // @see shorthandPosition
+	});
+
+	describe('inspecting foundation always uses highest card', () => {
+		test.todo('empty');
+
+		test.todo('one');
+
+		test.todo('few');
+
+		test.todo('all');
 	});
 
 	describe('parse', () => {

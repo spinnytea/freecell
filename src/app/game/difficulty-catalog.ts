@@ -1,7 +1,7 @@
 /**
 	of the original 32,000 deals
 
-	REVIEW https://www.solitairelaboratory.com/fclists.html
+	REVIEW (gameplay) https://www.solitairelaboratory.com/fclists.html
 */
 export const taggedSeeds = new Map<number, string[]>([
 	[2, ['one cell']],

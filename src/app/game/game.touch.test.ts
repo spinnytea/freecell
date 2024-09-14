@@ -7,12 +7,11 @@ import {
 
 describe('game.touch', () => {
 	// also tests print, since select is rendered
-	// TODO test FreeCell.parse here also (can it handle all the cursors + selections)
 	describe('select', () => {
 		let game: FreeCell;
 		beforeEach(() => {
 			// #12411 has a few sequences we can test
-			// XXX maybe we should hand-craft one instead of shuffle (needs FreeCell.parse -> game)
+			// XXX (techdebt) maybe we should hand-craft one instead of shuffle
 			game = new FreeCell().shuffle32(12411);
 		});
 
@@ -600,7 +599,7 @@ describe('game.touch', () => {
 		let game: FreeCell;
 		beforeEach(() => {
 			// #11863 has a few good moves we can test
-			// XXX maybe we should hand-craft one instead of shuffle (needs FreeCell.parse -> game)
+			// XXX (techdebt) maybe we should hand-craft one instead of shuffle
 			game = new FreeCell().shuffle32(11863);
 		});
 

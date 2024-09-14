@@ -45,7 +45,7 @@
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		/* TODO dark text should be based on --felt--selected */
+		/* TODO (theme) dark text should be based on --felt--selected */
 		/* --foreground-rgb: 33, 33, 33; */
 		--foreground-rgb: 212, 212, 212;
 		--background-glow: radial-gradient(
@@ -55,7 +55,7 @@
 			#00000040 100%
 		);
 
-		/* TODO pile colors should be based on --felt--selected */
+		/* TODO (theme) pile colors should be based on --felt--selected */
 		/* --pile-rgb: 30, 30, 30; */
 		/* --pile-border-rgb: 50, 50, 50; */
 
@@ -76,7 +76,7 @@ body {
 }
 
 body {
-	/* REVIEW drag scrolling moves background glow (but not the noise or background color) */
+	/* REVIEW (theme) drag scrolling moves background glow (but not the noise or background color) */
 	color: rgb(var(--foreground-rgb));
 	background: var(--background-glow), var(--felt--selected);
 	background-attachment: fixed;

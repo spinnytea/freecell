@@ -36,11 +36,15 @@ describe('game.autoFoundation', () => {
 	});
 
 	describe('limits some', () => {
-		// REVIEW rank+1.5 doesn't look right (i'm too tired to figure it out)
+		// XXX (gameplay) rank+1.5 doesn't look right (i'm too tired to figure it out)
 		//  - might need to stack 2S, so we shouldnt do red 3s, but we can do a black 3
 		//  - so 3C should be in the foundation
 		//  - the logic only allows +2 if we can identify the isRed(suit)
 		//  - we need to figure out the "color" of empty foundations
+		// ---
+		//  - this is just an edge case with the "beginning"
+		//  - once all the aces are up, this isn't a problem
+		//  - it's also just off-by-one for for a single suit, soo… minimal impac
 		describe.each`
 			limit         | homeStr
 			${'none'}     | ${'>         5S 3H KD    KC '}

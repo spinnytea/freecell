@@ -4,7 +4,7 @@
 
 	position: absolute;
 
-	/* REVIEW just a basic movement transition to get things moving (started) */
+	/* REVIEW (animation) just a basic movement transition to get things moving (started) */
 	transition:
 		top var(--movement-time) ease 0s,
 		left var(--movement-time) ease 0s,
