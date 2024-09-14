@@ -69,34 +69,33 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 				}
 			}
 			break;
-		case 'cascade':
-			{
-				const sequence: CardSequence = {
-					location,
-					cards: [],
-					canMove: false,
-				};
+		case 'cascade': {
+			const cascade = game.tableau[d0];
+			let idx = location.data[1];
 
-				const cascade = game.tableau[d0];
-				let idx = location.data[1];
+			if (!cascade[idx]) break;
+
+			const sequence: CardSequence = {
+				location,
+				cards: [cascade[idx]],
+				canMove: false,
+			};
+
+			while (
+				idx < cascade.length - 1 &&
+				isAdjacent({ min: cascade[idx + 1].rank, max: cascade[idx].rank }) &&
+				isRed(cascade[idx].suit) !== isRed(cascade[idx + 1].suit)
+			) {
+				idx++;
 				sequence.cards.push(cascade[idx]);
-
-				while (
-					idx < cascade.length - 1 &&
-					isAdjacent({ min: cascade[idx + 1].rank, max: cascade[idx].rank }) &&
-					isRed(cascade[idx].suit) !== isRed(cascade[idx + 1].suit)
-				) {
-					idx++;
-					sequence.cards.push(cascade[idx]);
-				}
-
-				if (idx === cascade.length - 1) {
-					sequence.canMove = true;
-				}
-
-				return sequence;
 			}
-			break;
+
+			if (idx === cascade.length - 1) {
+				sequence.canMove = true;
+			}
+
+			return sequence;
+		}
 	}
 
 	// no cards at selection

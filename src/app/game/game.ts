@@ -347,20 +347,25 @@ export class FreeCell {
 		return this.__clone({ action: 'cursor stop' });
 	}
 
+	clearSelection(): FreeCell | this {
+		if (this.selection) {
+			const action = 'deselect ' + shorthandSequence(this.selection, true);
+			return this.__clone({ action, selection: null, availableMoves: null });
+		}
+		return this;
+	}
+
 	/**
 		interact with the cursor
 
 		e.g. select cursor, deselect cursor, move selection
 	*/
 	touch(): FreeCell {
-		const game = this.__clone({ action: 'touch' });
-
-		if (game.selection && isLocationEqual(game.selection.location, game.cursor)) {
-			game.previousAction = 'deselect ' + shorthandSequence(game.selection, true);
-			game.selection = null;
-			game.availableMoves = null;
-			return game;
+		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
+			return this.clearSelection();
 		}
+
+		const game = this.__clone({ action: 'touch' });
 
 		// TODO allow "growing/shrinking sequence of current selection"
 		if (!game.selection?.canMove) {
@@ -405,7 +410,7 @@ export class FreeCell {
 	}: {
 		limit?: AutoFoundationLimit;
 		method?: AutoFoundationMethod;
-	} = {}): FreeCell {
+	} = {}): FreeCell | this {
 		let game = this.__clone({ action: 'auto-foundation setup' });
 		const moved: Card[] = [];
 

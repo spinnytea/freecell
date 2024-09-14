@@ -529,21 +529,16 @@ describe('game.touch', () => {
 			});
 
 			test('empty', () => {
-				game = game.setCursor({ fixture: 'cell', data: [2] }).touch();
+				game = game.setCursor({ fixture: 'cascade', data: [2, 0] }).touch();
 				expect(game.selection).toEqual(null);
-				expect(game.cursor).toEqual({ fixture: 'cell', data: [2] });
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] });
 				expect(game.print()).toBe(
 					'' +
-						'      >                  \n' +
 						'                         \n' +
+						'      >                  \n' +
 						'd: KS 4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' touch stop'
 				);
-				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
-
-				game = game.setCursor({ fixture: 'cell', data: [2] }).touch();
-				expect(game.previousAction).toBe('touch stop');
-				expect(game.selection).toEqual(null);
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 			});
 

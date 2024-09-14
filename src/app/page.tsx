@@ -46,9 +46,8 @@ export default function Page() {
 		}
 	}
 
+	/** @deprecated just for getting started */
 	useEffect(() => {
-		// FIXME keyboard events for win/deal
-		// TODO keyboard event for deselect (esc?)
 		function handleKey(event: KeyboardEvent) {
 			const { key } = event;
 			let consumed = false;
@@ -72,11 +71,23 @@ export default function Page() {
 				case ' ':
 				case 'Enter':
 					consumed = true;
-					setGame((g) => g.touch().autoFoundationAll());
+					setGame((g) => {
+						if (g.cursor.fixture === 'deck') {
+							return g.dealAll();
+						}
+						if (g.cursor.fixture === 'foundation' && g.win) {
+							return new FreeCell().shuffle32();
+						}
+						return g.touch().autoFoundationAll();
+					});
 					break;
-				// default:
-				// 	console.log(`unused key: "${key}"`);
-				// 	break;
+				case 'Escape':
+					consumed = true;
+					setGame((g) => g.clearSelection());
+					break;
+				default:
+					console.log(`unused key: "${key}"`);
+					break;
 			}
 			if (consumed) {
 				event.stopPropagation();
