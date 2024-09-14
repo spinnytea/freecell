@@ -13,8 +13,7 @@ TODO main development tasks:
 1. ~~win state~~
 1. ~~quick and dirty loop (new -> shuffle -> deal -> play -> win -> <<-- new -> shuffle -> …)~~
 1. ~~auto-foundation~~
-1. one-click-to-move
-1. everything (core game) is tested (ui selection -> move, all the way to winning)
+1. core game is tested + manual testing page (ui selection -> move, all the way to winning)
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 
@@ -33,6 +32,7 @@ TODO main development tasks:
   - click to move to "next best"
   - can we "select without moving"?
 - TODO mouse drag-drop target is entire cascade
+- TODO mouse controls: click to move
 - TODO single click to move: one vs multiple - move to next option? - identify the _types_ of moves, not just _isAllowed_ - different moves have different priorities? (render debug info)
 - TODO animate cards in flight should be above others
 - TODO undo (move history) - all, few, one, none (should allow at least one undo, misclicks)
@@ -51,7 +51,7 @@ TODO main development tasks:
 - IDEA implement Spider Solitaire, that could be fun
 - IDEA learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
 - TODO keyboard input (tab index, pick&place card&sequence, inspect card, shortcuts for top row)
-- IDEA UI render for all options, hidden options, controls (keyboard + mouse)
+- IDEA UI render for all options, hidden options, controls (keyboard + mouse click + mouse drag)
 - TODO rules page (SUG)
 - IDEA joker
   - high - any rank can stack onto them, they cannot be stacked on anything (color-fixed cascade)
@@ -63,6 +63,7 @@ TODO main development tasks:
   - spitball impl: attempts positive and negative, display Math.abs(attempts), set neg when undo, set pos and increase when move
 - IDEA comments for all the rules? (or maybe that's too late now?)
 - IDEA sounds - normally i don't like to, but some folio for moving cards should be okay
+- TODO more themes - card themes / colors, background colors, etc
 
 ## Technicals
 

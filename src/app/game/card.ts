@@ -171,19 +171,22 @@ export function shorthandSequence(sequence: CardSequence, includePosition = fals
 }
 
 export function shorthandPosition(location: CardLocation): Position {
+	const d0 = location.data[0];
 	if (location.fixture === 'foundation') {
 		return 'h';
 	} else if (location.fixture === 'cascade') {
 		// this doesn't check data[1], it assumes it's the final row
 		// sequences would need to check data[1] + card.length, not just the location
 		// (could pass in a optional canMove with default of true)
-		if (location.data[0] === 9) {
+		if (d0 === 9) {
 			return 't';
-		} else {
-			return (location.data[0] + 1).toString(10) as Position;
+		} else if (d0 >= 0 && d0 < 9) {
+			return (d0 + 1).toString(10) as Position;
 		}
 	} else if (location.fixture === 'cell') {
-		return (location.data[0] + 10).toString(16) as Position;
+		if (d0 >= 0 && d0 < 6) {
+			return (d0 + 10).toString(16) as Position;
+		}
 	}
 	throw new Error(`invalid position: ${JSON.stringify(location)}`);
 }
