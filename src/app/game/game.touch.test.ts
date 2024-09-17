@@ -595,6 +595,9 @@ describe('game.touch', () => {
 		test.todo('select when current select cannot move'); // select
 	});
 
+	// XXX (techdebt) replace `expect.any(Number) as number` with values?
+	//  - not sure if this is insightful or overtesting
+	//  - priority is only used for autoMove, so we really only need to check it there
 	describe('move card', () => {
 		let game: FreeCell;
 		beforeEach(() => {
@@ -665,9 +668,21 @@ describe('game.touch', () => {
 					canMove: true,
 				});
 				expect(game.availableMoves).toEqual([
-					{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
-					{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
-					{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+					{
+						location: { fixture: 'cell', data: [1] },
+						moveDestinationType: 'cell',
+						priority: expect.any(Number) as number,
+					},
+					{
+						location: { fixture: 'cell', data: [2] },
+						moveDestinationType: 'cell',
+						priority: expect.any(Number) as number,
+					},
+					{
+						location: { fixture: 'cell', data: [3] },
+						moveDestinationType: 'cell',
+						priority: expect.any(Number) as number,
+					},
 				]);
 				game = game.touch();
 				expect(game.print()).toBe(
@@ -703,23 +718,35 @@ describe('game.touch', () => {
 					canMove: true,
 				});
 				expect(game.availableMoves).toEqual([
-					{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
-					{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
-					{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+					{
+						location: { fixture: 'cell', data: [1] },
+						moveDestinationType: 'cell',
+						priority: expect.any(Number) as number,
+					},
+					{
+						location: { fixture: 'cell', data: [2] },
+						moveDestinationType: 'cell',
+						priority: expect.any(Number) as number,
+					},
+					{
+						location: { fixture: 'cell', data: [3] },
+						moveDestinationType: 'cell',
+						priority: expect.any(Number) as number,
+					},
 					{
 						location: { fixture: 'foundation', data: [3] },
 						moveDestinationType: 'foundation',
-						priority: -1,
+						priority: expect.any(Number) as number,
 					},
 					{
 						location: { fixture: 'cascade', data: [3, 0] },
 						moveDestinationType: 'cascade:empty',
-						priority: -1,
+						priority: expect.any(Number) as number,
 					},
 					{
 						location: { fixture: 'cascade', data: [7, 0] },
 						moveDestinationType: 'cascade:empty',
-						priority: -1,
+						priority: expect.any(Number) as number,
 					},
 				]);
 				game = game.touch();
@@ -760,12 +787,12 @@ describe('game.touch', () => {
 						{
 							location: { fixture: 'cascade', data: [1, 0] },
 							moveDestinationType: 'cascade:sequence',
-							priority: -1,
+							priority: expect.any(Number) as number,
 						},
 						{
 							location: { fixture: 'cascade', data: [2, 0] },
 							moveDestinationType: 'cascade:sequence',
-							priority: -1,
+							priority: expect.any(Number) as number,
 						},
 					]);
 					game = game.touch();
@@ -817,57 +844,57 @@ describe('game.touch', () => {
 							{
 								location: { fixture: 'cell', data: [1] },
 								moveDestinationType: 'cell',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cell', data: [2] },
 								moveDestinationType: 'cell',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cell', data: [3] },
 								moveDestinationType: 'cell',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'foundation', data: [1] },
 								moveDestinationType: 'foundation',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [0, 2] },
 								moveDestinationType: 'cascade:sequence',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [1, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [2, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [3, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [4, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [5, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [6, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 						]);
 						game = game.touch();
@@ -912,12 +939,12 @@ describe('game.touch', () => {
 						{
 							location: { fixture: 'cascade', data: [1, 0] },
 							moveDestinationType: 'cascade:empty',
-							priority: -1,
+							priority: expect.any(Number) as number,
 						},
 						{
 							location: { fixture: 'cascade', data: [2, 0] },
 							moveDestinationType: 'cascade:empty',
-							priority: -1,
+							priority: expect.any(Number) as number,
 						},
 					]);
 					game = game.touch();
@@ -988,14 +1015,30 @@ describe('game.touch', () => {
 						canMove: true,
 					});
 					expect(game.availableMoves).toEqual([
-						{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
-						{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
-						{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
-						{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+						{
+							location: { fixture: 'cell', data: [0] },
+							moveDestinationType: 'cell',
+							priority: expect.any(Number) as number,
+						},
+						{
+							location: { fixture: 'cell', data: [1] },
+							moveDestinationType: 'cell',
+							priority: expect.any(Number) as number,
+						},
+						{
+							location: { fixture: 'cell', data: [2] },
+							moveDestinationType: 'cell',
+							priority: expect.any(Number) as number,
+						},
+						{
+							location: { fixture: 'cell', data: [3] },
+							moveDestinationType: 'cell',
+							priority: expect.any(Number) as number,
+						},
 						{
 							location: { fixture: 'cascade', data: [6, 5] },
 							moveDestinationType: 'cascade:sequence',
-							priority: -1,
+							priority: expect.any(Number) as number,
 						},
 					]);
 					game = game.touch();
@@ -1043,29 +1086,45 @@ describe('game.touch', () => {
 						canMove: true,
 					});
 					expect(game.availableMoves).toEqual([
-						{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
-						{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
-						{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
-						{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+						{
+							location: { fixture: 'cell', data: [0] },
+							moveDestinationType: 'cell',
+							priority: expect.any(Number) as number,
+						},
+						{
+							location: { fixture: 'cell', data: [1] },
+							moveDestinationType: 'cell',
+							priority: expect.any(Number) as number,
+						},
+						{
+							location: { fixture: 'cell', data: [2] },
+							moveDestinationType: 'cell',
+							priority: expect.any(Number) as number,
+						},
+						{
+							location: { fixture: 'cell', data: [3] },
+							moveDestinationType: 'cell',
+							priority: expect.any(Number) as number,
+						},
 						{
 							location: { fixture: 'foundation', data: [0] },
 							moveDestinationType: 'foundation',
-							priority: -1,
+							priority: expect.any(Number) as number,
 						},
 						{
 							location: { fixture: 'foundation', data: [1] },
 							moveDestinationType: 'foundation',
-							priority: -1,
+							priority: expect.any(Number) as number,
 						},
 						{
 							location: { fixture: 'foundation', data: [2] },
 							moveDestinationType: 'foundation',
-							priority: -1,
+							priority: expect.any(Number) as number,
 						},
 						{
 							location: { fixture: 'foundation', data: [3] },
 							moveDestinationType: 'foundation',
-							priority: -1,
+							priority: expect.any(Number) as number,
 						},
 					]);
 					game = game.touch();
@@ -1117,27 +1176,27 @@ describe('game.touch', () => {
 							{
 								location: { fixture: 'cell', data: [0] },
 								moveDestinationType: 'cell',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cell', data: [1] },
 								moveDestinationType: 'cell',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cell', data: [2] },
 								moveDestinationType: 'cell',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cell', data: [3] },
 								moveDestinationType: 'cell',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [6, 5] },
 								moveDestinationType: 'cascade:sequence',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 						]);
 						game = game.touch();
@@ -1195,47 +1254,47 @@ describe('game.touch', () => {
 								{
 									location: { fixture: 'cell', data: [0] },
 									moveDestinationType: 'cell',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cell', data: [1] },
 									moveDestinationType: 'cell',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cell', data: [2] },
 									moveDestinationType: 'cell',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cell', data: [3] },
 									moveDestinationType: 'cell',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cascade', data: [0, 0] },
 									moveDestinationType: 'cascade:empty',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cascade', data: [2, 2] },
 									moveDestinationType: 'cascade:sequence',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cascade', data: [4, 0] },
 									moveDestinationType: 'cascade:empty',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cascade', data: [6, 0] },
 									moveDestinationType: 'cascade:empty',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cascade', data: [7, 0] },
 									moveDestinationType: 'cascade:empty',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 							]);
 							game = game.touch();
@@ -1286,47 +1345,47 @@ describe('game.touch', () => {
 							{
 								location: { fixture: 'cell', data: [0] },
 								moveDestinationType: 'cell',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cell', data: [1] },
 								moveDestinationType: 'cell',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cell', data: [2] },
 								moveDestinationType: 'cell',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cell', data: [3] },
 								moveDestinationType: 'cell',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [0, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [2, 2] },
 								moveDestinationType: 'cascade:sequence',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [4, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [6, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [7, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 						]);
 						game = game.touch();
@@ -1391,37 +1450,37 @@ describe('game.touch', () => {
 							{
 								location: { fixture: 'cascade', data: [0, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [2, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [3, 2] },
 								moveDestinationType: 'cascade:sequence',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [4, 0] },
 								moveDestinationType: 'cascade:sequence',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [5, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [6, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [7, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 						]);
 						game = game.touch();
@@ -1470,37 +1529,37 @@ describe('game.touch', () => {
 								{
 									location: { fixture: 'cascade', data: [0, 0] },
 									moveDestinationType: 'cascade:empty',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cascade', data: [2, 0] },
 									moveDestinationType: 'cascade:empty',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cascade', data: [3, 2] },
 									moveDestinationType: 'cascade:sequence',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cascade', data: [4, 0] },
 									moveDestinationType: 'cascade:sequence',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cascade', data: [5, 0] },
 									moveDestinationType: 'cascade:empty',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cascade', data: [6, 0] },
 									moveDestinationType: 'cascade:empty',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 								{
 									location: { fixture: 'cascade', data: [7, 0] },
 									moveDestinationType: 'cascade:empty',
-									priority: -1,
+									priority: expect.any(Number) as number,
 								},
 							]);
 							game = game.touch();
@@ -1547,37 +1606,37 @@ describe('game.touch', () => {
 							{
 								location: { fixture: 'cascade', data: [0, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [2, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [3, 2] },
 								moveDestinationType: 'cascade:sequence',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [4, 0] },
 								moveDestinationType: 'cascade:sequence',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [5, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [6, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 							{
 								location: { fixture: 'cascade', data: [7, 0] },
 								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								priority: expect.any(Number) as number,
 							},
 						]);
 						game = game.touch();
@@ -1634,12 +1693,12 @@ describe('game.touch', () => {
 				{
 					location: { fixture: 'cascade', data: [3, 5] },
 					moveDestinationType: 'cascade:sequence',
-					priority: -1,
+					priority: expect.any(Number) as number,
 				},
 				{
 					location: { fixture: 'cascade', data: [5, 4] },
 					moveDestinationType: 'cascade:sequence',
-					priority: -1,
+					priority: expect.any(Number) as number,
 				},
 			]);
 			game = game.touch();
@@ -1664,12 +1723,12 @@ describe('game.touch', () => {
 				{
 					location: { fixture: 'cascade', data: [3, 5] },
 					moveDestinationType: 'cascade:sequence',
-					priority: -1,
+					priority: expect.any(Number) as number,
 				},
 				{
 					location: { fixture: 'cascade', data: [5, 4] },
 					moveDestinationType: 'cascade:sequence',
-					priority: -1,
+					priority: expect.any(Number) as number,
 				},
 			]);
 		});

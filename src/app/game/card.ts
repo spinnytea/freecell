@@ -42,7 +42,7 @@ export interface CardLocation {
 	data: number[];
 }
 
-// REVIEW (techdebt) is this the right file?
+export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
 export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cascade:sequence';
 export interface AvailableMove {
 	/** where we could move the card */

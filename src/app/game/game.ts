@@ -543,8 +543,11 @@ export class FreeCell {
 		// FIXME only autoMove is previous move is a select
 		//  - test: do not autoMove if previous move was invalid
 
-		// FIXME prioritize location
-		const cursor = this.availableMoves[this.availableMoves.length - 1].location;
+		// find the highest priority, prioritize first one
+		const cursor = this.availableMoves.reduce((ret, next) => {
+			if (next.priority > ret.priority) return next;
+			return ret;
+		}, this.availableMoves[0]).location;
 
 		// FIXME simplify copy-pasta
 		const cursorSequence = getSequenceAt(this, cursor);
@@ -554,9 +557,7 @@ export class FreeCell {
 		const move = `${shorthandPosition(from_card.location)}${shorthandPosition(to_card_location)}`;
 		const action = `move ${move} ${shorthandSequence(this.selection)}→${to_card ? shorthandCard(to_card) : to_card_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
 
-		const valid = this.availableMoves.some(({ location }) =>
-			isLocationEqual(cursor, location)
-		);
+		const valid = this.availableMoves.some(({ location }) => isLocationEqual(cursor, location));
 		if (valid) {
 			const cards = moveCards(this, this.selection, cursor);
 			// leave the cursor at the source

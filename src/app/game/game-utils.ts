@@ -6,6 +6,8 @@ import {
 	isAdjacent,
 	isLocationEqual,
 	isRed,
+	MoveDestinationType,
+	MoveSourceType,
 	RankList,
 } from '@/app/game/card';
 import { FreeCell } from '@/app/game/game';
@@ -206,7 +208,74 @@ export function findAvailableMoves(
 		}
 	});
 
+	prioritizeAvailableMoves(game, selection, availableMoves);
+
 	return availableMoves;
+}
+
+function prioritizeAvailableMoves(
+	game: FreeCell,
+	selection: CardSequence,
+	availableMoves: AvailableMove[]
+): void {
+	const moveSourceType = getMoveSourceType(selection);
+	const sourceD0 = selection.location.data[0];
+
+	const moveDestinationTypes = new Set<MoveDestinationType>(
+		availableMoves.map(({ moveDestinationType }) => moveDestinationType)
+	);
+	if (moveDestinationTypes.size === 1) {
+		// only one destination, so cycle between the options
+		switch (availableMoves[0].moveDestinationType) {
+			case 'cell':
+				availableMoves.forEach((availableMove) => {
+					availableMove.priority = game.cells.length - availableMove.location.data[0];
+					if (moveSourceType === 'cell' && availableMove.location.data[0] > sourceD0) {
+						availableMove.priority += game.cells.length;
+					}
+				});
+				break;
+
+			case 'foundation':
+				availableMoves.forEach((availableMove) => {
+					availableMove.priority = game.foundations.length - availableMove.location.data[0];
+				});
+				break;
+
+			case 'cascade:empty':
+				availableMoves.forEach((availableMove) => {
+					availableMove.priority = game.tableau.length - availableMove.location.data[0];
+					if (
+						(moveSourceType === 'cascade:single' || moveSourceType === 'cascade:sequence') &&
+						availableMove.location.data[0] > sourceD0
+					) {
+						availableMove.priority += game.tableau.length;
+					}
+				});
+				// FIXME cycle
+				break;
+
+			case 'cascade:sequence':
+				availableMoves.forEach((availableMove) => {
+					availableMove.priority = game.tableau.length - availableMove.location.data[0];
+				});
+				// XXX cycle (jokers)
+				//  - there can only be 1 or 2 options in normal play
+				//  - jokers:wild and jokers:high allow more options
+				break;
+		}
+	}
+}
+
+function getMoveSourceType(selection: CardSequence): MoveSourceType {
+	switch (selection.location.fixture) {
+		case 'deck':
+		case 'cell':
+		case 'foundation':
+			return selection.location.fixture;
+		case 'cascade':
+			return selection.cards.length === 1 ? 'cascade:single' : 'cascade:sequence';
+	}
 }
 
 /**
