@@ -1,7 +1,7 @@
-describe('game.autoMove', () => {
-	// FIXME test.todo
-	test.todo('everything');
+import { FreeCell } from "@/app/game/game";
 
+// FIXME test.todo
+describe('game.autoMove', () => {
 	describe('scenarios', () => {
 		describe('from cell', () => {
 			test.todo('cycle through cell');
@@ -33,6 +33,19 @@ describe('game.autoMove', () => {
 					test.todo('cascade:sequence to cascade:empty');
 				});
 			});
+		});
+	});
+
+	describe('edges', () => {
+		test.skip('do not autoMove if previous touch was invalid', () => {
+			let game = FreeCell.parse('');
+			// select a card
+			game = game.setCursor({ fixture: 'cell', data: [0] }).touch();
+			// invalid move
+			game = game.setCursor({ fixture: 'cell', data: [1] }).touch()
+			// do not move card
+			game = game.autoMove();
+			expect(game.print()).toBe('');
 		});
 	});
 });

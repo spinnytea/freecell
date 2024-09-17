@@ -36,7 +36,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	);
 
 	function onClick() {
-		setGame(game.setCursor(location).touch().autoFoundationAll());
+		setGame(game.setCursor(location).touch().autoMove().autoFoundationAll());
 	}
 
 	return (
