@@ -46,6 +46,7 @@ export default function Page() {
 				Selection is obvious for each of cell, foundation, cascade, deck.
 			</div>
 			<div className="instruction">Foundation always renders highest card.</div>
+			<div className="instruction">Visual check DebugCursors.</div>
 		</main>
 	);
 }

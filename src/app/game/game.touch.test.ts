@@ -665,9 +665,9 @@ describe('game.touch', () => {
 					canMove: true,
 				});
 				expect(game.availableMoves).toEqual([
-					{ fixture: 'cell', data: [1] },
-					{ fixture: 'cell', data: [2] },
-					{ fixture: 'cell', data: [3] },
+					{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
+					{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
+					{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
 				]);
 				game = game.touch();
 				expect(game.print()).toBe(
@@ -703,12 +703,24 @@ describe('game.touch', () => {
 					canMove: true,
 				});
 				expect(game.availableMoves).toEqual([
-					{ fixture: 'cell', data: [1] },
-					{ fixture: 'cell', data: [2] },
-					{ fixture: 'cell', data: [3] },
-					{ fixture: 'foundation', data: [3] },
-					{ fixture: 'cascade', data: [3, 0] },
-					{ fixture: 'cascade', data: [7, 0] },
+					{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
+					{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
+					{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+					{
+						location: { fixture: 'foundation', data: [3] },
+						moveDestinationType: 'foundation',
+						priority: -1,
+					},
+					{
+						location: { fixture: 'cascade', data: [3, 0] },
+						moveDestinationType: 'cascade:empty',
+						priority: -1,
+					},
+					{
+						location: { fixture: 'cascade', data: [7, 0] },
+						moveDestinationType: 'cascade:empty',
+						priority: -1,
+					},
 				]);
 				game = game.touch();
 				expect(game.print()).toBe(
@@ -745,8 +757,16 @@ describe('game.touch', () => {
 						canMove: true,
 					});
 					expect(game.availableMoves).toEqual([
-						{ fixture: 'cascade', data: [1, 0] },
-						{ fixture: 'cascade', data: [2, 0] },
+						{
+							location: { fixture: 'cascade', data: [1, 0] },
+							moveDestinationType: 'cascade:sequence',
+							priority: -1,
+						},
+						{
+							location: { fixture: 'cascade', data: [2, 0] },
+							moveDestinationType: 'cascade:sequence',
+							priority: -1,
+						},
 					]);
 					game = game.touch();
 					expect(game.print()).toBe(
@@ -794,17 +814,61 @@ describe('game.touch', () => {
 							canMove: true,
 						});
 						expect(game.availableMoves).toEqual([
-							{ fixture: 'cell', data: [1] },
-							{ fixture: 'cell', data: [2] },
-							{ fixture: 'cell', data: [3] },
-							{ fixture: 'foundation', data: [1] },
-							{ fixture: 'cascade', data: [0, 2] },
-							{ fixture: 'cascade', data: [1, 0] },
-							{ fixture: 'cascade', data: [2, 0] },
-							{ fixture: 'cascade', data: [3, 0] },
-							{ fixture: 'cascade', data: [4, 0] },
-							{ fixture: 'cascade', data: [5, 0] },
-							{ fixture: 'cascade', data: [6, 0] },
+							{
+								location: { fixture: 'cell', data: [1] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cell', data: [2] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cell', data: [3] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'foundation', data: [1] },
+								moveDestinationType: 'foundation',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [0, 2] },
+								moveDestinationType: 'cascade:sequence',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [1, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [2, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [3, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [4, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [5, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [6, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
 						]);
 						game = game.touch();
 						expect(game.print()).toBe(
@@ -845,8 +909,16 @@ describe('game.touch', () => {
 						canMove: true,
 					});
 					expect(game.availableMoves).toEqual([
-						{ fixture: 'cascade', data: [1, 0] },
-						{ fixture: 'cascade', data: [2, 0] },
+						{
+							location: { fixture: 'cascade', data: [1, 0] },
+							moveDestinationType: 'cascade:empty',
+							priority: -1,
+						},
+						{
+							location: { fixture: 'cascade', data: [2, 0] },
+							moveDestinationType: 'cascade:empty',
+							priority: -1,
+						},
 					]);
 					game = game.touch();
 					expect(game.print()).toBe(
@@ -916,11 +988,15 @@ describe('game.touch', () => {
 						canMove: true,
 					});
 					expect(game.availableMoves).toEqual([
-						{ fixture: 'cell', data: [0] },
-						{ fixture: 'cell', data: [1] },
-						{ fixture: 'cell', data: [2] },
-						{ fixture: 'cell', data: [3] },
-						{ fixture: 'cascade', data: [6, 5] },
+						{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
+						{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
+						{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
+						{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+						{
+							location: { fixture: 'cascade', data: [6, 5] },
+							moveDestinationType: 'cascade:sequence',
+							priority: -1,
+						},
 					]);
 					game = game.touch();
 					expect(game.print()).toBe(
@@ -967,14 +1043,30 @@ describe('game.touch', () => {
 						canMove: true,
 					});
 					expect(game.availableMoves).toEqual([
-						{ fixture: 'cell', data: [0] },
-						{ fixture: 'cell', data: [1] },
-						{ fixture: 'cell', data: [2] },
-						{ fixture: 'cell', data: [3] },
-						{ fixture: 'foundation', data: [0] },
-						{ fixture: 'foundation', data: [1] },
-						{ fixture: 'foundation', data: [2] },
-						{ fixture: 'foundation', data: [3] },
+						{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
+						{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
+						{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
+						{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+						{
+							location: { fixture: 'foundation', data: [0] },
+							moveDestinationType: 'foundation',
+							priority: -1,
+						},
+						{
+							location: { fixture: 'foundation', data: [1] },
+							moveDestinationType: 'foundation',
+							priority: -1,
+						},
+						{
+							location: { fixture: 'foundation', data: [2] },
+							moveDestinationType: 'foundation',
+							priority: -1,
+						},
+						{
+							location: { fixture: 'foundation', data: [3] },
+							moveDestinationType: 'foundation',
+							priority: -1,
+						},
 					]);
 					game = game.touch();
 					expect(game.print()).toBe(
@@ -1022,11 +1114,31 @@ describe('game.touch', () => {
 							canMove: true,
 						});
 						expect(game.availableMoves).toEqual([
-							{ fixture: 'cell', data: [0] },
-							{ fixture: 'cell', data: [1] },
-							{ fixture: 'cell', data: [2] },
-							{ fixture: 'cell', data: [3] },
-							{ fixture: 'cascade', data: [6, 5] },
+							{
+								location: { fixture: 'cell', data: [0] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cell', data: [1] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cell', data: [2] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cell', data: [3] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [6, 5] },
+								moveDestinationType: 'cascade:sequence',
+								priority: -1,
+							},
 						]);
 						game = game.touch();
 						expect(game.print()).toBe(
@@ -1080,15 +1192,51 @@ describe('game.touch', () => {
 								canMove: true,
 							});
 							expect(game.availableMoves).toEqual([
-								{ fixture: 'cell', data: [0] },
-								{ fixture: 'cell', data: [1] },
-								{ fixture: 'cell', data: [2] },
-								{ fixture: 'cell', data: [3] },
-								{ fixture: 'cascade', data: [0, 0] },
-								{ fixture: 'cascade', data: [2, 2] },
-								{ fixture: 'cascade', data: [4, 0] },
-								{ fixture: 'cascade', data: [6, 0] },
-								{ fixture: 'cascade', data: [7, 0] },
+								{
+									location: { fixture: 'cell', data: [0] },
+									moveDestinationType: 'cell',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cell', data: [1] },
+									moveDestinationType: 'cell',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cell', data: [2] },
+									moveDestinationType: 'cell',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cell', data: [3] },
+									moveDestinationType: 'cell',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [0, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [2, 2] },
+									moveDestinationType: 'cascade:sequence',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [4, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [6, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [7, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
 							]);
 							game = game.touch();
 							expect(game.print()).toBe(
@@ -1135,15 +1283,51 @@ describe('game.touch', () => {
 							canMove: true,
 						});
 						expect(game.availableMoves).toEqual([
-							{ fixture: 'cell', data: [0] },
-							{ fixture: 'cell', data: [1] },
-							{ fixture: 'cell', data: [2] },
-							{ fixture: 'cell', data: [3] },
-							{ fixture: 'cascade', data: [0, 0] },
-							{ fixture: 'cascade', data: [2, 2] },
-							{ fixture: 'cascade', data: [4, 0] },
-							{ fixture: 'cascade', data: [6, 0] },
-							{ fixture: 'cascade', data: [7, 0] },
+							{
+								location: { fixture: 'cell', data: [0] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cell', data: [1] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cell', data: [2] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cell', data: [3] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [0, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [2, 2] },
+								moveDestinationType: 'cascade:sequence',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [4, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [6, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [7, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
 						]);
 						game = game.touch();
 						expect(game.print()).toBe(
@@ -1204,13 +1388,41 @@ describe('game.touch', () => {
 							canMove: true,
 						});
 						expect(game.availableMoves).toEqual([
-							{ fixture: 'cascade', data: [0, 0] },
-							{ fixture: 'cascade', data: [2, 0] },
-							{ fixture: 'cascade', data: [3, 2] },
-							{ fixture: 'cascade', data: [4, 0] },
-							{ fixture: 'cascade', data: [5, 0] },
-							{ fixture: 'cascade', data: [6, 0] },
-							{ fixture: 'cascade', data: [7, 0] },
+							{
+								location: { fixture: 'cascade', data: [0, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [2, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [3, 2] },
+								moveDestinationType: 'cascade:sequence',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [4, 0] },
+								moveDestinationType: 'cascade:sequence',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [5, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [6, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [7, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
 						]);
 						game = game.touch();
 						expect(game.print()).toBe(
@@ -1255,13 +1467,41 @@ describe('game.touch', () => {
 								canMove: true,
 							});
 							expect(game.availableMoves).toEqual([
-								{ fixture: 'cascade', data: [0, 0] },
-								{ fixture: 'cascade', data: [2, 0] },
-								{ fixture: 'cascade', data: [3, 2] },
-								{ fixture: 'cascade', data: [4, 0] },
-								{ fixture: 'cascade', data: [5, 0] },
-								{ fixture: 'cascade', data: [6, 0] },
-								{ fixture: 'cascade', data: [7, 0] },
+								{
+									location: { fixture: 'cascade', data: [0, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [2, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [3, 2] },
+									moveDestinationType: 'cascade:sequence',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [4, 0] },
+									moveDestinationType: 'cascade:sequence',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [5, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [6, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [7, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
 							]);
 							game = game.touch();
 							expect(game.print()).toBe(
@@ -1304,13 +1544,41 @@ describe('game.touch', () => {
 							canMove: true,
 						});
 						expect(game.availableMoves).toEqual([
-							{ fixture: 'cascade', data: [0, 0] },
-							{ fixture: 'cascade', data: [2, 0] },
-							{ fixture: 'cascade', data: [3, 2] },
-							{ fixture: 'cascade', data: [4, 0] },
-							{ fixture: 'cascade', data: [5, 0] },
-							{ fixture: 'cascade', data: [6, 0] },
-							{ fixture: 'cascade', data: [7, 0] },
+							{
+								location: { fixture: 'cascade', data: [0, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [2, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [3, 2] },
+								moveDestinationType: 'cascade:sequence',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [4, 0] },
+								moveDestinationType: 'cascade:sequence',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [5, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [6, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [7, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
 						]);
 						game = game.touch();
 						expect(game.print()).toBe(
@@ -1363,8 +1631,16 @@ describe('game.touch', () => {
 				canMove: true,
 			});
 			expect(game.availableMoves).toEqual([
-				{ fixture: 'cascade', data: [3, 5] },
-				{ fixture: 'cascade', data: [5, 4] },
+				{
+					location: { fixture: 'cascade', data: [3, 5] },
+					moveDestinationType: 'cascade:sequence',
+					priority: -1,
+				},
+				{
+					location: { fixture: 'cascade', data: [5, 4] },
+					moveDestinationType: 'cascade:sequence',
+					priority: -1,
+				},
 			]);
 			game = game.touch();
 			expect(game.print()).toBe(
@@ -1385,8 +1661,16 @@ describe('game.touch', () => {
 				canMove: true,
 			});
 			expect(game.availableMoves).toEqual([
-				{ fixture: 'cascade', data: [3, 5] },
-				{ fixture: 'cascade', data: [5, 4] },
+				{
+					location: { fixture: 'cascade', data: [3, 5] },
+					moveDestinationType: 'cascade:sequence',
+					priority: -1,
+				},
+				{
+					location: { fixture: 'cascade', data: [5, 4] },
+					moveDestinationType: 'cascade:sequence',
+					priority: -1,
+				},
 			]);
 		});
 	});

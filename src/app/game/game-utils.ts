@@ -1,4 +1,5 @@
 import {
+	AvailableMove,
 	Card,
 	CardLocation,
 	CardSequence,
@@ -140,8 +141,8 @@ export function canStackFoundation(foundation_card: Card | null, moving_card: Ca
 export function findAvailableMoves(
 	game: FreeCell,
 	selection?: CardSequence | null
-): CardLocation[] {
-	const availableMoves: CardLocation[] = [];
+): AvailableMove[] {
+	const availableMoves: AvailableMove[] = [];
 	if (!selection) {
 		selection = game.selection;
 	}
@@ -156,13 +157,21 @@ export function findAvailableMoves(
 		// REVIEW: if multiple, move last card?
 		game.cells.forEach((card, idx) => {
 			if (!card) {
-				availableMoves.push({ fixture: 'cell', data: [idx] });
+				availableMoves.push({
+					location: { fixture: 'cell', data: [idx] },
+					moveDestinationType: 'cell',
+					priority: -1,
+				});
 			}
 		});
 
 		game.foundations.forEach((card, idx) => {
 			if (canStackFoundation(card, head_card)) {
-				availableMoves.push({ fixture: 'foundation', data: [idx] });
+				availableMoves.push({
+					location: { fixture: 'foundation', data: [idx] },
+					moveDestinationType: 'foundation',
+					priority: -1,
+				});
 			}
 		});
 	}
@@ -174,14 +183,22 @@ export function findAvailableMoves(
 			const tail_card = cascade[cascade.length - 1];
 			if (!cascade.length) {
 				if (selection.cards.length <= mmsl / 2) {
-					availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length] });
+					availableMoves.push({
+						location: { fixture: 'cascade', data: [idx, cascade.length] },
+						moveDestinationType: 'cascade:empty',
+						priority: -1,
+					});
 				}
 			} else if (
 				isRed(tail_card.suit) !== isRed(head_card.suit) &&
 				isAdjacent({ min: head_card.rank, max: tail_card.rank }) &&
 				selection.cards.length <= mmsl
 			) {
-				availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length - 1] });
+				availableMoves.push({
+					location: { fixture: 'cascade', data: [idx, cascade.length - 1] },
+					moveDestinationType: 'cascade:sequence',
+					priority: -1,
+				});
 			}
 		}
 	});

@@ -51,11 +51,15 @@ describe('findAvailableMoves', () => {
 			});
 			expect(game.cells[0]).toBe(null);
 			expect(game.availableMoves).toEqual([
-				{ fixture: 'cell', data: [0] },
-				{ fixture: 'cell', data: [1] },
-				{ fixture: 'cell', data: [2] },
-				{ fixture: 'cell', data: [3] },
-				{ fixture: 'cascade', data: [6, 5] },
+				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+				{
+					location: { fixture: 'cascade', data: [6, 5] },
+					moveDestinationType: 'cascade:sequence',
+					priority: -1,
+				},
 			]);
 		});
 
@@ -86,11 +90,15 @@ describe('findAvailableMoves', () => {
 			});
 			expect(game.foundations[0]).toBe(null);
 			expect(game.availableMoves).toEqual([
-				{ fixture: 'cell', data: [0] },
-				{ fixture: 'cell', data: [1] },
-				{ fixture: 'cell', data: [2] },
-				{ fixture: 'cell', data: [3] },
-				{ fixture: 'cascade', data: [6, 5] },
+				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+				{
+					location: { fixture: 'cascade', data: [6, 5] },
+					moveDestinationType: 'cascade:sequence',
+					priority: -1,
+				},
 			]);
 		});
 
@@ -105,14 +113,30 @@ describe('findAvailableMoves', () => {
 				canMove: true,
 			});
 			expect(game.availableMoves).toEqual([
-				{ fixture: 'cell', data: [0] },
-				{ fixture: 'cell', data: [1] },
-				{ fixture: 'cell', data: [2] },
-				{ fixture: 'cell', data: [3] },
-				{ fixture: 'foundation', data: [0] },
-				{ fixture: 'foundation', data: [1] },
-				{ fixture: 'foundation', data: [2] },
-				{ fixture: 'foundation', data: [3] },
+				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+				{
+					location: { fixture: 'foundation', data: [0] },
+					moveDestinationType: 'foundation',
+					priority: -1,
+				},
+				{
+					location: { fixture: 'foundation', data: [1] },
+					moveDestinationType: 'foundation',
+					priority: -1,
+				},
+				{
+					location: { fixture: 'foundation', data: [2] },
+					moveDestinationType: 'foundation',
+					priority: -1,
+				},
+				{
+					location: { fixture: 'foundation', data: [3] },
+					moveDestinationType: 'foundation',
+					priority: -1,
+				},
 			]);
 		});
 
@@ -150,8 +174,16 @@ describe('findAvailableMoves', () => {
 				location: { fixture: 'foundation', data: [2] },
 			});
 			expect(game.availableMoves).toEqual([
-				{ fixture: 'foundation', data: [2] },
-				{ fixture: 'cascade', data: [4, 4] },
+				{
+					location: { fixture: 'foundation', data: [2] },
+					moveDestinationType: 'foundation',
+					priority: -1,
+				},
+				{
+					location: { fixture: 'cascade', data: [4, 4] },
+					moveDestinationType: 'cascade:sequence',
+					priority: -1,
+				},
 			]);
 		});
 	});
@@ -179,11 +211,15 @@ describe('findAvailableMoves', () => {
 				location: { fixture: 'cascade', data: [6, 5] },
 			});
 			expect(game.availableMoves).toEqual([
-				{ fixture: 'cell', data: [0] },
-				{ fixture: 'cell', data: [1] },
-				{ fixture: 'cell', data: [2] },
-				{ fixture: 'cell', data: [3] },
-				{ fixture: 'cascade', data: [6, 5] },
+				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+				{
+					location: { fixture: 'cascade', data: [6, 5] },
+					moveDestinationType: 'cascade:sequence',
+					priority: -1,
+				},
 			]);
 		});
 
