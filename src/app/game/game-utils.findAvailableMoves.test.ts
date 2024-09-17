@@ -1,6 +1,6 @@
 import { FreeCell } from '@/app/game/game';
 
-describe('findAvailableMoves', () => {
+describe('game-utils.findAvailableMoves', () => {
 	let game: FreeCell;
 
 	beforeEach(() => {

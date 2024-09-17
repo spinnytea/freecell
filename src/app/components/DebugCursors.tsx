@@ -14,6 +14,7 @@ export function DebugCursors() {
 	const game = useGame();
 
 	// wrapper to make the dom more legible
+	// FIXME render availableMoves priority
 	return (
 		<div id="cursors">
 			{game.availableMoves?.map(({ location }) => (

@@ -536,6 +536,15 @@ export class FreeCell {
 		return this;
 	}
 
+	autoMove(): FreeCell | this {
+		if (!this.selection) return this;
+		if (!this.availableMoves?.length) return this;
+
+		// FIXME finish
+
+		return this.__clone({ action: 'auto-move noop' });
+	}
+
 	/**
 		These deals are numbered from 1 to 32000.
 

@@ -33,7 +33,6 @@ TODO (motivation) main development tasks:
 - TODO (controls) mouse drag to move - mouse drag-drop target is entire cascade
 - FIXME (controls) mouse controls: click to move
 - TODO (controls) keyboard + selection
-- FIXME (controls) single click to move: one vs multiple - move to next option? - identify the _types_ of moves, not just _isAllowed_ - different moves have different priorities? (render debug info)
 - TODO (animation) animate cards in flight should be above others
 - TODO (gameplay) undo (move history) - all, few, one, none (should allow at least one undo, misclicks)
   - "Standard FreeCell Notation" (cell: a-d, foundation: h(ome), cascades: 1-8)

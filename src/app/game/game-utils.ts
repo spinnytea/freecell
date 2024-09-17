@@ -155,6 +155,7 @@ export function findAvailableMoves(
 
 	if (selection.cards.length === 1) {
 		// REVIEW: if multiple, move last card?
+		//  - do not allow autoMove to move a sequence to a cell
 		game.cells.forEach((card, idx) => {
 			if (!card) {
 				availableMoves.push({
@@ -165,6 +166,8 @@ export function findAvailableMoves(
 			}
 		});
 
+		// REVIEW: if multiple, move last card?
+		//  - do not allow autoMove to move a sequence to a foundation
 		game.foundations.forEach((card, idx) => {
 			if (canStackFoundation(card, head_card)) {
 				availableMoves.push({
