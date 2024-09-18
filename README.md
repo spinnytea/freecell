@@ -31,7 +31,6 @@ TODO (motivation) main development tasks:
   - auto-foundation each card
 - TODO (animation) failed moves shake
 - TODO (controls) mouse drag to move - mouse drag-drop target is entire cascade
-- FIXME (controls) mouse controls: click to move
 - TODO (controls) keyboard + selection
 - TODO (animation) animate cards in flight should be above others
 - TODO (gameplay) undo (move history) - all, few, one, none (should allow at least one undo, misclicks)

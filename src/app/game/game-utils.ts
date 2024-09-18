@@ -6,7 +6,7 @@ import {
 	isAdjacent,
 	isLocationEqual,
 	isRed,
-	MoveDestinationTypePriority,
+	MoveDestinationTypePriorities,
 	MoveSourceType,
 	RankList,
 } from '@/app/game/card';
@@ -220,8 +220,12 @@ function prioritizeAvailableMoves(
 ): void {
 	if (!availableMoves.length) return;
 
+	// FIXME tidy-oop
+
 	const moveSourceType = getMoveSourceType(selection);
 	const sourceD0 = selection.location.data[0];
+
+	const MoveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
 
 	const moveDestinationType = availableMoves.reduce((ret, { moveDestinationType: next }) => {
 		if (MoveDestinationTypePriority[next] > MoveDestinationTypePriority[ret]) return next;
@@ -232,11 +236,9 @@ function prioritizeAvailableMoves(
 		(availableMove) => availableMove.moveDestinationType === moveDestinationType
 	);
 
-	// FIXME if moveDestinationTypes.size > 1, pick your favorite, and filter availableMoves to just those
-	// FIXME or just pick your favorite moveDestinationType of from availableMoves, regardless of which are present
-	// FIXME does favorite moveDestinationType depend on moveSourceType?
+	// REVIEW (controls) cycle (cell, cascade:empty) as one group?
+	//  - a->b->c->d -> 1->2->5->8 -> a->b->c->d
 
-	// only one destination, so cycle between the options
 	switch (moveDestinationType) {
 		case 'cell':
 			availableMoves.forEach((availableMove) => {

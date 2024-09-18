@@ -540,8 +540,7 @@ export class FreeCell {
 	autoMove(): FreeCell | this {
 		if (!this.selection) return this;
 		if (!this.availableMoves?.length) return this;
-		// FIXME only autoMove is previous move is a select
-		//  - test: do not autoMove if previous move was invalid
+		if (!this.previousAction.startsWith('select')) return this;
 
 		// find the highest priority, prioritize first one
 		const cursor = this.availableMoves.reduce((ret, next) => {

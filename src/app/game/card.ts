@@ -44,12 +44,45 @@ export interface CardLocation {
 
 export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
 export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cascade:sequence';
-export const MoveDestinationTypePriority = Object.freeze({
-	'cell': 3,
-	'foundation': 1, // TODO (controls) higher for single
-	'cascade:empty': 2,
-	'cascade:sequence': 4,
-});
+export const MoveDestinationTypePriorities: {
+	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
+} = {
+	// XXX (controls) deck: when will we get to do this?
+	'deck': {
+		'cell': 1,
+		'foundation': 4,
+		'cascade:empty': 2,
+		'cascade:sequence': 3,
+	},
+	// FIXME cell: need some examples
+	'cell': {
+		'cell': 2,
+		'foundation': 1,
+		'cascade:empty': 3,
+		'cascade:sequence': 4,
+	},
+	// XXX (controls) foundation: down from foundation means "back into play?"
+	'foundation': {
+		'cell': 1,
+		'foundation': 4,
+		'cascade:empty': 2,
+		'cascade:sequence': 3,
+	},
+	// FIXME cascade:single: cell vs foundation, need some examples
+	'cascade:single': {
+		'cell': 3,
+		'foundation': 1,
+		'cascade:empty': 2,
+		'cascade:sequence': 4,
+	},
+	// FIXME cascade:sequence: cell vs foundation, need some examples
+	'cascade:sequence': {
+		'cell': 1,
+		'foundation': 2,
+		'cascade:empty': 3,
+		'cascade:sequence': 4,
+	},
+};
 export interface AvailableMove {
 	/** where we could move the card */
 	location: CardLocation;
