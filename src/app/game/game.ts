@@ -971,6 +971,8 @@ export class FreeCell {
 		game.previousAction = action;
 		return game;
 	}
+
+	// XXX (techdebt) printTest: expect(previous.touch()).toBe(current)
 }
 
 function calcMoveActionText(from: CardSequence, to: CardSequence): string {

@@ -54,11 +54,10 @@ export const MoveDestinationTypePriorities: {
 		'cascade:empty': 2,
 		'cascade:sequence': 3,
 	},
-	// FIXME cell: need some examples
 	'cell': {
-		'cell': 2,
-		'foundation': 1,
-		'cascade:empty': 3,
+		'cell': 1,
+		'foundation': 3,
+		'cascade:empty': 2,
 		'cascade:sequence': 4,
 	},
 	// XXX (controls) foundation: down from foundation means "back into play?"
@@ -68,14 +67,12 @@ export const MoveDestinationTypePriorities: {
 		'cascade:empty': 2,
 		'cascade:sequence': 3,
 	},
-	// FIXME cascade:single: cell vs foundation, need some examples
 	'cascade:single': {
-		'cell': 3,
-		'foundation': 1,
-		'cascade:empty': 2,
+		'cell': 2,
+		'foundation': 3,
+		'cascade:empty': 1,
 		'cascade:sequence': 4,
 	},
-	// FIXME cascade:sequence: cell vs foundation, need some examples
 	'cascade:sequence': {
 		'cell': 1,
 		'foundation': 2,

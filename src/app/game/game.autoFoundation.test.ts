@@ -74,6 +74,8 @@ describe('game.autoFoundation', () => {
 					.print({ skipDeck: true });
 				expect(print.split('\n')[0]).toBe(homeStr);
 			});
+
+			test.todo('rank+1.5 0342');
 		});
 	});
 

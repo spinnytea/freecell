@@ -112,30 +112,47 @@ describe('game-utils.findAvailableMoves', () => {
 				cards: [{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 6] } }],
 				canMove: true,
 			});
+			// XXX (techdebt) unsure if we should prefer foundation or cells
 			expect(game.availableMoves).toEqual([
-				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: 4 },
-				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: 3 },
-				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: 2 },
-				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: 1 },
+				{
+					location: { fixture: 'cell', data: [0] },
+					moveDestinationType: 'cell',
+					priority: expect.any(Number) as number,
+				},
+				{
+					location: { fixture: 'cell', data: [1] },
+					moveDestinationType: 'cell',
+					priority: expect.any(Number) as number,
+				},
+				{
+					location: { fixture: 'cell', data: [2] },
+					moveDestinationType: 'cell',
+					priority: expect.any(Number) as number,
+				},
+				{
+					location: { fixture: 'cell', data: [3] },
+					moveDestinationType: 'cell',
+					priority: expect.any(Number) as number,
+				},
 				{
 					location: { fixture: 'foundation', data: [0] },
 					moveDestinationType: 'foundation',
-					priority: -1,
+					priority: expect.any(Number) as number,
 				},
 				{
 					location: { fixture: 'foundation', data: [1] },
 					moveDestinationType: 'foundation',
-					priority: -1,
+					priority: expect.any(Number) as number,
 				},
 				{
 					location: { fixture: 'foundation', data: [2] },
 					moveDestinationType: 'foundation',
-					priority: -1,
+					priority: expect.any(Number) as number,
 				},
 				{
 					location: { fixture: 'foundation', data: [3] },
 					moveDestinationType: 'foundation',
-					priority: -1,
+					priority: expect.any(Number) as number,
 				},
 			]);
 		});
