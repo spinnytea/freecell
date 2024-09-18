@@ -20,6 +20,7 @@ describe('game.autoMove', () => {
 	describe('scenarios', () => {
 		describe('deck', () => {
 			describe('prefers', () => {
+				/** not that we _can_ play from the deck, but if we could, strait to home is best :D */
 				test.todo('foundation');
 			});
 		});
@@ -108,23 +109,19 @@ describe('game.autoMove', () => {
 			});
 
 			describe('prefers', () => {
-				test.todo('cascade:sequence to cell');
-
-				test.todo('cascade:single to cell');
+				/** if we prefer cells, it just cycles forever, we need to be able to move them up and down */
+				test.todo('cascade:empty to cell');
 			});
 		});
 
 		describe('foundation', () => {
 			test.todo('cycles through foundation');
 
+			test.todo('all non-foundation moves are not allowed');
+
 			describe('prefers', () => {
-				test.todo('foundation first');
-
-				test.todo('cascade:sequence second');
-
-				test.todo('cascade:empty third');
-
-				test.todo('cell last');
+				/** not that we _can_ play from a foundation, but if we could, we still can't take them down */
+				test.todo('foundation');
 			});
 		});
 
@@ -328,7 +325,8 @@ describe('game.autoMove', () => {
 			test.todo('cycles through cascade:sequence (jokers)');
 
 			describe('prefers', () => {
-				test('cascade:sequence to cell', () => {
+				/** always prefer growing a sequence, if available */
+				test('cascade:sequence to cell and cascade:empty', () => {
 					let game = FreeCell.parse(
 						'' + //
 							'            >QC TD KH QS \n' + //
@@ -409,14 +407,11 @@ describe('game.autoMove', () => {
 					);
 				});
 
-				test.todo('cascade:sequence to foundation');
-
-				test.todo('cascade:sequence to cascade:empty');
-
-				test.todo('foundation to cell');
-
-				test.todo('foundation to cascade:empty');
-
+				/**
+					empty cascades can move _sequences_
+					empty cells can move _single_
+					so move to a cell first to keep our options open
+				*/
 				test.todo('cell to cascade:empty');
 			});
 		});
@@ -434,6 +429,7 @@ describe('game.autoMove', () => {
 			test.todo('cycles through cascade:sequence (jokers)');
 
 			describe('prefers', () => {
+				/** always prefer growing a sequence, if available */
 				test.todo('cascade:sequence to cascade:empty');
 			});
 		});

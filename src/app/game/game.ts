@@ -396,12 +396,7 @@ export class FreeCell {
 			return this.__clone({ action: 'touch stop' });
 		}
 
-		const cursorSequence = getSequenceAt(this, this.cursor);
-		const from_card = this.selection.cards[0];
-		const to_card: Card | undefined = cursorSequence.cards[cursorSequence.cards.length - 1];
-		const to_card_location = to_card?.location || this.cursor; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-		const move = `${shorthandPosition(from_card.location)}${shorthandPosition(to_card_location)}`;
-		const action = `move ${move} ${shorthandSequence(this.selection)}→${to_card ? shorthandCard(to_card) : to_card_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+		const action = calcMoveActionText(this.selection, getSequenceAt(this, this.cursor));
 
 		const valid = this.availableMoves.some(({ location }) =>
 			isLocationEqual(this.cursor, location)
@@ -540,30 +535,20 @@ export class FreeCell {
 	autoMove(): FreeCell | this {
 		if (!this.selection) return this;
 		if (!this.availableMoves?.length) return this;
+		// REVIEW (techdebt) use the move history instead of the action text?
 		if (!this.previousAction.startsWith('select')) return this;
 
 		// find the highest priority, prioritize first one
-		const cursor = this.availableMoves.reduce((ret, next) => {
+		const to_location = this.availableMoves.reduce((ret, next) => {
 			if (next.priority > ret.priority) return next;
 			return ret;
 		}, this.availableMoves[0]).location;
 
-		// FIXME simplify copy-pasta
-		const cursorSequence = getSequenceAt(this, cursor);
-		const from_card = this.selection.cards[0];
-		const to_card: Card | undefined = cursorSequence.cards[cursorSequence.cards.length - 1];
-		const to_card_location = to_card?.location || cursor; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-		const move = `${shorthandPosition(from_card.location)}${shorthandPosition(to_card_location)}`;
-		const action = `move ${move} ${shorthandSequence(this.selection)}→${to_card ? shorthandCard(to_card) : to_card_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-
-		const valid = this.availableMoves.some(({ location }) => isLocationEqual(cursor, location));
-		if (valid) {
-			const cards = moveCards(this, this.selection, cursor);
-			// leave the cursor at the source
-			return this.__clone({ action, cards, selection: null, availableMoves: null });
-		}
-
-		return this.__clone({ action: 'invalid ' + action });
+		const action = calcMoveActionText(this.selection, getSequenceAt(this, to_location));
+		const cards = moveCards(this, this.selection, to_location);
+		// leave the cursor at the source
+		// clear the selection
+		return this.__clone({ action, cards, selection: null, availableMoves: null });
 	}
 
 	/**
@@ -986,4 +971,12 @@ export class FreeCell {
 		game.previousAction = action;
 		return game;
 	}
+}
+
+function calcMoveActionText(from: CardSequence, to: CardSequence): string {
+	const from_location = from.cards[0].location;
+	const to_card: Card | undefined = to.cards[to.cards.length - 1];
+	const to_location = to_card?.location || to.location; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+	const move = `${shorthandPosition(from_location)}${shorthandPosition(to_location)}`;
+	return `move ${move} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
 }

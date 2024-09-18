@@ -213,6 +213,12 @@ export function findAvailableMoves(
 	return availableMoves;
 }
 
+/**
+	update the AvailableMove priority (in place)
+
+	REVIEW (controls) cycle (cell, cascade:empty) as one group?
+	 - a->b->c->d -> 1->2->5->8 -> a->b->c->d
+*/
 function prioritizeAvailableMoves(
 	game: FreeCell,
 	selection: CardSequence,
@@ -220,30 +226,27 @@ function prioritizeAvailableMoves(
 ): void {
 	if (!availableMoves.length) return;
 
-	// FIXME tidy-oop
-
 	const moveSourceType = getMoveSourceType(selection);
 	const sourceD0 = selection.location.data[0];
-
 	const MoveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
 
+	// pick our favorite destination type
 	const moveDestinationType = availableMoves.reduce((ret, { moveDestinationType: next }) => {
 		if (MoveDestinationTypePriority[next] > MoveDestinationTypePriority[ret]) return next;
 		return ret;
 	}, availableMoves[0].moveDestinationType);
 
+	// filter down to just these ones (all other will remain -1)
 	availableMoves = availableMoves.filter(
 		(availableMove) => availableMove.moveDestinationType === moveDestinationType
 	);
-
-	// REVIEW (controls) cycle (cell, cascade:empty) as one group?
-	//  - a->b->c->d -> 1->2->5->8 -> a->b->c->d
 
 	switch (moveDestinationType) {
 		case 'cell':
 			availableMoves.forEach((availableMove) => {
 				availableMove.priority = game.cells.length - availableMove.location.data[0];
 				if (moveSourceType === 'cell' && availableMove.location.data[0] > sourceD0) {
+					// cycle within cell
 					availableMove.priority += game.cells.length;
 				}
 			});
@@ -253,6 +256,7 @@ function prioritizeAvailableMoves(
 			availableMoves.forEach((availableMove) => {
 				availableMove.priority = game.foundations.length - availableMove.location.data[0];
 				if (moveSourceType === 'foundation' && availableMove.location.data[0] > sourceD0) {
+					// cycle within foundation
 					availableMove.priority += game.foundations.length;
 				}
 			});
@@ -266,6 +270,7 @@ function prioritizeAvailableMoves(
 					(moveSourceType === 'cascade:single' || moveSourceType === 'cascade:sequence') &&
 					availableMove.location.data[0] > sourceD0
 				) {
+					// cycle within cascade (we only picked one type)
 					availableMove.priority += game.tableau.length;
 				}
 			});
