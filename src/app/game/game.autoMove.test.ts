@@ -244,8 +244,124 @@ describe('game.autoMove', () => {
 					);
 				});
 
+				test('cycles through cascade:sequence', () => {
+					let game = FreeCell.parse(
+						'' + //
+							'            >QC TD KH QS \n' + //
+							' JD KC       KS          \n' + //
+							' KD QD                   \n' + //
+							' hand-jammed'
+					);
+
+					game = game
+						.setCursor({ fixture: 'cascade', data: [1, 1] })
+						.touch()
+						.autoMove();
+
+					expect(game.print()).toBe(
+						'' + //
+							'             QC TD KH QS \n' + //
+							' JD>KC       KS          \n' + //
+							' KD          QD          \n' + //
+							' move 25 QD→KS'
+					);
+
+					game = game
+						.setCursor({ fixture: 'cascade', data: [4, 1] })
+						.touch()
+						.autoMove();
+
+					expect(game.print()).toBe(
+						'' + //
+							'             QC TD KH QS \n' + //
+							' JD KC      >KS          \n' + //
+							' KD QD                   \n' + //
+							' move 52 QD→KC'
+					);
+				});
+
+				/**
+					cascade:sequence cycle (jokers)
+				 	 - there can only be 1 or 2 options in normal play
+					 - jokers:wild and jokers:high allow more options
+				*/
+				test.todo('cycles through cascade:sequence (jokers)');
+
 				describe('prefers', () => {
-					test.todo('cascade:sequence to cell');
+					test('cascade:sequence to cell', () => {
+						let game = FreeCell.parse(
+							'' + //
+								'            >QC TD KH QS \n' + //
+								' JD KC       KS          \n' + //
+								' KD QD                   \n' + //
+								' hand-jammed'
+						);
+
+						game = game.setCursor({ fixture: 'cascade', data: [1, 1] }).touch();
+
+						expect(game.availableMoves).toEqual([
+							{
+								location: { fixture: 'cell', data: [0] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cell', data: [1] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cell', data: [2] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cell', data: [3] },
+								moveDestinationType: 'cell',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [2, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [3, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [4, 0] },
+								moveDestinationType: 'cascade:sequence',
+								priority: 12,
+							},
+							{
+								location: { fixture: 'cascade', data: [5, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [6, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+							{
+								location: { fixture: 'cascade', data: [7, 0] },
+								moveDestinationType: 'cascade:empty',
+								priority: -1,
+							},
+						]);
+
+						game = game.autoMove();
+
+						expect(game.print()).toBe(
+							'' + //
+								'             QC TD KH QS \n' + //
+								' JD>KC       KS          \n' + //
+								' KD          QD          \n' + //
+								' move 25 QD→KS'
+						);
+					});
 
 					test.todo('cascade:sequence to foundation');
 
@@ -262,6 +378,13 @@ describe('game.autoMove', () => {
 			describe('sequence', () => {
 				test.todo('cycles through cascade:empty');
 
+				test.todo('cycles through cascade:sequence');
+
+				/**
+					cascade:sequence cycle (jokers)
+				 	 - there can only be 1 or 2 options in normal play
+					 - jokers:wild and jokers:high allow more options
+				*/
 				test.todo('cycles through cascade:sequence (jokers)');
 
 				describe('prefers', () => {

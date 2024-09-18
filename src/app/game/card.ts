@@ -44,6 +44,12 @@ export interface CardLocation {
 
 export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
 export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cascade:sequence';
+export const MoveDestinationTypePriority = Object.freeze({
+	'cell': 3,
+	'foundation': 1, // TODO (controls) higher for single
+	'cascade:empty': 2,
+	'cascade:sequence': 4,
+});
 export interface AvailableMove {
 	/** where we could move the card */
 	location: CardLocation;

@@ -58,7 +58,7 @@ describe('game-utils.findAvailableMoves', () => {
 				{
 					location: { fixture: 'cascade', data: [6, 5] },
 					moveDestinationType: 'cascade:sequence',
-					priority: -1,
+					priority: 10,
 				},
 			]);
 		});
@@ -97,7 +97,7 @@ describe('game-utils.findAvailableMoves', () => {
 				{
 					location: { fixture: 'cascade', data: [6, 5] },
 					moveDestinationType: 'cascade:sequence',
-					priority: -1,
+					priority: 10,
 				},
 			]);
 		});
@@ -113,10 +113,10 @@ describe('game-utils.findAvailableMoves', () => {
 				canMove: true,
 			});
 			expect(game.availableMoves).toEqual([
-				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: 4 },
+				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: 3 },
+				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: 2 },
+				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: 1 },
 				{
 					location: { fixture: 'foundation', data: [0] },
 					moveDestinationType: 'foundation',
@@ -182,7 +182,7 @@ describe('game-utils.findAvailableMoves', () => {
 				{
 					location: { fixture: 'cascade', data: [4, 4] },
 					moveDestinationType: 'cascade:sequence',
-					priority: -1,
+					priority: 4,
 				},
 			]);
 		});
@@ -218,7 +218,7 @@ describe('game-utils.findAvailableMoves', () => {
 				{
 					location: { fixture: 'cascade', data: [6, 5] },
 					moveDestinationType: 'cascade:sequence',
-					priority: -1,
+					priority: 10,
 				},
 			]);
 		});

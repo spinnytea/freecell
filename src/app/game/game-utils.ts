@@ -6,7 +6,7 @@ import {
 	isAdjacent,
 	isLocationEqual,
 	isRed,
-	MoveDestinationType,
+	MoveDestinationTypePriority,
 	MoveSourceType,
 	RankList,
 } from '@/app/game/card';
@@ -218,52 +218,56 @@ function prioritizeAvailableMoves(
 	selection: CardSequence,
 	availableMoves: AvailableMove[]
 ): void {
+	if (!availableMoves.length) return;
+
 	const moveSourceType = getMoveSourceType(selection);
 	const sourceD0 = selection.location.data[0];
 
-	const moveDestinationTypes = new Set<MoveDestinationType>(
-		availableMoves.map(({ moveDestinationType }) => moveDestinationType)
+	const moveDestinationType = availableMoves.reduce((ret, { moveDestinationType: next }) => {
+		if (MoveDestinationTypePriority[next] > MoveDestinationTypePriority[ret]) return next;
+		return ret;
+	}, availableMoves[0].moveDestinationType);
+
+	availableMoves = availableMoves.filter(
+		(availableMove) => availableMove.moveDestinationType === moveDestinationType
 	);
-	if (moveDestinationTypes.size === 1) {
-		// only one destination, so cycle between the options
-		switch (availableMoves[0].moveDestinationType) {
-			case 'cell':
-				availableMoves.forEach((availableMove) => {
-					availableMove.priority = game.cells.length - availableMove.location.data[0];
-					if (moveSourceType === 'cell' && availableMove.location.data[0] > sourceD0) {
-						availableMove.priority += game.cells.length;
-					}
-				});
-				break;
 
-			case 'foundation':
-				availableMoves.forEach((availableMove) => {
-					availableMove.priority = game.foundations.length - availableMove.location.data[0];
-				});
-				break;
+	// FIXME if moveDestinationTypes.size > 1, pick your favorite, and filter availableMoves to just those
+	// FIXME or just pick your favorite moveDestinationType of from availableMoves, regardless of which are present
+	// FIXME does favorite moveDestinationType depend on moveSourceType?
 
-			case 'cascade:empty':
-				availableMoves.forEach((availableMove) => {
-					availableMove.priority = game.tableau.length - availableMove.location.data[0];
-					if (
-						(moveSourceType === 'cascade:single' || moveSourceType === 'cascade:sequence') &&
-						availableMove.location.data[0] > sourceD0
-					) {
-						availableMove.priority += game.tableau.length;
-					}
-				});
-				// FIXME cycle
-				break;
+	// only one destination, so cycle between the options
+	switch (moveDestinationType) {
+		case 'cell':
+			availableMoves.forEach((availableMove) => {
+				availableMove.priority = game.cells.length - availableMove.location.data[0];
+				if (moveSourceType === 'cell' && availableMove.location.data[0] > sourceD0) {
+					availableMove.priority += game.cells.length;
+				}
+			});
+			break;
 
-			case 'cascade:sequence':
-				availableMoves.forEach((availableMove) => {
-					availableMove.priority = game.tableau.length - availableMove.location.data[0];
-				});
-				// XXX cycle (jokers)
-				//  - there can only be 1 or 2 options in normal play
-				//  - jokers:wild and jokers:high allow more options
-				break;
-		}
+		case 'foundation':
+			availableMoves.forEach((availableMove) => {
+				availableMove.priority = game.foundations.length - availableMove.location.data[0];
+				if (moveSourceType === 'foundation' && availableMove.location.data[0] > sourceD0) {
+					availableMove.priority += game.foundations.length;
+				}
+			});
+			break;
+
+		case 'cascade:empty':
+		case 'cascade:sequence':
+			availableMoves.forEach((availableMove) => {
+				availableMove.priority = game.tableau.length - availableMove.location.data[0];
+				if (
+					(moveSourceType === 'cascade:single' || moveSourceType === 'cascade:sequence') &&
+					availableMove.location.data[0] > sourceD0
+				) {
+					availableMove.priority += game.tableau.length;
+				}
+			});
+			break;
 	}
 }
 
