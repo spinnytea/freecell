@@ -42,6 +42,53 @@ export interface CardLocation {
 	data: number[];
 }
 
+export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
+export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cascade:sequence';
+export const MoveDestinationTypePriorities: {
+	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
+} = {
+	// XXX (controls) deck: when will we get to do this?
+	'deck': {
+		'cell': 1,
+		'foundation': 4,
+		'cascade:empty': 2,
+		'cascade:sequence': 3,
+	},
+	'cell': {
+		'cell': 1,
+		'foundation': 3,
+		'cascade:empty': 2,
+		'cascade:sequence': 4,
+	},
+	// XXX (controls) foundation: down from foundation means "back into play?"
+	'foundation': {
+		'cell': 1,
+		'foundation': 4,
+		'cascade:empty': 2,
+		'cascade:sequence': 3,
+	},
+	'cascade:single': {
+		'cell': 2,
+		'foundation': 3,
+		'cascade:empty': 1,
+		'cascade:sequence': 4,
+	},
+	'cascade:sequence': {
+		'cell': 1,
+		'foundation': 2,
+		'cascade:empty': 3,
+		'cascade:sequence': 4,
+	},
+};
+export interface AvailableMove {
+	/** where we could move the card */
+	location: CardLocation;
+	/** helps us think about priorities / communicate settings */
+	moveDestinationType: MoveDestinationType;
+	/** if we are going to visualize them debug mode, we need to have it precomputed */
+	priority: number;
+}
+
 /**
 	foundation: h
 	cells: a - d

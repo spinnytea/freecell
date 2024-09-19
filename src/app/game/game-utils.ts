@@ -1,10 +1,13 @@
 import {
+	AvailableMove,
 	Card,
 	CardLocation,
 	CardSequence,
 	isAdjacent,
 	isLocationEqual,
 	isRed,
+	MoveDestinationTypePriorities,
+	MoveSourceType,
 	RankList,
 } from '@/app/game/card';
 import { FreeCell } from '@/app/game/game';
@@ -140,8 +143,8 @@ export function canStackFoundation(foundation_card: Card | null, moving_card: Ca
 export function findAvailableMoves(
 	game: FreeCell,
 	selection?: CardSequence | null
-): CardLocation[] {
-	const availableMoves: CardLocation[] = [];
+): AvailableMove[] {
+	const availableMoves: AvailableMove[] = [];
 	if (!selection) {
 		selection = game.selection;
 	}
@@ -154,15 +157,26 @@ export function findAvailableMoves(
 
 	if (selection.cards.length === 1) {
 		// REVIEW: if multiple, move last card?
+		//  - do not allow autoMove to move a sequence to a cell
 		game.cells.forEach((card, idx) => {
 			if (!card) {
-				availableMoves.push({ fixture: 'cell', data: [idx] });
+				availableMoves.push({
+					location: { fixture: 'cell', data: [idx] },
+					moveDestinationType: 'cell',
+					priority: -1,
+				});
 			}
 		});
 
+		// REVIEW: if multiple, move last card?
+		//  - do not allow autoMove to move a sequence to a foundation
 		game.foundations.forEach((card, idx) => {
 			if (canStackFoundation(card, head_card)) {
-				availableMoves.push({ fixture: 'foundation', data: [idx] });
+				availableMoves.push({
+					location: { fixture: 'foundation', data: [idx] },
+					moveDestinationType: 'foundation',
+					priority: -1,
+				});
 			}
 		});
 	}
@@ -174,19 +188,116 @@ export function findAvailableMoves(
 			const tail_card = cascade[cascade.length - 1];
 			if (!cascade.length) {
 				if (selection.cards.length <= mmsl / 2) {
-					availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length] });
+					availableMoves.push({
+						location: { fixture: 'cascade', data: [idx, cascade.length] },
+						moveDestinationType: 'cascade:empty',
+						priority: -1,
+					});
 				}
 			} else if (
 				isRed(tail_card.suit) !== isRed(head_card.suit) &&
 				isAdjacent({ min: head_card.rank, max: tail_card.rank }) &&
 				selection.cards.length <= mmsl
 			) {
-				availableMoves.push({ fixture: 'cascade', data: [idx, cascade.length - 1] });
+				availableMoves.push({
+					location: { fixture: 'cascade', data: [idx, cascade.length - 1] },
+					moveDestinationType: 'cascade:sequence',
+					priority: -1,
+				});
 			}
 		}
 	});
 
+	prioritizeAvailableMoves(game, selection, availableMoves);
+
 	return availableMoves;
+}
+
+/**
+	update the AvailableMove priority (in place)
+
+	REVIEW (controls) cycle (cell, cascade:empty) as one group?
+	 - a->b->c->d -> 1->2->5->8 -> a->b->c->d
+*/
+function prioritizeAvailableMoves(
+	game: FreeCell,
+	selection: CardSequence,
+	availableMoves: AvailableMove[]
+): void {
+	if (!availableMoves.length) return;
+
+	const moveSourceType = getMoveSourceType(selection);
+	const sourceD0 = selection.location.data[0];
+	let MoveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
+	if (
+		moveSourceType === 'cascade:single' &&
+		selection.cards.length === 1 &&
+		selection.cards[0].rank === 'king'
+	) {
+		// REVIEW (techdebt) can we clean this up? it's fine the way it is
+		MoveDestinationTypePriority = {
+			...MoveDestinationTypePriority,
+			'cascade:empty': MoveDestinationTypePriority['cascade:empty'] + 4,
+		};
+	}
+
+	// pick our favorite destination type
+	const moveDestinationType = availableMoves.reduce((ret, { moveDestinationType: next }) => {
+		if (MoveDestinationTypePriority[next] > MoveDestinationTypePriority[ret]) return next;
+		return ret;
+	}, availableMoves[0].moveDestinationType);
+
+	// filter down to just these ones (all other will remain -1)
+	availableMoves = availableMoves.filter(
+		(availableMove) => availableMove.moveDestinationType === moveDestinationType
+	);
+
+	switch (moveDestinationType) {
+		case 'cell':
+			availableMoves.forEach((availableMove) => {
+				availableMove.priority = game.cells.length - availableMove.location.data[0];
+				if (moveSourceType === 'cell' && availableMove.location.data[0] > sourceD0) {
+					// cycle within cell
+					availableMove.priority += game.cells.length;
+				}
+			});
+			break;
+
+		case 'foundation':
+			availableMoves.forEach((availableMove) => {
+				availableMove.priority = game.foundations.length - availableMove.location.data[0];
+				if (moveSourceType === 'foundation' && availableMove.location.data[0] > sourceD0) {
+					// cycle within foundation
+					availableMove.priority += game.foundations.length;
+				}
+			});
+			break;
+
+		case 'cascade:empty':
+		case 'cascade:sequence':
+			availableMoves.forEach((availableMove) => {
+				availableMove.priority = game.tableau.length - availableMove.location.data[0];
+				if (
+					(moveSourceType === 'cascade:single' || moveSourceType === 'cascade:sequence') &&
+					availableMove.location.data[0] > sourceD0
+				) {
+					// cycle within cascade (we only picked one type)
+					availableMove.priority += game.tableau.length;
+				}
+			});
+			break;
+	}
+}
+
+function getMoveSourceType(selection: CardSequence): MoveSourceType {
+	switch (selection.location.fixture) {
+		case 'deck':
+		case 'cell':
+		case 'foundation':
+			return selection.location.fixture;
+		case 'cascade':
+			return selection.cards.length === 1 ? 'cascade:single' : 'cascade:sequence';
+	}
 }
 
 /**

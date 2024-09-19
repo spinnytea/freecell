@@ -16,10 +16,10 @@ export function DebugCursors() {
 	// wrapper to make the dom more legible
 	return (
 		<div id="cursors">
-			{game.availableMoves?.map((location) => (
+			{game.availableMoves?.map(({ location, priority }) => (
 				<LocationBox
 					key={`available-${shorthandPosition(location)}-${location.data[0].toString(10)}`}
-					type="available"
+					type={`available${priority < 0 ? '-low' : '-high'}`}
 					fixtureSizes={fixtureSizes}
 					location={location}
 				/>

@@ -37,6 +37,10 @@
 	border: 2px solid yellow;
 }
 
-.available {
+.available-high {
 	border: 2px solid cyan;
+}
+
+.available-low {
+	border: 2px solid blue;
 }

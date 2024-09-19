@@ -1,7 +1,7 @@
 import { CardLocation } from '@/app/game/card';
 import { FreeCell } from '@/app/game/game';
 
-describe('moveCursor', () => {
+describe('game.moveCursor', () => {
 	describe('selection empty', () => {
 		describe('cell', () => {
 			test('within left and right', () => {

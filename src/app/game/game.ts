@@ -1,4 +1,5 @@
 import {
+	AvailableMove,
 	Card,
 	CardLocation,
 	CardSequence,
@@ -54,7 +55,7 @@ export class FreeCell {
 	// controls
 	cursor: CardLocation;
 	selection: CardSequence | null; // REVIEW (techdebt) none, single, sequence
-	availableMoves: CardLocation[] | null;
+	availableMoves: AvailableMove[] | null;
 	previousAction: string;
 
 	// custom rules
@@ -77,7 +78,7 @@ export class FreeCell {
 		cards?: Card[];
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
-		availableMoves?: CardLocation[] | null;
+		availableMoves?: AvailableMove[] | null;
 	} = {}) {
 		this.deck = [];
 		this.cells = new Array<null>(cellCount).fill(null);
@@ -160,7 +161,7 @@ export class FreeCell {
 		cards?: Card[];
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
-		availableMoves?: CardLocation[] | null;
+		availableMoves?: AvailableMove[] | null;
 	}): FreeCell {
 		const game = new FreeCell({
 			cellCount: this.cells.length,
@@ -376,6 +377,7 @@ export class FreeCell {
 		const game = this.__clone({ action: 'touch' });
 
 		// TODO (controls) allow "growing/shrinking sequence of current selection"
+		// TODO (controls) || !game.availableMoves?.length (if the current selection has no valid moves)
 		if (!game.selection?.canMove) {
 			const selection = getSequenceAt(game, game.cursor);
 			// we can't do anything with a foundation (we can move cards off of it)
@@ -394,14 +396,11 @@ export class FreeCell {
 			return this.__clone({ action: 'touch stop' });
 		}
 
-		const cursorSequence = getSequenceAt(this, this.cursor);
-		const from_card = this.selection.cards[0];
-		const to_card: Card | undefined = cursorSequence.cards[cursorSequence.cards.length - 1];
-		const to_card_location = to_card?.location || this.cursor; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-		const move = `${shorthandPosition(from_card.location)}${shorthandPosition(to_card_location)}`;
-		const action = `move ${move} ${shorthandSequence(this.selection)}→${to_card ? shorthandCard(to_card) : to_card_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+		const action = calcMoveActionText(this.selection, getSequenceAt(this, this.cursor));
 
-		const valid = this.availableMoves.some((location) => isLocationEqual(this.cursor, location));
+		const valid = this.availableMoves.some(({ location }) =>
+			isLocationEqual(this.cursor, location)
+		);
 		if (valid) {
 			const cards = moveCards(this, this.selection, this.cursor);
 			return this.__clone({ action, cards, selection: null, availableMoves: null });
@@ -434,12 +433,12 @@ export class FreeCell {
 				game.cells.forEach((c, c_idx) => {
 					const sequenceToMove = getSequenceAt(game, { fixture: 'cell', data: [c_idx] });
 					const availableMove = findAvailableMoves(game, sequenceToMove).find(
-						({ fixture }) => fixture === 'foundation'
+						({ location: { fixture } }) => fixture === 'foundation'
 					);
 					if (c && availableMove && !game.selection?.cards.includes(sequenceToMove.cards[0])) {
 						didMove = true;
 						didMoveAny = true;
-						const cards = moveCards(game, sequenceToMove, availableMove);
+						const cards = moveCards(game, sequenceToMove, availableMove.location);
 						game = game.__clone({ action: 'auto-foundation middle', cards });
 						moved.push(c);
 					}
@@ -451,13 +450,17 @@ export class FreeCell {
 							data: [c_idx, cascade.length - 1],
 						});
 						const availableMove = findAvailableMoves(game, sequenceToMove).find(
-							({ fixture, data: [f_idx] }) =>
-								fixture === 'foundation' && foundationCanAcceptCards(game, f_idx, limit)
+							({
+								location: {
+									fixture,
+									data: [f_idx],
+								},
+							}) => fixture === 'foundation' && foundationCanAcceptCards(game, f_idx, limit)
 						);
 						if (availableMove && !game.selection?.cards.includes(sequenceToMove.cards[0])) {
 							didMove = true;
 							didMoveAny = true;
-							const cards = moveCards(game, sequenceToMove, availableMove);
+							const cards = moveCards(game, sequenceToMove, availableMove.location);
 							game = game.__clone({ action: 'auto-foundation middle', cards });
 							moved.push(sequenceToMove.cards[0]);
 						}
@@ -527,6 +530,25 @@ export class FreeCell {
 
 		// silent noop
 		return this;
+	}
+
+	autoMove(): FreeCell | this {
+		if (!this.selection) return this;
+		if (!this.availableMoves?.length) return this;
+		// REVIEW (techdebt) use the move history instead of the action text?
+		if (!this.previousAction.startsWith('select')) return this;
+
+		// find the highest priority, prioritize first one
+		const to_location = this.availableMoves.reduce((ret, next) => {
+			if (next.priority > ret.priority) return next;
+			return ret;
+		}, this.availableMoves[0]).location;
+
+		const action = calcMoveActionText(this.selection, getSequenceAt(this, to_location));
+		const cards = moveCards(this, this.selection, to_location);
+		// leave the cursor at the source
+		// clear the selection
+		return this.__clone({ action, cards, selection: null, availableMoves: null });
 	}
 
 	/**
@@ -949,4 +971,14 @@ export class FreeCell {
 		game.previousAction = action;
 		return game;
 	}
+
+	// XXX (techdebt) printTest: expect(previous.touch()).toBe(current)
+}
+
+function calcMoveActionText(from: CardSequence, to: CardSequence): string {
+	const from_location = from.cards[0].location;
+	const to_card: Card | undefined = to.cards[to.cards.length - 1];
+	const to_location = to_card?.location || to.location; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+	const move = `${shorthandPosition(from_location)}${shorthandPosition(to_location)}`;
+	return `move ${move} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
 }

@@ -13,7 +13,7 @@ TODO (motivation) main development tasks:
 1. ~~win state~~
 1. ~~quick and dirty loop (new -> shuffle -> deal -> play -> win -> <<-- new -> shuffle -> …)~~
 1. ~~auto-foundation~~
-1. click-to-move
+1. ~~click-to-move~~
 1. core game is tested + manual testing page (ui selection -> move, all the way to winning)
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
@@ -30,14 +30,8 @@ TODO (motivation) main development tasks:
   - card drag animation (drag waggles the sequence)
   - auto-foundation each card
 - TODO (animation) failed moves shake
-- TODO (controls) mouse controls
-  - drag to move
-  - click to move to "next best"
-  - can we "select without moving"?
-- TODO (controls) mouse drag-drop target is entire cascade
-- TODO (controls) mouse controls: click to move
+- TODO (controls) mouse drag to move - mouse drag-drop target is entire cascade
 - TODO (controls) keyboard + selection
-- TODO (controls) single click to move: one vs multiple - move to next option? - identify the _types_ of moves, not just _isAllowed_ - different moves have different priorities? (render debug info)
 - TODO (animation) animate cards in flight should be above others
 - TODO (gameplay) undo (move history) - all, few, one, none (should allow at least one undo, misclicks)
   - "Standard FreeCell Notation" (cell: a-d, foundation: h(ome), cascades: 1-8)
