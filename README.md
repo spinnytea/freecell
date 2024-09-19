@@ -51,6 +51,9 @@ TODO (motivation) main development tasks:
 - IDEA (motivation) implement Spider Solitaire, that could be fun
 - IDEA (animation) learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
 - TODO (controls) keyboard input (tab index, pick&place card&sequence, inspect card, shortcuts for top row)
+- TODO (controls) keyboard hotkeys (1-8 (1234567890), abcd, h, ¿qwer?, ¿uiop?)
+  - if cursor can stack with target: select, moveCard
+  - if cursor cannot stack with target: setCursor
 - IDEA (deployment) UI render for all options, hidden options, controls (keyboard, keyboard+selection, mouse click, mouse drag)
 - TODO (deployment) rules page (SUG)
 - IDEA (gameplay) joker

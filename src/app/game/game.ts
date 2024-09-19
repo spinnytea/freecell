@@ -368,6 +368,8 @@ export class FreeCell {
 		interact with the cursor
 
 		e.g. select cursor, deselect cursor, move selection
+
+		IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
 	*/
 	touch(): FreeCell {
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
@@ -548,6 +550,11 @@ export class FreeCell {
 		const cards = moveCards(this, this.selection, to_location);
 		// leave the cursor at the source
 		// clear the selection
+		// REVIEW (controls) autoMove place cursor at destination
+		// - autoMove is a mouse-only activity?
+		// - for keyboard, the cursor would be at the destination
+		// - maybe it makes sense to move it too
+		// - right now, cascades have to clamp it up one
 		return this.__clone({ action, cards, selection: null, availableMoves: null });
 	}
 

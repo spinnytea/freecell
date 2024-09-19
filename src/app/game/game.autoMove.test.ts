@@ -411,6 +411,12 @@ describe('game.autoMove', () => {
 				*/
 				test.todo('cell to cascade:empty');
 
+				/**
+					if you are going to start building something new,
+					it needs to be in a cascade
+				*/
+				test.todo('cascade:empty to cell when only one cell remains');
+
 				describe('foundation, somtimes', () => {
 					/**
 						in this situation, we're kind of stuck.

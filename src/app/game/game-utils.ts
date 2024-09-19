@@ -169,7 +169,7 @@ export function findAvailableMoves(
 		});
 
 		// REVIEW: if multiple, move last card?
-		//  - do not allow autoMove to move a sequence to a foundation
+		//  - do not allow autoMove to move a single card when a sequence is selected
 		game.foundations.forEach((card, idx) => {
 			if (canStackFoundation(card, head_card)) {
 				availableMoves.push({
@@ -181,6 +181,8 @@ export function findAvailableMoves(
 		});
 	}
 
+	// IDEA (controls) sequence from root of cascade (the entire cascade) can freely move to cascade:empty
+	//  - sorting cascades doesn't "change" the game
 	const mmsl = maxMovableSequenceLength(game);
 	game.tableau.forEach((cascade, idx) => {
 		// typescript is confused, we need to gaurd against selection even though we did it above

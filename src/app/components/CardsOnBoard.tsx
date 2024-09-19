@@ -11,7 +11,7 @@ import { useGame } from '@/app/hooks/Game/useGame';
 //  - i.e. as the cursor moves:
 //    - "peek" at all the cards in cascade, rotate card in cell
 //    - once selected, do not change that
-// IDEA (settings) setting for "reduced movement"
+// IDEA (settings) setting for "reduced motion" - disable most animations
 export function CardsOnBoard() {
 	const { cards } = useGame();
 
