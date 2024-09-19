@@ -13,7 +13,7 @@ TODO (motivation) main development tasks:
 1. ~~win state~~
 1. ~~quick and dirty loop (new -> shuffle -> deal -> play -> win -> <<-- new -> shuffle -> …)~~
 1. ~~auto-foundation~~
-1. click-to-move
+1. ~~click-to-move~~
 1. core game is tested + manual testing page (ui selection -> move, all the way to winning)
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
