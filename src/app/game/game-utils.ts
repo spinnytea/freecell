@@ -228,7 +228,18 @@ function prioritizeAvailableMoves(
 
 	const moveSourceType = getMoveSourceType(selection);
 	const sourceD0 = selection.location.data[0];
-	const MoveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
+	let MoveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
+	if (
+		moveSourceType === 'cascade:single' &&
+		selection.cards.length === 1 &&
+		selection.cards[0].rank === 'king'
+	) {
+		// REVIEW (techdebt) can we clean this up? it's fine the way it is
+		MoveDestinationTypePriority = {
+			...MoveDestinationTypePriority,
+			'cascade:empty': MoveDestinationTypePriority['cascade:empty'] + 4,
+		};
+	}
 
 	// pick our favorite destination type
 	const moveDestinationType = availableMoves.reduce((ret, { moveDestinationType: next }) => {

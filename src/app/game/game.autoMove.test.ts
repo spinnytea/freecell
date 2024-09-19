@@ -486,7 +486,8 @@ describe('game.autoMove', () => {
 					});
 				});
 
-				test.skip('King prefers cascade:empty', () => {
+				/** if we are moving a single king, it's _probably_ time to build a stack */
+				test('King prefers cascade:empty', () => {
 					expect(
 						FreeCell.parse(
 							'' +
@@ -530,9 +531,106 @@ describe('game.autoMove', () => {
 		});
 
 		describe('cascade:sequence', () => {
-			test.todo('cycles through cascade:empty'); // FIXME test
+			test('cycles through cascade:empty', () => {
+				let game = FreeCell.parse(
+					'' + //
+						'            >QC TD KH TS \n' + //
+						' KD KC       KS          \n' + //
+						' QS QD                   \n' + //
+						' JD JS                   \n' + //
+						' hand-jammed'
+				);
 
-			test.todo('cycles through cascade:sequence'); // FIXME test
+				game = game
+					.setCursor({ fixture: 'cascade', data: [1, 0] })
+					.touch()
+					.autoMove();
+
+				expect(game.print()).toBe(
+					'' + //
+						'             QC TD KH TS \n' + //
+						' KD>   KC    KS          \n' + //
+						' QS    QD                \n' + //
+						' JD    JS                \n' + //
+						' move 23 KC-QD-JS→cascade'
+				);
+
+				game = game
+					.setCursor({ fixture: 'cascade', data: [2, 0] })
+					.touch()
+					.autoMove()
+					.setCursor({ fixture: 'cascade', data: [3, 0] })
+					.touch()
+					.autoMove();
+
+				expect(game.print()).toBe(
+					'' + //
+						'             QC TD KH TS \n' + //
+						' KD      >   KS KC       \n' + //
+						' QS             QD       \n' + //
+						' JD             JS       \n' + //
+						' move 46 KC-QD-JS→cascade'
+				);
+
+				game = game
+					.setCursor({ fixture: 'cascade', data: [5, 0] })
+					.touch()
+					.autoMove()
+					.setCursor({ fixture: 'cascade', data: [6, 0] })
+					.touch()
+					.autoMove()
+					.setCursor({ fixture: 'cascade', data: [7, 0] })
+					.touch()
+					.autoMove();
+
+				expect(game.print()).toBe(
+					'' + //
+						'             QC TD KH TS \n' + //
+						' KD KC       KS      >   \n' + //
+						' QS QD                   \n' + //
+						' JD JS                   \n' + //
+						' move 82 KC-QD-JS→cascade'
+				);
+			});
+
+			test('cycles through cascade:sequence', () => {
+				let game = FreeCell.parse(
+					'' + //
+						'            >QC TD KH TS \n' + //
+						' KD KC       KS          \n' + //
+						' QS QD                   \n' + //
+						' JD JS                   \n' + //
+						' hand-jammed'
+				);
+
+				game = game
+					.setCursor({ fixture: 'cascade', data: [1, 1] })
+					.touch()
+					.autoMove();
+
+				expect(game.print()).toBe(
+					'' + //
+						'             QC TD KH TS \n' + //
+						' KD>KC       KS          \n' + //
+						' QS          QD          \n' + //
+						' JD          JS          \n' + //
+						' move 25 QD-JS→KS'
+				);
+
+				game = game
+					.setCursor({ fixture: 'cascade', data: [4, 1] })
+					.touch()
+					.autoMove();
+
+				expect(game.print()).toBe(
+					'' + //
+						'             QC TD KH TS \n' + //
+						' KD KC      >KS          \n' + //
+						' QS QD                   \n' + //
+						' JD JS                   \n' + //
+						' move 52 QD-JS→KC'
+				);
+			});
 
 			/**
 				cascade:sequence cycle (jokers)
