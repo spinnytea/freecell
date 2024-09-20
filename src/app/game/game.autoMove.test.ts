@@ -28,13 +28,13 @@ describe('game.autoMove', () => {
 			test('cycle through cell', () => {
 				let game = FreeCell.parse(
 					'' +
-						' JC          9C 9D 9H 9S \n' +
-						' QC QD QH QS>KC KD KH KS \n' +
+						'>JC          9C 9D 9H 9S \n' +
+						' QC QD QH QS KC KD KH KS \n' +
 						' TC TD TH TS    JD JH JS \n' +
 						' hand-jammed'
 				);
 
-				game = game.setCursor({ fixture: 'cell', data: [0] }).touch();
+				game = game.touch();
 
 				expect(game.availableMoves).toEqual([
 					{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: 7 },
@@ -46,13 +46,13 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' +
-						'>   JC       9C 9D 9H 9S \n' +
+						'   >JC       9C 9D 9H 9S \n' +
 						' QC QD QH QS KC KD KH KS \n' +
 						' TC TD TH TS    JD JH JS \n' +
 						' move ab JC→cell'
 				);
 
-				game = game.setCursor({ fixture: 'cell', data: [1] }).touch();
+				game = game.touch();
 
 				expect(game.availableMoves).toEqual([
 					{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: 4 },
@@ -64,13 +64,13 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' +
-						'   >   JC    9C 9D 9H 9S \n' +
+						'      >JC    9C 9D 9H 9S \n' +
 						' QC QD QH QS KC KD KH KS \n' +
 						' TC TD TH TS    JD JH JS \n' +
 						' move bc JC→cell'
 				);
 
-				game = game.setCursor({ fixture: 'cell', data: [2] }).touch();
+				game = game.touch();
 
 				expect(game.availableMoves).toEqual([
 					{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: 4 },
@@ -82,13 +82,13 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' +
-						'      >   JC 9C 9D 9H 9S \n' +
+						'         >JC 9C 9D 9H 9S \n' +
 						' QC QD QH QS KC KD KH KS \n' +
 						' TC TD TH TS    JD JH JS \n' +
 						' move cd JC→cell'
 				);
 
-				game = game.setCursor({ fixture: 'cell', data: [3] }).touch();
+				game = game.touch();
 
 				expect(game.availableMoves).toEqual([
 					{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: 4 },
@@ -100,7 +100,7 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' +
-						' JC      >   9C 9D 9H 9S \n' +
+						'>JC          9C 9D 9H 9S \n' +
 						' QC QD QH QS KC KD KH KS \n' +
 						' TC TD TH TS    JD JH JS \n' +
 						' move da JC→cell'
@@ -128,13 +128,13 @@ describe('game.autoMove', () => {
 			test('cycles through cascade:empty (4)', () => {
 				let game = FreeCell.parse(
 					'' + //
-						' QC KD KH KS>JC QD QH QS \n' + //
-						' KC          \n' + //
+						' QC KD KH KS JC QD QH QS \n' + //
+						'>KC          \n' + //
 						' hand-jammed'
 				);
 				expect(game.tableau.length).toBe(4);
 
-				game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+				game = game.touch();
 
 				expect(game.availableMoves).toEqual([
 					{
@@ -159,16 +159,11 @@ describe('game.autoMove', () => {
 				expect(game.print()).toBe(
 					'' + //
 						' QC KD KH KS JC QD QH QS \n' + //
-						'>   KC       \n' + //
+						'   >KC       \n' + //
 						' move 12 KC→cascade'
 				);
 
-				game = game
-					.setCursor({ fixture: 'cascade', data: [1, 0] })
-					.touch()
-					.autoMove()
-					.setCursor({ fixture: 'cascade', data: [2, 0] })
-					.touch();
+				game = game.touch().autoMove().touch();
 
 				expect(game.availableMoves).toEqual([
 					{
@@ -193,19 +188,16 @@ describe('game.autoMove', () => {
 				expect(game.print()).toBe(
 					'' + //
 						' QC KD KH KS JC QD QH QS \n' + //
-						'      >   KC \n' + //
+						'         >KC \n' + //
 						' move 34 KC→cascade'
 				);
 
-				game = game
-					.setCursor({ fixture: 'cascade', data: [3, 0] })
-					.touch()
-					.autoMove();
+				game = game.touch().autoMove();
 
 				expect(game.print()).toBe(
 					'' + //
 						' QC KD KH KS JC QD QH QS \n' + //
-						' KC      >   \n' + //
+						'>KC          \n' + //
 						' move 41 KC→cascade'
 				);
 			});
@@ -213,69 +205,45 @@ describe('game.autoMove', () => {
 			test('cycles through cascade:empty (8)', () => {
 				let game = FreeCell.parse(
 					'' + //
-						' QC KD KH KS>JC QD QH QS \n' + //
-						' KC                      \n' + //
+						' QC KD KH KS JC QD QH QS \n' + //
+						'>KC                      \n' + //
 						' hand-jammed'
 				);
 				expect(game.tableau.length).toBe(8);
 
-				game = game
-					.setCursor({ fixture: 'cascade', data: [0, 0] })
-					.touch()
-					.autoMove();
+				game = game.touch().autoMove();
 
 				expect(game.print()).toBe(
 					'' + //
 						' QC KD KH KS JC QD QH QS \n' + //
-						'>   KC                   \n' + //
+						'   >KC                   \n' + //
 						' move 12 KC→cascade'
 				);
 
-				game = game
-					.setCursor({ fixture: 'cascade', data: [1, 0] })
-					.touch()
-					.autoMove()
-					.setCursor({ fixture: 'cascade', data: [2, 0] })
-					.touch()
-					.autoMove()
-					.setCursor({ fixture: 'cascade', data: [3, 0] })
-					.touch()
-					.autoMove()
-					.setCursor({ fixture: 'cascade', data: [4, 0] })
-					.touch()
-					.autoMove();
+				game = game.touch().autoMove().touch().autoMove().touch().autoMove().touch().autoMove();
 
 				expect(game.print()).toBe(
 					'' + //
 						' QC KD KH KS JC QD QH QS \n' + //
-						'            >   KC       \n' + //
+						'               >KC       \n' + //
 						' move 56 KC→cascade'
 				);
 
-				game = game
-					.setCursor({ fixture: 'cascade', data: [5, 0] })
-					.touch()
-					.autoMove()
-					.setCursor({ fixture: 'cascade', data: [6, 0] })
-					.touch()
-					.autoMove();
+				game = game.touch().autoMove().touch().autoMove();
 
 				expect(game.print()).toBe(
 					'' + //
 						' QC KD KH KS JC QD QH QS \n' + //
-						'                  >   KC \n' + //
+						'                     >KC \n' + //
 						' move 78 KC→cascade'
 				);
 
-				game = game
-					.setCursor({ fixture: 'cascade', data: [7, 0] })
-					.touch()
-					.autoMove();
+				game = game.touch().autoMove();
 
 				expect(game.print()).toBe(
 					'' + //
 						' QC KD KH KS JC QD QH QS \n' + //
-						' KC                  >   \n' + //
+						'>KC                      \n' + //
 						' move 81 KC→cascade'
 				);
 			});
@@ -283,21 +251,18 @@ describe('game.autoMove', () => {
 			test('cycles through cascade:sequence', () => {
 				let game = FreeCell.parse(
 					'' + //
-						'            >QC TD KH QS \n' + //
+						'             QC TD KH QS \n' + //
 						' JD KC       KS          \n' + //
-						' KD QD                   \n' + //
+						' KD>QD                   \n' + //
 						' hand-jammed'
 				);
 
-				game = game
-					.setCursor({ fixture: 'cascade', data: [1, 1] })
-					.touch()
-					.autoMove();
+				game = game.touch().autoMove();
 
 				expect(game.print()).toBe(
 					'' + //
 						'             QC TD KH QS \n' + //
-						' JD>KC       KS          \n' + //
+						' JD KC      >KS          \n' + //
 						' KD          QD          \n' + //
 						' move 25 QD→KS'
 				);
@@ -310,7 +275,7 @@ describe('game.autoMove', () => {
 				expect(game.print()).toBe(
 					'' + //
 						'             QC TD KH QS \n' + //
-						' JD KC      >KS          \n' + //
+						' JD>KC       KS          \n' + //
 						' KD QD                   \n' + //
 						' move 52 QD→KC'
 				);
@@ -398,7 +363,7 @@ describe('game.autoMove', () => {
 					expect(game.print()).toBe(
 						'' + //
 							'             QC TD KH QS \n' + //
-							' JD>KC       KS          \n' + //
+							' JD KC      >KS          \n' + //
 							' KD          QD          \n' + //
 							' move 25 QD→KS'
 					);
@@ -427,7 +392,7 @@ describe('game.autoMove', () => {
 						expect(
 							FreeCell.parse(
 								'' +
-									'>   6H QS    AS 3C 3H 3D \n' +
+									'    6H QS    AS 3C 3H 3D \n' +
 									' JD 9S 6C KH KC 2S QH JH \n' +
 									' TS 8D 5D QC QD KD JS TC \n' +
 									' 9H 7S 4S    JC 7C TH 9D \n' +
@@ -443,14 +408,14 @@ describe('game.autoMove', () => {
 								.print()
 						).toBe(
 							'' +
-								'    6H QS    AS 4C 3H 3D \n' +
+								'    6H QS    AS>4C 3H 3D \n' +
 								' JD 9S 6C KH KC 2S QH JH \n' +
 								' TS 8D 5D QC QD KD JS TC \n' +
 								' 9H 7S 4S    JC 7C TH 9D \n' +
 								' 8C 6D       TD 7H 9C 8S \n' +
 								' 7D 5C          KS 8H    \n' +
 								' 6S 4D          5S       \n' +
-								'>5H             4H       \n' +
+								' 5H             4H       \n' +
 								'                3S       \n' +
 								' move 1h 4C→3C'
 						);
@@ -479,7 +444,7 @@ describe('game.autoMove', () => {
 								.print()
 						).toBe(
 							'' +
-								' JC 9C>   4S AH 2C 3S    \n' +
+								' JC 9C    4S AH 2C>3S    \n' +
 								'    TH 4C JS KD 2H QD 5H \n' +
 								'    7C 6D KH QH 6S 4D 5S \n' +
 								'    AD    9D 8H TC KC 7H \n' +
@@ -518,8 +483,8 @@ describe('game.autoMove', () => {
 					).toBe(
 						'' +
 							' KD QD 7S    AS AD       \n' +
-							' 2C JC 6C 2D AH 9D KS QC \n' +
-							' 9S TD 4H QS>2S 8S    8H \n' +
+							' 2C JC 6C 2D AH 9D>KS QC \n' +
+							' 9S TD 4H QS 2S 8S    8H \n' +
 							' 5S AC 7D TC          JD \n' +
 							' 2H 3C 5C KH          7H \n' +
 							' 5D 6D 4D 6H          5H \n' +
@@ -533,6 +498,66 @@ describe('game.autoMove', () => {
 							' move 57 KS→cascade'
 					);
 				});
+
+				test('Ace prefers foundation', () => {
+					const game = FreeCell.parse(
+						'' +
+							'                         \n' +
+							' 3C TS 6S 5D 9H QC AH 9C \n' +
+							' 4H 8S 8C JS 2S 2H 3D 3H \n' +
+							' JD 7C TC 4C 9S 6H QH 9D \n' +
+							' TH TD KC AS JC 6C 4D 5C \n' +
+							' AC 7S KH 3S 6D QS 8H 7D \n' +
+							' KD 2D JH 8D KS 4S 5H>AD \n' +
+							' 7H 2C 5S QD             \n' +
+							' copy-pasta'
+					).touch();
+
+					expect(game.availableMoves).toEqual([
+						{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
+						{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
+						{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
+						{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+						{
+							location: { fixture: 'foundation', data: [0] },
+							moveDestinationType: 'foundation',
+							priority: 4,
+						},
+						{
+							location: { fixture: 'foundation', data: [1] },
+							moveDestinationType: 'foundation',
+							priority: 3,
+						},
+						{
+							location: { fixture: 'foundation', data: [2] },
+							moveDestinationType: 'foundation',
+							priority: 2,
+						},
+						{
+							location: { fixture: 'foundation', data: [3] },
+							moveDestinationType: 'foundation',
+							priority: 1,
+						},
+						{
+							location: { fixture: 'cascade', data: [1, 6] },
+							moveDestinationType: 'cascade:sequence',
+							priority: -1,
+						},
+					]);
+
+					expect(game.autoMove().print()).toBe(
+						'' +
+							'            >AD          \n' +
+							' 3C TS 6S 5D 9H QC AH 9C \n' +
+							' 4H 8S 8C JS 2S 2H 3D 3H \n' +
+							' JD 7C TC 4C 9S 6H QH 9D \n' +
+							' TH TD KC AS JC 6C 4D 5C \n' +
+							' AC 7S KH 3S 6D QS 8H 7D \n' +
+							' KD 2D JH 8D KS 4S 5H    \n' +
+							' 7H 2C 5S QD             \n' +
+							' move 8h AD→foundation'
+					);
+				});
 			});
 		});
 
@@ -540,59 +565,41 @@ describe('game.autoMove', () => {
 			test('cycles through cascade:empty', () => {
 				let game = FreeCell.parse(
 					'' + //
-						'            >QC TD KH TS \n' + //
-						' KD KC       KS          \n' + //
+						'             QC TD KH TS \n' + //
+						' KD>KC       KS          \n' + //
 						' QS QD                   \n' + //
 						' JD JS                   \n' + //
 						' hand-jammed'
 				);
 
-				game = game
-					.setCursor({ fixture: 'cascade', data: [1, 0] })
-					.touch()
-					.autoMove();
+				game = game.touch().autoMove();
 
 				expect(game.print()).toBe(
 					'' + //
 						'             QC TD KH TS \n' + //
-						' KD>   KC    KS          \n' + //
+						' KD   >KC    KS          \n' + //
 						' QS    QD                \n' + //
 						' JD    JS                \n' + //
 						' move 23 KC-QD-JS→cascade'
 				);
 
-				game = game
-					.setCursor({ fixture: 'cascade', data: [2, 0] })
-					.touch()
-					.autoMove()
-					.setCursor({ fixture: 'cascade', data: [3, 0] })
-					.touch()
-					.autoMove();
+				game = game.touch().autoMove().touch().autoMove();
 
 				expect(game.print()).toBe(
 					'' + //
 						'             QC TD KH TS \n' + //
-						' KD      >   KS KC       \n' + //
+						' KD          KS>KC       \n' + //
 						' QS             QD       \n' + //
 						' JD             JS       \n' + //
 						' move 46 KC-QD-JS→cascade'
 				);
 
-				game = game
-					.setCursor({ fixture: 'cascade', data: [5, 0] })
-					.touch()
-					.autoMove()
-					.setCursor({ fixture: 'cascade', data: [6, 0] })
-					.touch()
-					.autoMove()
-					.setCursor({ fixture: 'cascade', data: [7, 0] })
-					.touch()
-					.autoMove();
+				game = game.touch().autoMove().touch().autoMove().touch().autoMove();
 
 				expect(game.print()).toBe(
 					'' + //
 						'             QC TD KH TS \n' + //
-						' KD KC       KS      >   \n' + //
+						' KD>KC       KS          \n' + //
 						' QS QD                   \n' + //
 						' JD JS                   \n' + //
 						' move 82 KC-QD-JS→cascade'
@@ -602,22 +609,19 @@ describe('game.autoMove', () => {
 			test('cycles through cascade:sequence', () => {
 				let game = FreeCell.parse(
 					'' + //
-						'            >QC TD KH TS \n' + //
+						'             QC TD KH TS \n' + //
 						' KD KC       KS          \n' + //
-						' QS QD                   \n' + //
+						' QS>QD                   \n' + //
 						' JD JS                   \n' + //
 						' hand-jammed'
 				);
 
-				game = game
-					.setCursor({ fixture: 'cascade', data: [1, 1] })
-					.touch()
-					.autoMove();
+				game = game.touch().autoMove();
 
 				expect(game.print()).toBe(
 					'' + //
 						'             QC TD KH TS \n' + //
-						' KD>KC       KS          \n' + //
+						' KD KC      >KS          \n' + //
 						' QS          QD          \n' + //
 						' JD          JS          \n' + //
 						' move 25 QD-JS→KS'
@@ -631,7 +635,7 @@ describe('game.autoMove', () => {
 				expect(game.print()).toBe(
 					'' + //
 						'             QC TD KH TS \n' + //
-						' KD KC      >KS          \n' + //
+						' KD>KC       KS          \n' + //
 						' QS QD                   \n' + //
 						' JD JS                   \n' + //
 						' move 52 QD-JS→KC'

@@ -548,14 +548,15 @@ export class FreeCell {
 
 		const action = calcMoveActionText(this.selection, getSequenceAt(this, to_location));
 		const cards = moveCards(this, this.selection, to_location);
-		// leave the cursor at the source
+		// move the cursor to the destination
 		// clear the selection
-		// REVIEW (controls) autoMove place cursor at destination
-		// - autoMove is a mouse-only activity?
-		// - for keyboard, the cursor would be at the destination
-		// - maybe it makes sense to move it too
-		// - right now, cascades have to clamp it up one
-		return this.__clone({ action, cards, selection: null, availableMoves: null });
+		return this.__clone({
+			action,
+			cards,
+			cursor: to_location,
+			selection: null,
+			availableMoves: null,
+		});
 	}
 
 	/**
@@ -778,6 +779,12 @@ export class FreeCell {
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		const cards = new FreeCell().cards;
 		const remaining = cards.slice(0);
+
+		if (!print.includes('>')) {
+			throw new Error('must have at least 1 cursor');
+		} else if (print.includes('>', print.indexOf('>') + 1)) {
+			throw new Error('must have no more than 1 cursor');
+		}
 
 		const lines = print.split('\n');
 		let line: string[];
