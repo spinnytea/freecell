@@ -6,7 +6,7 @@ describe('game.autoFoundation', () => {
 		describe.each`
 			limit         | homeStr
 			${'none'}     | ${'>            3H KS KD KC '}
-			${'rank+1.5'} | ${'>            3H 5S 6D 5C '}
+			${'rank+1.5'} | ${'>            3H 5S 7D 5C '}
 			${'rank+1'}   | ${'>            3H 5S 5D 5C '}
 			${'rank'}     | ${'>            3H 4S 4D 4C '}
 		`('$limit', ({ limit, homeStr }: { limit: AutoFoundationLimit; homeStr: string }) => {
@@ -47,16 +47,16 @@ describe('game.autoFoundation', () => {
 		//  - it's also just off-by-one for for a single suit, soo… minimal impac
 		describe.each`
 			limit         | homeStr
-			${'none'}     | ${'>         5S 3H KD    KC '}
-			${'rank+1.5'} | ${'>         5S 2H 2D    2C '}
-			${'rank+1'}   | ${'>         5S 2H 2D    2C '}
-			${'rank'}     | ${'>         5S AH AD    AC '}
+			${'none'}     | ${'>         5S 3H    KD KC '}
+			${'rank+1.5'} | ${'>         5S 2H    2D 4C '}
+			${'rank+1'}   | ${'>         5S 2H    2D 2C '}
+			${'rank'}     | ${'>         5S AH    AD AC '}
 		`('$limit', ({ limit, homeStr }: { limit: AutoFoundationLimit; homeStr: string }) => {
 			test.each(['cell,cascade', 'foundation'] as AutoFoundationMethod[])('%s', (method) => {
 				const print = FreeCell.parse(
 					'' + //
-						'>         5S AH       AC \n' + //
-						' KC KD 4H 4S    AD       \n' + //
+						'>         5S AH    AD AC \n' + //
+						' KC KD 4H 4S             \n' + //
 						' QC QD KH 3S             \n' + //
 						' JC JD QH 2S             \n' + //
 						' TC TD JH AS             \n' + //
@@ -74,8 +74,40 @@ describe('game.autoFoundation', () => {
 					.print({ skipDeck: true });
 				expect(print.split('\n')[0]).toBe(homeStr);
 			});
+		});
 
-			test.todo('rank+1.5 0342');
+		test('rank+1.5 4230', () => {
+			expect(
+				FreeCell.parse(
+					'' +
+						' KS 4D       4C 2S 2D    \n' +
+						' 7D>7S 5C 6S 9D 8C QC AH \n' +
+						' TD 6D QD 5D 8S 8H JD KH \n' +
+						' TH    3H 4S 7H 8D    TC \n' +
+						' KD    9S 3D 6C 7C    JS \n' +
+						' QS    9C    5H 6H       \n' +
+						' JH    2H       5S       \n' +
+						' TS    KC       4H       \n' +
+						' 9H    QH       3S       \n' +
+						'       JC                \n' +
+						' copy-pasta'
+				)
+					.autoFoundationAll({ limit: 'rank+1.5' })
+					.print()
+			).toBe(
+				'' +
+					' KS          4C 2S 4D    \n' +
+					' 7D>7S 5C 6S 9D 8C QC AH \n' +
+					' TD 6D QD 5D 8S 8H JD KH \n' +
+					' TH    3H 4S 7H 8D    TC \n' +
+					' KD    9S    6C 7C    JS \n' +
+					' QS    9C    5H 6H       \n' +
+					' JH    2H       5S       \n' +
+					' TS    KC       4H       \n' +
+					' 9H    QH       3S       \n' +
+					'       JC                \n' +
+					' auto-foundation 3D,4D'
+			);
 		});
 	});
 

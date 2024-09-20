@@ -8,7 +8,9 @@ import {
 	isRed,
 	MoveDestinationTypePriorities,
 	MoveSourceType,
+	parseShorthandPosition,
 	RankList,
+	Suit,
 } from '@/app/game/card';
 import { FreeCell } from '@/app/game/game';
 
@@ -140,6 +142,13 @@ export function canStackFoundation(foundation_card: Card | null, moving_card: Ca
 	return false;
 }
 
+function canStackCascade(tail_card: Card, moving_card: Card): boolean {
+	return (
+		isRed(tail_card.suit) !== isRed(moving_card.suit) &&
+		isAdjacent({ min: moving_card.rank, max: tail_card.rank })
+	);
+}
+
 export function findAvailableMoves(
 	game: FreeCell,
 	selection?: CardSequence | null
@@ -196,11 +205,7 @@ export function findAvailableMoves(
 						priority: -1,
 					});
 				}
-			} else if (
-				isRed(tail_card.suit) !== isRed(head_card.suit) &&
-				isAdjacent({ min: head_card.rank, max: tail_card.rank }) &&
-				selection.cards.length <= mmsl
-			) {
+			} else if (canStackCascade(tail_card, head_card) && selection.cards.length <= mmsl) {
 				availableMoves.push({
 					location: { fixture: 'cascade', data: [idx, cascade.length - 1] },
 					moveDestinationType: 'cascade:sequence',
@@ -361,6 +366,7 @@ export function foundationCanAcceptCards(
 	) {
 		return false;
 	}
+
 	const card = game.foundations[index];
 	if (!card) return true; // empty can always accept an ace
 	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
@@ -377,13 +383,22 @@ export function foundationCanAcceptCards(
 			return game.foundations.every(
 				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) + 1 >= card_rank_idx
 			);
-		case 'rank+1.5':
-			return game.foundations.every(
-				(c) =>
-					c === card ||
-					(c ? RankList.indexOf(c.rank) : -1) + (c && isRed(c.suit) === isRed(card.suit) ? 2 : 1) >=
-						card_rank_idx
-			);
+		case 'rank+1.5': {
+			const ranks: { [suit in Suit]: number } = {
+				clubs: -1,
+				diamonds: -1,
+				hearts: -1,
+				spades: -1,
+			};
+			game.foundations.forEach((card) => {
+				if (card) ranks[card.suit] = RankList.indexOf(card.rank);
+			});
+			const foundation_rank_for_color = isRed(card.suit)
+				? Math.min(ranks.clubs, ranks.spades)
+				: Math.min(ranks.diamonds, ranks.hearts);
+
+			return foundation_rank_for_color + 1 >= card_rank_idx;
+		}
 	}
 }
 
@@ -424,4 +439,58 @@ export function getPrintSeparator(
 		}
 	}
 	return ' ';
+}
+
+export function parseShorthandMove(
+	game: FreeCell,
+	shorthandMove: string
+): [CardLocation, CardLocation] {
+	const [from_shorthand, to_shorthand] = shorthandMove.split('');
+	const from_location = parseShorthandPosition(from_shorthand);
+	const to_location = parseShorthandPosition(to_shorthand);
+
+	if (to_location.fixture === 'cascade') {
+		to_location.data[1] = game.tableau[to_location.data[0]].length - 1;
+	}
+
+	if (from_location.fixture === 'cascade') {
+		from_location.data[1] = game.tableau[from_location.data[0]].length - 1;
+
+		if (to_location.fixture === 'cascade') {
+			// adjust selection until stackable on target
+			const tail_card = game.tableau[to_location.data[0]][to_location.data[1]];
+			let d1 = from_location.data[1];
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			if (tail_card) {
+				// moving to cascade:sequence, pick rank we can stack
+				while (d1 > 0 && !canStackCascade(tail_card, game.tableau[from_location.data[0]][d1])) d1--;
+			} else {
+				// moving to cascade:empty, move entire sequence
+				while (
+					d1 > 0 &&
+					canStackCascade(
+						game.tableau[from_location.data[0]][d1 - 1],
+						game.tableau[from_location.data[0]][d1]
+					)
+				)
+					d1--;
+			}
+			from_location.data[1] = d1;
+		}
+	}
+
+	if (to_location.fixture === 'foundation') {
+		// adjust selection until stackable on target
+		const from_sequence = getSequenceAt(game, from_location);
+		const tail_card = from_sequence.cards[from_sequence.cards.length - 1];
+		let d0 = to_location.data[0];
+		while (
+			d0 < game.foundations.length &&
+			!canStackFoundation(game.foundations[to_location.data[d0]], tail_card)
+		)
+			d0++;
+		to_location.data[0] = d0;
+	}
+
+	return [from_location, to_location];
 }

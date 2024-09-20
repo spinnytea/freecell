@@ -15,22 +15,7 @@ import { GameContext } from '@/app/hooks/Game/GameContext';
 import { SettingsContextProvider } from '@/app/hooks/Settings/SettingsContextProvider';
 import { useSettings } from '@/app/hooks/Settings/useSettings';
 
-// let idx = 0;
-// /** @deprecated just for testing */
-// function trySeed(): number {
-// 	const list = getSeedsByTag('zero cell');
-// 	const seed = list[idx];
-// 	console.log('trySeed', idx, '->', seed);
-// 	return seed ?? 1;
-// }
-
-// const almostWin = FreeCell.parse(
-// 	'' + //
-// 		'>            QC KD KH KS \n' + //
-// 		'                KC       \n' + //
-// 		' hand-jammed'
-// );
-
+// TODO (techdebt) test clicking all the way through winning
 export default function Page() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	const [game, setGame] = useState(() => new FreeCell().shuffle32());
