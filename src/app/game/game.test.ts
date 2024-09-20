@@ -330,7 +330,7 @@ describe('game', () => {
 			expect(game.print()).toBe('');
 		});
 
-		test.skip('Game #617', () => {
+		test('Game #617', () => {
 			let game = new FreeCell().shuffle32(617).dealAll();
 			const moves = (
 				'83 53 6a 6b 6c 56 c5 a5 b6 2a ' +
@@ -343,10 +343,17 @@ describe('game', () => {
 			).split(' ');
 			moves.forEach((move) => {
 				game = game.moveByShorthand(move);
-				// console.log(game.print());
 				expect(game.previousAction).toMatch(new RegExp(`^move ${move}`));
 			});
-			expect(game.print()).toBe('');
+
+			expect(game.print()).toBe(
+				'' +
+					'   >         KC KS KD KH \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' move 1b TD→cell'
+			);
 		});
 	});
 });

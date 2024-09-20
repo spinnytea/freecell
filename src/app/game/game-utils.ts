@@ -377,7 +377,6 @@ export function foundationCanAcceptCards(
 	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
 	const card_rank_idx = RankList.indexOf(card.rank);
 
-
 	const ranks: { [suit in Suit]: number } = {
 		clubs: -1,
 		diamonds: -1,
@@ -493,11 +492,9 @@ export function parseShorthandMove(
 		const from_sequence = getSequenceAt(game, from_location);
 		const tail_card = from_sequence.cards[from_sequence.cards.length - 1];
 		let d0 = to_location.data[0];
-		while (
-			d0 < game.foundations.length &&
-			!canStackFoundation(game.foundations[to_location.data[d0]], tail_card)
-		)
+		while (d0 < game.foundations.length && !canStackFoundation(game.foundations[d0], tail_card)) {
 			d0++;
+		}
 		to_location.data[0] = d0;
 	}
 
