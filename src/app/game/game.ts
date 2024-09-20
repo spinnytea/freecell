@@ -568,7 +568,7 @@ export class FreeCell {
 		// select, move
 		let game = this.setCursor(from).touch().setCursor(to).touch();
 		const previousAction = game.previousAction;
-		game = game.autoFoundationAll({ limit: 'rank+1.5' });
+		game = game.autoFoundationAll({ limit: 'opp+1' });
 		game.previousAction = previousAction;
 		return game;
 	}

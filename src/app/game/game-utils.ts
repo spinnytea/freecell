@@ -20,10 +20,15 @@ export type AutoFoundationLimit =
 	// i.e. 3KKK
 	| 'none'
 
+	// the best we can safely do
+	// if we have black 3,5
+	// we can put up all the red 5s
+	| 'opp+2'
+
 	// 3s are set, all the 4s and 5s, red 6s IFF black 5s are up
 	// i.e. 3565, 0342
 	// all not needed for developing sequences, opp rank + 1
-	| 'rank+1.5'
+	| 'opp+1'
 
 	// 3s are set, all the 4s and 5s, but not 6s
 	// i.e. 3555
@@ -372,6 +377,22 @@ export function foundationCanAcceptCards(
 	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
 	const card_rank_idx = RankList.indexOf(card.rank);
 
+
+	const ranks: { [suit in Suit]: number } = {
+		clubs: -1,
+		diamonds: -1,
+		hearts: -1,
+		spades: -1,
+	};
+	if (limit === 'opp+1' || limit === 'opp+2') {
+		game.foundations.forEach((card) => {
+			if (card) ranks[card.suit] = RankList.indexOf(card.rank);
+		});
+	}
+	const foundation_rank_for_color = isRed(card.suit)
+		? Math.min(ranks.clubs, ranks.spades)
+		: Math.min(ranks.diamonds, ranks.hearts);
+
 	switch (limit) {
 		case 'none':
 			return true;
@@ -383,22 +404,10 @@ export function foundationCanAcceptCards(
 			return game.foundations.every(
 				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) + 1 >= card_rank_idx
 			);
-		case 'rank+1.5': {
-			const ranks: { [suit in Suit]: number } = {
-				clubs: -1,
-				diamonds: -1,
-				hearts: -1,
-				spades: -1,
-			};
-			game.foundations.forEach((card) => {
-				if (card) ranks[card.suit] = RankList.indexOf(card.rank);
-			});
-			const foundation_rank_for_color = isRed(card.suit)
-				? Math.min(ranks.clubs, ranks.spades)
-				: Math.min(ranks.diamonds, ranks.hearts);
-
+		case 'opp+1':
+			return foundation_rank_for_color >= card_rank_idx;
+		case 'opp+2':
 			return foundation_rank_for_color + 1 >= card_rank_idx;
-		}
 	}
 }
 
