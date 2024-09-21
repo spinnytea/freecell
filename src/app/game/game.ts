@@ -420,11 +420,9 @@ export class FreeCell {
 	autoFoundationAll({
 		limit = 'opp+1',
 		method = 'foundation',
-		skipCell = false,
 	}: {
 		limit?: AutoFoundationLimit;
 		method?: AutoFoundationMethod;
-		skipCell?: boolean;
 	} = {}): FreeCell | this {
 		let game = this.__clone({ action: 'auto-foundation setup' });
 		const moved: Card[] = [];
@@ -438,21 +436,19 @@ export class FreeCell {
 			didMove = false;
 
 			if (method === 'cell,cascade') {
-				if (!skipCell) {
-					game.cells.forEach((c, c_idx) => {
-						const sequenceToMove = getSequenceAt(game, { fixture: 'cell', data: [c_idx] });
-						const availableMove = findAvailableMoves(game, sequenceToMove).find(
-							({ location: { fixture } }) => fixture === 'foundation'
-						);
-						if (c && availableMove && !game.selection?.cards.includes(sequenceToMove.cards[0])) {
-							didMove = true;
-							didMoveAny = true;
-							const cards = moveCards(game, sequenceToMove, availableMove.location);
-							game = game.__clone({ action: 'auto-foundation middle', cards });
-							moved.push(c);
-						}
-					});
-				}
+				game.cells.forEach((c, c_idx) => {
+					const sequenceToMove = getSequenceAt(game, { fixture: 'cell', data: [c_idx] });
+					const availableMove = findAvailableMoves(game, sequenceToMove).find(
+						({ location: { fixture } }) => fixture === 'foundation'
+					);
+					if (c && availableMove && !game.selection?.cards.includes(sequenceToMove.cards[0])) {
+						didMove = true;
+						didMoveAny = true;
+						const cards = moveCards(game, sequenceToMove, availableMove.location);
+						game = game.__clone({ action: 'auto-foundation middle', cards });
+						moved.push(c);
+					}
+				});
 				game.tableau.forEach((cascade, c_idx) => {
 					if (cascade.length) {
 						const sequenceToMove = getSequenceAt(game, {
@@ -481,7 +477,7 @@ export class FreeCell {
 			if (method === 'foundation') {
 				game.foundations.forEach((f, f_idx) => {
 					let canAccept = foundationCanAcceptCards(game, f_idx, limit);
-					if (canAccept && !skipCell) {
+					if (canAccept) {
 						game.cells.forEach((c, c_idx) => {
 							if (canAccept) {
 								const canMove = c && canStackFoundation(f, c) && !game.selection?.cards.includes(c);
@@ -567,20 +563,29 @@ export class FreeCell {
 		});
 	}
 
-	/** REVIEW (gameplay) these are some weird rules… */
 	moveByShorthand(shorthandMove: string): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
-		// select, move
-		let game = this.setCursor(from).touch().setCursor(to).touch();
-		const previousAction = game.previousAction;
-		game = game.autoFoundationAll({ limit: 'opp+2', skipCell: true });
 
+		// select from, move to
+		let game = this.setCursor(from).touch().setCursor(to).touch();
+
+		// save the previousAction so we can mask all the autoFoundation moves
+		const previousAction = game.previousAction;
+
+		// autoFoundation a bunch of stuff
+		game = game.autoFoundationAll();
+
+		// if moving everything to the foundation would win, then ignore the other rules
 		const winning = game.autoFoundationAll();
 		if (winning.win) {
 			game = winning;
 		}
 
+		// mask the autoFoundation actions
+		// we want to see the action like `move 1b TD→cell`
+		// it mirrors shorthandMove
 		game.previousAction = previousAction;
+
 		return game;
 	}
 
@@ -668,6 +673,10 @@ export class FreeCell {
 		}
 
 		return game;
+	}
+
+	printFoundation(): string {
+		return this.foundations.map((card) => shorthandCard(card)).join(' ');
 	}
 
 	/**

@@ -20,14 +20,15 @@ export type AutoFoundationLimit =
 	// i.e. 3KKK
 	| 'none'
 
-	// the best we can safely do
 	// if we have black 3,5
 	// we can put up all the red 5s
+	// (the best we can safely do)
 	| 'opp+2'
 
 	// 3s are set, all the 4s and 5s, red 6s IFF black 5s are up
 	// i.e. 3565, 0342
 	// all not needed for developing sequences, opp rank + 1
+	// (this is standard gameplay)
 	| 'opp+1'
 
 	// 3s are set, all the 4s and 5s, but not 6s
@@ -374,6 +375,7 @@ export function foundationCanAcceptCards(
 
 	const card = game.foundations[index];
 	if (!card) return true; // empty can always accept an ace
+	if ((limit === 'opp+1' || limit === 'opp+2') && card.rank === 'ace') return true; // we will never want to "hold a 2 so we can stack aces"
 	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
 	const card_rank_idx = RankList.indexOf(card.rank);
 
