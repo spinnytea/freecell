@@ -20,6 +20,9 @@ import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 	TODO (animation) invalid move animation
 
 	TODO (animation) animate moving a sequence
+
+	TODO (deployment) various sizes of tall -> portrait -> landscape -> wide
+	 - if not well defined playing fields to spot check, at least a reminder to play with the screen size
 */
 export default function Page() {
 	return (
