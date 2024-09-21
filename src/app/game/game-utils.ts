@@ -291,6 +291,17 @@ function prioritizeAvailableMoves(
 			break;
 
 		case 'cascade:empty':
+			// IDEA (controls) prioritize "closer" moves
+			//  - e.g.: 1350642
+			//  - right now it _always_ go right, even when right is far away
+			//  - when leaving a sequence (when d1 > 0)
+			// ---
+			//  - sequence needs to cycle
+			//    1. because there are only 2 so it doesn't matter
+			//    2. when we have jokers, we _need_ to cycle
+			//       … unless we _also_ check "was i previous stacked"
+			//  … "moving away from a stacked position" (empty, split sequence) must cycle
+			//    "moving away from an invalid sequnce" (!canStackCascade(d1 - 1)) picks closest option (favors right)
 		case 'cascade:sequence':
 			availableMoves.forEach((availableMove) => {
 				availableMove.priority = game.tableau.length - availableMove.location.data[0];
@@ -298,7 +309,7 @@ function prioritizeAvailableMoves(
 					(moveSourceType === 'cascade:single' || moveSourceType === 'cascade:sequence') &&
 					availableMove.location.data[0] > sourceD0
 				) {
-					// cycle within cascade (we only picked one type)
+					// cycle within cascade (we only picked one destination type)
 					availableMove.priority += game.tableau.length;
 				}
 			});

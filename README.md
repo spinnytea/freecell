@@ -6,6 +6,7 @@ card game
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b\s+\((\w+)\)
+\b(FIXME|TODO|XXX|REVIEW|IDEA)\b\s+[^(]
 
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO (deployment) portrait vs landscape mode (portait on phone is ssoooooo small)
