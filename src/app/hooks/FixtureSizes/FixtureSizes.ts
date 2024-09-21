@@ -15,6 +15,8 @@ import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card';
 //  - it's a layout
 export const DEFAULT_CLIENT_WIDTH = 800;
 export const DEFAULT_CLIENT_HEIGHT = 600;
+// FIXME all of these need to be percentages, "fixed sizes" have no business in "dynamic card sizes"
+//  - this is why the space between cards is so much larger than the cards themselves.
 const HOME_TOP = 30;
 const HOME_CARD_SPACING = 30;
 const TABLEAU_TOP = HOME_TOP * 1.5;

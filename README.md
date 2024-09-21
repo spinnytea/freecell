@@ -17,8 +17,8 @@ card game
   - card movement
   - card drag animation (drag waggles the sequence)
   - auto-foundation each card
-- TODO (mobile) cards aren't legible
-- TODO (mobile) needs a smarter layout system to fill the space
+- FIXME (mobile) cards aren't legible
+- FIXME (mobile) needs a smarter layout system to fill the space
   - landscape isn't tall enough
   - portrait is a joke
 - TODO (mobile) icons for bookmarks / save link to home screen (Andriod, iOS)
