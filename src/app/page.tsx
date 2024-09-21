@@ -15,7 +15,7 @@ import { GameContext } from '@/app/hooks/Game/GameContext';
 import { SettingsContextProvider } from '@/app/hooks/Settings/SettingsContextProvider';
 import { useSettings } from '@/app/hooks/Settings/useSettings';
 
-// TODO (techdebt) test clicking all the way through winning
+// TODO (techdebt) unit test that clicks all the way through winning
 export default function Page() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	const [game, setGame] = useState(() => new FreeCell().shuffle32());
@@ -70,9 +70,9 @@ export default function Page() {
 					consumed = true;
 					setGame((g) => g.clearSelection());
 					break;
-				default:
-					console.log(`unused key: "${key}"`);
-					break;
+				// default:
+				// 	console.log(`unused key: "${key}"`);
+				// 	break;
 			}
 			if (consumed) {
 				event.stopPropagation();

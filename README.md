@@ -4,18 +4,6 @@ card game
 
 ## Code TODOs
 
-TODO (motivation) main development tasks:
-
-1. ~~Render cards~~
-1. ~~Render playing field, card back(s)~~
-1. ~~shuffle/deal cards~~
-1. ~~click select -> click move (one card at a time, ¿no sequences?)~~
-1. ~~win state~~
-1. ~~quick and dirty loop (new -> shuffle -> deal -> play -> win -> <<-- new -> shuffle -> …)~~
-1. ~~auto-foundation~~
-1. ~~click-to-move~~
-1. core game is tested + manual testing page (ui selection -> move, all the way to winning)
-
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b\s+\((\w+)\)
 
