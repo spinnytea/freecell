@@ -688,5 +688,30 @@ describe('game', () => {
 					' move 1b TD→cell'
 			);
 		});
+
+		test('Game #23190', () => {
+			let game = new FreeCell().shuffle32(23190).dealAll();
+			const moves = (
+				'6d 76 75 d5 7d 75 72 7a 37 57 ' +
+				'27 31 37 17 d3 5d 57 5c 57 5b ' +
+				'52 a2 c5 b5 1c 12 15 17 16 15 ' +
+				'd1 c1 85 85 45 4d 4c 41 46 45 ' +
+				'd4 c5 25 86 81 8a 48 64 6b 61 ' +
+				'6c 62 6d a6 c6 86 b8 48 24 21 ' +
+				'3a 3b'
+			).split(' ');
+			moves.forEach((move) => {
+				game = game.moveByShorthand(move);
+				expect(game.previousAction).toMatch(new RegExp(`^move ${move}`));
+			});
+			expect(game.print()).toBe(
+				'' +
+					'   >         KS KD KC KH \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' move 3b 8S→cell'
+			);
+		});
 	});
 });

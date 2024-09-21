@@ -476,8 +476,11 @@ export function parseShorthandMove(
 				while (d1 > 0 && !canStackCascade(tail_card, game.tableau[from_location.data[0]][d1])) d1--;
 			} else {
 				// moving to cascade:empty, move entire sequence
+				// while adhearing to the max sequence length
+				const mmsl = maxMovableSequenceLength(game) / 2;
 				while (
 					d1 > 0 &&
+					from_location.data[1] - d1 + 1 < mmsl &&
 					canStackCascade(
 						game.tableau[from_location.data[0]][d1 - 1],
 						game.tableau[from_location.data[0]][d1]
