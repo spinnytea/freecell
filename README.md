@@ -18,9 +18,6 @@ card game
   - card drag animation (drag waggles the sequence)
   - auto-foundation each card
 - FIXME (mobile) cards aren't legible
-- FIXME (mobile) needs a smarter layout system to fill the space
-  - landscape isn't tall enough
-  - portrait is a joke
 - TODO (mobile) icons for bookmarks / save link to home screen (Andriod, iOS)
 - TODO (animation) failed moves shake
 - TODO (controls) mouse drag to move - mouse drag-drop target is entire cascade

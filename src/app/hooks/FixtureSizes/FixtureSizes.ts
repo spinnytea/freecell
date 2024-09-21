@@ -5,8 +5,10 @@ import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card';
 //  - the main issue with lanscape is vertical height, tall cascades
 //  - portrait we can afford to have much smaller margins, because it has enough height
 //  - maybe that's what should determine the cardHeight?
-// TODO (mobile) layout idea:
+// TODO (mobile) smarter layout
 //  - height first, min/max width, height again
+//  - right now we have "fixed margin" and "fixed gap" (1 card wide, 2 cards wide)
+//    if we impose a "max card width", we need to increase those gap sizes
 //  - max height: full deal of cards > last is king > build full sequence (6 + 12 = 18)
 //  - or with jokers, 6+12+1+12+1+12 = 44 (mean, visual test?)
 // IDEA (mobile) use game max cascade.length to influence TABLEAU_CARD_SPACING
@@ -15,13 +17,22 @@ import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card';
 //  - it's a layout
 export const DEFAULT_CLIENT_WIDTH = 800;
 export const DEFAULT_CLIENT_HEIGHT = 600;
-// FIXME all of these need to be percentages, "fixed sizes" have no business in "dynamic card sizes"
-//  - this is why the space between cards is so much larger than the cards themselves.
-const HOME_TOP = 30;
-const HOME_CARD_SPACING = 30;
-const TABLEAU_TOP = HOME_TOP * 1.5;
-const TABLEAU_CARD_SPACING = 30;
-const CASCADE_OFFSET = 20; // kinda dependent on the cards themselves
+
+/*
+	Spacing around cards is all in percentages.
+	The cards will by scaled to fit the screen, so too must the negative space.
+
+	LR spacing is expressed in % of card width
+	TB spacing is expressed in % of card height
+	i.e. TB_CASCADE_OFFSET will always "just barely show the rank" because the svg is also scaled and of fixed layout
+*/
+const LR_HOME_MARGIN = 1;
+const LR_HOME_GAP = LR_HOME_MARGIN * 2;
+const TB_HOME_TOP = 0.2;
+const LR_HOME_CARD_SPACING = 1/6; // TODO simplify the math below
+const TB_TABLEAU_TOP = 0.3;
+const LR_TABLEAU_CARD_SPACING = 2/7; // TODO simplify the math below
+const TB_CASCADE_OFFSET = 0.2;
 export const PEEK_UP = 0.25;
 export const PEEK_DOWN = 0.5;
 
@@ -49,21 +60,24 @@ export interface FixtureSizes {
 	};
 }
 
+// FIXME simplify all this math
 export function calcFixtureSizes(
 	boardWidth: number = DEFAULT_CLIENT_WIDTH,
 	boardHeight: number = DEFAULT_CLIENT_HEIGHT
 ): FixtureSizes {
-	const HOME_LR = boardWidth / 10;
-	const HOME_GAP = HOME_LR * 2;
-
 	// cells gap foundation
 	// this takes up the most space, so it determines the width of the cards
-	// lr + 4 cards (3 spaces) + gap + 4 cards (3 spaces) + lr = boardWidth
-	const cardWidth = (boardWidth - HOME_LR * 2 - HOME_GAP - HOME_CARD_SPACING * 6) / 8;
+	//   lr + 4 cards (3 spaces) + gap + 4 cards (3 spaces) + lr = boardWidth
+	//   spaces                                                       +  cards               = boardWidth
+	// ((LR_HOME_MARGIN * 2 + LR_HOME_GAP + LR_HOME_CARD_SPACING * 6) + (1 * 8)) * cardWidth = boardWidth
+	const cardWidth =
+		boardWidth / (LR_HOME_MARGIN * 2 + LR_HOME_GAP + LR_HOME_CARD_SPACING * 6 + 1 * 8);
+
 	const cardHeight = scale_height(cardWidth);
 
 	// lr + 8 cards (7 spaces) + lr = boardWidth
-	const TABLEAU_LR = (boardWidth - cardWidth * 8 - TABLEAU_CARD_SPACING * 7) / 2;
+	const TABLEAU_LR_MARGIN =
+		(boardWidth - cardWidth * 8 - LR_TABLEAU_CARD_SPACING * cardWidth * 7) / 2;
 
 	return {
 		boardWidth,
@@ -72,44 +86,56 @@ export function calcFixtureSizes(
 		cardHeight,
 
 		home: {
-			top: HOME_TOP,
+			top: TB_HOME_TOP * cardHeight,
 			// left justified
 			// < lr + cell + space + cell + …
 			cellLeft: [
-				(cardWidth + HOME_CARD_SPACING) * 0 + HOME_LR,
-				(cardWidth + HOME_CARD_SPACING) * 1 + HOME_LR,
-				(cardWidth + HOME_CARD_SPACING) * 2 + HOME_LR,
-				(cardWidth + HOME_CARD_SPACING) * 3 + HOME_LR,
+				(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 0 + LR_HOME_MARGIN * cardWidth,
+				(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 1 + LR_HOME_MARGIN * cardWidth,
+				(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 2 + LR_HOME_MARGIN * cardWidth,
+				(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 3 + LR_HOME_MARGIN * cardWidth,
 			],
 			// right justified
 			// … + cell + space + cell + lr >
 			foundationLeft: [
-				boardWidth - cardWidth - (cardWidth + HOME_CARD_SPACING) * 3 - HOME_LR,
-				boardWidth - cardWidth - (cardWidth + HOME_CARD_SPACING) * 2 - HOME_LR,
-				boardWidth - cardWidth - (cardWidth + HOME_CARD_SPACING) * 1 - HOME_LR,
-				boardWidth - cardWidth - (cardWidth + HOME_CARD_SPACING) * 0 - HOME_LR,
+				boardWidth -
+					cardWidth -
+					(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 3 -
+					LR_HOME_MARGIN * cardWidth,
+				boardWidth -
+					cardWidth -
+					(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 2 -
+					LR_HOME_MARGIN * cardWidth,
+				boardWidth -
+					cardWidth -
+					(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 1 -
+					LR_HOME_MARGIN * cardWidth,
+				boardWidth -
+					cardWidth -
+					(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 0 -
+					LR_HOME_MARGIN * cardWidth,
 			],
 		},
 
 		tableau: {
-			top: HOME_TOP + cardHeight + TABLEAU_TOP,
+			top: (TB_HOME_TOP + 1 + TB_TABLEAU_TOP) * cardHeight,
 			cascadeLeft: [
-				(cardWidth + TABLEAU_CARD_SPACING) * 0 + TABLEAU_LR,
-				(cardWidth + TABLEAU_CARD_SPACING) * 1 + TABLEAU_LR,
-				(cardWidth + TABLEAU_CARD_SPACING) * 2 + TABLEAU_LR,
-				(cardWidth + TABLEAU_CARD_SPACING) * 3 + TABLEAU_LR,
-				(cardWidth + TABLEAU_CARD_SPACING) * 4 + TABLEAU_LR,
-				(cardWidth + TABLEAU_CARD_SPACING) * 5 + TABLEAU_LR,
-				(cardWidth + TABLEAU_CARD_SPACING) * 6 + TABLEAU_LR,
-				(cardWidth + TABLEAU_CARD_SPACING) * 7 + TABLEAU_LR,
+				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 0 + TABLEAU_LR_MARGIN,
+				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 1 + TABLEAU_LR_MARGIN,
+				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 2 + TABLEAU_LR_MARGIN,
+				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 3 + TABLEAU_LR_MARGIN,
+				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 4 + TABLEAU_LR_MARGIN,
+				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 5 + TABLEAU_LR_MARGIN,
+				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 6 + TABLEAU_LR_MARGIN,
+				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 7 + TABLEAU_LR_MARGIN,
 			],
-			offsetTop: CASCADE_OFFSET,
+			offsetTop: TB_CASCADE_OFFSET * cardHeight,
 		},
 
 		// REVIEW (hud) this is an arbitrary place to deal from
 		deck: {
-			top: boardHeight - cardHeight - HOME_TOP,
-			left: HOME_LR,
+			top: boardHeight - cardHeight - TB_HOME_TOP * cardHeight,
+			left: LR_HOME_MARGIN * cardWidth,
 		},
 	};
 }
