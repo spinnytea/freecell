@@ -5,6 +5,11 @@ import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card';
 //  - the main issue with lanscape is vertical height, tall cascades
 //  - portrait we can afford to have much smaller margins, because it has enough height
 //  - maybe that's what should determine the cardHeight?
+// TODO (mobile) layout idea:
+//  - height first, min/max width, height again
+//  - max height: full deal of cards > last is king > build full sequence (6 + 12 = 18)
+//  - or with jokers, 6+12+1+12+1+12 = 44 (mean, visual test?)
+// IDEA (mobile) use game max cascade.length to influence TABLEAU_CARD_SPACING
 // IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)
 //  - so tableau can start at the top of the screen?
 //  - it's a layout

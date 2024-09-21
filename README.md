@@ -17,6 +17,11 @@ card game
   - card movement
   - card drag animation (drag waggles the sequence)
   - auto-foundation each card
+- TODO (mobile) cards aren't legible
+- TODO (mobile) needs a smarter layout system to fill the space
+  - landscape isn't tall enough
+  - portrait is a joke
+- TODO (mobile) icons for bookmarks / save link to home screen (Andriod, iOS)
 - TODO (animation) failed moves shake
 - TODO (controls) mouse drag to move - mouse drag-drop target is entire cascade
 - TODO (controls) keyboard + selection
@@ -26,6 +31,8 @@ card game
   - use move notation
   - play a game backward and forewards using move history
   - pay attention to sequences (probably need to look at the destination to pick the card from the source)
+  - moving the same card multiple times in a row replaces the history (i.e. click-to-move picked the wrong place, so i need to move it again to the right one) (i.e. dithering on a single card doesn't increase history length)
+  - moving a card back to it's original location remove the move from the history (similar to collapsing the moves into one) (this is essentially a free undo, although "back to it's original location" is a valid move)
 - TODO (gameplay) hard vs medium vs easy
   - [FreeCell lists of difficult (and extra easy) deals](https://www.solitairelaboratory.com/fclists.html)
   - Some games require no free cells :D - so make a 0 cells version restricted to these games

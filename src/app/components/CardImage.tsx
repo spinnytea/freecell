@@ -10,6 +10,7 @@ const assetFolder = process.env.BASE_PATH ?? '';
 // TODO (theme) https://cardmeister.github.io/
 //  - https://github.com/cardmeister/cardmeister.github.io/blob/master/elements.cardmeister.full.js
 // TODO (theme) https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
+// TODO (mobile) find a deck that's (tl Rank | tr Suit) (visible in stack), and the picture is just a large suit icon
 export function CardImage({
 	hidden = false,
 	rank,

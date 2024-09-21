@@ -86,6 +86,20 @@ export const MoveDestinationTypePriorities: {
 		'cascade:sequence': 4,
 	},
 };
+
+/**
+	REVIEW (techdebt) does AvailableMove need to store moveDestinationType and priority?
+	 - moveDestinationType is needed for building the list (like moveSourceType)
+	   but do we need to store it?
+	 - priority could be build into the sort order of the list (pick the first item),
+	   rather than stored with the location (pick the highest number)
+	 - it is nice to see in the DebugCursors the different categories
+	 	priority: 'high' | 'low';
+	---
+	 - we have sufficient impl to simplify now
+	 - wait for unit testing of DebugCursors
+	 - wait for manualtesting of DebugCursors
+*/
 export interface AvailableMove {
 	/** where we could move the card */
 	location: CardLocation;
