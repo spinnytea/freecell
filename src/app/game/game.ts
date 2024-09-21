@@ -36,7 +36,7 @@ const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 /**
 	large enough that clampCursor will always put this at the bottom
 	- 52 cards in the deck
-	- 26 is probably safe (not with jokers)
+	- 26 is probably safe (not with jokers wild)
 	- 999 is definately safe
 */
 const BOTTOM_OF_CASCADE = 99;
@@ -415,7 +415,6 @@ export class FreeCell {
 
 	/**
 		REVIEW (techdebt) autoFoundation needs some serious refactoring
-		@deprecated this is just for testing; we want to animate each card moved
 	*/
 	autoFoundationAll({
 		limit = 'opp+1',
@@ -569,22 +568,11 @@ export class FreeCell {
 		// select from, move to
 		let game = this.setCursor(from).touch().setCursor(to).touch();
 
-		// save the previousAction so we can mask all the autoFoundation moves
 		const previousAction = game.previousAction;
-
-		// autoFoundation a bunch of stuff
 		game = game.autoFoundationAll();
-
-		// if moving everything to the foundation would win, then ignore the other rules
-		const winning = game.autoFoundationAll();
-		if (winning.win) {
-			game = winning;
+		if (game.previousAction !== previousAction) {
+			game.previousAction = `${previousAction} (${game.previousAction})`;
 		}
-
-		// mask the autoFoundation actions
-		// we want to see the action like `move 1b TD→cell`
-		// it mirrors shorthandMove
-		game.previousAction = previousAction;
 
 		return game;
 	}

@@ -8,7 +8,7 @@ import {
 	isRed,
 	MoveDestinationTypePriorities,
 	MoveSourceType,
-	parseShorthandPosition,
+	parseShorthandPosition_INCOMPLETE,
 	RankList,
 	Suit,
 } from '@/app/game/card';
@@ -379,21 +379,6 @@ export function foundationCanAcceptCards(
 	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
 	const card_rank_idx = RankList.indexOf(card.rank);
 
-	const ranks: { [suit in Suit]: number } = {
-		clubs: -1,
-		diamonds: -1,
-		hearts: -1,
-		spades: -1,
-	};
-	if (limit === 'opp+1' || limit === 'opp+2') {
-		game.foundations.forEach((card) => {
-			if (card) ranks[card.suit] = RankList.indexOf(card.rank);
-		});
-	}
-	const foundation_rank_for_color = isRed(card.suit)
-		? Math.min(ranks.clubs, ranks.spades)
-		: Math.min(ranks.diamonds, ranks.hearts);
-
 	switch (limit) {
 		case 'none':
 			return true;
@@ -406,9 +391,9 @@ export function foundationCanAcceptCards(
 				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) + 1 >= card_rank_idx
 			);
 		case 'opp+1':
-			return foundation_rank_for_color >= card_rank_idx;
+			return getFoundationRankForColor(game, card) >= card_rank_idx;
 		case 'opp+2':
-			return foundation_rank_for_color + 1 >= card_rank_idx;
+			return getFoundationRankForColor(game, card) + 1 >= card_rank_idx;
 	}
 }
 
@@ -451,19 +436,40 @@ export function getPrintSeparator(
 	return ' ';
 }
 
+function getFoundationRankForColor(game: FreeCell, card: Card): number {
+	const ranks: { [suit in Suit]: number } = {
+		clubs: -1,
+		diamonds: -1,
+		hearts: -1,
+		spades: -1,
+	};
+	game.foundations.forEach((c) => {
+		if (c) ranks[c.suit] = RankList.indexOf(c.rank);
+	});
+	const foundation_rank_for_color = isRed(card.suit)
+		? Math.min(ranks.clubs, ranks.spades)
+		: Math.min(ranks.diamonds, ranks.hearts);
+	return foundation_rank_for_color;
+}
+
+/**
+	to parse a move correctly, we need the full game state AND the from/to positions
+*/
 export function parseShorthandMove(
 	game: FreeCell,
 	shorthandMove: string
 ): [CardLocation, CardLocation] {
 	const [from_shorthand, to_shorthand] = shorthandMove.split('');
-	const from_location = parseShorthandPosition(from_shorthand);
-	const to_location = parseShorthandPosition(to_shorthand);
+	const from_location = parseShorthandPosition_INCOMPLETE(from_shorthand);
+	const to_location = parseShorthandPosition_INCOMPLETE(to_shorthand);
 
 	if (to_location.fixture === 'cascade') {
+		// clamp
 		to_location.data[1] = game.tableau[to_location.data[0]].length - 1;
 	}
 
 	if (from_location.fixture === 'cascade') {
+		// clamp
 		from_location.data[1] = game.tableau[from_location.data[0]].length - 1;
 
 		if (to_location.fixture === 'cascade') {
@@ -494,6 +500,8 @@ export function parseShorthandMove(
 
 	if (to_location.fixture === 'foundation') {
 		// adjust selection until stackable on target
+		// i.e. 2S stacks on AS, find that foundation
+		// i.e. AC can go in any _empty_ foundation, find that one
 		const from_sequence = getSequenceAt(game, from_location);
 		const tail_card = from_sequence.cards[from_sequence.cards.length - 1];
 		let d0 = to_location.data[0];

@@ -245,7 +245,16 @@ export function shorthandPosition(location: CardLocation): Position {
 	throw new Error(`invalid position: ${JSON.stringify(location)}`);
 }
 
-export function parseShorthandPosition(p: string | undefined): CardLocation {
+/**
+	this is part 1 of a 2 step process
+	moves are not always obvious
+	i.e. 1h - _which_ foundation do we use? there are 4
+	i.e. 42 - is this a cascade:single or cascade:sequence moving to a cascade:sequence or cascade:empty?
+
+	notice also that this function only accepts the single character, it does not accept a game
+	so which d1 do we use for a cascade? this will return an invalid value (too high), which will be clamped if used directly
+*/
+export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLocation {
 	switch (p) {
 		case '1':
 		case '2':

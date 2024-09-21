@@ -331,7 +331,7 @@ describe('game', () => {
 					'      >                  \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' move 13 KD→cascade'
+					' move 13 KD→cascade (auto-foundation JD,QD,KC,KS,KD)'
 			);
 		});
 
@@ -354,7 +354,7 @@ describe('game', () => {
 					'   >                     \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' move 42 JS→QH'
+					' move 42 JS→QH (auto-foundation 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)'
 			);
 		});
 
@@ -378,7 +378,8 @@ describe('game', () => {
 			// In game 5, you may begin by moving the six of hearts onto the seven of clubs.
 			// Note that the free ace of diamonds moves automatically to a homecell when you do this.
 			game = game.moveByShorthand('53');
-			expect(game.previousAction).toBe('move 53 6H→7C');
+			expect(game.previousAction).toBe('move 53 6H→7C (auto-foundation AD)');
+			expect(game.printFoundation()).toBe('AD         ');
 			// the six of clubs to a freecell,
 			game = game.moveByShorthand('6a');
 			expect(game.previousAction).toBe('move 6a 6C→cell');
@@ -391,7 +392,7 @@ describe('game', () => {
 			// the jack of spades onto the queen of diamonds
 			// (the free ace of clubs moves automatically to another homecell)
 			game = game.moveByShorthand('85');
-			expect(game.previousAction).toBe('move 85 JS→QD');
+			expect(game.previousAction).toBe('move 85 JS→QD (auto-foundation AC)');
 			expect(game.printFoundation()).toBe('AD AC      ');
 			// Now move the six of clubs from its freecell onto the seven of diamonds,
 			game = game.moveByShorthand('a8');
@@ -399,7 +400,7 @@ describe('game', () => {
 			// and the five of hearts onto the six of clubs.
 			// The free two of clubs now moves automatically onto the club homecell.
 			game = game.moveByShorthand('68');
-			expect(game.previousAction).toBe('move 68 5H→6C');
+			expect(game.previousAction).toBe('move 68 5H→6C (auto-foundation 2C)');
 			expect(game.printFoundation()).toBe('AD 2C      ');
 			// Move the ten of clubs onto the jack of hearts,
 			game = game.moveByShorthand('27');
@@ -442,7 +443,7 @@ describe('game', () => {
 			game = game.moveByShorthand('1a');
 			expect(game.previousAction).toBe('move 1a 3S→cell');
 			game = game.moveByShorthand('1c');
-			expect(game.previousAction).toBe('move 1c 5C→cell');
+			expect(game.previousAction).toBe('move 1c 5C→cell (auto-foundation AH,2H)');
 			expect(game.printFoundation()).toBe('AD 2C 2H   ');
 
 			// Click on the five of hearts now to select it, then click on the empty sixth column.
@@ -504,7 +505,7 @@ describe('game', () => {
 			expect(game.previousAction).toBe('move 25 7S→8D');
 			// the five of diamonds to a freecell (sending the ace of spades home),
 			game = game.moveByShorthand('2b');
-			expect(game.previousAction).toBe('move 2b 5D→cell');
+			expect(game.previousAction).toBe('move 2b 5D→cell (auto-foundation AS)');
 			expect(game.printFoundation()).toBe('AD 2C 2H AS');
 			// and the eight of spades onto the nine of hearts.
 			game = game.moveByShorthand('27');
@@ -574,7 +575,7 @@ describe('game', () => {
 			// Move the three of clubs to its homecell
 			// The two of spades goes automatically, since both red aces are already home.
 			game = game.moveByShorthand('7h');
-			expect(game.previousAction).toBe('move 7h 3C→2C');
+			expect(game.previousAction).toBe('move 7h 3C→2C (auto-foundation 2S)');
 			expect(game.printFoundation()).toBe('AD 3C 4H 2S');
 			// Move the three of spades home
 			game = game.moveByShorthand('ah');
@@ -624,7 +625,7 @@ describe('game', () => {
 			// and the nine of clubs onto the ten of hearts
 			// (sending the two and three of diamonds and the four of spades home).
 			game = game.moveByShorthand('31');
-			expect(game.previousAction).toBe('move 31 9C→TH');
+			expect(game.previousAction).toBe('move 31 9C→TH (auto-foundation 2D,3D,4S)');
 			expect(game.printFoundation()).toBe('3D 3C 4H 4S');
 			// Move the king of clubs back into the empty third column,
 			game = game.moveByShorthand('a3');
@@ -651,7 +652,9 @@ describe('game', () => {
 			// and will all go automatically to the homecells,
 			// winning the game.
 			game = game.moveByShorthand('56');
-			expect(game.previousAction).toBe('move 56 KD→cascade');
+			expect(game.previousAction).toBe(
+				'move 56 KD→cascade (auto-foundation 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)'
+			);
 			expect(game.printFoundation()).toBe('KD KC KH KS');
 
 			expect(game.print()).toBe(
@@ -660,7 +663,7 @@ describe('game', () => {
 					'               >         \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' move 56 KD→cascade'
+					' move 56 KD→cascade (auto-foundation 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)'
 			);
 		});
 
@@ -685,7 +688,7 @@ describe('game', () => {
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' move 1b TD→cell'
+					' move 1b TD→cell (auto-foundation 7D,8S,8D,8H,8C,9S,9D,9H,9C,TS,TD,TH,TC,JS,JD,JH,JC,QS,QD,QH,QC,KS,KD,KH,KC)'
 			);
 		});
 
@@ -710,7 +713,7 @@ describe('game', () => {
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' move 3b 8S→cell'
+					' move 3b 8S→cell (auto-foundation AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)'
 			);
 		});
 	});
