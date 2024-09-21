@@ -60,7 +60,6 @@ export interface FixtureSizes {
 	};
 }
 
-// FIXME simplify all this math
 export function calcFixtureSizes(
 	boardWidth: number = DEFAULT_CLIENT_WIDTH,
 	boardHeight: number = DEFAULT_CLIENT_HEIGHT
@@ -76,68 +75,87 @@ export function calcFixtureSizes(
 	const cardHeight = scale_height(cardWidth);
 
 	// lr + 8 cards (7 spaces) + lr = boardWidth
-	const TABLEAU_LR_MARGIN =
-		(boardWidth - cardWidth * 8 - LR_TABLEAU_CARD_SPACING * cardWidth * 7) / 2;
+	// adjust tableau margins to center cards (in px values)
+	const tableauLRMargin =
+		(boardWidth - (8 + LR_TABLEAU_CARD_SPACING * 7) * cardWidth) / 2;
+
+	const cellLOffset = LR_HOME_MARGIN * cardWidth;
+	const foundationLOffset = (LR_HOME_MARGIN + LR_HOME_CARD_SPACING * 3 + 4 + LR_HOME_GAP) * cardWidth;
 
 	return {
-		boardWidth,
-		boardHeight,
-		cardWidth,
-		cardHeight,
+		boardWidth: toFixed(boardWidth),
+		boardHeight: toFixed(boardHeight),
+		cardWidth: toFixed(cardWidth),
+		cardHeight: toFixed(cardHeight),
 
 		home: {
-			top: TB_HOME_TOP * cardHeight,
+			top: toFixed(TB_HOME_TOP * cardHeight),
 			// left justified
 			// < lr + cell + space + cell + …
 			cellLeft: [
-				(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 0 + LR_HOME_MARGIN * cardWidth,
-				(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 1 + LR_HOME_MARGIN * cardWidth,
-				(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 2 + LR_HOME_MARGIN * cardWidth,
-				(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 3 + LR_HOME_MARGIN * cardWidth,
+				toFixed(((1 + LR_HOME_CARD_SPACING) * cardWidth) * 0 + cellLOffset),
+				toFixed(((1 + LR_HOME_CARD_SPACING) * cardWidth) * 1 + cellLOffset),
+				toFixed(((1 + LR_HOME_CARD_SPACING) * cardWidth) * 2 + cellLOffset),
+				toFixed(((1 + LR_HOME_CARD_SPACING) * cardWidth) * 3 + cellLOffset),
 			],
+			// left justified
+			// gap << cell + space + cell + …
+			foundationLeft: [
+				toFixed(((1 + LR_HOME_CARD_SPACING) * cardWidth) * 0 + foundationLOffset),
+				toFixed(((1 + LR_HOME_CARD_SPACING) * cardWidth) * 1 + foundationLOffset),
+				toFixed(((1 + LR_HOME_CARD_SPACING) * cardWidth) * 2 + foundationLOffset),
+				toFixed(((1 + LR_HOME_CARD_SPACING) * cardWidth) * 3 + foundationLOffset),
+			],
+
 			// right justified
 			// … + cell + space + cell + lr >
-			foundationLeft: [
-				boardWidth -
-					cardWidth -
-					(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 3 -
-					LR_HOME_MARGIN * cardWidth,
-				boardWidth -
-					cardWidth -
-					(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 2 -
-					LR_HOME_MARGIN * cardWidth,
-				boardWidth -
-					cardWidth -
-					(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 1 -
-					LR_HOME_MARGIN * cardWidth,
-				boardWidth -
-					cardWidth -
-					(cardWidth + LR_HOME_CARD_SPACING * cardWidth) * 0 -
-					LR_HOME_MARGIN * cardWidth,
-			],
+			// foundationLeft: [
+			// 	toFixed(boardWidth -
+			// 		cardWidth -
+			// 		((1 + LR_HOME_CARD_SPACING) * cardWidth) * 3 -
+			// 		cellLOffset),
+			// 	toFixed(boardWidth -
+			// 		cardWidth -
+			// 		((1 + LR_HOME_CARD_SPACING) * cardWidth) * 2 -
+			// 		cellLOffset),
+			// 	toFixed(boardWidth -
+			// 		cardWidth -
+			// 		((1 + LR_HOME_CARD_SPACING) * cardWidth) * 1 -
+			// 		cellLOffset),
+			// 	toFixed(boardWidth -
+			// 		cardWidth -
+			// 		((1 + LR_HOME_CARD_SPACING) * cardWidth) * 0 -
+			// 		cellLOffset),
+			// ],
 		},
 
 		tableau: {
-			top: (TB_HOME_TOP + 1 + TB_TABLEAU_TOP) * cardHeight,
+			top: toFixed((TB_HOME_TOP + 1 + TB_TABLEAU_TOP) * cardHeight),
+			// left justified
+			// < lr + cell + space + cell + …
 			cascadeLeft: [
-				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 0 + TABLEAU_LR_MARGIN,
-				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 1 + TABLEAU_LR_MARGIN,
-				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 2 + TABLEAU_LR_MARGIN,
-				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 3 + TABLEAU_LR_MARGIN,
-				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 4 + TABLEAU_LR_MARGIN,
-				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 5 + TABLEAU_LR_MARGIN,
-				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 6 + TABLEAU_LR_MARGIN,
-				(cardWidth + LR_TABLEAU_CARD_SPACING * cardWidth) * 7 + TABLEAU_LR_MARGIN,
+				toFixed(((1 + LR_TABLEAU_CARD_SPACING) * cardWidth) * 0 + tableauLRMargin),
+				toFixed(((1 + LR_TABLEAU_CARD_SPACING) * cardWidth) * 1 + tableauLRMargin),
+				toFixed(((1 + LR_TABLEAU_CARD_SPACING) * cardWidth) * 2 + tableauLRMargin),
+				toFixed(((1 + LR_TABLEAU_CARD_SPACING) * cardWidth) * 3 + tableauLRMargin),
+				toFixed(((1 + LR_TABLEAU_CARD_SPACING) * cardWidth) * 4 + tableauLRMargin),
+				toFixed(((1 + LR_TABLEAU_CARD_SPACING) * cardWidth) * 5 + tableauLRMargin),
+				toFixed(((1 + LR_TABLEAU_CARD_SPACING) * cardWidth) * 6 + tableauLRMargin),
+				toFixed(((1 + LR_TABLEAU_CARD_SPACING) * cardWidth) * 7 + tableauLRMargin),
 			],
-			offsetTop: TB_CASCADE_OFFSET * cardHeight,
+			offsetTop: toFixed(TB_CASCADE_OFFSET * cardHeight),
 		},
 
 		// REVIEW (hud) this is an arbitrary place to deal from
 		deck: {
-			top: boardHeight - cardHeight - TB_HOME_TOP * cardHeight,
-			left: LR_HOME_MARGIN * cardWidth,
+			top: toFixed(boardHeight - cardHeight - TB_HOME_TOP * cardHeight),
+			left: toFixed(cellLOffset),
 		},
 	};
+}
+
+function toFixed(num: number): number {
+	return parseFloat(num.toFixed(3));
 }
 
 export function calcTopLeftZ(
