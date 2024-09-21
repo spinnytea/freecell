@@ -22,6 +22,7 @@ import {
 	getPrintSeparator,
 	getSequenceAt,
 	moveCards,
+	parseShorthandMove,
 } from '@/app/game/game-utils';
 
 const DEFAULT_NUMBER_OF_CELLS = 4;
@@ -35,10 +36,10 @@ const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 /**
 	large enough that clampCursor will always put this at the bottom
 	- 52 cards in the deck
-	- 26 is probably safe
+	- 26 is probably safe (not with jokers wild)
 	- 999 is definately safe
 */
-const BOTTOM_OF_CASCADE = 52;
+const BOTTOM_OF_CASCADE = 99;
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
 export class FreeCell {
@@ -412,9 +413,11 @@ export class FreeCell {
 		return this.__clone({ action: 'invalid ' + action });
 	}
 
-	/** @deprecated this is just for testing; we want to animate each card moved */
+	/**
+		REVIEW (techdebt) autoFoundation needs some serious refactoring
+	*/
 	autoFoundationAll({
-		limit = 'rank+1',
+		limit = 'opp+1',
 		method = 'foundation',
 	}: {
 		limit?: AutoFoundationLimit;
@@ -559,6 +562,21 @@ export class FreeCell {
 		});
 	}
 
+	moveByShorthand(shorthandMove: string): FreeCell {
+		const [from, to] = parseShorthandMove(this, shorthandMove);
+
+		// select from, move to
+		let game = this.setCursor(from).touch().setCursor(to).touch();
+
+		const previousAction = game.previousAction;
+		game = game.autoFoundationAll();
+		if (game.previousAction !== previousAction) {
+			game.previousAction = `${previousAction} (${game.previousAction})`;
+		}
+
+		return game;
+	}
+
 	/**
 		These deals are numbered from 1 to 32000.
 
@@ -643,6 +661,10 @@ export class FreeCell {
 		}
 
 		return game;
+	}
+
+	printFoundation(): string {
+		return this.foundations.map((card) => shorthandCard(card)).join(' ');
 	}
 
 	/**

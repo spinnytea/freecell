@@ -4,11 +4,12 @@ import { AutoFoundationLimit, AutoFoundationMethod } from '@/app/game/game-utils
 describe('game.autoFoundation', () => {
 	describe('limits all', () => {
 		describe.each`
-			limit         | homeStr
-			${'none'}     | ${'>            3H KS KD KC '}
-			${'rank+1.5'} | ${'>            3H 5S 6D 5C '}
-			${'rank+1'}   | ${'>            3H 5S 5D 5C '}
-			${'rank'}     | ${'>            3H 4S 4D 4C '}
+			limit       | homeStr
+			${'none'}   | ${'>            3H KS KD KC '}
+			${'opp+2'}  | ${'>            3H 5S 7D 5C '}
+			${'opp+1'}  | ${'>            3H 4S 5D 4C '}
+			${'rank+1'} | ${'>            3H 5S 5D 5C '}
+			${'rank'}   | ${'>            3H 4S 4D 4C '}
 		`('$limit', ({ limit, homeStr }: { limit: AutoFoundationLimit; homeStr: string }) => {
 			test.each(['cell,cascade', 'foundation'] as AutoFoundationMethod[])('%s', (method) => {
 				const print = FreeCell.parse(
@@ -36,27 +37,19 @@ describe('game.autoFoundation', () => {
 	});
 
 	describe('limits some', () => {
-		// XXX (gameplay) rank+1.5 doesn't look right (i'm too tired to figure it out)
-		//  - might need to stack 2S, so we shouldnt do red 3s, but we can do a black 3
-		//  - so 3C should be in the foundation
-		//  - the logic only allows +2 if we can identify the isRed(suit)
-		//  - we need to figure out the "color" of empty foundations
-		// ---
-		//  - this is just an edge case with the "beginning"
-		//  - once all the aces are up, this isn't a problem
-		//  - it's also just off-by-one for for a single suit, soo… minimal impac
 		describe.each`
-			limit         | homeStr
-			${'none'}     | ${'>         5S 3H KD    KC '}
-			${'rank+1.5'} | ${'>         5S 2H 2D    2C '}
-			${'rank+1'}   | ${'>         5S 2H 2D    2C '}
-			${'rank'}     | ${'>         5S AH AD    AC '}
+			limit       | homeStr
+			${'none'}   | ${'>         5S 3H    KD KC '}
+			${'opp+2'}  | ${'>         5S 2H    2D 4C '}
+			${'opp+1'}  | ${'>         5S 2H    2D 3C '}
+			${'rank+1'} | ${'>         5S 2H    2D 2C '}
+			${'rank'}   | ${'>         5S AH    AD AC '}
 		`('$limit', ({ limit, homeStr }: { limit: AutoFoundationLimit; homeStr: string }) => {
 			test.each(['cell,cascade', 'foundation'] as AutoFoundationMethod[])('%s', (method) => {
 				const print = FreeCell.parse(
 					'' + //
-						'>         5S AH       AC \n' + //
-						' KC KD 4H 4S    AD       \n' + //
+						'>         5S       AD AC \n' + //
+						' KC KD 4H 4S    AH       \n' + //
 						' QC QD KH 3S             \n' + //
 						' JC JD QH 2S             \n' + //
 						' TC TD JH AS             \n' + //
@@ -74,8 +67,51 @@ describe('game.autoFoundation', () => {
 					.print({ skipDeck: true });
 				expect(print.split('\n')[0]).toBe(homeStr);
 			});
+		});
 
-			test.todo('rank+1.5 0342');
+		test('opp+1 4320, opp+2 4420', () => {
+			const game = FreeCell.parse(
+				'' +
+					' KS 4D       4C 2D 2S    \n' +
+					' 7D>7S 5C 6S 9D 8C QC AH \n' +
+					' TD 6D QD 5D 8S 8H JD KH \n' +
+					' TH    3H 4S 7H 8D    TC \n' +
+					' KD    9S 3D 6C 7C    JS \n' +
+					' QS    9C    5H 6H       \n' +
+					' JH    2H       5S       \n' +
+					' TS    KC       4H       \n' +
+					' 9H    QH       3S       \n' +
+					'       JC                \n' +
+					' copy-pasta'
+			);
+			expect(game.autoFoundationAll({ limit: 'opp+1' }).print()).toBe(
+				'' +
+					' KS 4D       4C 3D 2S    \n' +
+					' 7D>7S 5C 6S 9D 8C QC AH \n' +
+					' TD 6D QD 5D 8S 8H JD KH \n' +
+					' TH    3H 4S 7H 8D    TC \n' +
+					' KD    9S    6C 7C    JS \n' +
+					' QS    9C    5H 6H       \n' +
+					' JH    2H       5S       \n' +
+					' TS    KC       4H       \n' +
+					' 9H    QH       3S       \n' +
+					'       JC                \n' +
+					' auto-foundation 3D'
+			);
+			expect(game.autoFoundationAll({ limit: 'opp+2' }).print()).toBe(
+				'' +
+					' KS          4C 4D 2S    \n' +
+					' 7D>7S 5C 6S 9D 8C QC AH \n' +
+					' TD 6D QD 5D 8S 8H JD KH \n' +
+					' TH    3H 4S 7H 8D    TC \n' +
+					' KD    9S    6C 7C    JS \n' +
+					' QS    9C    5H 6H       \n' +
+					' JH    2H       5S       \n' +
+					' TS    KC       4H       \n' +
+					' 9H    QH       3S       \n' +
+					'       JC                \n' +
+					' auto-foundation 3D,4D'
+			);
 		});
 	});
 
@@ -102,15 +138,17 @@ describe('game.autoFoundation', () => {
 
 		describe('solves everything', () => {
 			test.each`
-				limit         | method            | movedStr
-				${'none'}     | ${'cell,cascade'} | ${'2C,2H,2S,AD,3C,2D,3H,3S,4C,3D,4H,4S,5C,4D,5H,5S,6C,5D,6H,6S,7C,6D,7H,7S,8C,7D,8H,8S,9C,8D,9H,9S,TC,9D,TH,TS,JC,TD,JH,JS,QC,JD,QH,QS,KS,KC,KH,QD,KD'}
-				${'none'}     | ${'foundation'}   | ${'2H,2S,AD,2C,3H,3S,2D,3C,4H,4S,3D,4C,5H,5S,4D,5C,6H,6S,5D,6C,7H,7S,6D,7C,8H,8S,7D,8C,9H,9S,8D,9C,TH,TS,9D,TC,JH,JS,TD,JC,QH,QS,JD,QC,KH,KS,QD,KC,KD'}
-				${'rank+1.5'} | ${'cell,cascade'} | ${'2C,2H,2S,AD,3C,2D,3H,3S,4C,3D,4H,4S,5C,4D,5H,5S,6C,5D,6H,6S,7C,6D,7H,7S,8C,7D,8H,8S,9C,8D,9H,9S,TC,9D,TH,TS,JC,TD,JH,JS,QC,JD,QH,QS,KS,KC,KH,QD,KD'}
-				${'rank+1.5'} | ${'foundation'}   | ${'2H,2S,AD,2C,3H,3S,2D,3C,4H,4S,3D,4C,5H,5S,4D,5C,6H,6S,5D,6C,7H,7S,6D,7C,8H,8S,7D,8C,9H,9S,8D,9C,TH,TS,9D,TC,JH,JS,TD,JC,QH,QS,JD,QC,KH,KS,QD,KC,KD'}
-				${'rank+1'}   | ${'cell,cascade'} | ${'2C,2H,2S,AD,3C,2D,3H,3S,4C,3D,4H,4S,5C,4D,5H,5S,6C,5D,6H,6S,7C,6D,7H,7S,8C,7D,8H,8S,9C,8D,9H,9S,TC,9D,TH,TS,JC,TD,JH,JS,QC,JD,QH,QS,KS,KC,KH,QD,KD'}
-				${'rank+1'}   | ${'foundation'}   | ${'2H,2S,AD,2C,3H,3S,2D,3C,4H,4S,3D,4C,5H,5S,4D,5C,6H,6S,5D,6C,7H,7S,6D,7C,8H,8S,7D,8C,9H,9S,8D,9C,TH,TS,9D,TC,JH,JS,TD,JC,QH,QS,JD,QC,KH,KS,QD,KC,KD'}
-				${'rank'}     | ${'cell,cascade'} | ${'AD,2C,2D,2H,2S,3C,3D,3H,3S,4C,4D,4H,4S,5C,5D,5H,5S,6C,6D,6H,6S,7C,7D,7H,7S,8C,8D,8H,8S,9C,9D,9H,9S,TC,TD,TH,TS,JC,JD,JH,JS,QC,QD,QH,QS,KS,KC,KD,KH'}
-				${'rank'}     | ${'foundation'}   | ${'AD,2C,2H,2S,2D,3C,3H,3S,3D,4C,4H,4S,4D,5C,5H,5S,5D,6C,6H,6S,6D,7C,7H,7S,7D,8C,8H,8S,8D,9C,9H,9S,9D,TC,TH,TS,TD,JC,JH,JS,JD,QC,QH,QS,QD,KC,KH,KS,KD'}
+				limit       | method            | movedStr
+				${'none'}   | ${'cell,cascade'} | ${'2C,2H,2S,AD,3C,2D,3H,3S,4C,3D,4H,4S,5C,4D,5H,5S,6C,5D,6H,6S,7C,6D,7H,7S,8C,7D,8H,8S,9C,8D,9H,9S,TC,9D,TH,TS,JC,TD,JH,JS,QC,JD,QH,QS,KS,KC,KH,QD,KD'}
+				${'none'}   | ${'foundation'}   | ${'2H,2S,AD,2C,3H,3S,2D,3C,4H,4S,3D,4C,5H,5S,4D,5C,6H,6S,5D,6C,7H,7S,6D,7C,8H,8S,7D,8C,9H,9S,8D,9C,TH,TS,9D,TC,JH,JS,TD,JC,QH,QS,JD,QC,KH,KS,QD,KC,KD'}
+				${'opp+2'}  | ${'cell,cascade'} | ${'2C,2H,2S,AD,3C,2D,3H,3S,4C,3D,4H,4S,5C,4D,5H,5S,6C,5D,6H,6S,7C,6D,7H,7S,8C,7D,8H,8S,9C,8D,9H,9S,TC,9D,TH,TS,JC,TD,JH,JS,QC,JD,QH,QS,KS,KC,KH,QD,KD'}
+				${'opp+2'}  | ${'foundation'}   | ${'2H,2S,AD,2C,3H,3S,2D,3C,4H,4S,3D,4C,5H,5S,4D,5C,6H,6S,5D,6C,7H,7S,6D,7C,8H,8S,7D,8C,9H,9S,8D,9C,TH,TS,9D,TC,JH,JS,TD,JC,QH,QS,JD,QC,KH,KS,QD,KC,KD'}
+				${'opp+1'}  | ${'cell,cascade'} | ${'2C,2H,2S,AD,2D,3H,3S,3C,3D,4H,4S,4C,4D,5H,5S,5C,5D,6H,6S,6C,6D,7H,7S,7C,7D,8H,8S,8C,8D,9H,9S,9C,9D,TH,TS,TC,TD,JH,JS,JC,JD,QH,QS,KS,KH,QC,QD,KC,KD'}
+				${'opp+1'}  | ${'foundation'}   | ${'2H,2S,AD,2C,3H,2D,3C,3S,3D,4C,4H,4S,4D,5C,5H,5S,5D,6C,6H,6S,6D,7C,7H,7S,7D,8C,8H,8S,8D,9C,9H,9S,9D,TC,TH,TS,TD,JC,JH,JS,JD,QC,QH,QS,QD,KC,KH,KS,KD'}
+				${'rank+1'} | ${'cell,cascade'} | ${'2C,2H,2S,AD,3C,2D,3H,3S,4C,3D,4H,4S,5C,4D,5H,5S,6C,5D,6H,6S,7C,6D,7H,7S,8C,7D,8H,8S,9C,8D,9H,9S,TC,9D,TH,TS,JC,TD,JH,JS,QC,JD,QH,QS,KS,KC,KH,QD,KD'}
+				${'rank+1'} | ${'foundation'}   | ${'2H,2S,AD,2C,3H,3S,2D,3C,4H,4S,3D,4C,5H,5S,4D,5C,6H,6S,5D,6C,7H,7S,6D,7C,8H,8S,7D,8C,9H,9S,8D,9C,TH,TS,9D,TC,JH,JS,TD,JC,QH,QS,JD,QC,KH,KS,QD,KC,KD'}
+				${'rank'}   | ${'cell,cascade'} | ${'AD,2C,2D,2H,2S,3C,3D,3H,3S,4C,4D,4H,4S,5C,5D,5H,5S,6C,6D,6H,6S,7C,7D,7H,7S,8C,8D,8H,8S,9C,9D,9H,9S,TC,TD,TH,TS,JC,JD,JH,JS,QC,QD,QH,QS,KS,KC,KD,KH'}
+				${'rank'}   | ${'foundation'}   | ${'AD,2C,2H,2S,2D,3C,3H,3S,3D,4C,4H,4S,4D,5C,5H,5S,5D,6C,6H,6S,6D,7C,7H,7S,7D,8C,8H,8S,8D,9C,9H,9S,9D,TC,TH,TS,TD,JC,JH,JS,JD,QC,QH,QS,QD,KC,KH,KS,KD'}
 			`(
 				'$limit & $method',
 				({

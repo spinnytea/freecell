@@ -8,7 +8,9 @@ import {
 	isRed,
 	MoveDestinationTypePriorities,
 	MoveSourceType,
+	parseShorthandPosition_INCOMPLETE,
 	RankList,
+	Suit,
 } from '@/app/game/card';
 import { FreeCell } from '@/app/game/game';
 
@@ -18,10 +20,16 @@ export type AutoFoundationLimit =
 	// i.e. 3KKK
 	| 'none'
 
+	// if we have black 3,5
+	// we can put up all the red 5s
+	// (the best we can safely do)
+	| 'opp+2'
+
 	// 3s are set, all the 4s and 5s, red 6s IFF black 5s are up
 	// i.e. 3565, 0342
 	// all not needed for developing sequences, opp rank + 1
-	| 'rank+1.5'
+	// (this is standard gameplay)
+	| 'opp+1'
 
 	// 3s are set, all the 4s and 5s, but not 6s
 	// i.e. 3555
@@ -140,6 +148,13 @@ export function canStackFoundation(foundation_card: Card | null, moving_card: Ca
 	return false;
 }
 
+function canStackCascade(tail_card: Card, moving_card: Card): boolean {
+	return (
+		isRed(tail_card.suit) !== isRed(moving_card.suit) &&
+		isAdjacent({ min: moving_card.rank, max: tail_card.rank })
+	);
+}
+
 export function findAvailableMoves(
 	game: FreeCell,
 	selection?: CardSequence | null
@@ -196,11 +211,7 @@ export function findAvailableMoves(
 						priority: -1,
 					});
 				}
-			} else if (
-				isRed(tail_card.suit) !== isRed(head_card.suit) &&
-				isAdjacent({ min: head_card.rank, max: tail_card.rank }) &&
-				selection.cards.length <= mmsl
-			) {
+			} else if (canStackCascade(tail_card, head_card) && selection.cards.length <= mmsl) {
 				availableMoves.push({
 					location: { fixture: 'cascade', data: [idx, cascade.length - 1] },
 					moveDestinationType: 'cascade:sequence',
@@ -361,8 +372,10 @@ export function foundationCanAcceptCards(
 	) {
 		return false;
 	}
+
 	const card = game.foundations[index];
 	if (!card) return true; // empty can always accept an ace
+	if ((limit === 'opp+1' || limit === 'opp+2') && card.rank === 'ace') return true; // we will never want to "hold a 2 so we can stack aces"
 	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
 	const card_rank_idx = RankList.indexOf(card.rank);
 
@@ -377,13 +390,10 @@ export function foundationCanAcceptCards(
 			return game.foundations.every(
 				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) + 1 >= card_rank_idx
 			);
-		case 'rank+1.5':
-			return game.foundations.every(
-				(c) =>
-					c === card ||
-					(c ? RankList.indexOf(c.rank) : -1) + (c && isRed(c.suit) === isRed(card.suit) ? 2 : 1) >=
-						card_rank_idx
-			);
+		case 'opp+1':
+			return getFoundationRankForColor(game, card) >= card_rank_idx;
+		case 'opp+2':
+			return getFoundationRankForColor(game, card) + 1 >= card_rank_idx;
 	}
 }
 
@@ -424,4 +434,82 @@ export function getPrintSeparator(
 		}
 	}
 	return ' ';
+}
+
+function getFoundationRankForColor(game: FreeCell, card: Card): number {
+	const ranks: { [suit in Suit]: number } = {
+		clubs: -1,
+		diamonds: -1,
+		hearts: -1,
+		spades: -1,
+	};
+	game.foundations.forEach((c) => {
+		if (c) ranks[c.suit] = RankList.indexOf(c.rank);
+	});
+	const foundation_rank_for_color = isRed(card.suit)
+		? Math.min(ranks.clubs, ranks.spades)
+		: Math.min(ranks.diamonds, ranks.hearts);
+	return foundation_rank_for_color;
+}
+
+/**
+	to parse a move correctly, we need the full game state AND the from/to positions
+*/
+export function parseShorthandMove(
+	game: FreeCell,
+	shorthandMove: string
+): [CardLocation, CardLocation] {
+	const [from_shorthand, to_shorthand] = shorthandMove.split('');
+	const from_location = parseShorthandPosition_INCOMPLETE(from_shorthand);
+	const to_location = parseShorthandPosition_INCOMPLETE(to_shorthand);
+
+	if (to_location.fixture === 'cascade') {
+		// clamp
+		to_location.data[1] = game.tableau[to_location.data[0]].length - 1;
+	}
+
+	if (from_location.fixture === 'cascade') {
+		// clamp
+		from_location.data[1] = game.tableau[from_location.data[0]].length - 1;
+
+		if (to_location.fixture === 'cascade') {
+			// adjust selection until stackable on target
+			const tail_card = game.tableau[to_location.data[0]][to_location.data[1]];
+			let d1 = from_location.data[1];
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			if (tail_card) {
+				// moving to cascade:sequence, pick rank we can stack
+				while (d1 > 0 && !canStackCascade(tail_card, game.tableau[from_location.data[0]][d1])) d1--;
+			} else {
+				// moving to cascade:empty, move entire sequence
+				// while adhearing to the max sequence length
+				const mmsl = maxMovableSequenceLength(game) / 2;
+				while (
+					d1 > 0 &&
+					from_location.data[1] - d1 + 1 < mmsl &&
+					canStackCascade(
+						game.tableau[from_location.data[0]][d1 - 1],
+						game.tableau[from_location.data[0]][d1]
+					)
+				)
+					d1--;
+			}
+			from_location.data[1] = d1;
+		}
+	}
+
+	if (to_location.fixture === 'foundation') {
+		// adjust selection until stackable on target
+		// i.e. 2S stacks on AS, find that foundation
+		// i.e. AC can go in any _empty_ foundation, find that one
+		const from_sequence = getSequenceAt(game, from_location);
+		const tail_card = from_sequence.cards[from_sequence.cards.length - 1];
+		let d0 = to_location.data[0];
+		while (d0 < game.foundations.length && !canStackFoundation(game.foundations[d0], tail_card)) {
+			d0++;
+		}
+		to_location.data[0] = d0;
+	}
+
+	return [from_location, to_location];
 }
