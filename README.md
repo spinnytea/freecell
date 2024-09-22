@@ -13,7 +13,7 @@ TODO (motivation) main development tasks:
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b\s+\((\w+)\)
-\b(FIXME|TODO|XXX|REVIEW|IDEA)\b\s+[^(]
+\b(TODO|XXX|REVIEW|IDEA)\b\s+[^(]
 
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO (deployment) portrait vs landscape mode (portait on phone is ssoooooo small)
@@ -27,7 +27,7 @@ TODO (motivation) main development tasks:
   - auto-foundation each card
 - TODO (mobile) icons for bookmarks / save link to home screen (Andriod, iOS)
 - TODO (animation) failed moves shake
-- TODO (drag-and-drop) mouse drag to move - mouse drag-drop target is entire cascade
+- FIXME mouse drag to move - mouse drag-drop target is entire cascade
 - TODO (controls) keyboard + selection
 - TODO (animation) animate cards in flight should be above others
 - TODO (history) undo - all, few, one, none (should allow at least one undo, misclicks)
@@ -54,11 +54,10 @@ TODO (motivation) main development tasks:
 - IDEA (motivation) implement War? just so it's flexible?
 - IDEA (motivation) implement Spider Solitaire, that could be fun
 - IDEA (animation) learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
-- TODO (controls) keyboard input (tab index, pick&place card&sequence, inspect card, shortcuts for top row)
-- TODO (controls) keyboard hotkeys (1-8 (1234567890), abcd, h, ¿qwer?, ¿uiop?)
+- TODO (controls) keyboard hotkeys (1-8 (1234567890), abcd, h, ¿qwerty?, ¿uiop?)
   - if cursor can stack with target: select, moveCard
   - if cursor cannot stack with target: setCursor
-- IDEA (deployment) UI render for all options, hidden options, controls (keyboard, keyboard+selection, mouse click, mouse drag)
+- IDEA (deployment) UI render for all options, hidden options, controls (keyboard, keyboard+selection, keyboard hotkeys, mouse click, mouse drag)
 - TODO (deployment) rules page (SUG)
 - IDEA (gameplay) joker
   - high - any rank can stack onto them, they cannot be stacked on anything (color-fixed cascade)

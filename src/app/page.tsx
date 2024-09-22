@@ -15,13 +15,18 @@ import { GameContext } from '@/app/hooks/Game/GameContext';
 import { SettingsContextProvider } from '@/app/hooks/Settings/SettingsContextProvider';
 import { useSettings } from '@/app/hooks/Settings/useSettings';
 
+// FIXME need to refactor this file
+//  - split out controls
+//  - split out board (if possible)
+//  - need to figure out settings (needs to wrap most everything)
+//  - honestly, page should probably be a dumb simply component, and everything else here is in other files
 // TODO (techdebt) unit test that clicks all the way through winning
 export default function Page() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	const [game, setGame] = useState(() => new FreeCell().shuffle32());
 
 	/** @deprecated just for getting started */
-	function onClick() {
+	function handleClick() {
 		if (game.win) {
 			// click to reset
 			setGame(new FreeCell().shuffle32());
@@ -86,7 +91,7 @@ export default function Page() {
 	}, []);
 
 	return (
-		<main ref={gameBoardRef} className={styles_gameboard.main} onClick={onClick}>
+		<main ref={gameBoardRef} className={styles_gameboard.main} onClick={handleClick}>
 			<FixtureSizesContextProvider gameBoardRef={gameBoardRef}>
 				<GameContext.Provider value={[game, setGame]}>
 					<SettingsContextProvider>

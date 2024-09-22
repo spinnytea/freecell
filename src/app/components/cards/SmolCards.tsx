@@ -126,7 +126,7 @@ function NativeCards({
 
 function getFilename(rank: Rank, suit: Suit) {
 	if (rank === 'joker') {
-		// TODO restyle joker
+		// TODO (joker) restyle joker
 		//  - (make one for each suit, rotate the center so suit is top-left)
 		if (isRed(suit)) return `${ASSET_FOLDER}/i/SVG-cards-1.3/red_joker.svg`;
 		return `${ASSET_FOLDER}/i/SVG-cards-1.3/black_joker.svg`;
