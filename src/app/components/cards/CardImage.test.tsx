@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { CardImage, units } from '@/app/components/CardImage';
+import { CardImage, units } from '@/app/components/cards/CardImage';
 import { RankList, SuitList } from '@/app/game/card';
 
 describe('CardImage', () => {

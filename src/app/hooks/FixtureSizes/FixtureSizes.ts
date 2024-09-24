@@ -1,4 +1,4 @@
-import { scale_height } from '@/app/components/CardImage';
+import { scale_height } from '@/app/components/cards/CardImage';
 import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card';
 
 // REVIEW (deployment) portrait vs landscape
