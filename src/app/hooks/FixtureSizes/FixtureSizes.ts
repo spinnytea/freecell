@@ -28,7 +28,7 @@ const TB_HOME_TOP = 0.2;
 const LR_HOME_CARD_SPACING = 1 / 6; // TODO (techdebt) simplify the math below
 const TB_TABLEAU_TOP = 0.3;
 const LR_TABLEAU_CARD_SPACING = 2 / 7; // TODO (techdebt) simplify the math below
-const TB_CASCADE_OFFSET = 0.2;
+const TB_CASCADE_OFFSET = 0.3; // FIXME based on aspect ratio? cards?
 export const PEEK_UP = 0.25;
 export const PEEK_DOWN = 0.5;
 

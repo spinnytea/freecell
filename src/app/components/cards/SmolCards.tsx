@@ -25,6 +25,17 @@ const TEXT: { [rank in Rank]: string } = {
 	'joker': 'W', // unused
 };
 
+// FIXME find a deck that's (tl Rank | tr Suit) (visible in stack), and the picture is just a large suit icon
+//  - based on SVG-cards-1.3
+// ---
+//  - black_joker.svg (normal)
+//  - red_joker.svg (normal)
+//  - (make one for each suit, rotate the center so suit is top-left)
+// ---
+// FIXME cleanup ace_of_clubs.svg
+// FIXME cleanup ace_of_diamonds.svg
+// FIXME cleanup ace_of_hearts.svg
+// FIXME cleanup ace_of_spades.svg
 export function SmolCards({
 	width,
 	height,
@@ -70,15 +81,15 @@ function NativeCards({
 
 	return (
 		<svg width={width} height={height} viewBox="0 0 208 303">
-			<rect width="208" height="303" rx="8" fill="#FFFFFF" stroke="none" />
-			<g fill={color} stroke="none" textAnchor="middle" dominantBaseline="middle">
-				<text fontSize="80px" x="40" y="60" letterSpacing={-4}>
+			<rect width="208" height="303" rx="8" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
+			<g fill={color} stroke="none" textAnchor="middle" dominantBaseline="middle" fontFamily="Arial">
+				<text fontSize="80" x="52" y="60" letterSpacing={-4}>
 					{text}
 				</text>
-				<text fontSize="110px" x="140" y="60">
+				<text fontSize="110" x="156" y="60">
 					{symbol}
 				</text>
-				<text fontSize="200px" x="104" y="200">
+				<text fontSize="200" x="104" y="200">
 					{symbol}
 				</text>
 			</g>
