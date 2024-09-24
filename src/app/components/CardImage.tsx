@@ -11,6 +11,19 @@ const assetFolder = process.env.BASE_PATH ?? '';
 //  - https://github.com/cardmeister/cardmeister.github.io/blob/master/elements.cardmeister.full.js
 // TODO (theme) https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
 // TODO (mobile) find a deck that's (tl Rank | tr Suit) (visible in stack), and the picture is just a large suit icon
+//  - based on SVG-cards-1.3
+// ---
+//  - ace_of_clubs.svg (normal)
+//  - ace_of_diamonds.svg (normal)
+//  - ace_of_hearts.svg (normal)
+//  - ace_of_spades.svg (fancy)
+//  - ace_of_spades2.svg (normal)
+// ---
+//  - black_joker.svg (normal)
+//  - red_joker.svg (normal)
+//  - (make one for each suit, rotate the center so suit is top-left)
+// ---
+//  - red numbers are better than black (the 10 is weird, the rest look the same?)
 export function CardImage({
 	hidden = false,
 	rank,
