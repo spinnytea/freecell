@@ -13,7 +13,7 @@ export function SVGCards13({
 	rank: Rank;
 	suit: Suit;
 }>) {
-	const filename = getFilename(rank, suit);
+	const filename = ASSET_FOLDER + '/i/SVG-cards-1.3/' + getFilename(rank, suit);
 	return (
 		<Image
 			src={filename}
@@ -26,21 +26,16 @@ export function SVGCards13({
 	);
 }
 
-function getFilename(rank: Rank, suit: Suit, useFancyDeck = true) {
+function getFilename(rank: Rank, suit: Suit) {
 	if (rank === 'joker') {
-		if (isRed(suit)) return `${ASSET_FOLDER}/i/SVG-cards-1.3/red_joker.svg`;
-		return `${ASSET_FOLDER}/i/SVG-cards-1.3/black_joker.svg`;
+		if (isRed(suit)) return 'red_joker.svg';
+		return 'black_joker.svg';
 	}
 	if (rank === 'ace' && suit === 'spades') {
-		if (useFancyDeck) return `${ASSET_FOLDER}/i/SVG-cards-1.3/ace_of_spades.svg`;
-		return `${ASSET_FOLDER}/i/SVG-cards-1.3/ace_of_spades2.svg`;
+		return 'ace_of_spades.svg';
 	}
-	const fancy = useFancyDeck
-		? rank === 'jack' || rank === 'queen' || rank === 'king'
-			? '2'
-			: ''
-		: '';
-	return `${ASSET_FOLDER}/i/SVG-cards-1.3/${rank}_of_${suit}${fancy}.svg`;
+	const fancy = rank === 'jack' || rank === 'queen' || rank === 'king' ? '2' : '';
+	return `${rank}_of_${suit}${fancy}.svg`;
 }
 
 /** stuff exported for testing, not meant to be used directly */
