@@ -1,11 +1,9 @@
 import Image from 'next/image';
+import { CardBack } from '@/app/components/cards/CardBack';
+import { ASSET_FOLDER, ORIG_HEIGHT, ORIG_WIDTH } from '@/app/components/cards/constants';
 import { isRed, Rank, Suit } from '@/app/game/card';
 
-const ORIG_WIDTH = 167.0869141;
-const ORIG_HEIGHT = 242.6669922;
 export const scale_height = (width: number) => Math.floor((width / ORIG_WIDTH) * ORIG_HEIGHT);
-
-const assetFolder = process.env.BASE_PATH ?? '';
 
 // TODO (theme) https://cardmeister.github.io/
 //  - https://github.com/cardmeister/cardmeister.github.io/blob/master/elements.cardmeister.full.js
@@ -35,12 +33,17 @@ export function CardImage({
 	suit: Suit;
 	width?: number;
 }>) {
-	const filename = getFilename(rank, suit, hidden);
 	const height = scale_height(width);
+
+	if (hidden) {
+		return <CardBack width={width} height={height} />;
+	}
+
+	const filename = getFilename(rank, suit);
 	return (
 		<Image
 			src={filename}
-			alt={hidden ? 'card back' : `${rank} of ${suit}`}
+			alt={`${rank} of ${suit}`}
 			width={Math.floor(width)}
 			height={height}
 			draggable={false}
@@ -52,25 +55,21 @@ export function CardImage({
 // TODO (theme) alternate card backs?
 // TODO (theme) deck w/ kings are lions?
 // TODO (theme) dark theme cards
-function getFilename(rank: Rank, suit: Suit, hidden: boolean, useFancyDeck = true) {
-	if (hidden) {
-		return `${assetFolder}/i/Card_back_10.svg`;
-	}
-
+function getFilename(rank: Rank, suit: Suit, useFancyDeck = true) {
 	if (rank === 'joker') {
-		if (isRed(suit)) return `${assetFolder}/i/SVG-cards-1.3/red_joker.svg`;
-		return `${assetFolder}/i/SVG-cards-1.3/black_joker.svg`;
+		if (isRed(suit)) return `${ASSET_FOLDER}/i/SVG-cards-1.3/red_joker.svg`;
+		return `${ASSET_FOLDER}/i/SVG-cards-1.3/black_joker.svg`;
 	}
 	if (rank === 'ace' && suit === 'spades') {
-		if (useFancyDeck) return `${assetFolder}/i/SVG-cards-1.3/ace_of_spades.svg`;
-		return `${assetFolder}/i/SVG-cards-1.3/ace_of_spades2.svg`;
+		if (useFancyDeck) return `${ASSET_FOLDER}/i/SVG-cards-1.3/ace_of_spades.svg`;
+		return `${ASSET_FOLDER}/i/SVG-cards-1.3/ace_of_spades2.svg`;
 	}
 	const fancy = useFancyDeck
 		? rank === 'jack' || rank === 'queen' || rank === 'king'
 			? '2'
 			: ''
 		: '';
-	return `${assetFolder}/i/SVG-cards-1.3/${rank}_of_${suit}${fancy}.svg`;
+	return `${ASSET_FOLDER}/i/SVG-cards-1.3/${rank}_of_${suit}${fancy}.svg`;
 }
 
 /** stuff exported for testing, not meant to be used directly */

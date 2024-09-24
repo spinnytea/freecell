@@ -63,16 +63,19 @@ export function calcFixtureSizes(
 	// scale LR_HOME_MARGIN based on aspect ratio
 	// wider playing fields need a larger margin
 	// taller playing fields can have a smaller margin
-	let aspectratio = (boardWidth / boardHeight);
+	let aspectratio = boardWidth / boardHeight;
 	// smooth transition across the +/-, but negative (effectively) doubles it's scale factor
-	if (aspectratio < 1) aspectratio = 1 - ((1 - aspectratio) * 2);
+	if (aspectratio < 1) aspectratio = 1 - (1 - aspectratio) * 2;
 
 	// minimum margin of home spacing
 	const LR_HOME_MARGIN_SCALED = Math.max(LR_HOME_CARD_SPACING, _LR_HOME_MARGIN * aspectratio);
 	// leave at least one space for the deck
 	// leave at most 2 card widths
 	// otherwise, scale down the gap with the aspect ratio
-	const LR_HOME_GAP_SCALED = Math.max(1 + LR_HOME_CARD_SPACING * 2, Math.min(_LR_HOME_GAP * aspectratio, 2))
+	const LR_HOME_GAP_SCALED = Math.max(
+		1 + LR_HOME_CARD_SPACING * 2,
+		Math.min(_LR_HOME_GAP * aspectratio, 2)
+	);
 
 	// cells gap foundation
 	// this takes up the most space, so it determines the width of the cards
@@ -80,7 +83,8 @@ export function calcFixtureSizes(
 	//   spaces                                                       +  cards               = boardWidth
 	// ((LR_HOME_MARGIN * 2 + LR_HOME_GAP + LR_HOME_CARD_SPACING * 6) + (1 * 8)) * cardWidth = boardWidth
 	const cardWidth =
-		boardWidth / (LR_HOME_MARGIN_SCALED * 2 + LR_HOME_GAP_SCALED + LR_HOME_CARD_SPACING * 6 + 1 * 8);
+		boardWidth /
+		(LR_HOME_MARGIN_SCALED * 2 + LR_HOME_GAP_SCALED + LR_HOME_CARD_SPACING * 6 + 1 * 8);
 
 	const cardHeight = scale_height(cardWidth);
 
