@@ -17,14 +17,13 @@ export function CardImage({
 	rank,
 	suit,
 	width = ORIG_WIDTH,
-	faces = 'SmolCards',
 }: Readonly<{
 	hidden?: boolean;
 	rank: Rank;
 	suit: Suit;
 	width?: number;
-	faces?: CardFaces;
 }>) {
+	const faces: CardFaces = (width < 60 ? 'SmolCards' : 'SVGCards13');
 	const height = scale_height(width);
 
 	if (hidden) {
