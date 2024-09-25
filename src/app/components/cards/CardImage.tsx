@@ -23,7 +23,7 @@ export function CardImage({
 	suit: Suit;
 	width?: number;
 }>) {
-	const faces: CardFaces = (width < 60 ? 'SmolCards' : 'SVGCards13');
+	const faces: CardFaces = width < 60 ? 'SmolCards' : 'SVGCards13';
 	const height = scale_height(width);
 
 	if (hidden) {

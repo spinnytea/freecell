@@ -71,7 +71,13 @@ function NativeCards({
 	return (
 		<svg width={width} height={height} viewBox="0 0 208 303">
 			<rect width="208" height="303" rx="8" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
-			<g fill={color} stroke="none" textAnchor="middle" dominantBaseline="middle" fontFamily="Arial">
+			<g
+				fill={color}
+				stroke="none"
+				textAnchor="middle"
+				dominantBaseline="middle"
+				fontFamily="Arial"
+			>
 				<text fontSize="80" x="52" y="60" letterSpacing={-4}>
 					{text}
 				</text>
