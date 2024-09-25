@@ -89,7 +89,7 @@ function NativeCards({
 				<text fontSize="110" x="156" y="60">
 					{symbol}
 				</text>
-				<text fontSize="200" x="104" y="200">
+				<text fontSize="208" x="104" y="200">
 					{symbol}
 				</text>
 			</g>
