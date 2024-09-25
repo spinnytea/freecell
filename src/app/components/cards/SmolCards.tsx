@@ -25,17 +25,6 @@ const TEXT: { [rank in Rank]: string } = {
 	'joker': 'W', // unused
 };
 
-// FIXME find a deck that's (tl Rank | tr Suit) (visible in stack), and the picture is just a large suit icon
-//  - based on SVG-cards-1.3
-// ---
-//  - black_joker.svg (normal)
-//  - red_joker.svg (normal)
-//  - (make one for each suit, rotate the center so suit is top-left)
-// ---
-// FIXME cleanup ace_of_clubs.svg
-// FIXME cleanup ace_of_diamonds.svg
-// FIXME cleanup ace_of_hearts.svg
-// FIXME cleanup ace_of_spades.svg
 export function SmolCards({
 	width,
 	height,
@@ -98,16 +87,12 @@ function NativeCards({
 }
 
 function getFilename(rank: Rank, suit: Suit) {
-	if (rank === 'ace') {
-		return `${ASSET_FOLDER}/i/smol-cards/ace_of_${suit}.svg`;
-	}
-
-	// FIXME change all below
-
 	if (rank === 'joker') {
+		// TODO restyle joker
+		//  - (make one for each suit, rotate the center so suit is top-left)
 		if (isRed(suit)) return `${ASSET_FOLDER}/i/SVG-cards-1.3/red_joker.svg`;
 		return `${ASSET_FOLDER}/i/SVG-cards-1.3/black_joker.svg`;
 	}
-	const fancy = rank === 'jack' || rank === 'queen' || rank === 'king' ? '2' : '';
-	return `${ASSET_FOLDER}/i/SVG-cards-1.3/${rank}_of_${suit}${fancy}.svg`;
+
+	return `${ASSET_FOLDER}/i/smol-cards/ace_of_${suit}.svg`;
 }
