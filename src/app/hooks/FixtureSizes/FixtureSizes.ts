@@ -1,12 +1,6 @@
-import { scale_height } from '@/app/components/CardImage';
+import { scale_height } from '@/app/components/cards/CardImage';
 import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card';
 
-// REVIEW (deployment) portrait vs landscape
-//  - the main issue with lanscape is vertical height, tall cascades
-//  - portrait we can afford to have much smaller margins, because it has enough height
-//  - maybe that's what should determine the cardHeight?
-//  - mobile height (9 x 16 ish ratio) should have WAY less margins/gaps/spacing
-//    home row has 8 cards + more gaps, so it's always going to dictate the size
 // IDEA (mobile) use game max cascade.length to influence TABLEAU_CARD_SPACING?
 // IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)
 //  - so tableau can start at the top of the screen?
@@ -28,7 +22,7 @@ const TB_HOME_TOP = 0.2;
 const LR_HOME_CARD_SPACING = 1 / 6; // TODO (techdebt) simplify the math below
 const TB_TABLEAU_TOP = 0.3;
 const LR_TABLEAU_CARD_SPACING = 2 / 7; // TODO (techdebt) simplify the math below
-const TB_CASCADE_OFFSET = 0.2;
+const TB_CASCADE_OFFSET = 0.3;
 export const PEEK_UP = 0.25;
 export const PEEK_DOWN = 0.5;
 
@@ -63,16 +57,22 @@ export function calcFixtureSizes(
 	// scale LR_HOME_MARGIN based on aspect ratio
 	// wider playing fields need a larger margin
 	// taller playing fields can have a smaller margin
-	let aspectratio = (boardWidth / boardHeight);
+	let aspectratio = boardWidth / boardHeight;
 	// smooth transition across the +/-, but negative (effectively) doubles it's scale factor
-	if (aspectratio < 1) aspectratio = 1 - ((1 - aspectratio) * 2);
+	if (aspectratio < 1) aspectratio = 1 - (1 - aspectratio) * 2;
 
 	// minimum margin of home spacing
 	const LR_HOME_MARGIN_SCALED = Math.max(LR_HOME_CARD_SPACING, _LR_HOME_MARGIN * aspectratio);
 	// leave at least one space for the deck
 	// leave at most 2 card widths
 	// otherwise, scale down the gap with the aspect ratio
-	const LR_HOME_GAP_SCALED = Math.max(1 + LR_HOME_CARD_SPACING * 2, Math.min(_LR_HOME_GAP * aspectratio, 2))
+	const LR_HOME_GAP_SCALED = Math.max(
+		1 + LR_HOME_CARD_SPACING * 2,
+		Math.min(_LR_HOME_GAP * aspectratio, 2)
+	);
+
+	// REVIEW (mobile) scale with aspect ratio?
+	// const TB_CASCADE_OFFSET_SCALED = _TB_CASCADE_OFFSET / Math.max(1, Math.min(Math.sqrt(aspectratio), 1.25));
 
 	// cells gap foundation
 	// this takes up the most space, so it determines the width of the cards
@@ -80,7 +80,8 @@ export function calcFixtureSizes(
 	//   spaces                                                       +  cards               = boardWidth
 	// ((LR_HOME_MARGIN * 2 + LR_HOME_GAP + LR_HOME_CARD_SPACING * 6) + (1 * 8)) * cardWidth = boardWidth
 	const cardWidth =
-		boardWidth / (LR_HOME_MARGIN_SCALED * 2 + LR_HOME_GAP_SCALED + LR_HOME_CARD_SPACING * 6 + 1 * 8);
+		boardWidth /
+		(LR_HOME_MARGIN_SCALED * 2 + LR_HOME_GAP_SCALED + LR_HOME_CARD_SPACING * 6 + 1 * 8);
 
 	const cardHeight = scale_height(cardWidth);
 
