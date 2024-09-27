@@ -1,5 +1,10 @@
 import { CardBack } from '@/app/components/cards/CardBack';
-import { CardFaces, ORIG_WIDTH, scale_height } from '@/app/components/cards/constants';
+import {
+	CARD_FACE_CUTOFF,
+	CardFaces,
+	ORIG_WIDTH,
+	scale_height,
+} from '@/app/components/cards/constants';
 import { SmolCards } from '@/app/components/cards/SmolCards';
 import { SVGCards13 } from '@/app/components/cards/SVGCards13';
 import { Rank, Suit } from '@/app/game/card';
@@ -21,7 +26,7 @@ export function CardImage({
 	suit: Suit;
 	width?: number;
 }>) {
-	const faces: CardFaces = width < 60 ? 'SmolCards' : 'SVGCards13';
+	const faces: CardFaces = width < CARD_FACE_CUTOFF ? 'SmolCards' : 'SVGCards13';
 	const height = scale_height(width);
 
 	if (hidden) {

@@ -6,7 +6,7 @@ card game
 
 TODO (motivation) main development tasks:
 
-1. legible `(cards)` for mobile
+1. ~~legible `(cards)` for mobile~~
 1. (drag-and-drop) (click-to-move has been working, but sometimes you need to "force" the move you want)
 1. `(animations)`
 1. move `(history)` & undo

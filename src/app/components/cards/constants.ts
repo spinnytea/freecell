@@ -5,3 +5,4 @@ export const scale_height = (width: number) => Math.floor((width / ORIG_WIDTH) *
 export const ASSET_FOLDER = process.env.BASE_PATH ?? '';
 
 export type CardFaces = 'SVGCards13' | 'SmolCards';
+export const CARD_FACE_CUTOFF = 60;
