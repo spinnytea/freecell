@@ -2,6 +2,8 @@
 	--movement-time: 0.3s;
 	--rotation-time: 0.1s;
 
+	user-select: none;
+
 	position: absolute;
 
 	/* REVIEW (animation) just a basic movement transition to get things moving (started) */
