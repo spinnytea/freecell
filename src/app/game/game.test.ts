@@ -193,13 +193,13 @@ describe('game', () => {
 
 		test('0 cells', () => {
 			expect(() => new FreeCell({ cellCount: 0 })).toThrow(
-				'Must have between 1 and 4 cells; requested "0".'
+				'Must have between 1 and 6 cells; requested "0".'
 			);
 		});
 
-		test('5 cells', () => {
-			expect(() => new FreeCell({ cellCount: 5 })).toThrow(
-				'Must have between 1 and 4 cells; requested "5".'
+		test('7 cells', () => {
+			expect(() => new FreeCell({ cellCount: 7 })).toThrow(
+				'Must have between 1 and 6 cells; requested "7".'
 			);
 		});
 

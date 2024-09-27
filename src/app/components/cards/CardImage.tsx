@@ -1,10 +1,8 @@
 import { CardBack } from '@/app/components/cards/CardBack';
-import { CardFaces, ORIG_HEIGHT, ORIG_WIDTH } from '@/app/components/cards/constants';
+import { CardFaces, ORIG_WIDTH, scale_height } from '@/app/components/cards/constants';
 import { SmolCards } from '@/app/components/cards/SmolCards';
 import { SVGCards13 } from '@/app/components/cards/SVGCards13';
 import { Rank, Suit } from '@/app/game/card';
-
-export const scale_height = (width: number) => Math.floor((width / ORIG_WIDTH) * ORIG_HEIGHT);
 
 // TODO (theme) https://cardmeister.github.io/
 //  - https://github.com/cardmeister/cardmeister.github.io/blob/master/elements.cardmeister.full.js

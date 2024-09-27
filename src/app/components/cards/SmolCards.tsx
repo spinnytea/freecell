@@ -1,7 +1,10 @@
 import { ReactElement } from 'react';
+import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import { ASSET_FOLDER } from '@/app/components/cards/constants';
 import { isRed, Rank, Suit } from '@/app/game/card';
+
+const inter = Inter({ subsets: ['latin'] });
 
 const SYMBOLS: { [suit in Suit]: ReactElement } = {
 	clubs: (
@@ -106,9 +109,10 @@ function NativeCards({
 				stroke="none"
 				textAnchor="middle"
 				dominantBaseline="middle"
-				fontFamily="Arial"
+				fontWeight={500}
+				className={inter.className}
 			>
-				<text fontSize="80" x="52" y="60" letterSpacing={-4}>
+				<text fontSize="80" x="52" y="60" letterSpacing="-0.1em">
 					{text}
 				</text>
 			</g>

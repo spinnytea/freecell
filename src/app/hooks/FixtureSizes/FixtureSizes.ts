@@ -1,6 +1,7 @@
-import { scale_height } from '@/app/components/cards/CardImage';
+import { scale_height } from '@/app/components/cards/constants';
 import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card';
 
+// TODO (cards) widescreen is too short
 // IDEA (mobile) use game max cascade.length to influence TABLEAU_CARD_SPACING?
 // IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)
 //  - so tableau can start at the top of the screen?

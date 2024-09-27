@@ -28,9 +28,8 @@ import {
 const DEFAULT_NUMBER_OF_CELLS = 4;
 const NUMBER_OF_FOUNDATIONS = SuitList.length;
 const DEFAULT_NUMBER_OF_CASCADES = 8;
-// REVIEW (gameplay) why 1-4 cells? why not, say, 10? @see shorthandPosition
 const MIN_CELL_COUNT = 1;
-const MAX_CELL_COUNT = 4;
+const MAX_CELL_COUNT = 6;
 
 const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 /**
@@ -114,7 +113,7 @@ export class FreeCell {
 			this.win = this.cards.every((card) => card.location.fixture === 'foundation');
 		} else {
 			if (cellCount < MIN_CELL_COUNT || cellCount > MAX_CELL_COUNT)
-				throw new Error(`Must have between 1 and 4 cells; requested "${cellCount.toString(10)}".`);
+				throw new Error(`Must have between 1 and 6 cells; requested "${cellCount.toString(10)}".`);
 			if (cascadeCount < NUMBER_OF_FOUNDATIONS)
 				throw new Error(
 					`Must have at least as many cascades as foundations (${this.foundations.length.toString(10)}); requested "${cascadeCount.toString(10)}".`

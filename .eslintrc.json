@@ -35,7 +35,8 @@
 				],
 				"pathGroupsExcludedImportTypes": ["builtin"]
 			}
-		]
+		],
+		"no-warning-comments": ["warn", { "terms": ["fixme"] }]
 	},
 	"overrides": [
 		{

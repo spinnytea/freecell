@@ -4,6 +4,13 @@ card game
 
 ## Code TODOs
 
+TODO (motivation) main development tasks:
+
+1. legible `(cards)` for mobile
+1. drag-and-drop (click-to-move has been working, but sometimes you need to "force" the move you want)
+1. `(animations)`
+1. move `(history)` & undo
+
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b\s+\((\w+)\)
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b\s+[^(]
@@ -23,20 +30,24 @@ card game
 - TODO (controls) mouse drag to move - mouse drag-drop target is entire cascade
 - TODO (controls) keyboard + selection
 - TODO (animation) animate cards in flight should be above others
-- TODO (gameplay) undo (move history) - all, few, one, none (should allow at least one undo, misclicks)
+- TODO (history) undo - all, few, one, none (should allow at least one undo, misclicks)
   - "Standard FreeCell Notation" (cell: a-d, foundation: h(ome), cascades: 1-8)
   - use move notation
   - play a game backward and forewards using move history
   - pay attention to sequences (probably need to look at the destination to pick the card from the source)
   - moving the same card multiple times in a row replaces the history (i.e. click-to-move picked the wrong place, so i need to move it again to the right one) (i.e. dithering on a single card doesn't increase history length)
   - moving a card back to it's original location remove the move from the history (similar to collapsing the moves into one) (this is essentially a free undo, although "back to it's original location" is a valid move)
+- TODO (gameplay) make sure to play/record a game for 10-6 and 4-1
+  - use move history, unit test replay
+  - use it for testing history forward & backwards
 - TODO (gameplay) hard vs medium vs easy
   - [FreeCell lists of difficult (and extra easy) deals](https://www.solitairelaboratory.com/fclists.html)
   - Some games require no free cells :D - so make a 0 cells version restricted to these games
   - Same with a list for solvable 1-cell games
+- TODO (settings) once move history is in game.print, save completed games to local storage and/or print to console (this way we can "recover" the last one after we finish, if we accidentally start a new one before we can snapshot it / archive it) - we only need the one for this
 - IDEA (settings) option to dis/enable auto-foundation until all cascades are in order (all are a single sequence, or all are ascending)
 - IDEA (animation) auto-foundation gets faster the longer it runs
-- TODO (gameplay) can move cards during auto-foundation, stops when it gets to a card the user has moved (currently stops if the user has selected a card)
+- TODO (animation) (gameplay) can move cards during auto-foundation, stops when it gets to a card the user has moved (currently stops if the user has selected a card)
 - TODO (animation) animations after/during win state
 - IDEA (settings) toggle for: move sequence as one vs animate in-between steps (sequence moves vs each card moves)
 - IDEA (motivation) implement War? just so it's flexible?
