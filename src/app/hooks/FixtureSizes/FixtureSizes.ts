@@ -2,6 +2,10 @@ import { scale_height } from '@/app/components/cards/constants';
 import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card';
 
 // TODO (cards) widescreen is too short
+//  - need smaller cards
+//  - in super wide, scale TB_CASCADE_OFFSET (based on available height, not ratio directly)
+// TODO (cards) portrait cards are too small
+//  - can have smaller gaps between piles
 // IDEA (mobile) use game max cascade.length to influence TABLEAU_CARD_SPACING?
 // IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)
 //  - so tableau can start at the top of the screen?

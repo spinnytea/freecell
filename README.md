@@ -7,7 +7,7 @@ card game
 TODO (motivation) main development tasks:
 
 1. legible `(cards)` for mobile
-1. drag-and-drop (click-to-move has been working, but sometimes you need to "force" the move you want)
+1. (drag-and-drop) (click-to-move has been working, but sometimes you need to "force" the move you want)
 1. `(animations)`
 1. move `(history)` & undo
 
@@ -27,7 +27,7 @@ TODO (motivation) main development tasks:
   - auto-foundation each card
 - TODO (mobile) icons for bookmarks / save link to home screen (Andriod, iOS)
 - TODO (animation) failed moves shake
-- TODO (controls) mouse drag to move - mouse drag-drop target is entire cascade
+- TODO (drag-and-drop) mouse drag to move - mouse drag-drop target is entire cascade
 - TODO (controls) keyboard + selection
 - TODO (animation) animate cards in flight should be above others
 - TODO (history) undo - all, few, one, none (should allow at least one undo, misclicks)
@@ -45,6 +45,7 @@ TODO (motivation) main development tasks:
   - Some games require no free cells :D - so make a 0 cells version restricted to these games
   - Same with a list for solvable 1-cell games
 - TODO (settings) once move history is in game.print, save completed games to local storage and/or print to console (this way we can "recover" the last one after we finish, if we accidentally start a new one before we can snapshot it / archive it) - we only need the one for this
+- TODO (settings) store current game so it survives page refresh
 - IDEA (settings) option to dis/enable auto-foundation until all cascades are in order (all are a single sequence, or all are ascending)
 - IDEA (animation) auto-foundation gets faster the longer it runs
 - TODO (animation) (gameplay) can move cards during auto-foundation, stops when it gets to a card the user has moved (currently stops if the user has selected a card)

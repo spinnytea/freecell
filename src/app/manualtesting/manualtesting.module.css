@@ -4,5 +4,6 @@
 	grid-template-rows: auto;
 	gap: 2px;
 	padding: 2px;
+	/* TODO (drag-and-drop) disable selection in more places; see screenshot, ctrl+A, Ace in foundation */
 	user-select: none;
 }
