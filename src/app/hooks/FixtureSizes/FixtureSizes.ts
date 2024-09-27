@@ -51,6 +51,7 @@ export interface FixtureSizes {
 	};
 }
 
+// FIXME calcFixtureSizes needs to include cellCount and cascadeCount
 export function calcFixtureSizes(
 	boardWidth: number = DEFAULT_CLIENT_WIDTH,
 	boardHeight: number = DEFAULT_CLIENT_HEIGHT
