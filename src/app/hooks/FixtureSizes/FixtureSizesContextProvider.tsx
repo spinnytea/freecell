@@ -6,6 +6,7 @@ import {
 	FixtureSizes,
 } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { FixtureSizesContext } from '@/app/hooks/FixtureSizes/FixtureSizesContext';
+import { useGame } from '@/app/hooks/Game/useGame';
 
 export function FixtureSizesContextProvider({
 	gameBoardRef,
@@ -14,6 +15,9 @@ export function FixtureSizesContextProvider({
 	gameBoardRef: MutableRefObject<HTMLElement | null>;
 	children: ReactNode;
 }>) {
+	const game = useGame();
+	const cellCount = game.cells.length;
+	const cascadeCount = game.tableau.length;
 	const [fixtureSizes, setFixtureSizes] = useState<FixtureSizes | null>(null);
 
 	useEffect(() => {
@@ -22,7 +26,12 @@ export function FixtureSizesContextProvider({
 			const screenHeight = gameBoardRef.current?.offsetHeight ?? DEFAULT_CLIENT_HEIGHT;
 			setFixtureSizes((fs) => {
 				if (!fs || fs.boardWidth !== screenWidth || fs.boardHeight !== screenHeight) {
-					return calcFixtureSizes(screenWidth, screenHeight);
+					return calcFixtureSizes({
+						boardWidth: screenWidth,
+						boardHeight: screenHeight,
+						cellCount,
+						cascadeCount,
+					});
 				}
 				return fs;
 			});
@@ -32,7 +41,7 @@ export function FixtureSizesContextProvider({
 		return () => {
 			window.removeEventListener('resize', updateSize);
 		};
-	}, [gameBoardRef]);
+	}, [gameBoardRef, cellCount, cascadeCount]);
 
 	// wait until we have an actual value init
 	if (!fixtureSizes) {

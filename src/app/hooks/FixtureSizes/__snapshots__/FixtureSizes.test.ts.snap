@@ -1,5 +1,51 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`FixtureSizes adjust counts 1`] = `
+{
+  "boardHeight": 600,
+  "boardWidth": 800,
+  "cardHeight": 69,
+  "cardWidth": 47.368,
+  "deck": {
+    "left": 63.158,
+    "top": 517.2,
+  },
+  "home": {
+    "cellLeft": [
+      63.158,
+      121.053,
+      178.947,
+      236.842,
+      294.737,
+      352.632,
+    ],
+    "foundationLeft": [
+      515.789,
+      573.684,
+      631.579,
+      689.474,
+    ],
+    "top": 13.8,
+  },
+  "tableau": {
+    "cascadeLeft": [
+      102.256,
+      163.158,
+      224.06,
+      284.962,
+      345.865,
+      406.767,
+      467.669,
+      528.571,
+      589.474,
+      650.376,
+    ],
+    "offsetTop": 20.7,
+    "top": 103.5,
+  },
+}
+`;
+
 exports[`FixtureSizes basic 1`] = `
 {
   "boardHeight": 600,
