@@ -51,10 +51,28 @@ export interface FixtureSizes {
 	};
 }
 
-export function calcFixtureSizes(
-	boardWidth: number = DEFAULT_CLIENT_WIDTH,
-	boardHeight: number = DEFAULT_CLIENT_HEIGHT
-): FixtureSizes {
+function times<T>(count: number, cb: (i: number) => T): T[] {
+	const list: T[] = [];
+	for (let i = 0; i < count; i++) list.push(cb(i));
+	return list;
+}
+
+export function calcFixtureSizes({
+	boardWidth = DEFAULT_CLIENT_WIDTH,
+	boardHeight = DEFAULT_CLIENT_HEIGHT,
+	cellCount = 4,
+	cascadeCount = 8,
+}: {
+	boardWidth?: number;
+	boardHeight?: number;
+	cellCount?: number;
+	cascadeCount?: number;
+}): FixtureSizes {
+	const foundationCount = 4;
+	const homeCount = foundationCount + cellCount;
+	const homeGapCount = foundationCount - 1 + cellCount - 1;
+	const cascadeGapCount = cascadeCount - 1;
+
 	// scale LR_HOME_MARGIN based on aspect ratio
 	// wider playing fields need a larger margin
 	// taller playing fields can have a smaller margin
@@ -82,7 +100,7 @@ export function calcFixtureSizes(
 	// use default spacing, or scale down to be as wide as
 	const LR_TABLEAU_CARD_SPACING_SCALED = Math.min(
 		_LR_TABLEAU_CARD_SPACING,
-		(LR_HOME_CARD_SPACING_SCALED * 6 + LR_HOME_GAP_SCALED) / 7
+		(LR_HOME_CARD_SPACING_SCALED * homeGapCount + LR_HOME_GAP_SCALED) / cascadeGapCount
 	);
 
 	// cells gap foundation
@@ -92,7 +110,10 @@ export function calcFixtureSizes(
 	// ((LR_HOME_MARGIN * 2 + LR_HOME_GAP + LR_HOME_CARD_SPACING_SCALED * 6) + (1 * 8)) * cardWidth = boardWidth
 	const cardWidth =
 		boardWidth /
-		(LR_HOME_MARGIN_SCALED * 2 + LR_HOME_GAP_SCALED + LR_HOME_CARD_SPACING_SCALED * 6 + 1 * 8);
+		(LR_HOME_MARGIN_SCALED * 2 +
+			LR_HOME_GAP_SCALED +
+			LR_HOME_CARD_SPACING_SCALED * homeGapCount +
+			homeCount);
 
 	const cardHeight = scale_height(cardWidth);
 
@@ -101,11 +122,17 @@ export function calcFixtureSizes(
 
 	// lr + 8 cards (7 spaces) + lr = boardWidth
 	// adjust tableau margins to center cards (in px values)
-	const tableauLRMargin = (boardWidth - (8 + LR_TABLEAU_CARD_SPACING_SCALED * 7) * cardWidth) / 2;
+	const tableauLRMargin =
+		(boardWidth - (cascadeCount + LR_TABLEAU_CARD_SPACING_SCALED * cascadeGapCount) * cardWidth) /
+		2;
 
 	const cellLOffset = LR_HOME_MARGIN_SCALED * cardWidth;
 	const foundationLOffset =
-		(LR_HOME_MARGIN_SCALED + LR_HOME_CARD_SPACING_SCALED * 3 + 4 + LR_HOME_GAP_SCALED) * cardWidth;
+		(LR_HOME_MARGIN_SCALED +
+			LR_HOME_CARD_SPACING_SCALED * (cellCount - 1) +
+			cellCount +
+			LR_HOME_GAP_SCALED) *
+		cardWidth;
 
 	return {
 		boardWidth: toFixed(boardWidth),
@@ -117,20 +144,14 @@ export function calcFixtureSizes(
 			top: toFixed(TB_HOME_TOP * cardHeight),
 			// left justified
 			// < lr + cell + space + cell + …
-			cellLeft: [
-				toFixed((1 + LR_HOME_CARD_SPACING_SCALED) * cardWidth * 0 + cellLOffset),
-				toFixed((1 + LR_HOME_CARD_SPACING_SCALED) * cardWidth * 1 + cellLOffset),
-				toFixed((1 + LR_HOME_CARD_SPACING_SCALED) * cardWidth * 2 + cellLOffset),
-				toFixed((1 + LR_HOME_CARD_SPACING_SCALED) * cardWidth * 3 + cellLOffset),
-			],
+			cellLeft: times(cellCount, (i) =>
+				toFixed((1 + LR_HOME_CARD_SPACING_SCALED) * cardWidth * i + cellLOffset)
+			),
 			// left justified
 			// gap << cell + space + cell + …
-			foundationLeft: [
-				toFixed((1 + LR_HOME_CARD_SPACING_SCALED) * cardWidth * 0 + foundationLOffset),
-				toFixed((1 + LR_HOME_CARD_SPACING_SCALED) * cardWidth * 1 + foundationLOffset),
-				toFixed((1 + LR_HOME_CARD_SPACING_SCALED) * cardWidth * 2 + foundationLOffset),
-				toFixed((1 + LR_HOME_CARD_SPACING_SCALED) * cardWidth * 3 + foundationLOffset),
-			],
+			foundationLeft: times(foundationCount, (i) =>
+				toFixed((1 + LR_HOME_CARD_SPACING_SCALED) * cardWidth * i + foundationLOffset)
+			),
 
 			// right justified
 			// … + cell + space + cell + lr >
@@ -158,16 +179,9 @@ export function calcFixtureSizes(
 			top: toFixed((TB_HOME_TOP + 1 + TB_TABLEAU_TOP) * cardHeight),
 			// left justified
 			// < lr + cell + space + cell + …
-			cascadeLeft: [
-				toFixed((1 + LR_TABLEAU_CARD_SPACING_SCALED) * cardWidth * 0 + tableauLRMargin),
-				toFixed((1 + LR_TABLEAU_CARD_SPACING_SCALED) * cardWidth * 1 + tableauLRMargin),
-				toFixed((1 + LR_TABLEAU_CARD_SPACING_SCALED) * cardWidth * 2 + tableauLRMargin),
-				toFixed((1 + LR_TABLEAU_CARD_SPACING_SCALED) * cardWidth * 3 + tableauLRMargin),
-				toFixed((1 + LR_TABLEAU_CARD_SPACING_SCALED) * cardWidth * 4 + tableauLRMargin),
-				toFixed((1 + LR_TABLEAU_CARD_SPACING_SCALED) * cardWidth * 5 + tableauLRMargin),
-				toFixed((1 + LR_TABLEAU_CARD_SPACING_SCALED) * cardWidth * 6 + tableauLRMargin),
-				toFixed((1 + LR_TABLEAU_CARD_SPACING_SCALED) * cardWidth * 7 + tableauLRMargin),
-			],
+			cascadeLeft: times(cascadeCount, (i) =>
+				toFixed((1 + LR_TABLEAU_CARD_SPACING_SCALED) * cardWidth * i + tableauLRMargin)
+			),
 			offsetTop: toFixed(TB_CASCADE_OFFSET * cardHeight),
 		},
 
