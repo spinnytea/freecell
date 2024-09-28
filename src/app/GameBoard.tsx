@@ -15,13 +15,13 @@ import { useSettings } from '@/app/hooks/Settings/useSettings';
 // FIXME split out controls
 export default function GameBoard() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
-	const [game, setGame] = useContext(GameContext);
+	const [game, setGame, newGame] = useContext(GameContext);
 
 	/** @deprecated just for getting started */
 	function handleClick() {
 		if (game.win) {
 			// click to reset
-			setGame(new FreeCell().shuffle32());
+			setGame(newGame().shuffle32());
 		} else if (game.deck.length) {
 			// click to deal
 			setGame(game.dealAll());
@@ -58,7 +58,7 @@ export default function GameBoard() {
 							return g.dealAll();
 						}
 						if (g.cursor.fixture === 'foundation' && g.win) {
-							return new FreeCell().shuffle32();
+							return newGame().shuffle32();
 						}
 						return g.touch().autoFoundationAll();
 					});
@@ -80,7 +80,7 @@ export default function GameBoard() {
 		return () => {
 			window.removeEventListener('keydown', handleKey);
 		};
-	}, [setGame]);
+	}, [setGame, newGame]);
 
 	return (
 		<main ref={gameBoardRef} className={styles_gameboard.main} onClick={handleClick}>

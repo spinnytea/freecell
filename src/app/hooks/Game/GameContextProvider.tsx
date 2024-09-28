@@ -9,7 +9,6 @@ export default function GameContextProvider({
 	children: ReactNode;
 }>) {
 	const settingsRef = useRef(useSettings());
-	// FIXME use newGame instead of new FreeCell
 	const newGame = useCallback(
 		() =>
 			new FreeCell({
