@@ -17,8 +17,9 @@ import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 	|   b       |
 	+-----------+
 
+	TODO (animation) cards sliding
+	TODO (animation) cell selection rotation
 	TODO (animation) invalid move animation
-
 	TODO (animation) animate moving a sequence
 
 	TODO (deployment) various sizes of tall -> portrait -> landscape -> wide
