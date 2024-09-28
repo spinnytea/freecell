@@ -57,7 +57,6 @@ function times<T>(count: number, cb: (i: number) => T): T[] {
 	return list;
 }
 
-// FIXME broken for sizes != 4,8
 export function calcFixtureSizes({
 	boardWidth = DEFAULT_CLIENT_WIDTH,
 	boardHeight = DEFAULT_CLIENT_HEIGHT,

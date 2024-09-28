@@ -6,13 +6,12 @@ import { PileMarkers } from '@/app/components/PileMarkers';
 import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
 import { WinMessage } from '@/app/components/WinMessage';
-import { FreeCell } from '@/app/game/game';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { FixtureSizesContextProvider } from '@/app/hooks/FixtureSizes/FixtureSizesContextProvider';
 import { GameContext } from '@/app/hooks/Game/GameContext';
 import { useSettings } from '@/app/hooks/Settings/useSettings';
 
-// FIXME split out controls
+// TODO (controls) split out controls
 export default function GameBoard() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	const [game, setGame, newGame] = useContext(GameContext);

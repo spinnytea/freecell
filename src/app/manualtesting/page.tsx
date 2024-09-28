@@ -23,6 +23,8 @@ import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 
 	TODO (deployment) various sizes of tall -> portrait -> landscape -> wide
 	 - if not well defined playing fields to spot check, at least a reminder to play with the screen size
+
+	TODO (controls) each of the control schemes
 */
 export default function Page() {
 	return (

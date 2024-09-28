@@ -7,8 +7,8 @@ card game
 TODO (motivation) main development tasks:
 
 1. ~~legible `(cards)` for mobile~~
-1. (drag-and-drop) (click-to-move has been working, but sometimes you need to "force" the move you want)
-1. `(animations)`
+1. `(animations)` https://gsap.com/resources/React/
+1. `(drag-and-drop)` (click-to-move has been working, but sometimes you need to "force" the move you want)
 1. move `(history)` & undo
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
@@ -27,7 +27,7 @@ TODO (motivation) main development tasks:
   - auto-foundation each card
 - TODO (mobile) icons for bookmarks / save link to home screen (Andriod, iOS)
 - TODO (animation) failed moves shake
-- FIXME mouse drag to move - mouse drag-drop target is entire cascade
+- TODO (drag-and-drop) mouse drag to move - mouse drag-drop target is entire cascade
 - TODO (controls) keyboard + selection
 - TODO (animation) animate cards in flight should be above others
 - TODO (history) undo - all, few, one, none (should allow at least one undo, misclicks)
