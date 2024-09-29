@@ -22,6 +22,7 @@ import {
 	getPrintSeparator,
 	getSequenceAt,
 	moveCards,
+	parsePreviousActionText,
 	parseShorthandMove,
 } from '@/app/game/game-utils';
 
@@ -40,8 +41,8 @@ const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 */
 const BOTTOM_OF_CASCADE = 99;
 
-// TODO (techdebt) remove auto-foundation-tween
-type PreviousActionType =
+// TODO (techdebt) remove auto-foundation-tween, noop
+export type PreviousActionType =
 	| 'init'
 	| 'shuffle'
 	| 'deal'
@@ -50,7 +51,8 @@ type PreviousActionType =
 	| 'deselect'
 	| 'move'
 	| 'invalid'
-	| 'auto-foundation-tween';
+	| 'auto-foundation-tween'
+	| 'noop';
 export interface PreviousAction {
 	text: string;
 	type: PreviousActionType;
@@ -648,10 +650,10 @@ export class FreeCell {
 		// select from, move to
 		let game = this.setCursor(from).touch().setCursor(to).touch();
 
-		const previousActionText = game.previousAction.text;
+		const actionText = game.previousAction.text;
 		game = game.autoFoundationAll();
-		if (game.previousAction.text !== previousActionText) {
-			game.previousAction.text = `${previousActionText} (${game.previousAction.text})`;
+		if (game.previousAction.text !== actionText) {
+			game.previousAction.text = `${actionText} (${game.previousAction.text})`;
 		}
 
 		return game;
@@ -1105,8 +1107,7 @@ export class FreeCell {
 			game.selection = getSequenceAt(game, selection_location);
 			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
-		// FIXME (techdebt) parse action text (i.e. recover type)
-		game.previousAction = { text: actionText, type: 'init' };
+		game.previousAction = parsePreviousActionText(actionText);
 		return game;
 	}
 

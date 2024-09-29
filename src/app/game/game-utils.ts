@@ -12,7 +12,7 @@ import {
 	RankList,
 	Suit,
 } from '@/app/game/card';
-import { FreeCell } from '@/app/game/game';
+import { FreeCell, PreviousAction, PreviousActionType } from '@/app/game/game';
 
 // TODO (settings) these _exist_, but we need to be able to pick them
 export type AutoFoundationLimit =
@@ -347,7 +347,7 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 		return game.cards;
 	}
 
-	game = game.__clone({ action: 'noop' }); // clones the cards/table so we can safely make changes
+	game = game.__clone({ action: { text: 'noop', type: 'noop' } }); // clones the cards/table so we can safely make changes
 	from = getSequenceAt(game, from.location);
 
 	switch (to.fixture) {
@@ -523,4 +523,11 @@ export function parseShorthandMove(
 	}
 
 	return [from_location, to_location];
+}
+
+export function parsePreviousActionText(text: string): PreviousAction {
+	const firstWord = text.split(' ')[0];
+	if (firstWord === 'hand-jammed') return { text, type: 'init' };
+	if (firstWord === 'touch') return { text, type: 'invalid' };
+	return { text, type: firstWord as PreviousActionType };
 }
