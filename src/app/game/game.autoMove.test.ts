@@ -672,10 +672,10 @@ describe('game.autoMove', () => {
 			);
 			// select a card
 			game = game.setCursor({ fixture: 'cascade', data: [7, 5] }).touch();
-			expect(game.previousAction).toBe('select 8 7D');
+			expect(game.previousAction.text).toBe('select 8 7D');
 			// invalid move
 			game = game.setCursor({ fixture: 'cascade', data: [5, 5] }).touch();
-			expect(game.previousAction).toBe('invalid move 86 7D→9C');
+			expect(game.previousAction.text).toBe('invalid move 86 7D→9C');
 			// do not move card
 			game = game.autoMove();
 			expect(game.print()).toBe(

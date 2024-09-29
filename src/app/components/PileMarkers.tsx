@@ -63,10 +63,11 @@ function Pile({
 	cursorPile: boolean;
 	location: CardLocation;
 }) {
-	const [game, setGame] = useContext(GameContext);
+	const [, setGame] = useContext(GameContext);
 
 	function onClick() {
-		setGame(game.setCursor(location).touch().autoFoundationAll());
+		// REVIEW (controls) if a card is selected, move it to the empty pile
+		setGame((g) => g.setCursor(location).touch().autoFoundationAll());
 	}
 
 	const style = {

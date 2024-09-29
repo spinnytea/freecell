@@ -16,18 +16,18 @@ export default function GameBoard() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	const [game, setGame, newGame] = useContext(GameContext);
 
-	/** @deprecated just for getting started */
+	/** REVIEW (controls) mouse */
 	function handleClick() {
 		if (game.win) {
 			// click to reset
-			setGame(newGame().shuffle32());
+			setGame(() => newGame().shuffle32());
 		} else if (game.deck.length) {
 			// click to deal
-			setGame(game.dealAll());
+			setGame((g) => g.dealAll());
 		}
 	}
 
-	/** @deprecated just for getting started */
+	/** REVIEW (controls) keyboard */
 	useEffect(() => {
 		function handleKey(event: KeyboardEvent) {
 			const { key } = event;

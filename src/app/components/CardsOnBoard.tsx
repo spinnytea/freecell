@@ -36,7 +36,8 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	);
 
 	function onClick() {
-		setGame(game.setCursor(location).touch().autoMove().autoFoundationAll());
+		// REVIEW (controls) click-to-move
+		setGame((g) => g.setCursor(location).touch().autoMove().autoFoundationAll());
 	}
 
 	return (
