@@ -17,10 +17,11 @@ import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 	|   b       |
 	+-----------+
 
-	TODO (animation) cards sliding
-	TODO (animation) cell selection rotation
-	TODO (animation) invalid move animation
+	TODO (animation) animate cards sliding
+	TODO (animation) animate cell selection rotation
+	TODO (animation) animate invalid move animation
 	TODO (animation) animate moving a sequence
+	TODO (animation) animate cursorBox movement
 
 	TODO (deployment) various sizes of tall -> portrait -> landscape -> wide
 	 - if not well defined playing fields to spot check, at least a reminder to play with the screen size

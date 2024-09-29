@@ -40,7 +40,7 @@ const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 */
 const BOTTOM_OF_CASCADE = 99;
 
-// FIXME remove auto-foundation-tween
+// TODO (techdebt) remove auto-foundation-tween
 type PreviousActionType =
 	| 'init'
 	| 'shuffle'
@@ -54,6 +54,15 @@ type PreviousActionType =
 export interface PreviousAction {
 	text: string;
 	type: PreviousActionType;
+}
+
+/**
+	cards need to remain in consitent order for react[key=""] to work
+
+	TODO (techdebt) move to game-utils
+*/
+function __cloneCards(cards: Card[]) {
+	return cards.map((card) => ({ ...card }));
 }
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
@@ -105,7 +114,7 @@ export class FreeCell {
 
 		if (cards) {
 			// cards need to remain in consitent order for react[key=""] to work
-			this.cards = cards.map((card) => ({ ...card }));
+			this.cards = __cloneCards(cards);
 
 			// we want the objects in "cards" and there rest of the game board
 			// IDEA (techdebt) should we calc cells/foundations/tableau/deck on demand instead of in the constructor?
@@ -196,24 +205,25 @@ export class FreeCell {
 		if (!location) return DEFAULT_CURSOR_LOCATION;
 
 		const [d0, d1] = location.data;
-		if (location.fixture === 'cell') {
-			if (d0 < 0) return { fixture: 'cell', data: [0] };
-			else if (d0 >= this.cells.length) return { fixture: 'cell', data: [this.cells.length - 1] };
-			else return location;
-		} else if (location.fixture === 'foundation') {
-			if (d0 < 0) return { fixture: 'foundation', data: [0] };
-			else if (d0 >= this.foundations.length)
-				return { fixture: 'foundation', data: [this.foundations.length - 1] };
-			else return location;
-		} else if (location.fixture === 'cascade') {
-			const n0 = Math.max(0, Math.min(d0, this.tableau.length - 1));
-			const n1 = Math.max(0, Math.min(d1, this.tableau[n0].length - 1));
-			return { fixture: 'cascade', data: [n0, n1] };
-		} else {
-			// if (location.fixture === 'deck') {
-			if (d0 < 0) return { fixture: 'deck', data: [0] };
-			else if (d0 >= this.deck.length) return { fixture: 'deck', data: [this.deck.length - 1] };
-			else return location;
+		switch (location.fixture) {
+			case 'cell':
+				if (d0 < 0) return { fixture: 'cell', data: [0] };
+				else if (d0 >= this.cells.length) return { fixture: 'cell', data: [this.cells.length - 1] };
+				else return location;
+			case 'foundation':
+				if (d0 < 0) return { fixture: 'foundation', data: [0] };
+				else if (d0 >= this.foundations.length)
+					return { fixture: 'foundation', data: [this.foundations.length - 1] };
+				else return location;
+			case 'cascade': {
+				const n0 = Math.max(0, Math.min(d0, this.tableau.length - 1));
+				const n1 = Math.max(0, Math.min(d1, this.tableau[n0].length - 1));
+				return { fixture: 'cascade', data: [n0, n1] };
+			}
+			case 'deck':
+				if (d0 < 0) return { fixture: 'deck', data: [0] };
+				else if (d0 >= this.deck.length) return { fixture: 'deck', data: [this.deck.length - 1] };
+				else return location;
 		}
 	}
 
@@ -479,6 +489,7 @@ export class FreeCell {
 		limit?: AutoFoundationLimit;
 		method?: AutoFoundationMethod;
 	} = {}): FreeCell | this {
+		// TODO (techdebt) replace `const game = this.__clone({})` with `return this.__clone({})`
 		let game = this.__clone({
 			action: { text: 'auto-foundation setup', type: 'auto-foundation-tween' },
 		});
@@ -655,29 +666,44 @@ export class FreeCell {
 		if (seed === undefined) {
 			seed = Math.floor(Math.random() * 32000) + 1;
 		}
-		const game = this.__clone({
-			action: { text: `shuffle deck (${seed.toString(10)})`, type: 'shuffle' },
-		}); // FIXME remove
 
-		if (game.deck.length !== RankList.length * SuitList.length)
-			throw new Error('can only shuffle full decks');
+		const actionText = `shuffle deck (${seed.toString(10)})`;
+		const cards = __cloneCards(this.cards);
+		const deck: Card[] = [];
+		cards.forEach((card) => {
+			switch (card.location.fixture) {
+				case 'deck':
+					deck[card.location.data[0]] = card;
+					break;
+				case 'cell':
+				case 'foundation':
+				case 'cascade':
+					break;
+			}
+		});
+
 		let temp: Card;
-		for (let i = game.deck.length; i > 0; i--) {
+		for (let i = deck.length; i > 0; i--) {
 			seed = (214013 * seed + 2531011) % Math.pow(2, 31);
 			const j = Math.floor(seed / Math.pow(2, 16)) % i;
 
 			// swap
-			temp = game.deck[i - 1];
-			game.deck[i - 1] = game.deck[j];
-			game.deck[j] = temp;
+			temp = deck[i - 1];
+			deck[i - 1] = deck[j];
+			deck[j] = temp;
 		}
 
 		// update card locations
-		game.deck.forEach((c, idx) => {
+		deck.forEach((c, idx) => {
 			c.location = { fixture: 'deck', data: [idx] };
 		});
 
-		return game;
+		return this.__clone({
+			action: { text: actionText, type: 'shuffle' },
+			cards,
+			selection: null,
+			availableMoves: null,
+		});
 	}
 
 	/** @deprecated this is just for testing; we want to animate each card delt */
@@ -685,7 +711,8 @@ export class FreeCell {
 		demo = false,
 		keepDeck = false,
 	}: { demo?: boolean; keepDeck?: boolean } = {}): FreeCell {
-		const game = this.__clone({ action: { text: 'deal all cards', type: 'deal' } }); // FIXME remove
+		// TODO (techdebt) replace `const game = this.__clone({})` with `return this.__clone({})`
+		const game = this.__clone({ action: { text: 'deal all cards', type: 'deal' } });
 
 		const remaining = demo ? game.cells.length + game.foundations.length : 0;
 
@@ -727,8 +754,11 @@ export class FreeCell {
 				const clampD0 = Math.max(0, Math.min(reversePrevD0, game.deck.length));
 				const nextD0 = game.deck.length - 1 - clampD0;
 				game.cursor.data[0] = nextD0;
-				game.previousAction.text = 'deal most cards';
 			}
+		}
+
+		if (game.deck.length) {
+			game.previousAction.text = 'deal most cards';
 		}
 
 		return game;

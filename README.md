@@ -18,6 +18,8 @@ TODO (motivation) main development tasks:
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO (deployment) portrait vs landscape mode (portait on phone is ssoooooo small)
 - TODO (motivation) movement needs to be fun, animations are important, every time a card moves, it must not jump
+  - foundation -> deck
+  - shuffle
   - deal each card
   - card flips (back -> face -> back)
   - cursor
