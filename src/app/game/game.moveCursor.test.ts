@@ -10,39 +10,39 @@ describe('game.moveCursor', () => {
 
 				game = game.moveCursor('right');
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
-				expect(game.previousAction).toBe('cursor right');
+				expect(game.previousAction.text).toBe('cursor right');
 
 				game = game.moveCursor('right').moveCursor('right');
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [3] });
-				expect(game.previousAction).toBe('cursor right');
+				expect(game.previousAction.text).toBe('cursor right');
 
 				game = game.moveCursor('left');
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [2] });
-				expect(game.previousAction).toBe('cursor left');
+				expect(game.previousAction.text).toBe('cursor left');
 
 				game = game.moveCursor('left').moveCursor('left');
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
-				expect(game.previousAction).toBe('cursor left');
+				expect(game.previousAction.text).toBe('cursor left');
 			});
 
 			test('going off-left wraps to foundation', () => {
 				// start left, move left
 				const game = new FreeCell({ cursor: { fixture: 'cell', data: [0] } }).moveCursor('left');
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [3] });
-				expect(game.previousAction).toBe('cursor left w');
+				expect(game.previousAction.text).toBe('cursor left w');
 			});
 
 			test('going off-right wraps to foundation', () => {
 				// start right, move right
 				const game = new FreeCell({ cursor: { fixture: 'cell', data: [3] } }).moveCursor('right');
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
-				expect(game.previousAction).toBe('cursor right w');
+				expect(game.previousAction.text).toBe('cursor right w');
 			});
 
 			test('going off-top stops', () => {
 				const game = new FreeCell({ cursor: { fixture: 'cell', data: [2] } }).moveCursor('up');
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [2] });
-				expect(game.previousAction).toBe('cursor stop');
+				expect(game.previousAction.text).toBe('cursor stop');
 			});
 
 			describe('going off-bottom moves to cascade', () => {
@@ -53,7 +53,7 @@ describe('game.moveCursor', () => {
 						.moveCursor('down');
 					expect(game.tableau[2].length).toBe(7);
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
-					expect(game.previousAction).toBe('cursor down w');
+					expect(game.previousAction.text).toBe('cursor down w');
 				});
 
 				// moves to top of sequence (at the bottom of the cascade)
@@ -64,7 +64,7 @@ describe('game.moveCursor', () => {
 					const game = new FreeCell({ cursor: { fixture: 'cell', data: [2] } }).moveCursor('down');
 					expect(game.tableau[2].length).toBe(0);
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] });
-					expect(game.previousAction).toBe('cursor down w');
+					expect(game.previousAction.text).toBe('cursor down w');
 				});
 			});
 
@@ -76,12 +76,12 @@ describe('game.moveCursor', () => {
 				game = game.setCursor({ fixture: 'cell', data: [0] }).moveCursor('down');
 				expect(game.tableau[0].length).toBe(6);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 5] });
-				expect(game.previousAction).toBe('cursor down w');
+				expect(game.previousAction.text).toBe('cursor down w');
 
 				game = game.setCursor({ fixture: 'cell', data: [1] }).moveCursor('down');
 				expect(game.tableau[1].length).toBe(6);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [1, 5] });
-				expect(game.previousAction).toBe('cursor down w');
+				expect(game.previousAction.text).toBe('cursor down w');
 			});
 
 			test.todo('size mismatch: cell + foundation > tableau');
@@ -94,19 +94,19 @@ describe('game.moveCursor', () => {
 
 				game = game.moveCursor('right');
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [1] });
-				expect(game.previousAction).toBe('cursor right');
+				expect(game.previousAction.text).toBe('cursor right');
 
 				game = game.moveCursor('right').moveCursor('right');
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [3] });
-				expect(game.previousAction).toBe('cursor right');
+				expect(game.previousAction.text).toBe('cursor right');
 
 				game = game.moveCursor('left');
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [2] });
-				expect(game.previousAction).toBe('cursor left');
+				expect(game.previousAction.text).toBe('cursor left');
 
 				game = game.moveCursor('left').moveCursor('left');
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
-				expect(game.previousAction).toBe('cursor left');
+				expect(game.previousAction.text).toBe('cursor left');
 			});
 
 			test('going off-left wraps to cell', () => {
@@ -115,7 +115,7 @@ describe('game.moveCursor', () => {
 					'left'
 				);
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [3] });
-				expect(game.previousAction).toBe('cursor left w');
+				expect(game.previousAction.text).toBe('cursor left w');
 			});
 
 			test('going off-right wraps to cell', () => {
@@ -124,7 +124,7 @@ describe('game.moveCursor', () => {
 					'right'
 				);
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
-				expect(game.previousAction).toBe('cursor right w');
+				expect(game.previousAction.text).toBe('cursor right w');
 			});
 
 			test('going off-top stops', () => {
@@ -132,7 +132,7 @@ describe('game.moveCursor', () => {
 					'up'
 				);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [1] });
-				expect(game.previousAction).toBe('cursor stop');
+				expect(game.previousAction.text).toBe('cursor stop');
 			});
 
 			describe('going off-bottom moves to cascade', () => {
@@ -142,7 +142,7 @@ describe('game.moveCursor', () => {
 						.moveCursor('down');
 					expect(game.tableau[5].length).toBe(6);
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 5] });
-					expect(game.previousAction).toBe('cursor down w');
+					expect(game.previousAction.text).toBe('cursor down w');
 				});
 
 				// moves to top of sequence (at the bottom of the cascade)
@@ -155,7 +155,7 @@ describe('game.moveCursor', () => {
 					);
 					expect(game.tableau[2].length).toBe(0);
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
-					expect(game.previousAction).toBe('cursor down w');
+					expect(game.previousAction.text).toBe('cursor down w');
 				});
 			});
 
@@ -167,22 +167,22 @@ describe('game.moveCursor', () => {
 				game = game.setCursor({ fixture: 'foundation', data: [0] }).moveCursor('down');
 				expect(game.tableau[6].length).toBe(5);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 4] });
-				expect(game.previousAction).toBe('cursor down w');
+				expect(game.previousAction.text).toBe('cursor down w');
 
 				game = game.setCursor({ fixture: 'foundation', data: [1] }).moveCursor('down');
 				expect(game.tableau[6].length).toBe(5);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 4] });
-				expect(game.previousAction).toBe('cursor down w');
+				expect(game.previousAction.text).toBe('cursor down w');
 
 				game = game.setCursor({ fixture: 'foundation', data: [2] }).moveCursor('down');
 				expect(game.tableau[8].length).toBe(5);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [8, 4] });
-				expect(game.previousAction).toBe('cursor down w');
+				expect(game.previousAction.text).toBe('cursor down w');
 
 				game = game.setCursor({ fixture: 'foundation', data: [3] }).moveCursor('down');
 				expect(game.tableau[9].length).toBe(5);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [9, 4] });
-				expect(game.previousAction).toBe('cursor down w');
+				expect(game.previousAction.text).toBe('cursor down w');
 			});
 
 			test.todo('size mismatch: cell + foundation > tableau');
@@ -196,7 +196,7 @@ describe('game.moveCursor', () => {
 
 					game = game.moveCursor('right');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [1, 2] });
-					expect(game.previousAction).toBe('cursor right');
+					expect(game.previousAction.text).toBe('cursor right');
 
 					game = game
 						.moveCursor('right') // 2
@@ -206,11 +206,11 @@ describe('game.moveCursor', () => {
 						.moveCursor('right') // 6
 						.moveCursor('right');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 2] });
-					expect(game.previousAction).toBe('cursor right');
+					expect(game.previousAction.text).toBe('cursor right');
 
 					game = game.moveCursor('left');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 2] });
-					expect(game.previousAction).toBe('cursor left');
+					expect(game.previousAction.text).toBe('cursor left');
 
 					game = game
 						.moveCursor('left') // 5
@@ -220,7 +220,7 @@ describe('game.moveCursor', () => {
 						.moveCursor('left') // 1
 						.moveCursor('left');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 2] });
-					expect(game.previousAction).toBe('cursor left');
+					expect(game.previousAction.text).toBe('cursor left');
 				});
 
 				test('empty', () => {
@@ -229,7 +229,7 @@ describe('game.moveCursor', () => {
 
 					game = game.moveCursor('right');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [1, 0] });
-					expect(game.previousAction).toBe('cursor right');
+					expect(game.previousAction.text).toBe('cursor right');
 
 					game = game
 						.moveCursor('right') // 2
@@ -239,11 +239,11 @@ describe('game.moveCursor', () => {
 						.moveCursor('right') // 6
 						.moveCursor('right');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
-					expect(game.previousAction).toBe('cursor right');
+					expect(game.previousAction.text).toBe('cursor right');
 
 					game = game.moveCursor('left');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 0] });
-					expect(game.previousAction).toBe('cursor left');
+					expect(game.previousAction.text).toBe('cursor left');
 
 					game = game
 						.moveCursor('left') // 5
@@ -253,7 +253,7 @@ describe('game.moveCursor', () => {
 						.moveCursor('left') // 1
 						.moveCursor('left');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 0] });
-					expect(game.previousAction).toBe('cursor left');
+					expect(game.previousAction.text).toBe('cursor left');
 				});
 
 				test('bottom of cascade when smaller', () => {
@@ -264,7 +264,7 @@ describe('game.moveCursor', () => {
 
 					game = game.moveCursor('right');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [4, 5] });
-					expect(game.previousAction).toBe('cursor right');
+					expect(game.previousAction.text).toBe('cursor right');
 				});
 			});
 
@@ -274,7 +274,7 @@ describe('game.moveCursor', () => {
 
 				game = game.moveCursor('down');
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 1] });
-				expect(game.previousAction).toBe('cursor down');
+				expect(game.previousAction.text).toBe('cursor down');
 
 				game = game
 					.moveCursor('down') // 2
@@ -283,11 +283,11 @@ describe('game.moveCursor', () => {
 					.moveCursor('down') // 5
 					.moveCursor('down');
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
-				expect(game.previousAction).toBe('cursor down');
+				expect(game.previousAction.text).toBe('cursor down');
 
 				game = game.moveCursor('up');
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 5] });
-				expect(game.previousAction).toBe('cursor up');
+				expect(game.previousAction.text).toBe('cursor up');
 
 				game = game
 					.moveCursor('up') // 4
@@ -296,7 +296,7 @@ describe('game.moveCursor', () => {
 					.moveCursor('up') // 1
 					.moveCursor('up');
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] });
-				expect(game.previousAction).toBe('cursor up');
+				expect(game.previousAction.text).toBe('cursor up');
 			});
 
 			test('going off-left wraps', () => {
@@ -306,7 +306,7 @@ describe('game.moveCursor', () => {
 					.setCursor({ fixture: 'cascade', data: [0, 4] })
 					.moveCursor('left');
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 4] });
-				expect(game.previousAction).toBe('cursor left w');
+				expect(game.previousAction.text).toBe('cursor left w');
 			});
 
 			test('going off-right wraps', () => {
@@ -316,7 +316,7 @@ describe('game.moveCursor', () => {
 					.setCursor({ fixture: 'cascade', data: [7, 4] })
 					.moveCursor('right');
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 4] });
-				expect(game.previousAction).toBe('cursor right w');
+				expect(game.previousAction.text).toBe('cursor right w');
 			});
 
 			describe('going off-top', () => {
@@ -326,7 +326,7 @@ describe('game.moveCursor', () => {
 						.setCursor({ fixture: 'cascade', data: [2, 0] })
 						.moveCursor('up');
 					expect(game.cursor).toEqual({ fixture: 'cell', data: [2] });
-					expect(game.previousAction).toBe('cursor up w');
+					expect(game.previousAction.text).toBe('cursor up w');
 				});
 
 				test('moves to foundation', () => {
@@ -337,7 +337,7 @@ describe('game.moveCursor', () => {
 						.setCursor({ fixture: 'cascade', data: [5, 0] })
 						.moveCursor('up');
 					expect(game.cursor).toEqual({ fixture: 'foundation', data: [1] });
-					expect(game.previousAction).toBe('cursor up w');
+					expect(game.previousAction.text).toBe('cursor up w');
 				});
 
 				describe('size mismatch: cell + foundation < tableau', () => {
@@ -371,7 +371,7 @@ describe('game.moveCursor', () => {
 								.setCursor({ fixture: 'cascade', data: [col, 0] })
 								.moveCursor('up');
 							expect(game.cursor).toEqual(location);
-							expect(game.previousAction).toBe(action);
+							expect(game.previousAction.text).toBe(action);
 						}
 					);
 				});
@@ -387,7 +387,7 @@ describe('game.moveCursor', () => {
 					expect(game.tableau[2].length).toBe(0);
 					expect(game.deck.length).toBe(52);
 					expect(game.cursor).toEqual({ fixture: 'deck', data: [49] });
-					expect(game.previousAction).toBe('cursor down w');
+					expect(game.previousAction.text).toBe('cursor down w');
 				});
 
 				// i.e. if the deck has 1 card in it, and the cursor is in the middle of the tableau
@@ -400,7 +400,7 @@ describe('game.moveCursor', () => {
 						.moveCursor('down');
 					expect(game.tableau[2].length).toBe(7);
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
-					expect(game.previousAction).toBe('cursor stop');
+					expect(game.previousAction.text).toBe('cursor stop');
 				});
 			});
 		});
@@ -412,7 +412,7 @@ describe('game.moveCursor', () => {
 
 				game = game.moveCursor('right');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [8] });
-				expect(game.previousAction).toBe('cursor right');
+				expect(game.previousAction.text).toBe('cursor right');
 
 				game = game
 					.moveCursor('right') // 7
@@ -422,11 +422,11 @@ describe('game.moveCursor', () => {
 					.moveCursor('right') // 3
 					.moveCursor('right');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
-				expect(game.previousAction).toBe('cursor right');
+				expect(game.previousAction.text).toBe('cursor right');
 
 				game = game.moveCursor('left');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [3] });
-				expect(game.previousAction).toBe('cursor left');
+				expect(game.previousAction.text).toBe('cursor left');
 
 				game = game
 					.moveCursor('left') // 4
@@ -436,27 +436,27 @@ describe('game.moveCursor', () => {
 					.moveCursor('left') // 8
 					.moveCursor('left');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [9] });
-				expect(game.previousAction).toBe('cursor left');
+				expect(game.previousAction.text).toBe('cursor left');
 			});
 
 			test('going off-left wraps', () => {
 				// start left, move left (reversed)
 				const game = new FreeCell({ cursor: { fixture: 'deck', data: [51] } }).moveCursor('left');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
-				expect(game.previousAction).toBe('cursor left w');
+				expect(game.previousAction.text).toBe('cursor left w');
 			});
 
 			test('going off-right wraps', () => {
 				// start right, move right (reversed)
 				const game = new FreeCell({ cursor: { fixture: 'deck', data: [0] } }).moveCursor('right');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
-				expect(game.previousAction).toBe('cursor right w');
+				expect(game.previousAction.text).toBe('cursor right w');
 			});
 
 			test('going off-bottom stops', () => {
 				const game = new FreeCell({ cursor: { fixture: 'deck', data: [15] } }).moveCursor('down');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [15] });
-				expect(game.previousAction).toBe('cursor stop');
+				expect(game.previousAction.text).toBe('cursor stop');
 			});
 
 			describe('going off-top moves to cascade', () => {
@@ -481,7 +481,7 @@ describe('game.moveCursor', () => {
 
 					game = game.moveCursor('up');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 5] });
-					expect(game.previousAction).toBe('cursor up w');
+					expect(game.previousAction.text).toBe('cursor up w');
 				});
 
 				// moves to top of sequence (at the bottom of the cascade)
@@ -491,13 +491,13 @@ describe('game.moveCursor', () => {
 				test('empty', () => {
 					const game = new FreeCell({ cursor: { fixture: 'deck', data: [49] } }).moveCursor('up');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] });
-					expect(game.previousAction).toBe('cursor up w');
+					expect(game.previousAction.text).toBe('cursor up w');
 				});
 
 				test('size mismatch: tableau !== deck', () => {
 					const game = new FreeCell({ cursor: { fixture: 'deck', data: [15] } }).moveCursor('up');
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
-					expect(game.previousAction).toBe('cursor up w');
+					expect(game.previousAction.text).toBe('cursor up w');
 				});
 			});
 		});

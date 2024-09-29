@@ -1065,7 +1065,10 @@ FreeCell {
     null,
     null,
   ],
-  "previousAction": "init",
+  "previousAction": {
+    "text": "init",
+    "type": "init",
+  },
   "selection": null,
   "tableau": [
     [],
@@ -1717,7 +1720,10 @@ FreeCell {
       "suit": "spades",
     },
   ],
-  "previousAction": "hand-jammed",
+  "previousAction": {
+    "text": "hand-jammed",
+    "type": "init",
+  },
   "selection": null,
   "tableau": [
     [],
@@ -2329,7 +2335,10 @@ FreeCell {
     null,
     null,
   ],
-  "previousAction": "deal all cards",
+  "previousAction": {
+    "text": "deal all cards",
+    "type": "deal",
+  },
   "selection": null,
   "tableau": [
     [

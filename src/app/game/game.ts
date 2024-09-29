@@ -40,6 +40,22 @@ const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 */
 const BOTTOM_OF_CASCADE = 99;
 
+// FIXME remove auto-foundation-tween
+type PreviousActionType =
+	| 'init'
+	| 'shuffle'
+	| 'deal'
+	| 'cursor'
+	| 'select'
+	| 'deselect'
+	| 'move'
+	| 'invalid'
+	| 'auto-foundation-tween';
+export interface PreviousAction {
+	text: string;
+	type: PreviousActionType;
+}
+
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
 export class FreeCell {
 	cards: Card[];
@@ -56,7 +72,7 @@ export class FreeCell {
 	cursor: CardLocation;
 	selection: CardSequence | null; // REVIEW (techdebt) none, single, sequence
 	availableMoves: AvailableMove[] | null;
-	previousAction: string;
+	previousAction: PreviousAction;
 
 	// custom rules
 	// readonly jokers: 'none' | 'low' | 'high' | 'wild' | 'unknown'; // XXX (techdebt) use or remove
@@ -141,14 +157,13 @@ export class FreeCell {
 		// REVIEW (techdebt) do we need to validate selection & availableMoves every time (like the cursor)?
 		this.selection = !selection ? null : getSequenceAt(this, selection.location);
 		this.availableMoves = availableMoves ?? null;
-		this.previousAction = 'init';
+		this.previousAction = { text: 'init', type: 'init' };
 	}
 
 	/**
-		REVIEW (techdebt) uses of __clone right at the start of functions
-		 - it's supposed to be for one-liners
-		 - it's supposed to be returned immediately
-		 - needing to remember to use "game" instead of "this" is a problem
+		this variable should never be saved to a local variable
+		@example
+			return this.__clone({ action: … });
 	*/
 	__clone({
 		action,
@@ -157,7 +172,7 @@ export class FreeCell {
 		selection = this.selection,
 		availableMoves = this.availableMoves,
 	}: {
-		action: string;
+		action: PreviousAction;
 		cards?: Card[];
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
@@ -203,7 +218,7 @@ export class FreeCell {
 	}
 
 	setCursor(cursor: CardLocation): FreeCell {
-		return this.__clone({ action: 'cursor set', cursor });
+		return this.__clone({ action: { text: 'cursor set', type: 'cursor' }, cursor });
 	}
 
 	// REVIEW (controls) actually play the game and see what's not quite right
@@ -222,21 +237,27 @@ export class FreeCell {
 				case 'left':
 					if (d0 <= 0)
 						return this.__clone({
-							action: 'cursor left w',
+							action: { text: 'cursor left w', type: 'cursor' },
 							cursor: { fixture: 'foundation', data: [this.foundations.length - 1] },
 						});
-					return this.__clone({ action: 'cursor left', cursor: { fixture, data: [d0 - 1] } });
+					return this.__clone({
+						action: { text: 'cursor left', type: 'cursor' },
+						cursor: { fixture, data: [d0 - 1] },
+					});
 				case 'right': {
 					if (d0 >= this.cells.length - 1)
 						return this.__clone({
-							action: 'cursor right w',
+							action: { text: 'cursor right w', type: 'cursor' },
 							cursor: { fixture: 'foundation', data: [0] },
 						});
-					return this.__clone({ action: 'cursor right', cursor: { fixture, data: [d0 + 1] } });
+					return this.__clone({
+						action: { text: 'cursor right', type: 'cursor' },
+						cursor: { fixture, data: [d0 + 1] },
+					});
 				}
 				case 'down':
 					return this.__clone({
-						action: 'cursor down w',
+						action: { text: 'cursor down w', type: 'cursor' },
 						cursor: { fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] },
 					});
 			}
@@ -247,21 +268,27 @@ export class FreeCell {
 				case 'left':
 					if (d0 <= 0)
 						return this.__clone({
-							action: 'cursor left w',
+							action: { text: 'cursor left w', type: 'cursor' },
 							cursor: { fixture: 'cell', data: [this.cells.length - 1] },
 						});
-					return this.__clone({ action: 'cursor left', cursor: { fixture, data: [d0 - 1] } });
+					return this.__clone({
+						action: { text: 'cursor left', type: 'cursor' },
+						cursor: { fixture, data: [d0 - 1] },
+					});
 				case 'right': {
 					if (d0 >= this.foundations.length - 1)
 						return this.__clone({
-							action: 'cursor right w',
+							action: { text: 'cursor right w', type: 'cursor' },
 							cursor: { fixture: 'cell', data: [0] },
 						});
-					return this.__clone({ action: 'cursor right', cursor: { fixture, data: [d0 + 1] } });
+					return this.__clone({
+						action: { text: 'cursor right', type: 'cursor' },
+						cursor: { fixture, data: [d0 + 1] },
+					});
 				}
 				case 'down':
 					return this.__clone({
-						action: 'cursor down w',
+						action: { text: 'cursor down w', type: 'cursor' },
 						cursor: {
 							fixture: 'cascade',
 							data: [this.tableau.length - this.foundations.length + d0, BOTTOM_OF_CASCADE],
@@ -276,13 +303,13 @@ export class FreeCell {
 						//         0123   4567   89ab      01234567   89ab
 						if (d0 < this.cells.length) {
 							return this.__clone({
-								action: 'cursor up w',
+								action: { text: 'cursor up w', type: 'cursor' },
 								cursor: { fixture: 'cell', data: [d0] },
 							});
 						}
 						if (this.tableau.length - 1 - d0 < this.foundations.length) {
 							return this.__clone({
-								action: 'cursor up w',
+								action: { text: 'cursor up w', type: 'cursor' },
 								cursor: {
 									fixture: 'foundation',
 									data: [this.foundations.length - (this.tableau.length - d0)],
@@ -290,36 +317,48 @@ export class FreeCell {
 							});
 						}
 					}
-					return this.__clone({ action: 'cursor up', cursor: { fixture, data: [d0, d1 - 1] } });
+					return this.__clone({
+						action: { text: 'cursor up', type: 'cursor' },
+						cursor: { fixture, data: [d0, d1 - 1] },
+					});
 				case 'left':
 					// if d1 is too large, it will be fixed with __clampCursor
 					if (d0 <= 0)
 						return this.__clone({
-							action: 'cursor left w',
+							action: { text: 'cursor left w', type: 'cursor' },
 							cursor: { fixture: 'cascade', data: [this.tableau.length - 1, d1] },
 						});
-					return this.__clone({ action: 'cursor left', cursor: { fixture, data: [d0 - 1, d1] } });
+					return this.__clone({
+						action: { text: 'cursor left', type: 'cursor' },
+						cursor: { fixture, data: [d0 - 1, d1] },
+					});
 				case 'right':
 					// if d1 is too large, it will be fixed with __clampCursor
 					if (d0 >= this.tableau.length - 1)
 						return this.__clone({
-							action: 'cursor right w',
+							action: { text: 'cursor right w', type: 'cursor' },
 							cursor: { fixture: 'cascade', data: [0, d1] },
 						});
-					return this.__clone({ action: 'cursor right', cursor: { fixture, data: [d0 + 1, d1] } });
+					return this.__clone({
+						action: { text: 'cursor right', type: 'cursor' },
+						cursor: { fixture, data: [d0 + 1, d1] },
+					});
 				case 'down':
 					if (d1 >= this.tableau[d0].length - 1) {
 						if (this.deck.length) {
 							// deck is rendered in reverse
 							return this.__clone({
-								action: 'cursor down w',
+								action: { text: 'cursor down w', type: 'cursor' },
 								cursor: { fixture: 'deck', data: [this.deck.length - 1 - d0] },
 							});
 						}
 						// TODO (controls) same as up (from top)
 						break;
 					}
-					return this.__clone({ action: 'cursor down', cursor: { fixture, data: [d0, d1 + 1] } });
+					return this.__clone({
+						action: { text: 'cursor down', type: 'cursor' },
+						cursor: { fixture, data: [d0, d1 + 1] },
+					});
 			}
 		} else {
 			switch (dir) {
@@ -329,37 +368,50 @@ export class FreeCell {
 					// REVIEW (controls) spread up/down between cascade and deck?
 					//  - i.e. use the cascade to jump multiple cards in the deck
 					return this.__clone({
-						action: 'cursor up w',
+						action: { text: 'cursor up w', type: 'cursor' },
 						cursor: { fixture: 'cascade', data: [this.deck.length - 1 - d0, BOTTOM_OF_CASCADE] },
 					});
 				case 'left':
 					// left and right are reversed in the deck
 					if (d0 === this.deck.length - 1) {
-						return this.__clone({ action: 'cursor left w', cursor: { fixture, data: [0] } });
+						return this.__clone({
+							action: { text: 'cursor left w', type: 'cursor' },
+							cursor: { fixture, data: [0] },
+						});
 					}
-					return this.__clone({ action: 'cursor left', cursor: { fixture, data: [d0 + 1] } });
+					return this.__clone({
+						action: { text: 'cursor left', type: 'cursor' },
+						cursor: { fixture, data: [d0 + 1] },
+					});
 				case 'right':
 					// left and right are reversed in the deck
 					if (d0 === 0) {
 						return this.__clone({
-							action: 'cursor right w',
+							action: { text: 'cursor right w', type: 'cursor' },
 							cursor: { fixture, data: [this.deck.length - 1] },
 						});
 					}
-					return this.__clone({ action: 'cursor right', cursor: { fixture, data: [d0 - 1] } });
+					return this.__clone({
+						action: { text: 'cursor right', type: 'cursor' },
+						cursor: { fixture, data: [d0 - 1] },
+					});
 				case 'down':
 					break;
 			}
 		}
 
 		// noop
-		return this.__clone({ action: 'cursor stop' });
+		return this.__clone({ action: { text: 'cursor stop', type: 'cursor' } });
 	}
 
 	clearSelection(): FreeCell | this {
 		if (this.selection) {
-			const action = 'deselect ' + shorthandSequence(this.selection, true);
-			return this.__clone({ action, selection: null, availableMoves: null });
+			const text = 'deselect ' + shorthandSequence(this.selection, true);
+			return this.__clone({
+				action: { text, type: 'deselect' },
+				selection: null,
+				availableMoves: null,
+			});
 		}
 		return this;
 	}
@@ -376,40 +428,45 @@ export class FreeCell {
 			return this.clearSelection();
 		}
 
-		const game = this.__clone({ action: 'touch' });
-
 		// TODO (controls) allow "growing/shrinking sequence of current selection"
 		// TODO (controls) || !game.availableMoves?.length (if the current selection has no valid moves)
-		if (!game.selection?.canMove) {
-			const selection = getSequenceAt(game, game.cursor);
+		// TODO (controls) allow moving selection from one cell to another cell
+		if (!this.selection?.canMove) {
+			const selection = getSequenceAt(this, this.cursor);
 			// we can't do anything with a foundation (we can move cards off of it)
 			// - therefore it doesn't make sense to select it
 			// - you'd have to deselect it before you can continue with gameplay
-			if (selection.cards.length && game.cursor.fixture !== 'foundation') {
-				game.selection = selection;
-				game.availableMoves = findAvailableMoves(game); // XXX (techdebt) defer until later? unless we have debug render on
-				game.previousAction = 'select ' + shorthandSequence(selection, true);
-				return game;
+			if (selection.cards.length && this.cursor.fixture !== 'foundation') {
+				return this.__clone({
+					action: { text: 'select ' + shorthandSequence(selection, true), type: 'select' },
+					selection,
+					availableMoves: findAvailableMoves(this, selection),
+				});
 			}
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length) {
 			// XXX (techdebt) can we test this? should we remove this?
-			return this.__clone({ action: 'touch stop' });
+			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
 		}
 
-		const action = calcMoveActionText(this.selection, getSequenceAt(this, this.cursor));
+		const actionText = calcMoveActionText(this.selection, getSequenceAt(this, this.cursor));
 
 		const valid = this.availableMoves.some(({ location }) =>
 			isLocationEqual(this.cursor, location)
 		);
 		if (valid) {
 			const cards = moveCards(this, this.selection, this.cursor);
-			return this.__clone({ action, cards, selection: null, availableMoves: null });
+			return this.__clone({
+				action: { text: actionText, type: 'move' },
+				cards,
+				selection: null,
+				availableMoves: null,
+			});
 		}
 
 		// TODO (animation) animate invalid move
-		return this.__clone({ action: 'invalid ' + action });
+		return this.__clone({ action: { text: 'invalid ' + actionText, type: 'invalid' } });
 	}
 
 	/**
@@ -422,7 +479,9 @@ export class FreeCell {
 		limit?: AutoFoundationLimit;
 		method?: AutoFoundationMethod;
 	} = {}): FreeCell | this {
-		let game = this.__clone({ action: 'auto-foundation setup' });
+		let game = this.__clone({
+			action: { text: 'auto-foundation setup', type: 'auto-foundation-tween' },
+		});
 		const moved: Card[] = [];
 
 		// TODO (techdebt) don't autoFoundation just _any_ time, only do it after a card moves (check previousAction)
@@ -443,7 +502,10 @@ export class FreeCell {
 						didMove = true;
 						didMoveAny = true;
 						const cards = moveCards(game, sequenceToMove, availableMove.location);
-						game = game.__clone({ action: 'auto-foundation middle', cards });
+						game = game.__clone({
+							action: { text: 'auto-foundation middle', type: 'auto-foundation-tween' },
+							cards,
+						});
 						moved.push(c);
 					}
 				});
@@ -465,7 +527,10 @@ export class FreeCell {
 							didMove = true;
 							didMoveAny = true;
 							const cards = moveCards(game, sequenceToMove, availableMove.location);
-							game = game.__clone({ action: 'auto-foundation middle', cards });
+							game = game.__clone({
+								action: { text: 'auto-foundation middle', type: 'auto-foundation-tween' },
+								cards,
+							});
 							moved.push(sequenceToMove.cards[0]);
 						}
 					}
@@ -491,7 +556,10 @@ export class FreeCell {
 											data: [f_idx],
 										}
 									);
-									game = game.__clone({ action: 'auto-foundation middle', cards });
+									game = game.__clone({
+										action: { text: 'auto-foundation middle', type: 'auto-foundation-tween' },
+										cards,
+									});
 									moved.push(c);
 								}
 							}
@@ -515,7 +583,10 @@ export class FreeCell {
 											data: [f_idx],
 										}
 									);
-									game = game.__clone({ action: 'auto-foundation middle', cards });
+									game = game.__clone({
+										action: { text: 'auto-foundation middle', type: 'auto-foundation-tween' },
+										cards,
+									});
 									moved.push(c);
 								}
 							}
@@ -529,7 +600,7 @@ export class FreeCell {
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (didMoveAny) {
 			const movedStr = moved.map((card) => shorthandCard(card)).join(',');
-			return game.__clone({ action: `auto-foundation ${movedStr}` });
+			return game.__clone({ action: { text: `auto-foundation ${movedStr}`, type: 'move' } });
 		}
 
 		// silent noop
@@ -539,8 +610,7 @@ export class FreeCell {
 	autoMove(): FreeCell | this {
 		if (!this.selection) return this;
 		if (!this.availableMoves?.length) return this;
-		// REVIEW (techdebt) use the move history instead of the action text?
-		if (!this.previousAction.startsWith('select')) return this;
+		if (this.previousAction.type !== 'select') return this;
 
 		// find the highest priority, prioritize first one
 		const to_location = this.availableMoves.reduce((ret, next) => {
@@ -548,12 +618,12 @@ export class FreeCell {
 			return ret;
 		}, this.availableMoves[0]).location;
 
-		const action = calcMoveActionText(this.selection, getSequenceAt(this, to_location));
+		const actionText = calcMoveActionText(this.selection, getSequenceAt(this, to_location));
 		const cards = moveCards(this, this.selection, to_location);
 		// move the cursor to the destination
 		// clear the selection
 		return this.__clone({
-			action,
+			action: { text: actionText, type: 'move' },
 			cards,
 			cursor: to_location,
 			selection: null,
@@ -567,10 +637,10 @@ export class FreeCell {
 		// select from, move to
 		let game = this.setCursor(from).touch().setCursor(to).touch();
 
-		const previousAction = game.previousAction;
+		const previousActionText = game.previousAction.text;
 		game = game.autoFoundationAll();
-		if (game.previousAction !== previousAction) {
-			game.previousAction = `${previousAction} (${game.previousAction})`;
+		if (game.previousAction.text !== previousActionText) {
+			game.previousAction.text = `${previousActionText} (${game.previousAction.text})`;
 		}
 
 		return game;
@@ -585,7 +655,9 @@ export class FreeCell {
 		if (seed === undefined) {
 			seed = Math.floor(Math.random() * 32000) + 1;
 		}
-		const game = this.__clone({ action: `shuffle deck (${seed.toString(10)})` });
+		const game = this.__clone({
+			action: { text: `shuffle deck (${seed.toString(10)})`, type: 'shuffle' },
+		}); // FIXME remove
 
 		if (game.deck.length !== RankList.length * SuitList.length)
 			throw new Error('can only shuffle full decks');
@@ -613,7 +685,7 @@ export class FreeCell {
 		demo = false,
 		keepDeck = false,
 	}: { demo?: boolean; keepDeck?: boolean } = {}): FreeCell {
-		const game = this.__clone({ action: 'deal all cards' });
+		const game = this.__clone({ action: { text: 'deal all cards', type: 'deal' } }); // FIXME remove
 
 		const remaining = demo ? game.cells.length + game.foundations.length : 0;
 
@@ -655,7 +727,7 @@ export class FreeCell {
 				const clampD0 = Math.max(0, Math.min(reversePrevD0, game.deck.length));
 				const nextD0 = game.deck.length - 1 - clampD0;
 				game.cursor.data[0] = nextD0;
-				game.previousAction = 'deal most cards';
+				game.previousAction.text = 'deal most cards';
 			}
 		}
 
@@ -784,7 +856,7 @@ export class FreeCell {
 
 		// XXX (print) print and parse move history?
 
-		str += '\n ' + this.previousAction;
+		str += '\n ' + this.previousAction.text;
 		return str;
 	}
 
@@ -931,7 +1003,7 @@ export class FreeCell {
 		});
 
 		line.pop();
-		const action = line.reverse().join('');
+		const actionText = line.reverse().join('');
 
 		// sus out the cursor/selection locations
 		// TODO (techdebt) is there any way to simplify this?
@@ -1001,9 +1073,10 @@ export class FreeCell {
 		const game = new FreeCell({ cellCount, cascadeCount, cards, cursor });
 		if (selection_location) {
 			game.selection = getSequenceAt(game, selection_location);
-			game.availableMoves = findAvailableMoves(game);
+			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
-		game.previousAction = action;
+		// FIXME (techdebt) parse action text (i.e. recover type)
+		game.previousAction = { text: actionText, type: 'init' };
 		return game;
 	}
 

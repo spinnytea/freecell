@@ -59,7 +59,7 @@ describe('game.touch', () => {
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 
 				game = game.setCursor({ fixture: 'deck', data: [51] }).touch();
-				expect(game.previousAction).toBe('deselect KS');
+				expect(game.previousAction.text).toBe('deselect KS');
 				expect(game.selection).toEqual(null);
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 			});
@@ -69,7 +69,7 @@ describe('game.touch', () => {
 					.dealAll({ demo: true })
 					.setCursor({ fixture: 'deck', data: [0] })
 					.touch();
-				expect(game.previousAction).toBe('touch stop');
+				expect(game.previousAction.text).toBe('touch stop');
 				expect(game.selection).toEqual(null);
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(
 					game.print()
@@ -175,7 +175,7 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'cell', data: [1] }).touch();
 				expect(game.selection).toEqual(null);
-				expect(game.previousAction).toBe('deselect b QD');
+				expect(game.previousAction.text).toBe('deselect b QD');
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(
 					game.print()
 				);
@@ -184,7 +184,7 @@ describe('game.touch', () => {
 			test('empty', () => {
 				game = game.setCursor({ fixture: 'cell', data: [1] }).touch();
 				expect(game.selection).toEqual(null);
-				expect(game.previousAction).toBe('touch stop');
+				expect(game.previousAction.text).toBe('touch stop');
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 			});
 		});
@@ -248,7 +248,7 @@ describe('game.touch', () => {
 			expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(game.print());
 
 			game = game.setCursor({ fixture: 'foundation', data: [2] }).touch();
-			expect(game.previousAction).toBe('touch stop');
+			expect(game.previousAction.text).toBe('touch stop');
 			expect(game.selection).toEqual(null);
 			expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(game.print());
 		});
@@ -318,7 +318,7 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'cascade', data: [4, 1] }).touch();
 				expect(game.selection).toEqual(null);
-				expect(game.previousAction).toBe('deselect 3C');
+				expect(game.previousAction.text).toBe('deselect 3C');
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(
 					game.print()
 				);
@@ -367,7 +367,7 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'cascade', data: [5, 4] }).touch();
 				expect(game.selection).toEqual(null);
-				expect(game.previousAction).toBe('deselect 6 2C');
+				expect(game.previousAction.text).toBe('deselect 6 2C');
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(
 					game.print()
 				);
@@ -420,7 +420,7 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'cascade', data: [1, 0] }).touch();
 				expect(game.selection).toEqual(null);
-				expect(game.previousAction).toBe('deselect 4D-3S-2D');
+				expect(game.previousAction.text).toBe('deselect 4D-3S-2D');
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(
 					game.print()
 				);
@@ -472,7 +472,7 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'cascade', data: [0, 4] }).touch();
 				expect(game.selection).toEqual(null);
-				expect(game.previousAction).toBe('deselect 1 QH-JC');
+				expect(game.previousAction.text).toBe('deselect 1 QH-JC');
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(
 					game.print()
 				);
