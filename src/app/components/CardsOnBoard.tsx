@@ -6,6 +6,7 @@ import { calcTopLeftZ } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/Game/GameContext';
 import { useGame } from '@/app/hooks/Game/useGame';
+import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
 
 // IDEA (hud) render cursor like a selection when there is none (then leave that render in place once selected)
 //  - i.e. as the cursor moves:
@@ -28,6 +29,7 @@ export function CardsOnBoard() {
 function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; location: CardLocation }) {
 	const fixtureSizes = useFixtureSizes();
 	const [game, setGame] = useContext(GameContext);
+	const [, setSettings] = useContext(SettingsContext);
 	const { top, left, zIndex, transform } = calcTopLeftZ(
 		fixtureSizes,
 		location,
@@ -38,6 +40,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	function onClick() {
 		// REVIEW (controls) click-to-move
 		setGame((g) => g.setCursor(location).touch().autoMove().autoFoundationAll());
+		setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 	}
 
 	return (

@@ -6,6 +6,7 @@ import { FixtureSizes } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/Game/GameContext';
 import { useGame } from '@/app/hooks/Game/useGame';
+import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
 
 export function PileMarkers() {
 	const { cursor } = useGame();
@@ -64,10 +65,12 @@ function Pile({
 	location: CardLocation;
 }) {
 	const [, setGame] = useContext(GameContext);
+	const [, setSettings] = useContext(SettingsContext);
 
 	function onClick() {
 		// REVIEW (controls) if a card is selected, move it to the empty pile
 		setGame((g) => g.setCursor(location).touch().autoFoundationAll());
+		setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 	}
 
 	const style = {

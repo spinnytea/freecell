@@ -9,21 +9,25 @@ import { WinMessage } from '@/app/components/WinMessage';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { FixtureSizesContextProvider } from '@/app/hooks/FixtureSizes/FixtureSizesContextProvider';
 import { GameContext } from '@/app/hooks/Game/GameContext';
+import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
 import { useSettings } from '@/app/hooks/Settings/useSettings';
 
 // TODO (controls) split out controls
 export default function GameBoard() {
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	const [game, setGame, newGame] = useContext(GameContext);
+	const [, setSettings] = useContext(SettingsContext);
 
 	/** REVIEW (controls) mouse */
 	function handleClick() {
 		if (game.win) {
 			// click to reset
 			setGame(() => newGame().shuffle32());
+			setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 		} else if (game.deck.length) {
 			// click to deal
 			setGame((g) => g.dealAll());
+			setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 		}
 	}
 
@@ -72,6 +76,7 @@ export default function GameBoard() {
 			}
 			if (consumed) {
 				event.stopPropagation();
+				setSettings((s) => ({ ...s, showKeyboardCursor: true }));
 			}
 		}
 
@@ -79,7 +84,7 @@ export default function GameBoard() {
 		return () => {
 			window.removeEventListener('keydown', handleKey);
 		};
-	}, [setGame, newGame]);
+	}, [setGame, newGame, setSettings]);
 
 	return (
 		<main ref={gameBoardRef} className={styles_gameboard.main} onClick={handleClick}>
@@ -97,7 +102,7 @@ function BoardLayout() {
 		<>
 			<PileMarkers />
 			<WinMessage />
-			<KeyboardCursor />
+			{settings.showKeyboardCursor && <KeyboardCursor />}
 			<CardsOnBoard />
 			<StatusBar />
 

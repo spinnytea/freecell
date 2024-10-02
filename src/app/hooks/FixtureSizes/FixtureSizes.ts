@@ -185,7 +185,6 @@ export function calcFixtureSizes({
 			offsetTop: toFixed(TB_CASCADE_OFFSET * cardHeight),
 		},
 
-		// REVIEW (hud) this is an arbitrary place to deal from
 		deck: {
 			top: toFixed(boardHeight - cardHeight - TB_HOME_TOP * cardHeight),
 			left: toFixed(cellLOffset),

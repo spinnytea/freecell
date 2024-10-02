@@ -7,8 +7,6 @@ import { useGame } from '@/app/hooks/Game/useGame';
 
 const OVERLAY_MARGINS = 4;
 
-// REVIEW (hud) which of these are necessary? move them somewhere else
-//  - or make the main game not need them (keyboard needs a cursor, but does it need a canMove selection?)
 export function DebugCursors() {
 	const fixtureSizes = useFixtureSizes();
 	const game = useGame();
