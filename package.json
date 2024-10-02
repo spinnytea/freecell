@@ -14,6 +14,7 @@
     "test:cov": "jest --coverage"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.1",
     "http-server": "^14.1.1",
     "next": "14.2.5",
     "react": "^18",

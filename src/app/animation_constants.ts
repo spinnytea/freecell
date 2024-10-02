@@ -1,0 +1,2 @@
+export const DEFAULT_MOVEMENT_DURATION = 0.3;
+export const SELECT_ROTATION_DURATION = 0.1;

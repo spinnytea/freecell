@@ -1,4 +1,8 @@
+import { useEffect, useRef } from 'react';
+import { useGSAP } from '@gsap/react';
 import classNames from 'classnames';
+import { gsap } from 'gsap/all';
+import { DEFAULT_MOVEMENT_DURATION } from '@/app/animation_constants';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
 import { CardLocation, CardSequence, shorthandPosition } from '@/app/game/card';
 import { FixtureSizes, PEEK_DOWN, PEEK_UP } from '@/app/hooks/FixtureSizes/FixtureSizes';
@@ -39,48 +43,63 @@ function LocationBox({
 	fixtureSizes: FixtureSizes;
 	location: CardLocation;
 }) {
+	const boxRef = useRef<HTMLDivElement | null>(null);
 	const {
 		fixture,
 		data: [d0, d1],
 	} = location;
 
-	const style = {
-		top: 0,
-		left: 0,
-		width: fixtureSizes.cardWidth,
-		height: fixtureSizes.cardHeight,
-	};
+	let top = 0;
+	let left = 0;
+	let width = fixtureSizes.cardWidth;
+	let height = fixtureSizes.cardHeight;
 
 	switch (fixture) {
 		case 'cell':
-			style.top = fixtureSizes.home.top;
-			style.left = fixtureSizes.home.cellLeft[d0];
+			top = fixtureSizes.home.top;
+			left = fixtureSizes.home.cellLeft[d0];
 			break;
 		case 'foundation':
-			style.top = fixtureSizes.home.top;
-			style.left = fixtureSizes.home.foundationLeft[d0];
+			top = fixtureSizes.home.top;
+			left = fixtureSizes.home.foundationLeft[d0];
 			break;
 		case 'deck':
-			style.top = fixtureSizes.deck.top;
-			style.left = fixtureSizes.deck.left;
+			top = fixtureSizes.deck.top;
+			left = fixtureSizes.deck.left;
 			break;
 		case 'cascade':
-			// TODO (hud) height of card if tail
-			style.top = fixtureSizes.tableau.top + d1 * fixtureSizes.tableau.offsetTop;
-			style.left = fixtureSizes.tableau.cascadeLeft[d0];
-			style.height = fixtureSizes.tableau.offsetTop;
+			// XXX (hud) height of card if tail
+			top = fixtureSizes.tableau.top + d1 * fixtureSizes.tableau.offsetTop;
+			left = fixtureSizes.tableau.cascadeLeft[d0];
+			height = fixtureSizes.tableau.offsetTop;
 			break;
 	}
 
-	style.top -= OVERLAY_MARGINS;
-	style.left -= OVERLAY_MARGINS;
-	style.width += OVERLAY_MARGINS * 2;
-	style.height += OVERLAY_MARGINS * 2;
+	top -= OVERLAY_MARGINS;
+	left -= OVERLAY_MARGINS;
+	width += OVERLAY_MARGINS * 2;
+	height += OVERLAY_MARGINS * 2;
+
+	useEffect(() => {
+		// set the initial position, once on load
+		gsap.set(boxRef.current, { top, left, height });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useGSAP(
+		() => {
+			if (boxRef.current) {
+				gsap.to(boxRef.current, { top, left, height, duration: DEFAULT_MOVEMENT_DURATION });
+			}
+		},
+		{ dependencies: [top, left, height] }
+	);
 
 	return (
 		<div
 			className={classNames(styles_pilemarkers[type], styles_pilemarkers.cursorBox)}
-			style={style}
+			style={{ width }}
+			ref={boxRef}
 		/>
 	);
 }
@@ -94,6 +113,7 @@ function SequenceBox({
 	fixtureSizes: FixtureSizes;
 	sequence: CardSequence;
 }) {
+	const boxRef = useRef<HTMLDivElement | null>(null);
 	const {
 		location: {
 			fixture,
@@ -103,55 +123,69 @@ function SequenceBox({
 		canMove,
 	} = sequence;
 
-	const style = {
-		top: 0,
-		left: 0,
-		width: fixtureSizes.cardWidth,
-		height: fixtureSizes.cardHeight,
-	};
+	let top = 0;
+	let left = 0;
+	let width = fixtureSizes.cardWidth;
+	let height = fixtureSizes.cardHeight;
 
 	switch (fixture) {
 		case 'cell':
-			style.top = fixtureSizes.home.top;
-			style.left = fixtureSizes.home.cellLeft[d0];
+			top = fixtureSizes.home.top;
+			left = fixtureSizes.home.cellLeft[d0];
 			break;
 		case 'foundation':
-			style.top = fixtureSizes.home.top;
-			style.left = fixtureSizes.home.foundationLeft[d0];
+			top = fixtureSizes.home.top;
+			left = fixtureSizes.home.foundationLeft[d0];
 			break;
 		case 'deck':
-			style.top = fixtureSizes.deck.top;
-			style.left = fixtureSizes.deck.left;
+			top = fixtureSizes.deck.top;
+			left = fixtureSizes.deck.left;
 			break;
 		case 'cascade':
-			style.top = fixtureSizes.tableau.top + d1 * fixtureSizes.tableau.offsetTop;
-			style.left = fixtureSizes.tableau.cascadeLeft[d0];
+			top = fixtureSizes.tableau.top + d1 * fixtureSizes.tableau.offsetTop;
+			left = fixtureSizes.tableau.cascadeLeft[d0];
 			if (!canMove) {
-				style.height = fixtureSizes.tableau.offsetTop;
+				height = fixtureSizes.tableau.offsetTop;
 			}
 			if (sequence.cards.length > 1 || !sequence.canMove) {
 				if (d1 > 0) {
-					style.top -= fixtureSizes.tableau.offsetTop * PEEK_UP;
-					style.height += fixtureSizes.tableau.offsetTop * PEEK_UP;
+					top -= fixtureSizes.tableau.offsetTop * PEEK_UP;
+					height += fixtureSizes.tableau.offsetTop * PEEK_UP;
 				}
-				style.height += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
+				height += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
 			} else {
-				style.top += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
+				top += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
 			}
 
-			style.height += fixtureSizes.tableau.offsetTop * (length - 1);
+			height += fixtureSizes.tableau.offsetTop * (length - 1);
 			break;
 	}
 
-	style.top -= OVERLAY_MARGINS;
-	style.left -= OVERLAY_MARGINS;
-	style.width += OVERLAY_MARGINS * 2;
-	style.height += OVERLAY_MARGINS * 2;
+	top -= OVERLAY_MARGINS;
+	left -= OVERLAY_MARGINS;
+	width += OVERLAY_MARGINS * 2;
+	height += OVERLAY_MARGINS * 2;
+
+	useEffect(() => {
+		// set the initial position, once on load
+		gsap.set(boxRef.current, { top, left, height });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useGSAP(
+		() => {
+			if (boxRef.current) {
+				gsap.to(boxRef.current, { top, left, height, duration: DEFAULT_MOVEMENT_DURATION });
+			}
+		},
+		{ dependencies: [top, left, height] }
+	);
 
 	return (
 		<div
 			className={classNames(styles_pilemarkers[type], styles_pilemarkers.cursorBox)}
-			style={style}
+			style={{ width }}
+			ref={boxRef}
 		/>
 	);
 }

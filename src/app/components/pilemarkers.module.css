@@ -14,16 +14,8 @@
 }
 
 .cursorBox {
-	--movement-time: 0.3s;
-
 	position: absolute;
 	pointer-events: none;
-
-	/* REVIEW (animation) just a basic movement transition to get things moving (started) */
-	transition:
-		top var(--movement-time) ease 0s,
-		left var(--movement-time) ease 0s,
-		height var(--movement-time) ease 0s;
 
 	z-index: 1000;
 	border-radius: 5px;

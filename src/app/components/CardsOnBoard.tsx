@@ -1,4 +1,7 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import { gsap } from 'gsap/all';
+import { DEFAULT_MOVEMENT_DURATION, SELECT_ROTATION_DURATION } from '@/app/animation_constants';
 import { CardImage } from '@/app/components/cards/CardImage';
 import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
 import { CardLocation, Rank, Suit } from '@/app/game/card';
@@ -27,6 +30,7 @@ export function CardsOnBoard() {
 }
 
 function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; location: CardLocation }) {
+	const cardRef = useRef<HTMLDivElement | null>(null);
 	const fixtureSizes = useFixtureSizes();
 	const [game, setGame] = useContext(GameContext);
 	const [, setSettings] = useContext(SettingsContext);
@@ -37,6 +41,33 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 		rank
 	);
 
+	useEffect(() => {
+		// set the initial position, once on load
+		gsap.set(cardRef.current, { top, left });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useGSAP(
+		() => {
+			gsap.to(cardRef.current, { top, left, duration: DEFAULT_MOVEMENT_DURATION });
+			gsap.to(cardRef.current, { transform, duration: SELECT_ROTATION_DURATION });
+
+			/*
+			REVIEW (techdebt) use or remove
+			if (cardRef.current && contextSafe) {
+				const resetAfterDrag = contextSafe(() => {
+					gsap.to(cardRef.current, { transform, duration: DEFAULT_MOVEMENT_DURATION });
+				});
+				Draggable.create([cardRef.current], {
+					zIndexBoost: false,
+					onDragEnd: resetAfterDrag,
+				});
+			}
+			*/
+		},
+		{ dependencies: [top, left, transform] }
+	);
+
 	function onClick() {
 		// REVIEW (controls) click-to-move
 		setGame((g) => g.setCursor(location).touch().autoMove().autoFoundationAll());
@@ -44,11 +75,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	}
 
 	return (
-		<div
-			className={styles_cardsonboard.card}
-			style={{ top, left, zIndex, transform }}
-			onClick={onClick}
-		>
+		<div className={styles_cardsonboard.card} style={{ zIndex }} ref={cardRef} onClick={onClick}>
 			<CardImage
 				rank={rank}
 				suit={suit}
