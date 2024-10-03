@@ -7,9 +7,10 @@ card game
 TODO (motivation) main development tasks:
 
 1. ~~legible `(cards)` for mobile~~
-1. `(animations)` https://gsap.com/resources/React/
 1. `(drag-and-drop)` (click-to-move has been working, but sometimes you need to "force" the move you want)
 1. move `(history)` & undo
+1. `(settings)` local storage, new button
+1. `(animations)` https://gsap.com/resources/React/ - just basic animations, like, "stagger" the card movements
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b\s+\((\w+)\)
@@ -17,6 +18,7 @@ TODO (motivation) main development tasks:
 
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO (deployment) portrait vs landscape mode (portait on phone is ssoooooo small)
+- TODO (animations) https://gsap.com/resources/React/
 - TODO (motivation) movement needs to be fun, animations are important, every time a card moves, it must not jump
   - foundation -> deck
   - shuffle
@@ -28,7 +30,9 @@ TODO (motivation) main development tasks:
   - card drag animation (drag waggles the sequence)
   - auto-foundation each card
 - TODO (mobile) icons for bookmarks / save link to home screen (Andriod, iOS)
+- REVIEW (animation) when dealing or auto-foundation, do we "stop at any time" or "skip animation just get to the end state" (is this a setting?)
 - TODO (animation) failed moves shake
+- REVIEW (animation) finish card move animation before autoFoundationAll starts
 - TODO (drag-and-drop) mouse drag to move - mouse drag-drop target is entire cascade
 - TODO (controls) keyboard + selection
 - TODO (animation) animate cards in flight should be above others
@@ -47,15 +51,17 @@ TODO (motivation) main development tasks:
   - Some games require no free cells :D - so make a 0 cells version restricted to these games
   - Same with a list for solvable 1-cell games
 - TODO (settings) once move history is in game.print, save completed games to local storage and/or print to console (this way we can "recover" the last one after we finish, if we accidentally start a new one before we can snapshot it / archive it) - we only need the one for this
+- TODO (gameplay) new game button (esp before saving current game to local storage to persist across page reloads)
 - TODO (settings) store current game so it survives page refresh
 - IDEA (settings) option to dis/enable auto-foundation until all cascades are in order (all are a single sequence, or all are ascending)
 - IDEA (animation) auto-foundation gets faster the longer it runs
 - TODO (animation) (gameplay) can move cards during auto-foundation, stops when it gets to a card the user has moved (currently stops if the user has selected a card)
-- TODO (animation) animations after/during win state
+- TODO (animation) animations after/during win state (celbration)
 - IDEA (settings) toggle for: move sequence as one vs animate in-between steps (sequence moves vs each card moves)
 - IDEA (motivation) implement War? just so it's flexible?
 - IDEA (motivation) implement Spider Solitaire, that could be fun
-- IDEA (animation) learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
+- TODO (animation) learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
+- IDEA (controls) catch a card in-flight
 - TODO (controls) keyboard hotkeys (1-8 (1234567890), abcd, h, ¿qwerty?, ¿uiop?)
   - if cursor can stack with target: select, moveCard
   - if cursor cannot stack with target: setCursor

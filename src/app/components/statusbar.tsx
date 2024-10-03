@@ -6,6 +6,7 @@ import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
 
 const version = `v${process.env.VERSION ?? 'Unknown'}`;
 
+// TODO (hud) clicking "Show Debug Info" must NOT progress the game / restart
 export function StatusBar() {
 	const [settings, setSettings] = useContext(SettingsContext);
 
