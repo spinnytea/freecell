@@ -47,7 +47,5 @@ describe('game-utils.parsePreviousActionText', () => {
 		test.todo('invalid');
 
 		test.todo('auto-foundation-tween');
-
-		test.todo('noop');
 	});
 });

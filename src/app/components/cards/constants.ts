@@ -4,6 +4,14 @@ export const scale_height = (width: number) => Math.floor((width / ORIG_WIDTH) *
 
 export const ASSET_FOLDER = process.env.BASE_PATH ?? '';
 
+/**
+	large enough that clampCursor will always put this at the bottom
+	- 52 cards in the deck
+	- 26 is probably safe (not with jokers wild)
+	- 999 is definately safe
+*/
+export const BOTTOM_OF_CASCADE = 99;
+
 export type CardFaces = 'SVGCards13' | 'SmolCards';
 export const CARD_FACE_CUTOFF = 60;
 

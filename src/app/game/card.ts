@@ -1,5 +1,4 @@
-// XXX (techdebt) duplicate
-const BOTTOM_OF_CASCADE = 99;
+import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 
 export type Suit = 'clubs' | 'diamonds' | 'hearts' | 'spades';
 export const SuitList: Suit[] = ['clubs', 'diamonds', 'hearts', 'spades'];
@@ -38,7 +37,7 @@ export const RankList: Rank[] = [
 export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	RankList.indexOf(min) === RankList.indexOf(max) - 1;
 
-// REVIEW (techdebt) is "fixture" the right name?
+// XXX (techdebt) is "fixture" the right name?
 //  - cell -> freecell
 //  - foundation -> homecell
 //  - cascade -> column
@@ -87,25 +86,23 @@ export const MoveDestinationTypePriorities: {
 	},
 };
 
-/**
-	REVIEW (techdebt) does AvailableMove need to store moveDestinationType and priority?
-	 - moveDestinationType is needed for building the list (like moveSourceType)
-	   but do we need to store it?
-	 - priority could be build into the sort order of the list (pick the first item),
-	   rather than stored with the location (pick the highest number)
-	 - it is nice to see in the DebugCursors the different categories
-	 	priority: 'high' | 'low';
-	---
-	 - we have sufficient impl to simplify now
-	 - wait for unit testing of DebugCursors
-	 - wait for manualtesting of DebugCursors
-*/
 export interface AvailableMove {
-	/** where we could move the card */
+	/** where we could move the selection */
 	location: CardLocation;
-	/** helps us think about priorities / communicate settings */
+
+	/**
+		helps us think about priorities / communicate settings / sort move order
+		while we have a single moveSourceType (the selection),
+		we can have multiple moveDestinationTypes within the list of availableMoves
+	*/
 	moveDestinationType: MoveDestinationType;
-	/** if we are going to visualize them debug mode, we need to have it precomputed */
+
+	/**
+		helps pick the best move for "auto-foundation"
+
+		if we are going to visualize them debug mode, we need to have it precomputed
+		we really only need high|low for this
+	*/
 	priority: number;
 }
 
@@ -154,6 +151,13 @@ export interface CardSequence {
 
 	/** since we are allowing any card to be selected or inspected, not all of them are movable */
 	canMove: boolean;
+}
+
+/**
+	cards need to remain in consitent order for react[key=""] to work
+*/
+export function cloneCards(cards: Card[]) {
+	return cards.map((card) => ({ ...card }));
 }
 
 export function isLocationEqual(a: CardLocation, b: CardLocation) {

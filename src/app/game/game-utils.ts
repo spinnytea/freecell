@@ -3,6 +3,7 @@ import {
 	Card,
 	CardLocation,
 	CardSequence,
+	cloneCards,
 	isAdjacent,
 	isLocationEqual,
 	isRed,
@@ -10,6 +11,7 @@ import {
 	MoveSourceType,
 	parseShorthandPosition_INCOMPLETE,
 	RankList,
+	shorthandCard,
 	Suit,
 } from '@/app/game/card';
 import { FreeCell, PreviousAction, PreviousActionType } from '@/app/game/game';
@@ -243,8 +245,8 @@ function prioritizeAvailableMoves(
 	const sourceD0 = selection.location.data[0];
 	let MoveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
 
-	// REVIEW (techdebt) can we clean this up? it's fine the way it is
 	if (moveSourceType === 'cascade:single' && selection.cards.length === 1) {
+		// REVIEW (techdebt) can we clean this up? it's fine the way it is
 		if (selection.cards[0].rank === 'king') {
 			MoveDestinationTypePriority = {
 				...MoveDestinationTypePriority,
@@ -329,9 +331,12 @@ function getMoveSourceType(selection: CardSequence): MoveSourceType {
 }
 
 /**
-	TODO (techdebt) use this for dealing
-	TODO (techdebt) use this for auto-foundation
-	TODO (techdebt) use this for animate-move
+	moves the card sequence `from` onto `to`
+	single card onto cell/foundation, at the end of the cascade
+
+	this does not check for `availableMoves`
+	there are a lot of ways you can come to valid moves
+	this just _does_ it for you
 */
 export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation): Card[] {
 	if (from.cards.length === 0) {
@@ -347,28 +352,36 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 		return game.cards;
 	}
 
-	game = game.__clone({ action: { text: 'noop', type: 'noop' } }); // clones the cards/table so we can safely make changes
-	from = getSequenceAt(game, from.location);
+	const cards = cloneCards(game.cards);
+	const from_cards = from.cards.map((fc) => {
+		const c = cards.find((c) => c.rank === fc.rank && c.suit === fc.suit);
+		if (c) return c;
+		// this can't actually happen (unless `game` and `from` aren't actually related)
+		throw new Error('missing card ' + shorthandCard(fc));
+	});
 
 	switch (to.fixture) {
 		case 'cell':
-			from.cards[0].location = to;
+			from_cards[0].location = to;
 			break;
 		case 'foundation':
-			from.cards[0].location = to;
+			from_cards[0].location = to;
 			break;
-		case 'cascade':
+		case 'cascade': {
 			// move the selection to the end of the cascade
-			from.cards.forEach((card, idx) => {
+			const d0 = to.data[0];
+			const d1 = game.tableau[to.data[0]].length;
+			from_cards.forEach((card, idx) => {
 				card.location = {
 					fixture: 'cascade',
-					data: [to.data[0], game.tableau[to.data[0]].length + idx],
+					data: [d0, d1 + idx],
 				};
 			});
 			break;
+		}
 	}
 
-	return game.cards;
+	return cards;
 }
 
 export function foundationCanAcceptCards(

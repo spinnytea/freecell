@@ -80,6 +80,7 @@ describe('game', () => {
 			expect(game.cells.length).toBe(4);
 			expect(game.foundations.length).toBe(4);
 			expect(game.tableau.length).toBe(4);
+			expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 		});
 
 		test('1 cells, 10 cascades', () => {
@@ -98,6 +99,7 @@ describe('game', () => {
 			expect(game.cells.length).toBe(1);
 			expect(game.foundations.length).toBe(4);
 			expect(game.tableau.length).toBe(10);
+			expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 		});
 
 		test('0 cells', () => {

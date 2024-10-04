@@ -1,4 +1,8 @@
-import { CARD_FACE_CUTOFF, scale_height } from '@/app/components/cards/constants';
+import {
+	BOTTOM_OF_CASCADE,
+	CARD_FACE_CUTOFF,
+	scale_height,
+} from '@/app/components/cards/constants';
 import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card';
 
 // IDEA (hud) position deck in the center of the home row
@@ -225,9 +229,9 @@ export function calcTopLeftZ(
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.foundationLeft[data[0]],
-				// XXX (techdebt) zIndex + 100 so it's above the cell/cascade
+				// zIndex + BOTTOM_OF_CASCADE so it's above the cell/cascade
 				// REVIEW (animations) cards in flight
-				zIndex: (rank ? RankList.indexOf(rank) : 0) + 100,
+				zIndex: (rank ? RankList.indexOf(rank) : 0) + BOTTOM_OF_CASCADE,
 				transform:
 					selection?.location.fixture === 'foundation' && selection.location.data[0] === data[0]
 						? 'rotate(10deg)'

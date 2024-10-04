@@ -1,8 +1,10 @@
+import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import {
 	AvailableMove,
 	Card,
 	CardLocation,
 	CardSequence,
+	cloneCards,
 	isLocationEqual,
 	parseShorthandCard,
 	Rank,
@@ -33,15 +35,8 @@ const MIN_CELL_COUNT = 1;
 const MAX_CELL_COUNT = 6;
 
 const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
-/**
-	large enough that clampCursor will always put this at the bottom
-	- 52 cards in the deck
-	- 26 is probably safe (not with jokers wild)
-	- 999 is definately safe
-*/
-const BOTTOM_OF_CASCADE = 99;
 
-// TODO (techdebt) remove auto-foundation-tween, noop
+// TODO (techdebt) remove auto-foundation-tween
 export type PreviousActionType =
 	| 'init'
 	| 'shuffle'
@@ -51,20 +46,10 @@ export type PreviousActionType =
 	| 'deselect'
 	| 'move'
 	| 'invalid'
-	| 'auto-foundation-tween'
-	| 'noop';
+	| 'auto-foundation-tween';
 export interface PreviousAction {
 	text: string;
 	type: PreviousActionType;
-}
-
-/**
-	cards need to remain in consitent order for react[key=""] to work
-
-	TODO (techdebt) move to game-utils
-*/
-function __cloneCards(cards: Card[]) {
-	return cards.map((card) => ({ ...card }));
 }
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
@@ -81,7 +66,7 @@ export class FreeCell {
 
 	// controls
 	cursor: CardLocation;
-	selection: CardSequence | null; // REVIEW (techdebt) none, single, sequence
+	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
 	previousAction: PreviousAction;
 
@@ -116,10 +101,9 @@ export class FreeCell {
 
 		if (cards) {
 			// cards need to remain in consitent order for react[key=""] to work
-			this.cards = __cloneCards(cards);
+			this.cards = cloneCards(cards);
 
 			// we want the objects in "cards" and there rest of the game board
-			// IDEA (techdebt) should we calc cells/foundations/tableau/deck on demand instead of in the constructor?
 			this.cards.forEach((card) => {
 				switch (card.location.fixture) {
 					case 'deck':
@@ -164,21 +148,28 @@ export class FreeCell {
 			this.win = false;
 		}
 
+		// clamp cursor is a helper in case the game changes and the cursor is no longer valid
+		// it prevents us from having to manually specify it every time
 		this.cursor = this.__clampCursor(cursor);
-		// REVIEW (techdebt) do we need to validate selection & availableMoves every time (like the cursor)?
+
+		// selection & available moves are _not_ checked for validity
+		// they should be reset any time we move a card
 		this.selection = !selection ? null : getSequenceAt(this, selection.location);
 		this.availableMoves = availableMoves ?? null;
+
 		this.previousAction = { text: 'init', type: 'init' };
 	}
 
 	/**
+		helper method for creating a new game state from a previous one
+
 		this variable should never be saved to a local variable
 		@example
 			return this.__clone({ action: … });
 	*/
 	__clone({
 		action,
-		cards = this.cards,
+		cards,
 		cursor = this.cursor,
 		selection = this.selection,
 		availableMoves = this.availableMoves,
@@ -189,31 +180,31 @@ export class FreeCell {
 		selection?: CardSequence | null;
 		availableMoves?: AvailableMove[] | null;
 	}): FreeCell {
+		// XXX (techdebt) `selection && availableMoves && !cards` after removing auto-foundation-tween
 		const game = new FreeCell({
 			cellCount: this.cells.length,
 			cascadeCount: this.tableau.length,
-			cards,
+			cards: cards ?? this.cards,
 			cursor,
-			selection,
-			availableMoves,
+			selection: selection && availableMoves ? selection : null,
+			availableMoves: selection && availableMoves ? availableMoves : null,
 		});
 		game.previousAction = action;
 		// REVIEW (techdebt) message for: if (game.cursor !== cursor) game.previousAction += ' (cursor clamped)';
 		return game;
 	}
 
-	/** TODO (techdebt) move to game-utils */
 	__clampCursor(location?: CardLocation): CardLocation {
 		if (!location) return DEFAULT_CURSOR_LOCATION;
 
 		const [d0, d1] = location.data;
 		switch (location.fixture) {
 			case 'cell':
-				if (d0 < 0) return { fixture: 'cell', data: [0] };
+				if (d0 <= 0) return { fixture: 'cell', data: [0] };
 				else if (d0 >= this.cells.length) return { fixture: 'cell', data: [this.cells.length - 1] };
 				else return location;
 			case 'foundation':
-				if (d0 < 0) return { fixture: 'foundation', data: [0] };
+				if (d0 <= 0) return { fixture: 'foundation', data: [0] };
 				else if (d0 >= this.foundations.length)
 					return { fixture: 'foundation', data: [this.foundations.length - 1] };
 				else return location;
@@ -223,7 +214,7 @@ export class FreeCell {
 				return { fixture: 'cascade', data: [n0, n1] };
 			}
 			case 'deck':
-				if (d0 < 0) return { fixture: 'deck', data: [0] };
+				if (d0 <= 0) return { fixture: 'deck', data: [0] };
 				else if (d0 >= this.deck.length) return { fixture: 'deck', data: [this.deck.length - 1] };
 				else return location;
 		}
@@ -236,7 +227,7 @@ export class FreeCell {
 	// REVIEW (controls) actually play the game and see what's not quite right
 	//  - left right wraps between home/tableau
 	//  - entering a cascade (l/r, u/d) cascade always moves to the "last sequence"
-	// REVIEW (techdebt) refactor moveCursor out of game? setCursor yes, but move cursor?
+	// REVIEW (techdebt) move this function into a dedicated keyboard controls folder/file
 	moveCursor(dir: 'up' | 'right' | 'left' | 'down'): FreeCell {
 		const {
 			fixture,
@@ -670,7 +661,7 @@ export class FreeCell {
 		}
 
 		const actionText = `shuffle deck (${seed.toString(10)})`;
-		const cards = __cloneCards(this.cards);
+		const cards = cloneCards(this.cards);
 		const deck: Card[] = [];
 		cards.forEach((card) => {
 			switch (card.location.fixture) {
@@ -880,7 +871,7 @@ export class FreeCell {
 			const msg = this.tableau.length > 5 ? 'Y O U   W I N !' : 'YOU WIN !';
 			const lineLength = this.tableau.length * 3 + 1;
 			const paddingLength = (lineLength - msg.length - 2) / 2;
-			const spaces = '                               '; // XXX (techdebt) enough spaces for 10 cascadeCount
+			const spaces = '                               '; // enough spaces for 10 cascadeCount
 			const padding = '                            '.substring(0, paddingLength);
 			str += '\n:' + padding + msg + padding + (paddingLength === padding.length ? '' : ' ') + ':';
 			str += '\n' + spaces.substring(0, lineLength);
@@ -1110,8 +1101,6 @@ export class FreeCell {
 		game.previousAction = parsePreviousActionText(actionText);
 		return game;
 	}
-
-	// XXX (techdebt) printTest: expect(previous.touch()).toBe(current)
 }
 
 function calcMoveActionText(from: CardSequence, to: CardSequence): string {
