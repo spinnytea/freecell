@@ -1065,6 +1065,7 @@ FreeCell {
     null,
     null,
   ],
+  "history": [],
   "previousAction": {
     "text": "init",
     "type": "init",
@@ -1720,6 +1721,7 @@ FreeCell {
       "suit": "spades",
     },
   ],
+  "history": [],
   "previousAction": {
     "text": "hand-jammed",
     "type": "init",

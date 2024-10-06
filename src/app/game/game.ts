@@ -68,6 +68,9 @@ export class FreeCell {
 	cursor: CardLocation;
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
+
+	// history
+	history: string[];
 	previousAction: PreviousAction;
 
 	// custom rules
@@ -84,6 +87,8 @@ export class FreeCell {
 		cursor,
 		selection,
 		availableMoves,
+		action = { text: 'init', type: 'init' },
+		history,
 	}: {
 		cellCount?: number;
 		cascadeCount?: number;
@@ -91,6 +96,8 @@ export class FreeCell {
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
 		availableMoves?: AvailableMove[] | null;
+		action?: PreviousAction;
+		history?: string[];
 	} = {}) {
 		this.deck = [];
 		this.cells = new Array<null>(cellCount).fill(null);
@@ -157,7 +164,8 @@ export class FreeCell {
 		this.selection = !selection ? null : getSequenceAt(this, selection.location);
 		this.availableMoves = availableMoves ?? null;
 
-		this.previousAction = { text: 'init', type: 'init' };
+		this.previousAction = action;
+		this.history = history ?? [];
 	}
 
 	/**
@@ -173,25 +181,32 @@ export class FreeCell {
 		cursor = this.cursor,
 		selection = this.selection,
 		availableMoves = this.availableMoves,
+		history,
 	}: {
 		action: PreviousAction;
 		cards?: Card[];
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
 		availableMoves?: AvailableMove[] | null;
+		history?: string[];
 	}): FreeCell {
 		// XXX (techdebt) `selection && availableMoves && !cards` after removing auto-foundation-tween
-		const game = new FreeCell({
+		return new FreeCell({
 			cellCount: this.cells.length,
 			cascadeCount: this.tableau.length,
 			cards: cards ?? this.cards,
 			cursor,
 			selection: selection && availableMoves ? selection : null,
 			availableMoves: selection && availableMoves ? availableMoves : null,
+			action,
+			history: [
+				'shuffle', // FIXME confirm seed
+				'deal', // FIXME options (demo, most)
+				'move', // FIXME from/to, autoFoundationAll
+			].includes(action.type)
+				? [...(history ?? this.history), action.text]
+				: [],
 		});
-		game.previousAction = action;
-		// REVIEW (techdebt) message for: if (game.cursor !== cursor) game.previousAction += ' (cursor clamped)';
-		return game;
 	}
 
 	__clampCursor(location?: CardLocation): CardLocation {
@@ -472,6 +487,28 @@ export class FreeCell {
 		return this.__clone({ action: { text: 'invalid ' + actionText, type: 'invalid' } });
 	}
 
+	/**
+		go back one move
+
+		FIXME how far back do we go?
+		 - obviously to when all the cards are in their original positions in the tableau~
+		 - do we undo the deal?
+		 - do we undo the shuffle?
+	*/
+	undo(): FreeCell | this {
+		const history = [...this.history];
+		const moveToUndo = history.pop();
+		if (moveToUndo) return this;
+
+		// we _need_ an action in __clone
+		// i'd rather have an excess pop here than forget anywhere else
+		const actionText = history.pop() ?? 'init partial';
+
+		// FIXME finish
+
+		return this.__clone({ action: parsePreviousActionText(actionText), history });
+	}
+
 	/** Used replaying a game, starting with a seed or otherwise known deal. */
 	moveByShorthand(shorthandMove: string): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
@@ -489,6 +526,7 @@ export class FreeCell {
 	}
 
 	/**
+		FIXME break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
 		REVIEW (techdebt) autoFoundation needs some serious refactoring
 	*/
 	autoFoundationAll({
@@ -500,7 +538,7 @@ export class FreeCell {
 	} = {}): FreeCell | this {
 		// TODO (techdebt) replace `const game = this.__clone({})` with `return this.__clone({})`
 		let game = this.__clone({
-			action: { text: 'auto-foundation setup', type: 'auto-foundation-tween' },
+			action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
 		});
 		const moved: Card[] = [];
 
@@ -523,7 +561,7 @@ export class FreeCell {
 						didMoveAny = true;
 						const cards = moveCards(game, sequenceToMove, availableMove.location);
 						game = game.__clone({
-							action: { text: 'auto-foundation middle', type: 'auto-foundation-tween' },
+							action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
 							cards,
 						});
 						moved.push(c);
@@ -548,7 +586,7 @@ export class FreeCell {
 							didMoveAny = true;
 							const cards = moveCards(game, sequenceToMove, availableMove.location);
 							game = game.__clone({
-								action: { text: 'auto-foundation middle', type: 'auto-foundation-tween' },
+								action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
 								cards,
 							});
 							moved.push(sequenceToMove.cards[0]);
@@ -577,7 +615,7 @@ export class FreeCell {
 										}
 									);
 									game = game.__clone({
-										action: { text: 'auto-foundation middle', type: 'auto-foundation-tween' },
+										action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
 										cards,
 									});
 									moved.push(c);
@@ -604,7 +642,7 @@ export class FreeCell {
 										}
 									);
 									game = game.__clone({
-										action: { text: 'auto-foundation middle', type: 'auto-foundation-tween' },
+										action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
 										cards,
 									});
 									moved.push(c);
@@ -712,6 +750,7 @@ export class FreeCell {
 		keepDeck = false,
 	}: { demo?: boolean; keepDeck?: boolean } = {}): FreeCell {
 		// TODO (techdebt) replace `const game = this.__clone({})` with `return this.__clone({})`
+		// FIXME deal in multiple actions (deal most, demo)
 		const game = this.__clone({ action: { text: 'deal all cards', type: 'deal' } });
 
 		const remaining = demo ? game.cells.length + game.foundations.length : 0;
@@ -884,7 +923,11 @@ export class FreeCell {
 			str += '\n' + spaces.substring(0, lineLength);
 		}
 
-		// XXX (print) print and parse move history?
+		// FIXME print and parse move history
+		//  - optional; parse is going to be expensive (has to replay the whole game)
+		//  - shorthandMove
+		//  - Standard FreeCell Notation
+		//  - wrap = # columns
 
 		str += '\n ' + this.previousAction.text;
 		return str;
@@ -1110,10 +1153,11 @@ export class FreeCell {
 	}
 }
 
+// XXX (techdebt) refactor to src/app/game/move/move.ts
 function calcMoveActionText(from: CardSequence, to: CardSequence): string {
 	const from_location = from.cards[0].location;
 	const to_card: Card | undefined = to.cards[to.cards.length - 1];
 	const to_location = to_card?.location || to.location; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-	const move = `${shorthandPosition(from_location)}${shorthandPosition(to_location)}`;
-	return `move ${move} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+	const shorthandMove = `${shorthandPosition(from_location)}${shorthandPosition(to_location)}`;
+	return `move ${shorthandMove} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
 }

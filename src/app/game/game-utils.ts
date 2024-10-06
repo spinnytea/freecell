@@ -16,6 +16,15 @@ import {
 } from '@/app/game/card';
 import { FreeCell, PreviousAction, PreviousActionType } from '@/app/game/game';
 
+// TODO (techdebt) split this file up
+//  - src/app/game/card/card.ts
+//  - src/app/game/position/position.ts
+//    (includes parseShorthandMove)
+//  - src/app/game/move/move.ts
+//  - src/app/game/catalog/difficulty-catalog.ts
+// ---
+//  - i kinda don't want a "general" game-utils, they should all be namespaced (if possible)
+
 // TODO (settings) these _exist_, but we need to be able to pick them
 export type AutoFoundationLimit =
 	// move all cards that can go up
@@ -337,6 +346,9 @@ function getMoveSourceType(selection: CardSequence): MoveSourceType {
 	this does not check for `availableMoves`
 	there are a lot of ways you can come to valid moves
 	this just _does_ it for you
+
+	likewise, when you "undo", it's inherently an invalid move
+	(forwards creates order, backwards creates disorder)
 */
 export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation): Card[] {
 	if (from.cards.length === 0) {
@@ -555,5 +567,8 @@ export function parsePreviousActionText(text: string): PreviousAction {
 	const firstWord = text.split(' ')[0];
 	if (firstWord === 'hand-jammed') return { text, type: 'init' };
 	if (firstWord === 'touch') return { text, type: 'invalid' };
+	if (firstWord === 'auto-foundation') return { text, type: 'move' };
+	// if (firstWord === 'auto-foundation-setup') return { text, type: 'auto-foundation-tween' }; // should not appear in print
+	// if (firstWord === 'auto-foundation-middle') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	return { text, type: firstWord as PreviousActionType };
 }

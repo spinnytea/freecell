@@ -102,6 +102,8 @@ describe('game', () => {
 			expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 		});
 
+		test.todo('6 cells, 10 cascades'); // FIXME test.todo
+
 		test('0 cells', () => {
 			expect(() => new FreeCell({ cellCount: 0 })).toThrow(
 				'Must have between 1 and 6 cells; requested "0".'
@@ -217,7 +219,7 @@ describe('game', () => {
 			);
 		});
 
-		test.todo('test the state');
+		test.todo('the state');
 	});
 
 	describe('complete games', () => {
