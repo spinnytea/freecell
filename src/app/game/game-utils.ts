@@ -477,7 +477,20 @@ function getFoundationRankForColor(game: FreeCell, card: Card): number {
 }
 
 /**
-	to parse a move correctly, we need the full game state AND the from/to positions
+	to parse a move correctly, we need the full game state AND the shorthand (from/to positions)
+
+	[Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
+
+	Free cells (upper row, left side) are named (left to right) a, b, c, d, [e, f]. \
+	Home (upper row, right) is h. \
+	Initial columns (lower row, left to right) are named 1 through 8, [9, 0].
+
+	Example Moves:
+	1. Column one to column three: 13
+	2. Second freecell (b) to column five: b5
+	3. Column 4 to first (leftmost) freecell: 4a
+	4. Third freecell to home: ch \
+	etc.
 */
 export function parseShorthandMove(
 	game: FreeCell,

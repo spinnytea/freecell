@@ -472,6 +472,22 @@ export class FreeCell {
 		return this.__clone({ action: { text: 'invalid ' + actionText, type: 'invalid' } });
 	}
 
+	/** Used replaying a game, starting with a seed or otherwise known deal. */
+	moveByShorthand(shorthandMove: string): FreeCell {
+		const [from, to] = parseShorthandMove(this, shorthandMove);
+
+		// select from, move to
+		let game = this.setCursor(from).touch().setCursor(to).touch();
+
+		const actionText = game.previousAction.text;
+		game = game.autoFoundationAll();
+		if (game.previousAction.text !== actionText) {
+			game.previousAction.text = `${actionText} (${game.previousAction.text})`;
+		}
+
+		return game;
+	}
+
 	/**
 		REVIEW (techdebt) autoFoundation needs some serious refactoring
 	*/
@@ -611,6 +627,12 @@ export class FreeCell {
 		return this;
 	}
 
+	/**
+		this is the basis for click-to-move
+
+		@example
+			game.setCursor(loc).touch().autoMove();
+	*/
 	autoMove(): FreeCell | this {
 		if (!this.selection) return this;
 		if (!this.availableMoves?.length) return this;
@@ -633,21 +655,6 @@ export class FreeCell {
 			selection: null,
 			availableMoves: null,
 		});
-	}
-
-	moveByShorthand(shorthandMove: string): FreeCell {
-		const [from, to] = parseShorthandMove(this, shorthandMove);
-
-		// select from, move to
-		let game = this.setCursor(from).touch().setCursor(to).touch();
-
-		const actionText = game.previousAction.text;
-		game = game.autoFoundationAll();
-		if (game.previousAction.text !== actionText) {
-			game.previousAction.text = `${actionText} (${game.previousAction.text})`;
-		}
-
-		return game;
 	}
 
 	/**

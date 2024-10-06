@@ -286,6 +286,8 @@ export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLo
 			// this isn't a valid cursor position, it will need to be clamped
 			// cascades can have sequences, so you need to decide if you really want the "bottom"
 			return { fixture: 'cascade', data: [parseInt(p, 10) - 1, BOTTOM_OF_CASCADE] };
+		// ten
+		case '0':
 		case 't':
 			return { fixture: 'cascade', data: [9, BOTTOM_OF_CASCADE] };
 		case 'h':
