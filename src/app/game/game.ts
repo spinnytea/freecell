@@ -206,7 +206,7 @@ export class FreeCell {
 				'move', // FIXME from/to, autoFoundationAll
 			].includes(action.type)
 				? [...(history ?? this.history), action.text]
-				: [],
+				: this.history,
 		});
 	}
 
@@ -980,10 +980,10 @@ export class FreeCell {
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		const cards = new FreeCell().cards;
 		const remaining = cards.slice(0);
-		let checkIfHistory = false;
+		let parseHistory = false;
 
 		if (!print.includes('>')) {
-			checkIfHistory = true;
+			parseHistory = true;
 		} else if (print.includes('>', print.indexOf('>') + 1)) {
 			throw new Error('must have no more than 1 cursor');
 		}
@@ -1115,7 +1115,7 @@ export class FreeCell {
 		const actionText = line.reverse().join('');
 
 		const history: string[] = [];
-		if (checkIfHistory) {
+		if (parseHistory) {
 			const peek = lines.pop();
 			if (!peek) {
 				// FIXME test
@@ -1127,12 +1127,13 @@ export class FreeCell {
 			} else if (peek.startsWith(':h')) {
 				// FIXME finish: shuffle32(seed) + '\n' + moves
 			} else {
+				// FIXME test with at least 5 history items
 				Array.prototype.push.apply(history, lines);
 				history.push(peek.trim());
 				history.push(actionText);
 			}
 
-			// FIXME verify history
+			// FIXME verify history (if you didn't want to verify it, don't pass it in?)
 			//  - :h -> play forwards
 			//  - text -> play backwards, then forwards (heeey, parsePreviousActionText, not parseAndUndo)
 			//  - :h is all or nothing (omit history if invalid history); ['init discard history', actionText]
