@@ -496,6 +496,8 @@ export class FreeCell {
 		 - obviously to when all the cards are in their original positions in the tableau~
 		 - do we undo the deal?
 		 - do we undo the shuffle?
+
+		FIXME rewrite this function
 	*/
 	undo(): FreeCell | this {
 		const history = [...this.history];
@@ -662,7 +664,9 @@ export class FreeCell {
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (didMoveAny) {
 			const movedStr = moved.map((card) => shorthandCard(card)).join(',');
-			return game.__clone({ action: { text: `auto-foundation ${movedStr}`, type: 'move' } });
+			const ret = game.__clone({ action: { text: `auto-foundation ${movedStr}`, type: 'move' } });
+			if (ret.win) return game.__clone({ action: { text: `flourish ${movedStr}`, type: 'move' } });
+			return ret;
 		}
 
 		// silent noop
@@ -827,7 +831,9 @@ export class FreeCell {
 		skipDeck = false,
 		includeHistory = false,
 	}: { skipDeck?: boolean; includeHistory?: boolean } = {}): string {
-		const cursor: CardLocation = !includeHistory ? this.cursor : { fixture: 'cascade', data: [-1, -1] };
+		const cursor: CardLocation = !includeHistory
+			? this.cursor
+			: { fixture: 'cascade', data: [-1, -1] };
 		const selection = !includeHistory ? this.selection : null;
 
 		let str = '';
@@ -1157,7 +1163,14 @@ export class FreeCell {
 			};
 		}
 
-		const game = new FreeCell({ action: parsePreviousActionType(actionText), cellCount, cascadeCount, cards, cursor, history: [actionText] });
+		const game = new FreeCell({
+			action: parsePreviousActionType(actionText),
+			cellCount,
+			cascadeCount,
+			cards,
+			cursor,
+			history: [actionText],
+		});
 		if (selection_location) {
 			game.selection = getSequenceAt(game, selection_location);
 			game.availableMoves = findAvailableMoves(game, game.selection);

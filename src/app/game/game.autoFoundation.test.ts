@@ -185,7 +185,7 @@ describe('game.autoFoundation', () => {
 							'                         \n' + //
 							':    Y O U   W I N !    :\n' + //
 							'                         \n' + //
-							' auto-foundation ' +
+							' flourish ' +
 							movedStr
 					);
 				}
