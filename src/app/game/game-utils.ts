@@ -9,6 +9,7 @@ import {
 	isRed,
 	MoveDestinationTypePriorities,
 	MoveSourceType,
+	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
 	RankList,
 	shorthandCard,
@@ -563,7 +564,7 @@ export function parseShorthandMove(
 	return [from_location, to_location];
 }
 
-export function parsePreviousActionText(text: string): PreviousAction {
+export function parsePreviousActionType(text: string): PreviousAction {
 	const firstWord = text.split(' ')[0];
 	if (firstWord === 'hand-jammed') return { text, type: 'init' };
 	if (firstWord === 'touch') return { text, type: 'invalid' };
@@ -571,4 +572,33 @@ export function parsePreviousActionText(text: string): PreviousAction {
 	// if (firstWord === 'auto-foundation-setup') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	// if (firstWord === 'auto-foundation-middle') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	return { text, type: firstWord as PreviousActionType };
+}
+
+export function parsePreviousActionText(game: FreeCell, text: string): Card[] | null {
+	const previousActionType = parsePreviousActionType(text).type;
+
+	if (previousActionType !== 'move') return null;
+
+	const match = /^move (\w)(\w) (.*)→(.*)$/.exec(text);
+	if (!match) throw new Error('invalid move actionText: ' + text);
+	const [,from,to,fromShorthand,toShortHand] = match;
+	// XXX (techdebt) validate toShorthand? confirm that this even makes sense??
+	void (to); // FIXME validate
+	void (toShortHand) // FIXME validate
+
+	const fromShorthands = fromShorthand.split('-');
+	const firstShorthand =fromShorthands[0]
+	if (!firstShorthand) throw new Error('no card to move: ' + text);
+	// XXX (techdebt) validate fromShorthands? confirm that this even makes sense??
+
+	// FIXME remove ts-ignore
+	// @ts-expect-error we can come back and split this shorthand properly later
+	const firstCardSH = parseShorthandCard(...firstShorthand.split(''));
+	const firstCard = game.cards.find((c) => c.suit === firstCardSH?.suit && c.rank === firstCardSH.rank);
+	if (!firstCard) throw new Error('invalid first card: ' + text);
+
+	const fromSequence = getSequenceAt(game, firstCard.location);
+	const toLocation = parseShorthandPosition_INCOMPLETE(from);
+
+	return moveCards(game, fromSequence, toLocation);
 }

@@ -1721,7 +1721,9 @@ FreeCell {
       "suit": "spades",
     },
   ],
-  "history": [],
+  "history": [
+    "hand-jammed",
+  ],
   "previousAction": {
     "text": "hand-jammed",
     "type": "init",

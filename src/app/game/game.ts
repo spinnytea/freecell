@@ -25,6 +25,7 @@ import {
 	getSequenceAt,
 	moveCards,
 	parsePreviousActionText,
+	parsePreviousActionType,
 	parseShorthandMove,
 } from '@/app/game/game-utils';
 
@@ -200,6 +201,7 @@ export class FreeCell {
 			availableMoves: selection && availableMoves ? availableMoves : null,
 			action,
 			history: [
+				'init',
 				'shuffle', // FIXME confirm seed
 				'deal', // FIXME options (demo, most)
 				'move', // FIXME from/to, autoFoundationAll
@@ -498,15 +500,16 @@ export class FreeCell {
 	undo(): FreeCell | this {
 		const history = [...this.history];
 		const moveToUndo = history.pop();
-		if (moveToUndo) return this;
+		if (!moveToUndo) return this;
 
 		// we _need_ an action in __clone
 		// i'd rather have an excess pop here than forget anywhere else
 		const actionText = history.pop() ?? 'init partial';
 
-		// FIXME finish
+		const cards = parsePreviousActionText(this, moveToUndo);
+		if (!cards) throw new Error('invalid move: ' + moveToUndo);
 
-		return this.__clone({ action: parsePreviousActionText(actionText), history });
+		return this.__clone({ action: parsePreviousActionType(actionText), history, cards });
 	}
 
 	/** Used replaying a game, starting with a seed or otherwise known deal. */
@@ -527,6 +530,7 @@ export class FreeCell {
 
 	/**
 		FIXME break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
+		FIXME standard move notation can only be used when `limit = 'opp+1'`
 		REVIEW (techdebt) autoFoundation needs some serious refactoring
 	*/
 	autoFoundationAll({
@@ -819,26 +823,32 @@ export class FreeCell {
 	  - XXX (techdebt) print is super messy, can we clean this up?
 	  - IDEA (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
 	*/
-	print({ skipDeck = false }: { skipDeck?: boolean } = {}): string {
+	print({
+		skipDeck = false,
+		includeHistory = false,
+	}: { skipDeck?: boolean; includeHistory?: boolean } = {}): string {
+		const cursor: CardLocation = !includeHistory ? this.cursor : { fixture: 'cascade', data: [-1, -1] };
+		const selection = !includeHistory ? this.selection : null;
+
 		let str = '';
 		if (
-			this.cursor.fixture === 'cell' ||
-			this.selection?.location.fixture === 'cell' ||
-			this.cursor.fixture === 'foundation' ||
-			this.selection?.location.fixture === 'foundation'
+			cursor.fixture === 'cell' ||
+			selection?.location.fixture === 'cell' ||
+			cursor.fixture === 'foundation' ||
+			selection?.location.fixture === 'foundation'
 		) {
 			// cells
 			// prettier-ignore
 			str += this.cells
-				.map((card, idx) => `${getPrintSeparator({ fixture: 'cell', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`)
+				.map((card, idx) => `${getPrintSeparator({ fixture: 'cell', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
 				.join('');
 
 			// collapsed col between
-			if (isLocationEqual(this.cursor, { fixture: 'foundation', data: [0] })) {
+			if (isLocationEqual(cursor, { fixture: 'foundation', data: [0] })) {
 				str += '>';
 			} else if (
-				this.selection &&
-				isLocationEqual(this.selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
+				selection &&
+				isLocationEqual(selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
 			) {
 				str += '|';
 			} else {
@@ -848,14 +858,14 @@ export class FreeCell {
 			// foundation (minus first col)
 			// prettier-ignore
 			str += this.foundations
-				.map((card, idx) => `${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`)
+				.map((card, idx) => `${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
 				.join('');
 
 			// last col
 			str += getPrintSeparator(
 				{ fixture: 'foundation', data: [this.foundations.length - 1] },
 				null,
-				this.selection
+				selection
 			);
 		} else {
 			// if no cursor/selection in home row
@@ -866,15 +876,15 @@ export class FreeCell {
 
 		const max = Math.max(...this.tableau.map((cascade) => cascade.length));
 		for (let i = 0; i === 0 || i < max; i++) {
-			if (this.cursor.fixture === 'cascade' || this.selection?.location.fixture === 'cascade') {
+			if (cursor.fixture === 'cascade' || selection?.location.fixture === 'cascade') {
 				str +=
 					'\n' +
 					this.tableau
 						.map((cascade, idx) => {
 							const c = getPrintSeparator(
 								{ fixture: 'cascade', data: [idx, i] },
-								this.cursor,
-								this.selection
+								cursor,
+								selection
 							);
 							return c + shorthandCard(cascade[i]);
 						})
@@ -882,7 +892,7 @@ export class FreeCell {
 					getPrintSeparator(
 						{ fixture: 'cascade', data: [this.tableau.length, i] },
 						null,
-						this.selection
+						selection
 					);
 			} else {
 				// if no cursor/selection in this row
@@ -893,13 +903,13 @@ export class FreeCell {
 		// REVIEW (print) can we get rid of `d:` prefix (bcuz parse)
 		// REVIEW (print) should we use `:d` prefix instead?
 		if (this.deck.length && !skipDeck) {
-			if (this.cursor.fixture === 'deck' || this.selection?.location.fixture === 'deck') {
+			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
 				// prettier-ignore
 				const deckStr = this.deck
-					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`)
+					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
 					.reverse()
 					.join('');
-				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, this.selection);
+				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
 				str += `\nd:${deckStr}${lastCol}`;
 			} else {
 				// if no cursor/selection in deck
@@ -909,7 +919,7 @@ export class FreeCell {
 					.join(' ');
 				str += `\nd: ${deckStr} `;
 			}
-		} else if (this.cursor.fixture === 'deck') {
+		} else if (cursor.fixture === 'deck') {
 			str += `\nd:>   `;
 		}
 
@@ -923,13 +933,17 @@ export class FreeCell {
 			str += '\n' + spaces.substring(0, lineLength);
 		}
 
-		// FIXME print and parse move history
-		//  - optional; parse is going to be expensive (has to replay the whole game)
-		//  - shorthandMove
-		//  - Standard FreeCell Notation
-		//  - wrap = # columns
-
 		str += '\n ' + this.previousAction.text;
+
+		if (includeHistory) {
+			// FIXME print and parse move history
+			//  - optional; parse is going to be expensive (has to replay the whole game)
+			//  - shorthandMove
+			//  - Standard FreeCell Notation
+			//  - wrap = # columns
+			// FIXME need to include shuffle, else we don't know where to start
+		}
+
 		return str;
 	}
 
@@ -1143,12 +1157,11 @@ export class FreeCell {
 			};
 		}
 
-		const game = new FreeCell({ cellCount, cascadeCount, cards, cursor });
+		const game = new FreeCell({ action: parsePreviousActionType(actionText), cellCount, cascadeCount, cards, cursor, history: [actionText] });
 		if (selection_location) {
 			game.selection = getSequenceAt(game, selection_location);
 			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
-		game.previousAction = parsePreviousActionText(actionText);
 		return game;
 	}
 }

@@ -20,20 +20,19 @@ describe('game.undo', () => {
 			// we can't really undo that
 			test.todo('to: deck');
 
-			test.skip('to: cell', () => {
+			test('to: cell', () => {
 				let game = FreeCell.parse(
 					'' + //
 						'|KC>         QC KD KH KS \n' + //
 						'                         \n' + //
 						' hand-jammed'
 				);
+				const origPrint = game.print({ includeHistory: true });
+				expect(origPrint).toMatchSnapshot();
+				expect(game.history).toEqual(['hand-jammed']);
 				game = game.touch();
-				expect(game.print()).toBe(
-					'' +
-						'   >KC       QC KD KH KS \n' + //
-						'                         \n' + //
-						' move ab KC→cell'
-				);
+				expect(game.previousAction.text).toBe('move ab KC→cell');
+				expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 			});
 
 			test.todo('to: foundation');
