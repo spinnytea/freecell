@@ -130,9 +130,11 @@ export type Position =
 	| '9'
 	| 't';
 
-export interface Card {
+export interface CardSH {
 	rank: Rank;
 	suit: Suit;
+}
+export interface Card extends CardSH {
 	location: CardLocation;
 }
 
@@ -171,10 +173,7 @@ export function shorthandCard(card: Card | null | undefined) {
 	return (r + s).toUpperCase();
 }
 
-export function parseShorthandCard(
-	r: string | undefined,
-	s: string | undefined
-): { rank: Rank; suit: Suit } | null {
+export function parseShorthandCard(r: string | undefined, s: string | undefined): CardSH | null {
 	if (r === ' ' && s === ' ') return null;
 
 	let rank: Rank;

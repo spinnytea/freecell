@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`game.undo scenarios from: cell to: cell 1`] = `
-" KC          QC KD KH KS 
-                         
- hand-jammed"
-`;

@@ -490,7 +490,11 @@ function getFoundationRankForColor(game: FreeCell, card: Card): number {
 }
 
 /**
-	to parse a move correctly, we need the full game state AND the shorthand (from/to positions)
+	To parse a move correctly, we need the full game state AND the shorthand (from/to positions).
+	Since shorthandMove is only for replaying a game (moving forwards), we only need the shorthand.
+	In contrast, we cannot use this for undo/replay backwards.
+	Moving forwards, we can deduce which cards where moved, moving the maximum _allowable_ cards.
+	Moving backwards, the moves are "invalid", so we can't know which parts of sequences need to be split.
 
 	[Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 
@@ -575,8 +579,16 @@ export function parsePreviousActionType(text: string): PreviousAction {
 	return { text, type: firstWord as PreviousActionType };
 }
 
-// FIXME rewrite this function
-export function parsePreviousActionText(game: FreeCell, text: string): Card[] | null {
+/**
+	read {@link PreviousAction.text} which has the full context of what was moved
+	we can use this text to replaying a move, or (more importantly) undoing a move
+
+	FIXME clean up this function
+	XXX (techdebt) `parsePreviousActionText`, allow for both "undo" and "replay"
+	 - but like, that's not important for now
+	 - yes, i want to do this, but first i should focus on history
+*/
+export function parseAndUndoPreviousActionText(game: FreeCell, text: string): Card[] | null {
 	const previousActionType = parsePreviousActionType(text).type;
 
 	if (previousActionType !== 'move') return null;
@@ -601,6 +613,7 @@ export function parsePreviousActionText(game: FreeCell, text: string): Card[] | 
 	);
 	if (!firstCard) throw new Error('invalid first card: ' + text);
 
+	// FIXME this part is all undo
 	const fromSequence = getSequenceAt(game, firstCard.location);
 	const toLocation = parseShorthandPosition_INCOMPLETE(from);
 

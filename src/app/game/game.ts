@@ -4,15 +4,14 @@ import {
 	Card,
 	CardLocation,
 	CardSequence,
+	CardSH,
 	cloneCards,
 	isLocationEqual,
 	parseShorthandCard,
-	Rank,
 	RankList,
 	shorthandCard,
 	shorthandPosition,
 	shorthandSequence,
-	Suit,
 	SuitList,
 } from '@/app/game/card';
 import {
@@ -24,7 +23,7 @@ import {
 	getPrintSeparator,
 	getSequenceAt,
 	moveCards,
-	parsePreviousActionText,
+	parseAndUndoPreviousActionText,
 	parsePreviousActionType,
 	parseShorthandMove,
 } from '@/app/game/game-utils';
@@ -508,7 +507,7 @@ export class FreeCell {
 		// i'd rather have an excess pop here than forget anywhere else
 		const actionText = history.pop() ?? 'init partial';
 
-		const cards = parsePreviousActionText(this, moveToUndo);
+		const cards = parseAndUndoPreviousActionText(this, moveToUndo);
 		if (!cards) throw new Error('invalid move: ' + moveToUndo);
 
 		return this.__clone({ action: parsePreviousActionType(actionText), history, cards });
@@ -672,6 +671,12 @@ export class FreeCell {
 		// silent noop
 		return this;
 	}
+
+	// REVIEW (gameplay) use or remove this for quicker, unskippable animation
+	// canFlourish(game: FreeCell): boolean {
+	// 	if (game.win) return false;
+	// 	return game.autoFoundationAll().win;
+	// }
 
 	/**
 		this is the basis for click-to-move
@@ -939,15 +944,25 @@ export class FreeCell {
 			str += '\n' + spaces.substring(0, lineLength);
 		}
 
-		str += '\n ' + this.previousAction.text;
-
 		if (includeHistory) {
-			// FIXME print and parse move history
+			// FIXME if [init, shuffle, ...] = history; print and parse move history
 			//  - optional; parse is going to be expensive (has to replay the whole game)
 			//  - shorthandMove
 			//  - Standard FreeCell Notation
 			//  - wrap = # columns
-			// FIXME need to include shuffle, else we don't know where to start
+			//  - we can init the game, and replay forwards to recover the full history
+			//  - confirm that the states are the same at the end
+
+			// FIXME else; print and parse list of history
+			//  - we can replay the moves backwards to get to the "first" state
+			this.history
+				.slice(0)
+				.reverse()
+				.forEach((actionText) => {
+					str += '\n ' + actionText;
+				});
+		} else {
+			str += '\n ' + this.previousAction.text;
 		}
 
 		return str;
@@ -965,27 +980,28 @@ export class FreeCell {
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		const cards = new FreeCell().cards;
 		const remaining = cards.slice(0);
+		let checkIfHistory = false;
 
 		if (!print.includes('>')) {
-			throw new Error('must have at least 1 cursor');
+			checkIfHistory = true;
 		} else if (print.includes('>', print.indexOf('>') + 1)) {
 			throw new Error('must have no more than 1 cursor');
 		}
 
-		const lines = print.split('\n');
+		const lines = print.split('\n').reverse();
 		let line: string[];
 		const home_spaces: (string | undefined)[] = [];
 		const tableau_spaces: (string | undefined)[] = [];
 		const deck_spaces: (string | undefined)[] = [];
 
-		const getCard = ({ rank, suit }: { rank: Rank; suit: Suit }) => {
+		const getCard = ({ rank, suit }: CardSH) => {
 			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
 			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`); // XXX (print) test with a joker, duplicate card
 			remaining.splice(remaining.indexOf(card), 1);
 			return card;
 		};
 
-		const nextLine = () => lines.shift()?.split('').reverse() ?? [];
+		const nextLine = () => lines.pop()?.split('').reverse() ?? [];
 		const nextCard = (spaces: (string | undefined)[]) => {
 			// TODO (print) test invalid card rank
 			// TODO (print) test invalid card suit
@@ -1098,6 +1114,33 @@ export class FreeCell {
 		line.pop();
 		const actionText = line.reverse().join('');
 
+		const history: string[] = [];
+		if (checkIfHistory) {
+			const peek = lines.pop();
+			if (!peek) {
+				// FIXME test
+				if (parsePreviousActionType(actionText).type === 'init') {
+					history.push(actionText);
+				} else {
+					throw new Error('must have at least 1 cursor');
+				}
+			} else if (peek.startsWith(':h')) {
+				// FIXME finish: shuffle32(seed) + '\n' + moves
+			} else {
+				Array.prototype.push.apply(history, lines);
+				history.push(peek.trim());
+				history.push(actionText);
+			}
+
+			// FIXME verify history
+			//  - :h -> play forwards
+			//  - text -> play backwards, then forwards (heeey, parsePreviousActionText, not parseAndUndo)
+			//  - :h is all or nothing (omit history if invalid history); ['init discard history', actionText]
+			//  - text we can use what history is valid; ['init partial history', ..., actionText]
+		} else {
+			history.push(actionText);
+		}
+
 		// sus out the cursor/selection locations
 		// TODO (techdebt) is there any way to simplify this?
 		let cursor: CardLocation | undefined = undefined;
@@ -1169,7 +1212,7 @@ export class FreeCell {
 			cascadeCount,
 			cards,
 			cursor,
-			history: [actionText],
+			history,
 		});
 		if (selection_location) {
 			game.selection = getSequenceAt(game, selection_location);

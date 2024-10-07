@@ -2,6 +2,7 @@ import { FreeCell } from '@/app/game/game';
 
 // FIXME test.todo
 describe('game.undo', () => {
+	/** written as original move from→to, so we run the undo from←to */
 	describe('scenarios', () => {
 		test.todo('start (nothing to undo)');
 
@@ -28,14 +29,61 @@ describe('game.undo', () => {
 						' hand-jammed'
 				);
 				const origPrint = game.print({ includeHistory: true });
-				expect(origPrint).toMatchSnapshot();
+				expect(origPrint).toEqual(
+					'' + //
+						' KC          QC KD KH KS \n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
 				expect(game.history).toEqual(['hand-jammed']);
+
 				game = game.touch();
-				expect(game.previousAction.text).toBe('move ab KC→cell');
+				expect(game.print({ includeHistory: true })).toBe(
+					'' + //
+						'    KC       QC KD KH KS \n' + //
+						'                         \n' + //
+						' move ab KC→cell\n' + //
+						' hand-jammed'
+				);
+				expect(
+					FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
+				).toBe(game.print({ includeHistory: true }));
+
 				expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 			});
 
-			test.todo('to: foundation');
+			test('to: foundation', () => {
+				let game = FreeCell.parse(
+					'' + //
+						'|KC         >QC KD KH KS \n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
+				const origPrint = game.print({ includeHistory: true });
+				expect(origPrint).toEqual(
+					'' + //
+						' KC          QC KD KH KS \n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
+				expect(game.history).toEqual(['hand-jammed']);
+
+				game = game.touch();
+				expect(game.print({ includeHistory: true })).toBe(
+					'' + //
+						'             KC KD KH KS \n' + //
+						'                         \n' + //
+						':    Y O U   W I N !    :\n' + //
+						'                         \n' + //
+						' move ah KC→QC\n' + //
+						' hand-jammed'
+				);
+				expect(
+					FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
+				).toBe(game.print({ includeHistory: true }));
+
+				expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
+			});
 
 			describe('to: cascade', () => {
 				test.todo('single');
