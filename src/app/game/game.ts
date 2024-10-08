@@ -662,10 +662,12 @@ export class FreeCell {
 		// XXX (techdebt) can we write this function in a way that doesn't confuse typescript?
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (didMoveAny) {
-			const movedStr = moved.map((card) => shorthandCard(card)).join(',');
-			const ret = game.__clone({ action: { text: `auto-foundation ${movedStr}`, type: 'move' } });
-			if (ret.win) return game.__clone({ action: { text: `flourish ${movedStr}`, type: 'move' } });
-			return ret;
+			const movedCardsStr = moved.map((card) => shorthandCard(card)).join(',');
+			const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
+			const name = game.win ? 'flourish' : 'auto-foundation';
+			return game.__clone({
+				action: { text: `${name} ${movedPositionsStr} ${movedCardsStr}`, type: 'move' },
+			});
 		}
 
 		// silent noop

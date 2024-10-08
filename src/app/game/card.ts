@@ -118,6 +118,8 @@ export type Position =
 	| 'b'
 	| 'c'
 	| 'd'
+	| 'e'
+	| 'f'
 	| 'h'
 	| '1'
 	| '2'
@@ -128,7 +130,7 @@ export type Position =
 	| '7'
 	| '8'
 	| '9'
-	| 't';
+	| '0';
 
 export interface CardSH {
 	rank: Rank;
@@ -250,7 +252,7 @@ export function shorthandPosition(location: CardLocation): Position {
 		// sequences would need to check data[1] + card.length, not just the location
 		// (could pass in a optional canMove with default of true)
 		if (d0 === 9) {
-			return 't';
+			return '0';
 		} else if (d0 >= 0 && d0 < 9) {
 			return (d0 + 1).toString(10) as Position;
 		}
@@ -287,7 +289,6 @@ export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLo
 			return { fixture: 'cascade', data: [parseInt(p, 10) - 1, BOTTOM_OF_CASCADE] };
 		// ten
 		case '0':
-		case 't':
 			return { fixture: 'cascade', data: [9, BOTTOM_OF_CASCADE] };
 		case 'h':
 			// h could refer to _any_ of the foundations; this needs to be verified
