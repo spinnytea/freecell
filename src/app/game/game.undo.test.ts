@@ -1,3 +1,4 @@
+import { getMoves } from '@/app/game/catalog/solutions-catalog';
 import { FreeCell } from '@/app/game/game';
 
 // FIXME test.todo
@@ -417,8 +418,23 @@ describe('game.undo (+ history)', () => {
 		This sounds quite a lot like FreeCell.parse with history, just do that?
 	*/
 	describe('play a game backward and forewards using move history', () => {
-		// test.each`` …
-		test.todo('Game #1');
+		test.skip.each`
+			seed
+			${1}
+		`('Game #$seed', ({ seed }: { seed: number }) => {
+			let game = new FreeCell().shuffle32(seed).dealAll();
+			getMoves(seed).forEach((move) => {
+				const prevState = game.print({ includeHistory: true });
+
+				game = game.moveByShorthand(move);
+				expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
+
+				// FIXME finish
+				// invalid move actionText: auto-foundation AC,AS,2C
+				const afterUndo = game.undo();
+				expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
+			});
+		});
 
 		test.todo('Game #5');
 

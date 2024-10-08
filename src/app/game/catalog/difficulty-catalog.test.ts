@@ -1,4 +1,4 @@
-import { getSeedsByTag } from '@/app/game/difficulty-catalog';
+import { getSeedsByTag } from '@/app/game/catalog/difficulty-catalog';
 
 describe('difficulty-catalog', () => {
 	describe('getSeedsByTag', () => {
