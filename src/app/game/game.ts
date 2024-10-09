@@ -23,6 +23,7 @@ import {
 	getPrintSeparator,
 	getSequenceAt,
 	moveCards,
+	movesFromHistory,
 	parseAndUndoPreviousActionText,
 	parsePreviousActionType,
 	parseShorthandMove,
@@ -947,22 +948,20 @@ export class FreeCell {
 		}
 
 		if (includeHistory) {
-			// FIXME if [init, shuffle, ...] = history; print and parse move history
-			//  - optional; parse is going to be expensive (has to replay the whole game)
-			//  - shorthandMove
-			//  - Standard FreeCell Notation
-			//  - wrap = # columns
-			//  - we can init the game, and replay forwards to recover the full history
-			//  - confirm that the states are the same at the end
-
-			// FIXME else; print and parse list of history
-			//  - we can replay the moves backwards to get to the "first" state
-			this.history
-				.slice(0)
-				.reverse()
-				.forEach((actionText) => {
-					str += '\n ' + actionText;
-				});
+			const movesSeed = movesFromHistory(this.history);
+			if (movesSeed) {
+				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
+				while (movesSeed.moves.length) {
+					str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
+				}
+			} else {
+				this.history
+					.slice(0)
+					.reverse()
+					.forEach((actionText) => {
+						str += '\n ' + actionText;
+					});
+			}
 		} else {
 			str += '\n ' + this.previousAction.text;
 		}
@@ -1127,19 +1126,22 @@ export class FreeCell {
 					throw new Error('must have at least 1 cursor');
 				}
 			} else if (peek.startsWith(':h')) {
-				// FIXME finish: shuffle32(seed) + '\n' + moves
+				// FIXME parse move history
+				//  - we can init the game, and replay forwards to recover the full history
+				//  - confirm that the states are the same at the end
+				throw new Error('not implemented yet');
+				// FIXME verify history (if you didn't want to verify it, don't pass it in?)
+				//  - :h -> play forwards
+				//  - (we have the moves, but not the auto-foundation)
+				//  - text -> play backwards, then forwards (heeey, parsePreviousActionText, not parseAndUndo)
 			} else {
 				// FIXME test with at least 5 history items
 				Array.prototype.push.apply(history, lines);
 				history.push(peek.trim());
 				history.push(actionText);
+				// FIXME verify history (if you didn't want to verify it, don't pass it in?)
+				//  - text we can use what history is valid; ['init partial history', ..., actionText]
 			}
-
-			// FIXME verify history (if you didn't want to verify it, don't pass it in?)
-			//  - :h -> play forwards
-			//  - text -> play backwards, then forwards (heeey, parsePreviousActionText, not parseAndUndo)
-			//  - :h is all or nothing (omit history if invalid history); ['init discard history', actionText]
-			//  - text we can use what history is valid; ['init partial history', ..., actionText]
 		} else {
 			history.push(actionText);
 		}

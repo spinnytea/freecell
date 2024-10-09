@@ -274,6 +274,18 @@ describe('game', () => {
 					' 9S AD 7C TS             \n' +
 					' deal all cards'
 			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' +
+					'                         \n' +
+					' AH 8S 2D QS 4C 9H 2S 3D \n' +
+					' 5C AS 9C KH 4D 2C 3C 4S \n' +
+					' 3S 5D KC 3H KD 5H 6S 8D \n' +
+					' TD 7S JD 7H 8H JH JC 7D \n' +
+					' 5S QH 8C 9D KS QD 4H AC \n' +
+					' 2H TC TH 6D 6H 6C QC JS \n' +
+					' 9S AD 7C TS             \n' +
+					':h shuffle32 5'
+			);
 
 			// In game 5, you may begin by moving the six of hearts onto the seven of clubs.
 			// Note that the free ace of diamonds moves automatically to a homecell when you do this.
@@ -322,6 +334,22 @@ describe('game', () => {
 					'       6H         >TC    \n' +
 					'                   9H    \n' +
 					' move 67 9H→TC'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' +
+					'             AD 2C       \n' +
+					' AH 8S 2D QS 4C    2S 3D \n' +
+					' 5C AS 9C KH 4D    3C 4S \n' +
+					' 3S 5D KC 3H KD    6S 8D \n' +
+					' TD 7S JD 7H 8H    JC 7D \n' +
+					' 5S QH 8C 9D KS    4H 6C \n' +
+					' 2H    TH 6D QD    QC 5H \n' +
+					' 9S    7C TS JS    JH    \n' +
+					'       6H          TC    \n' +
+					'                   9H    \n' +
+					':h shuffle32 5\n' +
+					' 53 6a 65 67 85 a8 68 27 \n' +
+					' 67 '
 			);
 
 			// Move the nine of spades to a freecell
@@ -387,6 +415,23 @@ describe('game', () => {
 					'       6H    TD    TC    \n' +
 					'       5S    9S    9H    \n' +
 					' move 86 7D-6C-5H→cascade'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' +
+					' 3S    5C    AD 2C 2H    \n' +
+					'    8S 2D QS 4C 7D 2S 3D \n' +
+					'    AS 9C KH 4D 6C 3C 4S \n' +
+					'    5D KC 3H KD 5H 6S 8D \n' +
+					'    7S JD 7H 8H    JC    \n' +
+					'    QH 8C 9D KS    4H    \n' +
+					'       TH 6D QD    QC    \n' +
+					'       7C TS JS    JH    \n' +
+					'       6H    TD    TC    \n' +
+					'       5S    9S    9H    \n' +
+					':h shuffle32 5\n' +
+					' 53 6a 65 67 85 a8 68 27 \n' +
+					' 67 1a 1b 13 15 a5 1a 1c \n' +
+					' 86 '
 			);
 
 			// Next move the eight of diamonds onto the nine of spades,
@@ -455,6 +500,28 @@ describe('game', () => {
 					'             5C          \n' +
 					' move 48 QS→KH'
 			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' +
+					' 3S 5D       AD 2C 3H AS \n' +
+					' QH TS 2D    4C 7D 2S KH \n' +
+					'    9D 9C    4D 6C 3C QS \n' +
+					'       KC    KD 5H 6S    \n' +
+					'       JD    8H 4S JC    \n' +
+					'       8C    KS 3D 4H    \n' +
+					'       TH    QD    QC    \n' +
+					'       7C    JS    JH    \n' +
+					'       6H    TD    TC    \n' +
+					'       5S    9S    9H    \n' +
+					'             8D    8S    \n' +
+					'             7S    7H    \n' +
+					'             6D          \n' +
+					'             5C          \n' +
+					':h shuffle32 5\n' +
+					' 53 6a 65 67 85 a8 68 27 \n' +
+					' 67 1a 1b 13 15 a5 1a 1c \n' +
+					' 86 85 86 86 21 25 2b 27 \n' +
+					' 42 45 c5 42 47 4h 48 48 '
+			);
 
 			// move five cards (up to the jack of hearts) from column seven onto the queen of spades in column eight.
 			game = game.moveByShorthand('78');
@@ -502,6 +569,29 @@ describe('game', () => {
 					'             6D          \n' +
 					'             5C          \n' +
 					' move b8 5D→6S'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' +
+					'       QC    AD 3C 4H 3S \n' +
+					' QH TS 2D    4C 7D    KH \n' +
+					' JC 9D 9C    4D 6C    QS \n' +
+					'       KC    KD 5H    JH \n' +
+					'       JD    8H 4S    TC \n' +
+					'       8C    KS 3D    9H \n' +
+					'       TH    QD       8S \n' +
+					'       7C    JS       7H \n' +
+					'       6H    TD       6S \n' +
+					'       5S    9S       5D \n' +
+					'             8D          \n' +
+					'             7S          \n' +
+					'             6D          \n' +
+					'             5C          \n' +
+					':h shuffle32 5\n' +
+					' 53 6a 65 67 85 a8 68 27 \n' +
+					' 67 1a 1b 13 15 a5 1a 1c \n' +
+					' 86 85 86 86 21 25 2b 27 \n' +
+					' 42 45 c5 42 47 4h 48 48 \n' +
+					' 78 7c 7h 71 78 7h ah b8 '
 			);
 
 			// Move the five of spades through seven of clubs from column three to column four,
@@ -569,6 +659,22 @@ describe('game', () => {
 					'                         \n' +
 					' move 56 KD→cascade (flourish 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)'
 			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' +
+					'             KD KC KH KS \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					':h shuffle32 5\n' +
+					' 53 6a 65 67 85 a8 68 27 \n' +
+					' 67 1a 1b 13 15 a5 1a 1c \n' +
+					' 86 85 86 86 21 25 2b 27 \n' +
+					' 42 45 c5 42 47 4h 48 48 \n' +
+					' 78 7c 7h 71 78 7h ah b8 \n' +
+					' 34 31 32 c7 37 3a 31 a3 \n' +
+					' 13 27 67 52 53 56 '
+			);
+			expect(game).toMatchSnapshot();
 		});
 
 		test('Game #617', () => {

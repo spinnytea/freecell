@@ -54,6 +54,8 @@ export type AutoFoundationLimit =
 // TODO (settings) these _exist_, but we need to be able to pick them
 export type AutoFoundationMethod = 'cell,cascade' | 'foundation';
 
+const MOVE_REGEX = /^move (\w)(\w) (.*)→(.*)$/;
+
 export function getSequenceAt(game: FreeCell, location: CardLocation): CardSequence {
 	const [d0] = location.data;
 
@@ -593,7 +595,7 @@ export function parseAndUndoPreviousActionText(game: FreeCell, text: string): Ca
 
 	if (previousActionType !== 'move') return null;
 
-	const match = /^move (\w)(\w) (.*)→(.*)$/.exec(text);
+	const match = MOVE_REGEX.exec(text);
 	if (!match) throw new Error('invalid move actionText: ' + text);
 	const [, from, to, fromShorthand, toShortHand] = match;
 	// XXX (techdebt) validate toShorthand? confirm that this even makes sense??
@@ -618,4 +620,20 @@ export function parseAndUndoPreviousActionText(game: FreeCell, text: string): Ca
 	const toLocation = parseShorthandPosition_INCOMPLETE(from);
 
 	return moveCards(game, fromSequence, toLocation);
+}
+
+export function movesFromHistory(history: string[]): { seed: number; moves: string[] } | null {
+	if (!history[1] || parsePreviousActionType(history[1]).type !== 'deal') return null;
+	const matchSeed = /shuffle deck \((\d+)\)/.exec(history[0]);
+	if (!matchSeed) return null;
+	const seed = parseInt(matchSeed[1], 10);
+	const moves = history
+		.map((text) => {
+			const match = MOVE_REGEX.exec(text);
+			if (!match) return '';
+			const [, from, to] = match;
+			return `${from}${to}`;
+		})
+		.filter((m) => m);
+	return { seed, moves };
 }

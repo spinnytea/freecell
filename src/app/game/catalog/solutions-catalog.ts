@@ -10,7 +10,6 @@ export const seedSolutions48 = new Map<number, string>([
 			'37 2a 8h 4h 1h 17 1h 1b 8h 4h ' +
 			'4b 4c 4d a2 42 46 3h 7h 13',
 	],
-
 	[
 		3,
 		'' +
@@ -20,7 +19,16 @@ export const seedSolutions48 = new Map<number, string>([
 			'4c 4h ch 2c 23 74 67 62 c2 1c ' +
 			'13 48 42',
 	],
-
+	[
+		5,
+		'' +
+			'53 6a 65 67 85 a8 68 27 67 1a ' +
+			'1b 13 15 a5 1a 1c 86 85 86 86 ' +
+			'21 25 2b 27 42 45 c5 42 47 4h ' +
+			'48 48 78 7c 7h 71 78 7h ah b8 ' +
+			'34 31 32 c7 37 3a 31 a3 13 27 ' +
+			'67 52 53 56',
+	],
 	[
 		617,
 		'' +
@@ -32,7 +40,6 @@ export const seedSolutions48 = new Map<number, string>([
 			'c8 78 58 37 35 3c a4 34 b4 c2 ' +
 			'13 1a 1b',
 	],
-
 	[
 		23190,
 		'' +
