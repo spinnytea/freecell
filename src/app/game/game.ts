@@ -766,7 +766,7 @@ export class FreeCell {
 		keepDeck = false,
 	}: { demo?: boolean; keepDeck?: boolean } = {}): FreeCell {
 		// TODO (techdebt) replace `const game = this.__clone({})` with `return this.__clone({})`
-		// FIXME deal in multiple actions (deal most, demo)
+		// IDEA (techdebt) deal in multiple actions (deal most, demo)
 		const game = this.__clone({ action: { text: 'deal all cards', type: 'deal' } });
 
 		const remaining = demo ? game.cells.length + game.foundations.length : 0;
