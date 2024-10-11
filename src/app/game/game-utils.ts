@@ -55,6 +55,7 @@ export type AutoFoundationLimit =
 export type AutoFoundationMethod = 'cell,cascade' | 'foundation';
 
 const MOVE_REGEX = /^move (\w)(\w) (.*)→(.*)$/;
+const AUTO_FOUNDATION_REGEX = /^auto-foundation (\w+) (.+)$/;
 
 export function getSequenceAt(game: FreeCell, location: CardLocation): CardSequence {
 	const [d0] = location.data;
@@ -574,8 +575,7 @@ export function parsePreviousActionType(text: string): PreviousAction {
 	const firstWord = text.split(' ')[0];
 	if (firstWord === 'hand-jammed') return { text, type: 'init' };
 	if (firstWord === 'touch') return { text, type: 'invalid' };
-	if (firstWord === 'auto-foundation') return { text, type: 'move' };
-	if (firstWord === 'flourish') return { text, type: 'move' };
+	if (firstWord === 'flourish') return { text, type: 'auto-foundation' };
 	// if (firstWord === 'auto-foundation-setup') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	// if (firstWord === 'auto-foundation-middle') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	return { text, type: firstWord as PreviousActionType };
@@ -591,10 +591,25 @@ export function parsePreviousActionType(text: string): PreviousAction {
 	 - yes, i want to do this, but first i should focus on history
 */
 export function parseAndUndoPreviousActionText(game: FreeCell, text: string): Card[] | null {
-	const previousActionType = parsePreviousActionType(text).type;
+	switch (parsePreviousActionType(text).type) {
+		case 'init':
+		case 'shuffle':
+		case 'deal':
+			return null;
+		case 'move':
+			return undoMove(game, text);
+		case 'auto-foundation':
+			return undoAutoFoundation(game, text);
+		case 'cursor':
+		case 'select':
+		case 'deselect':
+		case 'invalid':
+		case 'auto-foundation-tween':
+			throw new Error(`cannot undo move type ${text}`);
+	}
+}
 
-	if (previousActionType !== 'move') return null;
-
+function undoMove(game: FreeCell, text: string): Card[] {
 	const match = MOVE_REGEX.exec(text);
 	if (!match) throw new Error('invalid move actionText: ' + text);
 	const [, from, to, fromShorthand, toShortHand] = match;
@@ -620,6 +635,33 @@ export function parseAndUndoPreviousActionText(game: FreeCell, text: string): Ca
 	const toLocation = parseShorthandPosition_INCOMPLETE(from);
 
 	return moveCards(game, fromSequence, toLocation);
+}
+
+function undoAutoFoundation(game: FreeCell, text: string): Card[] {
+	const match = AUTO_FOUNDATION_REGEX.exec(text);
+	if (!match) throw new Error('invalid move actionText: ' + text);
+	const froms = match[1].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
+	const shorthands = match[2].split(',').map((s) => parseShorthandCard(s[0], s[1]));
+	if (froms.length !== shorthands.length) throw new Error('invalid move actionText: ' + text);
+
+	game = game.__clone({
+		action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
+	});
+
+	while (froms.length) {
+		const from = froms.pop();
+		const shorthand = shorthands.pop();
+		const card = game.cards.find((c) => c.suit === shorthand?.suit && c.rank === shorthand.rank);
+		if (!from || !shorthand || !card) throw new Error('invalid move actionText: ' + text);
+
+		const cards = moveCards(game, getSequenceAt(game, card.location), from);
+		game = game.__clone({
+			action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
+			cards,
+		});
+	}
+
+	return game.cards;
 }
 
 export function movesFromHistory(history: string[]): { seed: number; moves: string[] } | null {

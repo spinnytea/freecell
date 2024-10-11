@@ -10,10 +10,13 @@ describe('game.undo (+ history)', () => {
 
 		test.todo('deal');
 
+		// history does not keep track of the cursor
 		test.todo('cursor');
 
+		// history does not keep track of the selection
 		test.todo('select');
 
+		// history does not keep track of the selection
 		test.todo('deselect');
 
 		/** written as original move from→to, so we run the undo from←to */
@@ -387,6 +390,8 @@ describe('game.undo (+ history)', () => {
 				});
 			});
 		});
+
+		test.todo('auto-foundation');
 	});
 
 	describe('edges', () => {
@@ -399,6 +404,9 @@ describe('game.undo (+ history)', () => {
 		test.todo('undo autoFoundationAll');
 
 		test.todo('parse without history (nothing to undo)');
+
+		// FIXME move, <cannot undo>, move, undo undo undo - the card marches down the cascade??
+		test.todo('if we reach a move it cannot undo, it should not break');
 	});
 
 	describe('collapse history', () => {
@@ -463,7 +471,8 @@ describe('game.undo (+ history)', () => {
 
 				// FIXME finish
 				// invalid move actionText: auto-foundation AC,AS,2C
-				const afterUndo = game.undo();
+				const afterUndo =
+					game.previousAction.type === 'auto-foundation' ? game.undo().undo() : game.undo();
 				expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
 			});
 		});

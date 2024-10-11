@@ -46,6 +46,7 @@ export type PreviousActionType =
 	| 'select'
 	| 'deselect'
 	| 'move'
+	| 'auto-foundation'
 	| 'invalid'
 	| 'auto-foundation-tween';
 export interface PreviousAction {
@@ -205,6 +206,7 @@ export class FreeCell {
 				'shuffle', // FIXME confirm seed
 				'deal', // FIXME options (demo, most)
 				'move', // FIXME from/to, autoFoundationAll
+				'auto-foundation',
 			].includes(action.type)
 				? [...(history ?? this.history), action.text]
 				: this.history,
@@ -500,18 +502,17 @@ export class FreeCell {
 		FIXME rewrite this function
 	*/
 	undo(): FreeCell | this {
-		const history = [...this.history];
+		const history = this.history.slice(0);
 		const moveToUndo = history.pop();
 		if (!moveToUndo) return this;
 
-		// we _need_ an action in __clone
-		// i'd rather have an excess pop here than forget anywhere else
-		const actionText = history.pop() ?? 'init partial';
-
 		const cards = parseAndUndoPreviousActionText(this, moveToUndo);
-		if (!cards) throw new Error('invalid move: ' + moveToUndo);
+		if (!cards) return this;
 
-		return this.__clone({ action: parsePreviousActionType(actionText), history, cards });
+		// we _need_ an action in __clone
+		// __clone will add it back to the history
+		const action = parsePreviousActionType(history.pop() ?? 'init partial');
+		return this.__clone({ action, history, cards });
 	}
 
 	/** Used replaying a game, starting with a seed or otherwise known deal. */

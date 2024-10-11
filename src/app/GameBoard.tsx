@@ -70,6 +70,13 @@ export default function GameBoard() {
 					consumed = true;
 					setGame((g) => g.clearSelection());
 					break;
+				case 'z':
+				case 'Z':
+					// FIXME BUG auto-foundation, move, undo undo undo - the card marches down the cascade??
+					// FIXME BUG why does g.undo run twice?
+					consumed = true;
+					setGame((g) => g.undo());
+					break;
 				// default:
 				// 	console.log(`unused key: "${key}"`);
 				// 	break;
@@ -95,6 +102,7 @@ export default function GameBoard() {
 	);
 }
 
+// FIXME button for undo
 function BoardLayout() {
 	const settings = useSettings();
 
