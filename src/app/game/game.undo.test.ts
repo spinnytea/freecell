@@ -2,7 +2,7 @@ import { getMoves, seedSolutions48 } from '@/app/game/catalog/solutions-catalog'
 import { FreeCell } from '@/app/game/game';
 import { movesFromHistory } from '@/app/game/game-utils';
 
-// FIXME test.todo
+// TODO (techdebt) (history) unit test history
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
 		test.todo('init');
@@ -450,6 +450,63 @@ describe('game.undo (+ history)', () => {
 		//  7a 7b 7c 76 79 71 0d c0 d0 17
 		//  97 b7 a7 90 86 20 12 17 38 34
 		//  35
+	});
+
+	test('parse history actions', () => {
+		let game = FreeCell.parse(
+			'' + //
+				' QC         >JC KD KH KS \n' + //
+				' KC                      \n' + //
+				' hand-jammed'
+		);
+		game = game
+			.setCursor({ fixture: 'cascade', data: [0, 0] })
+			.touch()
+			.autoMove();
+		game = game
+			.setCursor({ fixture: 'cascade', data: [1, 0] })
+			.touch()
+			.autoMove();
+		game = game
+			.setCursor({ fixture: 'cascade', data: [2, 0] })
+			.touch()
+			.autoMove();
+		game = game
+			.setCursor({ fixture: 'cascade', data: [3, 0] })
+			.touch()
+			.autoMove();
+		game = game
+			.setCursor({ fixture: 'cascade', data: [4, 0] })
+			.touch()
+			.autoMove();
+		game = game
+			.setCursor({ fixture: 'cascade', data: [5, 0] })
+			.touch()
+			.autoMove();
+		game = game
+			.setCursor({ fixture: 'cascade', data: [6, 0] })
+			.touch()
+			.autoMove();
+		expect(game.print({ includeHistory: true })).toEqual(
+			'' + //
+				' QC          JC KD KH KS \n' + //
+				'                      KC \n' + //
+				' move 78 KC→cascade\n' +
+				' move 67 KC→cascade\n' +
+				' move 56 KC→cascade\n' +
+				' move 45 KC→cascade\n' +
+				' move 34 KC→cascade\n' +
+				' move 23 KC→cascade\n' +
+				' move 12 KC→cascade\n' +
+				' hand-jammed'
+		);
+		let parsed = FreeCell.parse(game.print({ includeHistory: true }));
+		expect(parsed.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+		expect(parsed.history).toEqual(game.history);
+
+		game = game.setCursor({ fixture: 'cell', data: [0] });
+		parsed = parsed.setCursor({ fixture: 'cell', data: [0] });
+		expect(parsed).toEqual(game);
 	});
 
 	/*

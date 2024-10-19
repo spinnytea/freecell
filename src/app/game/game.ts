@@ -1116,27 +1116,29 @@ export class FreeCell {
 		if (parseHistory) {
 			const peek = lines.pop();
 			if (!peek) {
-				// FIXME test
+				// TODO (parse-history) test
 				if (parsePreviousActionType(actionText).type === 'init') {
 					history.push(actionText);
 				} else {
 					throw new Error('must have at least 1 cursor');
 				}
 			} else if (peek.startsWith(':h')) {
-				// FIXME parse move history
+				// TODO (parse-history) parse move history
 				//  - we can init the game, and replay forwards to recover the full history
 				//  - confirm that the states are the same at the end
 				throw new Error('not implemented yet');
-				// FIXME verify history (if you didn't want to verify it, don't pass it in?)
+				// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
 				//  - :h -> play forwards
 				//  - (we have the moves, but not the auto-foundation)
 				//  - text -> play backwards, then forwards (heeey, parsePreviousActionText, not parseAndUndo)
 			} else {
-				// FIXME test with at least 5 history items
-				Array.prototype.push.apply(history, lines);
+				Array.prototype.push.apply(
+					history,
+					lines.map((line) => line.trim())
+				);
 				history.push(peek.trim());
 				history.push(actionText);
-				// FIXME verify history (if you didn't want to verify it, don't pass it in?)
+				// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
 				//  - text we can use what history is valid; ['init partial history', ..., actionText]
 			}
 		} else {
