@@ -22,6 +22,8 @@ export default function GameBoard() {
 	/** REVIEW (controls) mouse */
 	function handleClick() {
 		if (game.win) {
+			// print game w/ history, just in case we want to archive it for testing or something
+			console.info(game.print({ includeHistory: true }));
 			// click to reset
 			setGame(() => newGame().shuffle32());
 			setSettings((s) => ({ ...s, showKeyboardCursor: false }));

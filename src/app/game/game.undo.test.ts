@@ -504,6 +504,7 @@ describe('game.undo (+ history)', () => {
 		expect(parsed.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 		expect(parsed.history).toEqual(game.history);
 
+		// TODO (techdebt) detect last cursor position, so we don't need to normalize the cursor
 		game = game.setCursor({ fixture: 'cell', data: [0] });
 		parsed = parsed.setCursor({ fixture: 'cell', data: [0] });
 		expect(parsed).toEqual(game);

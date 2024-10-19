@@ -529,7 +529,7 @@ export class FreeCell {
 
 	/**
 		TODO (techdebt) break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
-		REVIEW (history) standard move notation can only be used when `limit = 'opp+1'`
+		REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
 		REVIEW (techdebt) autoFoundation needs some serious refactoring
 	*/
 	autoFoundationAll({
@@ -947,6 +947,7 @@ export class FreeCell {
 		if (includeHistory) {
 			const movesSeed = movesFromHistory(this.history);
 			if (movesSeed) {
+				// REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
 				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 				while (movesSeed.moves.length) {
 					str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
