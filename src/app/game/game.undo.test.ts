@@ -167,47 +167,48 @@ describe('game.undo (+ history)', () => {
 					});
 
 					describe('sequence', () => {
-						test.skip('top', () => {
-							let game = FreeCell.parse(
-								'' + //
-									'   |TC|      9C TD KH KS \n' + //
-									' KC>KD                   \n' + //
-									' QD QC                   \n' + //
-									' JC JD                   \n' + //
-									' hand-jammed'
-							);
-							const origPrint = game.print({ includeHistory: true });
-							expect(origPrint).toEqual(
-								'' + //
-									'    TC       9C TD KH KS \n' + //
-									' KC KD                   \n' + //
-									' QD QC                   \n' + //
-									' JC JD                   \n' + //
-									' hand-jammed'
-							);
+						test.todo('top');
+						// ('top', () => {
+						// 	let game = FreeCell.parse(
+						// 		'' + //
+						// 			'   |TC|      9C TD KH KS \n' + //
+						// 			' KC>KD                   \n' + //
+						// 			' QD QC                   \n' + //
+						// 			' JC JD                   \n' + //
+						// 			' hand-jammed'
+						// 	);
+						// 	const origPrint = game.print({ includeHistory: true });
+						// 	expect(origPrint).toEqual(
+						// 		'' + //
+						// 			'    TC       9C TD KH KS \n' + //
+						// 			' KC KD                   \n' + //
+						// 			' QD QC                   \n' + //
+						// 			' JC JD                   \n' + //
+						// 			' hand-jammed'
+						// 	);
 
-							game = game.touch();
-							// what it is
-							expect(game.previousAction.text).toEqual('invalid move b2 TC→JD');
-							expect(game.history).toEqual(['hand-jammed']);
-							// XXX (techdebt) what is should be
-							expect(game.print({ includeHistory: true })).toBe(
-								'' + //
-									'             9C TD KH KS \n' + //
-									' KC KD                   \n' + //
-									' QD QC                   \n' + //
-									' JC JD                   \n' + //
-									'    TC                   \n' + //
-									' move b2 TC→JD\n' + //
-									' hand-jammed'
-							);
-							expect(game.history).toEqual(['hand-jammed', 'move b2 TC→JD']);
-							expect(
-								FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
-							).toBe(game.print({ includeHistory: true }));
+						// 	game = game.touch();
+						// 	// what it is
+						// 	expect(game.previousAction.text).toEqual('invalid move b2 TC→JD');
+						// 	expect(game.history).toEqual(['hand-jammed']);
+						// 	// XXX (techdebt) what is should be
+						// 	expect(game.print({ includeHistory: true })).toBe(
+						// 		'' + //
+						// 			'             9C TD KH KS \n' + //
+						// 			' KC KD                   \n' + //
+						// 			' QD QC                   \n' + //
+						// 			' JC JD                   \n' + //
+						// 			'    TC                   \n' + //
+						// 			' move b2 TC→JD\n' + //
+						// 			' hand-jammed'
+						// 	);
+						// 	expect(game.history).toEqual(['hand-jammed', 'move b2 TC→JD']);
+						// 	expect(
+						// 		FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
+						// 	).toBe(game.print({ includeHistory: true }));
 
-							expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
-						});
+						// 	expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
+						// });
 
 						test.todo('middle');
 
@@ -458,7 +459,7 @@ describe('game.undo (+ history)', () => {
 		This sounds quite a lot like FreeCell.parse with history, just do that?
 	*/
 	describe('play a game backward and forewards using move history', () => {
-		test.skip.each`
+		test.each`
 			seed
 			${1}
 		`('Game #$seed', ({ seed }: { seed: number }) => {
@@ -469,10 +470,7 @@ describe('game.undo (+ history)', () => {
 				game = game.moveByShorthand(move);
 				expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
 
-				// FIXME finish
-				// invalid move actionText: auto-foundation AC,AS,2C
-				const afterUndo =
-					game.previousAction.type === 'auto-foundation' ? game.undo().undo() : game.undo();
+				const afterUndo = game.undo();
 				expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
 			});
 		});

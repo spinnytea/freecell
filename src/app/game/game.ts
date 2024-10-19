@@ -22,6 +22,7 @@ import {
 	foundationCanAcceptCards,
 	getPrintSeparator,
 	getSequenceAt,
+	MOVE_AUTO_F_CHECK_REGEX,
 	moveCards,
 	movesFromHistory,
 	parseAndUndoPreviousActionText,
@@ -512,7 +513,13 @@ export class FreeCell {
 		// we _need_ an action in __clone
 		// __clone will add it back to the history
 		const action = parsePreviousActionType(history.pop() ?? 'init partial');
-		return this.__clone({ action, history, cards });
+		const game = this.__clone({ action, history, cards });
+
+		// special case: moveByShorthand: move 6c 2C→cell (auto-foundation 66c AC,AS,2C)
+		// REVIEW (techdebt) should this be a different PreviousActionType?
+		if (MOVE_AUTO_F_CHECK_REGEX.test(this.previousAction.text)) return game.undo();
+
+		return game;
 	}
 
 	/** Used replaying a game, starting with a seed or otherwise known deal. */
@@ -525,6 +532,7 @@ export class FreeCell {
 		const actionText = game.previousAction.text;
 		game = game.autoFoundationAll();
 		if (game.previousAction.text !== actionText) {
+			// REVIEW (techdebt) should this be a different PreviousActionType?
 			game.previousAction.text = `${actionText} (${game.previousAction.text})`;
 		}
 

@@ -55,7 +55,8 @@ export type AutoFoundationLimit =
 export type AutoFoundationMethod = 'cell,cascade' | 'foundation';
 
 const MOVE_REGEX = /^move (\w)(\w) (.*)→(.*)$/;
-const AUTO_FOUNDATION_REGEX = /^auto-foundation (\w+) (.+)$/;
+const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (.+)$/;
+export const MOVE_AUTO_F_CHECK_REGEX = /^move .* \((auto-foundation|flourish) .*\)$/;
 
 export function getSequenceAt(game: FreeCell, location: CardLocation): CardSequence {
 	const [d0] = location.data;
@@ -641,8 +642,8 @@ function undoMove(game: FreeCell, text: string): Card[] {
 function undoAutoFoundation(game: FreeCell, text: string): Card[] {
 	const match = AUTO_FOUNDATION_REGEX.exec(text);
 	if (!match) throw new Error('invalid move actionText: ' + text);
-	const froms = match[1].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
-	const shorthands = match[2].split(',').map((s) => parseShorthandCard(s[0], s[1]));
+	const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
+	const shorthands = match[3].split(',').map((s) => parseShorthandCard(s[0], s[1]));
 	if (froms.length !== shorthands.length) throw new Error('invalid move actionText: ' + text);
 
 	game = game.__clone({
