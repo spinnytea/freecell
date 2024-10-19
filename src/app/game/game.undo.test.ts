@@ -366,7 +366,6 @@ describe('game.undo (+ history)', () => {
 					});
 				});
 
-				// FIXME pay attention to sequences (probably need to look at the destination to pick the card from the source)
 				describe('sequence', () => {
 					// REVIEW do we have any control of where cards move from the deck?
 					// we can't really undo that

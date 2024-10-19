@@ -13,6 +13,8 @@ import {
 	parseShorthandPosition_INCOMPLETE,
 	RankList,
 	shorthandCard,
+	shorthandPosition,
+	shorthandSequence,
 	Suit,
 } from '@/app/game/card';
 import { FreeCell, PreviousAction, PreviousActionType } from '@/app/game/game';
@@ -587,7 +589,6 @@ export function parsePreviousActionType(text: string): PreviousAction {
 	read {@link PreviousAction.text} which has the full context of what was moved
 	we can use this text to replaying a move, or (more importantly) undoing a move
 
-	FIXME clean up this function
 	XXX (techdebt) `parsePreviousActionText`, allow for both "undo" and "replay"
 	 - but like, that's not important for now
 	 - yes, i want to do this, but first i should focus on history
@@ -595,8 +596,11 @@ export function parsePreviousActionType(text: string): PreviousAction {
 export function parseAndUndoPreviousActionText(game: FreeCell, text: string): Card[] | null {
 	switch (parsePreviousActionType(text).type) {
 		case 'init':
-		case 'shuffle':
-		case 'deal':
+			// silent failure
+			// it's not wrong to try to undo this, it just doesn't do anything
+			return null;
+		case 'shuffle': // TODO (history) undo shuffle
+		case 'deal': // TODO (history) undo deal
 			return null;
 		case 'move':
 			return undoMove(game, text);
@@ -614,29 +618,26 @@ export function parseAndUndoPreviousActionText(game: FreeCell, text: string): Ca
 function undoMove(game: FreeCell, text: string): Card[] {
 	const match = MOVE_REGEX.exec(text);
 	if (!match) throw new Error('invalid move actionText: ' + text);
-	const [, from, to, fromShorthand, toShortHand] = match;
-	// XXX (techdebt) validate toShorthand? confirm that this even makes sense??
-	void to; // FIXME validate
-	void toShortHand; // FIXME validate
+	const [, from, to, fromShorthand] = match;
 
-	const fromShorthands = fromShorthand.split('-');
-	const firstShorthand = fromShorthands[0];
-	if (!firstShorthand) throw new Error('no card to move: ' + text);
-	// XXX (techdebt) validate fromShorthands? confirm that this even makes sense??
+	// we don't actually need to parse this if we only care about the first card
+	// const fromShorthands = fromShorthand.split('-');
+	// const firstFromShorthand = fromShorthands[0];
+	// if (!firstFromShorthand) throw new Error('no card to move: ' + text);
 
-	// FIXME remove ts-ignore
-	// @ts-expect-error we can come back and split this shorthand properly later
-	const firstCardSH = parseShorthandCard(...firstShorthand.split(''));
+	const firstCardSH = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
 	const firstCard = game.cards.find(
 		(c) => c.suit === firstCardSH?.suit && c.rank === firstCardSH.rank
 	);
 	if (!firstCard) throw new Error('invalid first card: ' + text);
+	if (shorthandPosition(firstCard.location) !== to)
+		throw new Error('invalid first card position: ' + text);
 
-	// FIXME this part is all undo
-	const fromSequence = getSequenceAt(game, firstCard.location);
-	const toLocation = parseShorthandPosition_INCOMPLETE(from);
+	const sequence = getSequenceAt(game, firstCard.location);
+	if (shorthandSequence(sequence) !== fromShorthand) throw new Error('invalid sequence: ' + text);
+	const location = parseShorthandPosition_INCOMPLETE(from);
 
-	return moveCards(game, fromSequence, toLocation);
+	return moveCards(game, sequence, location);
 }
 
 function undoAutoFoundation(game: FreeCell, text: string): Card[] {

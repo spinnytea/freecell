@@ -103,7 +103,7 @@ describe('game', () => {
 			expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 		});
 
-		test.todo('6 cells, 10 cascades'); // FIXME test.todo
+		test.todo('6 cells, 10 cascades');
 
 		test('0 cells', () => {
 			expect(() => new FreeCell({ cellCount: 0 })).toThrow(

@@ -204,9 +204,9 @@ export class FreeCell {
 			action,
 			history: [
 				'init',
-				'shuffle', // FIXME confirm seed
-				'deal', // FIXME options (demo, most)
-				'move', // FIXME from/to, autoFoundationAll
+				'shuffle', // FIXME undo: confirm seed
+				'deal', // FIXME undo: options (demo, most)
+				'move',
 				'auto-foundation',
 			].includes(action.type)
 				? [...(history ?? this.history), action.text]
@@ -494,13 +494,7 @@ export class FreeCell {
 
 	/**
 		go back one move
-
-		FIXME how far back do we go?
-		 - obviously to when all the cards are in their original positions in the tableau~
-		 - do we undo the deal?
-		 - do we undo the shuffle?
-
-		FIXME rewrite this function
+		(or two if using moveByShorthand)
 	*/
 	undo(): FreeCell | this {
 		const history = this.history.slice(0);
@@ -540,8 +534,8 @@ export class FreeCell {
 	}
 
 	/**
-		FIXME break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
-		FIXME standard move notation can only be used when `limit = 'opp+1'`
+		TODO (techdebt) break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
+		REVIEW (history) standard move notation can only be used when `limit = 'opp+1'`
 		REVIEW (techdebt) autoFoundation needs some serious refactoring
 	*/
 	autoFoundationAll({

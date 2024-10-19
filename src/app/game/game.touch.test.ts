@@ -817,10 +817,8 @@ describe('game.touch', () => {
 						).touch();
 					});
 
-					// FIXME test.todo (top)
 					test.todo('top');
 
-					// FIXME test.todo (middle)
 					test.todo('middle');
 
 					test('bottom', () => {

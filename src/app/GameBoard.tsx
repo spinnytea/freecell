@@ -72,7 +72,6 @@ export default function GameBoard() {
 					break;
 				case 'z':
 				case 'Z':
-					// FIXME BUG auto-foundation, move, undo undo undo - the card marches down the cascade??
 					// FIXME BUG why does g.undo run twice?
 					consumed = true;
 					setGame((g) => g.undo());
