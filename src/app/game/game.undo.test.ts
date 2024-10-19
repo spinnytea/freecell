@@ -406,7 +406,9 @@ describe('game.undo (+ history)', () => {
 
 		test.todo('parse without history (nothing to undo)');
 
-		// FIXME move, <cannot undo>, move, undo undo undo - the card marches down the cascade??
+		// TODO (history) move, <cannot undo>, move, undo undo undo
+		//  - the card marches down the cascade??
+		//  - this was a bug before auto-foundation was undoable (if parseAndUndoPreviousActionText returns null)
 		test.todo('if we reach a move it cannot undo, it should not break');
 	});
 

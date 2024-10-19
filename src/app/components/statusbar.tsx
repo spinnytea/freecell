@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { MouseEvent, useContext } from 'react';
 import Link from 'next/link';
 import { Checkbox } from '@/app/components/element/Checkbox';
 import styles_gameboard from '@/app/gameboard.module.css';
@@ -6,7 +6,10 @@ import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
 
 const version = `v${process.env.VERSION ?? 'Unknown'}`;
 
-// TODO (hud) clicking "Show Debug Info" must NOT progress the game / restart
+function stopPropagation(event: MouseEvent) {
+	event.stopPropagation();
+}
+
 export function StatusBar() {
 	const [settings, setSettings] = useContext(SettingsContext);
 
@@ -18,7 +21,7 @@ export function StatusBar() {
 	}
 
 	return (
-		<section className={styles_gameboard.status}>
+		<section className={styles_gameboard.status} onClick={stopPropagation}>
 			<Checkbox
 				name="showDebugInfo"
 				value={settings.showDebugInfo}

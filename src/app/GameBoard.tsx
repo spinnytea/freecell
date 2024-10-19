@@ -5,6 +5,7 @@ import { KeyboardCursor } from '@/app/components/KeyboardCursor';
 import { PileMarkers } from '@/app/components/PileMarkers';
 import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
+import { UndoButton } from '@/app/components/UndoButton';
 import { WinMessage } from '@/app/components/WinMessage';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { FixtureSizesContextProvider } from '@/app/hooks/FixtureSizes/FixtureSizesContextProvider';
@@ -72,8 +73,8 @@ export default function GameBoard() {
 					break;
 				case 'z':
 				case 'Z':
-					// FIXME BUG why does g.undo run twice?
 					consumed = true;
+					// REVIEW (techdebt) why does g.undo run twice? (this keypress is only ran once; is this a react thing??)
 					setGame((g) => g.undo());
 					break;
 				// default:
@@ -101,7 +102,6 @@ export default function GameBoard() {
 	);
 }
 
-// FIXME button for undo
 function BoardLayout() {
 	const settings = useSettings();
 
@@ -111,6 +111,7 @@ function BoardLayout() {
 			<WinMessage />
 			{settings.showKeyboardCursor && <KeyboardCursor />}
 			<CardsOnBoard />
+			<UndoButton />
 			<StatusBar />
 
 			{settings.showDebugInfo && (

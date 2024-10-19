@@ -202,13 +202,7 @@ export class FreeCell {
 			selection: selection && availableMoves ? selection : null,
 			availableMoves: selection && availableMoves ? availableMoves : null,
 			action,
-			history: [
-				'init',
-				'shuffle', // FIXME undo: confirm seed
-				'deal', // FIXME undo: options (demo, most)
-				'move',
-				'auto-foundation',
-			].includes(action.type)
+			history: ['init', 'shuffle', 'deal', 'move', 'auto-foundation'].includes(action.type)
 				? [...(history ?? this.history), action.text]
 				: this.history,
 		});

@@ -599,8 +599,8 @@ export function parseAndUndoPreviousActionText(game: FreeCell, text: string): Ca
 			// silent failure
 			// it's not wrong to try to undo this, it just doesn't do anything
 			return null;
-		case 'shuffle': // TODO (history) undo shuffle
-		case 'deal': // TODO (history) undo deal
+		case 'shuffle': // TODO (history) undo shuffle: confirm seed
+		case 'deal': // TODO (history) undo deal: options (demo, most)
 			return null;
 		case 'move':
 			return undoMove(game, text);
