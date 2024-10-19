@@ -1,5 +1,6 @@
-import { getMoves } from '@/app/game/catalog/solutions-catalog';
+import { getMoves, seedSolutions48 } from '@/app/game/catalog/solutions-catalog';
 import { FreeCell } from '@/app/game/game';
+import { movesFromHistory } from '@/app/game/game-utils';
 
 // FIXME test.todo
 describe('game.undo (+ history)', () => {
@@ -459,27 +460,31 @@ describe('game.undo (+ history)', () => {
 		This sounds quite a lot like FreeCell.parse with history, just do that?
 	*/
 	describe('play a game backward and forewards using move history', () => {
-		test.each`
-			seed
-			${1}
-		`('Game #$seed', ({ seed }: { seed: number }) => {
+		test.each(Array.from(seedSolutions48.keys()))('Game #%d', (seed: number) => {
 			let game = new FreeCell().shuffle32(seed).dealAll();
+
+			// play the game forward
+			// undo each move as we play
 			getMoves(seed).forEach((move) => {
 				const prevState = game.print({ includeHistory: true });
 
 				game = game.moveByShorthand(move);
 				expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
 
+				// undo a in a different "branch" so we can keep marking forward
 				const afterUndo = game.undo();
 				expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
 			});
+			expect(game.win).toBe(true);
+			const movesSeed = movesFromHistory(game.history);
+			expect(movesSeed?.seed).toBe(seed);
+			expect(movesSeed?.moves).toEqual(getMoves(seed));
+
+			// now undo the whole game back to the start
+			while (game.history.length > 2) game = game.undo();
+			expect(game.history).toEqual([`shuffle deck (${seed.toString(10)})`, 'deal all cards']);
+			expect(game.cards).toEqual(new FreeCell().shuffle32(seed).dealAll().cards);
 		});
-
-		test.todo('Game #5');
-
-		test.todo('Game #617');
-
-		test.todo('Game #23190');
 
 		test.todo('games with alternate sizes');
 	});
