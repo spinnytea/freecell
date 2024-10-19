@@ -51,12 +51,14 @@
 			"plugins": ["@typescript-eslint"]
 		},
 		{
-			"files": "*.test.tsx",
+			"files": ["*.test.ts", "*.test.tsx"],
 			"env": {
 				"browser": false,
 				"jest": true,
 				"node": true
-			}
+			},
+			"plugins": ["jest"],
+			"extends": ["plugin:jest/recommended"]
 		}
 	]
 }

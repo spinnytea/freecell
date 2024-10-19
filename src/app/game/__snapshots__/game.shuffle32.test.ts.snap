@@ -596,6 +596,10 @@ FreeCell {
     null,
     null,
   ],
+  "history": [
+    "shuffle deck (1)",
+    "deal all cards",
+  ],
   "previousAction": {
     "text": "deal all cards",
     "type": "deal",

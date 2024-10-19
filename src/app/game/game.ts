@@ -4,15 +4,14 @@ import {
 	Card,
 	CardLocation,
 	CardSequence,
+	CardSH,
 	cloneCards,
 	isLocationEqual,
 	parseShorthandCard,
-	Rank,
 	RankList,
 	shorthandCard,
 	shorthandPosition,
 	shorthandSequence,
-	Suit,
 	SuitList,
 } from '@/app/game/card';
 import {
@@ -23,8 +22,11 @@ import {
 	foundationCanAcceptCards,
 	getPrintSeparator,
 	getSequenceAt,
+	MOVE_AUTO_F_CHECK_REGEX,
 	moveCards,
-	parsePreviousActionText,
+	movesFromHistory,
+	parseAndUndoPreviousActionText,
+	parsePreviousActionType,
 	parseShorthandMove,
 } from '@/app/game/game-utils';
 
@@ -45,6 +47,7 @@ export type PreviousActionType =
 	| 'select'
 	| 'deselect'
 	| 'move'
+	| 'auto-foundation'
 	| 'invalid'
 	| 'auto-foundation-tween';
 export interface PreviousAction {
@@ -68,6 +71,9 @@ export class FreeCell {
 	cursor: CardLocation;
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
+
+	// history
+	history: string[];
 	previousAction: PreviousAction;
 
 	// custom rules
@@ -84,6 +90,8 @@ export class FreeCell {
 		cursor,
 		selection,
 		availableMoves,
+		action = { text: 'init', type: 'init' },
+		history,
 	}: {
 		cellCount?: number;
 		cascadeCount?: number;
@@ -91,6 +99,8 @@ export class FreeCell {
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
 		availableMoves?: AvailableMove[] | null;
+		action?: PreviousAction;
+		history?: string[];
 	} = {}) {
 		this.deck = [];
 		this.cells = new Array<null>(cellCount).fill(null);
@@ -157,7 +167,8 @@ export class FreeCell {
 		this.selection = !selection ? null : getSequenceAt(this, selection.location);
 		this.availableMoves = availableMoves ?? null;
 
-		this.previousAction = { text: 'init', type: 'init' };
+		this.previousAction = action;
+		this.history = history ?? [];
 	}
 
 	/**
@@ -173,25 +184,28 @@ export class FreeCell {
 		cursor = this.cursor,
 		selection = this.selection,
 		availableMoves = this.availableMoves,
+		history,
 	}: {
 		action: PreviousAction;
 		cards?: Card[];
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
 		availableMoves?: AvailableMove[] | null;
+		history?: string[];
 	}): FreeCell {
 		// XXX (techdebt) `selection && availableMoves && !cards` after removing auto-foundation-tween
-		const game = new FreeCell({
+		return new FreeCell({
 			cellCount: this.cells.length,
 			cascadeCount: this.tableau.length,
 			cards: cards ?? this.cards,
 			cursor,
 			selection: selection && availableMoves ? selection : null,
 			availableMoves: selection && availableMoves ? availableMoves : null,
+			action,
+			history: ['init', 'shuffle', 'deal', 'move', 'auto-foundation'].includes(action.type)
+				? [...(history ?? this.history), action.text]
+				: this.history,
 		});
-		game.previousAction = action;
-		// REVIEW (techdebt) message for: if (game.cursor !== cursor) game.previousAction += ' (cursor clamped)';
-		return game;
 	}
 
 	__clampCursor(location?: CardLocation): CardLocation {
@@ -473,6 +487,49 @@ export class FreeCell {
 	}
 
 	/**
+		go back one move
+		(or two if using moveByShorthand)
+	*/
+	undo(): FreeCell | this {
+		const history = this.history.slice(0);
+		const moveToUndo = history.pop();
+		if (!moveToUndo) return this;
+
+		const cards = parseAndUndoPreviousActionText(this, moveToUndo);
+		if (!cards) return this;
+
+		// we _need_ an action in __clone
+		// __clone will add it back to the history
+		const action = parsePreviousActionType(history.pop() ?? 'init partial');
+		const game = this.__clone({ action, history, cards });
+
+		// special case: moveByShorthand: move 6c 2C→cell (auto-foundation 66c AC,AS,2C)
+		// REVIEW (techdebt) should this be a different PreviousActionType?
+		if (MOVE_AUTO_F_CHECK_REGEX.test(this.previousAction.text)) return game.undo();
+
+		return game;
+	}
+
+	/** Used replaying a game, starting with a seed or otherwise known deal. */
+	moveByShorthand(shorthandMove: string): FreeCell {
+		const [from, to] = parseShorthandMove(this, shorthandMove);
+
+		// select from, move to
+		let game = this.setCursor(from).touch().setCursor(to).touch();
+
+		const actionText = game.previousAction.text;
+		game = game.autoFoundationAll();
+		if (game.previousAction.text !== actionText) {
+			// REVIEW (techdebt) should this be a different PreviousActionType?
+			game.previousAction.text = `${actionText} (${game.previousAction.text})`;
+		}
+
+		return game;
+	}
+
+	/**
+		TODO (techdebt) break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
+		REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
 		REVIEW (techdebt) autoFoundation needs some serious refactoring
 	*/
 	autoFoundationAll({
@@ -484,7 +541,7 @@ export class FreeCell {
 	} = {}): FreeCell | this {
 		// TODO (techdebt) replace `const game = this.__clone({})` with `return this.__clone({})`
 		let game = this.__clone({
-			action: { text: 'auto-foundation setup', type: 'auto-foundation-tween' },
+			action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
 		});
 		const moved: Card[] = [];
 
@@ -507,7 +564,7 @@ export class FreeCell {
 						didMoveAny = true;
 						const cards = moveCards(game, sequenceToMove, availableMove.location);
 						game = game.__clone({
-							action: { text: 'auto-foundation middle', type: 'auto-foundation-tween' },
+							action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
 							cards,
 						});
 						moved.push(c);
@@ -532,7 +589,7 @@ export class FreeCell {
 							didMoveAny = true;
 							const cards = moveCards(game, sequenceToMove, availableMove.location);
 							game = game.__clone({
-								action: { text: 'auto-foundation middle', type: 'auto-foundation-tween' },
+								action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
 								cards,
 							});
 							moved.push(sequenceToMove.cards[0]);
@@ -561,7 +618,7 @@ export class FreeCell {
 										}
 									);
 									game = game.__clone({
-										action: { text: 'auto-foundation middle', type: 'auto-foundation-tween' },
+										action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
 										cards,
 									});
 									moved.push(c);
@@ -588,7 +645,7 @@ export class FreeCell {
 										}
 									);
 									game = game.__clone({
-										action: { text: 'auto-foundation middle', type: 'auto-foundation-tween' },
+										action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
 										cards,
 									});
 									moved.push(c);
@@ -603,14 +660,30 @@ export class FreeCell {
 		// XXX (techdebt) can we write this function in a way that doesn't confuse typescript?
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (didMoveAny) {
-			const movedStr = moved.map((card) => shorthandCard(card)).join(',');
-			return game.__clone({ action: { text: `auto-foundation ${movedStr}`, type: 'move' } });
+			const movedCardsStr = moved.map((card) => shorthandCard(card)).join(',');
+			const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
+			const name = game.win ? 'flourish' : 'auto-foundation';
+			return game.__clone({
+				action: { text: `${name} ${movedPositionsStr} ${movedCardsStr}`, type: 'move' },
+			});
 		}
 
 		// silent noop
 		return this;
 	}
 
+	// REVIEW (gameplay) use or remove this for quicker, unskippable animation
+	// canFlourish(game: FreeCell): boolean {
+	// 	if (game.win) return false;
+	// 	return game.autoFoundationAll().win;
+	// }
+
+	/**
+		this is the basis for click-to-move
+
+		@example
+			game.setCursor(loc).touch().autoMove();
+	*/
 	autoMove(): FreeCell | this {
 		if (!this.selection) return this;
 		if (!this.availableMoves?.length) return this;
@@ -633,21 +706,6 @@ export class FreeCell {
 			selection: null,
 			availableMoves: null,
 		});
-	}
-
-	moveByShorthand(shorthandMove: string): FreeCell {
-		const [from, to] = parseShorthandMove(this, shorthandMove);
-
-		// select from, move to
-		let game = this.setCursor(from).touch().setCursor(to).touch();
-
-		const actionText = game.previousAction.text;
-		game = game.autoFoundationAll();
-		if (game.previousAction.text !== actionText) {
-			game.previousAction.text = `${actionText} (${game.previousAction.text})`;
-		}
-
-		return game;
 	}
 
 	/**
@@ -705,6 +763,7 @@ export class FreeCell {
 		keepDeck = false,
 	}: { demo?: boolean; keepDeck?: boolean } = {}): FreeCell {
 		// TODO (techdebt) replace `const game = this.__clone({})` with `return this.__clone({})`
+		// IDEA (techdebt) deal in multiple actions (deal most, demo)
 		const game = this.__clone({ action: { text: 'deal all cards', type: 'deal' } });
 
 		const remaining = demo ? game.cells.length + game.foundations.length : 0;
@@ -773,26 +832,34 @@ export class FreeCell {
 	  - XXX (techdebt) print is super messy, can we clean this up?
 	  - IDEA (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
 	*/
-	print({ skipDeck = false }: { skipDeck?: boolean } = {}): string {
+	print({
+		skipDeck = false,
+		includeHistory = false,
+	}: { skipDeck?: boolean; includeHistory?: boolean } = {}): string {
+		const cursor: CardLocation = !includeHistory
+			? this.cursor
+			: { fixture: 'cascade', data: [-1, -1] };
+		const selection = !includeHistory ? this.selection : null;
+
 		let str = '';
 		if (
-			this.cursor.fixture === 'cell' ||
-			this.selection?.location.fixture === 'cell' ||
-			this.cursor.fixture === 'foundation' ||
-			this.selection?.location.fixture === 'foundation'
+			cursor.fixture === 'cell' ||
+			selection?.location.fixture === 'cell' ||
+			cursor.fixture === 'foundation' ||
+			selection?.location.fixture === 'foundation'
 		) {
 			// cells
 			// prettier-ignore
 			str += this.cells
-				.map((card, idx) => `${getPrintSeparator({ fixture: 'cell', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`)
+				.map((card, idx) => `${getPrintSeparator({ fixture: 'cell', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
 				.join('');
 
 			// collapsed col between
-			if (isLocationEqual(this.cursor, { fixture: 'foundation', data: [0] })) {
+			if (isLocationEqual(cursor, { fixture: 'foundation', data: [0] })) {
 				str += '>';
 			} else if (
-				this.selection &&
-				isLocationEqual(this.selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
+				selection &&
+				isLocationEqual(selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
 			) {
 				str += '|';
 			} else {
@@ -802,14 +869,14 @@ export class FreeCell {
 			// foundation (minus first col)
 			// prettier-ignore
 			str += this.foundations
-				.map((card, idx) => `${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`)
+				.map((card, idx) => `${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
 				.join('');
 
 			// last col
 			str += getPrintSeparator(
 				{ fixture: 'foundation', data: [this.foundations.length - 1] },
 				null,
-				this.selection
+				selection
 			);
 		} else {
 			// if no cursor/selection in home row
@@ -820,15 +887,15 @@ export class FreeCell {
 
 		const max = Math.max(...this.tableau.map((cascade) => cascade.length));
 		for (let i = 0; i === 0 || i < max; i++) {
-			if (this.cursor.fixture === 'cascade' || this.selection?.location.fixture === 'cascade') {
+			if (cursor.fixture === 'cascade' || selection?.location.fixture === 'cascade') {
 				str +=
 					'\n' +
 					this.tableau
 						.map((cascade, idx) => {
 							const c = getPrintSeparator(
 								{ fixture: 'cascade', data: [idx, i] },
-								this.cursor,
-								this.selection
+								cursor,
+								selection
 							);
 							return c + shorthandCard(cascade[i]);
 						})
@@ -836,7 +903,7 @@ export class FreeCell {
 					getPrintSeparator(
 						{ fixture: 'cascade', data: [this.tableau.length, i] },
 						null,
-						this.selection
+						selection
 					);
 			} else {
 				// if no cursor/selection in this row
@@ -847,13 +914,13 @@ export class FreeCell {
 		// REVIEW (print) can we get rid of `d:` prefix (bcuz parse)
 		// REVIEW (print) should we use `:d` prefix instead?
 		if (this.deck.length && !skipDeck) {
-			if (this.cursor.fixture === 'deck' || this.selection?.location.fixture === 'deck') {
+			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
 				// prettier-ignore
 				const deckStr = this.deck
-					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, this.cursor, this.selection)}${shorthandCard(card)}`)
+					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
 					.reverse()
 					.join('');
-				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, this.selection);
+				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
 				str += `\nd:${deckStr}${lastCol}`;
 			} else {
 				// if no cursor/selection in deck
@@ -863,7 +930,7 @@ export class FreeCell {
 					.join(' ');
 				str += `\nd: ${deckStr} `;
 			}
-		} else if (this.cursor.fixture === 'deck') {
+		} else if (cursor.fixture === 'deck') {
 			str += `\nd:>   `;
 		}
 
@@ -877,9 +944,26 @@ export class FreeCell {
 			str += '\n' + spaces.substring(0, lineLength);
 		}
 
-		// XXX (print) print and parse move history?
+		if (includeHistory) {
+			const movesSeed = movesFromHistory(this.history);
+			if (movesSeed) {
+				// REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
+				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
+				while (movesSeed.moves.length) {
+					str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
+				}
+			} else {
+				this.history
+					.slice(0)
+					.reverse()
+					.forEach((actionText) => {
+						str += '\n ' + actionText;
+					});
+			}
+		} else {
+			str += '\n ' + this.previousAction.text;
+		}
 
-		str += '\n ' + this.previousAction.text;
 		return str;
 	}
 
@@ -895,27 +979,28 @@ export class FreeCell {
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		const cards = new FreeCell().cards;
 		const remaining = cards.slice(0);
+		let parseHistory = false;
 
 		if (!print.includes('>')) {
-			throw new Error('must have at least 1 cursor');
+			parseHistory = true;
 		} else if (print.includes('>', print.indexOf('>') + 1)) {
 			throw new Error('must have no more than 1 cursor');
 		}
 
-		const lines = print.split('\n');
+		const lines = print.split('\n').reverse();
 		let line: string[];
 		const home_spaces: (string | undefined)[] = [];
 		const tableau_spaces: (string | undefined)[] = [];
 		const deck_spaces: (string | undefined)[] = [];
 
-		const getCard = ({ rank, suit }: { rank: Rank; suit: Suit }) => {
+		const getCard = ({ rank, suit }: CardSH) => {
 			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
 			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`); // XXX (print) test with a joker, duplicate card
 			remaining.splice(remaining.indexOf(card), 1);
 			return card;
 		};
 
-		const nextLine = () => lines.shift()?.split('').reverse() ?? [];
+		const nextLine = () => lines.pop()?.split('').reverse() ?? [];
 		const nextCard = (spaces: (string | undefined)[]) => {
 			// TODO (print) test invalid card rank
 			// TODO (print) test invalid card suit
@@ -1028,6 +1113,39 @@ export class FreeCell {
 		line.pop();
 		const actionText = line.reverse().join('');
 
+		const history: string[] = [];
+		if (parseHistory) {
+			const peek = lines.pop();
+			if (!peek) {
+				// TODO (parse-history) test
+				if (parsePreviousActionType(actionText).type === 'init') {
+					history.push(actionText);
+				} else {
+					throw new Error('must have at least 1 cursor');
+				}
+			} else if (peek.startsWith(':h')) {
+				// TODO (parse-history) parse move history
+				//  - we can init the game, and replay forwards to recover the full history
+				//  - confirm that the states are the same at the end
+				throw new Error('not implemented yet');
+				// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
+				//  - :h -> play forwards
+				//  - (we have the moves, but not the auto-foundation)
+				//  - text -> play backwards, then forwards (heeey, parsePreviousActionText, not parseAndUndo)
+			} else {
+				Array.prototype.push.apply(
+					history,
+					lines.map((line) => line.trim())
+				);
+				history.push(peek.trim());
+				history.push(actionText);
+				// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
+				//  - text we can use what history is valid; ['init partial history', ..., actionText]
+			}
+		} else {
+			history.push(actionText);
+		}
+
 		// sus out the cursor/selection locations
 		// TODO (techdebt) is there any way to simplify this?
 		let cursor: CardLocation | undefined = undefined;
@@ -1093,20 +1211,27 @@ export class FreeCell {
 			};
 		}
 
-		const game = new FreeCell({ cellCount, cascadeCount, cards, cursor });
+		const game = new FreeCell({
+			action: parsePreviousActionType(actionText),
+			cellCount,
+			cascadeCount,
+			cards,
+			cursor,
+			history,
+		});
 		if (selection_location) {
 			game.selection = getSequenceAt(game, selection_location);
 			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
-		game.previousAction = parsePreviousActionText(actionText);
 		return game;
 	}
 }
 
+// XXX (techdebt) refactor to src/app/game/move/move.ts
 function calcMoveActionText(from: CardSequence, to: CardSequence): string {
 	const from_location = from.cards[0].location;
 	const to_card: Card | undefined = to.cards[to.cards.length - 1];
 	const to_location = to_card?.location || to.location; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-	const move = `${shorthandPosition(from_location)}${shorthandPosition(to_location)}`;
-	return `move ${move} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+	const shorthandMove = `${shorthandPosition(from_location)}${shorthandPosition(to_location)}`;
+	return `move ${shorthandMove} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
 }

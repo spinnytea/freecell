@@ -5,6 +5,7 @@ import { KeyboardCursor } from '@/app/components/KeyboardCursor';
 import { PileMarkers } from '@/app/components/PileMarkers';
 import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
+import { UndoButton } from '@/app/components/UndoButton';
 import { WinMessage } from '@/app/components/WinMessage';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { FixtureSizesContextProvider } from '@/app/hooks/FixtureSizes/FixtureSizesContextProvider';
@@ -21,6 +22,8 @@ export default function GameBoard() {
 	/** REVIEW (controls) mouse */
 	function handleClick() {
 		if (game.win) {
+			// print game w/ history, just in case we want to archive it for testing or something
+			console.info(game.print({ includeHistory: true }));
 			// click to reset
 			setGame(() => newGame().shuffle32());
 			setSettings((s) => ({ ...s, showKeyboardCursor: false }));
@@ -70,6 +73,12 @@ export default function GameBoard() {
 					consumed = true;
 					setGame((g) => g.clearSelection());
 					break;
+				case 'z':
+				case 'Z':
+					consumed = true;
+					// REVIEW (techdebt) why does g.undo run twice? (this keypress is only ran once; is this a react thing??)
+					setGame((g) => g.undo());
+					break;
 				// default:
 				// 	console.log(`unused key: "${key}"`);
 				// 	break;
@@ -104,6 +113,7 @@ function BoardLayout() {
 			<WinMessage />
 			{settings.showKeyboardCursor && <KeyboardCursor />}
 			<CardsOnBoard />
+			<UndoButton />
 			<StatusBar />
 
 			{settings.showDebugInfo && (

@@ -36,13 +36,7 @@ TODO (motivation) main development tasks:
 - TODO (drag-and-drop) mouse drag to move - mouse drag-drop target is entire cascade
 - TODO (controls) keyboard + selection
 - TODO (animation) animate cards in flight should be above others
-- TODO (history) undo - all, few, one, none (should allow at least one undo, misclicks)
-  - "Standard FreeCell Notation" (cell: a-d, foundation: h(ome), cascades: 1-8)
-  - use move notation
-  - play a game backward and forewards using move history
-  - pay attention to sequences (probably need to look at the destination to pick the card from the source)
-  - moving the same card multiple times in a row replaces the history (i.e. click-to-move picked the wrong place, so i need to move it again to the right one) (i.e. dithering on a single card doesn't increase history length)
-  - moving a card back to it's original location remove the move from the history (similar to collapsing the moves into one) (this is essentially a free undo, although "back to it's original location" is a valid move)
+- TODO (settings) undo limit - all, few, once, none (should allow at least one undo, misclicks)
 - TODO (gameplay) make sure to play/record a game for 10-6 and 4-1
   - use move history, unit test replay
   - use it for testing history forward & backwards

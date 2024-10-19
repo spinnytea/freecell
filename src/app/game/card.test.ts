@@ -145,7 +145,7 @@ describe('card', () => {
 				${6} | ${'7'}
 				${7} | ${'8'}
 				${8} | ${'9'}
-				${9} | ${'t'}
+				${9} | ${'0'}
 			`('$d0', ({ d0, shorthand }: { d0: number; shorthand: string }) => {
 				[-1, 0, 1, 10, 13, 20, 55].forEach((d1) => {
 					expect(shorthandPosition({ fixture: 'cascade', data: [d0, d1] })).toBe(shorthand);

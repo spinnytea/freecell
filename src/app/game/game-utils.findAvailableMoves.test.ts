@@ -7,7 +7,7 @@ describe('game-utils.findAvailableMoves', () => {
 		game = new FreeCell().shuffle32(11863);
 	});
 
-	test('init deal', () => {
+	test('init deal default', () => {
 		game = game.dealAll();
 		expect(game.print()).toBe(
 			'' +
@@ -23,7 +23,7 @@ describe('game-utils.findAvailableMoves', () => {
 		);
 	});
 
-	test('init deal', () => {
+	test('init deal demo', () => {
 		game = game.dealAll({ demo: true });
 		expect(game.print()).toBe(
 			'' +

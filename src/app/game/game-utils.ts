@@ -9,12 +9,24 @@ import {
 	isRed,
 	MoveDestinationTypePriorities,
 	MoveSourceType,
+	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
 	RankList,
 	shorthandCard,
+	shorthandPosition,
+	shorthandSequence,
 	Suit,
 } from '@/app/game/card';
 import { FreeCell, PreviousAction, PreviousActionType } from '@/app/game/game';
+
+// TODO (techdebt) split this file up
+//  - src/app/game/card/card.ts
+//  - src/app/game/position/position.ts
+//    (includes parseShorthandMove)
+//  - src/app/game/move/move.ts
+//  - src/app/game/catalog/difficulty-catalog.ts
+// ---
+//  - i kinda don't want a "general" game-utils, they should all be namespaced (if possible)
 
 // TODO (settings) these _exist_, but we need to be able to pick them
 export type AutoFoundationLimit =
@@ -43,6 +55,10 @@ export type AutoFoundationLimit =
 
 // TODO (settings) these _exist_, but we need to be able to pick them
 export type AutoFoundationMethod = 'cell,cascade' | 'foundation';
+
+const MOVE_REGEX = /^move (\w)(\w) (.*)→(.*)$/;
+const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (.+)$/;
+export const MOVE_AUTO_F_CHECK_REGEX = /^move .* \((auto-foundation|flourish) .*\)$/;
 
 export function getSequenceAt(game: FreeCell, location: CardLocation): CardSequence {
 	const [d0] = location.data;
@@ -337,6 +353,9 @@ function getMoveSourceType(selection: CardSequence): MoveSourceType {
 	this does not check for `availableMoves`
 	there are a lot of ways you can come to valid moves
 	this just _does_ it for you
+
+	likewise, when you "undo", it's inherently an invalid move
+	(forwards creates order, backwards creates disorder)
 */
 export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation): Card[] {
 	if (from.cards.length === 0) {
@@ -356,6 +375,7 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 	const from_cards = from.cards.map((fc) => {
 		const c = cards.find((c) => c.rank === fc.rank && c.suit === fc.suit);
 		if (c) return c;
+		// TODO (techdebt) split this out for all cards.find
 		// this can't actually happen (unless `game` and `from` aren't actually related)
 		throw new Error('missing card ' + shorthandCard(fc));
 	});
@@ -477,7 +497,24 @@ function getFoundationRankForColor(game: FreeCell, card: Card): number {
 }
 
 /**
-	to parse a move correctly, we need the full game state AND the from/to positions
+	To parse a move correctly, we need the full game state AND the shorthand (from/to positions).
+	Since shorthandMove is only for replaying a game (moving forwards), we only need the shorthand.
+	In contrast, we cannot use this for undo/replay backwards.
+	Moving forwards, we can deduce which cards where moved, moving the maximum _allowable_ cards.
+	Moving backwards, the moves are "invalid", so we can't know which parts of sequences need to be split.
+
+	[Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
+
+	Free cells (upper row, left side) are named (left to right) a, b, c, d, [e, f]. \
+	Home (upper row, right) is h. \
+	Initial columns (lower row, left to right) are named 1 through 8, [9, 0].
+
+	Example Moves:
+	1. Column one to column three: 13
+	2. Second freecell (b) to column five: b5
+	3. Column 4 to first (leftmost) freecell: 4a
+	4. Third freecell to home: ch \
+	etc.
 */
 export function parseShorthandMove(
 	game: FreeCell,
@@ -538,9 +575,110 @@ export function parseShorthandMove(
 	return [from_location, to_location];
 }
 
-export function parsePreviousActionText(text: string): PreviousAction {
+export function parsePreviousActionType(text: string): PreviousAction {
 	const firstWord = text.split(' ')[0];
 	if (firstWord === 'hand-jammed') return { text, type: 'init' };
 	if (firstWord === 'touch') return { text, type: 'invalid' };
+	if (firstWord === 'flourish') return { text, type: 'auto-foundation' };
+	// if (firstWord === 'auto-foundation-setup') return { text, type: 'auto-foundation-tween' }; // should not appear in print
+	// if (firstWord === 'auto-foundation-middle') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	return { text, type: firstWord as PreviousActionType };
+}
+
+/**
+	read {@link PreviousAction.text} which has the full context of what was moved
+	we can use this text to replaying a move, or (more importantly) undoing a move
+
+	XXX (techdebt) `parsePreviousActionText`, allow for both "undo" and "replay"
+	 - but like, that's not important for now
+	 - yes, i want to do this, but first i should focus on history
+*/
+export function parseAndUndoPreviousActionText(game: FreeCell, text: string): Card[] | null {
+	switch (parsePreviousActionType(text).type) {
+		case 'init':
+			// silent failure
+			// it's not wrong to try to undo this, it just doesn't do anything
+			return null;
+		case 'shuffle': // TODO (history) undo shuffle: confirm seed
+		case 'deal': // TODO (history) undo deal: options (demo, most)
+			return null;
+		case 'move':
+			return undoMove(game, text);
+		case 'auto-foundation':
+			return undoAutoFoundation(game, text);
+		case 'cursor':
+		case 'select':
+		case 'deselect':
+		case 'invalid':
+		case 'auto-foundation-tween':
+			throw new Error(`cannot undo move type ${text}`);
+	}
+}
+
+function undoMove(game: FreeCell, text: string): Card[] {
+	const match = MOVE_REGEX.exec(text);
+	if (!match) throw new Error('invalid move actionText: ' + text);
+	const [, from, to, fromShorthand] = match;
+
+	// we don't actually need to parse this if we only care about the first card
+	// const fromShorthands = fromShorthand.split('-');
+	// const firstFromShorthand = fromShorthands[0];
+	// if (!firstFromShorthand) throw new Error('no card to move: ' + text);
+
+	const firstCardSH = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+	const firstCard = game.cards.find(
+		(c) => c.suit === firstCardSH?.suit && c.rank === firstCardSH.rank
+	);
+	if (!firstCard) throw new Error('invalid first card: ' + text);
+	if (shorthandPosition(firstCard.location) !== to)
+		throw new Error('invalid first card position: ' + text);
+
+	const sequence = getSequenceAt(game, firstCard.location);
+	if (shorthandSequence(sequence) !== fromShorthand) throw new Error('invalid sequence: ' + text);
+	const location = parseShorthandPosition_INCOMPLETE(from);
+
+	return moveCards(game, sequence, location);
+}
+
+function undoAutoFoundation(game: FreeCell, text: string): Card[] {
+	const match = AUTO_FOUNDATION_REGEX.exec(text);
+	if (!match) throw new Error('invalid move actionText: ' + text);
+	const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
+	const shorthands = match[3].split(',').map((s) => parseShorthandCard(s[0], s[1]));
+	if (froms.length !== shorthands.length) throw new Error('invalid move actionText: ' + text);
+
+	game = game.__clone({
+		action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
+	});
+
+	while (froms.length) {
+		const from = froms.pop();
+		const shorthand = shorthands.pop();
+		const card = game.cards.find((c) => c.suit === shorthand?.suit && c.rank === shorthand.rank);
+		if (!from || !shorthand || !card) throw new Error('invalid move actionText: ' + text);
+
+		const cards = moveCards(game, getSequenceAt(game, card.location), from);
+		game = game.__clone({
+			action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
+			cards,
+		});
+	}
+
+	return game.cards;
+}
+
+export function movesFromHistory(history: string[]): { seed: number; moves: string[] } | null {
+	if (!history[1] || parsePreviousActionType(history[1]).type !== 'deal') return null;
+	const matchSeed = /shuffle deck \((\d+)\)/.exec(history[0]);
+	if (!matchSeed) return null;
+	const seed = parseInt(matchSeed[1], 10);
+	const moves = history
+		.map((text) => {
+			const match = MOVE_REGEX.exec(text);
+			if (!match) return '';
+			const [, from, to] = match;
+			return `${from}${to}`;
+		})
+		.filter((m) => m);
+	return { seed, moves };
 }

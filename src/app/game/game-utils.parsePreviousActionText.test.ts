@@ -1,7 +1,7 @@
 import { PreviousAction } from '@/app/game/game';
-import { parsePreviousActionText } from '@/app/game/game-utils';
+import { parsePreviousActionType } from '@/app/game/game-utils';
 
-describe('game-utils.parsePreviousActionText', () => {
+describe('game-utils.parsePreviousActionType', () => {
 	describe('specific cases', () => {
 		test.each`
 			text                                    | previousAction
@@ -24,7 +24,7 @@ describe('game-utils.parsePreviousActionText', () => {
 			${'move 53 6H→7C (auto-foundation AD)'} | ${{ text: 'move 53 6H→7C (auto-foundation AD)', type: 'move' }}
 			${'invalid move 86 7D→9C'}              | ${{ text: 'invalid move 86 7D→9C', type: 'invalid' }}
 		`('$text', ({ text, previousAction }: { text: string; previousAction: PreviousAction }) => {
-			expect(parsePreviousActionText(text)).toEqual(previousAction);
+			expect(parsePreviousActionType(text)).toEqual(previousAction);
 		});
 	});
 
