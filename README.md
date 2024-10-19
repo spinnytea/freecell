@@ -7,8 +7,8 @@ card game
 TODO (motivation) main development tasks:
 
 1. ~~legible `(cards)` for mobile~~
+1. ~~move `(history)` & undo~~
 1. `(drag-and-drop)` (click-to-move has been working, but sometimes you need to "force" the move you want)
-1. move `(history)` & undo
 1. `(settings)` local storage, new button
 1. `(animations)` https://gsap.com/resources/React/ - just basic animations, like, "stagger" the card movements
 
@@ -59,7 +59,8 @@ TODO (motivation) main development tasks:
 - TODO (controls) keyboard hotkeys (1-8 (1234567890), abcd, h, ¿qwerty?, ¿uiop?)
   - if cursor can stack with target: select, moveCard
   - if cursor cannot stack with target: setCursor
-- IDEA (deployment) UI render for all options, hidden options, controls (keyboard, keyboard+selection, keyboard hotkeys, mouse click, mouse drag)
+- TODO (deployment) UI render for all options, hidden options, controls (keyboard, keyboard+selection, keyboard hotkeys, mouse click, mouse drag) w/ (settings) to enable/disable
+- TODO (settings) disable "select/peek card" i.e. selecting cards that cannot move
 - TODO (deployment) rules page (SUG)
 - IDEA (gameplay) joker
   - high - any rank can stack onto them, they cannot be stacked on anything (color-fixed cascade)
@@ -71,6 +72,8 @@ TODO (motivation) main development tasks:
   - spitball impl: attempts positive and negative, display Math.abs(attempts), set neg when undo, set pos and increase when move
 - IDEA (theme) sounds - normally i don't like to, but some folio for moving cards should be okay
 - TODO (theme) more themes - card themes / colors, background colors, etc
+- IDEA (deployment) download on android: "play offline"
+  - single html file? try testing that first (javascript + svg)
 
 ## Technicals
 
