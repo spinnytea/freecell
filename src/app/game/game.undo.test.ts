@@ -1,6 +1,6 @@
 import { getMoves, seedSolutions48 } from '@/app/game/catalog/solutions-catalog';
 import { FreeCell } from '@/app/game/game';
-import { movesFromHistory } from '@/app/game/game-utils';
+import { parseMovesFromHistory } from '@/app/game/move/history';
 
 function undoUntilStart(game: FreeCell): FreeCell {
 	let prev = game;
@@ -557,7 +557,7 @@ describe('game.undo (+ history)', () => {
 				expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
 			});
 			expect(game.win).toBe(true);
-			const movesSeed = movesFromHistory(game.history);
+			const movesSeed = parseMovesFromHistory(game.history);
 			expect(movesSeed?.seed).toBe(seed);
 			expect(movesSeed?.moves).toEqual(getMoves(seed));
 

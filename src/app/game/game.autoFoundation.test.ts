@@ -1,5 +1,5 @@
 import { FreeCell } from '@/app/game/game';
-import { AutoFoundationLimit, AutoFoundationMethod } from '@/app/game/game-utils';
+import { AutoFoundationLimit, AutoFoundationMethod } from '@/app/game/move/move';
 
 describe('game.autoFoundation', () => {
 	describe('limits all', () => {

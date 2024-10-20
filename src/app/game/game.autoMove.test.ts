@@ -1,5 +1,5 @@
-import { AvailableMove, MoveDestinationType } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
+import { AvailableMove, MoveDestinationType } from '@/app/game/move/move';
 
 describe('game.autoMove', () => {
 	function collectUniquePriorities(availableMoves: AvailableMove[] | null) {

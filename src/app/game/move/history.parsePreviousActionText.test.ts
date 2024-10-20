@@ -1,7 +1,6 @@
-import { PreviousAction } from '@/app/game/game';
-import { parsePreviousActionType } from '@/app/game/game-utils';
+import { parsePreviousActionType, PreviousAction } from '@/app/game/move/history';
 
-describe('game-utils.parsePreviousActionType', () => {
+describe('game/history.parsePreviousActionType', () => {
 	describe('specific cases', () => {
 		test.each`
 			text                                    | previousAction

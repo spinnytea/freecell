@@ -3,7 +3,7 @@ import {
 	countEmptyCascades,
 	countEmptyCells,
 	maxMovableSequenceLength,
-} from '@/app/game/game-utils';
+} from '@/app/game/move/move';
 
 describe('game.touch', () => {
 	// also tests print, since select is rendered

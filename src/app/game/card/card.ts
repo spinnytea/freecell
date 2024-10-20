@@ -1,4 +1,9 @@
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
+import { FreeCell } from '@/app/game/game';
+
+/* *********** */
+/* DEFINITIONS */
+/* *********** */
 
 export type Suit = 'clubs' | 'diamonds' | 'hearts' | 'spades';
 export const SuitList: Suit[] = ['clubs', 'diamonds', 'hearts', 'spades'];
@@ -45,65 +50,6 @@ export type Fixture = 'deck' | 'cell' | 'foundation' | 'cascade';
 export interface CardLocation {
 	fixture: Fixture;
 	data: number[];
-}
-
-export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
-export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cascade:sequence';
-export const MoveDestinationTypePriorities: {
-	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
-} = {
-	// XXX (controls) deck: when will we get to do this?
-	'deck': {
-		'cell': 1,
-		'foundation': 4,
-		'cascade:empty': 2,
-		'cascade:sequence': 3,
-	},
-	'cell': {
-		'cell': 1,
-		'foundation': 3,
-		'cascade:empty': 2,
-		'cascade:sequence': 4,
-	},
-	// XXX (controls) foundation: down from foundation means "back into play?"
-	'foundation': {
-		'cell': 1,
-		'foundation': 4,
-		'cascade:empty': 2,
-		'cascade:sequence': 3,
-	},
-	'cascade:single': {
-		'cell': 2,
-		'foundation': 3,
-		'cascade:empty': 1,
-		'cascade:sequence': 4,
-	},
-	'cascade:sequence': {
-		'cell': 1,
-		'foundation': 2,
-		'cascade:empty': 3,
-		'cascade:sequence': 4,
-	},
-};
-
-export interface AvailableMove {
-	/** where we could move the selection */
-	location: CardLocation;
-
-	/**
-		helps us think about priorities / communicate settings / sort move order
-		while we have a single moveSourceType (the selection),
-		we can have multiple moveDestinationTypes within the list of availableMoves
-	*/
-	moveDestinationType: MoveDestinationType;
-
-	/**
-		helps pick the best move for "auto-foundation"
-
-		if we are going to visualize them debug mode, we need to have it precomputed
-		we really only need high|low for this
-	*/
-	priority: number;
 }
 
 /**
@@ -157,16 +103,96 @@ export interface CardSequence {
 	canMove: boolean;
 }
 
-/**
-	cards need to remain in consitent order for react[key=""] to work
-*/
+/* ************** */
+/* HELPER METHODS */
+/* ************** */
+
 export function cloneCards(cards: Card[]) {
+	// cards need to remain in consitent order for react[key=""] to work
 	return cards.map((card) => ({ ...card }));
 }
 
 export function isLocationEqual(a: CardLocation, b: CardLocation) {
 	return a.fixture === b.fixture && a.data[0] === b.data[0] && a.data[1] === b.data[1];
 }
+
+export function getSequenceAt(game: FreeCell, location: CardLocation): CardSequence {
+	const [d0] = location.data;
+
+	switch (location.fixture) {
+		case 'deck':
+			{
+				const card = game.deck[d0];
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+				if (card) {
+					return {
+						location,
+						cards: [card],
+						canMove: false,
+					};
+				}
+			}
+			break;
+		case 'foundation':
+			{
+				const card = game.foundations[d0];
+				if (card) {
+					return {
+						location,
+						cards: [card],
+						canMove: false,
+					};
+				}
+			}
+			break;
+		case 'cell':
+			{
+				const card = game.cells[d0];
+				if (card) {
+					return {
+						location,
+						cards: [card],
+						canMove: true,
+					};
+				}
+			}
+			break;
+		case 'cascade': {
+			const cascade = game.tableau[d0];
+			let idx = location.data[1];
+
+			if (!cascade[idx]) break;
+
+			const sequence: CardSequence = {
+				location,
+				cards: [cascade[idx]],
+				canMove: false,
+			};
+
+			while (
+				idx < cascade.length - 1 &&
+				isAdjacent({ min: cascade[idx + 1].rank, max: cascade[idx].rank }) &&
+				isRed(cascade[idx].suit) !== isRed(cascade[idx + 1].suit)
+			) {
+				idx++;
+				sequence.cards.push(cascade[idx]);
+			}
+
+			if (idx === cascade.length - 1) {
+				sequence.canMove = true;
+			}
+
+			return sequence;
+		}
+	}
+
+	// no cards at selection
+	return { location, cards: [], canMove: false };
+}
+
+/* ************* */
+/* PRINT / PARSE */
+/* ************* */
 
 export function shorthandCard(card: Card | null | undefined) {
 	if (!card) return '  ';

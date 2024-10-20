@@ -1,7 +1,7 @@
 import { FreeCell } from '@/app/game/game';
-import { linearAvailableMovesPriority } from '@/app/game/game-utils';
+import { linearAvailableMovesPriority } from '@/app/game/move/move';
 
-describe('game-utils.findAvailableMoves', () => {
+describe('game/move.findAvailableMoves', () => {
 	let game: FreeCell;
 
 	beforeEach(() => {

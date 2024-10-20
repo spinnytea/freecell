@@ -1,30 +1,80 @@
 import {
-	AvailableMove,
 	Card,
 	CardLocation,
 	CardSequence,
 	cloneCards,
+	getSequenceAt,
 	isAdjacent,
-	isLocationEqual,
 	isRed,
-	MoveDestinationTypePriorities,
-	MoveSourceType,
-	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
 	RankList,
 	shorthandCard,
-	shorthandPosition,
-	shorthandSequence,
 	Suit,
 } from '@/app/game/card/card';
-import { FreeCell, PreviousAction, PreviousActionType } from '@/app/game/game';
+import { FreeCell } from '@/app/game/game';
 
-// TODO (techdebt) split this file up
-//  - src/app/game/position/position.ts
-//    (includes parseShorthandMove)
-//  - src/app/game/move/move.ts
-// ---
-//  - i kinda don't want a "general" game-utils, they should all be namespaced (if possible)
+/* *********** */
+/* DEFINITIONS */
+/* *********** */
+
+export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
+export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cascade:sequence';
+export const MoveDestinationTypePriorities: {
+	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
+} = {
+	// XXX (controls) deck: when will we get to do this?
+	'deck': {
+		'cell': 1,
+		'foundation': 4,
+		'cascade:empty': 2,
+		'cascade:sequence': 3,
+	},
+	'cell': {
+		'cell': 1,
+		'foundation': 3,
+		'cascade:empty': 2,
+		'cascade:sequence': 4,
+	},
+	// XXX (controls) foundation: down from foundation means "back into play?"
+	'foundation': {
+		'cell': 1,
+		'foundation': 4,
+		'cascade:empty': 2,
+		'cascade:sequence': 3,
+	},
+	'cascade:single': {
+		'cell': 2,
+		'foundation': 3,
+		'cascade:empty': 1,
+		'cascade:sequence': 4,
+	},
+	'cascade:sequence': {
+		'cell': 1,
+		'foundation': 2,
+		'cascade:empty': 3,
+		'cascade:sequence': 4,
+	},
+};
+
+export interface AvailableMove {
+	/** where we could move the selection */
+	location: CardLocation;
+
+	/**
+		helps us think about priorities / communicate settings / sort move order
+		while we have a single moveSourceType (the selection),
+		we can have multiple moveDestinationTypes within the list of availableMoves
+	*/
+	moveDestinationType: MoveDestinationType;
+
+	/**
+		helps pick the best move for "auto-foundation"
+
+		if we are going to visualize them debug mode, we need to have it precomputed
+		we really only need high|low for this
+	*/
+	priority: number;
+}
 
 // TODO (settings) these _exist_, but we need to be able to pick them
 export type AutoFoundationLimit =
@@ -54,83 +104,9 @@ export type AutoFoundationLimit =
 // TODO (settings) these _exist_, but we need to be able to pick them
 export type AutoFoundationMethod = 'cell,cascade' | 'foundation';
 
-const MOVE_REGEX = /^move (\w)(\w) (.*)→(.*)$/;
-const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (.+)$/;
-export const MOVE_AUTO_F_CHECK_REGEX = /^move .* \((auto-foundation|flourish) .*\)$/;
-
-export function getSequenceAt(game: FreeCell, location: CardLocation): CardSequence {
-	const [d0] = location.data;
-
-	switch (location.fixture) {
-		case 'deck':
-			{
-				const card = game.deck[d0];
-				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-				if (card) {
-					return {
-						location,
-						cards: [card],
-						canMove: false,
-					};
-				}
-			}
-			break;
-		case 'foundation':
-			{
-				const card = game.foundations[d0];
-				if (card) {
-					return {
-						location,
-						cards: [card],
-						canMove: false,
-					};
-				}
-			}
-			break;
-		case 'cell':
-			{
-				const card = game.cells[d0];
-				if (card) {
-					return {
-						location,
-						cards: [card],
-						canMove: true,
-					};
-				}
-			}
-			break;
-		case 'cascade': {
-			const cascade = game.tableau[d0];
-			let idx = location.data[1];
-
-			if (!cascade[idx]) break;
-
-			const sequence: CardSequence = {
-				location,
-				cards: [cascade[idx]],
-				canMove: false,
-			};
-
-			while (
-				idx < cascade.length - 1 &&
-				isAdjacent({ min: cascade[idx + 1].rank, max: cascade[idx].rank }) &&
-				isRed(cascade[idx].suit) !== isRed(cascade[idx + 1].suit)
-			) {
-				idx++;
-				sequence.cards.push(cascade[idx]);
-			}
-
-			if (idx === cascade.length - 1) {
-				sequence.canMove = true;
-			}
-
-			return sequence;
-		}
-	}
-
-	// no cards at selection
-	return { location, cards: [], canMove: false };
-}
+/* *************** */
+/* COUNTING THINGS */
+/* *************** */
 
 export function countEmptyCells(game: FreeCell): number {
 	return game.cells.reduce((ret, card) => ret + (card ? 0 : 1), 0);
@@ -149,6 +125,64 @@ export function countEmptyCascades(game: FreeCell): number {
 */
 export function maxMovableSequenceLength(game: FreeCell): number {
 	return Math.pow(2, countEmptyCascades(game)) * (countEmptyCells(game) + 1);
+}
+
+/* ************** */
+/* CHECK CAN MOVE */
+/* ************** */
+
+export function foundationCanAcceptCards(
+	game: FreeCell,
+	index: number,
+	limit: AutoFoundationLimit
+): boolean {
+	if (!(index in game.foundations)) return false;
+	if (
+		game.selection?.location.fixture === 'foundation' &&
+		game.selection.location.data[0] === index
+	) {
+		return false;
+	}
+
+	const card = game.foundations[index];
+	if (!card) return true; // empty can always accept an ace
+	if ((limit === 'opp+1' || limit === 'opp+2') && card.rank === 'ace') return true; // we will never want to "hold a 2 so we can stack aces"
+	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
+	const card_rank_idx = RankList.indexOf(card.rank);
+
+	switch (limit) {
+		case 'none':
+			return true;
+		case 'rank':
+			return game.foundations.every(
+				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) >= card_rank_idx
+			);
+		case 'rank+1':
+			return game.foundations.every(
+				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) + 1 >= card_rank_idx
+			);
+		case 'opp+1':
+			return getFoundationRankForColor(game, card) >= card_rank_idx;
+		case 'opp+2':
+			return getFoundationRankForColor(game, card) + 1 >= card_rank_idx;
+	}
+}
+
+/** helper for foundationCanAcceptCards */
+function getFoundationRankForColor(game: FreeCell, card: Card): number {
+	const ranks: { [suit in Suit]: number } = {
+		clubs: -1,
+		diamonds: -1,
+		hearts: -1,
+		spades: -1,
+	};
+	game.foundations.forEach((c) => {
+		if (c) ranks[c.suit] = RankList.indexOf(c.rank);
+	});
+	const foundation_rank_for_color = isRed(card.suit)
+		? Math.min(ranks.clubs, ranks.spades)
+		: Math.min(ranks.diamonds, ranks.hearts);
+	return foundation_rank_for_color;
 }
 
 export function canStackFoundation(foundation_card: Card | null, moving_card: Card): boolean {
@@ -170,6 +204,10 @@ function canStackCascade(tail_card: Card, moving_card: Card): boolean {
 		isAdjacent({ min: moving_card.rank, max: tail_card.rank })
 	);
 }
+
+/* ************ */
+/* FIND/DO MOVE */
+/* ************ */
 
 export function findAvailableMoves(
 	game: FreeCell,
@@ -340,6 +378,17 @@ function prioritizeAvailableMoves(
 	}
 }
 
+function getMoveSourceType(selection: CardSequence): MoveSourceType {
+	switch (selection.location.fixture) {
+		case 'deck':
+		case 'cell':
+		case 'foundation':
+			return selection.location.fixture;
+		case 'cascade':
+			return selection.cards.length === 1 ? 'cascade:single' : 'cascade:sequence';
+	}
+}
+
 export function linearAvailableMovesPriority(
 	cascadeCount: number,
 	d0: number,
@@ -354,17 +403,6 @@ export function linearAvailableMovesPriority(
 		}
 	}
 	return priority;
-}
-
-function getMoveSourceType(selection: CardSequence): MoveSourceType {
-	switch (selection.location.fixture) {
-		case 'deck':
-		case 'cell':
-		case 'foundation':
-			return selection.location.fixture;
-		case 'cascade':
-			return selection.cards.length === 1 ? 'cascade:single' : 'cascade:sequence';
-	}
 }
 
 /**
@@ -425,97 +463,9 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 	return cards;
 }
 
-export function foundationCanAcceptCards(
-	game: FreeCell,
-	index: number,
-	limit: AutoFoundationLimit
-): boolean {
-	if (!(index in game.foundations)) return false;
-	if (
-		game.selection?.location.fixture === 'foundation' &&
-		game.selection.location.data[0] === index
-	) {
-		return false;
-	}
-
-	const card = game.foundations[index];
-	if (!card) return true; // empty can always accept an ace
-	if ((limit === 'opp+1' || limit === 'opp+2') && card.rank === 'ace') return true; // we will never want to "hold a 2 so we can stack aces"
-	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
-	const card_rank_idx = RankList.indexOf(card.rank);
-
-	switch (limit) {
-		case 'none':
-			return true;
-		case 'rank':
-			return game.foundations.every(
-				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) >= card_rank_idx
-			);
-		case 'rank+1':
-			return game.foundations.every(
-				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) + 1 >= card_rank_idx
-			);
-		case 'opp+1':
-			return getFoundationRankForColor(game, card) >= card_rank_idx;
-		case 'opp+2':
-			return getFoundationRankForColor(game, card) + 1 >= card_rank_idx;
-	}
-}
-
-export function getPrintSeparator(
-	location: CardLocation,
-	cursor: CardLocation | null,
-	selection: CardSequence | null
-) {
-	if (cursor && isLocationEqual(location, cursor)) {
-		return '>';
-	}
-	if (selection) {
-		if (isLocationEqual(location, selection.location)) {
-			return '|';
-		}
-		if (location.fixture !== 'cascade') {
-			const shift = location.fixture === 'deck' ? 1 : -1;
-			if (
-				isLocationEqual(
-					{ fixture: location.fixture, data: [location.data[0] + shift] },
-					selection.location
-				)
-			) {
-				return '|';
-			}
-		} else {
-			if (
-				location.data[0] === selection.location.data[0] ||
-				location.data[0] - 1 === selection.location.data[0]
-			) {
-				if (
-					location.data[1] >= selection.location.data[1] &&
-					location.data[1] < selection.location.data[1] + selection.cards.length
-				) {
-					return '|';
-				}
-			}
-		}
-	}
-	return ' ';
-}
-
-function getFoundationRankForColor(game: FreeCell, card: Card): number {
-	const ranks: { [suit in Suit]: number } = {
-		clubs: -1,
-		diamonds: -1,
-		hearts: -1,
-		spades: -1,
-	};
-	game.foundations.forEach((c) => {
-		if (c) ranks[c.suit] = RankList.indexOf(c.rank);
-	});
-	const foundation_rank_for_color = isRed(card.suit)
-		? Math.min(ranks.clubs, ranks.spades)
-		: Math.min(ranks.diamonds, ranks.hearts);
-	return foundation_rank_for_color;
-}
+/* ************* */
+/* PRINT / PARSE */
+/* ************* */
 
 /**
 	To parse a move correctly, we need the full game state AND the shorthand (from/to positions).
@@ -594,112 +544,4 @@ export function parseShorthandMove(
 	}
 
 	return [from_location, to_location];
-}
-
-export function parsePreviousActionType(text: string): PreviousAction {
-	const firstWord = text.split(' ')[0];
-	if (firstWord === 'hand-jammed') return { text, type: 'init' };
-	if (firstWord === 'touch') return { text, type: 'invalid' };
-	if (firstWord === 'flourish') return { text, type: 'auto-foundation' };
-	// if (firstWord === 'auto-foundation-setup') return { text, type: 'auto-foundation-tween' }; // should not appear in print
-	// if (firstWord === 'auto-foundation-middle') return { text, type: 'auto-foundation-tween' }; // should not appear in print
-	return { text, type: firstWord as PreviousActionType };
-}
-
-/**
-	read {@link PreviousAction.text} which has the full context of what was moved
-	we can use this text to replaying a move, or (more importantly) undoing a move
-
-	XXX (techdebt) `parsePreviousActionText`, allow for both "undo" and "replay"
-	 - but like, that's not important for now
-	 - yes, i want to do this, but first i should focus on history
-*/
-export function parseAndUndoPreviousActionText(game: FreeCell, text: string): Card[] | null {
-	switch (parsePreviousActionType(text).type) {
-		case 'init':
-			// silent failure
-			// it's not wrong to try to undo this, it just doesn't do anything
-			return null;
-		case 'shuffle': // TODO (history) undo shuffle: confirm seed
-		case 'deal': // TODO (history) undo deal: options (demo, most)
-			return null;
-		case 'move':
-			return undoMove(game, text);
-		case 'auto-foundation':
-			return undoAutoFoundation(game, text);
-		case 'cursor':
-		case 'select':
-		case 'deselect':
-		case 'invalid':
-		case 'auto-foundation-tween':
-			throw new Error(`cannot undo move type ${text}`);
-	}
-}
-
-function undoMove(game: FreeCell, text: string): Card[] {
-	const match = MOVE_REGEX.exec(text);
-	if (!match) throw new Error('invalid move actionText: ' + text);
-	const [, from, to, fromShorthand] = match;
-
-	// we don't actually need to parse this if we only care about the first card
-	// const fromShorthands = fromShorthand.split('-');
-	// const firstFromShorthand = fromShorthands[0];
-	// if (!firstFromShorthand) throw new Error('no card to move: ' + text);
-
-	const firstCardSH = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
-	const firstCard = game.cards.find(
-		(c) => c.suit === firstCardSH?.suit && c.rank === firstCardSH.rank
-	);
-	if (!firstCard) throw new Error('invalid first card: ' + text);
-	if (shorthandPosition(firstCard.location) !== to)
-		throw new Error('invalid first card position: ' + text);
-
-	const sequence = getSequenceAt(game, firstCard.location);
-	if (shorthandSequence(sequence) !== fromShorthand) throw new Error('invalid sequence: ' + text);
-	const location = parseShorthandPosition_INCOMPLETE(from);
-
-	return moveCards(game, sequence, location);
-}
-
-function undoAutoFoundation(game: FreeCell, text: string): Card[] {
-	const match = AUTO_FOUNDATION_REGEX.exec(text);
-	if (!match) throw new Error('invalid move actionText: ' + text);
-	const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
-	const shorthands = match[3].split(',').map((s) => parseShorthandCard(s[0], s[1]));
-	if (froms.length !== shorthands.length) throw new Error('invalid move actionText: ' + text);
-
-	game = game.__clone({
-		action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
-	});
-
-	while (froms.length) {
-		const from = froms.pop();
-		const shorthand = shorthands.pop();
-		const card = game.cards.find((c) => c.suit === shorthand?.suit && c.rank === shorthand.rank);
-		if (!from || !shorthand || !card) throw new Error('invalid move actionText: ' + text);
-
-		const cards = moveCards(game, getSequenceAt(game, card.location), from);
-		game = game.__clone({
-			action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
-			cards,
-		});
-	}
-
-	return game.cards;
-}
-
-export function movesFromHistory(history: string[]): { seed: number; moves: string[] } | null {
-	if (!history[1] || parsePreviousActionType(history[1]).type !== 'deal') return null;
-	const matchSeed = /shuffle deck \((\d+)\)/.exec(history[0]);
-	if (!matchSeed) return null;
-	const seed = parseInt(matchSeed[1], 10);
-	const moves = history
-		.map((text) => {
-			const match = MOVE_REGEX.exec(text);
-			if (!match) return '';
-			const [, from, to] = match;
-			return `${from}${to}`;
-		})
-		.filter((m) => m);
-	return { seed, moves };
 }

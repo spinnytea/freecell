@@ -1,11 +1,11 @@
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import {
-	AvailableMove,
 	Card,
 	CardLocation,
 	CardSequence,
 	CardSH,
 	cloneCards,
+	getSequenceAt,
 	isLocationEqual,
 	parseShorthandCard,
 	RankList,
@@ -15,20 +15,22 @@ import {
 	SuitList,
 } from '@/app/game/card/card';
 import {
+	MOVE_AUTO_F_CHECK_REGEX,
+	parseAndUndoPreviousActionText,
+	parseMovesFromHistory,
+	parsePreviousActionType,
+	PreviousAction,
+} from '@/app/game/move/history';
+import {
 	AutoFoundationLimit,
 	AutoFoundationMethod,
+	AvailableMove,
 	canStackFoundation,
 	findAvailableMoves,
 	foundationCanAcceptCards,
-	getPrintSeparator,
-	getSequenceAt,
-	MOVE_AUTO_F_CHECK_REGEX,
 	moveCards,
-	movesFromHistory,
-	parseAndUndoPreviousActionText,
-	parsePreviousActionType,
 	parseShorthandMove,
-} from '@/app/game/game-utils';
+} from '@/app/game/move/move';
 
 const DEFAULT_NUMBER_OF_CELLS = 4;
 const NUMBER_OF_FOUNDATIONS = SuitList.length;
@@ -37,23 +39,6 @@ const MIN_CELL_COUNT = 1;
 const MAX_CELL_COUNT = 6;
 
 const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
-
-// TODO (techdebt) remove auto-foundation-tween
-export type PreviousActionType =
-	| 'init'
-	| 'shuffle'
-	| 'deal'
-	| 'cursor'
-	| 'select'
-	| 'deselect'
-	| 'move'
-	| 'auto-foundation'
-	| 'invalid'
-	| 'auto-foundation-tween';
-export interface PreviousAction {
-	text: string;
-	type: PreviousActionType;
-}
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
 export class FreeCell {
@@ -945,7 +930,7 @@ export class FreeCell {
 		}
 
 		if (includeHistory) {
-			const movesSeed = movesFromHistory(this.history);
+			const movesSeed = parseMovesFromHistory(this.history);
 			if (movesSeed) {
 				// REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
 				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
@@ -1234,4 +1219,43 @@ function calcMoveActionText(from: CardSequence, to: CardSequence): string {
 	const to_location = to_card?.location || to.location; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
 	const shorthandMove = `${shorthandPosition(from_location)}${shorthandPosition(to_location)}`;
 	return `move ${shorthandMove} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+}
+
+export function getPrintSeparator(
+	location: CardLocation,
+	cursor: CardLocation | null,
+	selection: CardSequence | null
+) {
+	if (cursor && isLocationEqual(location, cursor)) {
+		return '>';
+	}
+	if (selection) {
+		if (isLocationEqual(location, selection.location)) {
+			return '|';
+		}
+		if (location.fixture !== 'cascade') {
+			const shift = location.fixture === 'deck' ? 1 : -1;
+			if (
+				isLocationEqual(
+					{ fixture: location.fixture, data: [location.data[0] + shift] },
+					selection.location
+				)
+			) {
+				return '|';
+			}
+		} else {
+			if (
+				location.data[0] === selection.location.data[0] ||
+				location.data[0] - 1 === selection.location.data[0]
+			) {
+				if (
+					location.data[1] >= selection.location.data[1] &&
+					location.data[1] < selection.location.data[1] + selection.cards.length
+				) {
+					return '|';
+				}
+			}
+		}
+	}
+	return ' ';
 }
