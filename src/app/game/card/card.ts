@@ -112,6 +112,13 @@ export function cloneCards(cards: Card[]) {
 	return cards.map((card) => ({ ...card }));
 }
 
+export function findCard(cards: Card[], card: CardSH | null | undefined): Card {
+	if (!card) throw new Error('no card provided');
+	const found = cards.find((c) => c.suit === card.suit && c.rank === card.rank);
+	if (!found) throw new Error('missing card ' + shorthandCard(card));
+	return found;
+}
+
 export function isLocationEqual(a: CardLocation, b: CardLocation) {
 	return a.fixture === b.fixture && a.data[0] === b.data[0] && a.data[1] === b.data[1];
 }

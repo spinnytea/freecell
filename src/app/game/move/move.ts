@@ -3,12 +3,12 @@ import {
 	CardLocation,
 	CardSequence,
 	cloneCards,
+	findCard,
 	getSequenceAt,
 	isAdjacent,
 	isRed,
 	parseShorthandPosition_INCOMPLETE,
 	RankList,
-	shorthandCard,
 	Suit,
 } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
@@ -431,13 +431,7 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 	}
 
 	const cards = cloneCards(game.cards);
-	const from_cards = from.cards.map((fc) => {
-		const c = cards.find((c) => c.rank === fc.rank && c.suit === fc.suit);
-		if (c) return c;
-		// TODO (techdebt) split this out for all cards.find
-		// this can't actually happen (unless `game` and `from` aren't actually related)
-		throw new Error('missing card ' + shorthandCard(fc));
-	});
+	const from_cards = from.cards.map((fc) => findCard(cards, fc));
 
 	switch (to.fixture) {
 		case 'cell':
