@@ -2,6 +2,15 @@ import { getMoves, seedSolutions48 } from '@/app/game/catalog/solutions-catalog'
 import { FreeCell } from '@/app/game/game';
 import { movesFromHistory } from '@/app/game/game-utils';
 
+function undoUntilStart(game: FreeCell): FreeCell {
+	let prev = game;
+	do {
+		prev = game;
+		game = game.undo();
+	} while (prev !== game && game.history.length > 2);
+	return game;
+}
+
 // TODO (techdebt) (history) unit test history
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
@@ -412,6 +421,7 @@ describe('game.undo (+ history)', () => {
 		test.todo('if we reach a move it cannot undo, it should not break');
 	});
 
+	// TODO (optimize) collapse history
 	describe('collapse history', () => {
 		// i.e. click-to-move picked the wrong place, so i need to move it again to the right one
 		// i.e. dithering on a single card doesn't increase history length
@@ -439,17 +449,29 @@ describe('game.undo (+ history)', () => {
 		test.todo('1 cells, 10 cascades');
 
 		test.todo('6 cells, 10 cascades');
-		//                    KH KD KS KC
+		// ('6 cells, 10 cascades', () => {
+		// 	let game = FreeCell.parse(
+		// 		'' +
+		// 			'                   KH KD KS KC \n' +
+		// 			'                               \n' +
+		// 			':       Y O U   W I N !       :\n' +
+		// 			'                               \n' +
+		// 			':h shuffle32 25759\n' +
+		// 			' 42 4a 4b 4c b4 c4 a4 24 24 94 \n' +
+		// 			' 54 94 84 67 6a 63 6b a6 56 36 \n' +
+		// 			' b5 21 86 81 16 91 19 08 02 03 \n' +
+		// 			' 7a 7b 7c 76 79 71 0d c0 d0 17 \n' +
+		// 			' 97 b7 a7 90 86 20 12 17 38 34 \n' +
+		// 			' 35 '
+		// 	);
+		// 	expect(game.win).toBe(true);
+		// 	expect(game.history.length).toBe(51);
+		// 	const win = game; // save for later
 
-		// :       Y O U   W I N !       :
-
-		// :h shuffle32 25759
-		//  42 4a 4b 4c b4 c4 a4 24 24 94
-		//  54 94 84 67 6a 63 6b a6 56 36
-		//  b5 21 86 81 16 91 19 08 02 03
-		//  7a 7b 7c 76 79 71 0d c0 d0 17
-		//  97 b7 a7 90 86 20 12 17 38 34
-		//  35
+		// 	game = undoUntilStart(game);
+		// 	expect(game.history).toEqual([`shuffle deck (25759)`, 'deal all cards']);
+		// 	expect(game.cards).toEqual(new FreeCell().shuffle32(25759).dealAll().cards);
+		// });
 	});
 
 	test('parse history actions', () => {
@@ -539,8 +561,7 @@ describe('game.undo (+ history)', () => {
 			expect(movesSeed?.seed).toBe(seed);
 			expect(movesSeed?.moves).toEqual(getMoves(seed));
 
-			// now undo the whole game back to the start
-			while (game.history.length > 2) game = game.undo();
+			game = undoUntilStart(game);
 			expect(game.history).toEqual([`shuffle deck (${seed.toString(10)})`, 'deal all cards']);
 			expect(game.cards).toEqual(new FreeCell().shuffle32(seed).dealAll().cards);
 		});

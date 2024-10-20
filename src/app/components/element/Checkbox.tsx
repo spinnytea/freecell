@@ -12,9 +12,9 @@ export function Checkbox({
 	text: string;
 	onChange: (newChecked: boolean) => void;
 }>) {
-	function handleChange($event: ChangeEvent<HTMLInputElement>) {
-		$event.stopPropagation();
-		onChange($event.target.checked);
+	function handleChange(event: ChangeEvent<HTMLInputElement>) {
+		event.stopPropagation();
+		onChange(event.target.checked);
 	}
 
 	return (

@@ -36,7 +36,7 @@ TODO (motivation) main development tasks:
 - TODO (drag-and-drop) mouse drag to move - mouse drag-drop target is entire cascade
 - TODO (controls) keyboard + selection
 - TODO (animation) animate cards in flight should be above others
-- TODO (settings) undo limit - all, few, once, none (should allow at least one undo, misclicks)
+- TODO (settings) undo limit - all, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
 - TODO (gameplay) make sure to play/record a game for 10-6 and 4-1
   - use move history, unit test replay
   - use it for testing history forward & backwards
