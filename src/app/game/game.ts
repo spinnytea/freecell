@@ -13,7 +13,7 @@ import {
 	shorthandPosition,
 	shorthandSequence,
 	SuitList,
-} from '@/app/game/card';
+} from '@/app/game/card/card';
 import {
 	AutoFoundationLimit,
 	AutoFoundationMethod,

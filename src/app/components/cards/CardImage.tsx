@@ -7,7 +7,7 @@ import {
 } from '@/app/components/cards/constants';
 import { SmolCards } from '@/app/components/cards/SmolCards';
 import { SVGCards13 } from '@/app/components/cards/SVGCards13';
-import { Rank, Suit } from '@/app/game/card';
+import { Rank, Suit } from '@/app/game/card/card';
 
 // TODO (theme) https://cardmeister.github.io/
 //  - https://github.com/cardmeister/cardmeister.github.io/blob/master/elements.cardmeister.full.js

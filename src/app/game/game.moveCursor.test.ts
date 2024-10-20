@@ -1,4 +1,4 @@
-import { CardLocation } from '@/app/game/card';
+import { CardLocation } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 
 describe('game.moveCursor', () => {

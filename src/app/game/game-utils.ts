@@ -16,15 +16,13 @@ import {
 	shorthandPosition,
 	shorthandSequence,
 	Suit,
-} from '@/app/game/card';
+} from '@/app/game/card/card';
 import { FreeCell, PreviousAction, PreviousActionType } from '@/app/game/game';
 
 // TODO (techdebt) split this file up
-//  - src/app/game/card/card.ts
 //  - src/app/game/position/position.ts
 //    (includes parseShorthandMove)
 //  - src/app/game/move/move.ts
-//  - src/app/game/catalog/difficulty-catalog.ts
 // ---
 //  - i kinda don't want a "general" game-utils, they should all be namespaced (if possible)
 

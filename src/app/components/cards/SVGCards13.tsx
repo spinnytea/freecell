@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { ASSET_FOLDER } from '@/app/components/cards/constants';
-import { isRed, Rank, Suit } from '@/app/game/card';
+import { isRed, Rank, Suit } from '@/app/game/card/card';
 
 export function SVGCards13({
 	width,

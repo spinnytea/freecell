@@ -7,9 +7,9 @@ import {
 	shorthandCard,
 	shorthandPosition,
 	SuitList,
-} from '@/app/game/card';
+} from '@/app/game/card/card';
 
-describe('card', () => {
+describe('game/card', () => {
 	describe('isAdjacent', () => {
 		test('byListOrder', () => {
 			RankList.forEach((min, idx_min) => {

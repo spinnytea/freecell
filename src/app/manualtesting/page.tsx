@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import styles_common from '@/app/common.module.css';
 import { CardImage } from '@/app/components/cards/CardImage';
-import { RankList, SuitList } from '@/app/game/card';
+import { RankList, SuitList } from '@/app/game/card/card';
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 
 /*

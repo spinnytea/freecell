@@ -3,7 +3,7 @@ import {
 	CARD_FACE_CUTOFF,
 	scale_height,
 } from '@/app/components/cards/constants';
-import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card';
+import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card/card';
 
 // IDEA (hud) position deck in the center of the home row
 // IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)

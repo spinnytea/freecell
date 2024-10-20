@@ -1,4 +1,4 @@
-import { shorthandCard } from '@/app/game/card';
+import { shorthandCard } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 
 describe('game.shuffle32', () => {

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { gsap } from 'gsap/all';
 import { DEFAULT_MOVEMENT_DURATION } from '@/app/animation_constants';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { CardLocation, CardSequence, shorthandPosition } from '@/app/game/card';
+import { CardLocation, CardSequence, shorthandPosition } from '@/app/game/card/card';
 import { FixtureSizes, PEEK_DOWN, PEEK_UP } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/Game/useGame';

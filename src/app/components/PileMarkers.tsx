@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import classNames from 'classnames';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { CardLocation } from '@/app/game/card';
+import { CardLocation } from '@/app/game/card/card';
 import { FixtureSizes } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/Game/GameContext';

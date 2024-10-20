@@ -2,7 +2,7 @@ import { ReactElement } from 'react';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import { ASSET_FOLDER } from '@/app/components/cards/constants';
-import { isRed, Rank, Suit } from '@/app/game/card';
+import { isRed, Rank, Suit } from '@/app/game/card/card';
 
 const inter = Inter({ subsets: ['latin'] });
 

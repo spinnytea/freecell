@@ -1,6 +1,6 @@
 import { getSeedsByTag } from '@/app/game/catalog/difficulty-catalog';
 
-describe('difficulty-catalog', () => {
+describe('game/difficulty-catalog', () => {
 	describe('getSeedsByTag', () => {
 		test('zero cell', () => {
 			expect(getSeedsByTag('zero cell')).toEqual([

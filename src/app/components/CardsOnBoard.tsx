@@ -4,7 +4,7 @@ import { gsap } from 'gsap/all';
 import { DEFAULT_MOVEMENT_DURATION, SELECT_ROTATION_DURATION } from '@/app/animation_constants';
 import { CardImage } from '@/app/components/cards/CardImage';
 import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
-import { CardLocation, Rank, Suit } from '@/app/game/card';
+import { CardLocation, Rank, Suit } from '@/app/game/card/card';
 import { calcTopLeftZ } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/Game/GameContext';

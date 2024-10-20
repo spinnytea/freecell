@@ -1,4 +1,4 @@
-import { AvailableMove, MoveDestinationType } from '@/app/game/card';
+import { AvailableMove, MoveDestinationType } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 
 describe('game.autoMove', () => {
