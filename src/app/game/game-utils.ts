@@ -216,6 +216,7 @@ export function findAvailableMoves(
 
 	// IDEA (controls) sequence from root of cascade (the entire cascade) can freely move to cascade:empty
 	//  - sorting cascades doesn't "change" the game
+	//  - this needs to be a setting, disabled by default
 	const mmsl = maxMovableSequenceLength(game);
 	game.tableau.forEach((cascade, idx) => {
 		// typescript is confused, we need to gaurd against selection even though we did it above
@@ -288,25 +289,29 @@ function prioritizeAvailableMoves(
 	);
 
 	switch (moveDestinationType) {
-		case 'cell':
+		case 'cell': {
+			const useSourceD0 = moveSourceType === 'cell' ? sourceD0 : undefined;
 			availableMoves.forEach((availableMove) => {
-				availableMove.priority = game.cells.length - availableMove.location.data[0];
-				if (moveSourceType === 'cell' && availableMove.location.data[0] > sourceD0) {
-					// cycle within cell
-					availableMove.priority += game.cells.length;
-				}
+				availableMove.priority = linearAvailableMovesPriority(
+					game.cells.length,
+					availableMove.location.data[0],
+					useSourceD0
+				);
 			});
 			break;
+		}
 
-		case 'foundation':
+		case 'foundation': {
+			const useSourceD0 = moveSourceType === 'foundation' ? sourceD0 : undefined;
 			availableMoves.forEach((availableMove) => {
-				availableMove.priority = game.foundations.length - availableMove.location.data[0];
-				if (moveSourceType === 'foundation' && availableMove.location.data[0] > sourceD0) {
-					// cycle within foundation
-					availableMove.priority += game.foundations.length;
-				}
+				availableMove.priority = linearAvailableMovesPriority(
+					game.foundations.length,
+					availableMove.location.data[0],
+					useSourceD0
+				);
 			});
 			break;
+		}
 
 		// IDEA (controls) prioritize "closer" moves
 		//  - e.g.: 1350642
@@ -320,19 +325,37 @@ function prioritizeAvailableMoves(
 		//  … "moving away from a stacked position" (empty, split sequence) must cycle
 		//    "moving away from an invalid sequnce" (!canStackCascade(d1 - 1)) picks closest option (favors right)
 		case 'cascade:empty':
-		case 'cascade:sequence':
+		case 'cascade:sequence': {
+			const useSourceD0 =
+				moveSourceType === 'cascade:single' || moveSourceType === 'cascade:sequence'
+					? sourceD0
+					: undefined;
 			availableMoves.forEach((availableMove) => {
-				availableMove.priority = game.tableau.length - availableMove.location.data[0];
-				if (
-					(moveSourceType === 'cascade:single' || moveSourceType === 'cascade:sequence') &&
-					availableMove.location.data[0] > sourceD0
-				) {
-					// cycle within cascade (we only picked one destination type)
-					availableMove.priority += game.tableau.length;
-				}
+				availableMove.priority = linearAvailableMovesPriority(
+					game.tableau.length,
+					availableMove.location.data[0],
+					useSourceD0
+				);
 			});
 			break;
+		}
 	}
+}
+
+export function linearAvailableMovesPriority(
+	cascadeCount: number,
+	d0: number,
+	sourceD0?: number
+): number {
+	let priority = cascadeCount - d0;
+	if (sourceD0 !== undefined) {
+		if (d0 > sourceD0) {
+			priority += cascadeCount;
+		} else if (d0 === sourceD0) {
+			priority = 0;
+		}
+	}
+	return priority;
 }
 
 function getMoveSourceType(selection: CardSequence): MoveSourceType {

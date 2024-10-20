@@ -1,4 +1,5 @@
 import { FreeCell } from '@/app/game/game';
+import { linearAvailableMovesPriority } from '@/app/game/game-utils';
 
 describe('game-utils.findAvailableMoves', () => {
 	let game: FreeCell;
@@ -253,6 +254,86 @@ describe('game-utils.findAvailableMoves', () => {
 				canMove: true,
 			});
 			expect(game.availableMoves).toEqual([]);
+		});
+	});
+
+	describe('linearAvailableMovesPriority', () => {
+		describe('1 count', () => {
+			const positions = [0];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[1]}
+				${0}         | ${[0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => linearAvailableMovesPriority(1, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+
+		describe('4 count', () => {
+			const positions = [0, 1, 2, 3];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[4, 3, 2, 1]}
+				${0}         | ${[0, 7, 6, 5]}
+				${1}         | ${[4, 0, 6, 5]}
+				${2}         | ${[4, 3, 0, 5]}
+				${3}         | ${[4, 3, 2, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => linearAvailableMovesPriority(4, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+
+		describe('8 count', () => {
+			const positions = [0, 1, 2, 3, 4, 5, 6, 7];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[8, 7, 6, 5, 4, 3, 2, 1]}
+				${0}         | ${[0, 15, 14, 13, 12, 11, 10, 9]}
+				${1}         | ${[8, 0, 14, 13, 12, 11, 10, 9]}
+				${2}         | ${[8, 7, 0, 13, 12, 11, 10, 9]}
+				${3}         | ${[8, 7, 6, 0, 12, 11, 10, 9]}
+				${4}         | ${[8, 7, 6, 5, 0, 11, 10, 9]}
+				${5}         | ${[8, 7, 6, 5, 4, 0, 10, 9]}
+				${6}         | ${[8, 7, 6, 5, 4, 3, 0, 9]}
+				${7}         | ${[8, 7, 6, 5, 4, 3, 2, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => linearAvailableMovesPriority(8, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+
+		describe('10 count', () => {
+			const positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[10, 9, 8, 7, 6, 5, 4, 3, 2, 1]}
+				${0}         | ${[0, 19, 18, 17, 16, 15, 14, 13, 12, 11]}
+				${1}         | ${[10, 0, 18, 17, 16, 15, 14, 13, 12, 11]}
+				${5}         | ${[10, 9, 8, 7, 6, 0, 14, 13, 12, 11]}
+				${8}         | ${[10, 9, 8, 7, 6, 5, 4, 3, 0, 11]}
+				${9}         | ${[10, 9, 8, 7, 6, 5, 4, 3, 2, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => linearAvailableMovesPriority(10, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
 		});
 	});
 });
