@@ -77,9 +77,9 @@ TODO (motivation) main development tasks:
 
 ## Technicals
 
-Run the dev server: `npm run dev` and go to [http://localhost:3000](http://localhost:3000).
+Run the dev server: `npm start` and go to [http://localhost:3000](http://localhost:3000).
 
-Ready to release: `npm run build` and `npm run serve` (prebuild will `format`, `lint`, and `test`)
+Ready to release: `npm run build` and `npm run serve` (prebuild will `cleanup`, `format`, `lint`, and `test`)
 
 ## Terms
 
