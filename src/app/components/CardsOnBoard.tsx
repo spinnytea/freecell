@@ -4,7 +4,7 @@ import { gsap } from 'gsap/all';
 import { DEFAULT_MOVEMENT_DURATION, SELECT_ROTATION_DURATION } from '@/app/animation_constants';
 import { CardImage } from '@/app/components/cards/CardImage';
 import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
-import { CardLocation, Rank, Suit } from '@/app/game/card/card';
+import { CardLocation, Rank, shorthandCard, Suit } from '@/app/game/card/card';
 import { calcTopLeftZ } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/Game/GameContext';
@@ -34,7 +34,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	const fixtureSizes = useFixtureSizes();
 	const [game, setGame] = useContext(GameContext);
 	const [, setSettings] = useContext(SettingsContext);
-	const { top, left, zIndex, transform } = calcTopLeftZ(
+	const { top, left, zIndex, rotation } = calcTopLeftZ(
 		fixtureSizes,
 		location,
 		game.selection,
@@ -49,8 +49,9 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 
 	useGSAP(
 		() => {
+			// FIXME stagger cards
 			gsap.to(cardRef.current, { top, left, duration: DEFAULT_MOVEMENT_DURATION });
-			gsap.to(cardRef.current, { transform, duration: SELECT_ROTATION_DURATION });
+			gsap.to(cardRef.current, { rotation, duration: SELECT_ROTATION_DURATION });
 
 			/*
 			REVIEW (techdebt) use or remove
@@ -65,7 +66,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 			}
 			*/
 		},
-		{ dependencies: [top, left, transform] }
+		{ dependencies: [top, left, rotation] }
 	);
 
 	function onClick() {
@@ -75,7 +76,13 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	}
 
 	return (
-		<div className={styles_cardsonboard.card} style={{ zIndex }} ref={cardRef} onClick={onClick}>
+		<div
+			id={shorthandCard({ rank, suit })}
+			className={styles_cardsonboard.card}
+			style={{ zIndex }}
+			ref={cardRef}
+			onClick={onClick}
+		>
 			<CardImage
 				rank={rank}
 				suit={suit}

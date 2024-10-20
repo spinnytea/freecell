@@ -194,7 +194,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 /* PRINT / PARSE */
 /* ************* */
 
-export function shorthandCard(card: Card | null | undefined) {
+export function shorthandCard(card: CardSH | null | undefined) {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
 	const s = card.suit[0];

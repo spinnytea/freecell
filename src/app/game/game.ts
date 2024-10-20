@@ -467,7 +467,7 @@ export class FreeCell {
 			});
 		}
 
-		// TODO (animation) animate invalid move
+		// FIXME (animation) animate invalid move
 		return this.__clone({ action: { text: 'invalid ' + actionText, type: 'invalid' } });
 	}
 
@@ -485,6 +485,7 @@ export class FreeCell {
 
 		// we _need_ an action in __clone
 		// __clone will add it back to the history
+		// FIXME (animation) do we need an "undo" PreviousActionType
 		const action = parsePreviousActionType(history.pop() ?? 'init partial');
 		const game = this.__clone({ action, history, cards });
 

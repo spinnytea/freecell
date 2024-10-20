@@ -205,7 +205,7 @@ export function calcTopLeftZ(
 	{ fixture, data }: CardLocation,
 	selection: CardSequence | null,
 	rank?: Rank
-): { top: number; left: number; zIndex: number; transform: string } {
+): { top: number; left: number; zIndex: number; rotation: number } {
 	switch (fixture) {
 		case 'deck':
 			// TODO (animation) animate cursor (selection?) within deck
@@ -213,36 +213,34 @@ export function calcTopLeftZ(
 				top: fixtureSizes.deck.top,
 				left: fixtureSizes.deck.left,
 				zIndex: data[0],
-				transform: '',
+				rotation: 0,
 			};
 		case 'cell':
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.cellLeft[data[0]],
 				zIndex: data[0],
-				transform:
-					selection?.location.fixture === 'cell' && selection.location.data[0] === data[0]
-						? 'rotate(10deg)'
-						: '',
+				rotation:
+					selection?.location.fixture === 'cell' && selection.location.data[0] === data[0] ? 10 : 0,
 			};
 		case 'foundation':
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.foundationLeft[data[0]],
 				// zIndex + BOTTOM_OF_CASCADE so it's above the cell/cascade
-				// REVIEW (animations) cards in flight
+				// REVIEW (animation) cards in flight
 				zIndex: (rank ? RankList.indexOf(rank) : 0) + BOTTOM_OF_CASCADE,
-				transform:
+				rotation:
 					selection?.location.fixture === 'foundation' && selection.location.data[0] === data[0]
-						? 'rotate(10deg)'
-						: '',
+						? 10
+						: 0,
 			};
 		case 'cascade': {
 			const ret = {
 				top: fixtureSizes.tableau.top + fixtureSizes.tableau.offsetTop * data[1],
 				left: fixtureSizes.tableau.cascadeLeft[data[0]],
 				zIndex: data[1], // we don't really need to make one cascade strictly above another
-				transform: '',
+				rotation: 0,
 			};
 			if (selection?.location.fixture === 'cascade' && selection.location.data[0] === data[0]) {
 				const sd1 = selection.location.data[1];

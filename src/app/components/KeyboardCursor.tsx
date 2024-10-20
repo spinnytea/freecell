@@ -10,5 +10,6 @@ export function KeyboardCursor() {
 
 	const { top, left } = calcTopLeftZ(fixtureSizes, cursor, selection);
 
+	// FIXME gsap for cursor location?
 	return <div className={styles_gameboard.keyboardcursor} style={{ top, left }}>{`->`}</div>;
 }

@@ -10,7 +10,7 @@ TODO (motivation) main development tasks:
 1. ~~move `(history)` & undo~~
 1. `(drag-and-drop)` (click-to-move has been working, but sometimes you need to "force" the move you want)
 1. `(settings)` local storage, new button
-1. `(animations)` https://gsap.com/resources/React/ - just basic animations, like, "stagger" the card movements
+1. `(animation)` https://gsap.com/resources/React/ - just basic animations, like, "stagger" the card movements
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b\s+\((\w+)\)
@@ -18,7 +18,7 @@ TODO (motivation) main development tasks:
 
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO (deployment) portrait vs landscape mode (portait on phone is ssoooooo small)
-- TODO (animations) https://gsap.com/resources/React/
+- FIXME https://gsap.com/resources/React/
 - TODO (motivation) movement needs to be fun, animations are important, every time a card moves, it must not jump
   - foundation -> deck
   - shuffle
