@@ -19,6 +19,8 @@ import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
 export function CardsOnBoard() {
 	const { cards } = useGame();
 
+	// FIXME just try animating _all_ the cards before you go and add game.previousAction.affected
+
 	// wrapper to make the dom more legible
 	return (
 		<div id="cards">

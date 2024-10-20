@@ -22,8 +22,20 @@ export type PreviousActionType =
 	| 'auto-foundation'
 	| 'invalid'
 	| 'auto-foundation-tween';
-export interface PreviousAction {
+
+	export interface PreviousAction {
+	/**
+		human readable (loosely speaking) string
+		contains all you need to know about the action that just occured
+
+		all other properties can be computed from it
+		all other properties are cached for ease of use
+	*/
 	text: string;
+
+	// REVIEW (techdebt) is it actually useful to cache type with PreviousAction?
+	//  - should it just be `export type PreviousAction = string;`
+	//  - depends on if we need to add anything else to PreviousAction, like `affected: Card[]` ?
 	type: PreviousActionType;
 }
 
