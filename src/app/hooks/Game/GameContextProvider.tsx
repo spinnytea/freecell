@@ -19,13 +19,13 @@ export default function GameContextProvider({
 		[settingsRef]
 	);
 
-	const [game, internalSetGame] = useState(() => newGame().shuffle32());
+	const [game, internalSetGame] = useState(() => newGame().shuffle32(31316)); // FIXME remove seed
 
 	const setGame = useCallback(
 		(cb: setGameType) => {
 			internalSetGame((g) => {
 				const next = cb(g);
-				// XXX (techdebt) placeholder for … animations?
+				// FIXME placeholder for … animations?
 				return next;
 			});
 		},

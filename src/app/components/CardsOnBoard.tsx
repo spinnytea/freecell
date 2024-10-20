@@ -17,9 +17,29 @@ import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
 //    - once selected, do not change that
 // IDEA (settings) setting for "reduced motion" - disable most animations
 export function CardsOnBoard() {
-	const { cards } = useGame();
+	const { cards, selection } = useGame();
+	const fixtureSizes = useFixtureSizes();
 
 	// FIXME just try animating _all_ the cards before you go and add game.previousAction.affected
+	useGSAP(
+		() => {
+			// FIXME animation order
+			// FIXME only if position is different from before
+			// FIXME jump timeline to end if finshed
+			const tl = gsap.timeline();
+			cards.forEach((card) => {
+				const { top, left, zIndex } = calcTopLeftZ(
+					fixtureSizes,
+					card.location,
+					selection,
+					card.rank
+				);
+				const id = '#c' + shorthandCard(card);
+				tl.to(id, { top, left, duration: DEFAULT_MOVEMENT_DURATION, zIndex }, '<0.01');
+			});
+		},
+		{ dependencies: [cards, selection, fixtureSizes] }
+	);
 
 	// wrapper to make the dom more legible
 	return (
@@ -52,7 +72,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	useGSAP(
 		() => {
 			// FIXME stagger cards
-			gsap.to(cardRef.current, { top, left, duration: DEFAULT_MOVEMENT_DURATION });
+			// gsap.to(cardRef.current, { top, left, duration: DEFAULT_MOVEMENT_DURATION });
 			gsap.to(cardRef.current, { rotation, duration: SELECT_ROTATION_DURATION });
 
 			/*
@@ -68,7 +88,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 			}
 			*/
 		},
-		{ dependencies: [top, left, rotation] }
+		{ dependencies: [rotation] }
 	);
 
 	function onClick() {
@@ -79,7 +99,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 
 	return (
 		<div
-			id={shorthandCard({ rank, suit })}
+			id={'c' + shorthandCard({ rank, suit })}
 			className={styles_cardsonboard.card}
 			style={{ zIndex }}
 			ref={cardRef}
