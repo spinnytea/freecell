@@ -112,12 +112,12 @@ function NativeCards({
 				fontWeight={500}
 				className={inter.className}
 			>
-				<text fontSize="80" x="52" y="60" letterSpacing="-0.1em">
+				<text fontSize="90" x="52" y="56" letterSpacing="-0.1em">
 					{text}
 				</text>
 			</g>
 
-			<g transform="scale(1.4) translate(22, -18)">{symbol}</g>
+			<g transform="scale(1.4) translate(22, -22)">{symbol}</g>
 
 			<g transform="scale(2.2) translate(-37, 30)">{symbol}</g>
 		</svg>
