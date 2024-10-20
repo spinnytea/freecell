@@ -48,6 +48,18 @@ export default function Page() {
 				<CardImage rank="joker" suit="spades" width={80} />
 				<CardImage rank="joker" suit="spades" width={80} hidden />
 			</div>
+			<div className={styles_manualtesting.allplayingcards}>
+				{SuitList.map((suit) =>
+					RankList.map((rank) => (
+						<CardImage key={`${rank}-${suit}`} rank={rank} suit={suit} width={40} />
+					))
+				)}
+				<CardImage rank="joker" suit="clubs" width={40} />
+				<CardImage rank="joker" suit="diamonds" width={40} />
+				<CardImage rank="joker" suit="hearts" width={40} />
+				<CardImage rank="joker" suit="spades" width={40} />
+				<CardImage rank="joker" suit="spades" width={40} hidden />
+			</div>
 			<div className="instruction">Background texture scrolls (it&apos;s not fixed in place).</div>
 			<div className="instruction">
 				Selection is obvious for each of cell, foundation, cascade, deck.
