@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import classNames from 'classnames';
 import { gsap } from 'gsap/all';
-import { DEFAULT_MOVEMENT_DURATION } from '@/app/animation_constants';
+import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
 import { CardLocation, CardSequence, shorthandPosition } from '@/app/game/card/card';
 import { FixtureSizes, PEEK_DOWN, PEEK_UP } from '@/app/hooks/FixtureSizes/FixtureSizes';
@@ -89,7 +89,7 @@ function LocationBox({
 	useGSAP(
 		() => {
 			if (boxRef.current) {
-				gsap.to(boxRef.current, { top, left, height, duration: DEFAULT_MOVEMENT_DURATION });
+				gsap.to(boxRef.current, { top, left, height, duration: DEFAULT_TRANSLATE_DURATION });
 			}
 		},
 		{ dependencies: [top, left, height] }
@@ -175,7 +175,7 @@ function SequenceBox({
 	useGSAP(
 		() => {
 			if (boxRef.current) {
-				gsap.to(boxRef.current, { top, left, height, duration: DEFAULT_MOVEMENT_DURATION });
+				gsap.to(boxRef.current, { top, left, height, duration: DEFAULT_TRANSLATE_DURATION });
 			}
 		},
 		{ dependencies: [top, left, height] }

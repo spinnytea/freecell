@@ -39,8 +39,9 @@ export const RankList: Rank[] = [
 	'queen',
 	'king',
 ];
+export const getRankForCompare = (rank: Rank): number => RankList.indexOf(rank);
 export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
-	RankList.indexOf(min) === RankList.indexOf(max) - 1;
+	getRankForCompare(min) === getRankForCompare(max) - 1;
 
 // XXX (techdebt) is "fixture" the right name?
 //  - cell -> freecell

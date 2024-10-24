@@ -1,10 +1,22 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
-import { DEFAULT_MOVEMENT_DURATION, SELECT_ROTATION_DURATION } from '@/app/animation_constants';
+import {
+	DEFAULT_TRANSLATE_DURATION,
+	MAX_ANIMATION_OVERLAP,
+	SELECT_ROTATION_DURATION,
+	TOTAL_DEFAULT_MOVEMENT_DURATION,
+} from '@/app/animation_constants';
 import { CardImage } from '@/app/components/cards/CardImage';
 import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
-import { CardLocation, Rank, shorthandCard, Suit } from '@/app/game/card/card';
+import {
+	CardLocation,
+	Fixture,
+	getRankForCompare,
+	Rank,
+	shorthandCard,
+	Suit,
+} from '@/app/game/card/card';
 import { calcTopLeftZ } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/Game/GameContext';
@@ -19,23 +31,86 @@ import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
 export function CardsOnBoard() {
 	const { cards, selection } = useGame();
 	const fixtureSizes = useFixtureSizes();
+	const [, setTLs] = useState(new Map<string, number[]>());
+	const prevFixtureSizes = useRef(fixtureSizes);
+	const previousTimeline = useRef<gsap.core.Timeline | null>(null);
 
-	// FIXME just try animating _all_ the cards before you go and add game.previousAction.affected
 	useGSAP(
 		() => {
-			// FIXME animation order
-			// FIXME only if position is different from before
-			// FIXME jump timeline to end if finshed
-			const tl = gsap.timeline();
-			cards.forEach((card) => {
-				const { top, left, zIndex } = calcTopLeftZ(
-					fixtureSizes,
-					card.location,
-					selection,
-					card.rank
+			const timeline = gsap.timeline();
+
+			setTLs((previousTLs) => {
+				const updateCardPositions: {
+					shorthand: string;
+					top: number;
+					left: number;
+					rank: number;
+					suit: Suit;
+					previousTop: number;
+				}[] = [];
+				const fixtures = new Set<Fixture>();
+
+				cards.forEach((card) => {
+					const { top, left } = calcTopLeftZ(fixtureSizes, card.location, selection, card.rank);
+					const shorthand = shorthandCard(card);
+
+					const prev = previousTLs.get(shorthand);
+					if (!prev || prev[0] !== top || prev[1] !== left) {
+						updateCardPositions.push({
+							shorthand,
+							top,
+							left,
+							rank: getRankForCompare(card.rank),
+							suit: card.suit,
+							previousTop: prev?.[0] ?? top,
+						});
+						fixtures.add(card.location.fixture);
+					}
+				});
+
+				if (!updateCardPositions.length) return previousTLs;
+
+				if (previousTimeline.current && previousTimeline.current !== timeline) {
+					previousTimeline.current
+						.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
+						.kill(); // stop animating
+				}
+				previousTimeline.current = timeline;
+
+				const nextTLs = new Map(previousTLs);
+				if (fixtures.size === 1 && fixtures.has('foundation')) {
+					// order by rank / top
+					// FIXME this order needs a little work
+					//  - can we parse the previous action for the card list?? that's in the correct order!
+					updateCardPositions.sort((a, b) => {
+						if (a.suit === b.suit) {
+							return a.rank - b.rank;
+						}
+						return a.previousTop - b.previousTop;
+					});
+				} else {
+					// order by top
+					updateCardPositions.sort(({ top: a }, { top: b }) => a - b);
+				}
+				let overlap = Math.min(
+					(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) /
+						updateCardPositions.length,
+					MAX_ANIMATION_OVERLAP
 				);
-				const id = '#c' + shorthandCard(card);
-				tl.to(id, { top, left, duration: DEFAULT_MOVEMENT_DURATION, zIndex }, '<0.01');
+				if (prevFixtureSizes.current !== fixtureSizes) {
+					// XXX should this just do gsap.set ?
+					overlap = 0;
+					prevFixtureSizes.current = fixtureSizes;
+				}
+				updateCardPositions.forEach(({ shorthand, top, left }) => {
+					nextTLs.set(shorthand, [top, left]);
+					timeline.to(
+						'#c' + shorthand,
+						{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
+						`<${overlap.toFixed(3)}`
+					);
+				});
+				return nextTLs;
 			});
 		},
 		{ dependencies: [cards, selection, fixtureSizes] }

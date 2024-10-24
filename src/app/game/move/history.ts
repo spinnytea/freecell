@@ -23,7 +23,7 @@ export type PreviousActionType =
 	| 'invalid'
 	| 'auto-foundation-tween';
 
-	export interface PreviousAction {
+export interface PreviousAction {
 	/**
 		human readable (loosely speaking) string
 		contains all you need to know about the action that just occured
