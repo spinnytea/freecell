@@ -82,6 +82,8 @@ export function CardsOnBoard() {
 					// order by rank / top
 					// FIXME this order needs a little work
 					//  - can we parse the previous action for the card list?? that's in the correct order!
+					//  - that works moving forward, but undo is all crazy
+					//  - i guess we can default to "top" if the lists don't match
 					updateCardPositions.sort((a, b) => {
 						if (a.suit === b.suit) {
 							return a.rank - b.rank;
@@ -146,12 +148,10 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 
 	useGSAP(
 		() => {
-			// FIXME stagger cards
-			// gsap.to(cardRef.current, { top, left, duration: DEFAULT_MOVEMENT_DURATION });
 			gsap.to(cardRef.current, { rotation, duration: SELECT_ROTATION_DURATION });
 
 			/*
-			REVIEW (techdebt) use or remove
+			REVIEW (techdebt) (drag-and-drop) use or remove
 			if (cardRef.current && contextSafe) {
 				const resetAfterDrag = contextSafe(() => {
 					gsap.to(cardRef.current, { transform, duration: DEFAULT_MOVEMENT_DURATION });
