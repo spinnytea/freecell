@@ -112,6 +112,10 @@ export function countEmptyCells(game: FreeCell): number {
 	return game.cells.reduce((ret, card) => ret + (card ? 0 : 1), 0);
 }
 
+export function countEmptyFoundations(game: FreeCell): number {
+	return game.foundations.reduce((ret, card) => ret + (card ? 0 : 1), 0);
+}
+
 export function countEmptyCascades(game: FreeCell): number {
 	return game.tableau.reduce((ret, cascade) => ret + (cascade.length ? 0 : 1), 0);
 }

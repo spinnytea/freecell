@@ -27,6 +27,11 @@ import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 	 - if not well defined playing fields to spot check, at least a reminder to play with the screen size
 
 	TODO (controls) each of the control schemes
+
+	FIXME start doing manual testing for UI features
+	 - any time I need to play the game to setup a scenario to test something… SAVE THAT and put it in manual testing
+	 - animate stacks
+	 - animate flourish
 */
 export default function Page() {
 	return (

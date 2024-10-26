@@ -237,7 +237,7 @@ describe('game', () => {
 					'      >                  \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' move 13 KD→cascade (flourish 16263 JD,QD,KC,KS,KD)'
+					' move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)'
 			);
 		});
 
@@ -254,7 +254,7 @@ describe('game', () => {
 					'   >                     \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' move 42 JS→QH (flourish 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)'
+					' move 42 JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)'
 			);
 		});
 
@@ -647,7 +647,7 @@ describe('game', () => {
 			// winning the game.
 			game = game.moveByShorthand('56');
 			expect(game.previousAction.text).toBe(
-				'move 56 KD→cascade (flourish 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)'
+				'move 56 KD→cascade (auto-foundation 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)'
 			);
 			expect(game.printFoundation()).toBe('KD KC KH KS');
 
@@ -657,7 +657,7 @@ describe('game', () => {
 					'               >         \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' move 56 KD→cascade (flourish 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)'
+					' move 56 KD→cascade (auto-foundation 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)'
 			);
 			expect(game.print({ includeHistory: true })).toBe(
 				'' +
@@ -690,7 +690,7 @@ describe('game', () => {
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' move 1b TD→cell (flourish 1866628353ba8483734784387 7D,8S,8D,8H,8C,9S,9D,9H,9C,TS,TD,TH,TC,JS,JD,JH,JC,QS,QD,QH,QC,KS,KD,KH,KC)'
+					' move 1b TD→cell (auto-foundation 1866628353ba8483734784387 7D,8S,8D,8H,8C,9S,9D,9H,9C,TS,TD,TH,TC,JS,JD,JH,JC,QS,QD,QH,QC,KS,KD,KH,KC)'
 			);
 		});
 
