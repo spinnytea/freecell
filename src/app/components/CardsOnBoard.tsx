@@ -44,6 +44,7 @@ export function CardsOnBoard() {
 					shorthand: string;
 					top: number;
 					left: number;
+					zIndex: number;
 					rank: number;
 					suit: Suit;
 					previousTop: number;
@@ -51,7 +52,12 @@ export function CardsOnBoard() {
 				const fixtures = new Set<Fixture>();
 
 				cards.forEach((card) => {
-					const { top, left } = calcTopLeftZ(fixtureSizes, card.location, selection, card.rank);
+					const { top, left, zIndex } = calcTopLeftZ(
+						fixtureSizes,
+						card.location,
+						selection,
+						card.rank
+					);
 					const shorthand = shorthandCard(card);
 
 					const prev = previousTLs.get(shorthand);
@@ -60,6 +66,7 @@ export function CardsOnBoard() {
 							shorthand,
 							top,
 							left,
+							zIndex,
 							rank: getRankForCompare(card.rank),
 							suit: card.suit,
 							previousTop: prev?.[0] ?? top,
@@ -78,39 +85,45 @@ export function CardsOnBoard() {
 				previousTimeline.current = timeline;
 
 				const nextTLs = new Map(previousTLs);
+				let minAnimationOverlap = 0;
 				if (fixtures.size === 1 && fixtures.has('foundation')) {
 					// order by rank / top
-					// FIXME this order needs a little work
+					// REVIEW (animation) does this need more work?
 					//  - can we parse the previous action for the card list?? that's in the correct order!
 					//  - that works moving forward, but undo is all crazy
 					//  - i guess we can default to "top" if the lists don't match
-					updateCardPositions.sort((a, b) => {
-						if (a.suit === b.suit) {
-							return a.rank - b.rank;
-						}
-						return a.previousTop - b.previousTop;
-					});
+					updateCardPositions
+						.sort((a, b) => a.previousTop - b.previousTop)
+						.sort((a, b) => a.rank - b.rank);
+					minAnimationOverlap = MAX_ANIMATION_OVERLAP;
 				} else {
 					// order by top
 					updateCardPositions.sort(({ top: a }, { top: b }) => a - b);
 				}
-				let overlap = Math.min(
-					(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) /
-						updateCardPositions.length,
-					MAX_ANIMATION_OVERLAP
+				let overlap = Math.max(
+					Math.min(
+						(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) /
+							updateCardPositions.length,
+						MAX_ANIMATION_OVERLAP
+					),
+					minAnimationOverlap
 				);
 				if (prevFixtureSizes.current !== fixtureSizes) {
 					// XXX should this just do gsap.set ?
 					overlap = 0;
 					prevFixtureSizes.current = fixtureSizes;
 				}
-				updateCardPositions.forEach(({ shorthand, top, left }) => {
+				updateCardPositions.forEach(({ shorthand, top, left, zIndex }) => {
 					nextTLs.set(shorthand, [top, left]);
 					timeline.to(
 						'#c' + shorthand,
 						{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
 						`<${overlap.toFixed(3)}`
 					);
+					// REVIEW (animation) zIndex boost while in flight?
+					//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
+					//  - as soon as it finishes animating, set it to the correct value
+					timeline.to('#c' + shorthand, { zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2 }, `<`);
 				});
 				return nextTLs;
 			});
@@ -133,12 +146,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	const fixtureSizes = useFixtureSizes();
 	const [game, setGame] = useContext(GameContext);
 	const [, setSettings] = useContext(SettingsContext);
-	const { top, left, zIndex, rotation } = calcTopLeftZ(
-		fixtureSizes,
-		location,
-		game.selection,
-		rank
-	);
+	const { top, left, rotation } = calcTopLeftZ(fixtureSizes, location, game.selection, rank);
 
 	useEffect(() => {
 		// set the initial position, once on load
@@ -176,7 +184,6 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 		<div
 			id={'c' + shorthandCard({ rank, suit })}
 			className={styles_cardsonboard.card}
-			style={{ zIndex }}
 			ref={cardRef}
 			onClick={onClick}
 		>
