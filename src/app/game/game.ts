@@ -26,6 +26,7 @@ import {
 	AutoFoundationMethod,
 	AvailableMove,
 	canStackFoundation,
+	countEmptyFoundations,
 	findAvailableMoves,
 	foundationCanAcceptCards,
 	moveCards,
@@ -530,7 +531,7 @@ export class FreeCell {
 		});
 		const moved: Card[] = [];
 
-		// TODO (techdebt) don't autoFoundation just _any_ time, only do it after a card moves (check previousAction)
+		// TODO (techdebt) (bump) don't autoFoundation just _any_ time, only do it after a card moves (check previousAction)
 		// TODO (setting) autoFoundation "only after [any] move" vs "only after move to foundation"
 
 		let didMoveAny = false;
@@ -647,7 +648,7 @@ export class FreeCell {
 		if (didMoveAny) {
 			const movedCardsStr = moved.map((card) => shorthandCard(card)).join(',');
 			const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
-			const name = game.win ? 'flourish' : 'auto-foundation';
+			const name = game.win && countEmptyFoundations(this) > 0 ? 'flourish' : 'auto-foundation';
 			return game.__clone({
 				action: { text: `${name} ${movedPositionsStr} ${movedCardsStr}`, type: 'move' },
 			});

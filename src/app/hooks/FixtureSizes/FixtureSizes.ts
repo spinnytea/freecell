@@ -3,7 +3,7 @@ import {
 	CARD_FACE_CUTOFF,
 	scale_height,
 } from '@/app/components/cards/constants';
-import { CardLocation, CardSequence, Rank, RankList } from '@/app/game/card/card';
+import { CardLocation, CardSequence, getRankForCompare, Rank } from '@/app/game/card/card';
 
 // IDEA (hud) position deck in the center of the home row
 // IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)
@@ -205,7 +205,7 @@ export function calcTopLeftZ(
 	{ fixture, data }: CardLocation,
 	selection: CardSequence | null,
 	rank?: Rank
-): { top: number; left: number; zIndex: number; transform: string } {
+): { top: number; left: number; zIndex: number; rotation: number } {
 	switch (fixture) {
 		case 'deck':
 			// TODO (animation) animate cursor (selection?) within deck
@@ -213,36 +213,34 @@ export function calcTopLeftZ(
 				top: fixtureSizes.deck.top,
 				left: fixtureSizes.deck.left,
 				zIndex: data[0],
-				transform: '',
+				rotation: 0,
 			};
 		case 'cell':
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.cellLeft[data[0]],
 				zIndex: data[0],
-				transform:
-					selection?.location.fixture === 'cell' && selection.location.data[0] === data[0]
-						? 'rotate(10deg)'
-						: '',
+				rotation:
+					selection?.location.fixture === 'cell' && selection.location.data[0] === data[0] ? 10 : 0,
 			};
 		case 'foundation':
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.foundationLeft[data[0]],
 				// zIndex + BOTTOM_OF_CASCADE so it's above the cell/cascade
-				// REVIEW (animations) cards in flight
-				zIndex: (rank ? RankList.indexOf(rank) : 0) + BOTTOM_OF_CASCADE,
-				transform:
+				// REVIEW (animation) cards in flight
+				zIndex: (rank ? getRankForCompare(rank) : 0) + BOTTOM_OF_CASCADE,
+				rotation:
 					selection?.location.fixture === 'foundation' && selection.location.data[0] === data[0]
-						? 'rotate(10deg)'
-						: '',
+						? 10
+						: 0,
 			};
 		case 'cascade': {
 			const ret = {
 				top: fixtureSizes.tableau.top + fixtureSizes.tableau.offsetTop * data[1],
 				left: fixtureSizes.tableau.cascadeLeft[data[0]],
 				zIndex: data[1], // we don't really need to make one cascade strictly above another
-				transform: '',
+				rotation: 0,
 			};
 			if (selection?.location.fixture === 'cascade' && selection.location.data[0] === data[0]) {
 				const sd1 = selection.location.data[1];

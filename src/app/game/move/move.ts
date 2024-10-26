@@ -3,12 +3,12 @@ import {
 	CardLocation,
 	CardSequence,
 	cloneCards,
+	findCard,
+	getRankForCompare,
 	getSequenceAt,
 	isAdjacent,
 	isRed,
 	parseShorthandPosition_INCOMPLETE,
-	RankList,
-	shorthandCard,
 	Suit,
 } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
@@ -112,6 +112,10 @@ export function countEmptyCells(game: FreeCell): number {
 	return game.cells.reduce((ret, card) => ret + (card ? 0 : 1), 0);
 }
 
+export function countEmptyFoundations(game: FreeCell): number {
+	return game.foundations.reduce((ret, card) => ret + (card ? 0 : 1), 0);
+}
+
 export function countEmptyCascades(game: FreeCell): number {
 	return game.tableau.reduce((ret, cascade) => ret + (cascade.length ? 0 : 1), 0);
 }
@@ -148,18 +152,18 @@ export function foundationCanAcceptCards(
 	if (!card) return true; // empty can always accept an ace
 	if ((limit === 'opp+1' || limit === 'opp+2') && card.rank === 'ace') return true; // we will never want to "hold a 2 so we can stack aces"
 	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
-	const card_rank_idx = RankList.indexOf(card.rank);
+	const card_rank_idx = getRankForCompare(card.rank);
 
 	switch (limit) {
 		case 'none':
 			return true;
 		case 'rank':
 			return game.foundations.every(
-				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) >= card_rank_idx
+				(c) => c === card || (c ? getRankForCompare(c.rank) : -1) >= card_rank_idx
 			);
 		case 'rank+1':
 			return game.foundations.every(
-				(c) => c === card || (c ? RankList.indexOf(c.rank) : -1) + 1 >= card_rank_idx
+				(c) => c === card || (c ? getRankForCompare(c.rank) : -1) + 1 >= card_rank_idx
 			);
 		case 'opp+1':
 			return getFoundationRankForColor(game, card) >= card_rank_idx;
@@ -177,7 +181,7 @@ function getFoundationRankForColor(game: FreeCell, card: Card): number {
 		spades: -1,
 	};
 	game.foundations.forEach((c) => {
-		if (c) ranks[c.suit] = RankList.indexOf(c.rank);
+		if (c) ranks[c.suit] = getRankForCompare(c.rank);
 	});
 	const foundation_rank_for_color = isRed(card.suit)
 		? Math.min(ranks.clubs, ranks.spades)
@@ -431,13 +435,7 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 	}
 
 	const cards = cloneCards(game.cards);
-	const from_cards = from.cards.map((fc) => {
-		const c = cards.find((c) => c.rank === fc.rank && c.suit === fc.suit);
-		if (c) return c;
-		// TODO (techdebt) split this out for all cards.find
-		// this can't actually happen (unless `game` and `from` aren't actually related)
-		throw new Error('missing card ' + shorthandCard(fc));
-	});
+	const from_cards = from.cards.map((fc) => findCard(cards, fc));
 
 	switch (to.fixture) {
 		case 'cell':

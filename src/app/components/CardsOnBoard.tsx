@@ -1,10 +1,22 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
-import { DEFAULT_MOVEMENT_DURATION, SELECT_ROTATION_DURATION } from '@/app/animation_constants';
+import {
+	DEFAULT_TRANSLATE_DURATION,
+	MAX_ANIMATION_OVERLAP,
+	SELECT_ROTATION_DURATION,
+	TOTAL_DEFAULT_MOVEMENT_DURATION,
+} from '@/app/animation_constants';
 import { CardImage } from '@/app/components/cards/CardImage';
 import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
-import { CardLocation, Rank, Suit } from '@/app/game/card/card';
+import {
+	CardLocation,
+	Fixture,
+	getRankForCompare,
+	Rank,
+	shorthandCard,
+	Suit,
+} from '@/app/game/card/card';
 import { calcTopLeftZ } from '@/app/hooks/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/Game/GameContext';
@@ -16,8 +28,110 @@ import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
 //    - "peek" at all the cards in cascade, rotate card in cell
 //    - once selected, do not change that
 // IDEA (settings) setting for "reduced motion" - disable most animations
+// IDEA (animation) faster "peek" animation - when the cards are shifting to peek the selected card
 export function CardsOnBoard() {
-	const { cards } = useGame();
+	const { cards, selection } = useGame();
+	const fixtureSizes = useFixtureSizes();
+	const [, setTLs] = useState(new Map<string, number[]>());
+	const prevFixtureSizes = useRef(fixtureSizes);
+	const previousTimeline = useRef<gsap.core.Timeline | null>(null);
+
+	useGSAP(
+		() => {
+			const timeline = gsap.timeline();
+
+			setTLs((previousTLs) => {
+				const updateCardPositions: {
+					shorthand: string;
+					top: number;
+					left: number;
+					zIndex: number;
+					rank: number;
+					suit: Suit;
+					previousTop: number;
+				}[] = [];
+				const fixtures = new Set<Fixture>();
+
+				cards.forEach((card) => {
+					const { top, left, zIndex } = calcTopLeftZ(
+						fixtureSizes,
+						card.location,
+						selection,
+						card.rank
+					);
+					const shorthand = shorthandCard(card);
+
+					const prev = previousTLs.get(shorthand);
+					if (!prev || prev[0] !== top || prev[1] !== left) {
+						updateCardPositions.push({
+							shorthand,
+							top,
+							left,
+							zIndex,
+							rank: getRankForCompare(card.rank),
+							suit: card.suit,
+							previousTop: prev?.[0] ?? top,
+						});
+						fixtures.add(card.location.fixture);
+					}
+				});
+
+				if (!updateCardPositions.length) return previousTLs;
+
+				if (previousTimeline.current && previousTimeline.current !== timeline) {
+					previousTimeline.current
+						.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
+						.kill(); // stop animating
+				}
+				previousTimeline.current = timeline;
+
+				const nextTLs = new Map(previousTLs);
+				let minAnimationOverlap = 0;
+				if (fixtures.size === 1 && fixtures.has('foundation')) {
+					// order by rank / top
+					// REVIEW (animation) does this need more work?
+					//  - can we parse the previous action for the card list?? that's in the correct order!
+					//  - that works moving forward, but undo is all crazy
+					//  - i guess we can default to "top" if the lists don't match
+					// REVIEW (animation) dynamic overlap? start of slow and then speed up, / accelerate
+					updateCardPositions
+						.sort((a, b) => a.previousTop - b.previousTop)
+						.sort((a, b) => a.rank - b.rank);
+					minAnimationOverlap = MAX_ANIMATION_OVERLAP;
+				} else {
+					// order by top
+					updateCardPositions.sort(({ top: a }, { top: b }) => a - b);
+				}
+				let overlap = Math.max(
+					Math.min(
+						(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) /
+							updateCardPositions.length,
+						MAX_ANIMATION_OVERLAP
+					),
+					minAnimationOverlap
+				);
+				if (prevFixtureSizes.current !== fixtureSizes) {
+					// XXX should this just do gsap.set ?
+					overlap = 0;
+					prevFixtureSizes.current = fixtureSizes;
+				}
+				updateCardPositions.forEach(({ shorthand, top, left, zIndex }) => {
+					nextTLs.set(shorthand, [top, left]);
+					timeline.to(
+						'#c' + shorthand,
+						{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
+						`<${overlap.toFixed(3)}`
+					);
+					// REVIEW (animation) zIndex boost while in flight?
+					//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
+					//  - as soon as it finishes animating, set it to the correct value
+					timeline.to('#c' + shorthand, { zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2 }, `<`);
+				});
+				return nextTLs;
+			});
+		},
+		{ dependencies: [cards, selection, fixtureSizes] }
+	);
 
 	// wrapper to make the dom more legible
 	return (
@@ -34,12 +148,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	const fixtureSizes = useFixtureSizes();
 	const [game, setGame] = useContext(GameContext);
 	const [, setSettings] = useContext(SettingsContext);
-	const { top, left, zIndex, transform } = calcTopLeftZ(
-		fixtureSizes,
-		location,
-		game.selection,
-		rank
-	);
+	const { top, left, rotation } = calcTopLeftZ(fixtureSizes, location, game.selection, rank);
 
 	useEffect(() => {
 		// set the initial position, once on load
@@ -49,11 +158,10 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 
 	useGSAP(
 		() => {
-			gsap.to(cardRef.current, { top, left, duration: DEFAULT_MOVEMENT_DURATION });
-			gsap.to(cardRef.current, { transform, duration: SELECT_ROTATION_DURATION });
+			gsap.to(cardRef.current, { rotation, duration: SELECT_ROTATION_DURATION });
 
 			/*
-			REVIEW (techdebt) use or remove
+			REVIEW (techdebt) (drag-and-drop) use or remove
 			if (cardRef.current && contextSafe) {
 				const resetAfterDrag = contextSafe(() => {
 					gsap.to(cardRef.current, { transform, duration: DEFAULT_MOVEMENT_DURATION });
@@ -65,7 +173,7 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 			}
 			*/
 		},
-		{ dependencies: [top, left, transform] }
+		{ dependencies: [rotation] }
 	);
 
 	function onClick() {
@@ -75,7 +183,12 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	}
 
 	return (
-		<div className={styles_cardsonboard.card} style={{ zIndex }} ref={cardRef} onClick={onClick}>
+		<div
+			id={'c' + shorthandCard({ rank, suit })}
+			className={styles_cardsonboard.card}
+			ref={cardRef}
+			onClick={onClick}
+		>
 			<CardImage
 				rank={rank}
 				suit={suit}

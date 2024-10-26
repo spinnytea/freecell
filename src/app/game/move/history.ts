@@ -1,5 +1,6 @@
 import {
 	Card,
+	findCard,
 	getSequenceAt,
 	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
@@ -21,8 +22,20 @@ export type PreviousActionType =
 	| 'auto-foundation'
 	| 'invalid'
 	| 'auto-foundation-tween';
+
 export interface PreviousAction {
+	/**
+		human readable (loosely speaking) string
+		contains all you need to know about the action that just occured
+
+		all other properties can be computed from it
+		all other properties are cached for ease of use
+	*/
 	text: string;
+
+	// REVIEW (techdebt) is it actually useful to cache type with PreviousAction?
+	//  - should it just be `export type PreviousAction = string;`
+	//  - depends on if we need to add anything else to PreviousAction, like `affected: Card[]` ?
 	type: PreviousActionType;
 }
 
@@ -71,10 +84,7 @@ function undoMove(game: FreeCell, text: string): Card[] {
 	// if (!firstFromShorthand) throw new Error('no card to move: ' + text);
 
 	const firstCardSH = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
-	const firstCard = game.cards.find(
-		(c) => c.suit === firstCardSH?.suit && c.rank === firstCardSH.rank
-	);
-	if (!firstCard) throw new Error('invalid first card: ' + text);
+	const firstCard = findCard(game.cards, firstCardSH);
 	if (shorthandPosition(firstCard.location) !== to)
 		throw new Error('invalid first card position: ' + text);
 
@@ -99,8 +109,8 @@ function undoAutoFoundation(game: FreeCell, text: string): Card[] {
 	while (froms.length) {
 		const from = froms.pop();
 		const shorthand = shorthands.pop();
-		const card = game.cards.find((c) => c.suit === shorthand?.suit && c.rank === shorthand.rank);
-		if (!from || !shorthand || !card) throw new Error('invalid move actionText: ' + text);
+		const card = findCard(game.cards, shorthand);
+		if (!from || !shorthand) throw new Error('invalid move actionText: ' + text);
 
 		const cards = moveCards(game, getSequenceAt(game, card.location), from);
 		game = game.__clone({

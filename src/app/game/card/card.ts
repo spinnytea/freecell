@@ -39,8 +39,9 @@ export const RankList: Rank[] = [
 	'queen',
 	'king',
 ];
+export const getRankForCompare = (rank: Rank): number => RankList.indexOf(rank);
 export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
-	RankList.indexOf(min) === RankList.indexOf(max) - 1;
+	getRankForCompare(min) === getRankForCompare(max) - 1;
 
 // XXX (techdebt) is "fixture" the right name?
 //  - cell -> freecell
@@ -110,6 +111,13 @@ export interface CardSequence {
 export function cloneCards(cards: Card[]) {
 	// cards need to remain in consitent order for react[key=""] to work
 	return cards.map((card) => ({ ...card }));
+}
+
+export function findCard(cards: Card[], card: CardSH | null | undefined): Card {
+	if (!card) throw new Error('no card provided');
+	const found = cards.find((c) => c.suit === card.suit && c.rank === card.rank);
+	if (!found) throw new Error('missing card ' + shorthandCard(card));
+	return found;
 }
 
 export function isLocationEqual(a: CardLocation, b: CardLocation) {
@@ -194,7 +202,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 /* PRINT / PARSE */
 /* ************* */
 
-export function shorthandCard(card: Card | null | undefined) {
+export function shorthandCard(card: CardSH | null | undefined) {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
 	const s = card.suit[0];
