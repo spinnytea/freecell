@@ -14,3 +14,10 @@ export const MAX_ANIMATION_OVERLAP = 0.06;
 
 /** when we select a card, and it needs to rotate to show it's selected, this is how long that takes */
 export const SELECT_ROTATION_DURATION = 0.1;
+
+/**
+	we want the cursor to be snappy,
+	but a little bit of animation makes it easier to track
+	when it jumps across the screen
+*/
+export const CURSOR_TRANSLATE_DURATION = 1 / 16;

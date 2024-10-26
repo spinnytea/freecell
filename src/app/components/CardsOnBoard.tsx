@@ -92,6 +92,7 @@ export function CardsOnBoard() {
 					//  - can we parse the previous action for the card list?? that's in the correct order!
 					//  - that works moving forward, but undo is all crazy
 					//  - i guess we can default to "top" if the lists don't match
+					// REVIEW (animation) dynamic overlap? start of slow and then speed up, / accelerate
 					updateCardPositions
 						.sort((a, b) => a.previousTop - b.previousTop)
 						.sort((a, b) => a.rank - b.rank);
