@@ -28,6 +28,7 @@ import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
 //    - "peek" at all the cards in cascade, rotate card in cell
 //    - once selected, do not change that
 // IDEA (settings) setting for "reduced motion" - disable most animations
+// IDEA (animation) faster "peek" animation - when the cards are shifting to peek the selected card
 export function CardsOnBoard() {
 	const { cards, selection } = useGame();
 	const fixtureSizes = useFixtureSizes();
