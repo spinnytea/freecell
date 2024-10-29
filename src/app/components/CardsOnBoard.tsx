@@ -86,7 +86,6 @@ export function CardsOnBoard() {
 				previousTimeline.current = timeline;
 
 				const nextTLs = new Map(previousTLs);
-				let minAnimationOverlap = 0;
 				if (fixtures.size === 1 && fixtures.has('foundation')) {
 					// order by rank / top
 					// REVIEW (animation) does this need more work?
@@ -97,18 +96,14 @@ export function CardsOnBoard() {
 					updateCardPositions
 						.sort((a, b) => a.previousTop - b.previousTop)
 						.sort((a, b) => a.rank - b.rank);
-					minAnimationOverlap = MAX_ANIMATION_OVERLAP;
 				} else {
 					// order by top
 					updateCardPositions.sort(({ top: a }, { top: b }) => a - b);
 				}
-				let overlap = Math.max(
-					Math.min(
-						(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) /
-							updateCardPositions.length,
-						MAX_ANIMATION_OVERLAP
-					),
-					minAnimationOverlap
+				let overlap = Math.min(
+					(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) /
+						updateCardPositions.length,
+					MAX_ANIMATION_OVERLAP
 				);
 				if (prevFixtureSizes.current !== fixtureSizes) {
 					// XXX should this just do gsap.set ?
