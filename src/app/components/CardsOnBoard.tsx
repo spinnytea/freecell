@@ -79,6 +79,7 @@ export function CardsOnBoard() {
 				if (!updateCardPositions.length) return previousTLs;
 
 				if (previousTimeline.current && previousTimeline.current !== timeline) {
+					// REVIEW (animations) since animations are so fast, should they be appended instead of replaced?
 					previousTimeline.current
 						.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
 						.kill(); // stop animating
@@ -88,11 +89,15 @@ export function CardsOnBoard() {
 				const nextTLs = new Map(previousTLs);
 				if (fixtures.size === 1 && fixtures.has('foundation')) {
 					// order by rank / top
-					// REVIEW (animation) does this need more work?
+					// REVIEW (animation) this needs more work
 					//  - can we parse the previous action for the card list?? that's in the correct order!
 					//  - that works moving forward, but undo is all crazy
 					//  - i guess we can default to "top" if the lists don't match
+					// ---
+					//  - no matter what tricks we apply, the auto-foundation animation will _always_ be wrong if we do not finish the previous animation first
+					//  - animate((g) => g.touch()).animate((g) => g.autoFoundation())
 					// REVIEW (animation) dynamic overlap? start of slow and then speed up, / accelerate
+					// IDEA different animations for "auto-foundation" vs "flourish" (can just check previousAction.type)
 					updateCardPositions
 						.sort((a, b) => a.previousTop - b.previousTop)
 						.sort((a, b) => a.rank - b.rank);

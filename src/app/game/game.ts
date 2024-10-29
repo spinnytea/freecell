@@ -934,6 +934,7 @@ export class FreeCell {
 			const movesSeed = parseMovesFromHistory(this.history);
 			if (movesSeed) {
 				// REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
+				// REVIEW (history) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
 				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 				while (movesSeed.moves.length) {
 					str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
