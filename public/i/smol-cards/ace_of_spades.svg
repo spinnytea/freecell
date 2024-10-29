@@ -5,5 +5,6 @@
     fill="#010101" />
   <path
     d="M177.2 58.338c-.898-13.755-28.727-39.644-29.625-46.12-.897 6.472-28.727 32.361-29.624 46.12-.627 9.723 6.285 13.754 12.57 13.754 6.806-.073 12.426-9.495 14.362-11.327.898 2.428-5.944 22.655-8.08 22.655h21.548c-2.136 0-8.977-20.227-8.08-22.655 1.695 1.683 6.664 11.046 14.365 11.327 6.282-.003 13.19-4.03 12.564-13.754z" />
-  <text font-size="80" x="56" y="60" text-anchor="middle" dominant-baseline="middle" font-family="Arial">A</text>
+  <text font-size="80" x="56" y="60" text-anchor="middle" dominant-baseline="middle" font-family="Arial"
+    stroke="#000" stroke-width="3">A</text>
 </svg>
