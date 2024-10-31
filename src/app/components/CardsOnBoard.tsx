@@ -98,6 +98,8 @@ export function CardsOnBoard() {
 					//  - animate((g) => g.touch()).animate((g) => g.autoFoundation())
 					// REVIEW (animation) dynamic overlap? start of slow and then speed up, / accelerate
 					// IDEA different animations for "auto-foundation" vs "flourish" (can just check previousAction.type)
+					// IDEA auto-foundation win needs more drama than just "do the same thing"
+					// IDEA flourish: first card goes up. then second card goes up. then third card overlaps abit ... second-to-last AND last go up at the same time
 					updateCardPositions
 						.sort((a, b) => a.previousTop - b.previousTop)
 						.sort((a, b) => a.rank - b.rank);

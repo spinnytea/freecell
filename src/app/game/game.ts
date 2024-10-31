@@ -425,6 +425,7 @@ export class FreeCell {
 		e.g. select cursor, deselect cursor, move selection
 
 		IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
+		IDEA (controls) click-to-move does not allow selection if !canMove
 	*/
 	touch(): FreeCell {
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
