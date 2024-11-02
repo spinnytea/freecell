@@ -125,6 +125,11 @@ export class FreeCell {
 				throw new Error(
 					`Must have at least as many cascades as foundations (${this.foundations.length.toString(10)}); requested "${cascadeCount.toString(10)}".`
 				);
+			// 10 is a magic number - @see shorthandPosition, which we use for history
+			if (cascadeCount > 10)
+				throw new Error(
+					`Cannot have more then 10 cascades; requested "${cascadeCount.toString(10)}".`
+				);
 
 			this.cards = new Array<Card>();
 
@@ -498,17 +503,22 @@ export class FreeCell {
 	}
 
 	/** Used replaying a game, starting with a seed or otherwise known deal. */
-	moveByShorthand(shorthandMove: string): FreeCell {
+	moveByShorthand(
+		shorthandMove: string,
+		{ autoFoundation = true }: { autoFoundation?: boolean } = {}
+	): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
 
 		// select from, move to
 		let game = this.setCursor(from).touch().setCursor(to).touch();
 
-		const actionText = game.previousAction.text;
-		game = game.autoFoundationAll();
-		if (game.previousAction.text !== actionText) {
-			// REVIEW (techdebt) should this be a different PreviousActionType?
-			game.previousAction.text = `${actionText} (${game.previousAction.text})`;
+		if (autoFoundation) {
+			const actionText = game.previousAction.text;
+			game = game.autoFoundationAll();
+			if (game.previousAction.text !== actionText) {
+				// REVIEW (techdebt) should this be a different PreviousActionType?
+				game.previousAction.text = `${actionText} (${game.previousAction.text})`;
+			}
 		}
 
 		return game;
@@ -1120,6 +1130,10 @@ export class FreeCell {
 				//  - :h -> play forwards
 				//  - (we have the moves, but not the auto-foundation)
 				//  - text -> play backwards, then forwards (heeey, parsePreviousActionText, not parseAndUndo)
+				// TODO (parse-history) play a game backward and forewards using move history
+				// expect(
+				// 	FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
+				// ).toBe(game.print({ includeHistory: true }));
 			} else {
 				Array.prototype.push.apply(
 					history,

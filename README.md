@@ -13,7 +13,7 @@ TODO (motivation) main development tasks:
 1. `(settings)` local storage, new button
 
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b
-\b(FIXME|TODO|XXX|REVIEW|IDEA)\b\s+\((\w+)\)
+\b(FIXME|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
 \b(TODO|XXX|REVIEW|IDEA)\b\s+[^(]
 
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
@@ -36,9 +36,6 @@ TODO (motivation) main development tasks:
 - TODO (controls) keyboard + selection
 - TODO (animation) animate cards in flight should be above others
 - TODO (settings) undo limit - all, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
-- TODO (gameplay) make sure to play/record a game for 10-6 and 4-1
-  - use move history, unit test replay
-  - use it for testing history forward & backwards
 - TODO (gameplay) hard vs medium vs easy
   - [FreeCell lists of difficult (and extra easy) deals](https://www.solitairelaboratory.com/fclists.html)
   - Some games require no free cells :D - so make a 0 cells version restricted to these games

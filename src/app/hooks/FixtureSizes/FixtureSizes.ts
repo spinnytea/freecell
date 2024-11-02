@@ -5,7 +5,6 @@ import {
 } from '@/app/components/cards/constants';
 import { CardLocation, CardSequence, getRankForCompare, Rank } from '@/app/game/card/card';
 
-// IDEA (hud) position deck in the center of the home row
 // IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)
 //  - so tableau can start at the top of the screen?
 //  - it's a layout
@@ -92,7 +91,7 @@ export function calcFixtureSizes({
 	// otherwise scale up or down
 	const LR_HOME_MARGIN_SCALED = Math.max(_LR_HOME_CARD_SPACING, _LR_HOME_MARGIN * aspectratio);
 
-	// leave at least one space for the deck
+	// leave at least one space for the deck (…but don't actually put it there, the deal looks lame)
 	// leave at most 2 card widths
 	// otherwise, scale down the gap with the aspect ratio
 	const LR_HOME_GAP_SCALED = Math.max(

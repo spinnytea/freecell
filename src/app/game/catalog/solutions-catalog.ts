@@ -53,16 +53,42 @@ export const seedSolutions48 = new Map<number, string>([
 	],
 ]);
 
-export function getMoves(seed: number, cellCount = 4, cascadeCount = 8): string[] {
+export const seedSolutions60 = new Map<number, string>([
+	// TODO (techdebt) example that uses all 6 cells
+	[
+		25759,
+		'' +
+			'42 4a 4b 4c b4 c4 a4 24 24 94 ' +
+			'54 94 84 67 6a 63 6b a6 56 36 ' +
+			'b5 21 86 81 16 91 19 08 02 03 ' +
+			'7a 7b 7c 76 79 71 0d c0 d0 17 ' +
+			'97 b7 a7 90 86 20 12 17 38 34 ' +
+			'35',
+	],
+]);
+
+export function getMoves(
+	seed: number,
+	{ cellCount = 4, cascadeCount = 8 }: { cellCount?: number; cascadeCount?: number } = {}
+): string[] {
+	let seedSolutions = undefined;
 	if (cellCount === 4 && cascadeCount === 8) {
-		const moves = seedSolutions48.get(seed)?.split(' ');
-		if (!moves)
-			throw new Error(
-				`No solution for Game #${seed.toString(10)} (${cellCount.toString(10)} × ${cascadeCount.toString(10)}).`
-			);
-		return moves;
+		seedSolutions = seedSolutions48;
 	}
-	throw new Error(
-		`No solution for games of size ${cellCount.toString(10)} × ${cascadeCount.toString(10)}.`
-	);
+	if (cellCount === 6 && cascadeCount === 10) {
+		seedSolutions = seedSolutions60;
+	}
+	if (!seedSolutions) {
+		throw new Error(
+			`No solution for games of size ${cellCount.toString(10)} × ${cascadeCount.toString(10)}.`
+		);
+	}
+
+	const moves = seedSolutions.get(seed)?.split(' ');
+	if (!moves)
+		throw new Error(
+			`No solution for Game #${seed.toString(10)} (${cellCount.toString(10)} × ${cascadeCount.toString(10)}).`
+		);
+
+	return moves;
 }

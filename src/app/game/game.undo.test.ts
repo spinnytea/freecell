@@ -1,4 +1,4 @@
-import { getMoves, seedSolutions48 } from '@/app/game/catalog/solutions-catalog';
+import { getMoves, seedSolutions48, seedSolutions60 } from '@/app/game/catalog/solutions-catalog';
 import { FreeCell } from '@/app/game/game';
 import { parseMovesFromHistory } from '@/app/game/move/history';
 
@@ -31,12 +31,12 @@ describe('game.undo (+ history)', () => {
 
 		/** written as original move from→to, so we run the undo from←to */
 		describe('move', () => {
-			// REVIEW can we move a card from the deck directly to anywhere?
+			// REVIEW (techdebt) can we move a card from the deck directly to anywhere?
 			// this should just be handled by undo deal
 			test.todo('from: deck');
 
 			describe('from: cell', () => {
-				// REVIEW do we have any control of where cards move from the deck?
+				// REVIEW (techdebt) do we have any control of where cards move from the deck?
 				// we can't really undo that
 				test.todo('to: deck');
 
@@ -322,7 +322,7 @@ describe('game.undo (+ history)', () => {
 
 			describe('from: cascade', () => {
 				describe('single', () => {
-					// REVIEW do we have any control of where cards move from the deck?
+					// REVIEW (techdebt) do we have any control of where cards move from the deck?
 					// we can't really undo that
 					test.todo('to: deck');
 
@@ -376,7 +376,7 @@ describe('game.undo (+ history)', () => {
 				});
 
 				describe('sequence', () => {
-					// REVIEW do we have any control of where cards move from the deck?
+					// REVIEW (techdebt) do we have any control of where cards move from the deck?
 					// we can't really undo that
 					test.todo('to: deck');
 
@@ -441,37 +441,6 @@ describe('game.undo (+ history)', () => {
 		// similar to collapsing the moves into one
 		// this is essentially a free undo, except that "back to it's original location" is a valid move
 		test.todo('moving a card back to its original location remove the move from the history');
-	});
-
-	describe('various sizes', () => {
-		test.todo('4 cells, 4 cascades');
-
-		test.todo('1 cells, 10 cascades');
-
-		test.todo('6 cells, 10 cascades');
-		// ('6 cells, 10 cascades', () => {
-		// 	let game = FreeCell.parse(
-		// 		'' +
-		// 			'                   KH KD KS KC \n' +
-		// 			'                               \n' +
-		// 			':       Y O U   W I N !       :\n' +
-		// 			'                               \n' +
-		// 			':h shuffle32 25759\n' +
-		// 			' 42 4a 4b 4c b4 c4 a4 24 24 94 \n' +
-		// 			' 54 94 84 67 6a 63 6b a6 56 36 \n' +
-		// 			' b5 21 86 81 16 91 19 08 02 03 \n' +
-		// 			' 7a 7b 7c 76 79 71 0d c0 d0 17 \n' +
-		// 			' 97 b7 a7 90 86 20 12 17 38 34 \n' +
-		// 			' 35 '
-		// 	);
-		// 	expect(game.win).toBe(true);
-		// 	expect(game.history.length).toBe(51);
-		// 	const win = game; // save for later
-
-		// 	game = undoUntilStart(game);
-		// 	expect(game.history).toEqual([`shuffle deck (25759)`, 'deal all cards']);
-		// 	expect(game.cards).toEqual(new FreeCell().shuffle32(25759).dealAll().cards);
-		// });
 	});
 
 	test('parse history actions', () => {
@@ -541,31 +510,56 @@ describe('game.undo (+ history)', () => {
 		This sounds quite a lot like FreeCell.parse with history, just do that?
 	*/
 	describe('play a game backward and forewards using move history', () => {
-		test.each(Array.from(seedSolutions48.keys()))('Game #%d', (seed: number) => {
-			let game = new FreeCell().shuffle32(seed).dealAll();
+		test.todo('4 cells, 4 cascades');
 
-			// play the game forward
-			// undo each move as we play
-			getMoves(seed).forEach((move) => {
-				const prevState = game.print({ includeHistory: true });
+		test.todo('1 cells, 10 cascades');
 
-				game = game.moveByShorthand(move);
-				expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
+		describe.each`
+			cellCount | cascadeCount | seedSolutions
+			${4}      | ${8}         | ${seedSolutions48}
+			${6}      | ${10}        | ${seedSolutions60}
+		`(
+			'$cellCount cells, $cascadeCount cascades',
+			({
+				cellCount,
+				cascadeCount,
+				seedSolutions,
+			}: {
+				cellCount: number;
+				cascadeCount: number;
+				seedSolutions: Map<number, string>;
+			}) => {
+				test.each(Array.from(seedSolutions.keys()))('Game #%d', (seed: number) => {
+					let game = new FreeCell({ cellCount, cascadeCount }).shuffle32(seed).dealAll();
 
-				// undo a in a different "branch" so we can keep marking forward
-				const afterUndo = game.undo();
-				expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
-			});
-			expect(game.win).toBe(true);
-			const movesSeed = parseMovesFromHistory(game.history);
-			expect(movesSeed?.seed).toBe(seed);
-			expect(movesSeed?.moves).toEqual(getMoves(seed));
+					// play the game forward
+					// undo each move as we play
+					getMoves(seed, { cellCount, cascadeCount }).forEach((move) => {
+						const prevState = game.print({ includeHistory: true });
 
-			game = undoUntilStart(game);
-			expect(game.history).toEqual([`shuffle deck (${seed.toString(10)})`, 'deal all cards']);
-			expect(game.cards).toEqual(new FreeCell().shuffle32(seed).dealAll().cards);
-		});
+						game = game.moveByShorthand(move);
+						expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
 
-		test.todo('games with alternate sizes');
+						// undo a in a different "branch" so we can keep marking forward
+						const afterUndo = game.undo();
+						expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
+					});
+					expect(game.win).toBe(true);
+					const movesSeed = parseMovesFromHistory(game.history);
+					expect(movesSeed?.seed).toBe(seed);
+					expect(movesSeed?.moves).toEqual(getMoves(seed, { cellCount, cascadeCount }));
+
+					game = undoUntilStart(game);
+					expect(game.history).toEqual([`shuffle deck (${seed.toString(10)})`, 'deal all cards']);
+					let newGame = new FreeCell({ cellCount, cascadeCount }).shuffle32(seed).dealAll();
+					expect(game.cards).toEqual(newGame.cards);
+
+					// TODO (techdebt) detect last cursor position, so we don't need to normalize the cursor
+					game = game.setCursor({ fixture: 'cell', data: [0] });
+					newGame = newGame.setCursor({ fixture: 'cell', data: [0] });
+					expect(newGame).toEqual(game);
+				});
+			}
+		);
 	});
 });

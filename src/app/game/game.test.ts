@@ -103,7 +103,24 @@ describe('game', () => {
 			expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 		});
 
-		test.todo('6 cells, 10 cascades');
+		test('6 cells, 10 cascades', () => {
+			let game = new FreeCell({ cellCount: 6, cascadeCount: 10 });
+			game = game.dealAll({ demo: true });
+			expect(game.print()).toBe(
+				'' +
+					'>3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
+					' KS KH KD KC QS QH QD QC JS JH \n' +
+					' JD JC TS TH TD TC 9S 9H 9D 9C \n' +
+					' 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H \n' +
+					' 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H                         \n' +
+					' deal all cards'
+			);
+			expect(game.cells.length).toBe(6);
+			expect(game.foundations.length).toBe(4);
+			expect(game.tableau.length).toBe(10);
+			expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+		});
 
 		test('0 cells', () => {
 			expect(() => new FreeCell({ cellCount: 0 })).toThrow(
@@ -123,17 +140,106 @@ describe('game', () => {
 			);
 		});
 
-		test.todo('11 cascades'); // @see shorthandPosition
+		test('11 cascades', () => {
+			expect(() => new FreeCell({ cascadeCount: 11 })).toThrow(
+				'Cannot have more then 10 cascades; requested "11".'
+			);
+		});
 	});
 
-	describe('inspecting foundation always uses highest card', () => {
-		test.todo('empty');
+	test('inspecting foundation always uses highest card', () => {
+		let game = FreeCell.parse(
+			'' +
+				'>                        \n' +
+				' KS KH KD KC             \n' +
+				' QS QH QD QC             \n' +
+				' JS JH JD JC             \n' +
+				' TS TH TD TC             \n' +
+				' 9S 9H 9D 9C             \n' +
+				' 8S 8H 8D 8C             \n' +
+				' 7S 7H 7D 7C             \n' +
+				' 6S 6H 6D 6C             \n' +
+				' 5S 5H 5D 5C             \n' +
+				' 4S 4H 4D 4C             \n' +
+				' 3S 3H 3D 3C             \n' +
+				' 2S 2H 2D 2C             \n' +
+				' AS AH AD AC             \n' +
+				' hand-jammed'
+		);
+		expect(game.cells.length).toBe(4);
+		expect(game.foundations.length).toBe(4);
+		expect(game.tableau.length).toBe(8);
 
-		test.todo('one');
-
-		test.todo('few');
-
-		test.todo('all');
+		expect(game.printFoundation()).toBe('           ');
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		expect(game.printFoundation()).toBe('AS         ');
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		expect(game.printFoundation()).toBe('4S         ');
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		expect(game.printFoundation()).toBe('TS         ');
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		game = game.moveByShorthand('1h', { autoFoundation: false });
+		expect(game.print()).toBe(
+			'' +
+				'            >KS          \n' +
+				'    KH KD KC             \n' +
+				'    QH QD QC             \n' +
+				'    JH JD JC             \n' +
+				'    TH TD TC             \n' +
+				'    9H 9D 9C             \n' +
+				'    8H 8D 8C             \n' +
+				'    7H 7D 7C             \n' +
+				'    6H 6D 6C             \n' +
+				'    5H 5D 5C             \n' +
+				'    4H 4D 4C             \n' +
+				'    3H 3D 3C             \n' +
+				'    2H 2D 2C             \n' +
+				'    AH AD AC             \n' +
+				' move 1h KS→QS'
+		);
+		game = game.undo();
+		expect(game.printFoundation()).toBe('QS         ');
+		game = game.undo();
+		game = game.undo();
+		game = game.undo();
+		game = game.undo();
+		expect(game.printFoundation()).toBe('8S         ');
+		game = game.undo();
+		game = game.undo();
+		game = game.undo();
+		game = game.undo();
+		expect(game.printFoundation()).toBe('4S         ');
+		game = game.undo();
+		game = game.undo();
+		game = game.undo();
+		expect(game.printFoundation()).toBe('AS         ');
+		game = game.undo();
+		expect(game.print()).toEqual(
+			'' +
+				'            >            \n' +
+				' KS KH KD KC             \n' +
+				' QS QH QD QC             \n' +
+				' JS JH JD JC             \n' +
+				' TS TH TD TC             \n' +
+				' 9S 9H 9D 9C             \n' +
+				' 8S 8H 8D 8C             \n' +
+				' 7S 7H 7D 7C             \n' +
+				' 6S 6H 6D 6C             \n' +
+				' 5S 5H 5D 5C             \n' +
+				' 4S 4H 4D 4C             \n' +
+				' 3S 3H 3D 3C             \n' +
+				' 2S 2H 2D 2C             \n' +
+				' AS AH AD AC             \n' +
+				' hand-jammed'
+		);
 	});
 
 	describe('parse', () => {
@@ -199,6 +305,25 @@ describe('game', () => {
 				);
 			});
 
+			test('second', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'>            KC KD KH KS \n' + //
+						'                         \n' + //
+						':    Y O U   W I N !    :\n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
+				expect(game.print()).toBe(
+					'' + //
+						'>            KC KD KH KS \n' + //
+						'                         \n' + //
+						':    Y O U   W I N !    :\n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
+			});
+
 			test.each`
 				cascadeCount | emptyLine
 				${4}         | ${'             '}
@@ -219,8 +344,6 @@ describe('game', () => {
 				}
 			);
 		});
-
-		test.todo('the state');
 	});
 
 	describe('complete games', () => {
