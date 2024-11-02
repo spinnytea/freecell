@@ -712,6 +712,7 @@ export class FreeCell {
 	*/
 	shuffle32(seed?: number): FreeCell {
 		if (seed === undefined) {
+			// TODO (gameplay) (settings) do not allow the impossible #11982?
 			seed = Math.floor(Math.random() * 32000) + 1;
 		}
 
