@@ -3,8 +3,8 @@
 import { useGSAP } from '@gsap/react';
 import { gsap, Draggable } from 'gsap/all';
 import GameBoard from '@/app/GameBoard';
-import GameContextProvider from '@/app/hooks/Game/GameContextProvider';
-import { SettingsContextProvider } from '@/app/hooks/Settings/SettingsContextProvider';
+import GameContextProvider from '@/app/hooks/contexts/Game/GameContextProvider';
+import { SettingsContextProvider } from '@/app/hooks/contexts/Settings/SettingsContextProvider';
 
 gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(Draggable);

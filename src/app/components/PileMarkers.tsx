@@ -2,11 +2,11 @@ import { useContext } from 'react';
 import classNames from 'classnames';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
 import { CardLocation } from '@/app/game/card/card';
-import { FixtureSizes } from '@/app/hooks/FixtureSizes/FixtureSizes';
-import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
-import { GameContext } from '@/app/hooks/Game/GameContext';
-import { useGame } from '@/app/hooks/Game/useGame';
-import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
+import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
+import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
+import { useGame } from '@/app/hooks/contexts/Game/useGame';
+import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
 export function PileMarkers() {
 	const { cursor } = useGame();

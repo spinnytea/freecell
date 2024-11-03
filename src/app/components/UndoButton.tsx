@@ -1,6 +1,6 @@
 import { MouseEvent, useContext } from 'react';
 import styles_gameboard from '@/app/gameboard.module.css';
-import { GameContext } from '@/app/hooks/Game/GameContext';
+import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 
 export function UndoButton() {
 	const [, setGame] = useContext(GameContext);

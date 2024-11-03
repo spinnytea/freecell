@@ -1,4 +1,4 @@
-import { calcFixtureSizes } from '@/app/hooks/FixtureSizes/FixtureSizes';
+import { calcFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 
 describe('FixtureSizes', () => {
 	test('basic', () => {

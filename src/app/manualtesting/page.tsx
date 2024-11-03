@@ -5,7 +5,7 @@ import styles_common from '@/app/common.module.css';
 import { CardImage } from '@/app/components/cards/CardImage';
 import { RankList, SuitList } from '@/app/game/card/card';
 import GameBoard from '@/app/GameBoard';
-import StaticGameContextProvider from '@/app/hooks/Game/StaticGameContextProvider';
+import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 
 const gamePrint_52CardFlourish =

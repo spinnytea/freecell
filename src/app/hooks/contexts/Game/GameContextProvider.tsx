@@ -1,7 +1,7 @@
 import { ReactNode, useCallback, useRef, useState } from 'react';
 import { FreeCell } from '@/app/game/game';
-import { GameContext } from '@/app/hooks/Game/GameContext';
-import { useSettings } from '@/app/hooks/Settings/useSettings';
+import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
+import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 
 export default function GameContextProvider({
 	children,

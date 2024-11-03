@@ -2,7 +2,7 @@ import { MouseEvent, useContext } from 'react';
 import Link from 'next/link';
 import { Checkbox } from '@/app/components/element/Checkbox';
 import styles_gameboard from '@/app/gameboard.module.css';
-import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
+import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
 const version = `v${process.env.VERSION ?? 'Unknown'}`;
 

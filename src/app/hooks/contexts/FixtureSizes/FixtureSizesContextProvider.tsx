@@ -4,9 +4,9 @@ import {
 	DEFAULT_CLIENT_HEIGHT,
 	DEFAULT_CLIENT_WIDTH,
 	FixtureSizes,
-} from '@/app/hooks/FixtureSizes/FixtureSizes';
-import { FixtureSizesContext } from '@/app/hooks/FixtureSizes/FixtureSizesContext';
-import { useGame } from '@/app/hooks/Game/useGame';
+} from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import { FixtureSizesContext } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContext';
+import { useGame } from '@/app/hooks/contexts/Game/useGame';
 
 export function FixtureSizesContextProvider({
 	gameBoardRef,

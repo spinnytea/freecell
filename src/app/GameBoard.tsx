@@ -8,10 +8,10 @@ import { TextBoard } from '@/app/components/TextBoard';
 import { UndoButton } from '@/app/components/UndoButton';
 import { WinMessage } from '@/app/components/WinMessage';
 import styles_gameboard from '@/app/gameboard.module.css';
-import { FixtureSizesContextProvider } from '@/app/hooks/FixtureSizes/FixtureSizesContextProvider';
-import { GameContext } from '@/app/hooks/Game/GameContext';
-import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
-import { useSettings } from '@/app/hooks/Settings/useSettings';
+import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
+import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
+import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
+import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 
 // TODO (controls) split out controls
 export default function GameBoard() {

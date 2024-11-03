@@ -1,6 +1,6 @@
 import { ReactNode, useCallback, useState } from 'react';
 import { FreeCell } from '@/app/game/game';
-import { GameContext } from '@/app/hooks/Game/GameContext';
+import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 
 export default function StaticGameContextProvider({
 	gamePrint,
