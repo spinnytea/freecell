@@ -12,6 +12,7 @@ function stopPropagation(event: MouseEvent) {
 
 export function StatusBar() {
 	const [settings, setSettings] = useContext(SettingsContext);
+	const showManualTestingLink = window.location.hostname === 'localhost';
 
 	function handleShowDebugInfoChange(newChecked: boolean) {
 		setSettings((s) => ({
@@ -29,7 +30,7 @@ export function StatusBar() {
 				onChange={handleShowDebugInfoChange}
 			/>
 			<span className={styles_gameboard.statusspacer} />
-			<Link href="/manualtesting">↗ Manual Testing</Link>
+			{showManualTestingLink && <Link href="/manualtesting">↗ Manual Testing</Link>}
 			<span>{version}</span>
 		</section>
 	);
