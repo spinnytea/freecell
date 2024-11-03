@@ -16,6 +16,8 @@ TODO (motivation) main development tasks:
 \b(FIXME|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
 \b(TODO|XXX|REVIEW|IDEA)\b\s+[^(]
 
+- FIXME are there any other controls that need to be refactored?
+- FIXME retest the controls (just to be extra sure)
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO (deployment) portrait vs landscape mode (portait on phone is ssoooooo small)
 - TODO (motivation) movement needs to be fun, animations are important, every time a card moves, it must not jump

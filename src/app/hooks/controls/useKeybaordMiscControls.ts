@@ -1,0 +1,53 @@
+import { useContext, useEffect } from 'react';
+import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
+import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
+
+export function useKeybaordMiscControls() {
+	const [, setGame, newGame] = useContext(GameContext);
+	const [, setSettings] = useContext(SettingsContext);
+
+	/** REVIEW (controls) keyboard */
+	useEffect(() => {
+		function handleKey(event: KeyboardEvent) {
+			const { key } = event;
+			let consumed = false;
+			switch (key) {
+				case ' ':
+				case 'Enter':
+					consumed = true;
+					setGame((g) => {
+						if (g.cursor.fixture === 'deck') {
+							return g.dealAll();
+						}
+						if (g.cursor.fixture === 'foundation' && g.win) {
+							return newGame().shuffle32();
+						}
+						return g.touch().autoFoundationAll();
+					});
+					break;
+				case 'Escape':
+					consumed = true;
+					setGame((g) => g.clearSelection());
+					break;
+				case 'z':
+				case 'Z':
+					consumed = true;
+					// REVIEW (techdebt) why does g.undo run twice? (this keypress is only ran once; is this a react thing??)
+					setGame((g) => g.undo());
+					break;
+				// default:
+				// 	console.log(`unused key: "${key}"`);
+				// 	break;
+			}
+			if (consumed) {
+				event.stopPropagation();
+				setSettings((s) => ({ ...s, showKeyboardCursor: true }));
+			}
+		}
+
+		window.addEventListener('keydown', handleKey);
+		return () => {
+			window.removeEventListener('keydown', handleKey);
+		};
+	}, [setGame, newGame, setSettings]);
+}
