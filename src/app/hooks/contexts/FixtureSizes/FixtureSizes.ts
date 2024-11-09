@@ -61,8 +61,8 @@ function times<T>(count: number, cb: (i: number) => T): T[] {
 }
 
 export function calcFixtureSizes({
-	boardWidth = DEFAULT_CLIENT_WIDTH,
-	boardHeight = DEFAULT_CLIENT_HEIGHT,
+	boardWidth,
+	boardHeight,
 	cellCount = 4,
 	cascadeCount = 8,
 }: {
@@ -71,6 +71,8 @@ export function calcFixtureSizes({
 	cellCount?: number;
 	cascadeCount?: number;
 }): FixtureSizes {
+	if (!boardWidth) boardWidth = DEFAULT_CLIENT_WIDTH;
+	if (!boardHeight) boardHeight = DEFAULT_CLIENT_HEIGHT;
 	const foundationCount = 4;
 	const homeCount = foundationCount + cellCount;
 	const homeGapCount = foundationCount - 1 + cellCount - 1;

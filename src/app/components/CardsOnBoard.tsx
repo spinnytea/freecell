@@ -149,11 +149,16 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 	const game = useGame();
 	const handleClickToMove = useClickToMoveControls(location);
 	const fixtureSizes = useFixtureSizes();
-	const { top, left, rotation } = calcTopLeftZ(fixtureSizes, location, game.selection, rank);
+	const { top, left, zIndex, rotation } = calcTopLeftZ(
+		fixtureSizes,
+		location,
+		game.selection,
+		rank
+	);
 
 	useEffect(() => {
 		// set the initial position, once on load
-		gsap.set(cardRef.current, { top, left });
+		gsap.set(cardRef.current, { top, left, zIndex });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

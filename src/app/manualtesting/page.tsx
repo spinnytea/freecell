@@ -5,6 +5,7 @@ import styles_common from '@/app/common.module.css';
 import { CardImage } from '@/app/components/cards/CardImage';
 import { RankList, SuitList } from '@/app/game/card/card';
 import GameBoard from '@/app/GameBoard';
+import styles_gameboard from '@/app/gameboard.module.css';
 import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 
@@ -27,7 +28,9 @@ const gamePrint_52CardFlourish =
 /*
 	TODO (techdebt) much needed style overhaul
 
-	TODO (techdebt) manual tests for cursor/selection
+	TODO (techdebt) manual tests for cursor
+	TODO (techdebt) manual tests for selection: one, two, three, etc
+
 	+-----------+
 	| _ a c _ _ |
 	|   a d     |
@@ -43,6 +46,11 @@ const gamePrint_52CardFlourish =
 	TODO (animation) animate moving a sequence
 	TODO (animation) animate cursorBox movement
 	TODO (animation) animate flourish
+
+	TODO (hud) fixture sizes: narrow
+	TODO (hud) fixture sizes: wide
+	TODO (hud) fixture sizes: mobile portrait
+	TODO (hud) fixture sizes: mobile landscape
 
 	TODO (deployment) various sizes of tall -> portrait -> landscape -> wide
 	 - if not well defined playing fields to spot check, at least a reminder to play with the screen size
@@ -93,7 +101,10 @@ export default function Page() {
 			{/*  - swap out GameBoard - we want separate/simpler controls? */}
 			{/*  - swap out GameBoard - we want to define our own FixtureSizesContext.Provider w/ smaller size */}
 			<StaticGameContextProvider gamePrint={gamePrint_52CardFlourish}>
-				<GameBoard />
+				<GameBoard
+					className={styles_gameboard.inline}
+					displayOptions={{ showStatusBar: false, showUndoButton: false, showTextBoard: false }}
+				/>
 			</StaticGameContextProvider>
 		</main>
 	);

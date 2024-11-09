@@ -6,6 +6,15 @@
 	bottom: 0;
 }
 
+.inline {
+	position: relative;
+	/* FIXME right-sized calcFixtureSizes */
+	width: 400px;
+	height: 500px;
+	border: 1px solid rgba(var(--pile-border-rgb), 0.5);
+	border-radius: var(--pile-border-radius);
+}
+
 .winmessage {
 	position: absolute;
 	left: 0;
