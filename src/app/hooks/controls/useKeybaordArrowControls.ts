@@ -3,7 +3,7 @@ import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
 export function useKeybaordArrowControls() {
-	const [, setGame, newGame] = useContext(GameContext);
+	const [, setGame] = useContext(GameContext);
 	const [, setSettings] = useContext(SettingsContext);
 
 	/** REVIEW (controls) keyboard */
@@ -39,5 +39,5 @@ export function useKeybaordArrowControls() {
 		return () => {
 			window.removeEventListener('keydown', handleKey);
 		};
-	}, [setGame, newGame, setSettings]);
+	}, [setGame, setSettings]);
 }

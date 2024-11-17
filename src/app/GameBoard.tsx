@@ -46,20 +46,20 @@ function BoardLayout({
 }: {
 	displayOptions: GameBoardDisplayOptions;
 }) {
-	const settings = useSettings();
+	const { showDebugInfo, showKeyboardCursor } = useSettings();
 
 	// if we pass in a display option, respect that
 	// if we do not pass in a display option, fall back to defaults / settings
 	if (showUndoButton === undefined) showUndoButton = true;
 	if (showStatusBar === undefined) showStatusBar = true;
-	if (showTextBoard === undefined) showTextBoard = settings.showDebugInfo;
-	if (showDebugCursors === undefined) showDebugCursors = settings.showDebugInfo;
+	if (showTextBoard === undefined) showTextBoard = showDebugInfo;
+	if (showDebugCursors === undefined) showDebugCursors = showDebugInfo;
 
 	return (
 		<>
 			<PileMarkers />
 			<WinMessage />
-			{settings.showKeyboardCursor && <KeyboardCursor />}
+			{showKeyboardCursor && <KeyboardCursor />}
 			<CardsOnBoard />
 			{!!showUndoButton && <UndoButton />}
 			{!!showStatusBar && <StatusBar />}

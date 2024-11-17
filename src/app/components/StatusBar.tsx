@@ -11,7 +11,7 @@ function stopPropagation(event: MouseEvent) {
 }
 
 export function StatusBar() {
-	const [settings, setSettings] = useContext(SettingsContext);
+	const [{ showDebugInfo }, setSettings] = useContext(SettingsContext);
 	const showManualTestingLink = window.location.hostname === 'localhost';
 
 	function handleShowDebugInfoChange(newChecked: boolean) {
@@ -25,7 +25,7 @@ export function StatusBar() {
 		<section className={styles_gameboard.status} onClick={stopPropagation}>
 			<Checkbox
 				name="showDebugInfo"
-				value={settings.showDebugInfo}
+				value={showDebugInfo}
 				text="Show Debug Info"
 				onChange={handleShowDebugInfoChange}
 			/>
