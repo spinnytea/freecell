@@ -112,7 +112,7 @@ export default function Page() {
 							showStatusBar: false,
 							showUndoButton: false,
 							showTextBoard: false,
-							fixtureLayout: 'justified',
+							fixtureLayout: 'portrait',
 						}}
 					/>
 				</StaticGameContextProvider>

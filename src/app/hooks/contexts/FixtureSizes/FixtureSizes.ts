@@ -10,7 +10,7 @@ import { CardLocation, CardSequence, getRankForCompare, Rank } from '@/app/game/
 //  - it's a layout
 export const DEFAULT_CLIENT_WIDTH = 800;
 export const DEFAULT_CLIENT_HEIGHT = 600;
-export type FixtureLayout = 'wide' | 'justified' | 'auto';
+export type FixtureLayout = 'landscape' | 'portrait' | 'auto';
 
 /*
 	Spacing around cards is all in percentages.
@@ -88,9 +88,9 @@ export function calcFixtureSizes({
 
 	// wide layouts try to ensure we can see the card stacks, so we need to balanace the aspect ratio
 	// it's ideally targetting 16:9 or 21:9, so we can just stick with that
-	if (fixtureLayout === 'wide') aspectratio = 2;
+	if (fixtureLayout === 'landscape') aspectratio = 2;
 	// justified layouts will fit the width, regardless of height
-	else if (fixtureLayout === 'justified') aspectratio = 0.001;
+	else if (fixtureLayout === 'portrait') aspectratio = 0.001;
 	// smooth transition across the +/-, but negative (effectively) doubles it's scale factor
 	else if (aspectratio < 1) aspectratio = 1 - (1 - aspectratio) * 2.5;
 

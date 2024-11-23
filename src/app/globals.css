@@ -10,6 +10,7 @@
 	--pile-rgb: 180, 180, 180;
 	--pile-border-rgb: 200, 200, 200;
 	--pile-border-radius: 4px;
+	--cursor-border-radius: 8px;
 
 	--felt--basic-green: rgb(51, 110, 78); /* poker-green */
 	--felt--championship-green: rgb(43, 100, 49);
