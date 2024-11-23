@@ -12,7 +12,8 @@ function stopPropagation(event: MouseEvent) {
 
 export function StatusBar() {
 	const [{ showDebugInfo }, setSettings] = useContext(SettingsContext);
-	const showManualTestingLink = window.location.hostname === 'localhost';
+	const showManualTestingLink =
+		typeof window !== 'undefined' && window.location.hostname === 'localhost';
 
 	function handleShowDebugInfoChange(newChecked: boolean) {
 		setSettings((s) => ({

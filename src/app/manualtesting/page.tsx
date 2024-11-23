@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles_common from '@/app/common.module.css';
 import { CardImage } from '@/app/components/cards/CardImage';
@@ -11,6 +12,7 @@ import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Setti
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 
 const gamePrint_readyToAutoFoundation =
+	'' + //
 	'>   JH JC JD JS \n' +
 	' KH KC KD KS QH QC QD QS \n' +
 	' hand-jammed';
@@ -27,6 +29,9 @@ const gamePrint_52CardFlourish =
 	'             6S 2S 6H 2D \n' +
 	'             5D    5C    \n' +
 	' move 3a 7H→cell';
+
+const calcCardWidth = (windowInnerWidth = 9999) =>
+	Math.floor(Math.min(Math.max((windowInnerWidth - 80) / 13, 10), 75));
 
 /*
 	TODO (techdebt) much needed style overhaul
@@ -61,7 +66,20 @@ const gamePrint_52CardFlourish =
 	TODO (controls) each of the control schemes
 */
 export default function Page() {
-	const cardWidth = Math.floor(Math.min(window.innerWidth - 80, 960) / 13);
+	const [cardWidth, setCardWidth] = useState(() => calcCardWidth());
+
+	useEffect(() => {
+		function updateCardWidth() {
+			const innerWidth = typeof window === 'undefined' ? undefined : window.innerWidth;
+			setCardWidth(calcCardWidth(innerWidth));
+		}
+
+		updateCardWidth();
+		window.addEventListener('resize', updateCardWidth);
+		return () => {
+			window.removeEventListener('resize', updateCardWidth);
+		};
+	}, []);
 
 	return (
 		<main className={styles_common.main}>

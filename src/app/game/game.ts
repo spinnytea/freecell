@@ -537,7 +537,7 @@ export class FreeCell {
 	}: {
 		limit?: AutoFoundationLimit;
 		method?: AutoFoundationMethod;
-		anytime?: boolean,
+		anytime?: boolean;
 	} = {}): FreeCell | this {
 		// can only do auto-foundation after a card moves
 		// e.g. we can't auto-foundation just because we select a card

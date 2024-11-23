@@ -28,7 +28,7 @@ import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveContr
 //    - once selected, do not change that
 // IDEA (settings) setting for "reduced motion" - disable most animations
 // IDEA (animation) faster "peek" animation - when the cards are shifting to peek the selected card
-export function CardsOnBoard({gameBoardIdRef}: {gameBoardIdRef: MutableRefObject<string>;}) {
+export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObject<string> }) {
 	const { cards, selection } = useGame();
 	const fixtureSizes = useFixtureSizes();
 	const [, setTLs] = useState(new Map<string, number[]>());
@@ -139,13 +139,29 @@ export function CardsOnBoard({gameBoardIdRef}: {gameBoardIdRef: MutableRefObject
 	return (
 		<div id="cards">
 			{cards.map(({ rank, suit, location }) => (
-				<CardOnBoard key={`${rank} of ${suit}`} rank={rank} suit={suit} location={location} gameBoardIdRef={gameBoardIdRef} />
+				<CardOnBoard
+					key={`${rank} of ${suit}`}
+					rank={rank}
+					suit={suit}
+					location={location}
+					gameBoardIdRef={gameBoardIdRef}
+				/>
 			))}
 		</div>
 	);
 }
 
-function CardOnBoard({ rank, suit, location, gameBoardIdRef }: { rank: Rank; suit: Suit; location: CardLocation; gameBoardIdRef: MutableRefObject<string>; }) {
+function CardOnBoard({
+	rank,
+	suit,
+	location,
+	gameBoardIdRef,
+}: {
+	rank: Rank;
+	suit: Suit;
+	location: CardLocation;
+	gameBoardIdRef: MutableRefObject<string>;
+}) {
 	const cardRef = useRef<HTMLDivElement | null>(null);
 	const game = useGame();
 	const handleClickToMove = useClickToMoveControls(location);
@@ -185,12 +201,7 @@ function CardOnBoard({ rank, suit, location, gameBoardIdRef }: { rank: Rank; sui
 
 	const cardId = 'c' + shorthandCard({ rank, suit }) + '-' + gameBoardIdRef.current;
 	return (
-		<div
-			id={cardId}
-			className={styles_cardsonboard.card}
-			ref={cardRef}
-			onClick={handleClickToMove}
-		>
+		<div id={cardId} className={styles_cardsonboard.card} ref={cardRef} onClick={handleClickToMove}>
 			<CardImage
 				rank={rank}
 				suit={suit}

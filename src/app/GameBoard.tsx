@@ -22,7 +22,7 @@ interface GameBoardDisplayOptions {
 	fixtureLayout?: FixtureLayout;
 }
 
-const nextUid = (function*() {
+const nextUid = (function* () {
 	let id = 0;
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 	while (true) {
@@ -34,7 +34,6 @@ const nextUid = (function*() {
 	}
 })();
 
-// FIXME needs some kind of ID so we can have more than one on screen at a time
 export default function GameBoard({
 	className,
 	displayOptions = {},

@@ -40,8 +40,8 @@ export function FixtureSizesContextProvider({
 				return fs;
 			});
 		}
-		window.addEventListener('resize', updateSize);
 		updateSize();
+		window.addEventListener('resize', updateSize);
 		return () => {
 			window.removeEventListener('resize', updateSize);
 		};
