@@ -74,6 +74,7 @@ export function calcFixtureSizes({
 	cascadeCount?: number;
 	fixtureLayout?: FixtureLayout;
 }): FixtureSizes {
+	// BUG (hud) portrait AND homeCount < cascadeCount: we need to increase the gap between cells and foundation
 	if (!boardWidth) boardWidth = DEFAULT_CLIENT_WIDTH;
 	if (!boardHeight) boardHeight = DEFAULT_CLIENT_HEIGHT;
 	const foundationCount = 4;

@@ -10,6 +10,11 @@ import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameConte
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 
+const gamePrint_readyToAutoFoundation =
+	'>   JH JC JD JS \n' +
+	' KH KC KD KS QH QC QD QS \n' +
+	' hand-jammed';
+
 const gamePrint_52CardFlourish =
 	'>7H       2C             \n' +
 	' KS 6C AC 5H KD 6D KC KH \n' +
@@ -104,8 +109,27 @@ export default function Page() {
 			{/*  - include next move, e.g. '3b' */}
 			{/*  - swap out GameBoard - we want separate/simpler controls? */}
 			{/*  - swap out GameBoard - we want to define our own FixtureSizesContext.Provider w/ smaller size */}
+			<div className="instruction">Move 8S for a 52 Card Flourish (e.g. 3b).</div>
 			<ManualTestingSettingsContextProvider>
 				<StaticGameContextProvider gamePrint={gamePrint_52CardFlourish}>
+					<GameBoard
+						className={styles_gameboard.inline}
+						displayOptions={{
+							showStatusBar: false,
+							showUndoButton: false,
+							showTextBoard: false,
+							fixtureLayout: 'portrait',
+						}}
+					/>
+				</StaticGameContextProvider>
+			</ManualTestingSettingsContextProvider>
+
+			<hr />
+
+			{/* BUG (hud) portrait AND homeCount < cascadeCount: cascade is wider than viewport */}
+			<div className="instruction">Does not autoFoundation until a card is moved.</div>
+			<ManualTestingSettingsContextProvider>
+				<StaticGameContextProvider gamePrint={gamePrint_readyToAutoFoundation}>
 					<GameBoard
 						className={styles_gameboard.inline}
 						displayOptions={{

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { MutableRefObject, useRef } from 'react';
 import { CardsOnBoard } from '@/app/components/CardsOnBoard';
 import { DebugCursors } from '@/app/components/DebugCursors';
 import { KeyboardCursor } from '@/app/components/KeyboardCursor';
@@ -22,6 +22,19 @@ interface GameBoardDisplayOptions {
 	fixtureLayout?: FixtureLayout;
 }
 
+const nextUid = (function*() {
+	let id = 0;
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	while (true) {
+		yield id.toString(16);
+		id++;
+		if (id > Number.MAX_SAFE_INTEGER / 2) {
+			id = 0;
+		}
+	}
+})();
+
+// FIXME needs some kind of ID so we can have more than one on screen at a time
 export default function GameBoard({
 	className,
 	displayOptions = {},
@@ -33,6 +46,8 @@ export default function GameBoard({
 	useKeybaordArrowControls();
 	const handleNewGameClick = useNewGameClick();
 	const gameBoardRef = useRef<HTMLElement | null>(null);
+	const gameBoardIdRef: MutableRefObject<string> = useRef('');
+	if (!gameBoardIdRef.current) gameBoardIdRef.current = nextUid.next().value;
 
 	return (
 		<main ref={gameBoardRef} className={className} onClick={handleNewGameClick}>
@@ -40,7 +55,7 @@ export default function GameBoard({
 				gameBoardRef={gameBoardRef}
 				fixtureLayout={displayOptions.fixtureLayout}
 			>
-				<BoardLayout displayOptions={displayOptions} />
+				<BoardLayout displayOptions={displayOptions} gameBoardIdRef={gameBoardIdRef} />
 			</FixtureSizesContextProvider>
 		</main>
 	);
@@ -48,8 +63,10 @@ export default function GameBoard({
 
 function BoardLayout({
 	displayOptions: { showUndoButton, showStatusBar, showTextBoard, showDebugCursors },
+	gameBoardIdRef,
 }: {
 	displayOptions: GameBoardDisplayOptions;
+	gameBoardIdRef: MutableRefObject<string>;
 }) {
 	const { showDebugInfo, showKeyboardCursor } = useSettings();
 
@@ -65,7 +82,7 @@ function BoardLayout({
 			<PileMarkers />
 			<WinMessage />
 			{showKeyboardCursor && <KeyboardCursor />}
-			<CardsOnBoard />
+			<CardsOnBoard gameBoardIdRef={gameBoardIdRef} />
 			{!!showUndoButton && <UndoButton />}
 			{!!showStatusBar && <StatusBar />}
 

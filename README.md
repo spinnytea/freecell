@@ -12,9 +12,9 @@ TODO (motivation) main development tasks:
 1. `(drag-and-drop)` (click-to-move has been working, but sometimes you need to "force" the move you want)
 1. `(settings)` local storage, new button
 
-\b(FIXME|TODO|XXX|REVIEW|IDEA)\b
-\b(FIXME|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
-\b(TODO|XXX|REVIEW|IDEA)\b\s+[^(]
+\b(FIXME|BUG|TODO|XXX|REVIEW|IDEA)\b
+\b(FIXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
+\b(BUG|TODO|XXX|REVIEW|IDEA)\b\s+[^(]
 
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO (deployment) portrait vs landscape mode (portait on phone is ssoooooo small)

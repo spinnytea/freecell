@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
 import {
@@ -28,7 +28,7 @@ import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveContr
 //    - once selected, do not change that
 // IDEA (settings) setting for "reduced motion" - disable most animations
 // IDEA (animation) faster "peek" animation - when the cards are shifting to peek the selected card
-export function CardsOnBoard() {
+export function CardsOnBoard({gameBoardIdRef}: {gameBoardIdRef: MutableRefObject<string>;}) {
 	const { cards, selection } = useGame();
 	const fixtureSizes = useFixtureSizes();
 	const [, setTLs] = useState(new Map<string, number[]>());
@@ -117,16 +117,17 @@ export function CardsOnBoard() {
 					prevFixtureSizes.current = fixtureSizes;
 				}
 				updateCardPositions.forEach(({ shorthand, top, left, zIndex }) => {
+					const cardId = '#c' + shorthand + '-' + gameBoardIdRef.current;
 					nextTLs.set(shorthand, [top, left]);
 					timeline.to(
-						'#c' + shorthand,
+						cardId,
 						{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
 						`<${overlap.toFixed(3)}`
 					);
 					// REVIEW (animation) zIndex boost while in flight?
 					//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
 					//  - as soon as it finishes animating, set it to the correct value
-					timeline.to('#c' + shorthand, { zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2 }, `<`);
+					timeline.to(cardId, { zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2 }, `<`);
 				});
 				return nextTLs;
 			});
@@ -138,13 +139,13 @@ export function CardsOnBoard() {
 	return (
 		<div id="cards">
 			{cards.map(({ rank, suit, location }) => (
-				<CardOnBoard key={`${rank} of ${suit}`} rank={rank} suit={suit} location={location} />
+				<CardOnBoard key={`${rank} of ${suit}`} rank={rank} suit={suit} location={location} gameBoardIdRef={gameBoardIdRef} />
 			))}
 		</div>
 	);
 }
 
-function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; location: CardLocation }) {
+function CardOnBoard({ rank, suit, location, gameBoardIdRef }: { rank: Rank; suit: Suit; location: CardLocation; gameBoardIdRef: MutableRefObject<string>; }) {
 	const cardRef = useRef<HTMLDivElement | null>(null);
 	const game = useGame();
 	const handleClickToMove = useClickToMoveControls(location);
@@ -182,9 +183,10 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 		{ dependencies: [rotation] }
 	);
 
+	const cardId = 'c' + shorthandCard({ rank, suit }) + '-' + gameBoardIdRef.current;
 	return (
 		<div
-			id={'c' + shorthandCard({ rank, suit })}
+			id={cardId}
 			className={styles_cardsonboard.card}
 			ref={cardRef}
 			onClick={handleClickToMove}
