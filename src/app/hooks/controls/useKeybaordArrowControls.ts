@@ -31,6 +31,7 @@ export function useKeybaordArrowControls() {
 			}
 			if (consumed) {
 				event.stopPropagation();
+				event.preventDefault();
 				setSettings((s) => ({ ...s, showKeyboardCursor: true }));
 			}
 		}

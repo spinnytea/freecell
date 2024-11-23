@@ -79,6 +79,7 @@ body {
 	min-width: 100vw;
 	min-height: 100vh;
 }
+/* TODO (hud) (techdebt) the background texture does not go all the way to the bottom of the screen on mobile */
 body::before {
 	/* first-child */
 	content: '';
