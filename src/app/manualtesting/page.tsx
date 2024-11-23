@@ -144,7 +144,6 @@ export default function Page() {
 
 			<hr />
 
-			{/* BUG (hud) portrait AND homeCount < cascadeCount: cascade is wider than viewport */}
 			<div className="instruction">Does not autoFoundation until a card is moved.</div>
 			<ManualTestingSettingsContextProvider>
 				<StaticGameContextProvider gamePrint={gamePrint_readyToAutoFoundation}>

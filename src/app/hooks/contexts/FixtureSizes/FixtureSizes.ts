@@ -74,7 +74,6 @@ export function calcFixtureSizes({
 	cascadeCount?: number;
 	fixtureLayout?: FixtureLayout;
 }): FixtureSizes {
-	// BUG (hud) portrait AND homeCount < cascadeCount: we need to increase the gap between cells and foundation
 	if (!boardWidth) boardWidth = DEFAULT_CLIENT_WIDTH;
 	if (!boardHeight) boardHeight = DEFAULT_CLIENT_HEIGHT;
 	const foundationCount = 4;
@@ -123,12 +122,16 @@ export function calcFixtureSizes({
 	//   lr + 4 cards (3 spaces) + gap + 4 cards (3 spaces) + lr = boardWidth
 	//   spaces                                                       +  cards               = boardWidth
 	// ((LR_HOME_MARGIN * 2 + LR_HOME_GAP + LR_HOME_CARD_SPACING_SCALED * 6) + (1 * 8)) * cardWidth = boardWidth
-	const cardWidth =
+	const cardWidthByHome =
 		boardWidth /
 		(LR_HOME_MARGIN_SCALED * 2 +
 			LR_HOME_GAP_SCALED +
 			LR_HOME_CARD_SPACING_SCALED * homeGapCount +
 			homeCount);
+	const cardWidthByTableau =
+		boardWidth /
+		(LR_HOME_MARGIN_SCALED * 2 + LR_TABLEAU_CARD_SPACING_SCALED * cascadeGapCount + cascadeCount);
+	const cardWidth = Math.min(cardWidthByHome, cardWidthByTableau);
 
 	const cardHeight = scale_height(cardWidth);
 
@@ -142,12 +145,13 @@ export function calcFixtureSizes({
 		2;
 
 	const cellLOffset = LR_HOME_MARGIN_SCALED * cardWidth;
+	// right justify foundation, but find the left most edge
 	const foundationLOffset =
+		boardWidth -
 		(LR_HOME_MARGIN_SCALED +
-			LR_HOME_CARD_SPACING_SCALED * (cellCount - 1) +
-			cellCount +
-			LR_HOME_GAP_SCALED) *
-		cardWidth;
+			LR_HOME_CARD_SPACING_SCALED * (foundationCount - 1) +
+			foundationCount) *
+			cardWidth;
 
 	return {
 		boardWidth: toFixed(boardWidth),
