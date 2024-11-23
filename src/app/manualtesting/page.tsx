@@ -15,15 +15,12 @@ const gamePrint_52CardFlourish =
 	' KS 6C AC 5H KD 6D KC KH \n' +
 	' QD AH AD 4S QC 5S QH QS \n' +
 	' JC 3D AS    JH 4H JS JD \n' +
-	' TD    8S    TS 3C TH TC \n' +
-	' 9C          9D 2H 9S 9H \n' +
-	' 8D          8C    8H    \n' +
-	' 7S          7D    7C    \n' +
-	'             6S    6H    \n' +
+	' TD    8S    TS 4C TH TC \n' +
+	' 9C          9D 3H 9S 9H \n' +
+	' 8D          8C 3C 8H 4D \n' +
+	' 7S          7D 2H 7C 3S \n' +
+	'             6S 2S 6H 2D \n' +
 	'             5D    5C    \n' +
-	'             4C    4D    \n' +
-	'             3H    3S    \n' +
-	'             2S    2D    \n' +
 	' move 3a 7H→cell';
 
 /*
@@ -103,7 +100,7 @@ export default function Page() {
 			<div className="instruction">Foundation always renders highest card.</div>
 			<div className="instruction">Visual check DebugCursors.</div>
 
-			{/* FIXME keep refining */}
+			{/* TODO keep refining */}
 			{/*  - include next move, e.g. '3b' */}
 			{/*  - swap out GameBoard - we want separate/simpler controls? */}
 			{/*  - swap out GameBoard - we want to define our own FixtureSizesContext.Provider w/ smaller size */}
@@ -111,7 +108,12 @@ export default function Page() {
 				<StaticGameContextProvider gamePrint={gamePrint_52CardFlourish}>
 					<GameBoard
 						className={styles_gameboard.inline}
-						displayOptions={{ showStatusBar: false, showUndoButton: false, showTextBoard: false }}
+						displayOptions={{
+							showStatusBar: false,
+							showUndoButton: false,
+							showTextBoard: false,
+							fixtureLayout: 'justified',
+						}}
 					/>
 				</StaticGameContextProvider>
 			</ManualTestingSettingsContextProvider>

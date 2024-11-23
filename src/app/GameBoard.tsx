@@ -7,6 +7,7 @@ import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
 import { UndoButton } from '@/app/components/UndoButton';
 import { WinMessage } from '@/app/components/WinMessage';
+import { FixtureLayout } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
 import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 import { useKeybaordArrowControls } from '@/app/hooks/controls/useKeybaordArrowControls';
@@ -18,6 +19,7 @@ interface GameBoardDisplayOptions {
 	showStatusBar?: boolean;
 	showTextBoard?: boolean;
 	showDebugCursors?: boolean;
+	fixtureLayout?: FixtureLayout;
 }
 
 export default function GameBoard({
@@ -34,7 +36,10 @@ export default function GameBoard({
 
 	return (
 		<main ref={gameBoardRef} className={className} onClick={handleNewGameClick}>
-			<FixtureSizesContextProvider gameBoardRef={gameBoardRef}>
+			<FixtureSizesContextProvider
+				gameBoardRef={gameBoardRef}
+				fixtureLayout={displayOptions.fixtureLayout}
+			>
 				<BoardLayout displayOptions={displayOptions} />
 			</FixtureSizesContextProvider>
 		</main>

@@ -10,6 +10,7 @@ import { CardLocation, CardSequence, getRankForCompare, Rank } from '@/app/game/
 //  - it's a layout
 export const DEFAULT_CLIENT_WIDTH = 800;
 export const DEFAULT_CLIENT_HEIGHT = 600;
+export type FixtureLayout = 'wide' | 'justified' | 'auto';
 
 /*
 	Spacing around cards is all in percentages.
@@ -65,11 +66,13 @@ export function calcFixtureSizes({
 	boardHeight,
 	cellCount = 4,
 	cascadeCount = 8,
+	fixtureLayout = 'auto',
 }: {
 	boardWidth?: number;
 	boardHeight?: number;
 	cellCount?: number;
 	cascadeCount?: number;
+	fixtureLayout?: FixtureLayout;
 }): FixtureSizes {
 	if (!boardWidth) boardWidth = DEFAULT_CLIENT_WIDTH;
 	if (!boardHeight) boardHeight = DEFAULT_CLIENT_HEIGHT;
@@ -82,8 +85,14 @@ export function calcFixtureSizes({
 	// wider playing fields need a larger margin
 	// taller playing fields can have a smaller margin
 	let aspectratio = boardWidth / boardHeight;
+
+	// wide layouts try to ensure we can see the card stacks, so we need to balanace the aspect ratio
+	// it's ideally targetting 16:9 or 21:9, so we can just stick with that
+	if (fixtureLayout === 'wide') aspectratio = 2;
+	// justified layouts will fit the width, regardless of height
+	else if (fixtureLayout === 'justified') aspectratio = 0.001;
 	// smooth transition across the +/-, but negative (effectively) doubles it's scale factor
-	if (aspectratio < 1) aspectratio = 1 - (1 - aspectratio) * 2.5;
+	else if (aspectratio < 1) aspectratio = 1 - (1 - aspectratio) * 2.5;
 
 	// less spacing in portait mode, more spacing in landscape
 	const LR_HOME_CARD_SPACING_SCALED =
