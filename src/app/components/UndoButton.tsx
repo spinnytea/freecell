@@ -5,7 +5,7 @@ import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 export function UndoButton() {
 	const [, setGame] = useContext(GameContext);
 
-	function onClick(event: MouseEvent) {
+	function handleClick(event: MouseEvent) {
 		event.stopPropagation();
 		setGame((g) => g.undo());
 	}
@@ -15,7 +15,7 @@ export function UndoButton() {
 			className={styles_gameboard.undoButton}
 			title="Undo"
 			aria-label="Undo previous action"
-			onClick={onClick}
+			onClick={handleClick}
 		>
 			<span className={styles_gameboard.undoButtonText}>⎌</span>
 		</button>
