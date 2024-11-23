@@ -3,16 +3,19 @@ import {
 	calcFixtureSizes,
 	DEFAULT_CLIENT_HEIGHT,
 	DEFAULT_CLIENT_WIDTH,
+	FixtureLayout,
 	FixtureSizes,
-} from '@/app/hooks/FixtureSizes/FixtureSizes';
-import { FixtureSizesContext } from '@/app/hooks/FixtureSizes/FixtureSizesContext';
-import { useGame } from '@/app/hooks/Game/useGame';
+} from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import { FixtureSizesContext } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContext';
+import { useGame } from '@/app/hooks/contexts/Game/useGame';
 
 export function FixtureSizesContextProvider({
 	gameBoardRef,
+	fixtureLayout,
 	children,
 }: Readonly<{
 	gameBoardRef: MutableRefObject<HTMLElement | null>;
+	fixtureLayout?: FixtureLayout;
 	children: ReactNode;
 }>) {
 	const game = useGame();
@@ -31,6 +34,7 @@ export function FixtureSizesContextProvider({
 						boardHeight: screenHeight,
 						cellCount,
 						cascadeCount,
+						fixtureLayout,
 					});
 				}
 				return fs;
@@ -41,7 +45,7 @@ export function FixtureSizesContextProvider({
 		return () => {
 			window.removeEventListener('resize', updateSize);
 		};
-	}, [gameBoardRef, cellCount, cascadeCount]);
+	}, [gameBoardRef, cellCount, cascadeCount, fixtureLayout]);
 
 	// wait until we have an actual value init
 	if (!fixtureSizes) {

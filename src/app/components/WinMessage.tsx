@@ -1,6 +1,6 @@
 import styles_gameboard from '@/app/gameboard.module.css';
-import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
-import { useGame } from '@/app/hooks/Game/useGame';
+import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
+import { useGame } from '@/app/hooks/contexts/Game/useGame';
 
 export function WinMessage() {
 	const { win } = useGame();

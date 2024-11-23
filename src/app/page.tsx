@@ -3,8 +3,9 @@
 import { useGSAP } from '@gsap/react';
 import { gsap, Draggable } from 'gsap/all';
 import GameBoard from '@/app/GameBoard';
-import GameContextProvider from '@/app/hooks/Game/GameContextProvider';
-import { SettingsContextProvider } from '@/app/hooks/Settings/SettingsContextProvider';
+import styles_gameboard from '@/app/gameboard.module.css';
+import GameContextProvider from '@/app/hooks/contexts/Game/GameContextProvider';
+import { SettingsContextProvider } from '@/app/hooks/contexts/Settings/SettingsContextProvider';
 
 gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(Draggable);
@@ -14,7 +15,7 @@ export default function Page() {
 	return (
 		<SettingsContextProvider>
 			<GameContextProvider>
-				<GameBoard />
+				<GameBoard className={styles_gameboard.main} />
 			</GameContextProvider>
 		</SettingsContextProvider>
 	);

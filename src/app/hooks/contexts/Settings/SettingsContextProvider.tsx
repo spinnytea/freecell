@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
-import { calcDefaultSettings, Settings } from '@/app/hooks/Settings/Settings';
-import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
+import { calcDefaultSettings, Settings } from '@/app/hooks/contexts/Settings/Settings';
+import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
 export function SettingsContextProvider({
 	children,

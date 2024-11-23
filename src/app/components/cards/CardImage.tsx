@@ -8,6 +8,7 @@ import {
 import { SmolCards } from '@/app/components/cards/SmolCards';
 import { SVGCards13 } from '@/app/components/cards/SVGCards13';
 import { Rank, Suit } from '@/app/game/card/card';
+import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 
 // TODO (theme) https://cardmeister.github.io/
 //  - https://github.com/cardmeister/cardmeister.github.io/blob/master/elements.cardmeister.full.js
@@ -26,7 +27,9 @@ export function CardImage({
 	suit: Suit;
 	width?: number;
 }>) {
-	const faces: CardFaces = width < CARD_FACE_CUTOFF ? 'SmolCards' : 'SVGCards13';
+	const { cardFace } = useSettings();
+	const faces: CardFaces =
+		cardFace === 'auto' ? (width < CARD_FACE_CUTOFF ? 'SmolCards' : 'SVGCards13') : cardFace;
 	const height = scale_height(width);
 
 	if (hidden) {

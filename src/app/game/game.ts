@@ -430,7 +430,8 @@ export class FreeCell {
 		e.g. select cursor, deselect cursor, move selection
 
 		IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
-		IDEA (controls) click-to-move does not allow selection if !canMove
+		TODO (controls) click-to-move does not allow selection if !canMove
+		 - disable select-to-peek for mouse, ¿but not for keyboard?
 	*/
 	touch(): FreeCell {
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
@@ -712,6 +713,7 @@ export class FreeCell {
 	*/
 	shuffle32(seed?: number): FreeCell {
 		if (seed === undefined) {
+			// TODO (gameplay) (settings) do not allow the impossible #11982?
 			seed = Math.floor(Math.random() * 32000) + 1;
 		}
 
@@ -828,6 +830,7 @@ export class FreeCell {
 
 	  - XXX (techdebt) print is super messy, can we clean this up?
 	  - IDEA (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
+	  - REVIEW (print) why are there two prints? why don't we always include the history after the previousAction?
 	*/
 	print({
 		skipDeck = false,

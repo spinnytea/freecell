@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
 import {
@@ -17,11 +17,10 @@ import {
 	shorthandCard,
 	Suit,
 } from '@/app/game/card/card';
-import { calcTopLeftZ } from '@/app/hooks/FixtureSizes/FixtureSizes';
-import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
-import { GameContext } from '@/app/hooks/Game/GameContext';
-import { useGame } from '@/app/hooks/Game/useGame';
-import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
+import { calcTopLeftZ } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
+import { useGame } from '@/app/hooks/contexts/Game/useGame';
+import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
 
 // IDEA (hud) render cursor like a selection when there is none (then leave that render in place once selected)
 //  - i.e. as the cursor moves:
@@ -147,14 +146,19 @@ export function CardsOnBoard() {
 
 function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; location: CardLocation }) {
 	const cardRef = useRef<HTMLDivElement | null>(null);
+	const game = useGame();
+	const handleClickToMove = useClickToMoveControls(location);
 	const fixtureSizes = useFixtureSizes();
-	const [game, setGame] = useContext(GameContext);
-	const [, setSettings] = useContext(SettingsContext);
-	const { top, left, rotation } = calcTopLeftZ(fixtureSizes, location, game.selection, rank);
+	const { top, left, zIndex, rotation } = calcTopLeftZ(
+		fixtureSizes,
+		location,
+		game.selection,
+		rank
+	);
 
 	useEffect(() => {
 		// set the initial position, once on load
-		gsap.set(cardRef.current, { top, left });
+		gsap.set(cardRef.current, { top, left, zIndex });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -178,18 +182,12 @@ function CardOnBoard({ rank, suit, location }: { rank: Rank; suit: Suit; locatio
 		{ dependencies: [rotation] }
 	);
 
-	function onClick() {
-		// REVIEW (controls) click-to-move
-		setGame((g) => g.setCursor(location).touch().autoMove().autoFoundationAll());
-		setSettings((s) => ({ ...s, showKeyboardCursor: false }));
-	}
-
 	return (
 		<div
 			id={'c' + shorthandCard({ rank, suit })}
 			className={styles_cardsonboard.card}
 			ref={cardRef}
-			onClick={onClick}
+			onClick={handleClickToMove}
 		>
 			<CardImage
 				rank={rank}

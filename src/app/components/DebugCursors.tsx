@@ -5,9 +5,9 @@ import { gsap } from 'gsap/all';
 import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
 import { CardLocation, CardSequence, shorthandPosition } from '@/app/game/card/card';
-import { FixtureSizes, PEEK_DOWN, PEEK_UP } from '@/app/hooks/FixtureSizes/FixtureSizes';
-import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
-import { useGame } from '@/app/hooks/Game/useGame';
+import { FixtureSizes, PEEK_DOWN, PEEK_UP } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
+import { useGame } from '@/app/hooks/contexts/Game/useGame';
 
 const OVERLAY_MARGINS = 4;
 

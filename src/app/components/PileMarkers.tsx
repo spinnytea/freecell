@@ -1,12 +1,10 @@
-import { useContext } from 'react';
 import classNames from 'classnames';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
 import { CardLocation } from '@/app/game/card/card';
-import { FixtureSizes } from '@/app/hooks/FixtureSizes/FixtureSizes';
-import { useFixtureSizes } from '@/app/hooks/FixtureSizes/useFixtureSizes';
-import { GameContext } from '@/app/hooks/Game/GameContext';
-import { useGame } from '@/app/hooks/Game/useGame';
-import { SettingsContext } from '@/app/hooks/Settings/SettingsContext';
+import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
+import { useGame } from '@/app/hooks/contexts/Game/useGame';
+import { useClickTouchControls } from '@/app/hooks/controls/useClickTouchControls';
 
 export function PileMarkers() {
 	const { cursor } = useGame();
@@ -64,14 +62,7 @@ function Pile({
 	cursorPile: boolean;
 	location: CardLocation;
 }) {
-	const [, setGame] = useContext(GameContext);
-	const [, setSettings] = useContext(SettingsContext);
-
-	function onClick() {
-		// REVIEW (controls) if a card is selected, move it to the empty pile
-		setGame((g) => g.setCursor(location).touch().autoFoundationAll());
-		setSettings((s) => ({ ...s, showKeyboardCursor: false }));
-	}
+	const handleClickTouch = useClickTouchControls(location);
 
 	const style = {
 		top: top + 1,
@@ -86,7 +77,7 @@ function Pile({
 				[styles_pilemarkers.cursorPile]: cursorPile,
 			})}
 			style={style}
-			onClick={onClick}
+			onClick={handleClickTouch}
 		/>
 	);
 }

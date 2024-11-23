@@ -30,6 +30,11 @@ TODO (motivation) main development tasks:
   - auto-foundation each card
 - TODO (mobile) icons for bookmarks / save link to home screen (Andriod, iOS)
 - REVIEW (animation) when dealing or auto-foundation, do we "stop at any time" or "skip animation just get to the end state" (is this a setting?)
+- TODO (motivation) animate card flash for use in flourishes and end of game
+  - blue, red, pink, etc
+  - snazzy explosion when you place the last card
+  - based on the image svg so we can do it with any card (king, ace, whatever)
+  - maybe use it for the whole animation for a win when a flourish
 - TODO (animation) failed moves shake
 - REVIEW (animation) finish card move animation before autoFoundationAll starts
 - TODO (drag-and-drop) mouse drag to move - mouse drag-drop target is entire cascade
