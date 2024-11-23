@@ -29,7 +29,7 @@ describe('game.autoFoundation', () => {
 						' 2C 2D 2H 2S             \n' + //
 						' hand-jammed'
 				)
-					.autoFoundationAll({ limit, method })
+					.autoFoundationAll({ limit, method, anytime: true })
 					.print({ skipDeck: true });
 				expect(print.split('\n')[0]).toBe(homeStr);
 			});
@@ -63,7 +63,7 @@ describe('game.autoFoundation', () => {
 						' 2C 2D 2H 6S             \n' + //
 						' hand-jammed'
 				)
-					.autoFoundationAll({ limit, method })
+					.autoFoundationAll({ limit, method, anytime: true })
 					.print({ skipDeck: true });
 				expect(print.split('\n')[0]).toBe(homeStr);
 			});
@@ -84,7 +84,7 @@ describe('game.autoFoundation', () => {
 					'       JC                \n' +
 					' copy-pasta'
 			);
-			expect(game.autoFoundationAll({ limit: 'opp+1' }).print()).toBe(
+			expect(game.autoFoundationAll({ limit: 'opp+1', anytime: true }).print()).toBe(
 				'' +
 					' KS 4D       4C 3D 2S    \n' +
 					' 7D>7S 5C 6S 9D 8C QC AH \n' +
@@ -98,7 +98,7 @@ describe('game.autoFoundation', () => {
 					'       JC                \n' +
 					' auto-foundation 4 3D'
 			);
-			expect(game.autoFoundationAll({ limit: 'opp+2' }).print()).toBe(
+			expect(game.autoFoundationAll({ limit: 'opp+2', anytime: true }).print()).toBe(
 				'' +
 					' KS          4C 4D 2S    \n' +
 					' 7D>7S 5C 6S 9D 8C QC AH \n' +
@@ -130,7 +130,7 @@ describe('game.autoFoundation', () => {
 			test.each(['cell,cascade', 'foundation'] as AutoFoundationMethod[])('%s', (method) => {
 				expect(
 					FreeCell.parse(before)
-						.autoFoundationAll({ limit: 'none', method })
+						.autoFoundationAll({ limit: 'none', method, anytime: true })
 						.print({ skipDeck: true })
 				).toBe(after);
 			});
@@ -179,7 +179,7 @@ describe('game.autoFoundation', () => {
 								' 2C 2D 2H 2S             \n' + //
 								' hand-jammed'
 						)
-							.autoFoundationAll({ limit, method })
+							.autoFoundationAll({ limit, method, anytime: true })
 							.print({ skipDeck: true })
 					).toBe(
 						'' + //

@@ -533,17 +533,24 @@ export class FreeCell {
 	autoFoundationAll({
 		limit = 'opp+1',
 		method = 'foundation',
+		anytime = false,
 	}: {
 		limit?: AutoFoundationLimit;
 		method?: AutoFoundationMethod;
+		anytime?: boolean,
 	} = {}): FreeCell | this {
+		// can only do auto-foundation after a card moves
+		// e.g. we can't auto-foundation just because we select a card
+		if (!anytime && this.previousAction.type !== 'move') {
+			return this;
+		}
+
 		// TODO (techdebt) replace `const game = this.__clone({})` with `return this.__clone({})`
 		let game = this.__clone({
 			action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
 		});
 		const moved: Card[] = [];
 
-		// TODO (techdebt) (bump) don't autoFoundation just _any_ time, only do it after a card moves (check previousAction)
 		// TODO (setting) autoFoundation "only after [any] move" vs "only after move to foundation"
 
 		let didMoveAny = false;
