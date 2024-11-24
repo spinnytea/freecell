@@ -1,10 +1,14 @@
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
-import { WIN_TEXT_ANIMATION_DURATION } from '@/app/animation_constants';
+import { WIN_TEXT_ANIMATION_DURATION, WIN_TEXT_COLOR_DURATION } from '@/app/animation_constants';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
+
+const toHSL = ({ h, s, l }: { h: number; s: number; l: number }) =>
+	`hsl(${h.toFixed(1)}, ${s.toFixed(1)}%, ${l.toFixed(1)}%)`;
+const toGradient = (a: string, b: string) => `linear-gradient(to right, ${a}, ${b})`;
 
 export function WinMessage() {
 	const elementRef = useRef<HTMLDivElement | null>(null);
@@ -14,8 +18,30 @@ export function WinMessage() {
 	useGSAP(
 		() => {
 			if (win) {
+				// TODO (settings) (reduced-motion) - only animate scale (not X, not Y, not color)
 				const prop = gsap.utils.random(['scale', 'scaleX', 'scaleY']);
 				gsap.from(elementRef.current, { [prop]: 0, duration: WIN_TEXT_ANIMATION_DURATION });
+
+				// animate color hue, to white
+				const color = { h: 0, s: 100, l: 44 }; /* #df0000 */
+				const applyColor: gsap.Callback = () => {
+					if (elementRef.current) {
+						elementRef.current.style.background = toGradient(
+							toHSL(color),
+							toHSL({ ...color, h: color.h + 135 })
+						);
+						elementRef.current.style.backgroundClip = 'text';
+					}
+				};
+				gsap.set(elementRef.current, { backgroundClip: 'text', color: 'transparent' });
+				gsap.to(color, { h: 360, onUpdate: applyColor, duration: WIN_TEXT_COLOR_DURATION });
+				gsap.to(color, {
+					s: 0,
+					l: 90,
+					onUpdate: applyColor,
+					ease: 'power3.in',
+					duration: WIN_TEXT_COLOR_DURATION,
+				});
 			}
 		},
 		{ dependencies: [win] }
