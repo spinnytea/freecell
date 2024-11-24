@@ -125,6 +125,17 @@ export default function Page() {
 							<CardImage rank="joker" suit="spades" width={cardWidth} hidden />
 						</div>
 					</ManualTestingSettingsContextProvider>
+					<ol start={3} style={{ display: 'none' }}>
+						{/* TODO (motivation) animate card flash for use in flourishes and end of game */}
+						<li>
+							Shiny ✨
+							<ManualTestingSettingsContextProvider cardFace="SVGCards13">
+								<div>
+									<CardImage rank="king" suit="clubs" width={cardWidth} />
+								</div>
+							</ManualTestingSettingsContextProvider>
+						</li>
+					</ol>
 				</li>
 
 				<li>Background texture scrolls (it&apos;s not fixed in place).</li>
@@ -136,7 +147,7 @@ export default function Page() {
 					{/*  - swap out GameBoard - we want separate/simpler controls? */}
 					{/*  - swap out GameBoard - we don't want keyboard controls to bleed between games */}
 					<ol>
-						<li>Foundation always renders highest card..</li>
+						<li>Foundation always renders highest card.</li>
 						<li>Move 8S for a 52 Card Flourish (e.g. 3b).</li>
 					</ol>
 					<ManualTestingSettingsContextProvider>
