@@ -12,9 +12,14 @@ TODO (motivation) main development tasks:
 1. `(drag-and-drop)` (click-to-move has been working, but sometimes you need to "force" the move you want)
 1. `(settings)` local storage, new button
 
+```
 \b(FIXME|BUG|TODO|XXX|REVIEW|IDEA)\b
 \b(FIXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
 \b(BUG|TODO|XXX|REVIEW|IDEA)\b\s+[^(]
+(bump)
+```
+
+## Top-Level TODOs
 
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO (deployment) portrait vs landscape mode (portait on phone is ssoooooo small)
@@ -78,9 +83,11 @@ TODO (motivation) main development tasks:
 
 ## Technicals
 
-Run the dev server: `npm start` and go to [http://localhost:3000](http://localhost:3000).
+Run the dev server: `npm start` and go to [http://localhost:3000](http://localhost:3000). Use `npm run fix` before commits. Use `npm test`.
 
 Ready to release: `npm run build` and `npm run serve` (prebuild will `cleanup`, `format`, `lint`, and `test`)
+
+Bump the version in package.json. Make and push version tags with `git tag v1.3.2` and `git push origin refs/tags/v1.3.2`.
 
 ## Terms
 
