@@ -1,3 +1,22 @@
+.instructions ol {
+	counter-reset: item;
+}
+.instructions ol li {
+	display: block;
+}
+.instructions ol li:before {
+	content: counters(item, '.') ' ';
+	counter-increment: item;
+}
+
+.instructions > ol > li + li {
+	margin-top: 1em;
+}
+
+.instructions li > *:not(ol) {
+	margin-left: 3ch;
+}
+
 .allplayingcards {
 	display: grid;
 	grid-template-columns: repeat(13, min-content);

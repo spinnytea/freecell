@@ -1003,7 +1003,7 @@ export class FreeCell {
 
 		const getCard = ({ rank, suit }: CardSH) => {
 			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
-			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`); // XXX (print) test with a joker, duplicate card
+			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`); // XXX (print) (joker) test with a joker, duplicate card
 			remaining.splice(remaining.indexOf(card), 1);
 			return card;
 		};

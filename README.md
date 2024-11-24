@@ -63,7 +63,7 @@ TODO (motivation) main development tasks:
 - TODO (deployment) UI render for all options, hidden options, controls (keyboard, keyboard+selection, keyboard hotkeys, mouse click, mouse drag) w/ (settings) to enable/disable
 - TODO (settings) disable "select/peek card" i.e. selecting cards that cannot move
 - TODO (deployment) rules page (SUG)
-- IDEA (gameplay) joker
+- IDEA (joker) add joker to gameplay
   - high - any rank can stack onto them, they cannot be stacked on anything (color-fixed cascade)
   - low - they can stack onto any rank, but nothing can stack onto them (moving dead space)
   - wild - they can stack onto any rank, any rank can stack onto them

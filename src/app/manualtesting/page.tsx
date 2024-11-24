@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import classNames from 'classnames';
 import Link from 'next/link';
 import styles_common from '@/app/common.module.css';
 import { CardImage } from '@/app/components/cards/CardImage';
@@ -64,6 +65,9 @@ const calcCardWidth = (windowInnerWidth = 9999) =>
 	 - if not well defined playing fields to spot check, at least a reminder to play with the screen size
 
 	TODO (controls) each of the control schemes
+
+	TODO (techdebt) Selection is obvious for each of cell, foundation, cascade, deck.
+	TODO (techdebt) Visual check DebugCursors.
 */
 export default function Page() {
 	const [cardWidth, setCardWidth] = useState(() => calcCardWidth());
@@ -82,82 +86,94 @@ export default function Page() {
 	}, []);
 
 	return (
-		<main className={styles_common.main}>
+		<main className={classNames(styles_common.main, styles_manualtesting.instructions)}>
 			<Link href="/">
 				<span>&lt;-</span> Back to game
 			</Link>
-			<div className="instruction">Visual check on all Suit x Rank.</div>
-			<div className="instruction">Visual check on red/black jokers.</div>
-			<ManualTestingSettingsContextProvider cardFace="SVGCards13">
-				<div className={styles_manualtesting.allplayingcards}>
-					{SuitList.map((suit) =>
-						RankList.map((rank) => (
-							<CardImage key={`${rank}-${suit}`} rank={rank} suit={suit} width={cardWidth} />
-						))
-					)}
-					<CardImage rank="joker" suit="clubs" width={cardWidth} />
-					<CardImage rank="joker" suit="diamonds" width={cardWidth} />
-					<CardImage rank="joker" suit="hearts" width={cardWidth} />
-					<CardImage rank="joker" suit="spades" width={cardWidth} />
-					<CardImage rank="joker" suit="spades" width={cardWidth} hidden />
-				</div>
-			</ManualTestingSettingsContextProvider>
-			<ManualTestingSettingsContextProvider cardFace="SmolCards">
-				<div className={styles_manualtesting.allplayingcards}>
-					{SuitList.map((suit) =>
-						RankList.map((rank) => (
-							<CardImage key={`${rank}-${suit}`} rank={rank} suit={suit} width={cardWidth} />
-						))
-					)}
-					<CardImage rank="joker" suit="clubs" width={cardWidth} />
-					<CardImage rank="joker" suit="diamonds" width={cardWidth} />
-					<CardImage rank="joker" suit="hearts" width={cardWidth} />
-					<CardImage rank="joker" suit="spades" width={cardWidth} />
-					<CardImage rank="joker" suit="spades" width={cardWidth} hidden />
-				</div>
-			</ManualTestingSettingsContextProvider>
-			<div className="instruction">Background texture scrolls (it&apos;s not fixed in place).</div>
-			<div className="instruction">
-				Selection is obvious for each of cell, foundation, cascade, deck.
-			</div>
-			<div className="instruction">Foundation always renders highest card.</div>
-			<div className="instruction">Visual check DebugCursors.</div>
+			<ol>
+				<li>
+					Playing Cards
+					<ol>
+						<li>Visual check on all Suit x Rank.</li>
+						<li>Visual check on red/black jokers.</li>
+					</ol>
+					<ManualTestingSettingsContextProvider cardFace="SVGCards13">
+						<div className={styles_manualtesting.allplayingcards}>
+							{SuitList.map((suit) =>
+								RankList.map((rank) => (
+									<CardImage key={`${rank}-${suit}`} rank={rank} suit={suit} width={cardWidth} />
+								))
+							)}
+							<CardImage rank="joker" suit="clubs" width={cardWidth} />
+							<CardImage rank="joker" suit="diamonds" width={cardWidth} />
+							<CardImage rank="joker" suit="hearts" width={cardWidth} />
+							<CardImage rank="joker" suit="spades" width={cardWidth} />
+							<CardImage rank="joker" suit="spades" width={cardWidth} hidden />
+						</div>
+					</ManualTestingSettingsContextProvider>
+					<ManualTestingSettingsContextProvider cardFace="SmolCards">
+						<div className={styles_manualtesting.allplayingcards}>
+							{SuitList.map((suit) =>
+								RankList.map((rank) => (
+									<CardImage key={`${rank}-${suit}`} rank={rank} suit={suit} width={cardWidth} />
+								))
+							)}
+							<CardImage rank="joker" suit="clubs" width={cardWidth} />
+							<CardImage rank="joker" suit="diamonds" width={cardWidth} />
+							<CardImage rank="joker" suit="hearts" width={cardWidth} />
+							<CardImage rank="joker" suit="spades" width={cardWidth} />
+							<CardImage rank="joker" suit="spades" width={cardWidth} hidden />
+						</div>
+					</ManualTestingSettingsContextProvider>
+				</li>
 
-			{/* TODO keep refining */}
-			{/*  - include next move, e.g. '3b' */}
-			{/*  - swap out GameBoard - we want separate/simpler controls? */}
-			{/*  - swap out GameBoard - we want to define our own FixtureSizesContext.Provider w/ smaller size */}
-			<div className="instruction">Move 8S for a 52 Card Flourish (e.g. 3b).</div>
-			<ManualTestingSettingsContextProvider>
-				<StaticGameContextProvider gamePrint={gamePrint_52CardFlourish}>
-					<GameBoard
-						className={styles_gameboard.inline}
-						displayOptions={{
-							showStatusBar: false,
-							showUndoButton: false,
-							showTextBoard: false,
-							fixtureLayout: 'portrait',
-						}}
-					/>
-				</StaticGameContextProvider>
-			</ManualTestingSettingsContextProvider>
+				<li>Background texture scrolls (it&apos;s not fixed in place).</li>
 
-			<hr />
+				<li>
+					Flourish
+					{/* TODO keep refining */}
+					{/*  - include next move, e.g. '3b' */}
+					{/*  - swap out GameBoard - we want separate/simpler controls? */}
+					{/*  - swap out GameBoard - we don't want keyboard controls to bleed between games */}
+					<ol>
+						<li>Foundation always renders highest card..</li>
+						<li>Move 8S for a 52 Card Flourish (e.g. 3b).</li>
+					</ol>
+					<ManualTestingSettingsContextProvider>
+						<StaticGameContextProvider gamePrint={gamePrint_52CardFlourish}>
+							<GameBoard
+								className={styles_gameboard.inline}
+								displayOptions={{
+									showStatusBar: false,
+									showUndoButton: false,
+									showTextBoard: false,
+									fixtureLayout: 'portrait',
+								}}
+							/>
+						</StaticGameContextProvider>
+					</ManualTestingSettingsContextProvider>
+				</li>
 
-			<div className="instruction">Does not autoFoundation until a card is moved.</div>
-			<ManualTestingSettingsContextProvider>
-				<StaticGameContextProvider gamePrint={gamePrint_readyToAutoFoundation}>
-					<GameBoard
-						className={styles_gameboard.inline}
-						displayOptions={{
-							showStatusBar: false,
-							showUndoButton: false,
-							showTextBoard: false,
-							fixtureLayout: 'portrait',
-						}}
-					/>
-				</StaticGameContextProvider>
-			</ManualTestingSettingsContextProvider>
+				<li>
+					Does not autoFoundation until a card is moved.
+					<ManualTestingSettingsContextProvider>
+						<StaticGameContextProvider gamePrint={gamePrint_readyToAutoFoundation}>
+							<GameBoard
+								className={styles_gameboard.inline}
+								displayOptions={{
+									showStatusBar: false,
+									showUndoButton: false,
+									showTextBoard: false,
+									fixtureLayout: 'portrait',
+								}}
+							/>
+						</StaticGameContextProvider>
+					</ManualTestingSettingsContextProvider>
+				</li>
+			</ol>
+			<Link href="/">
+				<span>&lt;-</span> Back to game
+			</Link>
 		</main>
 	);
 }
