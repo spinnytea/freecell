@@ -21,3 +21,5 @@ export const SELECT_ROTATION_DURATION = 0.1;
 	when it jumps across the screen
 */
 export const CURSOR_TRANSLATE_DURATION = 1 / 16;
+
+export const WIN_TEXT_ANIMATION_DURATION = 0.5;

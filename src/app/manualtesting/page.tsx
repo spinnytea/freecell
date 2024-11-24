@@ -148,6 +148,7 @@ export default function Page() {
 					{/*  - swap out GameBoard - we don't want keyboard controls to bleed between games */}
 					<ol>
 						<li>Foundation always renders highest card.</li>
+						<li>Win animation.</li>
 						<li>Move 8S for a 52 Card Flourish (e.g. 3b).</li>
 					</ol>
 					<ManualTestingSettingsContextProvider>
