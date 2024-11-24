@@ -536,13 +536,19 @@ describe('game.undo (+ history)', () => {
 					// undo each move as we play
 					getMoves(seed, { cellCount, cascadeCount }).forEach((move) => {
 						const prevState = game.print({ includeHistory: true });
+						const prevAction = game.previousAction;
+						// TODO (techdebt) detect last cursor position, so we don't need to normalize the cursor
+						// const prevStateNH = game.print({ includeHistory: false });
 
 						game = game.moveByShorthand(move);
 						expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
 
 						// undo a in a different "branch" so we can keep marking forward
 						const afterUndo = game.undo();
+						expect(afterUndo.previousAction).toEqual(prevAction);
 						expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
+						// TODO (techdebt) detect last cursor position, so we don't need to normalize the cursor
+						// expect(afterUndo.print({ includeHistory: false })).toBe(prevStateNH);
 					});
 					expect(game.win).toBe(true);
 					const movesSeed = parseMovesFromHistory(game.history);

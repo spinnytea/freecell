@@ -496,6 +496,13 @@ export class FreeCell {
 		const action = parsePreviousActionType(history.pop() ?? 'init partial');
 		const game = this.__clone({ action, history, cards });
 
+		// moveByShorthand collapses move and auto-foundation into one action text
+		// XXX (techdebt) playing the game normally does not do this
+		if (game.previousAction.type === 'auto-foundation') {
+			game.previousAction.text = `${game.history[game.history.length - 2]} (${game.previousAction.text})`;
+			game.previousAction.type = 'move';
+		}
+
 		// special case: moveByShorthand: move 6c 2C→cell (auto-foundation 66c AC,AS,2C)
 		// REVIEW (techdebt) should this be a different PreviousActionType?
 		if (MOVE_AUTO_F_CHECK_REGEX.test(this.previousAction.text)) return game.undo();
@@ -956,11 +963,14 @@ export class FreeCell {
 			if (movesSeed) {
 				// REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
 				// REVIEW (history) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
+				str += '\n ' + this.previousAction.text;
 				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 				while (movesSeed.moves.length) {
 					str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
 				}
 			} else {
+				// if we don't know where we started, and therefore can't print a short list
+				// we can still print out all the actions we do know about
 				this.history
 					.slice(0)
 					.reverse()

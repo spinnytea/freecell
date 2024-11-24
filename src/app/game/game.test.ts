@@ -407,6 +407,7 @@ describe('game', () => {
 					' 5S QH 8C 9D KS QD 4H AC \n' +
 					' 2H TC TH 6D 6H 6C QC JS \n' +
 					' 9S AD 7C TS             \n' +
+					' deal all cards\n' +
 					':h shuffle32 5'
 			);
 
@@ -470,6 +471,7 @@ describe('game', () => {
 					' 9S    7C TS JS    JH    \n' +
 					'       6H          TC    \n' +
 					'                   9H    \n' +
+					' move 67 9H→TC\n' +
 					':h shuffle32 5\n' +
 					' 53 6a 65 67 85 a8 68 27 \n' +
 					' 67 '
@@ -551,6 +553,7 @@ describe('game', () => {
 					'       7C TS JS    JH    \n' +
 					'       6H    TD    TC    \n' +
 					'       5S    9S    9H    \n' +
+					' move 86 7D-6C-5H→cascade\n' +
 					':h shuffle32 5\n' +
 					' 53 6a 65 67 85 a8 68 27 \n' +
 					' 67 1a 1b 13 15 a5 1a 1c \n' +
@@ -639,6 +642,7 @@ describe('game', () => {
 					'             7S    7H    \n' +
 					'             6D          \n' +
 					'             5C          \n' +
+					' move 48 QS→KH\n' +
 					':h shuffle32 5\n' +
 					' 53 6a 65 67 85 a8 68 27 \n' +
 					' 67 1a 1b 13 15 a5 1a 1c \n' +
@@ -709,6 +713,7 @@ describe('game', () => {
 					'             7S          \n' +
 					'             6D          \n' +
 					'             5C          \n' +
+					' move b8 5D→6S\n' +
 					':h shuffle32 5\n' +
 					' 53 6a 65 67 85 a8 68 27 \n' +
 					' 67 1a 1b 13 15 a5 1a 1c \n' +
@@ -788,6 +793,7 @@ describe('game', () => {
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
+					' move 56 KD→cascade (auto-foundation 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)\n' +
 					':h shuffle32 5\n' +
 					' 53 6a 65 67 85 a8 68 27 \n' +
 					' 67 1a 1b 13 15 a5 1a 1c \n' +
