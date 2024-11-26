@@ -46,6 +46,12 @@ export class FreeCell {
 	cards: Card[];
 	readonly win: boolean;
 
+	// REVIEW (techdebt) is this the best way to check? do we need it for other things?
+	get winIsFloursh(): boolean {
+		if (!this.win) return false;
+		return this.previousAction.text.includes('flourish');
+	}
+
 	// structure to make the logic easier
 	// REVIEW (motivation) consider: preferred foundation suits? (HSDC) - render these?
 	deck: Card[];

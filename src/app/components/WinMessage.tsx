@@ -12,7 +12,7 @@ const toGradient = (a: string, b: string) => `linear-gradient(to right, ${a}, ${
 
 export function WinMessage() {
 	const elementRef = useRef<HTMLDivElement | null>(null);
-	const { win } = useGame();
+	const { win, winIsFloursh } = useGame();
 	const fixtureSizes = useFixtureSizes();
 
 	useGSAP(
@@ -22,29 +22,31 @@ export function WinMessage() {
 				const prop = gsap.utils.random(['scale', 'scaleX', 'scaleY']);
 				gsap.from(elementRef.current, { [prop]: 0, duration: WIN_TEXT_ANIMATION_DURATION });
 
-				// animate color hue, to white
-				const color = { h: 0, s: 100, l: 44 }; /* #df0000 */
-				const applyColor: gsap.Callback = () => {
-					if (elementRef.current) {
-						elementRef.current.style.background = toGradient(
-							toHSL(color),
-							toHSL({ ...color, h: color.h + 135 })
-						);
-						elementRef.current.style.backgroundClip = 'text';
-					}
-				};
-				gsap.set(elementRef.current, { backgroundClip: 'text', color: 'transparent' });
-				gsap.to(color, { h: 360, onUpdate: applyColor, duration: WIN_TEXT_COLOR_DURATION });
-				gsap.to(color, {
-					s: 0,
-					l: 90,
-					onUpdate: applyColor,
-					ease: 'power3.in',
-					duration: WIN_TEXT_COLOR_DURATION,
-				});
+				if (winIsFloursh) {
+					// animate color hue, to white
+					const color = { h: 0, s: 100, l: 44 }; /* #df0000 */
+					const applyColor: gsap.Callback = () => {
+						if (elementRef.current) {
+							elementRef.current.style.background = toGradient(
+								toHSL(color),
+								toHSL({ ...color, h: color.h + 135 })
+							);
+							elementRef.current.style.backgroundClip = 'text';
+						}
+					};
+					gsap.set(elementRef.current, { backgroundClip: 'text', color: 'transparent' });
+					gsap.to(color, { h: 360, onUpdate: applyColor, duration: WIN_TEXT_COLOR_DURATION });
+					gsap.to(color, {
+						s: 0,
+						l: 90,
+						onUpdate: applyColor,
+						ease: 'power3.in',
+						duration: WIN_TEXT_COLOR_DURATION,
+					});
+				}
 			}
 		},
-		{ dependencies: [win] }
+		{ dependencies: [win, winIsFloursh] }
 	);
 
 	if (!win) return null;
