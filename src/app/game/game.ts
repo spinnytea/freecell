@@ -437,7 +437,9 @@ export class FreeCell {
 
 		IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
 		TODO (controls) click-to-move does not allow selection if !canMove
-		 - disable select-to-peek for mouse, ¿but not for keyboard?
+		 - disable select-to-peek for mouse, but still allow it for keyboard
+		TOOD (controls) (2-priority) make it easier to re-select when move is invalid
+		 - OR disable select-to-peek for mouse
 	*/
 	touch(): FreeCell {
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
@@ -481,13 +483,13 @@ export class FreeCell {
 			});
 		}
 
-		// TODO (animation) animate invalid move
+		// TODO (animation) (3-priority) animate invalid move
 		return this.__clone({ action: { text: 'invalid ' + actionText, type: 'invalid' } });
 	}
 
 	/**
 		go back one move
-		(or two if using moveByShorthand)
+		XXX (combine-move-auto-foundation) (or two if using moveByShorthand)
 	*/
 	undo(): FreeCell | this {
 		const history = this.history.slice(0);
@@ -502,7 +504,7 @@ export class FreeCell {
 		const action = parsePreviousActionType(history.pop() ?? 'init partial');
 		const game = this.__clone({ action, history, cards });
 
-		// moveByShorthand collapses move and auto-foundation into one action text
+		// XXX (combine-move-auto-foundation) moveByShorthand collapses move and auto-foundation into one action text
 		// XXX (techdebt) playing the game normally does not do this
 		if (game.previousAction.type === 'auto-foundation') {
 			game.previousAction.text = `${game.history[game.history.length - 2]} (${game.previousAction.text})`;
@@ -516,7 +518,11 @@ export class FreeCell {
 		return game;
 	}
 
-	/** Used replaying a game, starting with a seed or otherwise known deal. */
+	/**
+		Used replaying a game, starting with a seed or otherwise known deal.
+
+		it's really just "touch the first one" then "touch the second one"
+	*/
 	moveByShorthand(
 		shorthandMove: string,
 		{ autoFoundation = true }: { autoFoundation?: boolean } = {}
@@ -526,6 +532,7 @@ export class FreeCell {
 		// select from, move to
 		let game = this.setCursor(from).touch().setCursor(to).touch();
 
+		// TODO (combine-move-auto-foundation) make this a standard part of touch
 		if (autoFoundation) {
 			const actionText = game.previousAction.text;
 			game = game.autoFoundationAll();

@@ -87,3 +87,87 @@ exports[`FixtureSizes basic 1`] = `
   },
 }
 `;
+
+exports[`FixtureSizes landscape 1`] = `
+{
+  "boardHeight": 600,
+  "boardWidth": 800,
+  "cardHeight": 69,
+  "cardWidth": 48,
+  "deck": {
+    "left": 96,
+    "top": 517.2,
+  },
+  "home": {
+    "cellLeft": [
+      96,
+      160,
+      224,
+      288,
+    ],
+    "foundationLeft": [
+      464,
+      528,
+      592,
+      656,
+    ],
+    "top": 13.8,
+  },
+  "tableau": {
+    "cascadeLeft": [
+      160,
+      221.714,
+      283.429,
+      345.143,
+      406.857,
+      468.571,
+      530.286,
+      592,
+    ],
+    "offsetTop": 20.7,
+    "top": 103.5,
+  },
+}
+`;
+
+exports[`FixtureSizes portait 1`] = `
+{
+  "boardHeight": 600,
+  "boardWidth": 800,
+  "cardHeight": 122,
+  "cardWidth": 84.211,
+  "deck": {
+    "left": 14.035,
+    "top": 453.6,
+  },
+  "home": {
+    "cellLeft": [
+      14.035,
+      105.263,
+      196.491,
+      287.719,
+    ],
+    "foundationLeft": [
+      428.07,
+      519.298,
+      610.526,
+      701.754,
+    ],
+    "top": 24.4,
+  },
+  "tableau": {
+    "cascadeLeft": [
+      14.035,
+      112.281,
+      210.526,
+      308.772,
+      407.018,
+      505.263,
+      603.509,
+      701.754,
+    ],
+    "offsetTop": 24.4,
+    "top": 183,
+  },
+}
+`;

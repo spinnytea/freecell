@@ -1,4 +1,5 @@
 import { MutableRefObject, useRef } from 'react';
+import classNames from 'classnames';
 import { CardsOnBoard } from '@/app/components/CardsOnBoard';
 import { DebugCursors } from '@/app/components/DebugCursors';
 import { KeyboardCursor } from '@/app/components/KeyboardCursor';
@@ -7,6 +8,7 @@ import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
 import { UndoButton } from '@/app/components/UndoButton';
 import { WinMessage } from '@/app/components/WinMessage';
+import styles_gameboard from '@/app/gameboard.module.css';
 import { FixtureLayout } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
 import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
@@ -49,7 +51,11 @@ export default function GameBoard({
 	if (!gameBoardIdRef.current) gameBoardIdRef.current = nextUid.next().value;
 
 	return (
-		<main ref={gameBoardRef} className={className} onClick={handleNewGameClick}>
+		<main
+			ref={gameBoardRef}
+			className={classNames(className, styles_gameboard.common)}
+			onClick={handleNewGameClick}
+		>
 			<FixtureSizesContextProvider
 				gameBoardRef={gameBoardRef}
 				fixtureLayout={displayOptions.fixtureLayout}

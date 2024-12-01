@@ -37,6 +37,10 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 
 	useGSAP(
 		() => {
+			// TODO (combine-move-auto-foundation) animate move and auto-foundation in two parts
+			//  - if we can parse the action text and all the diffed cards are the same
+			//  - timelines!
+			//  - if the parse or cards differ, then just animate them in one-shot
 			const timeline = gsap.timeline();
 
 			setTLs((previousTLs) => {
@@ -96,7 +100,7 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 					//  - no matter what tricks we apply, the auto-foundation animation will _always_ be wrong if we do not finish the previous animation first
 					//  - animate((g) => g.touch()).animate((g) => g.autoFoundation())
 					// REVIEW (animation) dynamic overlap? start of slow and then speed up, / accelerate
-					// IDEA (animation) different animations for "auto-foundation" vs "flourish" (can just check previousAction.type)
+					// IDEA (motivation) (animation) different animations for "auto-foundation" vs "win" vs "flourish" (can just check previousAction.type)
 					// IDEA (animation) auto-foundation win needs more drama than just "do the same thing"
 					// IDEA (animation) flourish: first card goes up. then second card goes up. then third card overlaps abit ... second-to-last AND last go up at the same time
 					updateCardPositions

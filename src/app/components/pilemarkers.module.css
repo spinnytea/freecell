@@ -6,6 +6,8 @@
 	border-radius: var(--pile-border-radius);
 }
 
+/* TODO (hud) (2-priority) piles don't need the focus style for mouse, only for keyboard */
+/* TODO (optimize) two sets of styles, one for mouse one for keyboard? */
 .pile:hover,
 .pile:focus,
 .cursorPile {

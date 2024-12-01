@@ -16,11 +16,23 @@ TODO (motivation) main development tasks:
 \b(FIXME|BUG|TODO|XXX|REVIEW|IDEA)\b
 \b(FIXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
 \b(BUG|TODO|XXX|REVIEW|IDEA)\b\s+[^(]
-(bump)
+\((\d+)-priority\)
 ```
 
 ## Top-Level TODOs
 
+- TODO (combine-move-auto-foundation) (4-priority) combine move and auto foundation into one action
+  - during `game.touch`, always call `game.autoFoundationAll` by default (make flags to disable or whatever)
+  - keep the action text like in `game.moveByShorthand`
+  - it's not a single action, verify undo
+  - animate it in two parts
+  - remove auto-foundation, it's a type of move
+- TODO (more-undo) (4-priority) undo all the back to start
+  - new games can start with a shuffle, so we don't need to click through that (unit test it / unit test history)
+  - undo before deal
+  - undo before shuffle
+  - touch deck to shuffle
+  - animate shuffle
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO (deployment) portrait vs landscape mode (portait on phone is ssoooooo small)
 - TODO (motivation) movement needs to be fun, animations are important, every time a card moves, it must not jump
@@ -52,7 +64,8 @@ TODO (motivation) main development tasks:
   - Same with a list for solvable 1-cell games
 - TODO (settings) once move history is in game.print, save completed games to local storage and/or print to console (this way we can "recover" the last one after we finish, if we accidentally start a new one before we can snapshot it / archive it) - we only need the one for this
 - TODO (gameplay) new game button (esp before saving current game to local storage to persist across page reloads)
-- TODO (settings) store current game so it survives page refresh
+- TODO (settings) (2-priority) store current game so it survives page refresh
+  - i keep hitting the "back" button on accident (swip from size of screen)
 - IDEA (settings) option to dis/enable auto-foundation until all cascades are in order (all are a single sequence, or all are ascending)
 - IDEA (animation) auto-foundation gets faster the longer it runs
 - TODO (animation) (gameplay) can move cards during auto-foundation, stops when it gets to a card the user has moved (currently stops if the user has selected a card)

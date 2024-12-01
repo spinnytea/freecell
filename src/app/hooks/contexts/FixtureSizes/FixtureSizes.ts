@@ -102,11 +102,11 @@ export function calcFixtureSizes({
 	// otherwise scale up or down
 	const LR_HOME_MARGIN_SCALED = Math.max(_LR_HOME_CARD_SPACING, _LR_HOME_MARGIN * aspectratio);
 
-	// leave at least one space for the deck (…but don't actually put it there, the deal looks lame)
+	// leave at least ~~one~~ half space for the deck (…but don't actually put it there, the deal looks lame)
 	// leave at most 2 card widths
 	// otherwise, scale down the gap with the aspect ratio
 	const LR_HOME_GAP_SCALED = Math.max(
-		1 + LR_HOME_CARD_SPACING_SCALED * 2,
+		0.5 + LR_HOME_CARD_SPACING_SCALED * 2,
 		Math.min(_LR_HOME_GAP * aspectratio, 2 + LR_HOME_CARD_SPACING_SCALED * 2)
 	);
 

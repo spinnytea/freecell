@@ -5,6 +5,14 @@ describe('FixtureSizes', () => {
 		expect(calcFixtureSizes({})).toMatchSnapshot();
 	});
 
+	test('portait', () => {
+		expect(calcFixtureSizes({ fixtureLayout: 'portrait' })).toMatchSnapshot();
+	});
+
+	test('landscape', () => {
+		expect(calcFixtureSizes({ fixtureLayout: 'landscape' })).toMatchSnapshot();
+	});
+
 	test('adjust counts', () => {
 		expect(calcFixtureSizes({ cellCount: 6, cascadeCount: 10 })).toMatchSnapshot();
 	});

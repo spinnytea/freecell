@@ -2,6 +2,9 @@ import Image from 'next/image';
 import { ASSET_FOLDER } from '@/app/components/cards/constants';
 
 // TODO (theme) alternate card backs?
+// TODO (hud) (2-priority) Airplane mode: no deck?
+// - Does it check for it every time?
+// - Do we need to place an invisible one / off screen so it's always loaded?
 export function CardBack({
 	width,
 	height,

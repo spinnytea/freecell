@@ -16,6 +16,7 @@ export function useNewGameClick() {
 			setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 		} else if (game.deck.length) {
 			// click to deal
+			// TODO (more-undo) shuffle if no seed
 			setGame((g) => g.dealAll());
 			setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 		}

@@ -11,13 +11,16 @@ function undoUntilStart(game: FreeCell): FreeCell {
 	return game;
 }
 
-// TODO (techdebt) (history) unit test history
+// TODO (techdebt) (history) (5-priority) unit test history
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
+		// TODO (more-undo) init does not undo
 		test.todo('init');
 
+		// TODO (more-undo) undo before shuffle for a new seed
 		test.todo('shuffle');
 
+		// TODO (more-undo) undo before deal
 		test.todo('deal');
 
 		// history does not keep track of the cursor
@@ -421,7 +424,7 @@ describe('game.undo (+ history)', () => {
 		test.todo('if we reach a move it cannot undo, it should not break');
 	});
 
-	// TODO (optimize) collapse history
+	// TODO (optimize) (3-priority) collapse history
 	describe('collapse history', () => {
 		// i.e. click-to-move picked the wrong place, so i need to move it again to the right one
 		// i.e. dithering on a single card doesn't increase history length

@@ -19,6 +19,25 @@ import { FreeCell } from '@/app/game/game';
 
 export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
 export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cascade:sequence';
+// IDEA (controls) only single -> foundation if opp+2 or no other option
+//  - put it last in the list, or IFF do it first
+// IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
+/*
+TODO (controls) (3-priority) Can't put the three in the foundation
+ 9C KC 8S 4D AC 2H 2D
+ AS KD 2C 7C 6S 7D 9H JC
+ 3H QC 7H 6H 5D TC TH 3C
+ 8H JD QH    4S TD 9S JS
+ KH TS 2S          8D 5S
+ QS 9D QD          7S KS
+    8C JH          6D
+       6C          5C
+       5H          4H
+      >4C          3S
+       3D
+ move 53 3D→4C
+*/
+
 export const MoveDestinationTypePriorities: {
 	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
 } = {

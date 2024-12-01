@@ -1,3 +1,7 @@
+.common > *:not(pre) {
+	user-select: none;
+}
+
 .main {
 	position: fixed;
 	top: 0;
@@ -9,6 +13,7 @@
 .inline {
 	position: relative;
 	width: 400px;
+	max-width: calc(100vw - 6ch);
 	height: 300px;
 	border: 1px solid rgba(var(--pile-border-rgb), 0.5);
 	border-radius: var(--pile-border-radius);

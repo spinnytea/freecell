@@ -19,7 +19,8 @@ export type PreviousActionType =
 	| 'select'
 	| 'deselect'
 	| 'move'
-	| 'auto-foundation'
+	| 'auto-foundation' // TODO (combine-move-auto-foundation) when we collapse them, use auto-foundation as the resulting type
+	// | 'flourish' // TODO (combine-move-auto-foundation) add flourish as a move type ;)
 	| 'invalid'
 	| 'auto-foundation-tween';
 
@@ -39,8 +40,11 @@ export interface PreviousAction {
 	type: PreviousActionType;
 }
 
+// REVIEW (combine-move-auto-foundation) do we still need this?
 const MOVE_REGEX = /^move (\w)(\w) (.*)→(.*)$/;
+// REVIEW (combine-move-auto-foundation) do we still need this?
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (.+)$/;
+// REVIEW (combine-move-auto-foundation) do we still need this?
 export const MOVE_AUTO_F_CHECK_REGEX = /^move .* \((auto-foundation|flourish) .*\)$/;
 
 /**
