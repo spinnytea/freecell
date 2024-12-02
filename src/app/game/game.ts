@@ -852,12 +852,14 @@ export class FreeCell {
 		 - current cursor (keyboard)
 		 - current selection (helps debug peek, needed for canMove)
 
-		we do not print the "available moves", that's important for good gameplay
-		(and this print function is complicated enough, we don't want more complexity just for a debug visualization)
+		you can use this to play the game from a text-only interface (e.g. console) if you like
+
+		by default, we do not print the history (complete set of previous actions); we only print the previous move to help confirm your actions
+
+		by default, we do not print the "available moves", that's important for good gameplay
 
 	  - XXX (techdebt) print is super messy, can we clean this up?
-	  - IDEA (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
-	  - REVIEW (print) why are there two prints? why don't we always include the history after the previousAction?
+	  - TODO (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
 	*/
 	print({
 		skipDeck = false,
@@ -938,8 +940,8 @@ export class FreeCell {
 			}
 		}
 
-		// REVIEW (print) can we get rid of `d:` prefix (bcuz parse)
-		// REVIEW (print) should we use `:d` prefix instead?
+		// FIXME (print) can we get rid of `d:` prefix (bcuz parse)
+		// FIXME (print) should we use `:d` prefix instead?
 		if (this.deck.length && !skipDeck) {
 			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
 				// prettier-ignore
@@ -974,15 +976,15 @@ export class FreeCell {
 		if (includeHistory) {
 			const movesSeed = parseMovesFromHistory(this.history);
 			if (movesSeed) {
-				// REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
-				// REVIEW (history) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
+				// BUG (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
+				// REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
 				str += '\n ' + this.previousAction.text;
 				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 				while (movesSeed.moves.length) {
 					str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
 				}
 			} else {
-				// if we don't know where we started, and therefore can't print a short list
+				// if we don't know where we started or shorthand is otherwise invalid,
 				// we can still print out all the actions we do know about
 				this.history
 					.slice(0)
@@ -1044,7 +1046,7 @@ export class FreeCell {
 			return getCard(rs);
 		};
 
-		// TODO (print) test if first line isn't present
+		// TODO (print) (techdebt) test if first line isn't present
 		line = nextLine();
 
 		// parse cells
@@ -1079,7 +1081,7 @@ export class FreeCell {
 
 		// parse cascades
 		let row = 0;
-		// TODO (print) test if first line isn't present
+		// TODO (print) (techdebt) test if first line isn't present
 		line = nextLine();
 		const cascadeLineLength = line.length;
 		const cascadeCount = (cascadeLineLength - 1) / 3;
@@ -1090,7 +1092,6 @@ export class FreeCell {
 		}
 
 		while (line.length === cascadeLineLength && line[0] !== ':') {
-			// TODO (print) come up with a better metric than 25 (actions can be 25 chars, decks could be too)
 			for (let i = 0; i < cascadeCount; i++) {
 				const card = nextCard(tableau_spaces);
 				if (card) {
@@ -1098,7 +1099,7 @@ export class FreeCell {
 				}
 			}
 			row++;
-			// TODO (print) test if line isn't present
+			// TODO (print) (techdebt) test if line isn't present
 			tableau_spaces.push(line.pop());
 			line = nextLine();
 		}
@@ -1148,22 +1149,22 @@ export class FreeCell {
 		if (parseHistory) {
 			const peek = lines.pop();
 			if (!peek) {
-				// TODO (parse-history) test
+				// FIXME (parse-history) test
 				if (parsePreviousActionType(actionText).type === 'init') {
 					history.push(actionText);
 				} else {
 					throw new Error('must have at least 1 cursor');
 				}
 			} else if (peek.startsWith(':h')) {
-				// TODO (parse-history) parse move history
+				// FIXME (parse-history) parse move history
 				//  - we can init the game, and replay forwards to recover the full history
 				//  - confirm that the states are the same at the end
 				throw new Error('not implemented yet');
-				// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
+				// FIXME (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
 				//  - :h -> play forwards
 				//  - (we have the moves, but not the auto-foundation)
 				//  - text -> play backwards, then forwards (heeey, parsePreviousActionText, not parseAndUndo)
-				// TODO (parse-history) play a game backward and forewards using move history
+				// FIXME (parse-history) play a game backward and forewards using move history
 				// expect(
 				// 	FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 				// ).toBe(game.print({ includeHistory: true }));
@@ -1174,7 +1175,7 @@ export class FreeCell {
 				);
 				history.push(peek.trim());
 				history.push(actionText);
-				// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
+				// FIXME (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
 				//  - text we can use what history is valid; ['init partial history', ..., actionText]
 			}
 		} else {

@@ -498,7 +498,7 @@ describe('game.undo (+ history)', () => {
 		expect(parsed.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 		expect(parsed.history).toEqual(game.history);
 
-		// TODO (techdebt) detect last cursor position, so we don't need to normalize the cursor
+		// FIXME (techdebt) detect last cursor position, so we don't need to normalize the cursor
 		game = game.setCursor({ fixture: 'cell', data: [0] });
 		parsed = parsed.setCursor({ fixture: 'cell', data: [0] });
 		expect(parsed).toEqual(game);
@@ -540,7 +540,7 @@ describe('game.undo (+ history)', () => {
 					getMoves(seed, { cellCount, cascadeCount }).forEach((move) => {
 						const prevState = game.print({ includeHistory: true });
 						const prevAction = game.previousAction;
-						// TODO (techdebt) detect last cursor position, so we don't need to normalize the cursor
+						// FIXME (techdebt) detect last cursor position, so we don't need to normalize the cursor
 						// const prevStateNH = game.print({ includeHistory: false });
 
 						game = game.moveByShorthand(move);
@@ -550,7 +550,7 @@ describe('game.undo (+ history)', () => {
 						const afterUndo = game.undo();
 						expect(afterUndo.previousAction).toEqual(prevAction);
 						expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
-						// TODO (techdebt) detect last cursor position, so we don't need to normalize the cursor
+						// FIXME (techdebt) detect last cursor position, so we don't need to normalize the cursor
 						// expect(afterUndo.print({ includeHistory: false })).toBe(prevStateNH);
 					});
 					expect(game.win).toBe(true);
@@ -563,7 +563,7 @@ describe('game.undo (+ history)', () => {
 					let newGame = new FreeCell({ cellCount, cascadeCount }).shuffle32(seed).dealAll();
 					expect(game.cards).toEqual(newGame.cards);
 
-					// TODO (techdebt) detect last cursor position, so we don't need to normalize the cursor
+					// FIXME (techdebt) detect last cursor position, so we don't need to normalize the cursor
 					game = game.setCursor({ fixture: 'cell', data: [0] });
 					newGame = newGame.setCursor({ fixture: 'cell', data: [0] });
 					expect(newGame).toEqual(game);
