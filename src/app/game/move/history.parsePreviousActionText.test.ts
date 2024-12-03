@@ -8,13 +8,15 @@ import {
 describe('game/history.parsePreviousActionType', () => {
 	describe('specific cases', () => {
 		test.each`
-			text                                    | previousAction                                                  | cursor
+			actionText                              | previousAction                                                  | cursor
 			${'init'}                               | ${{ text: 'init', type: 'init' }}                               | ${undefined}
 			${'shuffle deck (0)'}                   | ${{ text: 'shuffle deck (0)', type: 'shuffle' }}                | ${undefined}
 			${'deal all cards'}                     | ${{ text: 'deal all cards', type: 'deal' }}                     | ${undefined}
 			${'deal most cards'}                    | ${{ text: 'deal most cards', type: 'deal' }}                    | ${undefined}
 			${'cursor set'}                         | ${{ text: 'cursor set', type: 'cursor' }}                       | ${undefined}
+			${'select 6D'}                          | ${{ text: 'select 6D', type: 'select' }}                        | ${undefined}
 			${'select 8 7D'}                        | ${{ text: 'select 8 7D', type: 'select' }}                      | ${undefined}
+			${'select 4D-3S-2D'}                    | ${{ text: 'select 4D-3S-2D', type: 'select' }}                  | ${undefined}
 			${'deselect KS'}                        | ${{ text: 'deselect KS', type: 'deselect' }}                    | ${undefined}
 			${'deselect 6 2C'}                      | ${{ text: 'deselect 6 2C', type: 'deselect' }}                  | ${undefined}
 			${'deselect 4D-3S-2D'}                  | ${{ text: 'deselect 4D-3S-2D', type: 'deselect' }}              | ${undefined}
@@ -28,18 +30,18 @@ describe('game/history.parsePreviousActionType', () => {
 			${'move 53 6H→7C (auto-foundation AD)'} | ${{ text: 'move 53 6H→7C (auto-foundation AD)', type: 'move' }} | ${{ fixture: 'cascade', data: [2, 99] }}
 			${'invalid move 86 7D→9C'}              | ${{ text: 'invalid move 86 7D→9C', type: 'invalid' }}           | ${undefined}
 		`(
-			'$text',
+			'$actionText',
 			({
-				text,
+				actionText,
 				previousAction,
 				cursor,
 			}: {
-				text: string;
+				actionText: string;
 				previousAction: PreviousAction;
 				cursor: CardLocation | undefined;
 			}) => {
-				expect(parsePreviousActionType(text)).toEqual(previousAction);
-				expect(parseCursorFromPreviousActionText(text)).toEqual(cursor);
+				expect(parsePreviousActionType(actionText)).toEqual(previousAction);
+				expect(parseCursorFromPreviousActionText(actionText)).toEqual(cursor);
 			}
 		);
 	});

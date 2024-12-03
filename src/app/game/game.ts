@@ -437,11 +437,11 @@ export class FreeCell {
 
 		e.g. select cursor, deselect cursor, move selection
 
-		IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
-		TODO (controls) click-to-move does not allow selection if !canMove
-		 - disable select-to-peek for mouse, but still allow it for keyboard
-		TOOD (controls) (2-priority) make it easier to re-select when move is invalid
-		 - OR disable select-to-peek for mouse
+		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
+		- TODO (controls) click-to-move does not allow selection if !canMove
+		  - disable select-to-peek for mouse, but still allow it for keyboard
+		- TODO (controls) (2-priority) make it easier to re-select when move is invalid
+		  - OR disable select-to-peek for mouse
 	*/
 	touch(): FreeCell {
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
@@ -850,9 +850,9 @@ export class FreeCell {
 
 	/**
 		print the game board
-		 - all card locations
-		 - current cursor (keyboard)
-		 - current selection (helps debug peek, needed for canMove)
+		- all card locations
+		- current cursor (keyboard)
+		- current selection (helps debug peek, needed for canMove)
 
 		you can use this to play the game from a text-only interface (e.g. console) if you like
 
@@ -860,8 +860,8 @@ export class FreeCell {
 
 		by default, we do not print the "available moves", that's important for good gameplay
 
-	  - XXX (techdebt) print is super messy, can we clean this up?
-	  - TODO (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
+		XXX (techdebt) print is super messy, can we clean this up?
+		TODO (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
 	*/
 	print({
 		skipDeck = false,
@@ -1170,6 +1170,9 @@ export class FreeCell {
 				// expect(
 				// 	FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 				// ).toBe(game.print({ includeHistory: true }));
+				// expect(
+				// 	FreeCell.parse(game.print({ includeHistory: true }))
+				// ).toEqual(game);
 			} else {
 				Array.prototype.push.apply(
 					history,
@@ -1251,10 +1254,10 @@ export class FreeCell {
 
 		if (!cursor) {
 			// try to figure out the location of the cursor based on the previous move
-			const actionText = history.findLast((actionText) =>
-				['move', 'auto-foundation'].includes(parsePreviousActionType(actionText).type)
-			);
-			cursor = parseCursorFromPreviousActionText(actionText, cards);
+			for (let i = history.length - 1; !cursor && i >= 0; i--) {
+				const actionText = history[i];
+				cursor = parseCursorFromPreviousActionText(actionText, cards);
+			}
 		}
 
 		const game = new FreeCell({
