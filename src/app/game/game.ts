@@ -785,7 +785,6 @@ export class FreeCell {
 		});
 	}
 
-	/** @deprecated this is just for testing; we want to animate each card delt */
 	dealAll({
 		demo = false,
 		keepDeck = false,
@@ -1153,18 +1152,34 @@ export class FreeCell {
 				if (parsePreviousActionType(actionText).type === 'init') {
 					history.push(actionText);
 				} else {
+					// this is a weird edge case because parseHistory is enabled when there is no cursor
 					throw new Error('must have at least 1 cursor');
 				}
 			} else if (peek.startsWith(':h')) {
+				const matchSeed = /:h shuffle32 (\d+)/.exec(peek);
+				if (!matchSeed) throw new Error('unsupported shuffle');
+				const seed = parseInt(matchSeed[1], 10);
+
+				let playGameForHistroy = new FreeCell({ cellCount, cascadeCount })
+					.shuffle32(seed)
+					.dealAll();
+				const moves = lines.reverse().join('').trim().split(/\s+/);
+				moves.forEach((move) => {
+					playGameForHistroy = playGameForHistroy.moveByShorthand(move);
+				});
+
+				// FIXME confirm `action: parsePreviousActionType(actionText)`
+				// FIXME confirm `cards`
+				// FIXME confirm `cursor`
+
+				// we have the whole game, so we can simply return it now
+				return playGameForHistroy;
+
 				// FIXME (parse-history) parse move history
 				//  - we can init the game, and replay forwards to recover the full history
 				//  - confirm that the states are the same at the end
-				throw new Error('not implemented yet');
-				// FIXME (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
-				//  - :h -> play forwards
-				//  - (we have the moves, but not the auto-foundation)
-				//  - text -> play backwards, then forwards (heeey, parsePreviousActionText, not parseAndUndo)
-				// FIXME (parse-history) play a game backward and forewards using move history
+
+				// FIXME (parse-history) test... more?
 				// expect(
 				// 	FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 				// ).toBe(game.print({ includeHistory: true }));
@@ -1252,6 +1267,7 @@ export class FreeCell {
 			// try to figure out the location of the cursor based on the previous move
 			for (let i = history.length - 1; !cursor && i >= 0; i--) {
 				const actionText = history[i];
+				// FIXME this fails on `move 42 JS→QH (auto-foundation …)`
 				cursor = parseCursorFromPreviousActionText(actionText, cards);
 			}
 		}
