@@ -86,7 +86,8 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 }
 
 export function parseCursorFromPreviousActionText(
-	actionText: string | undefined
+	actionText: string | undefined,
+	cards?: Card[]
 ): CardLocation | undefined {
 	if (!actionText) return undefined;
 	switch (parsePreviousActionType(actionText).type) {
@@ -96,14 +97,48 @@ export function parseCursorFromPreviousActionText(
 		case 'deal':
 			return undefined;
 		case 'move': {
-			const { to, fromShorthand } = parseActionTextMove(actionText);
+			const { to, fromShorthand, toShorthand } = parseActionTextMove(actionText);
 			const cursor = parseShorthandPosition_INCOMPLETE(to);
-			// FIXME parse fromShorthand
+			switch (cursor.fixture) {
+				case 'deck':
+					// XXX (gameplay) can we, in theory, move a card to the deck? but we don't
+					break;
+				case 'cell':
+					// each cell identifies it's own d0
+					break;
+				case 'foundation':
+					if (cards) {
+						const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+						const card = findCard(cards, shorthand);
+						if (cursor.fixture !== card.location.fixture) {
+							throw new Error(
+								`invalid move actionText "${actionText}" for cards w/ ${JSON.stringify(card)}`
+							);
+						}
+						cursor.data[0] = card.location.data[0];
+					}
+					break;
+				case 'cascade':
+					if (toShorthand === 'cascade') {
+						cursor.data[1] = 0;
+					} else if (cards) {
+						const shorthand = parseShorthandCard(toShorthand[0], toShorthand[1]);
+						const card = findCard(cards, shorthand);
+						if (
+							cursor.fixture !== card.location.fixture ||
+							cursor.data[0] !== card.location.data[0]
+						) {
+							throw new Error(
+								`invalid move actionText "${actionText}" for cards w/ ${JSON.stringify(card)}`
+							);
+						}
+						cursor.data[1] = card.location.data[1];
+					}
+					break;
+			}
 			return cursor;
 		}
 		case 'auto-foundation':
-			// FIXME finish
-			return undefined;
 		case 'cursor':
 		case 'select':
 		case 'deselect':
@@ -116,8 +151,8 @@ export function parseCursorFromPreviousActionText(
 function parseActionTextMove(actionText: string) {
 	const match = MOVE_REGEX.exec(actionText);
 	if (!match) throw new Error('invalid move actionText: ' + actionText);
-	const [, from, to, fromShorthand] = match;
-	return { from, to, fromShorthand };
+	const [, from, to, fromShorthand, toShorthand] = match;
+	return { from, to, fromShorthand, toShorthand };
 }
 
 function undoMove(game: FreeCell, actionText: string): Card[] {

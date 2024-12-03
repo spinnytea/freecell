@@ -1251,11 +1251,10 @@ export class FreeCell {
 
 		if (!cursor) {
 			// try to figure out the location of the cursor based on the previous move
-			// FIXME test with all action types
 			const actionText = history.findLast((actionText) =>
 				['move', 'auto-foundation'].includes(parsePreviousActionType(actionText).type)
 			);
-			cursor = parseCursorFromPreviousActionText(actionText);
+			cursor = parseCursorFromPreviousActionText(actionText, cards);
 		}
 
 		const game = new FreeCell({

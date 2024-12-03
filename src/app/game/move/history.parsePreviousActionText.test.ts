@@ -1,31 +1,47 @@
-import { parsePreviousActionType, PreviousAction } from '@/app/game/move/history';
+import { CardLocation } from '@/app/game/card/card';
+import {
+	parseCursorFromPreviousActionText,
+	parsePreviousActionType,
+	PreviousAction,
+} from '@/app/game/move/history';
 
 describe('game/history.parsePreviousActionType', () => {
 	describe('specific cases', () => {
 		test.each`
-			text                                    | previousAction
-			${'init'}                               | ${{ text: 'init', type: 'init' }}
-			${'shuffle deck (0)'}                   | ${{ text: 'shuffle deck (0)', type: 'shuffle' }}
-			${'deal all cards'}                     | ${{ text: 'deal all cards', type: 'deal' }}
-			${'deal most cards'}                    | ${{ text: 'deal most cards', type: 'deal' }}
-			${'cursor set'}                         | ${{ text: 'cursor set', type: 'cursor' }}
-			${'select 8 7D'}                        | ${{ text: 'select 8 7D', type: 'select' }}
-			${'deselect KS'}                        | ${{ text: 'deselect KS', type: 'deselect' }}
-			${'deselect 6 2C'}                      | ${{ text: 'deselect 6 2C', type: 'deselect' }}
-			${'deselect 4D-3S-2D'}                  | ${{ text: 'deselect 4D-3S-2D', type: 'deselect' }}
-			${'touch stop'}                         | ${{ text: 'touch stop', type: 'invalid' }}
-			${'move 3a KC→cell'}                    | ${{ text: 'move 3a KC→cell', type: 'move' }}
-			${'move 8h AD→foundation'}              | ${{ text: 'move 8h AD→foundation', type: 'move' }}
-			${'move 57 KS→cascade'}                 | ${{ text: 'move 57 KS→cascade', type: 'move' }}
-			${'move 23 KC-QD-JS→cascade'}           | ${{ text: 'move 23 KC-QD-JS→cascade', type: 'move' }}
-			${'move 15 TD→JS'}                      | ${{ text: 'move 15 TD→JS', type: 'move' }}
-			${'move 78 JH-TC-9H-8S-7H→QS'}          | ${{ text: 'move 78 JH-TC-9H-8S-7H→QS', type: 'move' }}
-			${'move 53 6H→7C (auto-foundation AD)'} | ${{ text: 'move 53 6H→7C (auto-foundation AD)', type: 'move' }}
-			${'invalid move 86 7D→9C'}              | ${{ text: 'invalid move 86 7D→9C', type: 'invalid' }}
-		`('$text', ({ text, previousAction }: { text: string; previousAction: PreviousAction }) => {
-			expect(parsePreviousActionType(text)).toEqual(previousAction);
-			// FIXME parseCursorFromPreviousActionText
-		});
+			text                                    | previousAction                                                  | cursor
+			${'init'}                               | ${{ text: 'init', type: 'init' }}                               | ${undefined}
+			${'shuffle deck (0)'}                   | ${{ text: 'shuffle deck (0)', type: 'shuffle' }}                | ${undefined}
+			${'deal all cards'}                     | ${{ text: 'deal all cards', type: 'deal' }}                     | ${undefined}
+			${'deal most cards'}                    | ${{ text: 'deal most cards', type: 'deal' }}                    | ${undefined}
+			${'cursor set'}                         | ${{ text: 'cursor set', type: 'cursor' }}                       | ${undefined}
+			${'select 8 7D'}                        | ${{ text: 'select 8 7D', type: 'select' }}                      | ${undefined}
+			${'deselect KS'}                        | ${{ text: 'deselect KS', type: 'deselect' }}                    | ${undefined}
+			${'deselect 6 2C'}                      | ${{ text: 'deselect 6 2C', type: 'deselect' }}                  | ${undefined}
+			${'deselect 4D-3S-2D'}                  | ${{ text: 'deselect 4D-3S-2D', type: 'deselect' }}              | ${undefined}
+			${'touch stop'}                         | ${{ text: 'touch stop', type: 'invalid' }}                      | ${undefined}
+			${'move 3a KC→cell'}                    | ${{ text: 'move 3a KC→cell', type: 'move' }}                    | ${{ fixture: 'cell', data: [0] }}
+			${'move 8h AD→foundation'}              | ${{ text: 'move 8h AD→foundation', type: 'move' }}              | ${{ fixture: 'foundation', data: [0] }}
+			${'move 57 KS→cascade'}                 | ${{ text: 'move 57 KS→cascade', type: 'move' }}                 | ${{ fixture: 'cascade', data: [6, 0] }}
+			${'move 23 KC-QD-JS→cascade'}           | ${{ text: 'move 23 KC-QD-JS→cascade', type: 'move' }}           | ${{ fixture: 'cascade', data: [2, 0] }}
+			${'move 15 TD→JS'}                      | ${{ text: 'move 15 TD→JS', type: 'move' }}                      | ${{ fixture: 'cascade', data: [4, 99] }}
+			${'move 78 JH-TC-9H-8S-7H→QS'}          | ${{ text: 'move 78 JH-TC-9H-8S-7H→QS', type: 'move' }}          | ${{ fixture: 'cascade', data: [7, 99] }}
+			${'move 53 6H→7C (auto-foundation AD)'} | ${{ text: 'move 53 6H→7C (auto-foundation AD)', type: 'move' }} | ${{ fixture: 'cascade', data: [2, 99] }}
+			${'invalid move 86 7D→9C'}              | ${{ text: 'invalid move 86 7D→9C', type: 'invalid' }}           | ${undefined}
+		`(
+			'$text',
+			({
+				text,
+				previousAction,
+				cursor,
+			}: {
+				text: string;
+				previousAction: PreviousAction;
+				cursor: CardLocation | undefined;
+			}) => {
+				expect(parsePreviousActionType(text)).toEqual(previousAction);
+				expect(parseCursorFromPreviousActionText(text)).toEqual(cursor);
+			}
+		);
 	});
 
 	// XXX (techdebt) i.e. FreeCell.parse
