@@ -11,7 +11,7 @@ function undoUntilStart(game: FreeCell): FreeCell {
 	return game;
 }
 
-// TODO (techdebt) (history) (5-priority) unit test history
+// TODO (techdebt) (more-undo) (history) unit test history
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
 		// TODO (more-undo) init does not undo
@@ -71,6 +71,7 @@ describe('game.undo (+ history)', () => {
 					expect(
 						FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 					).toBe(game.print({ includeHistory: true }));
+					expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 					expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 				});
@@ -106,6 +107,7 @@ describe('game.undo (+ history)', () => {
 						expect(
 							FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 						).toBe(game.print({ includeHistory: true }));
+						expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 						expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 					});
@@ -122,7 +124,7 @@ describe('game.undo (+ history)', () => {
 							'' + //
 								' AC             KD KH KS \n' + //
 								'                         \n' + //
-								'd: KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C \n' + //
+								':d KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C \n' + //
 								' hand-jammed'
 						);
 						expect(game.history).toEqual(['hand-jammed']);
@@ -132,7 +134,7 @@ describe('game.undo (+ history)', () => {
 							'' + //
 								'             AC KD KH KS \n' + //
 								'                         \n' + //
-								'd: KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C \n' + //
+								':d KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C \n' + //
 								' move ah AC→foundation\n' + //
 								' hand-jammed'
 						);
@@ -140,6 +142,7 @@ describe('game.undo (+ history)', () => {
 						expect(
 							FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 						).toBe(game.print({ includeHistory: true }));
+						expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 						expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 					});
@@ -175,6 +178,7 @@ describe('game.undo (+ history)', () => {
 						expect(
 							FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 						).toBe(game.print({ includeHistory: true }));
+						expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 						expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 					});
@@ -259,6 +263,7 @@ describe('game.undo (+ history)', () => {
 							expect(
 								FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 							).toBe(game.print({ includeHistory: true }));
+							expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 							expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 						});
@@ -292,6 +297,7 @@ describe('game.undo (+ history)', () => {
 						expect(
 							FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 						).toBe(game.print({ includeHistory: true }));
+						expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 						expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 					});
@@ -362,6 +368,7 @@ describe('game.undo (+ history)', () => {
 							expect(
 								FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 							).toBe(game.print({ includeHistory: true }));
+							expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 							expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 						});

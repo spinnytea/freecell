@@ -102,21 +102,21 @@ describe('game.shuffle32', () => {
 			'' + //
 				'>JC          9C 9D 9H 9S \n' + //
 				'                         \n' + //
-				'd: KS KH KD KC QS QH QD QC JS JH JD TS TH TD TC \n' + //
+				':d KS KH KD KC QS QH QD QC JS JH JD TS TH TD TC \n' + //
 				' hand-jammed'
 		);
 		expect(game.shuffle32(0).print()).toBe(
 			'' + //
 				'>JC          9C 9D 9H 9S \n' + //
 				'                         \n' + //
-				'd: QD JH QH TD TC QC JD KH JS QS TS KD TH KC KS \n' + //
+				':d QD JH QH TD TC QC JD KH JS QS TS KD TH KC KS \n' + //
 				' shuffle deck (0)'
 		);
 		expect(game.shuffle32(0).shuffle32(0).print()).toBe(
 			'' + //
 				'>JC          9C 9D 9H 9S \n' + //
 				'                         \n' + //
-				'd: JD QS QC KC KS KH TS JH JS TC KD QH TH TD QD \n' + //
+				':d JD QS QC KC KS KH TS JH JS TC KD QH TH TD QD \n' + //
 				' shuffle deck (0)'
 		);
 	});

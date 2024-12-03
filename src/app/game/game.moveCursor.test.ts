@@ -474,7 +474,7 @@ describe('game.moveCursor', () => {
 							' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
 							' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
 							' 3S 3H 3D 3C             \n' +
-							'd: 2S 2H>2D 2C AS AH AD AC \n' +
+							':d 2S 2H>2D 2C AS AH AD AC \n' +
 							' deal most cards'
 					);
 					expect(game.cursor).toEqual({ fixture: 'deck', data: [5] });

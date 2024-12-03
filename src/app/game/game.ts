@@ -942,8 +942,6 @@ export class FreeCell {
 			}
 		}
 
-		// FIXME (print) can we get rid of `d:` prefix (bcuz parse)
-		// FIXME (print) should we use `:d` prefix instead?
 		if (this.deck.length && !skipDeck) {
 			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
 				// prettier-ignore
@@ -952,17 +950,17 @@ export class FreeCell {
 					.reverse()
 					.join('');
 				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
-				str += `\nd:${deckStr}${lastCol}`;
+				str += `\n:d${deckStr}${lastCol}`;
 			} else {
 				// if no cursor/selection in deck
 				const deckStr = this.deck
 					.map((card) => shorthandCard(card))
 					.reverse()
 					.join(' ');
-				str += `\nd: ${deckStr} `;
+				str += `\n:d ${deckStr} `;
 			}
 		} else if (cursor.fixture === 'deck') {
-			str += `\nd:>   `;
+			str += `\n:d>   `;
 		}
 
 		if (this.win) {
@@ -1108,9 +1106,9 @@ export class FreeCell {
 
 		// handle deck
 		let deckLength = 0;
-		if (line[line.length - 1] === 'd' && line[line.length - 2] === ':') {
-			line.pop(); // d
+		if (line[line.length - 1] === ':' && line[line.length - 2] === 'd') {
 			line.pop(); // :
+			line.pop(); // d
 			while (line.length >= 3) {
 				const card = nextCard(deck_spaces);
 				if (card) {
@@ -1170,9 +1168,7 @@ export class FreeCell {
 				// expect(
 				// 	FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 				// ).toBe(game.print({ includeHistory: true }));
-				// expect(
-				// 	FreeCell.parse(game.print({ includeHistory: true }))
-				// ).toEqual(game);
+				// expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 			} else {
 				Array.prototype.push.apply(
 					history,
