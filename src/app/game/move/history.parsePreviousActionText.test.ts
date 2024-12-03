@@ -24,6 +24,7 @@ describe('game/history.parsePreviousActionType', () => {
 			${'invalid move 86 7D→9C'}              | ${{ text: 'invalid move 86 7D→9C', type: 'invalid' }}
 		`('$text', ({ text, previousAction }: { text: string; previousAction: PreviousAction }) => {
 			expect(parsePreviousActionType(text)).toEqual(previousAction);
+			// FIXME parseCursorFromPreviousActionText
 		});
 	});
 

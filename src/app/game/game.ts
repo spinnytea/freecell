@@ -15,8 +15,10 @@ import {
 	SuitList,
 } from '@/app/game/card/card';
 import {
+	HISTORY_ACTION_TYPES,
 	MOVE_AUTO_F_CHECK_REGEX,
 	parseAndUndoPreviousActionText,
+	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
 	parsePreviousActionType,
 	PreviousAction,
@@ -199,7 +201,7 @@ export class FreeCell {
 			selection: selection && availableMoves ? selection : null,
 			availableMoves: selection && availableMoves ? availableMoves : null,
 			action,
-			history: ['init', 'shuffle', 'deal', 'move', 'auto-foundation'].includes(action.type)
+			history: HISTORY_ACTION_TYPES.includes(action.type)
 				? [...(history ?? this.history), action.text]
 				: this.history,
 		});
@@ -420,9 +422,9 @@ export class FreeCell {
 
 	clearSelection(): FreeCell | this {
 		if (this.selection) {
-			const text = 'deselect ' + shorthandSequence(this.selection, true);
+			const actionText = 'deselect ' + shorthandSequence(this.selection, true);
 			return this.__clone({
-				action: { text, type: 'deselect' },
+				action: { text: actionText, type: 'deselect' },
 				selection: null,
 				availableMoves: null,
 			});
@@ -1245,6 +1247,15 @@ export class FreeCell {
 				fixture: 'deck',
 				data: [deckLength - deck_selection_index - 1],
 			};
+		}
+
+		if (!cursor) {
+			// try to figure out the location of the cursor based on the previous move
+			// FIXME test with all action types
+			const actionText = history.findLast((actionText) =>
+				['move', 'auto-foundation'].includes(parsePreviousActionType(actionText).type)
+			);
+			cursor = parseCursorFromPreviousActionText(actionText);
 		}
 
 		const game = new FreeCell({

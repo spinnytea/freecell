@@ -494,13 +494,12 @@ describe('game.undo (+ history)', () => {
 				' move 12 KC→cascade\n' +
 				' hand-jammed'
 		);
-		let parsed = FreeCell.parse(game.print({ includeHistory: true }));
+		const parsed = FreeCell.parse(game.print({ includeHistory: true }));
 		expect(parsed.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 		expect(parsed.history).toEqual(game.history);
+		expect(parsed.cards).toEqual(game.cards);
 
-		// FIXME (techdebt) detect last cursor position, so we don't need to normalize the cursor
-		game = game.setCursor({ fixture: 'cell', data: [0] });
-		parsed = parsed.setCursor({ fixture: 'cell', data: [0] });
+		// but really, we have _all_ the information we need to rebuild the entire game state
 		expect(parsed).toEqual(game);
 	});
 
@@ -540,7 +539,7 @@ describe('game.undo (+ history)', () => {
 					getMoves(seed, { cellCount, cascadeCount }).forEach((move) => {
 						const prevState = game.print({ includeHistory: true });
 						const prevAction = game.previousAction;
-						// FIXME (techdebt) detect last cursor position, so we don't need to normalize the cursor
+						// TODO (more-undo) (techdebt) update cursor, so we don't need to normalize the cursor
 						// const prevStateNH = game.print({ includeHistory: false });
 
 						game = game.moveByShorthand(move);
@@ -550,7 +549,7 @@ describe('game.undo (+ history)', () => {
 						const afterUndo = game.undo();
 						expect(afterUndo.previousAction).toEqual(prevAction);
 						expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
-						// FIXME (techdebt) detect last cursor position, so we don't need to normalize the cursor
+						// TODO (more-undo) (techdebt) update cursor, so we don't need to normalize the cursor
 						// expect(afterUndo.print({ includeHistory: false })).toBe(prevStateNH);
 					});
 					expect(game.win).toBe(true);
@@ -563,7 +562,7 @@ describe('game.undo (+ history)', () => {
 					let newGame = new FreeCell({ cellCount, cascadeCount }).shuffle32(seed).dealAll();
 					expect(game.cards).toEqual(newGame.cards);
 
-					// FIXME (techdebt) detect last cursor position, so we don't need to normalize the cursor
+					// TODO (more-undo) (techdebt) update cursor, so we don't need to normalize the cursor
 					game = game.setCursor({ fixture: 'cell', data: [0] });
 					newGame = newGame.setCursor({ fixture: 'cell', data: [0] });
 					expect(newGame).toEqual(game);
