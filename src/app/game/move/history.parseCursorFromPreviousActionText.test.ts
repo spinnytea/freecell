@@ -47,25 +47,4 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			}
 		);
 	});
-
-	// XXX (techdebt) i.e. FreeCell.parse
-	describe('examples', () => {
-		test.todo('init');
-
-		test.todo('shuffle');
-
-		test.todo('deal');
-
-		test.todo('cursor');
-
-		test.todo('select');
-
-		test.todo('deselect');
-
-		test.todo('move');
-
-		test.todo('invalid');
-
-		test.todo('auto-foundation-tween');
-	});
 });

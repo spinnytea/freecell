@@ -16,7 +16,6 @@ import {
 	SuitList,
 } from '@/app/game/card/card';
 import {
-	HISTORY_ACTION_TYPES,
 	MOVE_AUTO_F_CHECK_REGEX,
 	parseAndUndoPreviousActionText,
 	parseCursorFromPreviousActionText,
@@ -202,7 +201,7 @@ export class FreeCell {
 			selection: selection && availableMoves ? selection : null,
 			availableMoves: selection && availableMoves ? availableMoves : null,
 			action,
-			history: HISTORY_ACTION_TYPES.includes(action.type)
+			history: ['init', 'shuffle', 'deal', 'move', 'auto-foundation'].includes(action.type)
 				? [...(history ?? this.history), action.text]
 				: this.history,
 		});
@@ -1013,11 +1012,8 @@ export class FreeCell {
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		const cards = new FreeCell().cards;
 		const remaining = cards.slice(0);
-		let parseHistory = false;
 
-		if (!print.includes('>')) {
-			parseHistory = true;
-		} else if (print.includes('>', print.indexOf('>') + 1)) {
+		if (print.includes('>', print.indexOf('>') + 1)) {
 			throw new Error('must have no more than 1 cursor');
 		}
 
@@ -1146,65 +1142,62 @@ export class FreeCell {
 		line.pop();
 		const actionText = line.reverse().join('');
 
+		// attempt to parse the history
 		const history: string[] = [];
-		if (parseHistory) {
-			const peek = lines.pop();
-			if (!peek) {
-				// TODO (parse-history) test
-				if (parsePreviousActionType(actionText).type === 'init') {
-					history.push(actionText);
-				}
-			} else if (peek.startsWith(':h')) {
-				const matchSeed = /:h shuffle32 (\d+)/.exec(peek);
-				if (!matchSeed) throw new Error('unsupported shuffle');
-				const seed = parseInt(matchSeed[1], 10);
-
-				let replayGameForHistroy = new FreeCell({ cellCount, cascadeCount })
-					.shuffle32(seed)
-					.dealAll();
-				const moves = lines.reverse().join('').trim().split(/\s+/);
-				moves.forEach((move) => {
-					replayGameForHistroy = replayGameForHistroy.moveByShorthand(move);
-				});
-
-				// verify all args to the new FreeCell
-				const movesSeed = parseMovesFromHistory(replayGameForHistroy.history);
-				const valid =
-					// replayGameForHistroy.cells.length === cellCount &&
-					// replayGameForHistroy.tableau.length === cascadeCount &&
-					_isEqual(replayGameForHistroy.cards, cards) &&
-					// if (cannot verify cursor with running the code below to find it) vv
-					// replayGameForHistroy.selection === null &&
-					// replayGameForHistroy.availableMoves === null &&
-					replayGameForHistroy.previousAction.text === actionText &&
-					!!movesSeed &&
-					movesSeed.seed === seed &&
-					_isEqual(movesSeed.moves, moves) &&
-					// re-print the our game, confirm it matches the input
-					replayGameForHistroy.print({ includeHistory: true }) === print;
-
-				if (valid) {
-					// we have the whole game, so we can simply return it now
-					return replayGameForHistroy;
-					// although, we don't have to...
-
-					Array.prototype.push.apply(history, replayGameForHistroy.history);
-				} else {
-					history.push('init with invalid history');
-					history.push(actionText);
-				}
-			} else {
-				Array.prototype.push.apply(
-					history,
-					lines.map((line) => line.trim())
-				);
-				history.push(peek.trim());
+		const peek = lines.pop();
+		if (!peek) {
+			// TODO (parse-history) test
+			if (parsePreviousActionType(actionText).type === 'init') {
 				history.push(actionText);
-				// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
-				//  - text we can use what history is valid; ['init partial history', ..., actionText]
+			}
+		} else if (peek.startsWith(':h')) {
+			const matchSeed = /:h shuffle32 (\d+)/.exec(peek);
+			if (!matchSeed) throw new Error('unsupported shuffle');
+			const seed = parseInt(matchSeed[1], 10);
+
+			let replayGameForHistroy = new FreeCell({ cellCount, cascadeCount })
+				.shuffle32(seed)
+				.dealAll();
+			const moves = lines.reverse().join('').trim().split(/\s+/);
+			moves.forEach((move) => {
+				replayGameForHistroy = replayGameForHistroy.moveByShorthand(move);
+			});
+
+			// verify all args to the new FreeCell
+			const movesSeed = parseMovesFromHistory(replayGameForHistroy.history);
+			const valid =
+				// replayGameForHistroy.cells.length === cellCount &&
+				// replayGameForHistroy.tableau.length === cascadeCount &&
+				_isEqual(replayGameForHistroy.cards, cards) &&
+				// if (cannot verify cursor with running the code below to find it) vv
+				// replayGameForHistroy.selection === null &&
+				// replayGameForHistroy.availableMoves === null &&
+				replayGameForHistroy.previousAction.text === actionText &&
+				!!movesSeed &&
+				movesSeed.seed === seed &&
+				_isEqual(movesSeed.moves, moves) &&
+				// re-print the our game, confirm it matches the input
+				replayGameForHistroy.print({ includeHistory: true }) === print;
+
+			if (valid) {
+				// we have the whole game, so we can simply return it now
+				return replayGameForHistroy;
+				// although, we don't have to...
+
+				Array.prototype.push.apply(history, replayGameForHistroy.history);
+			} else {
+				history.push('init with invalid history');
+				history.push(actionText);
 			}
 		} else {
+			Array.prototype.push.apply(
+				history,
+				lines.map((line) => line.trim())
+			);
+			history.push(peek.trim());
 			history.push(actionText);
+			// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
+			//  - text we can use what history is valid; ['init partial history', ..., actionText]
 		}
 
 		// sus out the cursor/selection locations

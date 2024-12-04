@@ -24,13 +24,6 @@ export type PreviousActionType =
 	// | 'flourish' // TODO (combine-move-auto-foundation) add flourish as a move type ;)
 	| 'invalid'
 	| 'auto-foundation-tween';
-export const HISTORY_ACTION_TYPES: PreviousActionType[] = [
-	'init',
-	'shuffle',
-	'deal',
-	'move',
-	'auto-foundation',
-];
 
 export interface PreviousAction {
 	/**
