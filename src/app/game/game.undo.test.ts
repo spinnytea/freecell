@@ -431,7 +431,7 @@ describe('game.undo (+ history)', () => {
 		test.todo('if we reach a move it cannot undo, it should not break');
 	});
 
-	// TODO (optimize) (3-priority) collapse history
+	// TODO (optimize) (4-priority) collapse history
 	describe('collapse history', () => {
 		// i.e. click-to-move picked the wrong place, so i need to move it again to the right one
 		// i.e. dithering on a single card doesn't increase history length

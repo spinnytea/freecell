@@ -1198,6 +1198,8 @@ export class FreeCell {
 			history.push(actionText);
 			// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
 			//  - text we can use what history is valid; ['init partial history', ..., actionText]
+			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
+			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
 		}
 
 		// sus out the cursor/selection locations

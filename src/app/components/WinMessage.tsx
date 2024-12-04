@@ -23,6 +23,8 @@ export function WinMessage() {
 				gsap.from(elementRef.current, { [prop]: 0, duration: WIN_TEXT_ANIMATION_DURATION });
 
 				if (winIsFloursh) {
+					// IDEA (animation) 52-card flourish cycles color forever
+					//  - basically, disable s/l and repeat h
 					// animate color hue, to white
 					const color = { h: 0, s: 100, l: 44 }; /* #df0000 */
 					const applyColor: gsap.Callback = () => {
@@ -35,7 +37,7 @@ export function WinMessage() {
 						}
 					};
 					gsap.set(elementRef.current, { backgroundClip: 'text', color: 'transparent' });
-					gsap.to(color, { h: 360, onUpdate: applyColor, duration: WIN_TEXT_COLOR_DURATION });
+					gsap.to(color, { h: 360, onUpdate: applyColor, duration: WIN_TEXT_COLOR_DURATION, ease: 'none' });
 					gsap.to(color, {
 						s: 0,
 						l: 90,
