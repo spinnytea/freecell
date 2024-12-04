@@ -1,3 +1,4 @@
+import { isEqual as _isEqual } from 'lodash';
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import {
 	Card,
@@ -1160,30 +1161,43 @@ export class FreeCell {
 				if (!matchSeed) throw new Error('unsupported shuffle');
 				const seed = parseInt(matchSeed[1], 10);
 
-				let playGameForHistroy = new FreeCell({ cellCount, cascadeCount })
+				let replayGameForHistroy = new FreeCell({ cellCount, cascadeCount })
 					.shuffle32(seed)
 					.dealAll();
 				const moves = lines.reverse().join('').trim().split(/\s+/);
 				moves.forEach((move) => {
-					playGameForHistroy = playGameForHistroy.moveByShorthand(move);
+					replayGameForHistroy = replayGameForHistroy.moveByShorthand(move);
 				});
 
-				// FIXME confirm `action: parsePreviousActionType(actionText)`
-				// FIXME confirm `cards`
-				// FIXME confirm `cursor`
-
-				// we have the whole game, so we can simply return it now
-				return playGameForHistroy;
-
-				// FIXME (parse-history) parse move history
-				//  - we can init the game, and replay forwards to recover the full history
-				//  - confirm that the states are the same at the end
+				// verify all args to the new FreeCell
+				const movesSeed = parseMovesFromHistory(replayGameForHistroy.history);
+				const valid =
+					// replayGameForHistroy.cells.length === cellCount &&
+					// replayGameForHistroy.tableau.length === cascadeCount &&
+					_isEqual(replayGameForHistroy.cards, cards) &&
+					// if (cannot verify cursor with running the code below to find it) vv
+					// replayGameForHistroy.selection === null &&
+					// replayGameForHistroy.availableMoves === null &&
+					replayGameForHistroy.previousAction.text === actionText &&
+					!!movesSeed &&
+					movesSeed.seed === seed &&
+					_isEqual(movesSeed.moves, moves) &&
+					// re-print the our game, confirm it matches the input
+					replayGameForHistroy.print({ includeHistory: true }) === print;
 
 				// FIXME (parse-history) test... more?
 				// expect(
 				// 	FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 				// ).toBe(game.print({ includeHistory: true }));
 				// expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
+
+				if (valid) {
+					// we have the whole game, so we can simply return it now
+					return replayGameForHistroy;
+				}
+
+				history.push('init with invalid history');
+				history.push(actionText);
 			} else {
 				Array.prototype.push.apply(
 					history,
@@ -1284,6 +1298,10 @@ export class FreeCell {
 			game.selection = getSequenceAt(game, selection_location);
 			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
+		// XXX (techdebt) re-print the our game, confirm it matches the input
+		//  - seems to be mostly `skipDeck` and clipped "you win" messages
+		// const reprint = game.print({ includeHistory: parseHistory });
+		// if (reprint !== print) throw new Error(`whoops!\n${print}\n${reprint}`);
 		return game;
 	}
 }

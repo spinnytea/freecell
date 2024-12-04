@@ -12,6 +12,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 		test.each`
 			actionText                              | cards          | cursor
 			${'init'}                               | ${[]}          | ${undefined}
+			${'init with invalid history'}          | ${[]}          | ${undefined}
 			${'shuffle deck (0)'}                   | ${[]}          | ${undefined}
 			${'deal all cards'}                     | ${[]}          | ${undefined}
 			${'deal most cards'}                    | ${[]}          | ${undefined}

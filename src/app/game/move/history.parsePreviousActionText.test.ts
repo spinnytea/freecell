@@ -10,6 +10,7 @@ describe('game/history.parsePreviousActionType', () => {
 		test.each`
 			actionText                              | previousAction                                                  | cursor
 			${'init'}                               | ${{ text: 'init', type: 'init' }}                               | ${undefined}
+			${'init with invalid history'}          | ${{ text: 'init with invalid history', type: 'init' }}          | ${undefined}
 			${'shuffle deck (0)'}                   | ${{ text: 'shuffle deck (0)', type: 'shuffle' }}                | ${undefined}
 			${'deal all cards'}                     | ${{ text: 'deal all cards', type: 'deal' }}                     | ${undefined}
 			${'deal most cards'}                    | ${{ text: 'deal most cards', type: 'deal' }}                    | ${undefined}
