@@ -1,3 +1,4 @@
+import { isEqual as _isEqual } from 'lodash';
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import {
 	Card,
@@ -17,6 +18,7 @@ import {
 import {
 	MOVE_AUTO_F_CHECK_REGEX,
 	parseAndUndoPreviousActionText,
+	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
 	parsePreviousActionType,
 	PreviousAction,
@@ -420,9 +422,9 @@ export class FreeCell {
 
 	clearSelection(): FreeCell | this {
 		if (this.selection) {
-			const text = 'deselect ' + shorthandSequence(this.selection, true);
+			const actionText = 'deselect ' + shorthandSequence(this.selection, true);
 			return this.__clone({
-				action: { text, type: 'deselect' },
+				action: { text: actionText, type: 'deselect' },
 				selection: null,
 				availableMoves: null,
 			});
@@ -435,11 +437,11 @@ export class FreeCell {
 
 		e.g. select cursor, deselect cursor, move selection
 
-		IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
-		TODO (controls) click-to-move does not allow selection if !canMove
-		 - disable select-to-peek for mouse, but still allow it for keyboard
-		TOOD (controls) (2-priority) make it easier to re-select when move is invalid
-		 - OR disable select-to-peek for mouse
+		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
+		- TODO (controls) click-to-move does not allow selection if !canMove
+		  - disable select-to-peek for mouse, but still allow it for keyboard
+		- TODO (controls) (2-priority) make it easier to re-select when move is invalid
+		  - OR disable select-to-peek for mouse
 	*/
 	touch(): FreeCell {
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
@@ -736,11 +738,12 @@ export class FreeCell {
 	/**
 		These deals are numbered from 1 to 32000.
 
+		XXX (techdebt) rename to shuffle32k, including actionText and print history
+
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/
 	shuffle32(seed?: number): FreeCell {
-		if (seed === undefined) {
-			// TODO (gameplay) (settings) do not allow the impossible #11982?
+		if (seed === undefined || seed === 11982) {
 			seed = Math.floor(Math.random() * 32000) + 1;
 		}
 
@@ -783,7 +786,6 @@ export class FreeCell {
 		});
 	}
 
-	/** @deprecated this is just for testing; we want to animate each card delt */
 	dealAll({
 		demo = false,
 		keepDeck = false,
@@ -848,16 +850,18 @@ export class FreeCell {
 
 	/**
 		print the game board
-		 - all card locations
-		 - current cursor (keyboard)
-		 - current selection (helps debug peek, needed for canMove)
+		- all card locations
+		- current cursor (keyboard)
+		- current selection (helps debug peek, needed for canMove)
 
-		we do not print the "available moves", that's important for good gameplay
-		(and this print function is complicated enough, we don't want more complexity just for a debug visualization)
+		you can use this to play the game from a text-only interface (e.g. console) if you like
 
-	  - XXX (techdebt) print is super messy, can we clean this up?
-	  - IDEA (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
-	  - REVIEW (print) why are there two prints? why don't we always include the history after the previousAction?
+		by default, we do not print the history (complete set of previous actions); we only print the previous move to help confirm your actions
+
+		by default, we do not print the "available moves", that's important for good gameplay
+
+		XXX (techdebt) print is super messy, can we clean this up?
+		TODO (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
 	*/
 	print({
 		skipDeck = false,
@@ -938,8 +942,6 @@ export class FreeCell {
 			}
 		}
 
-		// REVIEW (print) can we get rid of `d:` prefix (bcuz parse)
-		// REVIEW (print) should we use `:d` prefix instead?
 		if (this.deck.length && !skipDeck) {
 			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
 				// prettier-ignore
@@ -948,17 +950,17 @@ export class FreeCell {
 					.reverse()
 					.join('');
 				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
-				str += `\nd:${deckStr}${lastCol}`;
+				str += `\n:d${deckStr}${lastCol}`;
 			} else {
 				// if no cursor/selection in deck
 				const deckStr = this.deck
 					.map((card) => shorthandCard(card))
 					.reverse()
 					.join(' ');
-				str += `\nd: ${deckStr} `;
+				str += `\n:d ${deckStr} `;
 			}
 		} else if (cursor.fixture === 'deck') {
-			str += `\nd:>   `;
+			str += `\n:d>   `;
 		}
 
 		if (this.win) {
@@ -974,15 +976,15 @@ export class FreeCell {
 		if (includeHistory) {
 			const movesSeed = parseMovesFromHistory(this.history);
 			if (movesSeed) {
-				// REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
-				// REVIEW (history) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
+				// BUG (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
+				// REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
 				str += '\n ' + this.previousAction.text;
 				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 				while (movesSeed.moves.length) {
 					str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
 				}
 			} else {
-				// if we don't know where we started, and therefore can't print a short list
+				// if we don't know where we started or shorthand is otherwise invalid,
 				// we can still print out all the actions we do know about
 				this.history
 					.slice(0)
@@ -1010,11 +1012,8 @@ export class FreeCell {
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		const cards = new FreeCell().cards;
 		const remaining = cards.slice(0);
-		let parseHistory = false;
 
-		if (!print.includes('>')) {
-			parseHistory = true;
-		} else if (print.includes('>', print.indexOf('>') + 1)) {
+		if (print.includes('>', print.indexOf('>') + 1)) {
 			throw new Error('must have no more than 1 cursor');
 		}
 
@@ -1044,7 +1043,7 @@ export class FreeCell {
 			return getCard(rs);
 		};
 
-		// TODO (print) test if first line isn't present
+		// TODO (print) (techdebt) test if first line isn't present
 		line = nextLine();
 
 		// parse cells
@@ -1068,7 +1067,7 @@ export class FreeCell {
 				if (!invalidFoundations) {
 					// …and all cards of lesser rank
 					const ranks = RankList.slice(0);
-					while (ranks.pop() !== card.rank); // pull off all the ranks we do not want
+					while (ranks.pop() !== card.rank); // pull off all the ranks we do not want (all the higher ones)
 					ranks.forEach((r) => {
 						getCard({ rank: r, suit: card.suit }).location = { fixture: 'foundation', data: [i] };
 					});
@@ -1079,7 +1078,7 @@ export class FreeCell {
 
 		// parse cascades
 		let row = 0;
-		// TODO (print) test if first line isn't present
+		// TODO (print) (techdebt) test if first line isn't present
 		line = nextLine();
 		const cascadeLineLength = line.length;
 		const cascadeCount = (cascadeLineLength - 1) / 3;
@@ -1090,7 +1089,6 @@ export class FreeCell {
 		}
 
 		while (line.length === cascadeLineLength && line[0] !== ':') {
-			// TODO (print) come up with a better metric than 25 (actions can be 25 chars, decks could be too)
 			for (let i = 0; i < cascadeCount; i++) {
 				const card = nextCard(tableau_spaces);
 				if (card) {
@@ -1098,16 +1096,16 @@ export class FreeCell {
 				}
 			}
 			row++;
-			// TODO (print) test if line isn't present
+			// TODO (print) (techdebt) test if line isn't present
 			tableau_spaces.push(line.pop());
 			line = nextLine();
 		}
 
 		// handle deck
 		let deckLength = 0;
-		if (line[line.length - 1] === 'd' && line[line.length - 2] === ':') {
-			line.pop(); // d
+		if (line[line.length - 1] === ':' && line[line.length - 2] === 'd') {
 			line.pop(); // :
+			line.pop(); // d
 			while (line.length >= 3) {
 				const card = nextCard(deck_spaces);
 				if (card) {
@@ -1144,41 +1142,62 @@ export class FreeCell {
 		line.pop();
 		const actionText = line.reverse().join('');
 
+		// attempt to parse the history
 		const history: string[] = [];
-		if (parseHistory) {
-			const peek = lines.pop();
-			if (!peek) {
-				// TODO (parse-history) test
-				if (parsePreviousActionType(actionText).type === 'init') {
-					history.push(actionText);
-				} else {
-					throw new Error('must have at least 1 cursor');
-				}
-			} else if (peek.startsWith(':h')) {
-				// TODO (parse-history) parse move history
-				//  - we can init the game, and replay forwards to recover the full history
-				//  - confirm that the states are the same at the end
-				throw new Error('not implemented yet');
-				// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
-				//  - :h -> play forwards
-				//  - (we have the moves, but not the auto-foundation)
-				//  - text -> play backwards, then forwards (heeey, parsePreviousActionText, not parseAndUndo)
-				// TODO (parse-history) play a game backward and forewards using move history
-				// expect(
-				// 	FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
-				// ).toBe(game.print({ includeHistory: true }));
-			} else {
-				Array.prototype.push.apply(
-					history,
-					lines.map((line) => line.trim())
-				);
-				history.push(peek.trim());
+		const peek = lines.pop();
+		if (!peek) {
+			// TODO (parse-history) test
+			if (parsePreviousActionType(actionText).type === 'init') {
 				history.push(actionText);
-				// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
-				//  - text we can use what history is valid; ['init partial history', ..., actionText]
+			}
+		} else if (peek.startsWith(':h')) {
+			const matchSeed = /:h shuffle32 (\d+)/.exec(peek);
+			if (!matchSeed) throw new Error('unsupported shuffle');
+			const seed = parseInt(matchSeed[1], 10);
+
+			let replayGameForHistroy = new FreeCell({ cellCount, cascadeCount })
+				.shuffle32(seed)
+				.dealAll();
+			const moves = lines.reverse().join('').trim().split(/\s+/);
+			moves.forEach((move) => {
+				replayGameForHistroy = replayGameForHistroy.moveByShorthand(move);
+			});
+
+			// verify all args to the new FreeCell
+			const movesSeed = parseMovesFromHistory(replayGameForHistroy.history);
+			const valid =
+				// replayGameForHistroy.cells.length === cellCount &&
+				// replayGameForHistroy.tableau.length === cascadeCount &&
+				_isEqual(replayGameForHistroy.cards, cards) &&
+				// if (cannot verify cursor with running the code below to find it) vv
+				// replayGameForHistroy.selection === null &&
+				// replayGameForHistroy.availableMoves === null &&
+				replayGameForHistroy.previousAction.text === actionText &&
+				!!movesSeed &&
+				movesSeed.seed === seed &&
+				_isEqual(movesSeed.moves, moves) &&
+				// re-print the our game, confirm it matches the input
+				replayGameForHistroy.print({ includeHistory: true }) === print;
+
+			if (valid) {
+				// we have the whole game, so we can simply return it now
+				return replayGameForHistroy;
+				// although, we don't have to...
+
+				Array.prototype.push.apply(history, replayGameForHistroy.history);
+			} else {
+				history.push('init with invalid history');
+				history.push(actionText);
 			}
 		} else {
+			Array.prototype.push.apply(
+				history,
+				lines.map((line) => line.trim())
+			);
+			history.push(peek.trim());
 			history.push(actionText);
+			// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
+			//  - text we can use what history is valid; ['init partial history', ..., actionText]
 		}
 
 		// sus out the cursor/selection locations
@@ -1246,6 +1265,14 @@ export class FreeCell {
 			};
 		}
 
+		if (!cursor) {
+			// try to figure out the location of the cursor based on the previous move
+			for (let i = history.length - 1; !cursor && i >= 0; i--) {
+				const actionText = history[i];
+				cursor = parseCursorFromPreviousActionText(actionText, cards);
+			}
+		}
+
 		const game = new FreeCell({
 			action: parsePreviousActionType(actionText),
 			cellCount,
@@ -1258,6 +1285,10 @@ export class FreeCell {
 			game.selection = getSequenceAt(game, selection_location);
 			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
+		// XXX (techdebt) re-print the our game, confirm it matches the input
+		//  - seems to be mostly `skipDeck` and clipped "you win" messages
+		// const reprint = game.print({ includeHistory: parseHistory });
+		// if (reprint !== print) throw new Error(`whoops!\n${print}\n${reprint}`);
 		return game;
 	}
 }

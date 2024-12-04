@@ -34,7 +34,7 @@ describe('game', () => {
 			'' +
 				'>                        \n' +
 				'                         \n' +
-				'd: KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
+				':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
 				' init'
 		);
 	});
@@ -281,7 +281,7 @@ describe('game', () => {
 				' 2S                      \n';
 			expect(FreeCell.parse(print + ' hand-jammed').print()).toBe(
 				print +
-					'd: KS KC QH QC JS JC TS TH TC 9S 9H 9C 8S 8H 7S 7H 6S 6H 5H 4S 3S 3H 2H AS AH \n' +
+					':d KS KC QH QC JS JC TS TH TC 9S 9H 9C 8S 8H 7S 7H 6S 6H 5H 4S 3S 3H 2H AS AH \n' +
 					' hand-jammed'
 			);
 		});
@@ -363,6 +363,7 @@ describe('game', () => {
 					' move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)'
 			);
 			expect(game.winIsFloursh).toBe(false);
+			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 		});
 
 		test('Game #3', () => {
@@ -381,6 +382,7 @@ describe('game', () => {
 					' move 42 JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)'
 			);
 			expect(game.winIsFloursh).toBe(false);
+			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 		});
 
 		/** https://www.solitairelaboratory.com/tutorial.html */
@@ -807,6 +809,11 @@ describe('game', () => {
 			);
 			expect(game).toMatchSnapshot();
 			expect(game.winIsFloursh).toBe(false);
+
+			expect(
+				FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
+			).toBe(game.print({ includeHistory: true }));
+			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 		});
 
 		test('Game #617', () => {
@@ -825,6 +832,7 @@ describe('game', () => {
 					' move 1b TD→cell (auto-foundation 1866628353ba8483734784387 7D,8S,8D,8H,8C,9S,9D,9H,9C,TS,TD,TH,TC,JS,JD,JH,JC,QS,QD,QH,QC,KS,KD,KH,KC)'
 			);
 			expect(game.winIsFloursh).toBe(false);
+			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 		});
 
 		/** 52-card flourish */
@@ -844,6 +852,7 @@ describe('game', () => {
 					' move 3b 8S→cell (flourish 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)'
 			);
 			expect(game.winIsFloursh).toBe(true);
+			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 		});
 	});
 });

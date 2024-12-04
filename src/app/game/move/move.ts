@@ -447,9 +447,11 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 		// XXX (gameplay) can we, in theory, move a card to the deck? what does that look like
 		//  - we should be able to move them to the bottom of the deck
 		//  - or move them to the top of the deck
+		//  - do we shuffle the deck every time we do this?
 		return game.cards;
 	}
 	if (to.fixture !== 'cascade' && from.cards.length > 1) {
+		// you can only move multiple cards to a cascade
 		return game.cards;
 	}
 

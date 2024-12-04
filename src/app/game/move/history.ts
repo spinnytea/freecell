@@ -1,5 +1,6 @@
 import {
 	Card,
+	CardLocation,
 	findCard,
 	getSequenceAt,
 	parseShorthandCard,
@@ -55,8 +56,8 @@ export const MOVE_AUTO_F_CHECK_REGEX = /^move .* \((auto-foundation|flourish) .*
 	 - but like, that's not important for now
 	 - yes, i want to do this, but first i should focus on history
 */
-export function parseAndUndoPreviousActionText(game: FreeCell, text: string): Card[] | null {
-	switch (parsePreviousActionType(text).type) {
+export function parseAndUndoPreviousActionText(game: FreeCell, actionText: string): Card[] | null {
+	switch (parsePreviousActionType(actionText).type) {
 		case 'init':
 			// silent failure
 			// it's not wrong to try to undo this, it just doesn't do anything
@@ -65,46 +66,118 @@ export function parseAndUndoPreviousActionText(game: FreeCell, text: string): Ca
 		case 'deal': // TODO (history) undo deal: options (demo, most)
 			return null;
 		case 'move':
-			return undoMove(game, text);
+			return undoMove(game, actionText);
 		case 'auto-foundation':
-			return undoAutoFoundation(game, text);
+			return undoAutoFoundation(game, actionText);
 		case 'cursor':
 		case 'select':
 		case 'deselect':
 		case 'invalid':
 		case 'auto-foundation-tween':
-			throw new Error(`cannot undo move type ${text}`);
+			throw new Error(`cannot undo move type ${actionText}`);
 	}
 }
 
-function undoMove(game: FreeCell, text: string): Card[] {
-	const match = MOVE_REGEX.exec(text);
-	if (!match) throw new Error('invalid move actionText: ' + text);
-	const [, from, to, fromShorthand] = match;
+export function parseCursorFromPreviousActionText(
+	actionText: string | undefined,
+	cards?: Card[]
+): CardLocation | undefined {
+	if (!actionText) return undefined;
+	switch (parsePreviousActionType(actionText).type) {
+		case 'init':
+			return undefined;
+		case 'shuffle':
+		case 'deal':
+			return undefined;
+		case 'move': {
+			const { to, fromShorthand, toShorthand } = parseActionTextMove(actionText);
+			const cursor = parseShorthandPosition_INCOMPLETE(to);
+			switch (cursor.fixture) {
+				case 'deck':
+					// XXX (gameplay) can we, in theory, move a card to the deck? but we don't
+					break;
+				case 'cell':
+					// each cell identifies it's own d0
+					break;
+				case 'foundation':
+					if (cards) {
+						const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+						const card = findCard(cards, shorthand);
+						if (cursor.fixture !== card.location.fixture) {
+							throw new Error(
+								`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
+							);
+						}
+						cursor.data[0] = card.location.data[0];
+					}
+					break;
+				case 'cascade':
+					if (toShorthand === 'cascade') {
+						cursor.data[1] = 0;
+					} else if (cards) {
+						const shorthand = parseShorthandCard(toShorthand[0], toShorthand[1]);
+						const card = findCard(cards, shorthand);
+						if (card.location.fixture !== 'foundation') {
+							if (cursor.fixture !== card.location.fixture) {
+								throw new Error(
+									`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
+								);
+							} else if (cursor.data[0] !== card.location.data[0]) {
+								throw new Error(
+									`invalid move actionText cascade "${actionText}" for cards w/ ${JSON.stringify(card)}`
+								);
+							}
+							cursor.data[1] = card.location.data[1];
+						}
+					}
+					break;
+			}
+			return cursor;
+		}
+		case 'auto-foundation':
+		case 'cursor':
+		case 'select':
+		case 'deselect':
+		case 'invalid':
+		case 'auto-foundation-tween':
+			return undefined;
+	}
+}
+
+function parseActionTextMove(actionText: string) {
+	const match = MOVE_REGEX.exec(actionText);
+	if (!match) throw new Error('invalid move actionText: ' + actionText);
+	const [, from, to, fromShorthand, toShorthand] = match;
+	return { from, to, fromShorthand, toShorthand };
+}
+
+function undoMove(game: FreeCell, actionText: string): Card[] {
+	const { from, to, fromShorthand } = parseActionTextMove(actionText);
 
 	// we don't actually need to parse this if we only care about the first card
 	// const fromShorthands = fromShorthand.split('-');
 	// const firstFromShorthand = fromShorthands[0];
-	// if (!firstFromShorthand) throw new Error('no card to move: ' + text);
+	// if (!firstFromShorthand) throw new Error('no card to move: ' + actionText);
 
 	const firstCardSH = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
 	const firstCard = findCard(game.cards, firstCardSH);
 	if (shorthandPosition(firstCard.location) !== to)
-		throw new Error('invalid first card position: ' + text);
+		throw new Error('invalid first card position: ' + actionText);
 
 	const sequence = getSequenceAt(game, firstCard.location);
-	if (shorthandSequence(sequence) !== fromShorthand) throw new Error('invalid sequence: ' + text);
+	if (shorthandSequence(sequence) !== fromShorthand)
+		throw new Error('invalid sequence: ' + actionText);
 	const location = parseShorthandPosition_INCOMPLETE(from);
 
 	return moveCards(game, sequence, location);
 }
 
-function undoAutoFoundation(game: FreeCell, text: string): Card[] {
-	const match = AUTO_FOUNDATION_REGEX.exec(text);
-	if (!match) throw new Error('invalid move actionText: ' + text);
+function undoAutoFoundation(game: FreeCell, actionText: string): Card[] {
+	const match = AUTO_FOUNDATION_REGEX.exec(actionText);
+	if (!match) throw new Error('invalid move actionText: ' + actionText);
 	const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
 	const shorthands = match[3].split(',').map((s) => parseShorthandCard(s[0], s[1]));
-	if (froms.length !== shorthands.length) throw new Error('invalid move actionText: ' + text);
+	if (froms.length !== shorthands.length) throw new Error('invalid move actionText: ' + actionText);
 
 	game = game.__clone({
 		action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
@@ -114,7 +187,7 @@ function undoAutoFoundation(game: FreeCell, text: string): Card[] {
 		const from = froms.pop();
 		const shorthand = shorthands.pop();
 		const card = findCard(game.cards, shorthand);
-		if (!from || !shorthand) throw new Error('invalid move actionText: ' + text);
+		if (!from || !shorthand) throw new Error('invalid move actionText: ' + actionText);
 
 		const cards = moveCards(game, getSequenceAt(game, card.location), from);
 		game = game.__clone({
@@ -126,14 +199,14 @@ function undoAutoFoundation(game: FreeCell, text: string): Card[] {
 	return game.cards;
 }
 
-export function parsePreviousActionType(text: string): PreviousAction {
-	const firstWord = text.split(' ')[0];
-	if (firstWord === 'hand-jammed') return { text, type: 'init' };
-	if (firstWord === 'touch') return { text, type: 'invalid' };
-	if (firstWord === 'flourish') return { text, type: 'auto-foundation' };
+export function parsePreviousActionType(actionText: string): PreviousAction {
+	const firstWord = actionText.split(' ')[0];
+	if (firstWord === 'hand-jammed') return { text: actionText, type: 'init' };
+	if (firstWord === 'touch') return { text: actionText, type: 'invalid' };
+	if (firstWord === 'flourish') return { text: actionText, type: 'auto-foundation' };
 	// if (firstWord === 'auto-foundation-setup') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	// if (firstWord === 'auto-foundation-middle') return { text, type: 'auto-foundation-tween' }; // should not appear in print
-	return { text, type: firstWord as PreviousActionType };
+	return { text: actionText, type: firstWord as PreviousActionType };
 }
 
 export function parseMovesFromHistory(history: string[]): { seed: number; moves: string[] } | null {
@@ -142,8 +215,8 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 	if (!matchSeed) return null;
 	const seed = parseInt(matchSeed[1], 10);
 	const moves = history
-		.map((text) => {
-			const match = MOVE_REGEX.exec(text);
+		.map((actionText) => {
+			const match = MOVE_REGEX.exec(actionText);
 			if (!match) return '';
 			const [, from, to] = match;
 			return `${from}${to}`;

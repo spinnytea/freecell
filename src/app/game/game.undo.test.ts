@@ -11,7 +11,7 @@ function undoUntilStart(game: FreeCell): FreeCell {
 	return game;
 }
 
-// TODO (techdebt) (history) (5-priority) unit test history
+// TODO (techdebt) (more-undo) (history) unit test history
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
 		// TODO (more-undo) init does not undo
@@ -71,6 +71,7 @@ describe('game.undo (+ history)', () => {
 					expect(
 						FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 					).toBe(game.print({ includeHistory: true }));
+					expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 					expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 				});
@@ -106,6 +107,7 @@ describe('game.undo (+ history)', () => {
 						expect(
 							FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 						).toBe(game.print({ includeHistory: true }));
+						expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 						expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 					});
@@ -122,7 +124,7 @@ describe('game.undo (+ history)', () => {
 							'' + //
 								' AC             KD KH KS \n' + //
 								'                         \n' + //
-								'd: KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C \n' + //
+								':d KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C \n' + //
 								' hand-jammed'
 						);
 						expect(game.history).toEqual(['hand-jammed']);
@@ -132,7 +134,7 @@ describe('game.undo (+ history)', () => {
 							'' + //
 								'             AC KD KH KS \n' + //
 								'                         \n' + //
-								'd: KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C \n' + //
+								':d KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C \n' + //
 								' move ah AC→foundation\n' + //
 								' hand-jammed'
 						);
@@ -140,6 +142,7 @@ describe('game.undo (+ history)', () => {
 						expect(
 							FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 						).toBe(game.print({ includeHistory: true }));
+						expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 						expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 					});
@@ -175,6 +178,7 @@ describe('game.undo (+ history)', () => {
 						expect(
 							FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 						).toBe(game.print({ includeHistory: true }));
+						expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 						expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 					});
@@ -259,6 +263,7 @@ describe('game.undo (+ history)', () => {
 							expect(
 								FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 							).toBe(game.print({ includeHistory: true }));
+							expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 							expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 						});
@@ -292,6 +297,7 @@ describe('game.undo (+ history)', () => {
 						expect(
 							FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 						).toBe(game.print({ includeHistory: true }));
+						expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 						expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 					});
@@ -362,6 +368,7 @@ describe('game.undo (+ history)', () => {
 							expect(
 								FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 							).toBe(game.print({ includeHistory: true }));
+							expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 							expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 						});
@@ -494,13 +501,12 @@ describe('game.undo (+ history)', () => {
 				' move 12 KC→cascade\n' +
 				' hand-jammed'
 		);
-		let parsed = FreeCell.parse(game.print({ includeHistory: true }));
+		const parsed = FreeCell.parse(game.print({ includeHistory: true }));
 		expect(parsed.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 		expect(parsed.history).toEqual(game.history);
+		expect(parsed.cards).toEqual(game.cards);
 
-		// TODO (techdebt) detect last cursor position, so we don't need to normalize the cursor
-		game = game.setCursor({ fixture: 'cell', data: [0] });
-		parsed = parsed.setCursor({ fixture: 'cell', data: [0] });
+		// but really, we have _all_ the information we need to rebuild the entire game state
 		expect(parsed).toEqual(game);
 	});
 
@@ -540,7 +546,7 @@ describe('game.undo (+ history)', () => {
 					getMoves(seed, { cellCount, cascadeCount }).forEach((move) => {
 						const prevState = game.print({ includeHistory: true });
 						const prevAction = game.previousAction;
-						// TODO (techdebt) detect last cursor position, so we don't need to normalize the cursor
+						// TODO (more-undo) (techdebt) update cursor, so we don't need to normalize the cursor
 						// const prevStateNH = game.print({ includeHistory: false });
 
 						game = game.moveByShorthand(move);
@@ -550,7 +556,7 @@ describe('game.undo (+ history)', () => {
 						const afterUndo = game.undo();
 						expect(afterUndo.previousAction).toEqual(prevAction);
 						expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
-						// TODO (techdebt) detect last cursor position, so we don't need to normalize the cursor
+						// TODO (more-undo) (techdebt) update cursor, so we don't need to normalize the cursor
 						// expect(afterUndo.print({ includeHistory: false })).toBe(prevStateNH);
 					});
 					expect(game.win).toBe(true);
@@ -563,7 +569,7 @@ describe('game.undo (+ history)', () => {
 					let newGame = new FreeCell({ cellCount, cascadeCount }).shuffle32(seed).dealAll();
 					expect(game.cards).toEqual(newGame.cards);
 
-					// TODO (techdebt) detect last cursor position, so we don't need to normalize the cursor
+					// TODO (more-undo) (techdebt) update cursor, so we don't need to normalize the cursor
 					game = game.setCursor({ fixture: 'cell', data: [0] });
 					newGame = newGame.setCursor({ fixture: 'cell', data: [0] });
 					expect(newGame).toEqual(game);

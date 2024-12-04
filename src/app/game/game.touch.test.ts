@@ -43,7 +43,7 @@ describe('game.touch', () => {
 					'' +
 						'                         \n' +
 						'                         \n' +
-						'd:>KS|4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
+						':d>KS|4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' select KS'
 				);
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
@@ -53,7 +53,7 @@ describe('game.touch', () => {
 					'' +
 						'                         \n' +
 						'                         \n' +
-						'd:|KS|4D 9C 5C 8H 7S 7H AD 5D>3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
+						':d|KS|4D 9C 5C 8H 7S 7H AD 5D>3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' cursor set'
 				);
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
@@ -83,7 +83,7 @@ describe('game.touch', () => {
 						' 9H AH 6D JD 8C 5H 6H 8D \n' +
 						' QH 5S KH 3H 4S 2C QC 2H \n' +
 						' JC KC 3D AC             \n' +
-						'd:>   \n' +
+						':d>   \n' +
 						' touch stop'
 				);
 			});
@@ -99,7 +99,7 @@ describe('game.touch', () => {
 					'' +
 						'                         \n' +
 						'                         \n' +
-						'd: KS 4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S>9D|\n' +
+						':d KS 4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S>9D|\n' +
 						' select 9D'
 				);
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
@@ -123,7 +123,7 @@ describe('game.touch', () => {
 						'' +
 							'                         \n' +
 							'                         \n' +
-							`d: KS 4D 9C 5C 8H ${printSubstr} JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n` +
+							`:d KS 4D 9C 5C 8H ${printSubstr} JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n` +
 							' cursor set'
 					);
 					expect(FreeCell.parse(game.print()).print()).toBe(game.print());
@@ -503,7 +503,7 @@ describe('game.touch', () => {
 						'      |9C|9D             \n' + //
 						'      |8D|8C             \n' + //
 						'      |7C|7D             \n' + //
-						'd: KS KH QS QH JS JH TS TH 9S 9H 8S 8H 7S 7H 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H \n' +
+						':d KS KH QS QH JS JH TS TH 9S 9H 8S 8H 7S 7H 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H \n' +
 						' select 3 QD-JC-TD-9C-8D-7C'
 				);
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
@@ -535,7 +535,7 @@ describe('game.touch', () => {
 					'' +
 						'                         \n' +
 						'      >                  \n' +
-						'd: KS 4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
+						':d KS 4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' touch stop'
 				);
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
@@ -923,7 +923,7 @@ describe('game.touch', () => {
 						'' + //
 							'|QC|QD QH QS TC TD TH TS \n' + //
 							' KC   >   KS JC JD JH JS \n' + //
-							'd: KH KD \n' + //
+							':d KH KD \n' + //
 							' cursor set'
 					);
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] });
@@ -949,7 +949,7 @@ describe('game.touch', () => {
 						'' + //
 							'    QD QH QS TC TD TH TS \n' + //
 							' KC   >QC KS JC JD JH JS \n' + //
-							'd: KH KD \n' + //
+							':d KH KD \n' + //
 							' move a3 QC→cascade'
 					);
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] });
@@ -1430,7 +1430,7 @@ describe('game.touch', () => {
 								'   |TC|   KD>JH          \n' + //
 								'   |9D|   QC             \n' + //
 								'   |8C|   JD             \n' + //
-								'd: KH KC QH QD JC TD 9C \n' + //
+								':d KH KC QH QD JC TD 9C \n' + //
 								' cursor set'
 						);
 						expect(game.cursor).toEqual({ fixture: 'cascade', data: [4, 0] });
@@ -1488,7 +1488,7 @@ describe('game.touch', () => {
 								'          QC TC          \n' + //
 								'          JD 9D          \n' + //
 								'             8C          \n' + //
-								'd: KH KC QH QD JC TD 9C \n' + //
+								':d KH KC QH QD JC TD 9C \n' + //
 								' move 25 TC-9D-8C→JH'
 						);
 						expect(game.cursor).toEqual({ fixture: 'cascade', data: [4, 0] });
@@ -1509,7 +1509,7 @@ describe('game.touch', () => {
 									'   |TC|   KD JH          \n' + //
 									'   |9D|   QC             \n' + //
 									'   |8C|  >JD             \n' + //
-									'd: KH KC QH QD JC TD 9C \n' + //
+									':d KH KC QH QD JC TD 9C \n' + //
 									' cursor set'
 							);
 							expect(game.cursor).toEqual({ fixture: 'cascade', data: [3, 2] });
@@ -1569,7 +1569,7 @@ describe('game.touch', () => {
 									'          TC             \n' + //
 									'          9D             \n' + //
 									'          8C             \n' + //
-									'd: KH KC QH QD JC TD 9C \n' + //
+									':d KH KC QH QD JC TD 9C \n' + //
 									' move 24 TC-9D-8C→JD'
 							);
 							expect(game.cursor).toEqual({ fixture: 'cascade', data: [3, 2] });
@@ -1586,7 +1586,7 @@ describe('game.touch', () => {
 								'   |TC|   KD JH>         \n' + //
 								'   |9D|   QC             \n' + //
 								'   |8C|   JD             \n' + //
-								'd: KH KC QH QD JC TD 9C \n' + //
+								':d KH KC QH QD JC TD 9C \n' + //
 								' cursor set'
 						);
 						expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
@@ -1643,7 +1643,7 @@ describe('game.touch', () => {
 								'          KD JH>TC       \n' + //
 								'          QC    9D       \n' + //
 								'          JD    8C       \n' + //
-								'd: KH KC QH QD JC TD 9C \n' + //
+								':d KH KC QH QD JC TD 9C \n' + //
 								' move 26 TC-9D-8C→cascade'
 						);
 						expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });

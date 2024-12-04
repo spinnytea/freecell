@@ -30,7 +30,7 @@ describe('game.autoFoundation', () => {
 						' hand-jammed'
 				)
 					.autoFoundationAll({ limit, method, anytime: true })
-					.print({ skipDeck: true });
+					.print();
 				expect(print.split('\n')[0]).toBe(homeStr);
 			});
 		});
@@ -64,7 +64,7 @@ describe('game.autoFoundation', () => {
 						' hand-jammed'
 				)
 					.autoFoundationAll({ limit, method, anytime: true })
-					.print({ skipDeck: true });
+					.print();
 				expect(print.split('\n')[0]).toBe(homeStr);
 			});
 		});
@@ -180,7 +180,7 @@ describe('game.autoFoundation', () => {
 								' hand-jammed'
 						)
 							.autoFoundationAll({ limit, method, anytime: true })
-							.print({ skipDeck: true })
+							.print()
 					).toBe(
 						'' + //
 							'>            KH KS KD KC \n' + //
