@@ -739,11 +739,12 @@ export class FreeCell {
 	/**
 		These deals are numbered from 1 to 32000.
 
+		XXX (techdebt) rename to shuffle32k, including actionText and print history
+
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/
 	shuffle32(seed?: number): FreeCell {
-		if (seed === undefined) {
-			// TODO (gameplay) (settings) do not allow the impossible #11982?
+		if (seed === undefined || seed === 11982) {
 			seed = Math.floor(Math.random() * 32000) + 1;
 		}
 

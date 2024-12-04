@@ -90,6 +90,14 @@ describe('game.shuffle32', () => {
 		);
 	});
 
+	test('Game #11982', () => {
+		const game = new FreeCell().shuffle32(11982);
+		const matchSeed = /shuffle deck \((\d+)\)/.exec(game.previousAction.text);
+		expect(matchSeed).not.toBe(null);
+		expect(matchSeed?.[1]).toMatch(/^\d+$/);
+		expect(matchSeed?.[1]).not.toBe('11982');
+	});
+
 	test('partial deck', () => {
 		const game = FreeCell.parse(
 			'' + //
