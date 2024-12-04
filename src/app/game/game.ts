@@ -1071,7 +1071,7 @@ export class FreeCell {
 				if (!invalidFoundations) {
 					// …and all cards of lesser rank
 					const ranks = RankList.slice(0);
-					while (ranks.pop() !== card.rank); // pull off all the ranks we do not want
+					while (ranks.pop() !== card.rank); // pull off all the ranks we do not want (all the higher ones)
 					ranks.forEach((r) => {
 						getCard({ rank: r, suit: card.suit }).location = { fixture: 'foundation', data: [i] };
 					});
@@ -1150,12 +1150,9 @@ export class FreeCell {
 		if (parseHistory) {
 			const peek = lines.pop();
 			if (!peek) {
-				// FIXME (parse-history) test
+				// TODO (parse-history) test
 				if (parsePreviousActionType(actionText).type === 'init') {
 					history.push(actionText);
-				} else {
-					// this is a weird edge case because parseHistory is enabled when there is no cursor
-					throw new Error('must have at least 1 cursor');
 				}
 			} else if (peek.startsWith(':h')) {
 				const matchSeed = /:h shuffle32 (\d+)/.exec(peek);
@@ -1186,19 +1183,16 @@ export class FreeCell {
 					// re-print the our game, confirm it matches the input
 					replayGameForHistroy.print({ includeHistory: true }) === print;
 
-				// FIXME (parse-history) test... more?
-				// expect(
-				// 	FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
-				// ).toBe(game.print({ includeHistory: true }));
-				// expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
-
 				if (valid) {
 					// we have the whole game, so we can simply return it now
 					return replayGameForHistroy;
-				}
+					// although, we don't have to...
 
-				history.push('init with invalid history');
-				history.push(actionText);
+					Array.prototype.push.apply(history, replayGameForHistroy.history);
+				} else {
+					history.push('init with invalid history');
+					history.push(actionText);
+				}
 			} else {
 				Array.prototype.push.apply(
 					history,
@@ -1206,7 +1200,7 @@ export class FreeCell {
 				);
 				history.push(peek.trim());
 				history.push(actionText);
-				// FIXME (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
+				// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
 				//  - text we can use what history is valid; ['init partial history', ..., actionText]
 			}
 		} else {
@@ -1282,7 +1276,6 @@ export class FreeCell {
 			// try to figure out the location of the cursor based on the previous move
 			for (let i = history.length - 1; !cursor && i >= 0; i--) {
 				const actionText = history[i];
-				// FIXME this fails on `move 42 JS→QH (auto-foundation …)`
 				cursor = parseCursorFromPreviousActionText(actionText, cards);
 			}
 		}

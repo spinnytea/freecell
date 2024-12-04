@@ -228,4 +228,27 @@ describe('game.parse', () => {
 			test.todo('different print');
 		});
 	});
+
+	describe('detect cursor location', () => {
+		test('move … (auto-foundation …)', () => {
+			const game = FreeCell.parse(
+				'' +
+					'             KH KC KS KD \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' move 42 JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)\n' +
+					' init hand-jammed'
+			);
+			expect(game.cursor).toEqual({ fixture: 'cascade', data: [1, 0] });
+			expect(game.print()).toBe(
+				'' +
+					'             KH KC KS KD \n' +
+					'   >                     \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' move 42 JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)'
+			);
+		});
+	});
 });

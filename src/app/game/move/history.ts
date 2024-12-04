@@ -124,16 +124,18 @@ export function parseCursorFromPreviousActionText(
 					} else if (cards) {
 						const shorthand = parseShorthandCard(toShorthand[0], toShorthand[1]);
 						const card = findCard(cards, shorthand);
-						if (cursor.fixture !== card.location.fixture) {
-							throw new Error(
-								`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
-							);
-						} else if (cursor.data[0] !== card.location.data[0]) {
-							throw new Error(
-								`invalid move actionText cascade "${actionText}" for cards w/ ${JSON.stringify(card)}`
-							);
+						if (card.location.fixture !== 'foundation') {
+							if (cursor.fixture !== card.location.fixture) {
+								throw new Error(
+									`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
+								);
+							} else if (cursor.data[0] !== card.location.data[0]) {
+								throw new Error(
+									`invalid move actionText cascade "${actionText}" for cards w/ ${JSON.stringify(card)}`
+								);
+							}
+							cursor.data[1] = card.location.data[1];
 						}
-						cursor.data[1] = card.location.data[1];
 					}
 					break;
 			}
