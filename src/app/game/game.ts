@@ -444,10 +444,12 @@ export class FreeCell {
 		  - OR disable select-to-peek for mouse
 	*/
 	touch(): FreeCell {
+		/** clear the selction, if re-touching the same spot */
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
 			return this.clearSelection();
 		}
 
+		/** set selection, or move selection if applicable  */
 		// TODO (controls) allow "growing/shrinking sequence of current selection"
 		// TODO (controls) || !game.availableMoves?.length (if the current selection has no valid moves)
 		// TODO (controls) allow moving selection from one cell to another cell
@@ -466,7 +468,10 @@ export class FreeCell {
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length) {
-			// XXX (techdebt) can we test this? should we remove this?
+			// XXX (techdebt) unit tests
+			//  - if we have a selection and there are no valid moves (select a 3, no empty cells or cascades, no 4s, no foundation)
+			//  - if we didn't have a selection… but we couldn't select the thing we touched (i.e. foundation (relax this?))
+			//  - if we have a selection, and we can't select the new thing (^^ relax this)
 			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
 		}
 
@@ -476,6 +481,7 @@ export class FreeCell {
 			isLocationEqual(this.cursor, location)
 		);
 		if (valid) {
+			// FIXME moveCards… and check for auto-foundation
 			const cards = moveCards(this, this.selection, this.cursor);
 			return this.__clone({
 				action: { text: actionText, type: 'move' },
@@ -491,7 +497,7 @@ export class FreeCell {
 
 	/**
 		go back one move
-		XXX (combine-move-auto-foundation) (or two if using moveByShorthand)
+		REVIEW (combine-move-auto-foundation) or two if using moveByShorthand
 	*/
 	undo(): FreeCell | this {
 		const history = this.history.slice(0);
@@ -534,7 +540,7 @@ export class FreeCell {
 		// select from, move to
 		let game = this.setCursor(from).touch().setCursor(to).touch();
 
-		// TODO (combine-move-auto-foundation) make this a standard part of touch
+		// FIXME (combine-move-auto-foundation) make this a standard part of touch
 		if (autoFoundation) {
 			const actionText = game.previousAction.text;
 			game = game.autoFoundationAll();
@@ -723,6 +729,7 @@ export class FreeCell {
 		}, this.availableMoves[0]).location;
 
 		const actionText = calcMoveActionText(this.selection, getSequenceAt(this, to_location));
+		// FIXME moveCards… and check for auto-foundation
 		const cards = moveCards(this, this.selection, to_location);
 		// move the cursor to the destination
 		// clear the selection

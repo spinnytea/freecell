@@ -37,7 +37,7 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 
 	useGSAP(
 		() => {
-			// TODO (combine-move-auto-foundation) animate move and auto-foundation in two parts
+			// FIXME (combine-move-auto-foundation) animate move and auto-foundation in two parts
 			//  - if we can parse the action text and all the diffed cards are the same
 			//  - timelines!
 			//  - if the parse or cards differ, then just animate them in one-shot

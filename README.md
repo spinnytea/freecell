@@ -21,7 +21,7 @@ TODO (motivation) main development tasks:
 
 ## Top-Level TODOs
 
-- TODO (combine-move-auto-foundation) (4-priority) combine move and auto foundation into one action
+- FIXME (combine-move-auto-foundation) (4-priority) combine move and auto foundation into one action
   - during `game.touch`, always call `game.autoFoundationAll` by default (make flags to disable or whatever)
   - keep the action text like in `game.moveByShorthand`
   - it's not a single action, verify undo

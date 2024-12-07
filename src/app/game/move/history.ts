@@ -20,8 +20,8 @@ export type PreviousActionType =
 	| 'select'
 	| 'deselect'
 	| 'move'
-	| 'auto-foundation' // TODO (combine-move-auto-foundation) when we collapse them, use auto-foundation as the resulting type
-	// | 'flourish' // TODO (combine-move-auto-foundation) add flourish as a move type ;)
+	| 'auto-foundation' // FIXME (combine-move-auto-foundation) move-foundation
+	// | 'flourish' // FIXME (combine-move-auto-foundation) move-flourish
 	| 'invalid'
 	| 'auto-foundation-tween';
 
