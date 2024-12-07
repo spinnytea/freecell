@@ -120,9 +120,6 @@ export type AutoFoundationLimit =
 	// i.e. 3444
 	| 'rank';
 
-// TODO (settings) these _exist_, but we need to be able to pick them
-export type AutoFoundationMethod = 'cell,cascade' | 'foundation';
-
 /* *************** */
 /* COUNTING THINGS */
 /* *************** */

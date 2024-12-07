@@ -25,7 +25,6 @@ import {
 } from '@/app/game/move/history';
 import {
 	AutoFoundationLimit,
-	AutoFoundationMethod,
 	AvailableMove,
 	canStackFoundation,
 	countEmptyFoundations,
@@ -75,7 +74,6 @@ export class FreeCell {
 
 	// settings
 	// autoFoundationLimit: AutoFoundationLimit; // XXX (techdebt) use or remove
-	// autoFoundationMethod: AutoFoundationMethod; // XXX (techdebt) use or remove
 
 	constructor({
 		cellCount = DEFAULT_NUMBER_OF_CELLS,
@@ -557,14 +555,17 @@ export class FreeCell {
 		TODO (techdebt) break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
 		REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
 		REVIEW (techdebt) autoFoundation needs some serious refactoring
+
+		XXX (settings) (AutoFoundationMethod) if we want more ways to do the "autoFoundation" logic, we can split it out
+		 - but as it stands, it's only a hair-splicy difference
+		 - the animation is so fast that you don't really notice the difference (and may or may not follow this order anyway)
+		 - the move history is all but ignored
 	*/
 	autoFoundationAll({
 		limit = 'opp+1',
-		method = 'foundation',
 		anytime = false,
 	}: {
 		limit?: AutoFoundationLimit;
-		method?: AutoFoundationMethod;
 		anytime?: boolean;
 	} = {}): FreeCell | this {
 		// can only do auto-foundation after a card moves
@@ -581,118 +582,71 @@ export class FreeCell {
 
 		// TODO (setting) autoFoundation "only after [any] move" vs "only after move to foundation"
 
-		let didMoveAny = false;
-		let didMove = true;
-		while (didMove) {
-			didMove = false;
+		let didAnyMove = false;
+		let keepGoing = true;
+		while (keepGoing) {
+			keepGoing = false;
 
-			if (method === 'cell,cascade') {
-				game.cells.forEach((c, c_idx) => {
-					const sequenceToMove = getSequenceAt(game, { fixture: 'cell', data: [c_idx] });
-					const availableMove = findAvailableMoves(game, sequenceToMove).find(
-						({ location: { fixture } }) => fixture === 'foundation'
-					);
-					if (c && availableMove && !game.selection?.cards.includes(sequenceToMove.cards[0])) {
-						didMove = true;
-						didMoveAny = true;
-						const cards = moveCards(game, sequenceToMove, availableMove.location);
-						game = game.__clone({
-							action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
-							cards,
-						});
-						moved.push(c);
-					}
-				});
-				game.tableau.forEach((cascade, c_idx) => {
-					if (cascade.length) {
-						const sequenceToMove = getSequenceAt(game, {
-							fixture: 'cascade',
-							data: [c_idx, cascade.length - 1],
-						});
-						const availableMove = findAvailableMoves(game, sequenceToMove).find(
-							({
-								location: {
-									fixture,
-									data: [f_idx],
-								},
-							}) => fixture === 'foundation' && foundationCanAcceptCards(game, f_idx, limit)
-						);
-						if (availableMove && !game.selection?.cards.includes(sequenceToMove.cards[0])) {
-							didMove = true;
-							didMoveAny = true;
-							const cards = moveCards(game, sequenceToMove, availableMove.location);
-							game = game.__clone({
-								action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
-								cards,
-							});
-							moved.push(sequenceToMove.cards[0]);
+			game.foundations.forEach((f, f_idx) => {
+				let canAccept = foundationCanAcceptCards(game, f_idx, limit);
+				if (canAccept) {
+					game.cells.forEach((c, c_idx) => {
+						if (canAccept) {
+							const canMove = c && canStackFoundation(f, c) && !game.selection?.cards.includes(c);
+							if (canMove) {
+								canAccept = false;
+								keepGoing = true;
+								didAnyMove = true;
+								const cards = moveCards(
+									game,
+									getSequenceAt(game, { fixture: 'cell', data: [c_idx] }),
+									{
+										fixture: 'foundation',
+										data: [f_idx],
+									}
+								);
+								game = game.__clone({
+									action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
+									cards,
+								});
+								moved.push(c);
+							}
 						}
-					}
-				});
-			}
-
-			if (method === 'foundation') {
-				game.foundations.forEach((f, f_idx) => {
-					let canAccept = foundationCanAcceptCards(game, f_idx, limit);
-					if (canAccept) {
-						game.cells.forEach((c, c_idx) => {
-							if (canAccept) {
-								const canMove = c && canStackFoundation(f, c) && !game.selection?.cards.includes(c);
-								if (canMove) {
-									canAccept = false;
-									didMove = true;
-									didMoveAny = true;
-									const cards = moveCards(
-										game,
-										getSequenceAt(game, { fixture: 'cell', data: [c_idx] }),
-										{
-											fixture: 'foundation',
-											data: [f_idx],
-										}
-									);
-									game = game.__clone({
-										action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
-										cards,
-									});
-									moved.push(c);
-								}
+					});
+				}
+				if (canAccept) {
+					game.tableau.forEach((cascade, c_idx) => {
+						const last_idx = cascade.length - 1;
+						if (canAccept && cascade.length > 0) {
+							const c = cascade[last_idx];
+							const canMove = canStackFoundation(f, c) && !game.selection?.cards.includes(c);
+							if (canMove) {
+								canAccept = false;
+								keepGoing = true;
+								didAnyMove = true;
+								const cards = moveCards(
+									game,
+									getSequenceAt(game, { fixture: 'cascade', data: [c_idx, last_idx] }),
+									{
+										fixture: 'foundation',
+										data: [f_idx],
+									}
+								);
+								game = game.__clone({
+									action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
+									cards,
+								});
+								moved.push(c);
 							}
-						});
-					}
-					if (canAccept) {
-						game.tableau.forEach((cascade, c_idx) => {
-							const last_idx = cascade.length - 1;
-							if (canAccept && cascade.length > 0) {
-								const c = cascade[last_idx];
-								const canMove = canStackFoundation(f, c) && !game.selection?.cards.includes(c);
-								if (canMove) {
-									canAccept = false;
-									didMove = true;
-									didMoveAny = true;
-									const cards = moveCards(
-										game,
-										getSequenceAt(game, { fixture: 'cascade', data: [c_idx, last_idx] }),
-										{
-											fixture: 'foundation',
-											data: [f_idx],
-										}
-									);
-									game = game.__clone({
-										action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
-										cards,
-									});
-									moved.push(c);
-								}
-							}
-						});
-					}
-				});
-			}
+						}
+					});
+				}
+			});
 		}
 
 		// XXX (techdebt) can we write this function in a way that doesn't confuse typescript?
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (didMoveAny) {
+		if (didAnyMove) {
 			const movedCardsStr = moved.map((card) => shorthandCard(card)).join(',');
 			const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
 			const name = game.win && countEmptyFoundations(this) > 0 ? 'flourish' : 'auto-foundation';
@@ -869,6 +823,7 @@ export class FreeCell {
 
 		XXX (techdebt) print is super messy, can we clean this up?
 		TODO (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
+		FIXME remove skipDeck
 	*/
 	print({
 		skipDeck = false,
@@ -1295,7 +1250,7 @@ export class FreeCell {
 			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
 		// XXX (techdebt) re-print the our game, confirm it matches the input
-		//  - seems to be mostly `skipDeck` and clipped "you win" messages
+		//  - seems to be mostly `skipDeck` (print) and clipped "you win" messages (hand-jammed)
 		// const reprint = game.print({ includeHistory: parseHistory });
 		// if (reprint !== print) throw new Error(`whoops!\n${print}\n${reprint}`);
 		return game;
