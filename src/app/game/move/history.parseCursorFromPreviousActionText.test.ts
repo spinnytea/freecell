@@ -8,6 +8,8 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 		{ rank: 'jack', suit: 'spades', location: { fixture: 'cascade', data: [4, 12] } },
 		{ rank: 'queen', suit: 'spades', location: { fixture: 'cascade', data: [7, 2] } },
 	];
+
+	/** @see game/history.parsePreviousActionType specific cases */
 	describe('specific cases', () => {
 		test.each`
 			actionText                                | cards          | cursor

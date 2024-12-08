@@ -346,8 +346,7 @@ describe('game', () => {
 		});
 	});
 
-	// FIXME fix
-	describe.skip('complete games', () => {
+	describe('complete games', () => {
 		test('Game #1', () => {
 			let game = new FreeCell().shuffle32(1).dealAll();
 			const moves = getMoves(1);

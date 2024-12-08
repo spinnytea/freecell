@@ -43,10 +43,10 @@ export interface PreviousAction {
 	type: PreviousActionType;
 }
 
-// REVIEW (combine-move-auto-foundation) do we still need this?
-const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(.*)$/;
-// REVIEW (combine-move-auto-foundation) do we still need this?
-const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (.+)$/;
+const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
+const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (\S+)$/;
+const MOVE_FOUNDATION_REGEX =
+	/^move (\w)(\w) ([\w-]+)→(\S+) \((auto-foundation|flourish) (\w+) (\S+)\)$/;
 
 /**
 	read {@link PreviousAction.text} which has the full context of what was moved
@@ -150,10 +150,19 @@ export function parseCursorFromPreviousActionText(
 }
 
 function parseActionTextMove(actionText: string) {
-	const match = MOVE_REGEX.exec(actionText);
-	if (!match) throw new Error('invalid move actionText: ' + actionText);
-	const [, from, to, fromShorthand, toShorthand] = match;
-	return { from, to, fromShorthand, toShorthand };
+	let match = MOVE_REGEX.exec(actionText);
+	if (match) {
+		const [, from, to, fromShorthand, toShorthand] = match;
+		return { from, to, fromShorthand, toShorthand };
+	}
+
+	match = MOVE_FOUNDATION_REGEX.exec(actionText);
+	if (match) {
+		const [, from, to, fromShorthand, toShorthand] = match;
+		return { from, to, fromShorthand, toShorthand };
+	}
+
+	throw new Error('invalid move actionText: ' + actionText);
 }
 
 function undoMove(game: FreeCell, actionText: string): Card[] {
@@ -177,12 +186,32 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 	return moveCards(game, sequence, location);
 }
 
+function parseActionTextAutoFoundation(actionText: string) {
+	let match = AUTO_FOUNDATION_REGEX.exec(actionText);
+	if (match) {
+		// match[1] === 'auto-foundation' || match[1] === 'flourish'
+		const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
+		const shorthands = match[3].split(',').map((s) => parseShorthandCard(s[0], s[1]));
+		if (froms.length !== shorthands.length)
+			throw new Error('invalid move actionText: ' + actionText);
+		return { froms, shorthands };
+	}
+
+	match = MOVE_FOUNDATION_REGEX.exec(actionText);
+	if (match) {
+		// match[5] === 'auto-foundation' || match[5] === 'flourish'
+		const froms = match[6].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
+		const shorthands = match[7].split(',').map((s) => parseShorthandCard(s[0], s[1]));
+		if (froms.length !== shorthands.length)
+			throw new Error('invalid move actionText: ' + actionText);
+		return { froms, shorthands };
+	}
+
+	throw new Error('invalid move actionText: ' + actionText);
+}
+
 function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
-	const match = AUTO_FOUNDATION_REGEX.exec(actionText);
-	if (!match) throw new Error('invalid move actionText: ' + actionText);
-	const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
-	const shorthands = match[3].split(',').map((s) => parseShorthandCard(s[0], s[1]));
-	if (froms.length !== shorthands.length) throw new Error('invalid move actionText: ' + actionText);
+	const { froms, shorthands } = parseActionTextAutoFoundation(actionText);
 
 	game = game.__clone({
 		action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
@@ -227,10 +256,17 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 	const seed = parseInt(matchSeed[1], 10);
 	const moves = history
 		.map((actionText) => {
-			const match = MOVE_REGEX.exec(actionText);
-			if (!match) return '';
-			const [, from, to] = match;
-			return `${from}${to}`;
+			let match = MOVE_REGEX.exec(actionText);
+			if (match) {
+				const [, from, to] = match;
+				return `${from}${to}`;
+			}
+			match = MOVE_FOUNDATION_REGEX.exec(actionText);
+			if (match) {
+				const [, from, to] = match;
+				return `${from}${to}`;
+			}
+			return '';
 		})
 		.filter((m) => m);
 	return { seed, moves };

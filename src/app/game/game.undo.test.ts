@@ -11,7 +11,6 @@ function undoUntilStart(game: FreeCell): FreeCell {
 	return game;
 }
 
-// FIXME remove autoFoundation? test both?
 // TODO (techdebt) (more-undo) (history) unit test history
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
@@ -412,11 +411,432 @@ describe('game.undo (+ history)', () => {
 			});
 		});
 
-		// FIXME test.todo
-		test.todo('move-foundation');
+		/** @see game.touch move card autoFoundation */
+		describe('auto-foundation', () => {
+			test('few', () => {
+				let game = FreeCell.parse(
+					'' +
+						'             AD          \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH 6D    6C QC JS \n' +
+						' 9S    7C TS             \n' +
+						'       6H                \n' +
+						' auto-foundation 2 AD\n' +
+						' move 53 6H→7C\n' +
+						' deal all cards\n' +
+						' shuffle deck (5)'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'auto-foundation 2 AD',
+					type: 'auto-foundation',
+				});
+				expect(game.history).toEqual([
+					'shuffle deck (5)',
+					'deal all cards',
+					'move 53 6H→7C',
+					'auto-foundation 2 AD',
+				]);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
 
-		// FIXME test.todo
-		test.todo('auto-foundation');
+				game = game.undo();
+				expect(game.print({ includeHistory: true })).toBe(
+					'' +
+						'                         \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH 6D    6C QC JS \n' +
+						' 9S AD 7C TS             \n' +
+						'       6H                \n' +
+						' move 53 6H→7C\n' +
+						':h shuffle32 5\n' +
+						' 53 '
+				);
+				expect(game.previousAction).toEqual({
+					text: 'move 53 6H→7C',
+					type: 'move',
+				});
+				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards', 'move 53 6H→7C']);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
+				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards', 'move 53 6H→7C']);
+
+				game = game.undo();
+				expect(game.print({ includeHistory: true })).toBe(
+					'' +
+						'                         \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH 6D 6H 6C QC JS \n' +
+						' 9S AD 7C TS             \n' +
+						' deal all cards\n' +
+						':h shuffle32 5'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'deal all cards',
+					type: 'deal',
+				});
+				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards']);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
+				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards']);
+			});
+
+			test('win', () => {
+				let game = FreeCell.parse(
+					'' +
+						'             KC KD KH KS \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS\n' +
+						' move ab KS→cell\n' +
+						' hand-jammed'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS',
+					type: 'auto-foundation',
+				});
+				expect(game.history).toEqual([
+					'hand-jammed',
+					'move ab KS→cell',
+					'auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS',
+				]);
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+
+				game = game.undo();
+				expect(game.print({ includeHistory: true })).toBe(
+					'' +
+						'    KS       JC JD JH TS \n' + //
+						' KC KD KH JS QC QD QH QS \n' + //
+						' move ab KS→cell\n' +
+						' hand-jammed'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'move ab KS→cell',
+					type: 'move',
+				});
+				expect(game.history).toEqual(['hand-jammed', 'move ab KS→cell']);
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+
+				game = game.undo();
+				expect(game.print({ includeHistory: true })).toBe(
+					'' +
+						' KS          JC JD JH TS \n' + //
+						' KC KD KH JS QC QD QH QS \n' + //
+						' hand-jammed'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'hand-jammed',
+					type: 'init',
+				});
+				expect(game.history).toEqual(['hand-jammed']);
+				// XXX (undo) undo should update position of cursor
+				// expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+			});
+
+			test('flourish', () => {
+				let game = FreeCell.parse(
+					'' +
+						'             KS KH KD KC \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS\n' +
+						' move 78 AS→cascade\n' +
+						' hand-jammed'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS',
+					type: 'auto-foundation',
+				});
+				expect(game.history).toEqual([
+					'hand-jammed',
+					'move 78 AS→cascade',
+					'flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS',
+				]);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
+				expect(game.selection).toEqual(null);
+				expect(game.availableMoves).toEqual(null);
+
+				game = game.undo();
+				expect(game.print({ includeHistory: true })).toEqual(
+					'' +
+						'                KH KD KC \n' +
+						' KS JS 9S 7S 5S 3S    AS \n' +
+						' QS TS 8S 6S 4S 2S       \n' +
+						' move 78 AS→cascade\n' +
+						' hand-jammed'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'move 78 AS→cascade',
+					type: 'move',
+				});
+				expect(game.history).toEqual(['hand-jammed', 'move 78 AS→cascade']);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
+				expect(game.selection).toEqual(null);
+				expect(game.availableMoves).toEqual(null);
+
+				game = game.undo();
+				expect(game.print({ includeHistory: true })).toEqual(
+					'' +
+						'                KH KD KC \n' +
+						' KS JS 9S 7S 5S 3S AS    \n' +
+						' QS TS 8S 6S 4S 2S       \n' +
+						' hand-jammed'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'hand-jammed',
+					type: 'init',
+				});
+				expect(game.history).toEqual(['hand-jammed']);
+				// XXX (undo) undo should update position of cursor
+				// expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 0] });
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
+				expect(game.selection).toEqual(null);
+				expect(game.availableMoves).toEqual(null);
+			});
+
+			test('52-card flourish', () => {
+				let game = FreeCell.parse(
+					'' +
+						'             KS KH KD KC \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC\n' +
+						' move 46 AC→2H\n' +
+						' deal all cards'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC',
+					type: 'auto-foundation',
+				});
+				expect(game.history).toEqual([
+					'deal all cards',
+					'move 46 AC→2H',
+					'flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC',
+				]);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
+
+				game = game.undo();
+				expect(game.print({ includeHistory: true })).toEqual(
+					'' +
+						'                         \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+						' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
+						' AS AH AD       AC       \n' +
+						' move 46 AC→2H\n' +
+						' deal all cards'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'move 46 AC→2H',
+					type: 'move',
+				});
+				expect(game.history).toEqual(['deal all cards', 'move 46 AC→2H']);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
+
+				game = game.undo();
+				expect(game.print({ includeHistory: true })).toEqual(
+					'' +
+						'                         \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+						' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
+						' AS AH AD AC             \n' +
+						' deal all cards'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'deal all cards',
+					type: 'deal',
+				});
+				expect(game.history).toEqual(['deal all cards']);
+				// XXX (undo) undo should update position of cursor
+				// expect(game.cursor).toEqual({ fixture: 'cascade', data: [3, 6] });
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
+			});
+		});
+
+		/** @see game.touch move card autoFoundation */
+		describe('move-foundation', () => {
+			test('few', () => {
+				let game = FreeCell.parse(
+					'' +
+						'             AD          \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH 6D    6C QC JS \n' +
+						' 9S    7C TS             \n' +
+						'       6H                \n' +
+						' move 53 6H→7C (auto-foundation 2 AD)\n' +
+						':h shuffle32 5\n' +
+						' 53 '
+				);
+				expect(game.previousAction).toEqual({
+					text: 'move 53 6H→7C (auto-foundation 2 AD)',
+					type: 'move-foundation',
+				});
+				expect(game.history).toEqual([
+					'shuffle deck (5)',
+					'deal all cards',
+					'move 53 6H→7C (auto-foundation 2 AD)',
+				]);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
+				expect(game.selection).toEqual(null);
+				expect(game.availableMoves).toEqual(null);
+
+				game = game.undo();
+				expect(game.print({ includeHistory: true })).toBe(
+					'' +
+						'                         \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH 6D 6H 6C QC JS \n' +
+						' 9S AD 7C TS             \n' +
+						' deal all cards\n' +
+						':h shuffle32 5'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'deal all cards',
+					type: 'deal',
+				});
+				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards']);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
+			});
+
+			test('win', () => {
+				let game = FreeCell.parse(
+					'' +
+						'             KC KD KH KS \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)\n' +
+						' hand-jammed'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)',
+					type: 'move-foundation',
+				});
+				expect(game.history).toEqual([
+					'hand-jammed',
+					'move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)',
+				]);
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+
+				game = game.undo();
+				expect(game.print({ includeHistory: true })).toBe(
+					'' + //
+						' KS          JC JD JH TS \n' + //
+						' KC KD KH JS QC QD QH QS \n' + //
+						' hand-jammed'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'hand-jammed',
+					type: 'init',
+				});
+				expect(game.history).toEqual(['hand-jammed']);
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+			});
+
+			test('flourish', () => {
+				let game = FreeCell.parse(
+					'' +
+						'             KS KH KD KC \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)\n' +
+						' hand-jammed'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)',
+					type: 'move-foundation',
+				});
+				expect(game.history).toEqual([
+					'hand-jammed',
+					'move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)',
+				]);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
+
+				game = game.undo();
+				expect(game.print({ includeHistory: true })).toEqual(
+					'' +
+						'                KH KD KC \n' +
+						' KS JS 9S 7S 5S 3S AS    \n' +
+						' QS TS 8S 6S 4S 2S       \n' +
+						' hand-jammed'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'hand-jammed',
+					type: 'init',
+				});
+				expect(game.history).toEqual(['hand-jammed']);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
+			});
+
+			test('52-card flourish', () => {
+				let game = FreeCell.parse(
+					'' +
+						'             KS KH KD KC \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' move 46 AC→2H (flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)\n' +
+						' deal all cards'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'move 46 AC→2H (flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
+					type: 'move-foundation',
+				});
+				expect(game.history).toEqual([
+					'deal all cards',
+					'move 46 AC→2H (flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
+				]);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
+
+				game = game.undo();
+				expect(game.print({ includeHistory: true })).toEqual(
+					'' +
+						'                         \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+						' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
+						' AS AH AD AC             \n' +
+						' deal all cards'
+				);
+				expect(game.previousAction).toEqual({
+					text: 'deal all cards',
+					type: 'deal',
+				});
+				expect(game.history).toEqual(['deal all cards']);
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
+			});
+		});
 	});
 
 	describe('edges', () => {
@@ -528,8 +948,7 @@ describe('game.undo (+ history)', () => {
 
 		test.todo('1 cells, 10 cascades');
 
-		// FIXME fix
-		describe.skip.each`
+		describe.each`
 			cellCount | cascadeCount | seedSolutions
 			${4}      | ${8}         | ${seedSolutions48}
 			${6}      | ${10}        | ${seedSolutions60}

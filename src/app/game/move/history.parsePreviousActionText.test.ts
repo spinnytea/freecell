@@ -6,6 +6,7 @@ import {
 } from '@/app/game/move/history';
 
 describe('game/history.parsePreviousActionType', () => {
+	/** @see game/history.parseCursorFromPreviousActionText specific cases */
 	describe('specific cases', () => {
 		test.each`
 			actionText                                | previousAction                                                               | cursor
