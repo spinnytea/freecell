@@ -21,9 +21,9 @@ export type PreviousActionType =
 	| 'deselect'
 	| 'move'
 	| 'move-foundation'
-	// | 'move-flourish' // FIXME (combine-move-auto-foundation) move-flourish
+	// | 'move-flourish' // TODO (move-flourish) move-flourish
 	| 'auto-foundation'
-	// | 'auto-flourish' // FIXME (combine-move-auto-foundation) auto-flourish
+	// | 'auto-flourish' // TODO (move-flourish) auto-flourish
 	| 'invalid'
 	| 'auto-foundation-tween';
 
@@ -70,7 +70,6 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 		case 'auto-foundation':
 			return undoAutoFoundation(game, actionText).cards;
 		case 'move-foundation':
-			// FIXME test move-foundation
 			return undoMove(undoAutoFoundation(game, actionText), actionText);
 		case 'cursor':
 		case 'select':
@@ -94,7 +93,6 @@ export function parseCursorFromPreviousActionText(
 			return undefined;
 		case 'move-foundation':
 		case 'move': {
-			// FIXME test move-foundation
 			const { to, fromShorthand, toShorthand } = parseActionTextMove(actionText);
 			const cursor = parseShorthandPosition_INCOMPLETE(to);
 			switch (cursor.fixture) {

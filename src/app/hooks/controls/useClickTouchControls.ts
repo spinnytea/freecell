@@ -9,7 +9,7 @@ export function useClickTouchControls(location: CardLocation) {
 
 	function handleClickToMove() {
 		// REVIEW (controls) if a card is selected, move it to the empty pile
-		setGame((g) => g.setCursor(location).touch().autoFoundationAll());
+		setGame((g) => g.setCursor(location).touch());
 		setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 	}
 

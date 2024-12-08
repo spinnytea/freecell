@@ -21,12 +21,6 @@ TODO (motivation) main development tasks:
 
 ## Top-Level TODOs
 
-- FIXME (combine-move-auto-foundation) (4-priority) combine move and auto foundation into one action
-  - during `game.touch`, always call `game.autoFoundationAll` by default (make flags to disable or whatever)
-  - keep the action text like in `game.moveByShorthand`
-  - it's not a single action, verify undo
-  - animate it in two parts
-  - remove auto-foundation, it's a type of move
 - TODO (more-undo) (4-priority) undo all the back to start
   - new games can start with a shuffle, so we don't need to click through that (unit test it / unit test history)
   - undo before deal

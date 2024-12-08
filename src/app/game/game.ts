@@ -49,7 +49,7 @@ export class FreeCell {
 	// REVIEW (techdebt) is this the best way to check? do we need it for other things?
 	get winIsFloursh(): boolean {
 		if (!this.win) return false;
-		// FIXME move-flourish or auto-flourish
+		// TODO (move-flourish) move-flourish or auto-flourish
 		return this.previousAction.text.includes('flourish');
 	}
 
@@ -524,21 +524,9 @@ export class FreeCell {
 
 		// we _need_ an action in __clone
 		// __clone will add it back to the history
+		// TODO (techdebt) test init partial
 		const action = parsePreviousActionType(history.pop() ?? 'init partial');
-		const game = this.__clone({ action, history, cards });
-
-		// FIXME (combine-move-auto-foundation) moveByShorthand collapses move and auto-foundation into one action text
-		// // XXX (techdebt) playing the game normally does not do this
-		// if (game.previousAction.type === 'auto-foundation') {
-		// 	game.previousAction.text = `${game.history[game.history.length - 2]} (${game.previousAction.text})`;
-		// 	game.previousAction.type = 'move';
-		// }
-
-		// FIXME special case: moveByShorthand: move 6c 2C→cell (auto-foundation 66c AC,AS,2C)
-		// REVIEW (techdebt) should this be a different PreviousActionType?
-		// if (MOVE_AUTO_F_CHECK_REGEX.test(this.previousAction.text)) return game.undo();
-
-		return game;
+		return this.__clone({ action, history, cards });
 	}
 
 	/**
@@ -674,10 +662,10 @@ export class FreeCell {
 		@example
 			game.setCursor(loc).touch().autoMove();
 	*/
-	autoMove(): FreeCell | this {
+	autoMove({ autoFoundation = true }: { autoFoundation?: boolean } = {}): FreeCell | this {
 		if (!this.selection) return this;
 		if (!this.availableMoves?.length) return this;
-		if (this.previousAction.type !== 'select') return this;
+		if (this.previousAction.type !== 'select') return this; // REVIEW (techdebt) is there a reason for this?
 
 		// find the highest priority, prioritize first one
 		const to_location = this.availableMoves.reduce((ret, next) => {
@@ -685,18 +673,7 @@ export class FreeCell {
 			return ret;
 		}, this.availableMoves[0]).location;
 
-		const actionText = calcMoveActionText(this.selection, getSequenceAt(this, to_location));
-		// FIXME moveCards… and check for auto-foundation
-		const cards = moveCards(this, this.selection, to_location);
-		// move the cursor to the destination
-		// clear the selection
-		return this.__clone({
-			action: { text: actionText, type: 'move' },
-			cards,
-			cursor: to_location,
-			selection: null,
-			availableMoves: null,
-		});
+		return this.setCursor(to_location).touch({ autoFoundation });
 	}
 
 	/**
@@ -826,7 +803,7 @@ export class FreeCell {
 
 		XXX (techdebt) print is super messy, can we clean this up?
 		TODO (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
-		FIXME remove skipDeck
+		XXX (techdebt) remove skipDeck
 	*/
 	print({
 		skipDeck = false,

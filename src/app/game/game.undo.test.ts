@@ -888,31 +888,31 @@ describe('game.undo (+ history)', () => {
 		game = game
 			.setCursor({ fixture: 'cascade', data: [0, 0] })
 			.touch()
-			.autoMove();
+			.autoMove({ autoFoundation: false });
 		game = game
 			.setCursor({ fixture: 'cascade', data: [1, 0] })
 			.touch()
-			.autoMove();
+			.autoMove({ autoFoundation: false });
 		game = game
 			.setCursor({ fixture: 'cascade', data: [2, 0] })
 			.touch()
-			.autoMove();
+			.autoMove({ autoFoundation: false });
 		game = game
 			.setCursor({ fixture: 'cascade', data: [3, 0] })
 			.touch()
-			.autoMove();
+			.autoMove({ autoFoundation: false });
 		game = game
 			.setCursor({ fixture: 'cascade', data: [4, 0] })
 			.touch()
-			.autoMove();
+			.autoMove({ autoFoundation: false });
 		game = game
 			.setCursor({ fixture: 'cascade', data: [5, 0] })
 			.touch()
-			.autoMove();
+			.autoMove({ autoFoundation: false });
 		game = game
 			.setCursor({ fixture: 'cascade', data: [6, 0] })
 			.touch()
-			.autoMove();
+			.autoMove({ autoFoundation: false });
 		expect(game.print({ includeHistory: true })).toEqual(
 			'' + //
 				' QC          JC KD KH KS \n' + //
