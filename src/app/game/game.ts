@@ -16,7 +16,6 @@ import {
 	SuitList,
 } from '@/app/game/card/card';
 import {
-	MOVE_AUTO_F_CHECK_REGEX,
 	parseAndUndoPreviousActionText,
 	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
@@ -50,6 +49,7 @@ export class FreeCell {
 	// REVIEW (techdebt) is this the best way to check? do we need it for other things?
 	get winIsFloursh(): boolean {
 		if (!this.win) return false;
+		// FIXME move-flourish or auto-flourish
 		return this.previousAction.text.includes('flourish');
 	}
 
@@ -199,7 +199,9 @@ export class FreeCell {
 			selection: selection && availableMoves ? selection : null,
 			availableMoves: selection && availableMoves ? availableMoves : null,
 			action,
-			history: ['init', 'shuffle', 'deal', 'move', 'auto-foundation'].includes(action.type)
+			history: ['init', 'shuffle', 'deal', 'move', 'move-foundation', 'auto-foundation'].includes(
+				action.type
+			)
 				? [...(history ?? this.history), action.text]
 				: this.history,
 		});
@@ -441,7 +443,7 @@ export class FreeCell {
 		- TODO (controls) (2-priority) make it easier to re-select when move is invalid
 		  - OR disable select-to-peek for mouse
 	*/
-	touch(): FreeCell {
+	touch({ autoFoundation = true }: { autoFoundation?: boolean } = {}): FreeCell {
 		/** clear the selction, if re-touching the same spot */
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
 			return this.clearSelection();
@@ -479,14 +481,29 @@ export class FreeCell {
 			isLocationEqual(this.cursor, location)
 		);
 		if (valid) {
-			// FIXME moveCards… and check for auto-foundation
-			const cards = moveCards(this, this.selection, this.cursor);
-			return this.__clone({
+			const movedGame = this.__clone({
 				action: { text: actionText, type: 'move' },
-				cards,
+				cards: moveCards(this, this.selection, this.cursor),
 				selection: null,
 				availableMoves: null,
 			});
+
+			if (autoFoundation) {
+				const foundationGame = movedGame.autoFoundationAll();
+				if (foundationGame !== movedGame) {
+					return this.__clone({
+						action: {
+							text: `${actionText} (${foundationGame.previousAction.text})`,
+							type: 'move-foundation',
+						},
+						cards: foundationGame.cards,
+						selection: null,
+						availableMoves: null,
+					});
+				}
+			}
+
+			return movedGame;
 		}
 
 		// TODO (animation) (3-priority) animate invalid move
@@ -510,16 +527,16 @@ export class FreeCell {
 		const action = parsePreviousActionType(history.pop() ?? 'init partial');
 		const game = this.__clone({ action, history, cards });
 
-		// XXX (combine-move-auto-foundation) moveByShorthand collapses move and auto-foundation into one action text
-		// XXX (techdebt) playing the game normally does not do this
-		if (game.previousAction.type === 'auto-foundation') {
-			game.previousAction.text = `${game.history[game.history.length - 2]} (${game.previousAction.text})`;
-			game.previousAction.type = 'move';
-		}
+		// FIXME (combine-move-auto-foundation) moveByShorthand collapses move and auto-foundation into one action text
+		// // XXX (techdebt) playing the game normally does not do this
+		// if (game.previousAction.type === 'auto-foundation') {
+		// 	game.previousAction.text = `${game.history[game.history.length - 2]} (${game.previousAction.text})`;
+		// 	game.previousAction.type = 'move';
+		// }
 
-		// special case: moveByShorthand: move 6c 2C→cell (auto-foundation 66c AC,AS,2C)
+		// FIXME special case: moveByShorthand: move 6c 2C→cell (auto-foundation 66c AC,AS,2C)
 		// REVIEW (techdebt) should this be a different PreviousActionType?
-		if (MOVE_AUTO_F_CHECK_REGEX.test(this.previousAction.text)) return game.undo();
+		// if (MOVE_AUTO_F_CHECK_REGEX.test(this.previousAction.text)) return game.undo();
 
 		return game;
 	}
@@ -534,21 +551,7 @@ export class FreeCell {
 		{ autoFoundation = true }: { autoFoundation?: boolean } = {}
 	): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
-
-		// select from, move to
-		let game = this.setCursor(from).touch().setCursor(to).touch();
-
-		// FIXME (combine-move-auto-foundation) make this a standard part of touch
-		if (autoFoundation) {
-			const actionText = game.previousAction.text;
-			game = game.autoFoundationAll();
-			if (game.previousAction.text !== actionText) {
-				// REVIEW (techdebt) should this be a different PreviousActionType?
-				game.previousAction.text = `${actionText} (${game.previousAction.text})`;
-			}
-		}
-
-		return game;
+		return this.setCursor(from).touch().setCursor(to).touch({ autoFoundation });
 	}
 
 	/**
@@ -651,7 +654,7 @@ export class FreeCell {
 			const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
 			const name = game.win && countEmptyFoundations(this) > 0 ? 'flourish' : 'auto-foundation';
 			return game.__clone({
-				action: { text: `${name} ${movedPositionsStr} ${movedCardsStr}`, type: 'move' },
+				action: { text: `${name} ${movedPositionsStr} ${movedCardsStr}`, type: 'auto-foundation' },
 			});
 		}
 
@@ -970,6 +973,8 @@ export class FreeCell {
 
 		must be a valid output of game.print(), there isn't much error correction/detection
 		i.e. must `game.print() === FreeCell.parse(game.print()).print()`
+
+		FIXME remove invalidFoundations? just add a blank home row?
 	*/
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		const cards = new FreeCell().cards;

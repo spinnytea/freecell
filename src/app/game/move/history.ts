@@ -20,8 +20,10 @@ export type PreviousActionType =
 	| 'select'
 	| 'deselect'
 	| 'move'
-	| 'auto-foundation' // FIXME (combine-move-auto-foundation) move-foundation
-	// | 'flourish' // FIXME (combine-move-auto-foundation) move-flourish
+	| 'move-foundation'
+	// | 'move-flourish' // FIXME (combine-move-auto-foundation) move-flourish
+	| 'auto-foundation'
+	// | 'auto-flourish' // FIXME (combine-move-auto-foundation) auto-flourish
 	| 'invalid'
 	| 'auto-foundation-tween';
 
@@ -42,11 +44,9 @@ export interface PreviousAction {
 }
 
 // REVIEW (combine-move-auto-foundation) do we still need this?
-const MOVE_REGEX = /^move (\w)(\w) (.*)→(.*)$/;
+const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(.*)$/;
 // REVIEW (combine-move-auto-foundation) do we still need this?
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (.+)$/;
-// REVIEW (combine-move-auto-foundation) do we still need this?
-export const MOVE_AUTO_F_CHECK_REGEX = /^move .* \((auto-foundation|flourish) .*\)$/;
 
 /**
 	read {@link PreviousAction.text} which has the full context of what was moved
@@ -68,7 +68,10 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 		case 'move':
 			return undoMove(game, actionText);
 		case 'auto-foundation':
-			return undoAutoFoundation(game, actionText);
+			return undoAutoFoundation(game, actionText).cards;
+		case 'move-foundation':
+			// FIXME test move-foundation
+			return undoMove(undoAutoFoundation(game, actionText), actionText);
 		case 'cursor':
 		case 'select':
 		case 'deselect':
@@ -89,7 +92,9 @@ export function parseCursorFromPreviousActionText(
 		case 'shuffle':
 		case 'deal':
 			return undefined;
+		case 'move-foundation':
 		case 'move': {
+			// FIXME test move-foundation
 			const { to, fromShorthand, toShorthand } = parseActionTextMove(actionText);
 			const cursor = parseShorthandPosition_INCOMPLETE(to);
 			switch (cursor.fixture) {
@@ -172,7 +177,7 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 	return moveCards(game, sequence, location);
 }
 
-function undoAutoFoundation(game: FreeCell, actionText: string): Card[] {
+function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 	const match = AUTO_FOUNDATION_REGEX.exec(actionText);
 	if (!match) throw new Error('invalid move actionText: ' + actionText);
 	const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
@@ -196,7 +201,7 @@ function undoAutoFoundation(game: FreeCell, actionText: string): Card[] {
 		});
 	}
 
-	return game.cards;
+	return game;
 }
 
 export function parsePreviousActionType(actionText: string): PreviousAction {
@@ -204,6 +209,12 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 	if (firstWord === 'hand-jammed') return { text: actionText, type: 'init' };
 	if (firstWord === 'touch') return { text: actionText, type: 'invalid' };
 	if (firstWord === 'flourish') return { text: actionText, type: 'auto-foundation' };
+	if (firstWord === 'move' && actionText.endsWith(')')) {
+		if (actionText.includes('auto-foundation'))
+			return { text: actionText, type: 'move-foundation' };
+		if (actionText.includes('flourish')) return { text: actionText, type: 'move-foundation' };
+	}
+
 	// if (firstWord === 'auto-foundation-setup') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	// if (firstWord === 'auto-foundation-middle') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	return { text: actionText, type: firstWord as PreviousActionType };
