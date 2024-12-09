@@ -16,7 +16,7 @@ import { useKeybaordArrowControls } from '@/app/hooks/controls/useKeybaordArrowC
 import { useKeybaordMiscControls } from '@/app/hooks/controls/useKeybaordMiscControls';
 import { useNewGameClick } from '@/app/hooks/controls/useNewGameClick';
 
-interface GameBoardDisplayOptions {
+export interface GameBoardDisplayOptions {
 	showUndoButton?: boolean;
 	showStatusBar?: boolean;
 	showTextBoard?: boolean;

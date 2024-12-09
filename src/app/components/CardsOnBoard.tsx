@@ -199,9 +199,6 @@ export function calcUpdatedCardPositions({
 	const updateCardPositions: UpdateCardPositionsType[] = [];
 	const fixtures = new Set<Fixture>();
 
-	// FIXME (techdebt) optimize this move/autoFoundation check
-	let { moveShorthands, autoFoundationShorthands } = parsePreviousActionMoveShorthands(actionText);
-
 	cards.forEach((card) => {
 		const { top, left, zIndex } = calcTopLeftZ(fixtureSizes, card.location, selection, card.rank);
 		const shorthand = shorthandCard(card);
@@ -217,10 +214,6 @@ export function calcUpdatedCardPositions({
 				suit: card.suit,
 				previousTop: prev?.[0] ?? top,
 			});
-			if (!moveShorthands?.includes(shorthand) && !autoFoundationShorthands?.includes(shorthand)) {
-				moveShorthands = undefined;
-				autoFoundationShorthands = undefined;
-			}
 			fixtures.add(card.location.fixture);
 		}
 	});
@@ -229,20 +222,36 @@ export function calcUpdatedCardPositions({
 		return { updateCardPositions };
 	}
 
+	// REVIEW (combine-move-auto-foundation) we've lost the positions for the "move"
+	//  - so we cannot play it "first" and then play auto-foundation "second"
+	//  - we'd need to... undo, and replay the move without autoFoundation to get them, and recompute updateCardPositions again
+	const { moveShorthands, autoFoundationShorthands } =
+		parsePreviousActionMoveShorthands(actionText);
 	if (
 		moveShorthands &&
-		autoFoundationShorthands &&
-		updateCardPositions.length === moveShorthands.length + autoFoundationShorthands.length
+		updateCardPositions.length <= moveShorthands.length + autoFoundationShorthands.length
 	) {
-		// FIXME (combine-move-auto-foundation) animate move and auto-foundation in two parts
-		//  - finish a, then start b; not just combined in a list
-		const a = moveShorthands.map((sh) =>
-			updateCardPositions.find(({ shorthand }) => shorthand === sh)
-		);
-		const b = autoFoundationShorthands.map((sh) =>
-			updateCardPositions.find(({ shorthand }) => shorthand === sh)
-		);
-		return { updateCardPositions: a.concat(b) as UpdateCardPositionsType[] };
+		// len(update) = len(union(move, auto)) -> winning may auto what we just moved, so move+auto > update
+		//  - could include some or all of move (e.g. if you move a sequence and only part gets auto)
+		//  - if we undo we could have more or less cards
+		//    we need to make sure all the cards in question are in the list
+		//    AND we need to make sure our two lists cover everything in updateCardPositions
+		let anyMissing = false;
+		const remainingCards = new Set(updateCardPositions.map(({ shorthand }) => shorthand));
+		const mapShorthands = (sh: string) => {
+			const position = updateCardPositions.find(({ shorthand }) => shorthand === sh);
+			if (!position) anyMissing = true;
+			remainingCards.delete(sh);
+			return position;
+		};
+		const a = moveShorthands
+			.filter((sh) => !autoFoundationShorthands.includes(sh))
+			.map(mapShorthands);
+		const b = autoFoundationShorthands.map(mapShorthands);
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (!anyMissing && remainingCards.size === 0) {
+			return { updateCardPositions: a.concat(b) as UpdateCardPositionsType[] };
+		}
 	}
 
 	// fallback to something simple
