@@ -10,14 +10,17 @@ import {
 import { CardImage } from '@/app/components/cards/CardImage';
 import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
 import {
+	Card,
 	CardLocation,
+	CardSequence,
 	Fixture,
 	getRankForCompare,
 	Rank,
 	shorthandCard,
 	Suit,
 } from '@/app/game/card/card';
-import { calcTopLeftZ } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import { parsePreviousActionMoveShorthands } from '@/app/game/move/history';
+import { calcTopLeftZ, FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
@@ -29,7 +32,11 @@ import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveContr
 // IDEA (settings) setting for "reduced motion" - disable most animations
 // IDEA (animation) faster "peek" animation - when the cards are shifting to peek the selected card
 export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObject<string> }) {
-	const { cards, selection } = useGame();
+	const {
+		cards,
+		selection,
+		previousAction: { text: actionText },
+	} = useGame();
 	const fixtureSizes = useFixtureSizes();
 	const [, setTLs] = useState(new Map<string, number[]>());
 	const prevFixtureSizes = useRef(fixtureSizes);
@@ -37,46 +44,15 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 
 	useGSAP(
 		() => {
-			// FIXME (combine-move-auto-foundation) animate move and auto-foundation in two parts
-			//  - if we can parse the action text and all the diffed cards are the same
-			//  - timelines!
-			//  - if the parse or cards differ, then just animate them in one-shot
 			const timeline = gsap.timeline();
 
 			setTLs((previousTLs) => {
-				const updateCardPositions: {
-					shorthand: string;
-					top: number;
-					left: number;
-					zIndex: number;
-					rank: number;
-					suit: Suit;
-					previousTop: number;
-				}[] = [];
-				const fixtures = new Set<Fixture>();
-
-				cards.forEach((card) => {
-					const { top, left, zIndex } = calcTopLeftZ(
-						fixtureSizes,
-						card.location,
-						selection,
-						card.rank
-					);
-					const shorthand = shorthandCard(card);
-
-					const prev = previousTLs.get(shorthand);
-					if (!prev || prev[0] !== top || prev[1] !== left) {
-						updateCardPositions.push({
-							shorthand,
-							top,
-							left,
-							zIndex,
-							rank: getRankForCompare(card.rank),
-							suit: card.suit,
-							previousTop: prev?.[0] ?? top,
-						});
-						fixtures.add(card.location.fixture);
-					}
+				const { updateCardPositions } = calcUpdatedCardPositions({
+					fixtureSizes,
+					previousTLs,
+					cards,
+					selection,
+					actionText,
 				});
 
 				if (!updateCardPositions.length) return previousTLs;
@@ -90,26 +66,6 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 				previousTimeline.current = timeline;
 
 				const nextTLs = new Map(previousTLs);
-				if (fixtures.size === 1 && fixtures.has('foundation')) {
-					// order by rank / top
-					// REVIEW (animation) this needs more work
-					//  - can we parse the previous action for the card list?? that's in the correct order!
-					//  - that works moving forward, but undo is all crazy
-					//  - i guess we can default to "top" if the lists don't match
-					// ---
-					//  - no matter what tricks we apply, the auto-foundation animation will _always_ be wrong if we do not finish the previous animation first
-					//  - animate((g) => g.touch()).animate((g) => g.autoFoundation())
-					// REVIEW (animation) dynamic overlap? start of slow and then speed up, / accelerate
-					// IDEA (motivation) (animation) different animations for "auto-foundation" vs "win" vs "flourish" (can just check previousAction.type)
-					// IDEA (animation) auto-foundation win needs more drama than just "do the same thing"
-					// IDEA (animation) flourish: first card goes up. then second card goes up. then third card overlaps abit ... second-to-last AND last go up at the same time
-					updateCardPositions
-						.sort((a, b) => a.previousTop - b.previousTop)
-						.sort((a, b) => a.rank - b.rank);
-				} else {
-					// order by top
-					updateCardPositions.sort(({ top: a }, { top: b }) => a - b);
-				}
 				let overlap = Math.min(
 					(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) /
 						updateCardPositions.length,
@@ -136,7 +92,7 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 				return nextTLs;
 			});
 		},
-		{ dependencies: [cards, selection, fixtureSizes] }
+		{ dependencies: [cards, selection, actionText, fixtureSizes] }
 	);
 
 	// wrapper to make the dom more legible
@@ -214,4 +170,103 @@ function CardOnBoard({
 			/>
 		</div>
 	);
+}
+
+interface UpdateCardPositionsType {
+	shorthand: string;
+	top: number;
+	left: number;
+	zIndex: number;
+	rank: number;
+	suit: Suit;
+	previousTop: number;
+}
+
+// XXX (techdebt) unit test?
+export function calcUpdatedCardPositions({
+	fixtureSizes,
+	previousTLs,
+	cards,
+	selection,
+	actionText,
+}: {
+	fixtureSizes: FixtureSizes;
+	previousTLs: Map<string, number[]>;
+	cards: Card[];
+	selection: CardSequence | null;
+	actionText: string;
+}): { updateCardPositions: UpdateCardPositionsType[] } {
+	const updateCardPositions: UpdateCardPositionsType[] = [];
+	const fixtures = new Set<Fixture>();
+
+	// FIXME (techdebt) optimize this move/autoFoundation check
+	let { moveShorthands, autoFoundationShorthands } = parsePreviousActionMoveShorthands(actionText);
+
+	cards.forEach((card) => {
+		const { top, left, zIndex } = calcTopLeftZ(fixtureSizes, card.location, selection, card.rank);
+		const shorthand = shorthandCard(card);
+
+		const prev = previousTLs.get(shorthand);
+		if (!prev || prev[0] !== top || prev[1] !== left) {
+			updateCardPositions.push({
+				shorthand,
+				top,
+				left,
+				zIndex,
+				rank: getRankForCompare(card.rank),
+				suit: card.suit,
+				previousTop: prev?.[0] ?? top,
+			});
+			if (!moveShorthands?.includes(shorthand) && !autoFoundationShorthands?.includes(shorthand)) {
+				moveShorthands = undefined;
+				autoFoundationShorthands = undefined;
+			}
+			fixtures.add(card.location.fixture);
+		}
+	});
+
+	if (!updateCardPositions.length) {
+		return { updateCardPositions };
+	}
+
+	if (
+		moveShorthands &&
+		autoFoundationShorthands &&
+		updateCardPositions.length === moveShorthands.length + autoFoundationShorthands.length
+	) {
+		// FIXME (combine-move-auto-foundation) animate move and auto-foundation in two parts
+		//  - finish a, then start b; not just combined in a list
+		const a = moveShorthands.map((sh) =>
+			updateCardPositions.find(({ shorthand }) => shorthand === sh)
+		);
+		const b = autoFoundationShorthands.map((sh) =>
+			updateCardPositions.find(({ shorthand }) => shorthand === sh)
+		);
+		return { updateCardPositions: a.concat(b) as UpdateCardPositionsType[] };
+	}
+
+	// fallback to something simple
+	const isFoundation = fixtures.size === 1 && fixtures.has('foundation');
+	if (isFoundation) {
+		// order by rank / top
+		// REVIEW (animation) this needs more work
+		//  - can we parse the previous action for the card list?? that's in the correct order!
+		//  - that works moving forward, but undo is all crazy
+		//  - i guess we can default to "top" if the lists don't match
+		// ---
+		//  - no matter what tricks we apply, the auto-foundation animation will _always_ be wrong if we do not finish the previous animation first
+		//  - animate((g) => g.touch()).animate((g) => g.autoFoundation())
+		// REVIEW (animation) dynamic overlap? start of slow and then speed up, / accelerate
+		// IDEA (motivation) (animation) different animations for "auto-foundation" vs "win" vs "flourish" (can just check previousAction.type)
+		// IDEA (animation) auto-foundation win needs more drama than just "do the same thing"
+		// IDEA (animation) flourish: first card goes up. then second card goes up. then third card overlaps abit ... second-to-last AND last go up at the same time
+		updateCardPositions
+			.sort((a, b) => a.previousTop - b.previousTop)
+			.sort((a, b) => a.rank - b.rank);
+	} else {
+		// order by top
+		updateCardPositions.sort(({ top: a }, { top: b }) => a - b);
+	}
+
+	return { updateCardPositions };
 }

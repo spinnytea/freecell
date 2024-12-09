@@ -247,6 +247,28 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 	return { text: actionText, type: firstWord as PreviousActionType };
 }
 
+/** XXX (techdebt) do we need to do any more type checking? I suppose we could just improve the regex */
+export function parsePreviousActionMoveShorthands(actionText: string) {
+	let match = MOVE_REGEX.exec(actionText);
+	if (match) {
+		const moveShorthands = match[3].split('-');
+		return {
+			moveShorthands,
+			autoFoundationShorthands: [],
+		};
+	}
+	match = MOVE_FOUNDATION_REGEX.exec(actionText);
+	if (match) {
+		const moveShorthands = match[3].split('-');
+		const autoFoundationShorthands = match[7].split(',');
+		return {
+			moveShorthands,
+			autoFoundationShorthands,
+		};
+	}
+	return {};
+}
+
 export function parseMovesFromHistory(history: string[]): { seed: number; moves: string[] } | null {
 	if (!history[1] || parsePreviousActionType(history[1]).type !== 'deal') return null;
 	const matchSeed = /shuffle deck \((\d+)\)/.exec(history[0]);
