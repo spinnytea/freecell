@@ -19,6 +19,7 @@ import {
 	shorthandCard,
 	Suit,
 } from '@/app/game/card/card';
+import { FreeCell } from '@/app/game/game';
 import { parsePreviousActionMoveShorthands } from '@/app/game/move/history';
 import { calcTopLeftZ, FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
@@ -35,24 +36,30 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 	const {
 		cards,
 		selection,
-		previousAction: { text: actionText },
+		previousAction: { text: actionText, actionPrev },
 	} = useGame();
 	const fixtureSizes = useFixtureSizes();
 	const [, setTLs] = useState(new Map<string, number[]>());
 	const prevFixtureSizes = useRef(fixtureSizes);
 	const previousTimeline = useRef<gsap.core.Timeline | null>(null);
 
+	// FIXME FIXME why is this running twice??
+	//  - it's been running the timeline twice since like forever
+	//  - I _thought_ it was an artifact of react or gsap
+	//  - turns out it's not, it is a problem, one that didn't matter before because it was targetting the same destination
+	//  - but now that we can move in two phases... we are seeing it happen
 	useGSAP(
 		() => {
 			const timeline = gsap.timeline();
 
 			setTLs((previousTLs) => {
-				const { updateCardPositions } = calcUpdatedCardPositions({
+				const { updateCardPositions, updateCardPositionsPrev } = calcUpdatedCardPositions({
 					fixtureSizes,
 					previousTLs,
 					cards,
 					selection,
 					actionText,
+					actionPrev,
 				});
 
 				if (!updateCardPositions.length) return previousTLs;
@@ -66,33 +73,39 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 				previousTimeline.current = timeline;
 
 				const nextTLs = new Map(previousTLs);
-				let overlap = Math.min(
-					(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) /
-						updateCardPositions.length,
-					MAX_ANIMATION_OVERLAP
-				);
-				if (prevFixtureSizes.current !== fixtureSizes) {
-					// XXX should this just do gsap.set ?
-					overlap = 0;
-					prevFixtureSizes.current = fixtureSizes;
+				if (updateCardPositionsPrev) {
+					anim(updateCardPositionsPrev);
 				}
-				updateCardPositions.forEach(({ shorthand, top, left, zIndex }) => {
-					const cardId = '#c' + shorthand + '-' + gameBoardIdRef.current;
-					nextTLs.set(shorthand, [top, left]);
-					timeline.to(
-						cardId,
-						{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
-						`<${overlap.toFixed(3)}`
-					);
-					// REVIEW (animation) zIndex boost while in flight?
-					//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
-					//  - as soon as it finishes animating, set it to the correct value
-					timeline.to(cardId, { zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2 }, `<`);
-				});
+				anim(updateCardPositions);
 				return nextTLs;
+
+				function anim(list: UpdateCardPositionsType[]) {
+					let overlap = Math.min(
+						(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) / list.length,
+						MAX_ANIMATION_OVERLAP
+					);
+					if (prevFixtureSizes.current !== fixtureSizes) {
+						// XXX should this just do gsap.set ?
+						overlap = 0;
+						prevFixtureSizes.current = fixtureSizes;
+					}
+					list.forEach(({ shorthand, top, left, zIndex }, index) => {
+						const cardId = '#c' + shorthand + '-' + gameBoardIdRef.current;
+						nextTLs.set(shorthand, [top, left]);
+						timeline.to(
+							cardId,
+							{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
+							index === 0 ? `>0` : `<${overlap.toFixed(3)}`
+						);
+						// REVIEW (animation) zIndex boost while in flight?
+						//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
+						//  - as soon as it finishes animating, set it to the correct value
+						timeline.to(cardId, { zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2 }, `<`);
+					});
+				}
 			});
 		},
-		{ dependencies: [cards, selection, actionText, fixtureSizes] }
+		{ dependencies: [cards, selection, actionText, actionPrev, fixtureSizes] }
 	);
 
 	// wrapper to make the dom more legible
@@ -182,20 +195,26 @@ interface UpdateCardPositionsType {
 	previousTop: number;
 }
 
-// XXX (techdebt) unit test?
+// FIXME unit test
+// FIXME optimize
 export function calcUpdatedCardPositions({
 	fixtureSizes,
 	previousTLs,
 	cards,
 	selection,
 	actionText,
+	actionPrev,
 }: {
 	fixtureSizes: FixtureSizes;
 	previousTLs: Map<string, number[]>;
 	cards: Card[];
 	selection: CardSequence | null;
-	actionText: string;
-}): { updateCardPositions: UpdateCardPositionsType[] } {
+	actionText?: string;
+	actionPrev?: FreeCell;
+}): {
+	updateCardPositions: UpdateCardPositionsType[];
+	updateCardPositionsPrev?: UpdateCardPositionsType[];
+} {
 	const updateCardPositions: UpdateCardPositionsType[] = [];
 	const fixtures = new Set<Fixture>();
 
@@ -218,39 +237,44 @@ export function calcUpdatedCardPositions({
 		}
 	});
 
-	if (!updateCardPositions.length) {
+	if (!updateCardPositions.length || !actionText) {
 		return { updateCardPositions };
 	}
 
-	// REVIEW (combine-move-auto-foundation) we've lost the positions for the "move"
-	//  - so we cannot play it "first" and then play auto-foundation "second"
-	//  - we'd need to... undo, and replay the move without autoFoundation to get them, and recompute updateCardPositions again
-	const { moveShorthands, autoFoundationShorthands } =
-		parsePreviousActionMoveShorthands(actionText);
-	if (
-		moveShorthands &&
-		updateCardPositions.length <= moveShorthands.length + autoFoundationShorthands.length
-	) {
+	// IFF all of the cards moving are the same as the ones in action text (all of a in b, all of b in a);
+	//  - then move a to old spot, then move ALL to new spot
+	if (actionPrev) {
 		// len(update) = len(union(move, auto)) -> winning may auto what we just moved, so move+auto > update
 		//  - could include some or all of move (e.g. if you move a sequence and only part gets auto)
 		//  - if we undo we could have more or less cards
 		//    we need to make sure all the cards in question are in the list
 		//    AND we need to make sure our two lists cover everything in updateCardPositions
-		let anyMissing = false;
-		const remainingCards = new Set(updateCardPositions.map(({ shorthand }) => shorthand));
-		const mapShorthands = (sh: string) => {
-			const position = updateCardPositions.find(({ shorthand }) => shorthand === sh);
-			if (!position) anyMissing = true;
-			remainingCards.delete(sh);
-			return position;
-		};
-		const a = moveShorthands
-			.filter((sh) => !autoFoundationShorthands.includes(sh))
-			.map(mapShorthands);
-		const b = autoFoundationShorthands.map(mapShorthands);
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (!anyMissing && remainingCards.size === 0) {
-			return { updateCardPositions: a.concat(b) as UpdateCardPositionsType[] };
+		const { moveShorthands, autoFoundationShorthands } =
+			parsePreviousActionMoveShorthands(actionText);
+		if (
+			moveShorthands &&
+			updateCardPositions.length <= moveShorthands.length + autoFoundationShorthands.length
+		) {
+			const { updateCardPositions: prevUpdateCardPositions } = calcUpdatedCardPositions({
+				fixtureSizes,
+				previousTLs,
+				cards: actionPrev.cards,
+				selection: actionPrev.selection,
+			});
+
+			let anyMissing = false;
+			const a = moveShorthands.map((sh) => {
+				const position = prevUpdateCardPositions.find(({ shorthand }) => shorthand === sh);
+				if (!position) anyMissing = true;
+				return position;
+			});
+
+			// FIXME filter updateCardPositions
+			//  - remove items that are in A and have the exact same position
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			if (!anyMissing) {
+				return { updateCardPositions, updateCardPositionsPrev: a as UpdateCardPositionsType[] };
+			}
 		}
 	}
 

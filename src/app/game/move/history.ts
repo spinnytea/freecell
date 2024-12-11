@@ -41,6 +41,9 @@ export interface PreviousAction {
 	//  - should it just be `export type PreviousAction = string;`
 	//  - depends on if we need to add anything else to PreviousAction, like `affected: Card[]` ?
 	type: PreviousActionType;
+
+	// FIXME only used for move-foundation
+	actionPrev?: FreeCell;
 }
 
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
@@ -249,15 +252,8 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 
 /** XXX (techdebt) do we need to do any more type checking? I suppose we could just improve the regex */
 export function parsePreviousActionMoveShorthands(actionText: string) {
-	let match = MOVE_REGEX.exec(actionText);
-	if (match) {
-		const moveShorthands = match[3].split('-');
-		return {
-			moveShorthands,
-			autoFoundationShorthands: [],
-		};
-	}
-	match = MOVE_FOUNDATION_REGEX.exec(actionText);
+	const match = MOVE_FOUNDATION_REGEX.exec(actionText);
+
 	if (match) {
 		const moveShorthands = match[3].split('-');
 		const autoFoundationShorthands = match[7].split(',');
@@ -266,6 +262,12 @@ export function parsePreviousActionMoveShorthands(actionText: string) {
 			autoFoundationShorthands,
 		};
 	}
+
+	// we don't need special animations/shorthands for regular moves
+	// the default animations are already good enough
+	// (it's just one card or stacks)
+	// match = MOVE_REGEX.exec(actionText);
+
 	return {};
 }
 

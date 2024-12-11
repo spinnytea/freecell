@@ -495,6 +495,7 @@ export class FreeCell {
 						action: {
 							text: `${actionText} (${foundationGame.previousAction.text})`,
 							type: 'move-foundation',
+							actionPrev: movedGame,
 						},
 						cards: foundationGame.cards,
 						selection: null,
