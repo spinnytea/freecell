@@ -106,6 +106,9 @@ export class FreeCell {
 			this.cards = cloneCards(cards);
 
 			// we want the objects in "cards" and there rest of the game board
+			// XXX (techdebt) only compute these when we need them?
+			//  - get deck() => this._deck ?? this._cacheBoard()._deck;
+			//  - get tableau() => this._tableau ?? this._cacheBoard()._tableau;
 			this.cards.forEach((card) => {
 				switch (card.location.fixture) {
 					case 'deck':

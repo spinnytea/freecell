@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
 import {
@@ -39,71 +39,64 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 		previousAction: { text: actionText, actionPrev },
 	} = useGame();
 	const fixtureSizes = useFixtureSizes();
-	const [, setTLs] = useState(new Map<string, number[]>());
+	const previousTLs = useRef(new Map<string, number[]>());
 	const prevFixtureSizes = useRef(fixtureSizes);
 	const previousTimeline = useRef<gsap.core.Timeline | null>(null);
 
-	// FIXME FIXME why is this running twice??
-	//  - it's been running the timeline twice since like forever
-	//  - I _thought_ it was an artifact of react or gsap
-	//  - turns out it's not, it is a problem, one that didn't matter before because it was targetting the same destination
-	//  - but now that we can move in two phases... we are seeing it happen
 	useGSAP(
 		() => {
 			const timeline = gsap.timeline();
 
-			setTLs((previousTLs) => {
-				const { updateCardPositions, updateCardPositionsPrev } = calcUpdatedCardPositions({
-					fixtureSizes,
-					previousTLs,
-					cards,
-					selection,
-					actionText,
-					actionPrev,
-				});
-
-				if (!updateCardPositions.length) return previousTLs;
-
-				if (previousTimeline.current && previousTimeline.current !== timeline) {
-					// REVIEW (animations) since animations are so fast, should they be appended instead of replaced?
-					previousTimeline.current
-						.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
-						.kill(); // stop animating
-				}
-				previousTimeline.current = timeline;
-
-				const nextTLs = new Map(previousTLs);
-				if (updateCardPositionsPrev) {
-					anim(updateCardPositionsPrev);
-				}
-				anim(updateCardPositions);
-				return nextTLs;
-
-				function anim(list: UpdateCardPositionsType[]) {
-					let overlap = Math.min(
-						(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) / list.length,
-						MAX_ANIMATION_OVERLAP
-					);
-					if (prevFixtureSizes.current !== fixtureSizes) {
-						// XXX should this just do gsap.set ?
-						overlap = 0;
-						prevFixtureSizes.current = fixtureSizes;
-					}
-					list.forEach(({ shorthand, top, left, zIndex }, index) => {
-						const cardId = '#c' + shorthand + '-' + gameBoardIdRef.current;
-						nextTLs.set(shorthand, [top, left]);
-						timeline.to(
-							cardId,
-							{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
-							index === 0 ? `>0` : `<${overlap.toFixed(3)}`
-						);
-						// REVIEW (animation) zIndex boost while in flight?
-						//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
-						//  - as soon as it finishes animating, set it to the correct value
-						timeline.to(cardId, { zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2 }, `<`);
-					});
-				}
+			const { updateCardPositions, updateCardPositionsPrev } = calcUpdatedCardPositions({
+				fixtureSizes,
+				previousTLs: previousTLs.current,
+				cards,
+				selection,
+				actionText,
+				actionPrev,
 			});
+
+			if (!updateCardPositions.length) return previousTLs;
+
+			if (previousTimeline.current && previousTimeline.current !== timeline) {
+				// REVIEW (animations) since animations are so fast, should they be appended instead of replaced?
+				previousTimeline.current
+					.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
+					.kill(); // stop animating
+			}
+			previousTimeline.current = timeline;
+
+			const nextTLs = new Map(previousTLs.current);
+			if (updateCardPositionsPrev) {
+				anim(updateCardPositionsPrev);
+			}
+			anim(updateCardPositions);
+			previousTLs.current = nextTLs;
+
+			function anim(list: UpdateCardPositionsType[]) {
+				let overlap = Math.min(
+					(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) / list.length,
+					MAX_ANIMATION_OVERLAP
+				);
+				if (prevFixtureSizes.current !== fixtureSizes) {
+					// XXX should this just do gsap.set ?
+					overlap = 0;
+					prevFixtureSizes.current = fixtureSizes;
+				}
+				list.forEach(({ shorthand, top, left, zIndex }, index) => {
+					const cardId = '#c' + shorthand + '-' + gameBoardIdRef.current;
+					nextTLs.set(shorthand, [top, left]);
+					timeline.to(
+						cardId,
+						{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
+						index === 0 ? `>0` : `<${overlap.toFixed(3)}`
+					);
+					// REVIEW (animation) zIndex boost while in flight?
+					//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
+					//  - as soon as it finishes animating, set it to the correct value
+					timeline.to(cardId, { zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2 }, `<`);
+				});
+			}
 		},
 		{ dependencies: [cards, selection, actionText, actionPrev, fixtureSizes] }
 	);
