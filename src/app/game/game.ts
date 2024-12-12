@@ -516,7 +516,6 @@ export class FreeCell {
 
 	/**
 		go back one move
-		REVIEW (combine-move-auto-foundation) or two if using moveByShorthand
 	*/
 	undo(): FreeCell | this {
 		const history = this.history.slice(0);

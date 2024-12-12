@@ -166,7 +166,7 @@ export default function Page() {
 
 				<li>
 					Flourish
-					{/* TODO keep refining */}
+					{/* TODO (techdebt) keep refining */}
 					{/*  - include next move, e.g. '3b' */}
 					{/*  - swap out GameBoard - we want separate/simpler controls? */}
 					{/*  - swap out GameBoard - we don't want keyboard controls to bleed between games */}

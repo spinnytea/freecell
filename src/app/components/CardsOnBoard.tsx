@@ -39,13 +39,35 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 		previousAction: { text: actionText, actionPrev },
 	} = useGame();
 	const fixtureSizes = useFixtureSizes();
+
+	/**
+		keep track of card positions, we need to animate anything that moves
+		if it hasn't moved since last time, then we don't need to animate it
+	*/
 	const previousTLs = useRef(new Map<string, number[]>());
+	/**
+		if we change the size of the screen, then everything will animate
+		don't do any offsets, just move/update all the cards immediately
+
+		positions of cards are controlled entirely by the animates
+	*/
 	const prevFixtureSizes = useRef(fixtureSizes);
+
+	/**
+		handle on the currently running / previous animation
+		if we have one running when we start a new one,
+		then finish it and kill it immediately
+		this is a user-interactive game, and we want to prioritize responsiveness
+	*/
 	const previousTimeline = useRef<gsap.core.Timeline | null>(null);
 
 	useGSAP(
 		() => {
-			const timeline = gsap.timeline();
+			const timeline = gsap.timeline({
+				onComplete: () => {
+					previousTimeline.current = null;
+				},
+			});
 
 			const { updateCardPositions, updateCardPositionsPrev } = calcUpdatedCardPositions({
 				fixtureSizes,
@@ -59,7 +81,6 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 			if (!updateCardPositions.length) return previousTLs;
 
 			if (previousTimeline.current && previousTimeline.current !== timeline) {
-				// REVIEW (animations) since animations are so fast, should they be appended instead of replaced?
 				previousTimeline.current
 					.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
 					.kill(); // stop animating
@@ -68,6 +89,8 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 
 			const nextTLs = new Map(previousTLs.current);
 			if (updateCardPositionsPrev) {
+				// XXX (techdebt) (motivation) this needs to be refactored this is the first non-trivial animation, so it's a bit of a 1-off
+				//  - everything else so far has been about making sure the cards move in the right order
 				anim(updateCardPositionsPrev);
 			}
 			anim(updateCardPositions);
@@ -79,7 +102,7 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 					MAX_ANIMATION_OVERLAP
 				);
 				if (prevFixtureSizes.current !== fixtureSizes) {
-					// XXX should this just do gsap.set ?
+					// XXX (techdebt) (animation) should this just do gsap.set ?
 					overlap = 0;
 					prevFixtureSizes.current = fixtureSizes;
 				}
