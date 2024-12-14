@@ -6,7 +6,7 @@ import Link from 'next/link';
 import styles_common from '@/app/common.module.css';
 import { CardImage } from '@/app/components/cards/CardImage';
 import { RankList, SuitList } from '@/app/game/card/card';
-import GameBoard from '@/app/GameBoard';
+import GameBoard, { GameBoardDisplayOptions } from '@/app/GameBoard';
 import styles_gameboard from '@/app/gameboard.module.css';
 import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
@@ -31,11 +31,35 @@ const gamePrint_52CardFlourish =
 	'             5D    5C    \n' +
 	' move 3a 7H→cell';
 
+const gamePrint_moveAutoFoundation0 =
+	' 5D          2S 3D 3H 4C \n' +
+	' KS 8C 9H 7C KH>   KD 9C \n' +
+	' QH TD 6H QD QC    QS 8D \n' +
+	' JC TH 7D JS JD    JH    \n' +
+	'    KC 3S    TS    TC    \n' +
+	'    4S|5S|         9D    \n' +
+	'    6C|4H|         8S    \n' +
+	'    9S             7H    \n' +
+	'    8H             6S    \n' +
+	'    7S             5H    \n' +
+	'    6D                   \n' +
+	'    5C                   \n' +
+	'    4D                   \n' +
+	' cursor right';
+
 const calcCardWidth = (windowInnerWidth = 9999) =>
 	Math.floor(Math.min(Math.max((windowInnerWidth - 80) / 13, 10), 75));
 
+const DEFAULT_DISPLAY_OPTIONS: GameBoardDisplayOptions = {
+	showStatusBar: false,
+	showUndoButton: false,
+	showTextBoard: false,
+	fixtureLayout: 'portrait',
+};
+
 /*
 	TODO (techdebt) much needed style overhaul
+	TODO (techdebt) manual testing Game #5, click to advance through all moves
 
 	TODO (techdebt) manual tests for cursor
 	TODO (techdebt) manual tests for selection: one, two, three, etc
@@ -142,7 +166,7 @@ export default function Page() {
 
 				<li>
 					Flourish
-					{/* TODO keep refining */}
+					{/* TODO (techdebt) keep refining */}
 					{/*  - include next move, e.g. '3b' */}
 					{/*  - swap out GameBoard - we want separate/simpler controls? */}
 					{/*  - swap out GameBoard - we don't want keyboard controls to bleed between games */}
@@ -155,12 +179,7 @@ export default function Page() {
 						<StaticGameContextProvider gamePrint={gamePrint_52CardFlourish}>
 							<GameBoard
 								className={styles_gameboard.inline}
-								displayOptions={{
-									showStatusBar: false,
-									showUndoButton: false,
-									showTextBoard: false,
-									fixtureLayout: 'portrait',
-								}}
+								displayOptions={DEFAULT_DISPLAY_OPTIONS}
 							/>
 						</StaticGameContextProvider>
 					</ManualTestingSettingsContextProvider>
@@ -172,12 +191,19 @@ export default function Page() {
 						<StaticGameContextProvider gamePrint={gamePrint_readyToAutoFoundation}>
 							<GameBoard
 								className={styles_gameboard.inline}
-								displayOptions={{
-									showStatusBar: false,
-									showUndoButton: false,
-									showTextBoard: false,
-									fixtureLayout: 'portrait',
-								}}
+								displayOptions={DEFAULT_DISPLAY_OPTIONS}
+							/>
+						</StaticGameContextProvider>
+					</ManualTestingSettingsContextProvider>
+				</li>
+				<li>
+					Random Gameplay moves (use z to undo)
+					{/* TODO (techdebt) showUndoButton inside board, or just cycle move + undo */}
+					<ManualTestingSettingsContextProvider>
+						<StaticGameContextProvider gamePrint={gamePrint_moveAutoFoundation0}>
+							<GameBoard
+								className={styles_gameboard.inline}
+								displayOptions={DEFAULT_DISPLAY_OPTIONS}
 							/>
 						</StaticGameContextProvider>
 					</ManualTestingSettingsContextProvider>

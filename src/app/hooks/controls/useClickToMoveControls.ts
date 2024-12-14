@@ -9,7 +9,7 @@ export function useClickToMoveControls(location: CardLocation) {
 
 	function handleClickToMove() {
 		// REVIEW (controls) click-to-move
-		setGame((g) => g.setCursor(location).touch().autoMove().autoFoundationAll());
+		setGame((g) => g.setCursor(location).touch().autoMove());
 		setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 	}
 

@@ -29,7 +29,7 @@ export function useKeybaordMiscControls() {
 						if (g.cursor.fixture === 'foundation' && g.win) {
 							return newGame().shuffle32();
 						}
-						return g.touch().autoFoundationAll();
+						return g.touch();
 					});
 					break;
 				case 'Escape':

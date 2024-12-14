@@ -37,7 +37,12 @@ export function WinMessage() {
 						}
 					};
 					gsap.set(elementRef.current, { backgroundClip: 'text', color: 'transparent' });
-					gsap.to(color, { h: 360, onUpdate: applyColor, duration: WIN_TEXT_COLOR_DURATION, ease: 'none' });
+					gsap.to(color, {
+						h: 360,
+						onUpdate: applyColor,
+						duration: WIN_TEXT_COLOR_DURATION,
+						ease: 'none',
+					});
 					gsap.to(color, {
 						s: 0,
 						l: 90,

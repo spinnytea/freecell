@@ -42,7 +42,7 @@ describe('game.autoMove', () => {
 					{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: 5 },
 				]);
 
-				game = game.autoMove();
+				game = game.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' +
@@ -60,7 +60,7 @@ describe('game.autoMove', () => {
 					{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: 5 },
 				]);
 
-				game = game.autoMove();
+				game = game.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' +
@@ -78,7 +78,7 @@ describe('game.autoMove', () => {
 					{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: 5 },
 				]);
 
-				game = game.autoMove();
+				game = game.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' +
@@ -96,7 +96,7 @@ describe('game.autoMove', () => {
 					{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: 2 },
 				]);
 
-				game = game.autoMove();
+				game = game.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' +
@@ -154,7 +154,7 @@ describe('game.autoMove', () => {
 					},
 				]);
 
-				game = game.autoMove();
+				game = game.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -163,7 +163,7 @@ describe('game.autoMove', () => {
 						' move 12 KC→cascade'
 				);
 
-				game = game.touch().autoMove().touch();
+				game = game.touch().autoMove({ autoFoundation: false }).touch();
 
 				expect(game.availableMoves).toEqual([
 					{
@@ -183,7 +183,7 @@ describe('game.autoMove', () => {
 					},
 				]);
 
-				game = game.autoMove();
+				game = game.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -192,7 +192,7 @@ describe('game.autoMove', () => {
 						' move 34 KC→cascade'
 				);
 
-				game = game.touch().autoMove();
+				game = game.touch().autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -211,7 +211,7 @@ describe('game.autoMove', () => {
 				);
 				expect(game.tableau.length).toBe(8);
 
-				game = game.touch().autoMove();
+				game = game.touch().autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -220,7 +220,15 @@ describe('game.autoMove', () => {
 						' move 12 KC→cascade'
 				);
 
-				game = game.touch().autoMove().touch().autoMove().touch().autoMove().touch().autoMove();
+				game = game
+					.touch()
+					.autoMove({ autoFoundation: false })
+					.touch()
+					.autoMove({ autoFoundation: false })
+					.touch()
+					.autoMove({ autoFoundation: false })
+					.touch()
+					.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -229,7 +237,11 @@ describe('game.autoMove', () => {
 						' move 56 KC→cascade'
 				);
 
-				game = game.touch().autoMove().touch().autoMove();
+				game = game
+					.touch()
+					.autoMove({ autoFoundation: false })
+					.touch()
+					.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -238,7 +250,7 @@ describe('game.autoMove', () => {
 						' move 78 KC→cascade'
 				);
 
-				game = game.touch().autoMove();
+				game = game.touch().autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -257,7 +269,7 @@ describe('game.autoMove', () => {
 						' hand-jammed'
 				);
 
-				game = game.touch().autoMove();
+				game = game.touch().autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -270,7 +282,7 @@ describe('game.autoMove', () => {
 				game = game
 					.setCursor({ fixture: 'cascade', data: [4, 1] })
 					.touch()
-					.autoMove();
+					.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -358,7 +370,7 @@ describe('game.autoMove', () => {
 						'cascade:sequence': new Set([12]),
 					});
 
-					game = game.autoMove();
+					game = game.autoMove({ autoFoundation: false });
 
 					expect(game.print()).toBe(
 						'' + //
@@ -404,7 +416,7 @@ describe('game.autoMove', () => {
 									' copy-pasta'
 							)
 								.touch()
-								.autoMove()
+								.autoMove({ autoFoundation: false })
 								.print()
 						).toBe(
 							'' +
@@ -440,7 +452,7 @@ describe('game.autoMove', () => {
 									' copy-pasta'
 							)
 								.touch()
-								.autoMove()
+								.autoMove({ autoFoundation: false })
 								.print()
 						).toBe(
 							'' +
@@ -478,7 +490,7 @@ describe('game.autoMove', () => {
 								' copy-pasta'
 						)
 							.touch()
-							.autoMove()
+							.autoMove({ autoFoundation: false })
 							.print()
 					).toBe(
 						'' +
@@ -545,7 +557,7 @@ describe('game.autoMove', () => {
 						},
 					]);
 
-					expect(game.autoMove().print()).toBe(
+					expect(game.autoMove({ autoFoundation: false }).print()).toBe(
 						'' +
 							'            >AD          \n' +
 							' 3C TS 6S 5D 9H QC AH 9C \n' +
@@ -572,7 +584,7 @@ describe('game.autoMove', () => {
 						' hand-jammed'
 				);
 
-				game = game.touch().autoMove();
+				game = game.touch().autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -583,7 +595,11 @@ describe('game.autoMove', () => {
 						' move 23 KC-QD-JS→cascade'
 				);
 
-				game = game.touch().autoMove().touch().autoMove();
+				game = game
+					.touch()
+					.autoMove({ autoFoundation: false })
+					.touch()
+					.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -594,7 +610,13 @@ describe('game.autoMove', () => {
 						' move 46 KC-QD-JS→cascade'
 				);
 
-				game = game.touch().autoMove().touch().autoMove().touch().autoMove();
+				game = game
+					.touch()
+					.autoMove({ autoFoundation: false })
+					.touch()
+					.autoMove({ autoFoundation: false })
+					.touch()
+					.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -616,7 +638,7 @@ describe('game.autoMove', () => {
 						' hand-jammed'
 				);
 
-				game = game.touch().autoMove();
+				game = game.touch().autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -630,7 +652,7 @@ describe('game.autoMove', () => {
 				game = game
 					.setCursor({ fixture: 'cascade', data: [4, 1] })
 					.touch()
-					.autoMove();
+					.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -656,6 +678,112 @@ describe('game.autoMove', () => {
 		});
 	});
 
+	describe('autoFoundation', () => {
+		test('move', () => {
+			const game = FreeCell.parse(
+				'' + //
+					'             QC TD KH QS \n' + //
+					' JD KC       KS          \n' + //
+					' KD>QD                   \n' + //
+					' hand-jammed'
+			)
+				.touch()
+				.autoMove();
+
+			expect(game.print()).toBe(
+				'' +
+					'             QC TD KH QS \n' + //
+					' JD KC      >KS          \n' + //
+					' KD          QD          \n' + //
+					' move 25 QD→KS'
+			);
+			expect(game.previousAction).toEqual({
+				text: 'move 25 QD→KS',
+				type: 'move',
+			});
+			expect(game.history).toEqual(['hand-jammed', 'move 25 QD→KS']);
+
+			expect(
+				FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
+			).toBe(game.print({ includeHistory: true }));
+			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
+		});
+
+		test('move-foundation', () => {
+			const game = FreeCell.parse(
+				'' + //
+					'             QC TD KH TS \n' + //
+					' KD KC       KS          \n' + //
+					' QS>QD                   \n' + //
+					' JD JS                   \n' + //
+					' hand-jammed'
+			)
+				.touch()
+				.autoMove();
+			expect(game.print()).toBe(
+				'' +
+					'             KC KD KH KS \n' + //
+					'            >            \n' + //
+					':    Y O U   W I N !    :\n' + //
+					'                         \n' + //
+					' move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)'
+			);
+			expect(game.previousAction).toEqual({
+				text: 'move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)',
+				type: 'move-foundation',
+				actionPrev: [
+					{ rank: 'queen', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 1] } },
+					{ rank: 'jack', suit: 'spades', location: { fixture: 'cascade', data: [4, 2] } },
+				],
+			});
+			expect(game.history).toEqual([
+				'hand-jammed',
+				'move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)',
+			]);
+
+			expect(
+				FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
+			).toBe(game.print({ includeHistory: true }));
+			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
+		});
+
+		test('auto-foundation', () => {
+			const game = FreeCell.parse(
+				'' + //
+					'             QC TD KH TS \n' + //
+					' KD KC       KS          \n' + //
+					' QS>QD                   \n' + //
+					' JD JS                   \n' + //
+					' hand-jammed'
+			)
+				.touch()
+				.autoMove({ autoFoundation: false })
+				.autoFoundationAll();
+			expect(game.print()).toBe(
+				'' +
+					'             KC KD KH KS \n' + //
+					'            >            \n' + //
+					':    Y O U   W I N !    :\n' + //
+					'                         \n' + //
+					' auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS'
+			);
+			expect(game.previousAction).toEqual({
+				text: 'auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS',
+				type: 'auto-foundation',
+			});
+			expect(game.history).toEqual([
+				'hand-jammed',
+				'move 25 QD-JS→KS',
+				'auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS',
+			]);
+
+			expect(
+				FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
+			).toBe(game.print({ includeHistory: true }));
+			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
+		});
+	});
+
 	describe('edges', () => {
 		test('do not autoMove if previous touch was invalid', () => {
 			let game = FreeCell.parse(
@@ -677,7 +805,7 @@ describe('game.autoMove', () => {
 			game = game.setCursor({ fixture: 'cascade', data: [5, 5] }).touch();
 			expect(game.previousAction.text).toBe('invalid move 86 7D→9C');
 			// do not move card
-			game = game.autoMove();
+			game = game.autoMove({ autoFoundation: false });
 			expect(game.print()).toBe(
 				'' +
 					'                         \n' +
