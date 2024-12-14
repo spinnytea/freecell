@@ -42,8 +42,17 @@ export interface PreviousAction {
 	//  - depends on if we need to add anything else to PreviousAction, like `affected: Card[]` ?
 	type: PreviousActionType;
 
-	// FIXME only used for move-foundation
-	actionPrev?: FreeCell;
+	/**
+		just the cards that moved
+
+		TODO (techdebt) currently only used for move-foundation
+		- maybe we should rename this variable?
+		- maybe we can always list "this are the cards that moved during this action"
+		  'move-foundation' has 2 sets of moves, what then?
+
+		@see {@link getCardsThatMoved}
+	*/
+	actionPrev?: Card[];
 }
 
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
@@ -150,7 +159,7 @@ export function parseCursorFromPreviousActionText(
 	}
 }
 
-function parseActionTextMove(actionText: string) {
+export function parseActionTextMove(actionText: string) {
 	let match = MOVE_REGEX.exec(actionText);
 	if (match) {
 		const [, from, to, fromShorthand, toShorthand] = match;
@@ -177,11 +186,25 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 	const firstCardSH = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
 	const firstCard = findCard(game.cards, firstCardSH);
 	if (shorthandPosition(firstCard.location) !== to)
-		throw new Error('invalid first card position: ' + actionText);
+		throw new Error(
+			'invalid first card position: ' +
+				actionText +
+				'; ' +
+				shorthandPosition(firstCard.location) +
+				' !== ' +
+				to
+		);
 
 	const sequence = getSequenceAt(game, firstCard.location);
 	if (shorthandSequence(sequence) !== fromShorthand)
-		throw new Error('invalid sequence: ' + actionText);
+		throw new Error(
+			'invalid sequence: ' +
+				actionText +
+				'; ' +
+				shorthandSequence(sequence) +
+				' !== ' +
+				fromShorthand
+		);
 	const location = parseShorthandPosition_INCOMPLETE(from);
 
 	return moveCards(game, sequence, location);
@@ -292,4 +315,13 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 		})
 		.filter((m) => m);
 	return { seed, moves };
+}
+
+/** just the cards that moved */
+export function getCardsThatMoved(game: FreeCell): Card[] {
+	if (game.previousAction.type !== 'move') return [];
+	const { fromShorthand } = parseActionTextMove(game.previousAction.text);
+	return fromShorthand
+		.split('-')
+		.map((sh) => findCard(game.cards, parseShorthandCard(sh[0], sh[1])));
 }

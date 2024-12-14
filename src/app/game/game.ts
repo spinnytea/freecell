@@ -16,6 +16,8 @@ import {
 	SuitList,
 } from '@/app/game/card/card';
 import {
+	getCardsThatMoved,
+	parseActionTextMove,
 	parseAndUndoPreviousActionText,
 	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
@@ -106,7 +108,7 @@ export class FreeCell {
 			this.cards = cloneCards(cards);
 
 			// we want the objects in "cards" and there rest of the game board
-			// XXX (techdebt) only compute these when we need them?
+			// TODO (techdebt) only compute these when we need them?
 			//  - get deck() => this._deck ?? this._cacheBoard()._deck;
 			//  - get tableau() => this._tableau ?? this._cacheBoard()._tableau;
 			this.cards.forEach((card) => {
@@ -498,7 +500,7 @@ export class FreeCell {
 						action: {
 							text: `${actionText} (${foundationGame.previousAction.text})`,
 							type: 'move-foundation',
-							actionPrev: movedGame,
+							actionPrev: getCardsThatMoved(movedGame),
 						},
 						cards: foundationGame.cards,
 						selection: null,
@@ -517,7 +519,9 @@ export class FreeCell {
 	/**
 		go back one move
 	*/
-	undo(): FreeCell | this {
+	undo({ skipMoveFoundationCards = false }: { skipMoveFoundationCards?: boolean } = {}):
+		| FreeCell
+		| this {
 		const history = this.history.slice(0);
 		const moveToUndo = history.pop();
 		if (!moveToUndo) return this;
@@ -525,11 +529,27 @@ export class FreeCell {
 		const cards = parseAndUndoPreviousActionText(this, moveToUndo);
 		if (!cards) return this;
 
-		// we _need_ an action in __clone
-		// __clone will add it back to the history
 		// TODO (techdebt) test init partial
 		const action = parsePreviousActionType(history.pop() ?? 'init partial');
-		return this.__clone({ action, history, cards });
+
+		// we _need_ an action in __clone
+		// __clone will add it back to the history
+		const didUndo = this.__clone({ action, history, cards });
+
+		// redo single move
+		if (
+			!skipMoveFoundationCards &&
+			didUndo.previousAction.type === 'move-foundation' &&
+			!didUndo.previousAction.actionPrev
+		) {
+			const secondUndo = didUndo.undo({ skipMoveFoundationCards: true });
+			const { from, to } = parseActionTextMove(didUndo.previousAction.text);
+			didUndo.previousAction.actionPrev = getCardsThatMoved(
+				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
+			);
+		}
+
+		return didUndo;
 	}
 
 	/**
@@ -954,7 +974,7 @@ export class FreeCell {
 		must be a valid output of game.print(), there isn't much error correction/detection
 		i.e. must `game.print() === FreeCell.parse(game.print()).print()`
 
-		FIXME remove invalidFoundations? just add a blank home row?
+		TODO (techdebt) remove invalidFoundations and deal demo
 	*/
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		const cards = new FreeCell().cards;
@@ -1234,6 +1254,16 @@ export class FreeCell {
 			game.selection = getSequenceAt(game, selection_location);
 			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
+
+		// TODO (techdebt) copy-pasta, same as `undo`
+		if (game.previousAction.type === 'move-foundation' && !game.previousAction.actionPrev) {
+			const secondUndo = game.undo({ skipMoveFoundationCards: true });
+			const { from, to } = parseActionTextMove(game.previousAction.text);
+			game.previousAction.actionPrev = getCardsThatMoved(
+				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
+			);
+		}
+
 		// XXX (techdebt) re-print the our game, confirm it matches the input
 		//  - seems to be mostly `skipDeck` (print) and clipped "you win" messages (hand-jammed)
 		// const reprint = game.print({ includeHistory: parseHistory });

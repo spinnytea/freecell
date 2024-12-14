@@ -19,7 +19,6 @@ import {
 	shorthandCard,
 	Suit,
 } from '@/app/game/card/card';
-import { FreeCell } from '@/app/game/game';
 import { parsePreviousActionMoveShorthands } from '@/app/game/move/history';
 import { calcTopLeftZ, FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
@@ -212,7 +211,7 @@ interface UpdateCardPositionsType {
 }
 
 // FIXME unit test
-// FIXME optimize
+// TODO (animation) (motivation) optimize
 export function calcUpdatedCardPositions({
 	fixtureSizes,
 	previousTLs,
@@ -226,7 +225,7 @@ export function calcUpdatedCardPositions({
 	cards: Card[];
 	selection: CardSequence | null;
 	actionText?: string;
-	actionPrev?: FreeCell;
+	actionPrev?: Card[];
 }): {
 	updateCardPositions: UpdateCardPositionsType[];
 	updateCardPositionsPrev?: UpdateCardPositionsType[];
@@ -274,8 +273,8 @@ export function calcUpdatedCardPositions({
 			const { updateCardPositions: prevUpdateCardPositions } = calcUpdatedCardPositions({
 				fixtureSizes,
 				previousTLs,
-				cards: actionPrev.cards,
-				selection: actionPrev.selection,
+				cards: actionPrev,
+				selection: null,
 			});
 
 			let anyMissing = false;
@@ -287,6 +286,8 @@ export function calcUpdatedCardPositions({
 
 			// FIXME filter updateCardPositions
 			//  - remove items that are in A and have the exact same position
+			//  - after unit testing
+			//  - we need to ensure that everything that should move does move
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (!anyMissing) {
 				return { updateCardPositions, updateCardPositionsPrev: a as UpdateCardPositionsType[] };
