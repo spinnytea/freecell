@@ -107,16 +107,26 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 				}
 				list.forEach(({ shorthand, top, left, zIndex }, index) => {
 					const cardId = '#c' + shorthand + '-' + gameBoardIdRef.current;
+					const prevTL = nextTLs.get(shorthand);
 					nextTLs.set(shorthand, [top, left]);
-					timeline.to(
-						cardId,
-						{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
-						index === 0 ? `>0` : `<${overlap.toFixed(3)}`
-					);
-					// REVIEW (animation) zIndex boost while in flight?
-					//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
-					//  - as soon as it finishes animating, set it to the correct value
-					timeline.to(cardId, { zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2 }, `<`);
+					if (prevTL) {
+						// bugfix: timeline.to should be enough, but mobile sometimes remakes cards at 0,0
+						//  - timeline.fromTo ensures we start the animation from the actual previous place
+						timeline.fromTo(
+							cardId,
+							{ top: prevTL[0], left: prevTL[1] },
+							{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
+							index === 0 ? `>0` : `<${overlap.toFixed(3)}`
+						);
+						// REVIEW (animation) zIndex boost while in flight?
+						//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
+						//  - as soon as it finishes animating, set it to the correct value
+						timeline.to(cardId, { zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2 }, `<`);
+					} else {
+						// when we draw the cards for the first time, don't animate them from (0, 0)
+						// for gameplay, this should just be drawing the deck
+						timeline.set(cardId, { top, left, zIndex });
+					}
 				});
 			}
 		},
@@ -284,13 +294,18 @@ export function calcUpdatedCardPositions({
 				return position;
 			});
 
-			// BUG (techdebt) (combine-move-auto-foundation) ? filter updateCardPositions
-			//  - remove items that are in A and have the exact same position
-			//  - after unit testing
-			//  - we need to ensure that everything that should move does move
+			// filter items from updateCardPositions if they are in A and have exactly the same position
+			const b = updateCardPositions.filter(({ shorthand, top, left }) => {
+				const found = a.find((_a) => _a?.shorthand === shorthand);
+				if (!found) return true;
+				if (found.top !== top) return true;
+				if (found.left !== left) return true;
+				return false;
+			});
+
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (!anyMissing) {
-				return { updateCardPositions, updateCardPositionsPrev: a as UpdateCardPositionsType[] };
+				return { updateCardPositions: b, updateCardPositionsPrev: a as UpdateCardPositionsType[] };
 			}
 		}
 	}

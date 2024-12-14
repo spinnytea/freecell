@@ -109,9 +109,7 @@ export class FreeCell {
 			this.cards = cloneCards(cards);
 
 			// we want the objects in "cards" and there rest of the game board
-			// TODO (techdebt) only compute these when we need them?
-			//  - get deck() => this._deck ?? this._cacheBoard()._deck;
-			//  - get tableau() => this._tableau ?? this._cacheBoard()._tableau;
+			// (there's no point in "only compute if needed"; review actions use cards, but every logical action (move, cursor) uses the structures)
 			this.cards.forEach((card) => {
 				switch (card.location.fixture) {
 					case 'deck':
@@ -135,7 +133,7 @@ export class FreeCell {
 				throw new Error(`Must have between 1 and 6 cells; requested "${cellCount.toString(10)}".`);
 			if (cascadeCount < NUMBER_OF_FOUNDATIONS)
 				throw new Error(
-					`Must have at least as many cascades as foundations (${this.foundations.length.toString(10)}); requested "${cascadeCount.toString(10)}".`
+					`Must have at least as many cascades as foundations (${NUMBER_OF_FOUNDATIONS.toString(10)}); requested "${cascadeCount.toString(10)}".`
 				);
 			// 10 is a magic number - @see shorthandPosition, which we use for history
 			if (cascadeCount > 10)

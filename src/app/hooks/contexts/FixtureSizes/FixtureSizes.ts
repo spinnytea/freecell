@@ -269,6 +269,7 @@ export function calcTopLeftZ(
 					ret.top += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
 				}
 			}
+			ret.top = toFixed(ret.top);
 			return ret;
 		}
 	}

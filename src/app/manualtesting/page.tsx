@@ -47,6 +47,19 @@ const gamePrint_moveAutoFoundation0 =
 	'    4D                   \n' +
 	' cursor right';
 
+/** move 71 7D-6C-5H-4S-3H→8S (auto-foundation 7 AH) */
+const gamePrint_animation0 =
+	' TH 6D       AD 3C       \n' +
+	' KS 5C JS KH    6S TD 2S \n' +
+	' 5D 7S 8H 4H    JD AH TC \n' +
+	' 7C AS JH JC    3D 7D KC \n' +
+	' 8D 9C 4C 2H    QD 6C 9H \n' +
+	' 2D 7H QS 8C       5H 5S \n' +
+	' TS 6H 9S 3S       4S 4D \n' +
+	'>8S QH KD 9D       3H    \n' +
+	'       QC                \n' +
+	' move 63 QC→KD';
+
 const calcCardWidth = (windowInnerWidth = 9999) =>
 	Math.floor(Math.min(Math.max((windowInnerWidth - 80) / 13, 10), 75));
 
@@ -201,6 +214,17 @@ export default function Page() {
 					{/* TODO (techdebt) showUndoButton inside board, or just cycle move + undo */}
 					<ManualTestingSettingsContextProvider>
 						<StaticGameContextProvider gamePrint={gamePrint_moveAutoFoundation0}>
+							<GameBoard
+								className={styles_gameboard.inline}
+								displayOptions={DEFAULT_DISPLAY_OPTIONS}
+							/>
+						</StaticGameContextProvider>
+					</ManualTestingSettingsContextProvider>
+				</li>
+				<li>
+					Ensure animation looks right: move 71 7D-6C-5H-4S-3H→8S (auto-foundation 7 AH)
+					<ManualTestingSettingsContextProvider>
+						<StaticGameContextProvider gamePrint={gamePrint_animation0}>
 							<GameBoard
 								className={styles_gameboard.inline}
 								displayOptions={DEFAULT_DISPLAY_OPTIONS}
