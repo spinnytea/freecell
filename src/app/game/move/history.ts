@@ -27,6 +27,15 @@ export type PreviousActionType =
 	| 'invalid'
 	| 'auto-foundation-tween';
 
+export const PREVIOUS_ACTION_TYPE_IN_HISTORY: PreviousActionType[] = [
+	'init',
+	'shuffle',
+	'deal',
+	'move',
+	'move-foundation',
+	'auto-foundation',
+];
+
 export interface PreviousAction {
 	/**
 		human readable (loosely speaking) string
@@ -45,7 +54,7 @@ export interface PreviousAction {
 	/**
 		just the cards that moved
 
-		TODO (techdebt) currently only used for move-foundation
+		TODO (techdebt) (combine-move-auto-foundation) currently only used for move-foundation
 		- maybe we should rename this variable?
 		- maybe we can always list "this are the cards that moved during this action"
 		  'move-foundation' has 2 sets of moves, what then?

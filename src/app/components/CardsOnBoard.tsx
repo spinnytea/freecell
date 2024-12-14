@@ -210,7 +210,7 @@ interface UpdateCardPositionsType {
 	previousTop: number;
 }
 
-// FIXME unit test
+// TODO (techdebt) (combine-move-auto-foundation) unit test
 // TODO (animation) (motivation) optimize
 export function calcUpdatedCardPositions({
 	fixtureSizes,
@@ -284,7 +284,7 @@ export function calcUpdatedCardPositions({
 				return position;
 			});
 
-			// FIXME filter updateCardPositions
+			// BUG (techdebt) (combine-move-auto-foundation) ? filter updateCardPositions
 			//  - remove items that are in A and have the exact same position
 			//  - after unit testing
 			//  - we need to ensure that everything that should move does move

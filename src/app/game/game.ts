@@ -22,6 +22,7 @@ import {
 	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
 	parsePreviousActionType,
+	PREVIOUS_ACTION_TYPE_IN_HISTORY,
 	PreviousAction,
 } from '@/app/game/move/history';
 import {
@@ -204,9 +205,7 @@ export class FreeCell {
 			selection: selection && availableMoves ? selection : null,
 			availableMoves: selection && availableMoves ? availableMoves : null,
 			action,
-			history: ['init', 'shuffle', 'deal', 'move', 'move-foundation', 'auto-foundation'].includes(
-				action.type
-			)
+			history: PREVIOUS_ACTION_TYPE_IN_HISTORY.includes(action.type)
 				? [...(history ?? this.history), action.text]
 				: this.history,
 		});
@@ -449,12 +448,12 @@ export class FreeCell {
 		  - OR disable select-to-peek for mouse
 	*/
 	touch({ autoFoundation = true }: { autoFoundation?: boolean } = {}): FreeCell {
-		/** clear the selction, if re-touching the same spot */
+		// clear the selction, if re-touching the same spot
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
 			return this.clearSelection();
 		}
 
-		/** set selection, or move selection if applicable  */
+		// set selection, or move selection if applicable
 		// TODO (controls) allow "growing/shrinking sequence of current selection"
 		// TODO (controls) || !game.availableMoves?.length (if the current selection has no valid moves)
 		// TODO (controls) allow moving selection from one cell to another cell
@@ -519,9 +518,7 @@ export class FreeCell {
 	/**
 		go back one move
 	*/
-	undo({ skipMoveFoundationCards = false }: { skipMoveFoundationCards?: boolean } = {}):
-		| FreeCell
-		| this {
+	undo({ skipActionPrev = false }: { skipActionPrev?: boolean } = {}): FreeCell | this {
 		const history = this.history.slice(0);
 		const moveToUndo = history.pop();
 		if (!moveToUndo) return this;
@@ -538,11 +535,11 @@ export class FreeCell {
 
 		// redo single move
 		if (
-			!skipMoveFoundationCards &&
+			!skipActionPrev &&
 			didUndo.previousAction.type === 'move-foundation' &&
 			!didUndo.previousAction.actionPrev
 		) {
-			const secondUndo = didUndo.undo({ skipMoveFoundationCards: true });
+			const secondUndo = didUndo.undo({ skipActionPrev: true });
 			const { from, to } = parseActionTextMove(didUndo.previousAction.text);
 			didUndo.previousAction.actionPrev = getCardsThatMoved(
 				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
@@ -1257,7 +1254,7 @@ export class FreeCell {
 
 		// TODO (techdebt) copy-pasta, same as `undo`
 		if (game.previousAction.type === 'move-foundation' && !game.previousAction.actionPrev) {
-			const secondUndo = game.undo({ skipMoveFoundationCards: true });
+			const secondUndo = game.undo({ skipActionPrev: true });
 			const { from, to } = parseActionTextMove(game.previousAction.text);
 			game.previousAction.actionPrev = getCardsThatMoved(
 				secondUndo.moveByShorthand(from + to, { autoFoundation: false })

@@ -209,6 +209,7 @@ export function shorthandCard(card: CardSH | null | undefined) {
 	return (r + s).toUpperCase();
 }
 
+/** TODO (techdebt) (refactor) change `rs` to single string since that's how it's _always_ called */
 export function parseShorthandCard(r: string | undefined, s: string | undefined): CardSH | null {
 	if (r === ' ' && s === ' ') return null;
 
