@@ -17,7 +17,12 @@ export function KeyboardCursor() {
 
 	useGSAP(
 		() => {
-			gsap.to(cursorRef.current, { top, left, duration: CURSOR_TRANSLATE_DURATION });
+			gsap.to(cursorRef.current, {
+				top,
+				left,
+				duration: CURSOR_TRANSLATE_DURATION,
+				ease: 'power1.out',
+			});
 		},
 		{ dependencies: [top, left] }
 	);

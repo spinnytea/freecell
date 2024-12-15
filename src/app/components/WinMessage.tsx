@@ -20,7 +20,11 @@ export function WinMessage() {
 			if (win) {
 				// TODO (settings) (reduced-motion) - only animate scale (not X, not Y, not color)
 				const prop = gsap.utils.random(['scale', 'scaleX', 'scaleY']);
-				gsap.from(elementRef.current, { [prop]: 0, duration: WIN_TEXT_ANIMATION_DURATION });
+				gsap.from(elementRef.current, {
+					[prop]: 0,
+					duration: WIN_TEXT_ANIMATION_DURATION,
+					ease: 'power1.out',
+				});
 
 				if (winIsFloursh) {
 					// IDEA (animation) 52-card flourish cycles color forever
@@ -47,8 +51,8 @@ export function WinMessage() {
 						s: 0,
 						l: 90,
 						onUpdate: applyColor,
-						ease: 'power3.in',
 						duration: WIN_TEXT_COLOR_DURATION,
+						ease: 'power3.in',
 					});
 				}
 			}

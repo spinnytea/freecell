@@ -117,7 +117,7 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 							timeline.fromTo(
 								cardId,
 								{ top: prevTL[0], left: prevTL[1] },
-								{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
+								{ top, left, duration: DEFAULT_TRANSLATE_DURATION, ease: 'power1.out' },
 								index === 0 ? `>0` : `<${overlap.toFixed(3)}`
 							);
 						} else {
@@ -126,14 +126,18 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 							// and the `.fromTo` is screwing with things, so fall back to just a `.to`
 							timeline.to(
 								cardId,
-								{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
+								{ top, left, duration: DEFAULT_TRANSLATE_DURATION, ease: 'power1.out' },
 								index === 0 ? `>${overlap.toFixed(3)}` : `<${overlap.toFixed(3)}`
 							);
 						}
 						// REVIEW (animation) zIndex boost while in flight?
 						//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
 						//  - as soon as it finishes animating, set it to the correct value
-						timeline.to(cardId, { zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2 }, `<`);
+						timeline.to(
+							cardId,
+							{ zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2, ease: 'none' },
+							`<`
+						);
 					} else {
 						// when we draw the cards for the first time, don't animate them from (0, 0)
 						// for gameplay, this should just be drawing the deck
@@ -191,7 +195,11 @@ function CardOnBoard({
 
 	useGSAP(
 		() => {
-			gsap.to(cardRef.current, { rotation, duration: SELECT_ROTATION_DURATION });
+			gsap.to(cardRef.current, {
+				rotation,
+				duration: SELECT_ROTATION_DURATION,
+				ease: 'power1.inOut',
+			});
 
 			/*
 			REVIEW (techdebt) (drag-and-drop) use or remove

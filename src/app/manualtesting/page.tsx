@@ -36,20 +36,20 @@ const gamePrint_animations: { nextActionText: string; gamePrint: string }[] = [
 		// TODO (techdebt) showUndoButton inside board, or just cycle move + undo
 		nextActionText: 'move 36 5S-4H→cascade (auto-foundation 3262 3S,4D,4H,5C)',
 		gamePrint:
-		' 5D          2S 3D 3H 4C \n' +
-		' KS 8C 9H 7C KH>   KD 9C \n' +
-		' QH TD 6H QD QC    QS 8D \n' +
-		' JC TH 7D JS JD    JH    \n' +
-		'    KC 3S    TS    TC    \n' +
-		'    4S|5S|         9D    \n' +
-		'    6C|4H|         8S    \n' +
-		'    9S             7H    \n' +
-		'    8H             6S    \n' +
-		'    7S             5H    \n' +
-		'    6D                   \n' +
-		'    5C                   \n' +
-		'    4D                   \n' +
-		' cursor right'
+			' 5D          2S 3D 3H 4C \n' +
+			' KS 8C 9H 7C KH>   KD 9C \n' +
+			' QH TD 6H QD QC    QS 8D \n' +
+			' JC TH 7D JS JD    JH    \n' +
+			'    KC 3S    TS    TC    \n' +
+			'    4S|5S|         9D    \n' +
+			'    6C|4H|         8S    \n' +
+			'    9S             7H    \n' +
+			'    8H             6S    \n' +
+			'    7S             5H    \n' +
+			'    6D                   \n' +
+			'    5C                   \n' +
+			'    4D                   \n' +
+			' cursor right',
 	},
 	{
 		nextActionText: 'move 71 7D-6C-5H-4S-3H→8S (auto-foundation 7 AH)',
@@ -83,7 +83,7 @@ const gamePrint_animations: { nextActionText: string; gamePrint: string }[] = [
 			'                   6C    \n' +
 			'                   5D    \n' +
 			'                   4C    \n' +
-			' move 36 TH-9S-8D-7C-6H-5C-4D→JC'
+			' move 36 TH-9S-8D-7C-6H-5C-4D→JC',
 	},
 	// {
 	// 	// TODO (techdebt) there isn't a way to get to the deal, static game provider resets to the win

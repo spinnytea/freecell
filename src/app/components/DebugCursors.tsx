@@ -89,7 +89,13 @@ function LocationBox({
 	useGSAP(
 		() => {
 			if (boxRef.current) {
-				gsap.to(boxRef.current, { top, left, height, duration: DEFAULT_TRANSLATE_DURATION });
+				gsap.to(boxRef.current, {
+					top,
+					left,
+					height,
+					duration: DEFAULT_TRANSLATE_DURATION,
+					ease: 'power1.out',
+				});
 			}
 		},
 		{ dependencies: [top, left, height] }
@@ -175,7 +181,13 @@ function SequenceBox({
 	useGSAP(
 		() => {
 			if (boxRef.current) {
-				gsap.to(boxRef.current, { top, left, height, duration: DEFAULT_TRANSLATE_DURATION });
+				gsap.to(boxRef.current, {
+					top,
+					left,
+					height,
+					duration: DEFAULT_TRANSLATE_DURATION,
+					ease: 'power1.out',
+				});
 			}
 		},
 		{ dependencies: [top, left, height] }
