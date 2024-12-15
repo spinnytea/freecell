@@ -60,6 +60,31 @@ const gamePrint_animation0 =
 	'       QC                \n' +
 	' move 63 QC→KD';
 
+/** move 18 5S-4H-3S→6D (auto-foundation 18 2D,3S) */
+const gamePrint_animation1 =
+	' 9D          2C 2H 2S AD \n' +
+	' 5H    QC KD TC KC 4S 6D \n' +
+	' 2D    7S    JH QD 3H    \n' +
+	' 5S    8C    6S JC 3C    \n' +
+	' 4H    3D    9C TH KS    \n' +
+	' 3S    KH    8H 9S 7D    \n' +
+	'       TD       8D QS    \n' +
+	'       QH       7C JD    \n' +
+	'       JS       6H TS    \n' +
+	'                5C 9H    \n' +
+	'                4D 8S    \n' +
+	'                   7H    \n' +
+	'                   6C    \n' +
+	'                   5D    \n' +
+	'                   4C    \n' +
+	' move 36 TH-9S-8D-7C-6H-5C-4D→JC\n' +
+	':h shuffle32 22292\n' +
+	' 43 4a a4 81 87 47 65 2a \n' +
+	' 23 53 2b 26 12 1c 15 12 \n' +
+	' a1 41 4a c4 a4 67 6a 6c \n' +
+	' 63 b6 c6 86 43 84 87 27 \n' +
+	' 36 ';
+
 const calcCardWidth = (windowInnerWidth = 9999) =>
 	Math.floor(Math.min(Math.max((windowInnerWidth - 80) / 13, 10), 75));
 
@@ -225,6 +250,17 @@ export default function Page() {
 					Ensure animation looks right: move 71 7D-6C-5H-4S-3H→8S (auto-foundation 7 AH)
 					<ManualTestingSettingsContextProvider>
 						<StaticGameContextProvider gamePrint={gamePrint_animation0}>
+							<GameBoard
+								className={styles_gameboard.inline}
+								displayOptions={DEFAULT_DISPLAY_OPTIONS}
+							/>
+						</StaticGameContextProvider>
+					</ManualTestingSettingsContextProvider>
+				</li>
+				<li>
+					Ensure animation looks right: move 18 5S-4H-3S→6D (auto-foundation 18 2D,3S)
+					<ManualTestingSettingsContextProvider>
+						<StaticGameContextProvider gamePrint={gamePrint_animation1}>
 							<GameBoard
 								className={styles_gameboard.inline}
 								displayOptions={DEFAULT_DISPLAY_OPTIONS}

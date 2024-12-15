@@ -68,14 +68,15 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 				},
 			});
 
-			const { updateCardPositions, updateCardPositionsPrev } = calcUpdatedCardPositions({
-				fixtureSizes,
-				previousTLs: previousTLs.current,
-				cards,
-				selection,
-				actionText,
-				actionPrev,
-			});
+			const { updateCardPositions, updateCardPositionsPrev, secondMustComeAfter } =
+				calcUpdatedCardPositions({
+					fixtureSizes,
+					previousTLs: previousTLs.current,
+					cards,
+					selection,
+					actionText,
+					actionPrev,
+				});
 
 			if (!updateCardPositions.length) return previousTLs;
 
@@ -92,10 +93,10 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 				//  - everything else so far has been about making sure the cards move in the right order
 				anim(updateCardPositionsPrev);
 			}
-			anim(updateCardPositions);
+			anim(updateCardPositions, secondMustComeAfter);
 			previousTLs.current = nextTLs;
 
-			function anim(list: UpdateCardPositionsType[]) {
+			function anim(list: UpdateCardPositionsType[], pause = false) {
 				let overlap = Math.min(
 					(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) / list.length,
 					MAX_ANIMATION_OVERLAP
@@ -110,14 +111,25 @@ export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObj
 					const prevTL = nextTLs.get(shorthand);
 					nextTLs.set(shorthand, [top, left]);
 					if (prevTL) {
-						// bugfix: timeline.to should be enough, but mobile sometimes remakes cards at 0,0
-						//  - timeline.fromTo ensures we start the animation from the actual previous place
-						timeline.fromTo(
-							cardId,
-							{ top: prevTL[0], left: prevTL[1] },
-							{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
-							index === 0 ? `>0` : `<${overlap.toFixed(3)}`
-						);
+						if (!pause) {
+							// bugfix: timeline.to should be enough, but mobile sometimes remakes cards at 0,0
+							//  - timeline.fromTo ensures we start the animation from the actual previous place
+							timeline.fromTo(
+								cardId,
+								{ top: prevTL[0], left: prevTL[1] },
+								{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
+								index === 0 ? `>0` : `<${overlap.toFixed(3)}`
+							);
+						} else {
+							// bugfix: but if the same card is moving in two animations,
+							// we need to wait for the first to finish before we can start the second
+							// and the `.fromTo` is screwing with things, so fall back to just a `.to`
+							timeline.to(
+								cardId,
+								{ top, left, duration: DEFAULT_TRANSLATE_DURATION },
+								index === 0 ? `>${overlap.toFixed(3)}` : `<${overlap.toFixed(3)}`
+							);
+						}
 						// REVIEW (animation) zIndex boost while in flight?
 						//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
 						//  - as soon as it finishes animating, set it to the correct value
@@ -239,6 +251,7 @@ export function calcUpdatedCardPositions({
 }): {
 	updateCardPositions: UpdateCardPositionsType[];
 	updateCardPositionsPrev?: UpdateCardPositionsType[];
+	secondMustComeAfter?: boolean;
 } {
 	const updateCardPositions: UpdateCardPositionsType[] = [];
 	const fixtures = new Set<Fixture>();
@@ -295,17 +308,28 @@ export function calcUpdatedCardPositions({
 			});
 
 			// filter items from updateCardPositions if they are in A and have exactly the same position
+			let secondMustComeAfter = false;
 			const b = updateCardPositions.filter(({ shorthand, top, left }) => {
 				const found = a.find((_a) => _a?.shorthand === shorthand);
 				if (!found) return true;
-				if (found.top !== top) return true;
-				if (found.left !== left) return true;
+				if (found.top !== top) {
+					secondMustComeAfter = true;
+					return true;
+				}
+				if (found.left !== left) {
+					secondMustComeAfter = true;
+					return true;
+				}
 				return false;
 			});
 
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (!anyMissing) {
-				return { updateCardPositions: b, updateCardPositionsPrev: a as UpdateCardPositionsType[] };
+				return {
+					updateCardPositions: b,
+					updateCardPositionsPrev: a as UpdateCardPositionsType[],
+					secondMustComeAfter,
+				};
 			}
 		}
 	}
