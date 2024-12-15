@@ -12,12 +12,6 @@ import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameConte
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 
-const gamePrint_readyToAutoFoundation =
-	'' + //
-	'>   JH JC JD JS \n' +
-	' KH KC KD KS QH QC QD QS \n' +
-	' hand-jammed';
-
 const gamePrint_52CardFlourish =
 	'>7H       2C             \n' +
 	' KS 6C AC 5H KD 6D KC KH \n' +
@@ -31,59 +25,78 @@ const gamePrint_52CardFlourish =
 	'             5D    5C    \n' +
 	' move 3a 7H→cell';
 
-const gamePrint_moveAutoFoundation0 =
-	' 5D          2S 3D 3H 4C \n' +
-	' KS 8C 9H 7C KH>   KD 9C \n' +
-	' QH TD 6H QD QC    QS 8D \n' +
-	' JC TH 7D JS JD    JH    \n' +
-	'    KC 3S    TS    TC    \n' +
-	'    4S|5S|         9D    \n' +
-	'    6C|4H|         8S    \n' +
-	'    9S             7H    \n' +
-	'    8H             6S    \n' +
-	'    7S             5H    \n' +
-	'    6D                   \n' +
-	'    5C                   \n' +
-	'    4D                   \n' +
-	' cursor right';
+const gamePrint_readyToAutoFoundation =
+	'' + //
+	'>   JH JC JD JS \n' +
+	' KH KC KD KS QH QC QD QS \n' +
+	' hand-jammed';
 
-/** move 71 7D-6C-5H-4S-3H→8S (auto-foundation 7 AH) */
-const gamePrint_animation0 =
-	' TH 6D       AD 3C       \n' +
-	' KS 5C JS KH    6S TD 2S \n' +
-	' 5D 7S 8H 4H    JD AH TC \n' +
-	' 7C AS JH JC    3D 7D KC \n' +
-	' 8D 9C 4C 2H    QD 6C 9H \n' +
-	' 2D 7H QS 8C       5H 5S \n' +
-	' TS 6H 9S 3S       4S 4D \n' +
-	'>8S QH KD 9D       3H    \n' +
-	'       QC                \n' +
-	' move 63 QC→KD';
-
-/** move 18 5S-4H-3S→6D (auto-foundation 18 2D,3S) */
-const gamePrint_animation1 =
-	' 9D          2C 2H 2S AD \n' +
-	' 5H    QC KD TC KC 4S 6D \n' +
-	' 2D    7S    JH QD 3H    \n' +
-	' 5S    8C    6S JC 3C    \n' +
-	' 4H    3D    9C TH KS    \n' +
-	' 3S    KH    8H 9S 7D    \n' +
-	'       TD       8D QS    \n' +
-	'       QH       7C JD    \n' +
-	'       JS       6H TS    \n' +
-	'                5C 9H    \n' +
-	'                4D 8S    \n' +
-	'                   7H    \n' +
-	'                   6C    \n' +
-	'                   5D    \n' +
-	'                   4C    \n' +
-	' move 36 TH-9S-8D-7C-6H-5C-4D→JC\n' +
-	':h shuffle32 22292\n' +
-	' 43 4a a4 81 87 47 65 2a \n' +
-	' 23 53 2b 26 12 1c 15 12 \n' +
-	' a1 41 4a c4 a4 67 6a 6c \n' +
-	' 63 b6 c6 86 43 84 87 27 \n' +
-	' 36 ';
+const gamePrint_animations: { nextActionText: string; gamePrint: string }[] = [
+	{
+		// TODO (techdebt) showUndoButton inside board, or just cycle move + undo
+		nextActionText: 'move 36 5S-4H→cascade (auto-foundation 3262 3S,4D,4H,5C)',
+		gamePrint:
+		' 5D          2S 3D 3H 4C \n' +
+		' KS 8C 9H 7C KH>   KD 9C \n' +
+		' QH TD 6H QD QC    QS 8D \n' +
+		' JC TH 7D JS JD    JH    \n' +
+		'    KC 3S    TS    TC    \n' +
+		'    4S|5S|         9D    \n' +
+		'    6C|4H|         8S    \n' +
+		'    9S             7H    \n' +
+		'    8H             6S    \n' +
+		'    7S             5H    \n' +
+		'    6D                   \n' +
+		'    5C                   \n' +
+		'    4D                   \n' +
+		' cursor right'
+	},
+	{
+		nextActionText: 'move 71 7D-6C-5H-4S-3H→8S (auto-foundation 7 AH)',
+		gamePrint:
+			' TH 6D       AD 3C       \n' +
+			' KS 5C JS KH    6S TD 2S \n' +
+			' 5D 7S 8H 4H    JD AH TC \n' +
+			' 7C AS JH JC    3D 7D KC \n' +
+			' 8D 9C 4C 2H    QD 6C 9H \n' +
+			' 2D 7H QS 8C       5H 5S \n' +
+			' TS 6H 9S 3S       4S 4D \n' +
+			'>8S QH KD 9D       3H    \n' +
+			'       QC                \n' +
+			' move 63 QC→KD',
+	},
+	{
+		nextActionText: 'move 18 5S-4H-3S→6D (auto-foundation 18 2D,3S)',
+		gamePrint:
+			' 9D          2C 2H 2S AD \n' +
+			' 5H    QC KD TC KC 4S>6D \n' +
+			' 2D    7S    JH QD 3H    \n' +
+			' 5S    8C    6S JC 3C    \n' +
+			' 4H    3D    9C TH KS    \n' +
+			' 3S    KH    8H 9S 7D    \n' +
+			'       TD       8D QS    \n' +
+			'       QH       7C JD    \n' +
+			'       JS       6H TS    \n' +
+			'                5C 9H    \n' +
+			'                4D 8S    \n' +
+			'                   7H    \n' +
+			'                   6C    \n' +
+			'                   5D    \n' +
+			'                   4C    \n' +
+			' move 36 TH-9S-8D-7C-6H-5C-4D→JC'
+	},
+	// {
+	// 	// TODO (techdebt) there isn't a way to get to the deal, static game provider resets to the win
+	// 	//  - we need to set it during `useState` and allow `newGame` to start a new game
+	// 	nextActionText: 'init',
+	// 	gamePrint:
+	// 		'>            KH KS KD KC \n' + //
+	// 		'                         \n' + //
+	// 		':    Y O U   W I N !    :\n' + //
+	// 		'                         \n' + //
+	// 		` hand-jammed`,
+	// },
+];
 
 const calcCardWidth = (windowInnerWidth = 9999) =>
 	Math.floor(Math.min(Math.max((windowInnerWidth - 80) / 13, 10), 75));
@@ -234,39 +247,24 @@ export default function Page() {
 						</StaticGameContextProvider>
 					</ManualTestingSettingsContextProvider>
 				</li>
+
 				<li>
-					Random Gameplay moves (use z to undo)
-					{/* TODO (techdebt) showUndoButton inside board, or just cycle move + undo */}
-					<ManualTestingSettingsContextProvider>
-						<StaticGameContextProvider gamePrint={gamePrint_moveAutoFoundation0}>
-							<GameBoard
-								className={styles_gameboard.inline}
-								displayOptions={DEFAULT_DISPLAY_OPTIONS}
-							/>
-						</StaticGameContextProvider>
-					</ManualTestingSettingsContextProvider>
-				</li>
-				<li>
-					Ensure animation looks right: move 71 7D-6C-5H-4S-3H→8S (auto-foundation 7 AH)
-					<ManualTestingSettingsContextProvider>
-						<StaticGameContextProvider gamePrint={gamePrint_animation0}>
-							<GameBoard
-								className={styles_gameboard.inline}
-								displayOptions={DEFAULT_DISPLAY_OPTIONS}
-							/>
-						</StaticGameContextProvider>
-					</ManualTestingSettingsContextProvider>
-				</li>
-				<li>
-					Ensure animation looks right: move 18 5S-4H-3S→6D (auto-foundation 18 2D,3S)
-					<ManualTestingSettingsContextProvider>
-						<StaticGameContextProvider gamePrint={gamePrint_animation1}>
-							<GameBoard
-								className={styles_gameboard.inline}
-								displayOptions={DEFAULT_DISPLAY_OPTIONS}
-							/>
-						</StaticGameContextProvider>
-					</ManualTestingSettingsContextProvider>
+					Ensure animation looks right
+					<ol>
+						{gamePrint_animations.map(({ nextActionText, gamePrint }) => (
+							<li key={nextActionText}>
+								{nextActionText}
+								<ManualTestingSettingsContextProvider>
+									<StaticGameContextProvider gamePrint={gamePrint}>
+										<GameBoard
+											className={styles_gameboard.inline}
+											displayOptions={DEFAULT_DISPLAY_OPTIONS}
+										/>
+									</StaticGameContextProvider>
+								</ManualTestingSettingsContextProvider>
+							</li>
+						))}
+					</ol>
 				</li>
 			</ol>
 			<Link href="/">
