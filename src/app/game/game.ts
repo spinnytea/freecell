@@ -529,7 +529,7 @@ export class FreeCell {
 
 		// we _need_ an action in __clone
 		// __clone will add it back to the history
-		const didUndo = this.__clone({ action, history, cards });
+		const didUndo = this.__clone({ action, history, cards, selection: null, availableMoves: null });
 
 		// redo single move
 		if (
