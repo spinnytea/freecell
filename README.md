@@ -87,6 +87,10 @@ TODO (motivation) main development tasks:
 - TODO (theme) more themes - card themes / colors, background colors, etc
 - IDEA (deployment) download on android: "play offline"
   - single html file? try testing that first (javascript + svg)
+- XXX (techdebt) optimize
+  - react keeps reinitializing cards, messing with animations
+  - i've never benchmarked memory/speed before in any meaningful way
+  - is the game impl even a problem? prove that there are no memory leeks (maybe print/parse proves it)
 
 ## Technicals
 
