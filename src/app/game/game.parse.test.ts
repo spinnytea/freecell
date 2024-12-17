@@ -1,6 +1,12 @@
 import { FreeCell } from '@/app/game/game';
 
 describe('game.parse', () => {
+	test('empty string', () => {
+		expect(() => FreeCell.parse('')).toThrow(
+			'No game string provided.'
+		);
+	});
+
 	describe('history shorthand', () => {
 		describe('validity checks', () => {
 			test('sample valid state', () => {

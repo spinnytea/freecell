@@ -79,6 +79,7 @@ export type Position =
 	| '9'
 	| '0';
 
+// REVIEW (optimize) should CardSH include `sh/rs = shorthandCard(this)`?
 export interface CardSH {
 	rank: Rank;
 	suit: Suit;

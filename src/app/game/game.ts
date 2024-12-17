@@ -972,6 +972,8 @@ export class FreeCell {
 		TODO (techdebt) remove invalidFoundations and deal demo
 	*/
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
+		if (!print) throw new Error('No game string provided.');
+
 		const cards = new FreeCell().cards;
 		const remaining = cards.slice(0);
 

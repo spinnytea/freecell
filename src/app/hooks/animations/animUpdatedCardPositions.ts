@@ -22,7 +22,7 @@ export function animUpdatedCardPositions({
 	nextTLs: Map<string, number[]>;
 	fixtureSizes: FixtureSizes;
 	prevFixtureSizes: MutableRefObject<FixtureSizes>;
-	gameBoardIdRef: MutableRefObject<string>;
+	gameBoardIdRef?: MutableRefObject<string>;
 	pause?: boolean;
 }) {
 	let overlap = Math.min(
@@ -35,7 +35,7 @@ export function animUpdatedCardPositions({
 		prevFixtureSizes.current = fixtureSizes;
 	}
 	list.forEach(({ shorthand, top, left, zIndex }, index) => {
-		const cardId = '#c' + shorthand + '-' + gameBoardIdRef.current;
+		const cardId = '#c' + shorthand + (gameBoardIdRef?.current ? '-' + gameBoardIdRef.current : '');
 		const prevTL = nextTLs.get(shorthand);
 		nextTLs.set(shorthand, [top, left]);
 		if (prevTL) {

@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`animations/calcUpdatedCardPositions first 1`] = `
+[
+  {
+    "left": 105.263,
+    "previousTop": -123,
+    "rank": 12,
+    "shorthand": "KH",
+    "suit": "hearts",
+    "top": 24.4,
+    "zIndex": 1,
+  },
+]
+`;

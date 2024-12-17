@@ -21,6 +21,14 @@ export interface UpdateCardPositionsType {
 
 // TODO (techdebt) (combine-move-auto-foundation) unit test
 // TODO (animation) (motivation) optimize
+// IDEA (animation) animations by move type
+//  - first check all the cards that did move (updateCardPositions)
+//  - then check all the cards we expected to move based on actionText
+//  - then pick an animation based on actionType
+//  - if there's a mismatch, run the default animation
+//  - most actionTypes can use the default, esp at first
+//  ---
+//  - we are informally doing this for `move-foundation`
 export function calcUpdatedCardPositions({
 	fixtureSizes,
 	previousTLs,

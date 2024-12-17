@@ -10,7 +10,7 @@ import { useGame } from '@/app/hooks/contexts/Game/useGame';
 //  - gsap in charge of position (and react mobile keeps dropping them)
 // IDEA (settings) setting for "reduced motion" - disable most animations
 // IDEA (animation) faster "peek" animation - when the cards are shifting to peek the selected card
-export function useCardPositionAnimations(gameBoardIdRef: MutableRefObject<string>) {
+export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<string>) {
 	const {
 		cards,
 		selection,
@@ -28,6 +28,8 @@ export function useCardPositionAnimations(gameBoardIdRef: MutableRefObject<strin
 		don't do any offsets, just move/update all the cards immediately
 
 		positions of cards are controlled entirely by the animates
+
+		TODO (techdebt) change to "usePrevious" which can/should return hasChanged
 	*/
 	const prevFixtureSizes = useRef(fixtureSizes);
 
@@ -57,7 +59,7 @@ export function useCardPositionAnimations(gameBoardIdRef: MutableRefObject<strin
 					actionPrev,
 				});
 
-			if (!updateCardPositions.length) return previousTLs;
+			if (!updateCardPositions.length) return;
 
 			if (previousTimeline.current && previousTimeline.current !== timeline) {
 				previousTimeline.current
@@ -92,4 +94,6 @@ export function useCardPositionAnimations(gameBoardIdRef: MutableRefObject<strin
 		},
 		{ dependencies: [cards, selection, actionText, actionPrev, fixtureSizes] }
 	);
+
+	return { previousTLs };
 }
