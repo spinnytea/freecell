@@ -37,6 +37,9 @@ function MockGameBoard() {
 //  - change game state
 //  - verify all the timeline calls
 describe('useCardPositionAnimations', () => {
+	// we can use this for a lot of tests, so we don't need to keep remaking it
+	const newGameState = new FreeCell();
+
 	let fromToSpy: jest.SpyInstance;
 	let toSpy: jest.SpyInstance;
 	let setSpy: jest.SpyInstance;
@@ -59,13 +62,19 @@ describe('useCardPositionAnimations', () => {
 		});
 	});
 
+	function mockReset() {
+		toSpy.mockReset();
+		fromToSpy.mockReset();
+		setSpy.mockReset();
+	}
+
 	test.todo('change fixtureSizes');
 
 	// FIXME all of (each PreviousActionType) should be on manualtesting/page
 	describe('game (each PreviousActionType)', () => {
 		describe('init', () => {
 			test('undefined -> init', () => {
-				const gameStateOne = new FreeCell();
+				const gameStateOne = newGameState;
 				const gameStateTwo = gameStateOne;
 				const { rerender } = render(
 					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
@@ -77,8 +86,7 @@ describe('useCardPositionAnimations', () => {
 				expect(setSpy.mock.calls).toMatchSnapshot();
 				// expect(setSpy.mock.calls.map(([cardId]) => cardId as string)).toEqual(['#cAC', '#cAD', ..., '#cKH', '#cKS']);
 
-				setSpy.mockReset();
-
+				mockReset();
 				rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
 
 				expect(toSpy).not.toHaveBeenCalled();
@@ -86,21 +94,61 @@ describe('useCardPositionAnimations', () => {
 				expect(setSpy).not.toHaveBeenCalled();
 			});
 
-			test.todo('win -> init');
+			test('win -> init', () => {
+				const gameStateOne =
+					'>            KC KD KH KS \n' + //
+					'                         \n' + //
+					':    Y O U   W I N !    :\n' + //
+					'                         \n' + //
+					' hand-jammed';
+				const gameStateTwo = newGameState;
+				const { rerender } = render(
+					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
+				);
+
+				mockReset();
+				rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+
+				expect(toSpy.mock.calls.length).toBe(52);
+				expect(toSpy.mock.calls[0]).toEqual([
+					'#cAC',
+					{ duration: 0.15, ease: 'none', zIndex: 0 },
+					'<',
+				]);
+				expect(fromToSpy.mock.calls.length).toBe(52);
+				expect(fromToSpy.mock.calls[0]).toEqual([
+					'#cAC',
+					{ top: 24.4, left: 428.07 },
+					{ top: 453.6, left: 14.035, duration: 0.3, ease: 'power1.out' },
+					'>0',
+				]);
+				expect(setSpy).not.toHaveBeenCalled();
+			});
 		});
 
-		test.todo('shuffle');
+		test('shuffle', () => {
+			const gameStateOne = newGameState;
+			const gameStateTwo = gameStateOne.shuffle32(5);
+			const { rerender } = render(
+				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
+			);
+
+			mockReset();
+			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+
+			expect(toSpy).not.toHaveBeenCalled();
+			expect(fromToSpy).not.toHaveBeenCalled();
+			expect(setSpy).not.toHaveBeenCalled();
+		});
 
 		test('deal', () => {
-			const gameStateOne = new FreeCell();
+			const gameStateOne = newGameState;
 			const gameStateTwo = gameStateOne.dealAll();
 			const { rerender } = render(
 				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
 			);
-			toSpy.mockReset();
-			fromToSpy.mockReset();
-			setSpy.mockReset();
 
+			mockReset();
 			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
 
 			expect(toSpy.mock.calls.length).toBe(52);
@@ -119,7 +167,20 @@ describe('useCardPositionAnimations', () => {
 			expect(setSpy).not.toHaveBeenCalled();
 		});
 
-		test.todo('cursor');
+		test('cursor', () => {
+			const gameStateOne = newGameState.dealAll().moveCursor('down');
+			const gameStateTwo = gameStateOne.moveCursor('right');
+			const { rerender } = render(
+				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
+			);
+
+			mockReset();
+			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+
+			expect(toSpy).not.toHaveBeenCalled();
+			expect(fromToSpy).not.toHaveBeenCalled();
+			expect(setSpy).not.toHaveBeenCalled();
+		});
 
 		test.todo('select');
 

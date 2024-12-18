@@ -61,6 +61,7 @@ export function animUpdatedCardPositions({
 			// REVIEW (animation) zIndex boost while in flight?
 			//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
 			//  - as soon as it finishes animating, set it to the correct value
+			// timeline.fromTo(cardId, { zIndex: zIndex + 100 }, { zIndex, duration: DEFAULT_TRANSLATE_DURATION, ease: 'power4.out' }, `<`);
 			timeline.to(cardId, { zIndex, duration: DEFAULT_TRANSLATE_DURATION / 2, ease: 'none' }, `<`);
 		} else {
 			// when we draw the cards for the first time, don't animate them from (0, 0)
