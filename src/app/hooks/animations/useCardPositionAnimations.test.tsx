@@ -11,13 +11,19 @@ jest.mock('gsap/all', () => ({
 	},
 }));
 
-function MockGamePage({ gamePrint }: { gamePrint: string }) {
+function MockGamePage({
+	gameStateOne,
+	gameStateTwo,
+}: {
+	gameStateOne: FreeCell | string;
+	gameStateTwo: FreeCell | string;
+}) {
 	return (
-			<StaticGameContextProvider gamePrint={gamePrint}>
-				<FixtureSizesContextProvider gameBoardRef={{ current: null }} fixtureLayout="portrait">
-					<MockGameBoard />
-				</FixtureSizesContextProvider>
-			</StaticGameContextProvider>
+		<StaticGameContextProvider games={[gameStateOne, gameStateTwo]}>
+			<FixtureSizesContextProvider gameBoardRef={{ current: null }} fixtureLayout="portrait">
+				<MockGameBoard />
+			</FixtureSizesContextProvider>
+		</StaticGameContextProvider>
 	);
 }
 
@@ -44,7 +50,9 @@ describe('useCardPositionAnimations', () => {
 				to: toSpy,
 				set: setSpy,
 				totalProgress: () => ({
-					kill: () => { /* empty */ },
+					kill: () => {
+						/* empty */
+					},
 				}),
 			};
 			return timelineMock as gsap.core.Timeline;
@@ -57,8 +65,11 @@ describe('useCardPositionAnimations', () => {
 	describe('game (each PreviousActionType)', () => {
 		describe('init', () => {
 			test('undefined -> init', () => {
-				const gamePrint = new FreeCell().print();
-				const { rerender } = render(<MockGamePage gamePrint={gamePrint} />);
+				const gameStateOne = new FreeCell();
+				const gameStateTwo = gameStateOne;
+				const { rerender } = render(
+					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
+				);
 
 				expect(toSpy).not.toHaveBeenCalled();
 				expect(fromToSpy).not.toHaveBeenCalled();
@@ -68,7 +79,7 @@ describe('useCardPositionAnimations', () => {
 
 				setSpy.mockReset();
 
-				rerender(<MockGamePage gamePrint={gamePrint} />);
+				rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
 
 				expect(toSpy).not.toHaveBeenCalled();
 				expect(fromToSpy).not.toHaveBeenCalled();
@@ -80,7 +91,33 @@ describe('useCardPositionAnimations', () => {
 
 		test.todo('shuffle');
 
-		test.todo('deal');
+		test('deal', () => {
+			const gameStateOne = new FreeCell();
+			const gameStateTwo = gameStateOne.dealAll();
+			const { rerender } = render(
+				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
+			);
+			toSpy.mockReset();
+			fromToSpy.mockReset();
+			setSpy.mockReset();
+
+			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+
+			expect(toSpy.mock.calls.length).toBe(52);
+			expect(toSpy.mock.calls[0]).toEqual([
+				'#cQC',
+				{ duration: 0.15, ease: 'none', zIndex: 0 },
+				'<',
+			]);
+			expect(fromToSpy.mock.calls.length).toBe(52);
+			expect(fromToSpy.mock.calls[0]).toEqual([
+				'#cQC',
+				{ top: 453.6, left: 14.035 },
+				{ top: 183, left: 701.754, duration: 0.3, ease: 'power1.out' },
+				'>0',
+			]);
+			expect(setSpy).not.toHaveBeenCalled();
+		});
 
 		test.todo('cursor');
 

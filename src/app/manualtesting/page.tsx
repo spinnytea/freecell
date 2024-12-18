@@ -227,7 +227,7 @@ export default function Page() {
 						<li>Move 8S for a 52 Card Flourish (e.g. 3b).</li>
 					</ol>
 					<ManualTestingSettingsContextProvider>
-						<StaticGameContextProvider gamePrint={gamePrint_52CardFlourish}>
+						<StaticGameContextProvider games={[gamePrint_52CardFlourish]}>
 							<GameBoard
 								className={styles_gameboard.inline}
 								displayOptions={DEFAULT_DISPLAY_OPTIONS}
@@ -239,7 +239,7 @@ export default function Page() {
 				<li>
 					Does not autoFoundation until a card is moved.
 					<ManualTestingSettingsContextProvider>
-						<StaticGameContextProvider gamePrint={gamePrint_readyToAutoFoundation}>
+						<StaticGameContextProvider games={[gamePrint_readyToAutoFoundation]}>
 							<GameBoard
 								className={styles_gameboard.inline}
 								displayOptions={DEFAULT_DISPLAY_OPTIONS}
@@ -255,7 +255,7 @@ export default function Page() {
 							<li key={nextActionText}>
 								{nextActionText}
 								<ManualTestingSettingsContextProvider>
-									<StaticGameContextProvider gamePrint={gamePrint}>
+									<StaticGameContextProvider games={[gamePrint]}>
 										<GameBoard
 											className={styles_gameboard.inline}
 											displayOptions={DEFAULT_DISPLAY_OPTIONS}

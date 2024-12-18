@@ -2,9 +2,7 @@ import { FreeCell } from '@/app/game/game';
 
 describe('game.parse', () => {
 	test('empty string', () => {
-		expect(() => FreeCell.parse('')).toThrow(
-			'No game string provided.'
-		);
+		expect(() => FreeCell.parse('')).toThrow('No game string provided.');
 	});
 
 	describe('history shorthand', () => {
