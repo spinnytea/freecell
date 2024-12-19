@@ -77,6 +77,10 @@ describe('useCardPositionAnimations', () => {
 			test('undefined -> init', () => {
 				const gameStateOne = newGameState;
 				const gameStateTwo = gameStateOne;
+				expect(gameStateTwo.previousAction).toEqual({
+					text: 'init',
+					type: 'init',
+				});
 				const { rerender } = render(
 					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
 				);
@@ -103,6 +107,10 @@ describe('useCardPositionAnimations', () => {
 					'                         \n' + //
 					' hand-jammed';
 				const gameStateTwo = newGameState;
+				expect(gameStateTwo.previousAction).toEqual({
+					text: 'init',
+					type: 'init',
+				});
 				const { rerender } = render(
 					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
 				);
@@ -130,6 +138,10 @@ describe('useCardPositionAnimations', () => {
 		test('shuffle', () => {
 			const gameStateOne = newGameState;
 			const gameStateTwo = gameStateOne.shuffle32(5);
+			expect(gameStateTwo.previousAction).toEqual({
+				text: 'shuffle deck (5)',
+				type: 'shuffle',
+			});
 			const { rerender } = render(
 				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
 			);
@@ -145,6 +157,10 @@ describe('useCardPositionAnimations', () => {
 		test('deal', () => {
 			const gameStateOne = newGameState;
 			const gameStateTwo = gameStateOne.dealAll();
+			expect(gameStateTwo.previousAction).toEqual({
+				text: 'deal all cards',
+				type: 'deal',
+			});
 			const { rerender } = render(
 				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
 			);
@@ -171,6 +187,10 @@ describe('useCardPositionAnimations', () => {
 		test('cursor', () => {
 			const gameStateOne = newGameState.dealAll().moveCursor('down');
 			const gameStateTwo = gameStateOne.moveCursor('right');
+			expect(gameStateTwo.previousAction).toEqual({
+				text: 'cursor right',
+				type: 'cursor',
+			});
 			const { rerender } = render(
 				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
 			);
@@ -189,7 +209,51 @@ describe('useCardPositionAnimations', () => {
 
 		test.todo('move');
 
-		test.todo('move-foundation');
+		describe('move-foundation', () => {
+			test('one and one', () => {
+				const gameStateOne = new FreeCell().shuffle32(5).dealAll();
+				const gameStateTwo = gameStateOne.moveByShorthand('53');
+				expect(gameStateTwo.previousAction).toEqual({
+					text: 'move 53 6H→7C (auto-foundation 2 AD)',
+					type: 'move-foundation',
+					actionPrev: [
+						{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } },
+					],
+				});
+				const { rerender } = render(
+					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
+				);
+
+				mockReset();
+				rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+
+				expect(toSpy.mock.calls).toEqual([
+					['#c6H', { zIndex: 7, duration: 0.15, ease: 'none' }, '<'],
+					[
+						'#cAD',
+						{ zIndex: 99, duration: 0.15, ease: 'none' }, // FIXME why 99? it's going to the foundation
+						'<',
+					],
+				]);
+				expect(fromToSpy.mock.calls).toEqual([
+					[
+						'#c6H',
+						{ top: 305, left: 407.018 },
+						{ top: 353.8, left: 210.526, duration: 0.3, ease: 'power1.out' },
+						'>0',
+					],
+					[
+						'#cAD',
+						{ top: 329.4, left: 112.281 },
+						{ top: 24.4, left: 428.07, duration: 0.3, ease: 'power1.out' },
+						'>0',
+					],
+				]);
+				expect(setSpy).not.toHaveBeenCalled();
+			});
+
+			test.todo('multiple with overlap');
+		});
 
 		test.todo('move-flourish');
 
