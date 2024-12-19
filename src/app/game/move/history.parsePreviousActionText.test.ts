@@ -1,3 +1,7 @@
+import {
+	ACTION_TEXT_EXAMPLES,
+	pullActionTextExamples,
+} from '@/app/components/cards/constants_test';
 import { CardLocation } from '@/app/game/card/card';
 import {
 	parseCursorFromPreviousActionText,
@@ -6,8 +10,16 @@ import {
 } from '@/app/game/move/history';
 
 describe('game/history.parsePreviousActionType', () => {
-	/** @see game/history.parseCursorFromPreviousActionText specific cases */
 	describe('specific cases', () => {
+		let actionTextExamples: string[];
+		beforeAll(() => {
+			actionTextExamples = ACTION_TEXT_EXAMPLES.slice(0);
+		});
+		afterAll(() => {
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(actionTextExamples).toEqual([]);
+		});
+
 		test.each`
 			actionText                                | previousAction                                                               | cursor
 			${'init'}                                 | ${{ text: 'init', type: 'init' }}                                            | ${undefined}
@@ -16,12 +28,10 @@ describe('game/history.parsePreviousActionType', () => {
 			${'deal all cards'}                       | ${{ text: 'deal all cards', type: 'deal' }}                                  | ${undefined}
 			${'deal most cards'}                      | ${{ text: 'deal most cards', type: 'deal' }}                                 | ${undefined}
 			${'cursor set'}                           | ${{ text: 'cursor set', type: 'cursor' }}                                    | ${undefined}
-			${'select 6D'}                            | ${{ text: 'select 6D', type: 'select' }}                                     | ${undefined}
 			${'select 8 7D'}                          | ${{ text: 'select 8 7D', type: 'select' }}                                   | ${undefined}
-			${'select 4D-3S-2D'}                      | ${{ text: 'select 4D-3S-2D', type: 'select' }}                               | ${undefined}
-			${'deselect KS'}                          | ${{ text: 'deselect KS', type: 'deselect' }}                                 | ${undefined}
+			${'select 8 4D-3S-2D'}                    | ${{ text: 'select 8 4D-3S-2D', type: 'select' }}                             | ${undefined}
 			${'deselect 6 2C'}                        | ${{ text: 'deselect 6 2C', type: 'deselect' }}                               | ${undefined}
-			${'deselect 4D-3S-2D'}                    | ${{ text: 'deselect 4D-3S-2D', type: 'deselect' }}                           | ${undefined}
+			${'deselect 6 4D-3S-2D'}                  | ${{ text: 'deselect 6 4D-3S-2D', type: 'deselect' }}                         | ${undefined}
 			${'touch stop'}                           | ${{ text: 'touch stop', type: 'invalid' }}                                   | ${undefined}
 			${'move 3a KC→cell'}                      | ${{ text: 'move 3a KC→cell', type: 'move' }}                                 | ${{ fixture: 'cell', data: [0] }}
 			${'move 8h AD→foundation'}                | ${{ text: 'move 8h AD→foundation', type: 'move' }}                           | ${{ fixture: 'foundation', data: [0] }}
@@ -45,6 +55,7 @@ describe('game/history.parsePreviousActionType', () => {
 				previousAction: PreviousAction;
 				cursor: CardLocation | undefined;
 			}) => {
+				pullActionTextExamples(actionTextExamples, actionText);
 				expect(parsePreviousActionType(actionText)).toEqual(previousAction);
 				expect(parseCursorFromPreviousActionText(actionText)).toEqual(cursor);
 			}

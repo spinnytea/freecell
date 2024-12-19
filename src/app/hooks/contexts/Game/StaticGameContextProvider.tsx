@@ -25,6 +25,7 @@ export default function StaticGameContextProvider({
 		() => (firstGame ? castGame(firstGame) : new FreeCell()),
 		[firstGame]
 	);
+	// eslint-disable-next-line prefer-const
 	let [game, setGame] = useState(() => newGame());
 
 	if (games.length > 1) {

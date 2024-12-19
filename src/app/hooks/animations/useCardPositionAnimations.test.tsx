@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import { gsap } from 'gsap/all';
+import { ACTION_TEXT_EXAMPLES } from '@/app/components/cards/constants_test';
 import { FreeCell } from '@/app/game/game';
 import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositionAnimations';
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
@@ -206,6 +207,21 @@ describe('useCardPositionAnimations', () => {
 			test.todo('cascade:single');
 
 			test.todo('cascade:sequence');
+		});
+
+		describe('actionText examples', () => {
+			// let actionTextExamples: string[];
+			// beforeAll(() => {
+			// 	actionTextExamples = ACTION_TEXT_EXAMPLES.slice(0);
+			// });
+			// afterAll(() => {
+			// 	expect(actionTextExamples).toEqual([]);
+			// });
+
+			// TODO (techdebt) (animation) actually write the tests for these?
+			ACTION_TEXT_EXAMPLES.forEach((actionText) => {
+				test.todo(actionText + '');
+			});
 		});
 	});
 

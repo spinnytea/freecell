@@ -91,6 +91,10 @@ TODO (motivation) main development tasks:
   - react keeps reinitializing cards, messing with animations
   - i've never benchmarked memory/speed before in any meaningful way
   - is the game impl even a problem? prove that there are no memory leeks (maybe print/parse proves it)
+- REVIEW (techdebt) there are quite a few `eslint-disable` now
+  - if we are going to have them, they should at least explain why
+  - go back and either remove or explain them
+  - ultimately we want to remove them, even if that's low priority or never
 
 ## Technicals
 
