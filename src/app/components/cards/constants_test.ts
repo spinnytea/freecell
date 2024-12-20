@@ -7,6 +7,7 @@ export const ACTION_TEXT_EXAMPLES = [
 	'cursor set',
 	'select 8 7D',
 	'select 8 4D-3S-2D',
+	// FIXME we still have these! put them back in the unit tests...
 	// original format of de/select, we shouldn't see these anymore
 	// `shorthandSequence` does allow us to skip it the move, but we don't in these cases
 	// 'select 6D',

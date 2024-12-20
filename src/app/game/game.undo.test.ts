@@ -409,6 +409,65 @@ describe('game.undo (+ history)', () => {
 					});
 				});
 			});
+
+			test('clears selection', () => {
+				let game = FreeCell.parse(
+					'' +
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C    2S 3D \n' +
+						' 5C AS 9C KH 4D    3C 4S \n' +
+						' 3S 5D KC 3H KD    6S 8D \n' +
+						' TD 7S JD 7H 8H    JC 7D \n' +
+						' 5S QH 8C 9D KS    4H 6C \n' +
+						' 2H    TH 6D QD    QC 5H \n' +
+						' 9S    7C TS JS    JH    \n' +
+						'       6H          TC    \n' +
+						'                   9H    \n' +
+						' move 67 9H→TC\n' +
+						':h shuffle32 5\n' +
+						' 53 6a 65 67 85 a8 68 27 \n' +
+						' 67 '
+				);
+				game = game.setCursor({ fixture: 'cascade', data: [7, 3] }).touch();
+				expect(game.print()).toBe(
+					'' +
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C    2S 3D \n' +
+						' 5C AS 9C KH 4D    3C 4S \n' +
+						' 3S 5D KC 3H KD    6S 8D \n' +
+						' TD 7S JD 7H 8H    JC>7D|\n' +
+						' 5S QH 8C 9D KS    4H|6C|\n' +
+						' 2H    TH 6D QD    QC|5H|\n' +
+						' 9S    7C TS JS    JH    \n' +
+						'       6H          TC    \n' +
+						'                   9H    \n' +
+						' select 8 7D-6C-5H'
+				);
+				expect(game.selection).toEqual({
+					location: { fixture: 'cascade', data: [7, 3] },
+					cards: [
+						{ rank: '7', suit: 'diamonds', location: { fixture: 'cascade', data: [7, 3] } },
+						{ rank: '6', suit: 'clubs', location: { fixture: 'cascade', data: [7, 4] } },
+						{ rank: '5', suit: 'hearts', location: { fixture: 'cascade', data: [7, 5] } },
+					],
+					canMove: true,
+				});
+				game = game.undo();
+				expect(game.print()).toBe(
+					'' +
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D    3C 4S \n' +
+						' 3S 5D KC 3H KD    6S 8D \n' +
+						' TD 7S JD 7H 8H    JC>7D \n' +
+						' 5S QH 8C 9D KS    4H 6C \n' +
+						' 2H    TH 6D QD    QC 5H \n' +
+						' 9S    7C TS JS    JH    \n' +
+						'       6H          TC    \n' +
+						' move 27 TC→JH'
+				);
+				expect(game.selection).toBe(null);
+			});
 		});
 
 		/** @see game.touch move card autoFoundation */
