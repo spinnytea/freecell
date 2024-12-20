@@ -33,10 +33,6 @@ function MockGameBoard() {
 	return null;
 }
 
-// FIXME test.todo
-//  - render a game state (populate previousTLs, timeline.set everything)
-//  - change game state
-//  - verify all the timeline calls
 describe('useCardPositionAnimations', () => {
 	// we can use this for a lot of tests, so we don't need to keep remaking it
 	const newGameState = new FreeCell();
@@ -71,7 +67,7 @@ describe('useCardPositionAnimations', () => {
 
 	test.todo('change fixtureSizes');
 
-	// FIXME all of (each PreviousActionType) should be on manualtesting/page
+	// REVIEW (animation) all of (each PreviousActionType) should be on manualtesting/page
 	describe('game (each PreviousActionType)', () => {
 		describe('init', () => {
 			test('undefined -> init', () => {

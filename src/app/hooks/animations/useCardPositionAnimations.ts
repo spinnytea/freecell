@@ -6,7 +6,7 @@ import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCard
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 
-// FIXME if no animation, then set the position
+// TODO (animation) if no animation, then set the position
 //  - gsap in charge of position (and react mobile keeps dropping them)
 // IDEA (settings) setting for "reduced motion" - disable most animations
 // IDEA (animation) faster "peek" animation - when the cards are shifting to peek the selected card
