@@ -28,8 +28,12 @@ describe('game/history.parsePreviousActionType', () => {
 			${'deal all cards'}                       | ${{ text: 'deal all cards', type: 'deal' }}                                  | ${undefined}
 			${'deal most cards'}                      | ${{ text: 'deal most cards', type: 'deal' }}                                 | ${undefined}
 			${'cursor set'}                           | ${{ text: 'cursor set', type: 'cursor' }}                                    | ${undefined}
+			${'select 6D'}                            | ${{ text: 'select 6D', type: 'select' }}                                     | ${undefined}
+			${'select 4D-3S-2D'}                      | ${{ text: 'select 4D-3S-2D', type: 'select' }}                               | ${undefined}
 			${'select 8 7D'}                          | ${{ text: 'select 8 7D', type: 'select' }}                                   | ${undefined}
 			${'select 8 4D-3S-2D'}                    | ${{ text: 'select 8 4D-3S-2D', type: 'select' }}                             | ${undefined}
+			${'deselect KS'}                          | ${{ text: 'deselect KS', type: 'deselect' }}                                 | ${undefined}
+			${'deselect 4D-3S-2D'}                    | ${{ text: 'deselect 4D-3S-2D', type: 'deselect' }}                           | ${undefined}
 			${'deselect 6 2C'}                        | ${{ text: 'deselect 6 2C', type: 'deselect' }}                               | ${undefined}
 			${'deselect 6 4D-3S-2D'}                  | ${{ text: 'deselect 6 4D-3S-2D', type: 'deselect' }}                         | ${undefined}
 			${'touch stop'}                           | ${{ text: 'touch stop', type: 'invalid' }}                                   | ${undefined}

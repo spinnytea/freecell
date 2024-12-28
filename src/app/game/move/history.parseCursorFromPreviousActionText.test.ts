@@ -31,8 +31,12 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'deal all cards'}                       | ${[]}          | ${undefined}
 			${'deal most cards'}                      | ${[]}          | ${undefined}
 			${'cursor set'}                           | ${[]}          | ${undefined}
+			${'select 6D'}                            | ${[]}          | ${undefined}
+			${'select 4D-3S-2D'}                      | ${[]}          | ${undefined}
 			${'select 8 7D'}                          | ${[]}          | ${undefined}
 			${'select 8 4D-3S-2D'}                    | ${[]}          | ${undefined}
+			${'deselect KS'}                          | ${[]}          | ${undefined}
+			${'deselect 4D-3S-2D'}                    | ${[]}          | ${undefined}
 			${'deselect 6 2C'}                        | ${[]}          | ${undefined}
 			${'deselect 6 4D-3S-2D'}                  | ${[]}          | ${undefined}
 			${'touch stop'}                           | ${[]}          | ${undefined}

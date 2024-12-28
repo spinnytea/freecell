@@ -225,11 +225,7 @@ describe('useCardPositionAnimations', () => {
 
 				expect(toSpy.mock.calls).toEqual([
 					['#c6H', { zIndex: 7, duration: 0.15, ease: 'none' }, '<'],
-					[
-						'#cAD',
-						{ zIndex: 99, duration: 0.15, ease: 'none' }, // FIXME why 99? it's going to the foundation
-						'<',
-					],
+					['#cAD', { zIndex: 99, duration: 0.15, ease: 'none' }, '<'],
 				]);
 				expect(fromToSpy.mock.calls).toEqual([
 					[

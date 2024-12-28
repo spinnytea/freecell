@@ -5,15 +5,12 @@ export const ACTION_TEXT_EXAMPLES = [
 	'deal all cards',
 	'deal most cards',
 	'cursor set',
+	'select 6D',
+	'select 4D-3S-2D',
 	'select 8 7D',
 	'select 8 4D-3S-2D',
-	// FIXME we still have these! put them back in the unit tests...
-	// original format of de/select, we shouldn't see these anymore
-	// `shorthandSequence` does allow us to skip it the move, but we don't in these cases
-	// 'select 6D',
-	// 'select 4D-3S-2D',
-	// 'deselect KS',
-	// 'deselect 4D-3S-2D',
+	'deselect KS',
+	'deselect 4D-3S-2D',
 	'deselect 6 2C',
 	'deselect 6 4D-3S-2D',
 	'touch stop',
