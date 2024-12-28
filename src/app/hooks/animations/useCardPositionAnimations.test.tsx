@@ -33,6 +33,7 @@ function MockGameBoard() {
 	return null;
 }
 
+// FIXME do more testing before merging (not _all_ the testing, but a bit more)
 describe('useCardPositionAnimations', () => {
 	// we can use this for a lot of tests, so we don't need to keep remaking it
 	const newGameState = new FreeCell();
@@ -114,6 +115,8 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
 
+				// TODO (animation) (techdebt) isn't this backwards?
+				//  - shouldn't kings be first?
 				expect(toSpy.mock.calls.length).toBe(52);
 				expect(toSpy.mock.calls[0]).toEqual([
 					'#cAC',
@@ -127,8 +130,25 @@ describe('useCardPositionAnimations', () => {
 					{ top: 453.6, left: 14.035, duration: 0.3, ease: 'power1.out' },
 					'>0',
 				]);
+				expect(fromToSpy.mock.calls[1]).toEqual([
+					'#cAD',
+					{ top: 24.4, left: 519.298 },
+					{ top: 453.6, left: 14.035, duration: 0.3, ease: 'power1.out' },
+					'<0.006',
+				]);
+				expect(fromToSpy.mock.calls[51]).toEqual([
+					'#cKS',
+					{ top: 24.4, left: 701.754 },
+					{ top: 453.6, left: 14.035, duration: 0.3, ease: 'power1.out' },
+					'<0.006',
+				]);
 				expect(setSpy).not.toHaveBeenCalled();
 			});
+
+			// we (read: _i_) very often win a game then set it aside
+			// after coming back later, maybe react has dropped the previous TLs
+			//
+			test.todo('win -> undefined init');
 		});
 
 		test('shuffle', () => {
@@ -176,6 +196,18 @@ describe('useCardPositionAnimations', () => {
 				{ top: 453.6, left: 14.035 },
 				{ top: 183, left: 701.754, duration: 0.3, ease: 'power1.out' },
 				'>0',
+			]);
+			expect(fromToSpy.mock.calls[1]).toEqual([
+				'#cQD',
+				{ top: 453.6, left: 14.035 },
+				{ top: 183, left: 603.509, duration: 0.3, ease: 'power1.out' },
+				'<0.006',
+			]);
+			expect(fromToSpy.mock.calls[51]).toEqual([
+				'#cAS',
+				{ top: 453.6, left: 14.035 },
+				{ top: 329.4, left: 14.035, duration: 0.3, ease: 'power1.out' },
+				'<0.006',
 			]);
 			expect(setSpy).not.toHaveBeenCalled();
 		});
@@ -264,24 +296,25 @@ describe('useCardPositionAnimations', () => {
 
 			test.todo('cascade:sequence');
 		});
+	});
 
-		describe('actionText examples', () => {
-			// let actionTextExamples: string[];
-			// beforeAll(() => {
-			// 	actionTextExamples = ACTION_TEXT_EXAMPLES.slice(0);
-			// });
-			// afterAll(() => {
-			// 	expect(actionTextExamples).toEqual([]);
-			// });
+	describe('actionText examples', () => {
+		// let actionTextExamples: string[];
+		// beforeAll(() => {
+		// 	actionTextExamples = ACTION_TEXT_EXAMPLES.slice(0);
+		// });
+		// afterAll(() => {
+		// 	expect(actionTextExamples).toEqual([]);
+		// });
 
-			// TODO (techdebt) (animation) actually write the tests for these?
-			ACTION_TEXT_EXAMPLES.forEach((actionText) => {
-				test.todo(actionText + '');
-			});
+		// TODO (techdebt) (animation) actually write the tests for these?
+		ACTION_TEXT_EXAMPLES.forEach((actionText) => {
+			test.todo(actionText + '');
 		});
 	});
 
-	// REVIEW (animation) which of these are covered by "each PreviousActionType"
+	// manual testing scenarios are for visual fine-tuning
+	// these may be [basically] duplicates of other unit tests
 	describe('manual testing scenarios', () => {
 		test.todo('52CardFlourish');
 
