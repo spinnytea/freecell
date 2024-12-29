@@ -30,7 +30,8 @@ export function animUpdatedCardPositions({
 		MAX_ANIMATION_OVERLAP
 	);
 	if (prevFixtureSizes.current !== fixtureSizes) {
-		// XXX (techdebt) (animation) should this just do gsap.set ?
+		// TODO (animation) (5-priority) should this just do gsap.set ?
+		//  - manual testing on mobile!
 		overlap = 0;
 		prevFixtureSizes.current = fixtureSizes;
 	}

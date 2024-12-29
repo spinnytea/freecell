@@ -12,6 +12,18 @@ import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameConte
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
 
+// XXX (techdebt) replace 52CardFlourish with 1/2
+//  - it's not working because we can't make changes to a "win", how do we step between states?
+//  - we trigger a rerender during unit testing, but we can't do that in manual testing
+// const gamePrint_52CardFlourish1 = '>                        \n                         \n hand-jammed';
+// const gamePrint_52CardFlourish2 = '>            KH KC KD KS \n                         \n hand-jammed';
+// XXX (techdebt) somehow this one is getting shuffled when it's reset??
+// const gamePrint_52CardFlourish =
+// '' +
+// 	   '>                        \n'+
+//       '                         \n'+
+//       ':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
+//       ' init';
 const gamePrint_52CardFlourish =
 	'>7H       2C             \n' +
 	' KS 6C AC 5H KD 6D KC KH \n' +
@@ -225,6 +237,8 @@ export default function Page() {
 						<li>Foundation always renders highest card.</li>
 						<li>Win animation.</li>
 						<li>Move 8S for a 52 Card Flourish (e.g. 3b).</li>
+						{/* TODO reset deck animation */}
+						{/* <li>Reset deck animation.</li> */}
 					</ol>
 					<ManualTestingSettingsContextProvider>
 						<StaticGameContextProvider games={[gamePrint_52CardFlourish]}>

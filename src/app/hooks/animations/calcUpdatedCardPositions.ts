@@ -29,6 +29,8 @@ export interface UpdateCardPositionsType {
 //  - most actionTypes can use the default, esp at first
 //  ---
 //  - we are informally doing this for `move-foundation`
+// TODO (animation) (2-priority) If win -> init, always run `.to` staggered animations
+//  - it keeps forgetting and animating all at once
 export function calcUpdatedCardPositions({
 	fixtureSizes,
 	previousTLs,
