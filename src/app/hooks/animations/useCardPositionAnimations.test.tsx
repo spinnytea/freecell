@@ -328,4 +328,91 @@ describe('useCardPositionAnimations', () => {
 
 		test.todo('animations 2');
 	});
+
+	describe('bugfix', () => {
+		test('Invalid Undo 2S (animation)', () => {
+			const gameStateOne = FreeCell.parse(
+				'' +
+					'    3H 8D 4D AC 2D AH 2S \n' +
+					'    JC 9D 9C KD KC KS 5C \n' +
+					'    JD 8S 4C QS    QH 2H \n' +
+					'    6D 7D 3C       JS TD \n' +
+					'    6H 6C 7S       TH 9S \n' +
+					'    QC 5H QD          2C \n' +
+					'    KH    TS          5S \n' +
+					'    8H    JH          4H \n' +
+					'    7C    TC          3S \n' +
+					'          9H             \n' +
+					'          8C             \n' +
+					'          7H             \n' +
+					'          6S             \n' +
+					'          5D             \n' +
+					'          4S             \n' +
+					'          3D             \n' +
+					' move 14 2S→3D (auto-foundation 14 AS,2S)\n' +
+					':h shuffle32 2107\n' +
+					' 64 62 6a 6b 3c 34 14 74 \n' +
+					' 34 38 3d 34 18 15 73 71 \n' +
+					' 73 57 53 57 54 13 a5 16 \n' +
+					' 14 '
+			).moveByShorthand('21');
+			expect(gameStateOne.previousAction).toEqual({
+				text: 'move 21 8H-7C→cascade',
+				type: 'move',
+			});
+			const gameStateTwo = gameStateOne.undo();
+			expect(gameStateTwo.previousAction).toEqual({
+				text: 'move 14 2S→3D (auto-foundation 14 AS,2S)',
+				type: 'move-foundation',
+				actionPrev: [
+					{ rank: '2', suit: 'spades', location: { fixture: 'cascade', data: [3, 15] } },
+				],
+			});
+
+			// "2 of spades" does not move between states
+			const gameStateOne_2S = gameStateOne.cards.find(
+				({ rank, suit }) => rank === '2' && suit === 'spades'
+			);
+			const gameStateTwo_2S = gameStateTwo.cards.find(
+				({ rank, suit }) => rank === '2' && suit === 'spades'
+			);
+			expect(gameStateOne_2S?.location).toEqual({ fixture: 'foundation', data: [3] });
+			expect(gameStateTwo_2S?.location).toEqual({ fixture: 'foundation', data: [3] });
+			expect(gameStateOne_2S?.location).toBe(gameStateOne_2S?.location);
+
+			const { rerender } = render(
+				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
+			);
+			mockReset();
+			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+
+			// BUG (animation) 2S shouldn't move; ignore actionPrev (because it's already in the final spot?)
+			expect(toSpy.mock.calls).toEqual([
+				['#c2S', { zIndex: 15, duration: 0.15, ease: 'none' }, '<'],
+				['#c7C', { zIndex: 7, duration: 0.15, ease: 'none' }, '<'],
+				['#c8H', { zIndex: 6, duration: 0.15, ease: 'none' }, '<'],
+			]);
+			expect(fromToSpy.mock.calls).toEqual([
+				[
+					'#c2S',
+					{ top: 24.4, left: 701.754 },
+					{ top: 549, left: 308.772, duration: 0.3, ease: 'power1.out' },
+					'>0',
+				],
+				[
+					'#c7C',
+					{ top: 207.4, left: 14.035 },
+					{ top: 353.8, left: 112.281, duration: 0.3, ease: 'power1.out' },
+					'>0',
+				],
+				[
+					'#c8H',
+					{ top: 183, left: 14.035 },
+					{ top: 329.4, left: 112.281, duration: 0.3, ease: 'power1.out' },
+					'<0.060',
+				],
+			]);
+			expect(setSpy).not.toHaveBeenCalled();
+		});
+	});
 });
