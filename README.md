@@ -13,8 +13,8 @@ TODO (motivation) main development tasks:
 1. `(newgame)` local storage, new button
 
 ```
-\b(FIXME|BUG|TODO|XXX|REVIEW|IDEA)\b
-\b(FIXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
+\b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b
+\b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
 \b(BUG|TODO|XXX|REVIEW|IDEA)\b\s+[^(]
 \((\d+)-priority\)
 ```

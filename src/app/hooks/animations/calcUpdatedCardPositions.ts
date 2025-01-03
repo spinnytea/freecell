@@ -109,11 +109,7 @@ export function calcUpdatedCardPositions({
 			const b = updateCardPositions.filter(({ shorthand, top, left }) => {
 				const found = a.find((_a) => _a?.shorthand === shorthand);
 				if (!found) return true;
-				if (found.top !== top) {
-					secondMustComeAfter = true;
-					return true;
-				}
-				if (found.left !== left) {
+				if (found.top !== top || found.left !== left) {
 					secondMustComeAfter = true;
 					return true;
 				}

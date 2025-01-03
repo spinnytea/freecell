@@ -33,7 +33,6 @@ function MockGameBoard() {
 	return null;
 }
 
-// FIXME do more testing before merging (not _all_ the testing, but a bit more)
 describe('useCardPositionAnimations', () => {
 	// we can use this for a lot of tests, so we don't need to keep remaking it
 	const newGameState = new FreeCell();
@@ -78,6 +77,7 @@ describe('useCardPositionAnimations', () => {
 					text: 'init',
 					type: 'init',
 				});
+
 				const { rerender } = render(
 					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
 				);
@@ -108,10 +108,10 @@ describe('useCardPositionAnimations', () => {
 					text: 'init',
 					type: 'init',
 				});
+
 				const { rerender } = render(
 					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
 				);
-
 				mockReset();
 				rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
 
@@ -158,10 +158,10 @@ describe('useCardPositionAnimations', () => {
 				text: 'shuffle deck (5)',
 				type: 'shuffle',
 			});
+
 			const { rerender } = render(
 				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
 			);
-
 			mockReset();
 			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
 
@@ -177,10 +177,10 @@ describe('useCardPositionAnimations', () => {
 				text: 'deal all cards',
 				type: 'deal',
 			});
+
 			const { rerender } = render(
 				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
 			);
-
 			mockReset();
 			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
 
@@ -219,10 +219,10 @@ describe('useCardPositionAnimations', () => {
 				text: 'cursor right',
 				type: 'cursor',
 			});
+
 			const { rerender } = render(
 				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
 			);
-
 			mockReset();
 			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
 
@@ -248,10 +248,10 @@ describe('useCardPositionAnimations', () => {
 						{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } },
 					],
 				});
+
 				const { rerender } = render(
 					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
 				);
-
 				mockReset();
 				rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
 
@@ -276,7 +276,75 @@ describe('useCardPositionAnimations', () => {
 				expect(setSpy).not.toHaveBeenCalled();
 			});
 
-			test.todo('multiple with overlap');
+			test('multiple with overlap', () => {
+				const gameStateOne = FreeCell.parse(
+					'' + //
+						'             QC TD KH TS \n' + //
+						' KD KC       KS          \n' + //
+						' QS>QD|                  \n' + //
+						' JD|JS|                  \n' + //
+						' select 2 QD-JS'
+				);
+				const gameStateTwo = gameStateOne.autoMove();
+				expect(gameStateTwo.print()).toBe(
+					'' +
+						'             KC KD KH KS \n' + //
+						'            >            \n' + //
+						':    Y O U   W I N !    :\n' + //
+						'                         \n' + //
+						' move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)'
+				);
+				expect(gameStateTwo.previousAction).toEqual({
+					text: 'move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)',
+					type: 'move-foundation',
+					actionPrev: [
+						{ rank: 'queen', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 1] } },
+						{ rank: 'jack', suit: 'spades', location: { fixture: 'cascade', data: [4, 2] } },
+					],
+				});
+
+				const { rerender } = render(
+					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
+				);
+				mockReset();
+				rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+
+				expect(toSpy.mock.calls.length).toBe(16);
+				expect(toSpy.mock.calls).toEqual([
+					['#cQD', { zIndex: 1, duration: 0.15, ease: 'none' }, '<'],
+					['#cJS', { zIndex: 2, duration: 0.15, ease: 'none' }, '<'],
+					// and then
+					['#cJD', { top: 24.4, left: 519.298, duration: 0.3, ease: 'power1.out' }, '>0.043'],
+					['#cJD', { zIndex: 109, duration: 0.15, ease: 'none' }, '<'],
+					['#cJS', { top: 24.4, left: 701.754, duration: 0.3, ease: 'power1.out' }, '<0.043'],
+					['#cJS', { zIndex: 109, duration: 0.15, ease: 'none' }, '<'],
+					['#cQD', { top: 24.4, left: 519.298, duration: 0.3, ease: 'power1.out' }, '<0.043'],
+					['#cQD', { zIndex: 110, duration: 0.15, ease: 'none' }, '<'],
+					['#cQS', { top: 24.4, left: 701.754, duration: 0.3, ease: 'power1.out' }, '<0.043'],
+					['#cQS', { zIndex: 110, duration: 0.15, ease: 'none' }, '<'],
+					['#cKC', { top: 24.4, left: 428.07, duration: 0.3, ease: 'power1.out' }, '<0.043'],
+					['#cKC', { zIndex: 111, duration: 0.15, ease: 'none' }, '<'],
+					['#cKD', { top: 24.4, left: 519.298, duration: 0.3, ease: 'power1.out' }, '<0.043'],
+					['#cKD', { zIndex: 111, duration: 0.15, ease: 'none' }, '<'],
+					['#cKS', { top: 24.4, left: 701.754, duration: 0.3, ease: 'power1.out' }, '<0.043'],
+					['#cKS', { zIndex: 111, duration: 0.15, ease: 'none' }, '<'],
+				]);
+				expect(fromToSpy.mock.calls).toEqual([
+					[
+						'#cQD',
+						{ top: 201.3, left: 112.281 },
+						{ top: 207.4, left: 407.018, duration: 0.3, ease: 'power1.out' },
+						'>0',
+					],
+					[
+						'#cJS',
+						{ top: 244, left: 112.281 },
+						{ top: 231.8, left: 407.018, duration: 0.3, ease: 'power1.out' },
+						'<0.060',
+					],
+				]);
+				expect(setSpy).not.toHaveBeenCalled();
+			});
 		});
 
 		test.todo('move-flourish');
