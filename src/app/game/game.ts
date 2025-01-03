@@ -972,6 +972,8 @@ export class FreeCell {
 		TODO (techdebt) remove invalidFoundations and deal demo
 	*/
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
+		if (!print) throw new Error('No game string provided.');
+
 		const cards = new FreeCell().cards;
 		const remaining = cards.slice(0);
 
@@ -1139,7 +1141,20 @@ export class FreeCell {
 				movesSeed.seed === seed &&
 				_isEqual(movesSeed.moves, moves) &&
 				// re-print the our game, confirm it matches the input
+				// REVIEW (techdebt) compare.trim() ? it keeps messing me up, the last history item without a space...
 				replayGameForHistroy.print({ includeHistory: true }) === print;
+
+			// console.log('cellCount', replayGameForHistroy.cells.length === cellCount);
+			// console.log('cascadeCount', replayGameForHistroy.tableau.length === cascadeCount);
+			// console.log('cards', _isEqual(replayGameForHistroy.cards, cards));
+			// console.log('selection', replayGameForHistroy.selection === null);
+			// console.log('availableMoves', replayGameForHistroy.availableMoves === null);
+			// console.log('actionText', replayGameForHistroy.previousAction.text === actionText);
+			// console.log('movesSeed', !!movesSeed);
+			// console.log('movesSeed.seed', movesSeed?.seed === seed);
+			// console.log('movesSeed.moves', _isEqual(movesSeed?.moves, moves));
+			// console.log('print', replayGameForHistroy.print({ includeHistory: true }) === print);
+			// console.log('print includeHistory\n', replayGameForHistroy.print({ includeHistory: true }));
 
 			if (valid) {
 				// we have the whole game, so we can simply return it now

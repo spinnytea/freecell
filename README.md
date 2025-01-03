@@ -10,11 +10,11 @@ TODO (motivation) main development tasks:
 1. ~~move `(history)` & undo~~
 1. ~~`(animation)` https://gsap.com/resources/React/ - just basic animations, like, "stagger" the card movements~~
 1. `(drag-and-drop)` (click-to-move has been working, but sometimes you need to "force" the move you want)
-1. `(settings)` local storage, new button
+1. `(newgame)` local storage, new button
 
 ```
-\b(FIXME|BUG|TODO|XXX|REVIEW|IDEA)\b
-\b(FIXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
+\b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b
+\b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
 \b(BUG|TODO|XXX|REVIEW|IDEA)\b\s+[^(]
 \((\d+)-priority\)
 ```
@@ -57,8 +57,8 @@ TODO (motivation) main development tasks:
   - Some games require no free cells :D - so make a 0 cells version restricted to these games
   - Same with a list for solvable 1-cell games
 - TODO (settings) once move history is in game.print, save completed games to local storage and/or print to console (this way we can "recover" the last one after we finish, if we accidentally start a new one before we can snapshot it / archive it) - we only need the one for this
-- TODO (gameplay) new game button (esp before saving current game to local storage to persist across page reloads)
-- TODO (settings) (2-priority) store current game so it survives page refresh
+- TODO (gameplay) (newgame) (4-priority) new game button (esp before saving current game to local storage to persist across page reloads)
+- TODO (gameplay) (newgame) (settings) (4-priority) store current game so it survives page refresh
   - i keep hitting the "back" button on accident (swip from size of screen)
 - IDEA (settings) option to dis/enable auto-foundation until all cascades are in order (all are a single sequence, or all are ascending)
 - IDEA (animation) auto-foundation gets faster the longer it runs
@@ -87,6 +87,18 @@ TODO (motivation) main development tasks:
 - TODO (theme) more themes - card themes / colors, background colors, etc
 - IDEA (deployment) download on android: "play offline"
   - single html file? try testing that first (javascript + svg)
+- XXX (techdebt) optimize
+  - react keeps reinitializing cards, messing with animations
+  - i've never benchmarked memory/speed before in any meaningful way
+  - is the game impl even a problem? prove that there are no memory leeks (maybe print/parse proves it)
+- REVIEW (techdebt) there are quite a few `eslint-disable` now
+  - if we are going to have them, they should at least explain why
+  - go back and either remove or explain them
+  - ultimately we want to remove them, even if that's low priority or never
+- REVIEW (techdebt) (hud) double check layout on:
+  - macbook chrome
+  - ipad safari
+  - android chrome
 
 ## Technicals
 

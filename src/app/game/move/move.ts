@@ -23,6 +23,7 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 //  - put it last in the list, or IFF do it first
 // IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
 /*
+TODO (controls) (3-priority) More control over where next card moves (i.e. cannot move to foundation if multiple valid moves)
 TODO (controls) (3-priority) Can't put the three in the foundation
  9C KC 8S 4D AC 2H 2D
  AS KD 2C 7C 6S 7D 9H JC

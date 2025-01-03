@@ -1,3 +1,7 @@
+import {
+	ACTION_TEXT_EXAMPLES,
+	pullActionTextExamples,
+} from '@/app/components/cards/constants_test';
 import { Card, CardLocation } from '@/app/game/card/card';
 import { parseCursorFromPreviousActionText } from '@/app/game/move/history';
 
@@ -9,8 +13,16 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 		{ rank: 'queen', suit: 'spades', location: { fixture: 'cascade', data: [7, 2] } },
 	];
 
-	/** @see game/history.parsePreviousActionType specific cases */
 	describe('specific cases', () => {
+		let actionTextExamples: string[];
+		beforeAll(() => {
+			actionTextExamples = ACTION_TEXT_EXAMPLES.slice(0);
+		});
+		afterAll(() => {
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(actionTextExamples).toEqual([]);
+		});
+
 		test.each`
 			actionText                                | cards          | cursor
 			${'init'}                                 | ${[]}          | ${undefined}
@@ -20,11 +32,13 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'deal most cards'}                      | ${[]}          | ${undefined}
 			${'cursor set'}                           | ${[]}          | ${undefined}
 			${'select 6D'}                            | ${[]}          | ${undefined}
-			${'select 8 7D'}                          | ${[]}          | ${undefined}
 			${'select 4D-3S-2D'}                      | ${[]}          | ${undefined}
+			${'select 8 7D'}                          | ${[]}          | ${undefined}
+			${'select 8 4D-3S-2D'}                    | ${[]}          | ${undefined}
 			${'deselect KS'}                          | ${[]}          | ${undefined}
-			${'deselect 6 2C'}                        | ${[]}          | ${undefined}
 			${'deselect 4D-3S-2D'}                    | ${[]}          | ${undefined}
+			${'deselect 6 2C'}                        | ${[]}          | ${undefined}
+			${'deselect 6 4D-3S-2D'}                  | ${[]}          | ${undefined}
 			${'touch stop'}                           | ${[]}          | ${undefined}
 			${'move 3a KC→cell'}                      | ${[]}          | ${{ fixture: 'cell', data: [0] }}
 			${'move 8h AD→foundation'}                | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}
@@ -48,6 +62,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 				cards: Card[];
 				cursor: CardLocation | undefined;
 			}) => {
+				pullActionTextExamples(actionTextExamples, actionText);
 				expect(parseCursorFromPreviousActionText(actionText, cards)).toEqual(cursor);
 			}
 		);

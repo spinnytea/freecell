@@ -79,6 +79,7 @@ export type Position =
 	| '9'
 	| '0';
 
+// REVIEW (optimize) should CardSH include `sh/rs = shorthandCard(this)`?
 export interface CardSH {
 	rank: Rank;
 	suit: Suit;
@@ -271,6 +272,8 @@ export function parseShorthandCard(r: string | undefined, s: string | undefined)
 export function shorthandSequence(sequence: CardSequence, includePosition = false) {
 	const cards = sequence.cards.map((card) => shorthandCard(card)).join('-');
 
+	// only incluce the position if we can move this selection
+	// i.e. in some settings (disallow invalid selections), this action wouldn't be allowed
 	if (sequence.canMove && includePosition) {
 		return shorthandPosition(sequence.location) + ' ' + cards;
 	}
