@@ -2,6 +2,8 @@
 
 card game
 
+[Play it now](https://spinnytea.bitbucket.io/freecell/)
+
 ## Code TODOs
 
 TODO (motivation) main development tasks:
