@@ -65,6 +65,10 @@ describe('useCardPositionAnimations', () => {
 		setSpy.mockReset();
 	}
 
+	function getCardIdsFromSpy(spy: jest.SpyInstance) {
+		return spy.mock.calls.map(([cardId]: [string]) => cardId);
+	}
+
 	test.todo('change fixtureSizes');
 
 	// REVIEW (animation) all of (each PreviousActionType) should be on manualtesting/page
@@ -273,7 +277,10 @@ describe('useCardPositionAnimations', () => {
 						'>0',
 					],
 				]);
-				expect(setSpy).not.toHaveBeenCalled();
+				const setCardIds = getCardIdsFromSpy(setSpy);
+				expect(setCardIds.length).toBe(50);
+				expect(setCardIds).not.toContain('#cAD'); // 51
+				expect(setCardIds).not.toContain('#c6H'); // 52
 			});
 
 			test('multiple with overlap', () => {
@@ -343,7 +350,15 @@ describe('useCardPositionAnimations', () => {
 						'<0.060',
 					],
 				]);
-				expect(setSpy).not.toHaveBeenCalled();
+				const setCardIds = getCardIdsFromSpy(setSpy);
+				expect(setCardIds.length).toBe(45);
+				expect(setCardIds).not.toContain('#cJD'); // 46
+				expect(setCardIds).not.toContain('#cJS');
+				expect(setCardIds).not.toContain('#cQD');
+				expect(setCardIds).not.toContain('#cQS');
+				expect(setCardIds).not.toContain('#cKC'); // 50
+				expect(setCardIds).not.toContain('#cKD');
+				expect(setCardIds).not.toContain('#cKS'); // 52
 			});
 		});
 
@@ -454,19 +469,18 @@ describe('useCardPositionAnimations', () => {
 			mockReset();
 			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
 
-			// BUG (animation) 2S shouldn't move; ignore actionPrev (because it's already in the final spot?)
 			expect(toSpy.mock.calls).toEqual([
-				['#c2S', { zIndex: 15, duration: 0.15, ease: 'none' }, '<'],
+				// ['#c2S', { zIndex: 15, duration: 0.15, ease: 'none' }, '<'],
 				['#c7C', { zIndex: 7, duration: 0.15, ease: 'none' }, '<'],
 				['#c8H', { zIndex: 6, duration: 0.15, ease: 'none' }, '<'],
 			]);
 			expect(fromToSpy.mock.calls).toEqual([
-				[
-					'#c2S',
-					{ top: 24.4, left: 701.754 },
-					{ top: 549, left: 308.772, duration: 0.3, ease: 'power1.out' },
-					'>0',
-				],
+				// [
+				// 	'#c2S',
+				// 	{ top: 24.4, left: 701.754 },
+				// 	{ top: 549, left: 308.772, duration: 0.3, ease: 'power1.out' },
+				// 	'>0',
+				// ],
 				[
 					'#c7C',
 					{ top: 207.4, left: 14.035 },
@@ -480,7 +494,10 @@ describe('useCardPositionAnimations', () => {
 					'<0.060',
 				],
 			]);
-			expect(setSpy).not.toHaveBeenCalled();
+			const setCardIds = getCardIdsFromSpy(setSpy);
+			expect(setCardIds.length).toBe(50);
+			expect(setCardIds).not.toContain('#c7C'); // 51
+			expect(setCardIds).not.toContain('#c8H'); // 52
 		});
 	});
 });

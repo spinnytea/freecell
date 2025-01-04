@@ -37,13 +37,15 @@ const gamePrint_52CardFlourish =
 	'             5D    5C    \n' +
 	' move 3a 7H→cell';
 
-const gamePrint_readyToAutoFoundation =
-	'' + //
-	'>   JH JC JD JS \n' +
-	' KH KC KD KS QH QC QD QS \n' +
-	' hand-jammed';
-
 const gamePrint_animations: { nextActionText: string; gamePrint: string }[] = [
+	{
+		nextActionText: 'Does not autoFoundation until a card is moved.',
+		gamePrint:
+			'' + //
+			'>   JH JC JD JS \n' +
+			' KH KC KD KS QH QC QD QS \n' +
+			' hand-jammed',
+	},
 	{
 		// TODO (techdebt) showUndoButton inside board, or just cycle move + undo
 		nextActionText: 'move 36 5S-4H→cascade (auto-foundation 3262 3S,4D,4H,5C)',
@@ -62,20 +64,6 @@ const gamePrint_animations: { nextActionText: string; gamePrint: string }[] = [
 			'    5C                   \n' +
 			'    4D                   \n' +
 			' cursor right',
-	},
-	{
-		nextActionText: 'move 71 7D-6C-5H-4S-3H→8S (auto-foundation 7 AH)',
-		gamePrint:
-			' TH 6D       AD 3C       \n' +
-			' KS 5C JS KH    6S TD 2S \n' +
-			' 5D 7S 8H 4H    JD AH TC \n' +
-			' 7C AS JH JC    3D 7D KC \n' +
-			' 8D 9C 4C 2H    QD 6C 9H \n' +
-			' 2D 7H QS 8C       5H 5S \n' +
-			' TS 6H 9S 3S       4S 4D \n' +
-			'>8S QH KD 9D       3H    \n' +
-			'       QC                \n' +
-			' move 63 QC→KD',
 	},
 	{
 		nextActionText: 'move 18 5S-4H-3S→6D (auto-foundation 18 2D,3S)',
@@ -242,18 +230,6 @@ export default function Page() {
 					</ol>
 					<ManualTestingSettingsContextProvider>
 						<StaticGameContextProvider games={[gamePrint_52CardFlourish]}>
-							<GameBoard
-								className={styles_gameboard.inline}
-								displayOptions={DEFAULT_DISPLAY_OPTIONS}
-							/>
-						</StaticGameContextProvider>
-					</ManualTestingSettingsContextProvider>
-				</li>
-
-				<li>
-					Does not autoFoundation until a card is moved.
-					<ManualTestingSettingsContextProvider>
-						<StaticGameContextProvider games={[gamePrint_readyToAutoFoundation]}>
 							<GameBoard
 								className={styles_gameboard.inline}
 								displayOptions={DEFAULT_DISPLAY_OPTIONS}

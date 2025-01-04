@@ -6,8 +6,6 @@ import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCard
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 
-// TODO (animation) if no animation, then set the position
-//  - gsap in charge of position (and react mobile keeps dropping them)
 // IDEA (settings) setting for "reduced motion" - disable most animations
 // IDEA (animation) faster "peek" animation - when the cards are shifting to peek the selected card
 export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<string>) {
@@ -53,7 +51,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				},
 			});
 
-			const { updateCardPositions, updateCardPositionsPrev, secondMustComeAfter } =
+			const { updateCardPositions, updateCardPositionsPrev, secondMustComeAfter, unmovedCards } =
 				calcUpdatedCardPositions({
 					fixtureSizes,
 					previousTLs: previousTLs.current,
@@ -73,6 +71,12 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 			previousTimeline.current = timeline;
 
 			const nextTLs = new Map(previousTLs.current);
+			unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
+				// XXX (animation) should this be in animUpdatedCardPositions somehow?
+				const cardId =
+					'#c' + shorthand + (gameBoardIdRef?.current ? '-' + gameBoardIdRef.current : '');
+				timeline.set(cardId, { top, left, zIndex });
+			});
 			if (updateCardPositionsPrev) {
 				// XXX (techdebt) (motivation) this needs to be refactored this is the first non-trivial animation, so it's a bit of a 1-off
 				//  - everything else so far has been about making sure the cards move in the right order

@@ -49,8 +49,10 @@ export function calcUpdatedCardPositions({
 	updateCardPositions: UpdateCardPositionsType[];
 	updateCardPositionsPrev?: UpdateCardPositionsType[];
 	secondMustComeAfter?: boolean;
+	unmovedCards: UpdateCardPositionsType[];
 } {
 	const updateCardPositions: UpdateCardPositionsType[] = [];
+	const unmovedCards: UpdateCardPositionsType[] = [];
 	const fixtures = new Set<Fixture>();
 
 	cards.forEach((card) => {
@@ -58,22 +60,25 @@ export function calcUpdatedCardPositions({
 		const shorthand = shorthandCard(card);
 
 		const prev = previousTLs.get(shorthand);
+		const updateCardPosition: UpdateCardPositionsType = {
+			shorthand,
+			top,
+			left,
+			zIndex,
+			rank: getRankForCompare(card.rank),
+			suit: card.suit,
+			previousTop: prev?.[0] ?? top,
+		};
 		if (!prev || prev[0] !== top || prev[1] !== left) {
-			updateCardPositions.push({
-				shorthand,
-				top,
-				left,
-				zIndex,
-				rank: getRankForCompare(card.rank),
-				suit: card.suit,
-				previousTop: prev?.[0] ?? top,
-			});
+			updateCardPositions.push(updateCardPosition);
 			fixtures.add(card.location.fixture);
+		} else {
+			unmovedCards.push(updateCardPosition);
 		}
 	});
 
 	if (!updateCardPositions.length || !actionText) {
-		return { updateCardPositions };
+		return { updateCardPositions, unmovedCards };
 	}
 
 	// IFF all of the cards moving are the same as the ones in action text (all of a in b, all of b in a);
@@ -98,11 +103,19 @@ export function calcUpdatedCardPositions({
 			});
 
 			let anyMissing = false;
-			const a = moveShorthands.map((sh) => {
-				const position = prevUpdateCardPositions.find(({ shorthand }) => shorthand === sh);
-				if (!position) anyMissing = true;
-				return position;
-			});
+			const a = moveShorthands
+				.filter((sh) => {
+					// XXX (animation) (optimize) this filter is primarily for a bug during undo
+					//  - is there a better way to say "ignore actionPrev" because it doesn't apply
+					// if the card is already in it's final position, then don't run the intermediate animation
+					const unmovedIdx = unmovedCards.findIndex(({ shorthand }) => shorthand === sh);
+					return unmovedIdx === -1;
+				})
+				.map((sh) => {
+					const position = prevUpdateCardPositions.find(({ shorthand }) => shorthand === sh);
+					if (!position) anyMissing = true;
+					return position;
+				});
 
 			// filter items from updateCardPositions if they are in A and have exactly the same position
 			let secondMustComeAfter = false;
@@ -122,6 +135,7 @@ export function calcUpdatedCardPositions({
 					updateCardPositions: b,
 					updateCardPositionsPrev: a as UpdateCardPositionsType[],
 					secondMustComeAfter,
+					unmovedCards,
 				};
 			}
 		}
@@ -150,5 +164,5 @@ export function calcUpdatedCardPositions({
 		updateCardPositions.sort(({ top: a }, { top: b }) => a - b);
 	}
 
-	return { updateCardPositions };
+	return { updateCardPositions, unmovedCards };
 }
