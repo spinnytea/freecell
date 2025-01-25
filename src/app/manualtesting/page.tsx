@@ -102,8 +102,9 @@ const calcCardWidth = (windowInnerWidth = 9999) =>
 	Math.floor(Math.min(Math.max((windowInnerWidth - 80) / 13, 10), 75));
 
 const DEFAULT_DISPLAY_OPTIONS: GameBoardDisplayOptions = {
-	showStatusBar: false,
+	showSettingsButton: false,
 	showUndoButton: false,
+	showStatusBar: false,
 	showTextBoard: false,
 	fixtureLayout: 'portrait',
 };

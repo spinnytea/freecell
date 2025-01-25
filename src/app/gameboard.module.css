@@ -35,6 +35,7 @@
 }
 
 /* REVIEW (techdebt) restyle undo button */
+.settingsButton,
 .undoButton {
 	position: fixed;
 	bottom: 2em;
@@ -50,7 +51,14 @@
 	justify-content: center;
 	line-height: 0;
 }
+.settingsButton {
+	left: 2ch;
+}
+.undoButton {
+	right: 2ch;
+}
 
+.settingsButtonText,
 .undoButtonText {
 	font-size: 2.5rem;
 }

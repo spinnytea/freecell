@@ -4,6 +4,7 @@ import { CardsOnBoard } from '@/app/components/CardsOnBoard';
 import { DebugCursors } from '@/app/components/DebugCursors';
 import { KeyboardCursor } from '@/app/components/KeyboardCursor';
 import { PileMarkers } from '@/app/components/PileMarkers';
+import { SettingsButton } from '@/app/components/SettingsButton';
 import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
 import { UndoButton } from '@/app/components/UndoButton';
@@ -17,6 +18,7 @@ import { useKeybaordMiscControls } from '@/app/hooks/controls/useKeybaordMiscCon
 import { useNewGameClick } from '@/app/hooks/controls/useNewGameClick';
 
 export interface GameBoardDisplayOptions {
+	showSettingsButton?: boolean;
 	showUndoButton?: boolean;
 	showStatusBar?: boolean;
 	showTextBoard?: boolean;
@@ -67,7 +69,13 @@ export default function GameBoard({
 }
 
 function BoardLayout({
-	displayOptions: { showUndoButton, showStatusBar, showTextBoard, showDebugCursors },
+	displayOptions: {
+		showSettingsButton,
+		showUndoButton,
+		showStatusBar,
+		showTextBoard,
+		showDebugCursors,
+	},
 	gameBoardIdRef,
 }: {
 	displayOptions: GameBoardDisplayOptions;
@@ -77,6 +85,7 @@ function BoardLayout({
 
 	// if we pass in a display option, respect that
 	// if we do not pass in a display option, fall back to defaults / settings
+	if (showSettingsButton === undefined) showSettingsButton = true;
 	if (showUndoButton === undefined) showUndoButton = true;
 	if (showStatusBar === undefined) showStatusBar = true;
 	if (showTextBoard === undefined) showTextBoard = showDebugInfo;
@@ -88,6 +97,7 @@ function BoardLayout({
 			<WinMessage />
 			{showKeyboardCursor && <KeyboardCursor />}
 			<CardsOnBoard gameBoardIdRef={gameBoardIdRef} />
+			{!!showSettingsButton && <SettingsButton />}
 			{!!showUndoButton && <UndoButton />}
 			{!!showStatusBar && <StatusBar />}
 
