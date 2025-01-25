@@ -925,7 +925,7 @@ describe('game.undo (+ history)', () => {
 		test.todo('if we reach a move it cannot undo, it should not break');
 	});
 
-	// TODO (optimize) (4-priority) collapse history
+	// TODO (optimize) (3-priority) collapse history
 	describe('collapse history', () => {
 		// i.e. click-to-move picked the wrong place, so i need to move it again to the right one
 		// i.e. dithering on a single card doesn't increase history length
@@ -945,6 +945,20 @@ describe('game.undo (+ history)', () => {
 		// similar to collapsing the moves into one
 		// this is essentially a free undo, except that "back to it's original location" is a valid move
 		test.todo('moving a card back to its original location remove the move from the history');
+
+		// move card a
+		// move card b
+		// move card c around a bit
+		// move card d a bit
+		// move card c a bit
+		// (still only 5 moves)
+		// move card c back
+		// move card d a bit, then back
+		// move card c back
+		// move card b back
+		// move card a back
+		// (no moves anymore, just shuffle and deal)
+		test.todo('a wild example');
 	});
 
 	test('parse history actions', () => {
