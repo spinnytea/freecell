@@ -4,10 +4,11 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
 export function useKeybaordMiscControls() {
 	const [, setGame, newGame] = useContext(GameContext);
-	const [, setSettings] = useContext(SettingsContext);
+	const [{ showSettingsDialog }, setSettings] = useContext(SettingsContext);
 
 	/** REVIEW (controls) keyboard */
 	useEffect(() => {
+		if (showSettingsDialog) return;
 		function handleKey(event: KeyboardEvent) {
 			const { key, target } = event;
 			let consumed = false;
@@ -57,5 +58,5 @@ export function useKeybaordMiscControls() {
 		return () => {
 			window.removeEventListener('keydown', handleKey);
 		};
-	}, [setGame, newGame, setSettings]);
+	}, [showSettingsDialog, setGame, newGame, setSettings]);
 }

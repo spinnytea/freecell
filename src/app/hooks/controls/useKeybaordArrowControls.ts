@@ -2,12 +2,14 @@ import { useContext, useEffect } from 'react';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
+// BUG (controls) if you tab to the buttons or something, you cannot get back to gameplay controls without clicking on the game board
 export function useKeybaordArrowControls() {
 	const [, setGame] = useContext(GameContext);
-	const [, setSettings] = useContext(SettingsContext);
+	const [{ showSettingsDialog }, setSettings] = useContext(SettingsContext);
 
 	/** REVIEW (controls) keyboard */
 	useEffect(() => {
+		if (showSettingsDialog) return;
 		function handleKey(event: KeyboardEvent) {
 			const { key } = event;
 			let consumed = false;
@@ -40,5 +42,5 @@ export function useKeybaordArrowControls() {
 		return () => {
 			window.removeEventListener('keydown', handleKey);
 		};
-	}, [setGame, setSettings]);
+	}, [showSettingsDialog, setGame, setSettings]);
 }

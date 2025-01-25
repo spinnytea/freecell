@@ -1,13 +1,15 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useContext } from 'react';
 import styles_gameboard from '@/app/gameboard.module.css';
+import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
 // FIXME restyle
 // FIXME icon ?, ⚙, ⋮, ⋯
-// FIXME dialog with: Restart ⏮, New Game ⏭
 export function SettingsButton() {
+	const [, setSettings] = useContext(SettingsContext);
+
 	function handleClick(event: MouseEvent) {
 		event.stopPropagation();
-		// FIXME do it
+		setSettings((s) => ({ ...s, showSettingsDialog: true }));
 	}
 
 	return (
@@ -17,7 +19,7 @@ export function SettingsButton() {
 			aria-label="Open settings dialog"
 			onClick={handleClick}
 		>
-			<span className={styles_gameboard.settingsButtonText}>⚙</span>
+			<span className={styles_gameboard.settingsButtonText}>⋮</span>
 		</button>
 	);
 }

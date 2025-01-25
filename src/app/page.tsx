@@ -6,6 +6,7 @@ import GameBoard from '@/app/GameBoard';
 import styles_gameboard from '@/app/gameboard.module.css';
 import GameContextProvider from '@/app/hooks/contexts/Game/GameContextProvider';
 import { SettingsContextProvider } from '@/app/hooks/contexts/Settings/SettingsContextProvider';
+import SettingsDialog from '@/app/SettingsDialog';
 
 gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(Draggable);
@@ -16,6 +17,7 @@ export default function Page() {
 		<SettingsContextProvider>
 			<GameContextProvider>
 				<GameBoard className={styles_gameboard.main} />
+				<SettingsDialog />
 			</GameContextProvider>
 		</SettingsContextProvider>
 	);

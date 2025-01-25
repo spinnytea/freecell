@@ -13,6 +13,7 @@ export function ManualTestingSettingsContextProvider({
 	const [settings, setSettings] = useState<Settings>(() => ({
 		newGameCascadeCount: 8,
 		newGameCellCount: 4,
+		showSettingsDialog: false,
 		showDebugInfo: false,
 		showKeyboardCursor: false,
 		cardFace: cardFace ?? 'SVGCards13',
