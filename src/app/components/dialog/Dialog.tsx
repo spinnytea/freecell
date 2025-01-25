@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { MouseEvent, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import styles_dialog from '@/app/components/dialog/dialog.module.css';
 
@@ -28,6 +28,14 @@ export default function Dialog({
 		}
 	}, [open]);
 
+	function handleClick(event: MouseEvent) {
+		const dialog = dialogRef.current;
+		// close on backdrop click
+		if (dialog && event.target === dialog) {
+			dialog.close();
+		}
+	}
+
 	function handleClose() {
 		if (onClose) onClose();
 	}
@@ -37,6 +45,7 @@ export default function Dialog({
 			ref={dialogRef}
 			aria-label={ariaLabel}
 			className={classNames(className, styles_dialog.root)}
+			onClick={handleClick}
 			onClose={handleClose}
 		>
 			<form method="dialog">{children}</form>
