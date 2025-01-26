@@ -93,6 +93,10 @@ body::before {
 	background: repeat url(/i/noise.svg);
 	background-size: 200px 200px;
 }
+/* blur everything behind the dialog - @see dialog.module.css */
+body:has(dialog[open]) main {
+	filter: blur(1.5px);
+}
 
 a {
 	color: inherit;

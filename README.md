@@ -60,7 +60,7 @@ TODO (motivation) main development tasks:
   - Same with a list for solvable 1-cell games
 - TODO (settings) once move history is in game.print, save completed games to local storage and/or print to console (this way we can "recover" the last one after we finish, if we accidentally start a new one before we can snapshot it / archive it) - we only need the one for this
 - FIXME (gameplay) (newgame) new game button (esp before saving current game to local storage to persist across page reloads)
-- FIXME (gameplay) (newgame) (settings) store current game so it survives page refresh
+- TODO (gameplay) (newgame) (settings) (4-priority) store current game so it survives page refresh
   - i keep hitting the "back" button on accident (swip from size of screen)
 - IDEA (settings) option to dis/enable auto-foundation until all cascades are in order (all are a single sequence, or all are ascending)
 - IDEA (animation) auto-foundation gets faster the longer it runs

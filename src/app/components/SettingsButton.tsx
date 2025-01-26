@@ -1,8 +1,8 @@
 import { MouseEvent, useContext } from 'react';
-import styles_gameboard from '@/app/gameboard.module.css';
+import classNames from 'classnames';
+import styles_buttons from '@/app/components/buttons.module.css';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
-// FIXME restyle
 // FIXME icon ?, ⚙, ⋮, ⋯
 export function SettingsButton() {
 	const [, setSettings] = useContext(SettingsContext);
@@ -14,12 +14,16 @@ export function SettingsButton() {
 
 	return (
 		<button
-			className={styles_gameboard.settingsButton}
+			className={classNames(
+				styles_buttons.btn,
+				styles_buttons.square,
+				styles_buttons.settingsButton
+			)}
 			title="Settings"
 			aria-label="Open settings dialog"
 			onClick={handleClick}
 		>
-			<span className={styles_gameboard.settingsButtonText}>⋮</span>
+			<span className={styles_buttons.squareText}>⋮</span>
 		</button>
 	);
 }
