@@ -98,6 +98,8 @@ const gamePrint_animations: { nextActionText: string; gamePrint: string }[] = [
 	// },
 ];
 
+const supportedBrowsers = ['Mac Chrome', 'Mac Safari', 'Android Chrome', 'iPad Safari'];
+
 const calcCardWidth = (windowInnerWidth = 9999) =>
 	Math.floor(Math.min(Math.max((windowInnerWidth - 80) / 13, 10), 75));
 
@@ -254,6 +256,22 @@ export default function Page() {
 									</StaticGameContextProvider>
 								</ManualTestingSettingsContextProvider>
 							</li>
+						))}
+					</ol>
+				</li>
+				<li>
+					Visually check settings/undo buttons in corners of gameplay.
+					<ol>
+						{supportedBrowsers.map((sb) => (
+							<li key={sb}>{sb}</li>
+						))}
+					</ol>
+				</li>
+				<li>
+					Visually check settings dialog & icons.
+					<ol>
+						{supportedBrowsers.map((sb) => (
+							<li key={sb}>{sb}</li>
 						))}
 					</ol>
 				</li>

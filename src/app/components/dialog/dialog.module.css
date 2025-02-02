@@ -2,9 +2,11 @@ dialog.root {
 	padding: 16px;
 	margin: auto;
 
+	opacity: 1;
+	color: #333;
 	background-color: rgba(255, 255, 255, 0.6);
 	border: none;
-	border-radius: 4px;
+	border-radius: var(--pile-border-radius);
 
 	/* REVIEW (techdebt) max-width, max-height */
 }
@@ -12,7 +14,7 @@ dialog.root {
 dialog.root::backdrop {
 	background-image: linear-gradient(45deg, hotpink, blueviolet, cornflowerblue, seagreen);
 	/* background-image: linear-gradient(45deg, grey, darkgrey, grey, darkgrey); */
-	opacity: 0.4;
+	opacity: 0.6;
 
 	/* blur everything behind the dialog - @see globals.css */
 	/* - we can probably wrap the dialog in a div */
@@ -22,7 +24,8 @@ dialog.root::backdrop {
 
 @media (prefers-color-scheme: dark) {
 	dialog.root {
-		background-color: rgba(0, 0, 0, 0.6);
+		color: white;
+		background-color: rgba(0, 0, 0, 0.8);
 	}
 
 	dialog.root::backdrop {

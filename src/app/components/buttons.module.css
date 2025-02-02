@@ -3,6 +3,10 @@
 	margin: 0;
 	padding: 0;
 
+	/* XXX (techdebt) radius give a thick inset, none gives a weird color */
+	/* border: none; */
+	/* border-radius: var(--pile-border-radius); */
+
 	display: flex;
 	align-items: center;
 	justify-content: center;
