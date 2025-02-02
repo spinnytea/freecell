@@ -15,7 +15,7 @@ export default function SettingsDialog() {
 	}
 
 	function handleRestart() {
-		// FIXME finish
+		setGame((game) => game.restart());
 	}
 
 	function handleNewGame() {

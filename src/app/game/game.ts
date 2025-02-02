@@ -694,6 +694,14 @@ export class FreeCell {
 		return this.setCursor(to_location).touch({ autoFoundation });
 	}
 
+	restart(): FreeCell {
+		// REVIEW (techdebt) can we be smarter
+		let prev: FreeCell = this.undo();
+		let prevv = prev;
+		while ((prevv = prev.undo()) !== prev) prev = prevv;
+		return prev;
+	}
+
 	/**
 		These deals are numbered from 1 to 32000.
 

@@ -242,6 +242,58 @@ describe('game', () => {
 		);
 	});
 
+	// FIXME test.todo
+	describe('restart', () => {
+		const gamePrint =
+			'             AD 2C       \n' +
+			' AH 8S 2D QS 4C    2S 3D \n' +
+			' 5C AS 9C KH 4D    3C 4S \n' +
+			' 3S 5D KC 3H KD    6S 8D \n' +
+			' TD 7S JD 7H 8H    JC 7D \n' +
+			' 5S QH 8C 9D KS    4H 6C \n' +
+			' 2H    TH 6D QD    QC 5H \n' +
+			' 9S    7C TS JS    JH    \n' +
+			'       6H          TC    \n' +
+			'                   9H    \n' +
+			' move 67 9H→TC\n' +
+			':h shuffle32 5\n' +
+			' 53 6a 65 67 85 a8 68 27 \n' +
+			' 67 ';
+
+		test('can find seed → new game', () => {
+			expect(FreeCell.parse(gamePrint).restart().print({ includeHistory: true })).toBe(
+				'' +
+					'                         \n' +
+					' AH 8S 2D QS 4C 9H 2S 3D \n' +
+					' 5C AS 9C KH 4D 2C 3C 4S \n' +
+					' 3S 5D KC 3H KD 5H 6S 8D \n' +
+					' TD 7S JD 7H 8H JH JC 7D \n' +
+					' 5S QH 8C 9D KS QD 4H AC \n' +
+					' 2H TC TH 6D 6H 6C QC JS \n' +
+					' 9S AD 7C TS             \n' +
+					' deal all cards\n' +
+					':h shuffle32 5'
+			);
+		});
+
+		describe('cannot find seed', () => {
+			test.todo('to beginning');
+
+			test.todo('partial history');
+		});
+
+		// new game / undo may not go to the same place by default
+		// e.g. undo cannot (yet) go past the deal, we don't want it to
+		// e.g. maybe we _can_ undo the shuffle to get a new one (similar to new game), we don't want that here
+		// e.g. create a game w/ seed, AND dealt
+		test.todo('can/not find seed produce same result');
+
+		// new game will show the deck, restart should put us at the beginning of the game AFTER deal
+		// it would be weird and confusing to move them back to the deck
+		// it's also extra actions we don't want
+		test.todo('after restart, the cards should be dealt');
+	});
+
 	describe('parse', () => {
 		test('first (stock)', () => {
 			const game = new FreeCell().dealAll({ demo: true }).setCursor({ fixture: 'cell', data: [1] });
