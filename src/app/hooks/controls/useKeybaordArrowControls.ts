@@ -4,10 +4,11 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
 export function useKeybaordArrowControls() {
 	const [, setGame] = useContext(GameContext);
-	const [, setSettings] = useContext(SettingsContext);
+	const [{ showSettingsDialog }, setSettings] = useContext(SettingsContext);
 
 	/** REVIEW (controls) keyboard */
 	useEffect(() => {
+		if (showSettingsDialog) return;
 		function handleKey(event: KeyboardEvent) {
 			const { key } = event;
 			let consumed = false;
@@ -40,5 +41,5 @@ export function useKeybaordArrowControls() {
 		return () => {
 			window.removeEventListener('keydown', handleKey);
 		};
-	}, [setGame, setSettings]);
+	}, [showSettingsDialog, setGame, setSettings]);
 }

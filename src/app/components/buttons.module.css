@@ -1,0 +1,37 @@
+/* TODO (techdebt) restyle buttons */
+.btn {
+	margin: 0;
+	padding: 0;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.btnText {
+	font-size: 2rem;
+	line-height: 1em;
+	margin: 0.2em 0.8ch;
+}
+
+.square {
+	height: 3rem;
+	width: 3rem;
+	line-height: 0;
+}
+.squareText {
+	font-size: 2.5rem;
+}
+
+.settingsButton,
+.undoButton {
+	position: fixed;
+	bottom: 2em;
+	z-index: 1;
+}
+.settingsButton {
+	left: 2ch;
+}
+.undoButton {
+	right: 2ch;
+}

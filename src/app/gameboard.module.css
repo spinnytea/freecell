@@ -8,6 +8,8 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
+
+	outline: none;
 }
 
 .inline {
@@ -32,27 +34,6 @@
 
 	margin-left: -1em;
 	user-select: none;
-}
-
-/* REVIEW (techdebt) restyle undo button */
-.undoButton {
-	position: fixed;
-	bottom: 2em;
-	right: 2ch;
-	z-index: 1;
-
-	margin: 0;
-	padding: 0;
-	width: 3rem;
-	height: 3rem;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	line-height: 0;
-}
-
-.undoButtonText {
-	font-size: 2.5rem;
 }
 
 .status {

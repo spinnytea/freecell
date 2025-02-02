@@ -1,5 +1,6 @@
 import { getMoves } from '@/app/game/catalog/solutions-catalog';
 import { FreeCell } from '@/app/game/game';
+import { parseMovesFromHistory } from '@/app/game/move/history';
 
 describe('game', () => {
 	test('init', () => {
@@ -240,6 +241,148 @@ describe('game', () => {
 				' AS AH AD AC             \n' +
 				' hand-jammed'
 		);
+	});
+
+	describe('restart', () => {
+		const gamePrint =
+			'             AD 2C       \n' +
+			' AH 8S 2D QS 4C    2S 3D \n' +
+			' 5C AS 9C KH 4D    3C 4S \n' +
+			' 3S 5D KC 3H KD    6S 8D \n' +
+			' TD 7S JD 7H 8H    JC 7D \n' +
+			' 5S QH 8C 9D KS    4H 6C \n' +
+			' 2H    TH 6D QD    QC 5H \n' +
+			' 9S    7C TS JS    JH    \n' +
+			'       6H          TC    \n' +
+			'                   9H    \n' +
+			' move 67 9H→TC\n' +
+			':h shuffle32 5\n' +
+			' 53 6a 65 67 85 a8 68 27 \n' +
+			' 67 ';
+
+		test('can find seed → restarts to beginning', () => {
+			const game = FreeCell.parse(gamePrint);
+			const movesSeed = parseMovesFromHistory(game.history);
+			expect(movesSeed?.seed).toBe(5);
+			expect(game.restart().print({ includeHistory: true })).toBe(
+				'' +
+					'                         \n' +
+					' AH 8S 2D QS 4C 9H 2S 3D \n' +
+					' 5C AS 9C KH 4D 2C 3C 4S \n' +
+					' 3S 5D KC 3H KD 5H 6S 8D \n' +
+					' TD 7S JD 7H 8H JH JC 7D \n' +
+					' 5S QH 8C 9D KS QD 4H AC \n' +
+					' 2H TC TH 6D 6H 6C QC JS \n' +
+					' 9S AD 7C TS             \n' +
+					' deal all cards\n' +
+					':h shuffle32 5'
+			);
+		});
+
+		test('cannot find seed → restarts to beginning', () => {
+			const game = FreeCell.parse(gamePrint);
+
+			// remove the seed, but otherwise keep the history in tact
+			game.history.shift();
+			const movesSeed = parseMovesFromHistory(game.history);
+			expect(movesSeed).toBe(null);
+
+			expect(game.restart().print({ includeHistory: true })).toBe(
+				'' +
+					'                         \n' +
+					' AH 8S 2D QS 4C 9H 2S 3D \n' +
+					' 5C AS 9C KH 4D 2C 3C 4S \n' +
+					' 3S 5D KC 3H KD 5H 6S 8D \n' +
+					' TD 7S JD 7H 8H JH JC 7D \n' +
+					' 5S QH 8C 9D KS QD 4H AC \n' +
+					' 2H TC TH 6D 6H 6C QC JS \n' +
+					' 9S AD 7C TS             \n' +
+					' deal all cards'
+			);
+		});
+
+		test('partial history', () => {
+			const game = FreeCell.parse(gamePrint);
+
+			// remove the seed, but otherwise keep the history in tact
+			game.history.shift();
+			game.history.shift();
+			game.history.shift();
+			game.history.shift();
+			game.history.shift();
+			const movesSeed = parseMovesFromHistory(game.history);
+			expect(movesSeed).toBe(null);
+
+			// this is a weirdly clipped history
+			expect(game.print({ includeHistory: true })).toBe(
+				'' +
+					'             AD 2C       \n' +
+					' AH 8S 2D QS 4C    2S 3D \n' +
+					' 5C AS 9C KH 4D    3C 4S \n' +
+					' 3S 5D KC 3H KD    6S 8D \n' +
+					' TD 7S JD 7H 8H    JC 7D \n' +
+					' 5S QH 8C 9D KS    4H 6C \n' +
+					' 2H    TH 6D QD    QC 5H \n' +
+					' 9S    7C TS JS    JH    \n' +
+					'       6H          TC    \n' +
+					'                   9H    \n' +
+					' move 67 9H→TC\n' +
+					' move 27 TC→JH\n' +
+					' move 68 5H→6C (auto-foundation 6 2C)\n' +
+					' move a8 6C→7D\n' +
+					' move 85 JS→QD (auto-foundation 8 AC)\n' +
+					' move 67 JH→QC'
+			);
+
+			// so we can only go back as far as possible
+			expect(game.restart().print({ includeHistory: true })).toBe(
+				'' +
+					' 6C          AD          \n' +
+					' AH 8S 2D QS 4C 9H 2S 3D \n' +
+					' 5C AS 9C KH 4D 2C 3C 4S \n' +
+					' 3S 5D KC 3H KD 5H 6S 8D \n' +
+					' TD 7S JD 7H 8H JH JC 7D \n' +
+					' 5S QH 8C 9D KS    4H AC \n' +
+					' 2H TC TH 6D QD    QC JS \n' +
+					' 9S    7C TS             \n' +
+					'       6H                \n' +
+					' init partial'
+			);
+		});
+
+		// new game / undo may not go to the same place by default
+		// e.g. undo cannot (yet) go past the deal, we don't want it to
+		// e.g. maybe we _can_ undo the shuffle to get a new one (similar to new game), we don't want that here
+		// e.g. create a game w/ seed, AND dealt
+		test('can/not find seed produce same result', () => {
+			const gameWithSeed = FreeCell.parse(gamePrint);
+			const gameWithoutSeed = FreeCell.parse(gamePrint);
+			gameWithoutSeed.history.shift();
+
+			const resetWithSeed = gameWithSeed
+				.restart() // do the reset
+				.setCursor({ fixture: 'cell', data: [0] }); // normalize (since history IS different)
+			const resetWithoutSeed = gameWithoutSeed
+				.restart() // do the reset
+				.setCursor({ fixture: 'cell', data: [0] }); // normalize (since history IS different)
+
+			expect(resetWithSeed.print()).toEqual(resetWithoutSeed.print());
+
+			// if we clip the history the same way, they should be the same again
+			resetWithSeed.history.shift();
+			expect(resetWithSeed).toEqual(resetWithoutSeed);
+		});
+
+		// new game will show the deck, restart should put us at the beginning of the game AFTER deal
+		// it would be weird and confusing to move them back to the deck
+		// it's also extra actions we don't want
+		test('after restart, the cards should be dealt', () => {
+			const game = FreeCell.parse(gamePrint);
+			expect(game.restart().previousAction).toEqual({
+				text: 'deal all cards',
+				type: 'deal',
+			});
+		});
 	});
 
 	describe('parse', () => {

@@ -390,9 +390,14 @@ describe('useCardPositionAnimations', () => {
 		// 	expect(actionTextExamples).toEqual([]);
 		// });
 
-		// TODO (techdebt) (animation) actually write the tests for these?
+		// TODO (techdebt) (animation) (5-priority) actually write the tests for these
 		ACTION_TEXT_EXAMPLES.forEach((actionText) => {
 			test.todo(actionText + '');
+		});
+
+		// BUG (animation) (5-priority) undo has some bugs (auto-foundation)
+		ACTION_TEXT_EXAMPLES.forEach((actionText) => {
+			test.todo('undo: ' + actionText + '');
 		});
 	});
 
