@@ -22,7 +22,7 @@ export default function StaticGameContextProvider({
 	const step = useRef(0);
 	const firstGame = games[0];
 	const newGame = useCallback(
-		() => (firstGame ? castGame(firstGame) : new FreeCell()),
+		() => (firstGame ? castGame(firstGame) : new FreeCell()), // REVIEW (techdebt) settings?
 		[firstGame]
 	);
 	// eslint-disable-next-line prefer-const

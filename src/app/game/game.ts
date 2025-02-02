@@ -695,11 +695,17 @@ export class FreeCell {
 	}
 
 	restart(): FreeCell {
-		// REVIEW (techdebt) can we be smarter
-		let prev: FreeCell = this.undo();
-		let prevv = prev;
-		while ((prevv = prev.undo()) !== prev) prev = prevv;
-		return prev;
+		const movesSeed = parseMovesFromHistory(this.history);
+		if (movesSeed) {
+			const cellCount = this.cells.length;
+			const cascadeCount = this.tableau.length;
+			return new FreeCell({ cellCount, cascadeCount }).shuffle32(movesSeed.seed).dealAll();
+		} else {
+			let prev: FreeCell = this.undo();
+			let prevv = prev;
+			while ((prevv = prev.undo()) !== prev) prev = prevv;
+			return prev;
+		}
 	}
 
 	/**
@@ -982,6 +988,9 @@ export class FreeCell {
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		if (!print) throw new Error('No game string provided.');
 
+		// XXX (techdebt) do we need to build a whole game to get the deck of cards?
+		//  - split the cards into their own utils method?
+		// REVIEW (joker) how do we know if we should include jokers?
 		const cards = new FreeCell().cards;
 		const remaining = cards.slice(0);
 
@@ -1135,7 +1144,7 @@ export class FreeCell {
 				replayGameForHistroy = replayGameForHistroy.moveByShorthand(move);
 			});
 
-			// verify all args to the new FreeCell
+			// verify all args to `new FreeCell`
 			const movesSeed = parseMovesFromHistory(replayGameForHistroy.history);
 			const valid =
 				// replayGameForHistroy.cells.length === cellCount &&

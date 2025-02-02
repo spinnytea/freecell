@@ -1,5 +1,6 @@
 import { getMoves } from '@/app/game/catalog/solutions-catalog';
 import { FreeCell } from '@/app/game/game';
+import { parseMovesFromHistory } from '@/app/game/move/history';
 
 describe('game', () => {
 	test('init', () => {
@@ -242,40 +243,50 @@ describe('game', () => {
 		);
 	});
 
-	// FIXME test.todo
 	describe('restart', () => {
-		const gamePrint =
-			'             AD 2C       \n' +
-			' AH 8S 2D QS 4C    2S 3D \n' +
-			' 5C AS 9C KH 4D    3C 4S \n' +
-			' 3S 5D KC 3H KD    6S 8D \n' +
-			' TD 7S JD 7H 8H    JC 7D \n' +
-			' 5S QH 8C 9D KS    4H 6C \n' +
-			' 2H    TH 6D QD    QC 5H \n' +
-			' 9S    7C TS JS    JH    \n' +
-			'       6H          TC    \n' +
-			'                   9H    \n' +
-			' move 67 9H→TC\n' +
-			':h shuffle32 5\n' +
-			' 53 6a 65 67 85 a8 68 27 \n' +
-			' 67 ';
-
-		test('can find seed → new game', () => {
-			expect(FreeCell.parse(gamePrint).restart().print({ includeHistory: true })).toBe(
+		const gameWithSeed = () =>
+			FreeCell.parse(
 				'' +
-					'                         \n' +
-					' AH 8S 2D QS 4C 9H 2S 3D \n' +
-					' 5C AS 9C KH 4D 2C 3C 4S \n' +
-					' 3S 5D KC 3H KD 5H 6S 8D \n' +
-					' TD 7S JD 7H 8H JH JC 7D \n' +
-					' 5S QH 8C 9D KS QD 4H AC \n' +
-					' 2H TC TH 6D 6H 6C QC JS \n' +
-					' 9S AD 7C TS             \n' +
-					' deal all cards\n' +
-					':h shuffle32 5'
+					'             AD 2C       \n' +
+					' AH 8S 2D QS 4C    2S 3D \n' +
+					' 5C AS 9C KH 4D    3C 4S \n' +
+					' 3S 5D KC 3H KD    6S 8D \n' +
+					' TD 7S JD 7H 8H    JC 7D \n' +
+					' 5S QH 8C 9D KS    4H 6C \n' +
+					' 2H    TH 6D QD    QC 5H \n' +
+					' 9S    7C TS JS    JH    \n' +
+					'       6H          TC    \n' +
+					'                   9H    \n' +
+					' move 67 9H→TC\n' +
+					':h shuffle32 5\n' +
+					' 53 6a 65 67 85 a8 68 27 \n' +
+					' 67 '
 			);
+
+		describe('can find seed', () => {
+			test('verify', () => {
+				const movesSeed = parseMovesFromHistory(gameWithSeed().history);
+				expect(movesSeed?.seed).toBe(5);
+			});
+
+			test('restarts to beginning', () => {
+				expect(gameWithSeed().restart().print({ includeHistory: true })).toBe(
+					'' +
+						'                         \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH 6D 6H 6C QC JS \n' +
+						' 9S AD 7C TS             \n' +
+						' deal all cards\n' +
+						':h shuffle32 5'
+				);
+			});
 		});
 
+		// FIXME test.todo
 		describe('cannot find seed', () => {
 			test.todo('to beginning');
 
@@ -291,7 +302,12 @@ describe('game', () => {
 		// new game will show the deck, restart should put us at the beginning of the game AFTER deal
 		// it would be weird and confusing to move them back to the deck
 		// it's also extra actions we don't want
-		test.todo('after restart, the cards should be dealt');
+		test('after restart, the cards should be dealt', () => {
+			expect(gameWithSeed().restart().previousAction).toEqual({
+				text: 'deal all cards',
+				type: 'deal',
+			});
+		});
 	});
 
 	describe('parse', () => {
