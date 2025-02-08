@@ -370,7 +370,7 @@ function prioritizeAvailableMoves(
 			break;
 		}
 
-		// IDEA (controls) prioritize "closer" moves
+		// TODO (controls) (3-priority) prioritize "closer" moves
 		//  - e.g.: 1350642
 		//  - right now it _always_ go right, even when right is far away
 		//  - when leaving a sequence (when d1 > 0)

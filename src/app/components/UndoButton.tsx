@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import styles_buttons from '@/app/components/buttons.module.css';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 
-// TODO (controls) hold undo button to fire every animation max, until deal (don't go farther even if we can, that needs to be pressed specifically)
 export function UndoButton() {
 	const [, setGame] = useContext(GameContext);
 

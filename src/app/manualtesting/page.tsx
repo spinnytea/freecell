@@ -228,7 +228,7 @@ export default function Page() {
 						<li>Foundation always renders highest card.</li>
 						<li>Win animation.</li>
 						<li>Move 8S for a 52 Card Flourish (e.g. 3b).</li>
-						{/* TODO reset deck animation */}
+						{/* TODO (animation) reset deck animation */}
 						{/* <li>Reset deck animation.</li> */}
 					</ol>
 					<ManualTestingSettingsContextProvider>

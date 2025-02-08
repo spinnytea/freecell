@@ -1,0 +1,68 @@
+{
+	"todo-tree.filtering.excludeGlobs": ["**/node_modules"],
+	"todo-tree.highlights.customHighlight": {
+		"FIXME": {
+			"type": "whole-line",
+			"icon": "flame",
+			"iconColour": "#921",
+			"foreground": "#b00",
+			"background": "#8004"
+		},
+		"BUG": {
+			"type": "text-and-comment",
+			"icon": "bug",
+			"iconColour": "#872",
+			"foreground": "#111",
+			"background": "#aa4"
+		},
+		"TODO": {
+			"icon": "bookmark",
+			"type": "text-and-comment",
+			"iconColour": "#694",
+			"foreground": "#694",
+			"background": "#8882"
+		},
+		"XXX": {
+			"type": "text-and-comment",
+			"icon": "archive",
+			"iconColour": "#8888",
+			"foreground": "#8888",
+			"background": "none"
+		},
+		"REVIEW": {
+			"type": "text-and-comment",
+			"icon": "code-review",
+			"iconColour": "#38a",
+			"foreground": "#49b",
+			"background": "#8882"
+		},
+		"IDEA": {
+			"type": "text-and-comment",
+			"icon": "light-bulb",
+			"iconColour": "#aa4",
+			"foreground": "#aa4",
+			"background": "none"
+		},
+		"[ ]": {
+			"type": "whole-line",
+			"icon": "issue-draft",
+			"iconColour": "#84e",
+			"foreground": "#ccc",
+			"background": "#84e3"
+		},
+		"[x]": {
+			"type": "whole-line",
+			"icon": "issue-closed",
+			"iconColour": "#84e",
+			"foreground": "#8888",
+			"background": "#84e3"
+		}
+	},
+	"todo-tree.general.tags": ["FIXME", "BUG", "TODO", "XXX", "REVIEW", "IDEA", "[ ]", "[x]"],
+	"todo-tree.general.statusBar": "tags",
+	"todo-tree.highlights.useColourScheme": true,
+	"todo-tree.tree.showCountsInTree": true,
+	"todo-tree.tree.showCurrentScanMode": false,
+	"todo-tree.regex.regex": "(//|#|<!--|;|/\\*\\*?|-|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)",
+	"todo-tree.tree.groupedByTag": true
+}

@@ -45,7 +45,10 @@ const MAX_CELL_COUNT = 6;
 const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 
 interface OptionsAutoFoundation {
-	/** @deprecated XXX (techdebt) this is just to get unit tests passing, we should have examples that do not need this */
+	/**
+	 	@deprecated
+		XXX (techdebt) this is just to get unit tests passing, we should have examples that do not need this
+	*/
 	autoFoundation?: boolean;
 }
 
@@ -692,7 +695,8 @@ export class FreeCell {
 	autoMove({ autoFoundation = true }: OptionsAutoFoundation = {}): FreeCell | this {
 		if (!this.selection) return this;
 		if (!this.availableMoves?.length) return this;
-		if (this.previousAction.type !== 'select') return this; // REVIEW (techdebt) is there a reason for this?
+		// REVIEW (techdebt) is there a reason for this?
+		if (this.previousAction.type !== 'select') return this;
 
 		// find the highest priority, prioritize first one
 		const to_location = this.availableMoves.reduce((ret, next) => {
@@ -1016,7 +1020,8 @@ export class FreeCell {
 
 		const getCard = ({ rank, suit }: CardSH) => {
 			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
-			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`); // XXX (print) (joker) test with a joker, duplicate card
+			// XXX (print) (joker) test with a joker, duplicate card
+			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`);
 			remaining.splice(remaining.indexOf(card), 1);
 			return card;
 		};
