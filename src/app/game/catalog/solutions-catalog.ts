@@ -1,4 +1,4 @@
-export const seedSolutions48 = new Map<number, string>([
+export const SEED_SOLUTIONS_4x8 = new Map<number, string>([
 	[
 		1,
 		'' +
@@ -53,7 +53,7 @@ export const seedSolutions48 = new Map<number, string>([
 	],
 ]);
 
-export const seedSolutions60 = new Map<number, string>([
+export const SEED_SOLUTIONS_6x10 = new Map<number, string>([
 	// TODO (techdebt) example that uses all 6 cells
 	[
 		25759,
@@ -73,10 +73,10 @@ export function getMoves(
 ): string[] {
 	let seedSolutions = undefined;
 	if (cellCount === 4 && cascadeCount === 8) {
-		seedSolutions = seedSolutions48;
+		seedSolutions = SEED_SOLUTIONS_4x8;
 	}
 	if (cellCount === 6 && cascadeCount === 10) {
-		seedSolutions = seedSolutions60;
+		seedSolutions = SEED_SOLUTIONS_6x10;
 	}
 	if (!seedSolutions) {
 		throw new Error(

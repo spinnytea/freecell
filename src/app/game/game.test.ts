@@ -381,6 +381,7 @@ describe('game', () => {
 			expect(game.restart().previousAction).toEqual({
 				text: 'deal all cards',
 				type: 'deal',
+				gameFunction: 'restart',
 			});
 		});
 	});

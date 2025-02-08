@@ -36,6 +36,13 @@ export const PREVIOUS_ACTION_TYPE_IN_HISTORY: PreviousActionType[] = [
 	'auto-foundation',
 ];
 
+/**
+	REVIEW (techdebt) (animation) is newGame even valid?
+	 - then it'll just be, like, a new game
+	 - should we have a special animation for this?
+*/
+type GameFunction = 'undo' | 'restart' | 'newGame';
+
 export interface PreviousAction {
 	/**
 		human readable (loosely speaking) string
@@ -52,16 +59,28 @@ export interface PreviousAction {
 	type: PreviousActionType;
 
 	/**
-		just the cards that moved
+		just the cards that moved during an in-between step (i.e. move -> auto-foundation)
+
+		we are keeping track of which cards we part of "move",
+		specifically so we have {@link Card.location},
+		so we can use that for animations
+
+		this is out-of-scope of a standard {@link FreeCell}, but his is the best time to calc and store it
 
 		TODO (techdebt) (combine-move-auto-foundation) currently only used for move-foundation
 		- maybe we should rename this variable?
 		- maybe we can always list "this are the cards that moved during this action"
 		  'move-foundation' has 2 sets of moves, what then?
 
+		TODO (techdebt) (settings) add an option to skip this calculation
+		- for non-animated interfaces
+
 		@see {@link getCardsThatMoved}
 	*/
-	actionPrev?: Card[];
+	tweenCards?: Card[];
+
+	/** for non-standard gameplay (e.g. undo) */
+	gameFunction?: GameFunction;
 }
 
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
@@ -304,7 +323,7 @@ export function parsePreviousActionMoveShorthands(actionText: string) {
 }
 
 export function parseMovesFromHistory(history: string[]): { seed: number; moves: string[] } | null {
-	if (!history[1] || parsePreviousActionType(history[1]).type !== 'deal') return null;
+	if (history[1] && parsePreviousActionType(history[1]).type !== 'deal') return null;
 	const matchSeed = /shuffle deck \((\d+)\)/.exec(history[0]);
 	if (!matchSeed) return null;
 	const seed = parseInt(matchSeed[1], 10);

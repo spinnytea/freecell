@@ -1,6 +1,10 @@
 import { render } from '@testing-library/react';
 import { gsap } from 'gsap/all';
-import { ACTION_TEXT_EXAMPLES } from '@/app/components/cards/constants_test';
+import {
+	ACTION_TEXT_EXAMPLES,
+	FIFTY_TWO_CARD_FLOURISH,
+	pullActionTextExamples,
+} from '@/app/game/catalog/actionText-examples';
 import { FreeCell } from '@/app/game/game';
 import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositionAnimations';
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
@@ -12,15 +16,9 @@ jest.mock('gsap/all', () => ({
 	},
 }));
 
-function MockGamePage({
-	gameStateOne,
-	gameStateTwo,
-}: {
-	gameStateOne: FreeCell | string;
-	gameStateTwo: FreeCell | string;
-}) {
+function MockGamePage({ games }: { games: (FreeCell | string)[] }) {
 	return (
-		<StaticGameContextProvider games={[gameStateOne, gameStateTwo]}>
+		<StaticGameContextProvider games={games}>
 			<FixtureSizesContextProvider gameBoardRef={{ current: null }} fixtureLayout="portrait">
 				<MockGameBoard />
 			</FixtureSizesContextProvider>
@@ -82,9 +80,7 @@ describe('useCardPositionAnimations', () => {
 					type: 'init',
 				});
 
-				const { rerender } = render(
-					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
-				);
+				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 				expect(toSpy).not.toHaveBeenCalled();
 				expect(fromToSpy).not.toHaveBeenCalled();
@@ -93,7 +89,7 @@ describe('useCardPositionAnimations', () => {
 				// expect(setSpy.mock.calls.map(([cardId]) => cardId as string)).toEqual(['#cAC', '#cAD', ..., '#cKH', '#cKS']);
 
 				mockReset();
-				rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 				expect(toSpy).not.toHaveBeenCalled();
 				expect(fromToSpy).not.toHaveBeenCalled();
@@ -113,11 +109,9 @@ describe('useCardPositionAnimations', () => {
 					type: 'init',
 				});
 
-				const { rerender } = render(
-					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
-				);
+				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 				mockReset();
-				rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 				// TODO (animation) (techdebt) isn't this backwards?
 				//  - shouldn't kings be first?
@@ -163,11 +157,9 @@ describe('useCardPositionAnimations', () => {
 				type: 'shuffle',
 			});
 
-			const { rerender } = render(
-				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
-			);
+			const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 			mockReset();
-			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
@@ -182,11 +174,9 @@ describe('useCardPositionAnimations', () => {
 				type: 'deal',
 			});
 
-			const { rerender } = render(
-				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
-			);
+			const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 			mockReset();
-			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 			expect(toSpy.mock.calls.length).toBe(52);
 			expect(toSpy.mock.calls[0]).toEqual([
@@ -224,11 +214,9 @@ describe('useCardPositionAnimations', () => {
 				type: 'cursor',
 			});
 
-			const { rerender } = render(
-				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
-			);
+			const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 			mockReset();
-			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
@@ -248,16 +236,14 @@ describe('useCardPositionAnimations', () => {
 				expect(gameStateTwo.previousAction).toEqual({
 					text: 'move 53 6H→7C (auto-foundation 2 AD)',
 					type: 'move-foundation',
-					actionPrev: [
+					tweenCards: [
 						{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } },
 					],
 				});
 
-				const { rerender } = render(
-					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
-				);
+				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 				mockReset();
-				rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 				expect(toSpy.mock.calls).toEqual([
 					['#c6H', { zIndex: 7, duration: 0.15, ease: 'none' }, '<'],
@@ -304,17 +290,15 @@ describe('useCardPositionAnimations', () => {
 				expect(gameStateTwo.previousAction).toEqual({
 					text: 'move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)',
 					type: 'move-foundation',
-					actionPrev: [
+					tweenCards: [
 						{ rank: 'queen', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 1] } },
 						{ rank: 'jack', suit: 'spades', location: { fixture: 'cascade', data: [4, 2] } },
 					],
 				});
 
-				const { rerender } = render(
-					<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
-				);
+				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 				mockReset();
-				rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 				expect(toSpy.mock.calls.length).toBe(16);
 				expect(toSpy.mock.calls).toEqual([
@@ -382,22 +366,249 @@ describe('useCardPositionAnimations', () => {
 	});
 
 	describe('actionText examples', () => {
-		// let actionTextExamples: string[];
-		// beforeAll(() => {
-		// 	actionTextExamples = ACTION_TEXT_EXAMPLES.slice(0);
-		// });
-		// afterAll(() => {
-		// 	expect(actionTextExamples).toEqual([]);
-		// });
-
-		// TODO (techdebt) (animation) (5-priority) actually write the tests for these
-		ACTION_TEXT_EXAMPLES.forEach((actionText) => {
-			test.todo(actionText + '');
+		const skipThrow = true; // TODO (techdebt) remove after we finish all tests
+		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES);
+		afterAll(() => {
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(actionTextExamples).toEqual([]);
+		});
+		beforeEach(() => {
+			// eslint-disable-next-line jest/no-standalone-expect
+			const actionText = (/·(.*)$/.exec(expect.getState().currentTestName ?? '')?.[1] ?? '').trim();
+			if (actionText) {
+				pullActionTextExamples(actionTextExamples, actionText);
+			}
 		});
 
-		// BUG (animation) (5-priority) undo has some bugs (auto-foundation)
-		ACTION_TEXT_EXAMPLES.forEach((actionText) => {
-			test.todo('undo: ' + actionText + '');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init with invalid history');
+		describe('animate init', () => {
+			test.todo('· init');
+
+			test.todo('· init with invalid history');
+		});
+
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'shuffle deck (0)');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal all cards');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal most cards');
+		describe('game setup', () => {
+			test.todo('· shuffle deck (0)');
+
+			test.todo('· deal all cards');
+
+			test.todo('· deal most cards');
+		});
+
+		// prettier-ignore
+		const ftcf_toSpyIDs = [
+			'#c8S',
+			'#cAC', // top left
+			'#cAC', // zIndex
+			'#cAD', // top left
+			'#cAD', // zIndex
+			'#cAH', // …
+			'#cAH', // …
+			'#cAS',
+			'#cAS',
+			'#c2C', '#c2C', '#c2D', '#c2D', '#c2H', '#c2H', '#c2S', '#c2S',
+			'#c3C', '#c3C', '#c3D', '#c3D', '#c3H', '#c3H', '#c3S', '#c3S',
+			'#c4C', '#c4C', '#c4D', '#c4D', '#c4H', '#c4H', '#c4S', '#c4S',
+			'#c5C', '#c5C', '#c5D', '#c5D', '#c5H', '#c5H', '#c5S', '#c5S',
+			'#c6C', '#c6C', '#c6D', '#c6D', '#c6H', '#c6H', '#c6S', '#c6S',
+			'#c7C', '#c7C', '#c7D', '#c7D', '#c7H', '#c7H', '#c7S', '#c7S',
+			'#c8C', '#c8C', '#c8D', '#c8D', '#c8H', '#c8H', '#c8S', '#c8S',
+			'#c9C', '#c9C', '#c9D', '#c9D', '#c9H', '#c9H', '#c9S', '#c9S',
+			'#cTC', '#cTC', '#cTD', '#cTD', '#cTH', '#cTH', '#cTS', '#cTS',
+			'#cJC', '#cJC', '#cJD', '#cJD', '#cJH', '#cJH', '#cJS', '#cJS',
+			'#cQC', '#cQC', '#cQD', '#cQD', '#cQH', '#cQH', '#cQS', '#cQS',
+			'#cKC', '#cKC', '#cKD', '#cKD', '#cKH', '#cKH', '#cKS', '#cKS',
+		];
+		// prettier-ignore
+		const ftcf_toSpyUndoIDs = [
+			'#c2C', '#c7H', // home row
+			'#cAC', '#c5H', '#c6C', '#c6D', '#cKC', '#cKD', '#cKH', '#cKS', // 0
+			'#cAD', '#cAH', '#c4S', '#c5S', '#cQC', '#cQD', '#cQH', '#cQS', // 1
+			'#cAS', '#c3D', '#c4H', '#cJC', '#cJD', '#cJH', '#cJS',         // 2
+			'#c3C', '#c8S', '#cTC', '#cTD', '#cTH', '#cTS',                 // 3
+			'#c2H', '#c9C', '#c9D', '#c9H', '#c9S',                         // 4
+			'#c8C', '#c8D', '#c8H', // 5
+			'#c7C', '#c7D', '#c7S', // 6
+			'#c6H', '#c6S',         // 7
+			'#c5C', '#c5D',         // 8
+			'#c4C', '#c4D',         // 9
+			'#c3H', '#c3S',         // 10
+			'#c2D', '#c2S',         // 11
+		];
+		describe('move and undo', () => {
+			describe('add to the each', () => {
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+				if (skipThrow) pullActionTextExamples(actionTextExamples, 'move 8h AD→foundation');
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+				if (skipThrow) pullActionTextExamples(actionTextExamples, 'move 57 KS→cascade');
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+				if (skipThrow) pullActionTextExamples(actionTextExamples, 'move 78 JH-TC-9H-8S-7H→QS');
+				test.todo('· move 8h AD→foundation');
+				test.todo('· move 57 KS→cascade');
+				test.todo('· move 78 JH-TC-9H-8S-7H→QS');
+			});
+
+			describe.each`
+				actionText                                    | shorthandMove | toSpyIDs                                    | fromToSpyIDs                | setSpyLength | toSpyUndoIDs         | fromToSpyUndoIDs
+				${'move 3a KC→cell'}                          | ${'3a'}       | ${['#cKC']}                                 | ${['#cKC']}                 | ${51}        | ${undefined}         | ${undefined}
+				${'move 15 TD→JS'}                            | ${'15'}       | ${['#cTD']}                                 | ${['#cTD']}                 | ${51}        | ${undefined}         | ${undefined}
+				${'move 23 KC-QD-JS→cascade'}                 | ${'23'}       | ${['#cKC', '#cQD', '#cJS']}                 | ${['#cKC', '#cQD', '#cJS']} | ${49}        | ${undefined}         | ${undefined}
+				${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${'53'}       | ${['#c6H', '#cAD']}                         | ${['#c6H', '#cAD']}         | ${50}        | ${undefined}         | ${undefined}
+				${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${'14'}       | ${['#c2S', '#cAS', '#cAS', '#c2S', '#c2S']} | ${['#c2S']}                 | ${50}        | ${['#cAS', '#c2S']}  | ${['#cAS', '#c2S']}
+				${'move 21 8H-7C→cascade'}                    | ${'21'}       | ${['#c8H', '#c7C']}                         | ${['#c8H', '#c7C']}         | ${50}        | ${undefined}         | ${undefined}
+				${FIFTY_TWO_CARD_FLOURISH}                    | ${'3b'}       | ${ftcf_toSpyIDs}                            | ${['#c8S']}                 | ${0}         | ${ftcf_toSpyUndoIDs} | ${ftcf_toSpyUndoIDs}
+			`(
+				'$actionText',
+				({
+					actionText,
+					shorthandMove,
+					toSpyIDs,
+					fromToSpyIDs,
+					setSpyLength,
+					toSpyUndoIDs = toSpyIDs,
+					fromToSpyUndoIDs = fromToSpyIDs,
+				}: {
+					actionText: string;
+					shorthandMove: string;
+					toSpyIDs: string[];
+					fromToSpyIDs: string[];
+					setSpyLength: number;
+					toSpyUndoIDs: string[] | undefined;
+					fromToSpyUndoIDs: string[] | undefined;
+				}) => {
+					let gameStateOne: FreeCell;
+					let gameStateTwo: FreeCell;
+					let gameStateThree: FreeCell;
+					beforeAll(() => {
+						gameStateOne = FreeCell.parse(ACTION_TEXT_EXAMPLES[actionText]);
+						gameStateTwo = gameStateOne.moveByShorthand(shorthandMove);
+						gameStateThree = gameStateTwo.undo();
+						pullActionTextExamples(actionTextExamples, actionText);
+					});
+
+					test('spot check', () => {
+						expect(gameStateOne.print({ includeHistory: true })).toBe(
+							ACTION_TEXT_EXAMPLES[actionText]
+						);
+						expect(gameStateTwo.previousAction.text).toBe(actionText);
+						expect(gameStateThree.print({ includeHistory: true })).toBe(
+							gameStateOne.print({ includeHistory: true })
+						);
+						// expect(gameStateThree.print()).toBe(gameStateOne.print()); // TODO (techdebt) move cursor during undo
+					});
+
+					test('move →', () => {
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyIDs);
+						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyIDs);
+						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+					});
+
+					test('undo ←', () => {
+						const { rerender } = render(<MockGamePage games={[gameStateTwo, gameStateThree]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateTwo, gameStateThree]} />);
+
+						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
+						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
+						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+					});
+
+					test('both →←', () => {
+						const { rerender } = render(
+							<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />
+						);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
+
+						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyIDs);
+						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyIDs);
+						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
+
+						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
+						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
+						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+					});
+				}
+			);
+		});
+
+		/**
+			just autoFoundation when we've previously skipped it
+			we can't get here through normal gameplay
+		*/
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'auto-foundation 56 KD,KS');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'flourish 56 KD,KS');
+		describe('autoFoundationAll', () => {
+			test.todo('· auto-foundation 56 KD,KS');
+
+			test.todo('· flourish 56 KD,KS');
+		});
+
+		/** singular animation */
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 6D');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 4D-3S-2D');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 8 7D');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 8 4D-3S-2D');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect KS');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 4D-3S-2D');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 6 2C');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 6 4D-3S-2D');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'invalid move 86 7D→9C');
+		describe('animate', () => {
+			test.todo('· select 6D');
+
+			test.todo('· select 4D-3S-2D');
+
+			test.todo('· select 8 7D');
+
+			test.todo('· select 8 4D-3S-2D');
+
+			test.todo('· deselect KS');
+
+			test.todo('· deselect 4D-3S-2D');
+
+			test.todo('· deselect 6 2C');
+
+			test.todo('· deselect 6 4D-3S-2D');
+
+			test.todo('· invalid move 86 7D→9C');
+		});
+
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'touch stop');
+		describe('do not animate', () => {
+			test.todo('· cursor set');
+
+			test.todo('· touch stop');
 		});
 	});
 
@@ -419,17 +630,46 @@ describe('useCardPositionAnimations', () => {
 
 	describe('bugfix', () => {
 		test('Invalid Undo 2S (animation)', () => {
-			const gameStateOne = FreeCell.parse(
+			const gamePrint =
+				'    3H 8D 4D AC 2D AH 2S \n' +
+				'    JC 9D 9C KD KC KS 5C \n' +
+				'    JD 8S 4C QS    QH 2H \n' +
+				'    6D 7D 3C       JS TD \n' +
+				'    6H 6C 7S       TH 9S \n' +
+				'    QC 5H QD          2C \n' +
+				'    KH    TS          5S \n' +
+				'    8H    JH          4H \n' +
+				'    7C    TC          3S \n' +
+				'          9H             \n' +
+				'          8C             \n' +
+				'          7H             \n' +
+				'          6S             \n' +
+				'          5D             \n' +
+				'          4S             \n' +
+				'          3D             \n' +
+				' move 14 2S→3D (auto-foundation 14 AS,2S)\n' +
+				':h shuffle32 2107\n' +
+				' 64 62 6a 6b 3c 34 14 74 \n' +
+				' 34 38 3d 34 18 15 73 71 \n' +
+				' 73 57 53 57 54 13 a5 16 \n' +
+				' 14 ';
+			expect(gamePrint).toEqual(ACTION_TEXT_EXAMPLES['move 21 8H-7C→cascade']);
+			const gameStateOne = FreeCell.parse(gamePrint).moveByShorthand('21');
+			expect(gameStateOne.previousAction).toEqual({
+				text: 'move 21 8H-7C→cascade',
+				type: 'move',
+			});
+			expect(gameStateOne.print({ includeHistory: true })).toBe(
 				'' +
 					'    3H 8D 4D AC 2D AH 2S \n' +
-					'    JC 9D 9C KD KC KS 5C \n' +
-					'    JD 8S 4C QS    QH 2H \n' +
+					' 8H JC 9D 9C KD KC KS 5C \n' +
+					' 7C JD 8S 4C QS    QH 2H \n' +
 					'    6D 7D 3C       JS TD \n' +
 					'    6H 6C 7S       TH 9S \n' +
 					'    QC 5H QD          2C \n' +
 					'    KH    TS          5S \n' +
-					'    8H    JH          4H \n' +
-					'    7C    TC          3S \n' +
+					'          JH          4H \n' +
+					'          TC          3S \n' +
 					'          9H             \n' +
 					'          8C             \n' +
 					'          7H             \n' +
@@ -437,25 +677,23 @@ describe('useCardPositionAnimations', () => {
 					'          5D             \n' +
 					'          4S             \n' +
 					'          3D             \n' +
-					' move 14 2S→3D (auto-foundation 14 AS,2S)\n' +
+					' move 21 8H-7C→cascade\n' +
 					':h shuffle32 2107\n' +
 					' 64 62 6a 6b 3c 34 14 74 \n' +
 					' 34 38 3d 34 18 15 73 71 \n' +
 					' 73 57 53 57 54 13 a5 16 \n' +
-					' 14 '
-			).moveByShorthand('21');
-			expect(gameStateOne.previousAction).toEqual({
-				text: 'move 21 8H-7C→cascade',
-				type: 'move',
-			});
+					' 14 21 '
+			);
 			const gameStateTwo = gameStateOne.undo();
 			expect(gameStateTwo.previousAction).toEqual({
 				text: 'move 14 2S→3D (auto-foundation 14 AS,2S)',
 				type: 'move-foundation',
-				actionPrev: [
+				tweenCards: [
 					{ rank: '2', suit: 'spades', location: { fixture: 'cascade', data: [3, 15] } },
 				],
+				gameFunction: 'undo',
 			});
+			expect(gameStateTwo.print({ includeHistory: true })).toBe(gamePrint);
 
 			// "2 of spades" does not move between states
 			const gameStateOne_2S = gameStateOne.cards.find(
@@ -468,16 +706,14 @@ describe('useCardPositionAnimations', () => {
 			expect(gameStateTwo_2S?.location).toEqual({ fixture: 'foundation', data: [3] });
 			expect(gameStateOne_2S?.location).toBe(gameStateOne_2S?.location);
 
-			const { rerender } = render(
-				<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />
-			);
+			const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 			mockReset();
-			rerender(<MockGamePage gameStateOne={gameStateOne} gameStateTwo={gameStateTwo} />);
+			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 			expect(toSpy.mock.calls).toEqual([
 				// ['#c2S', { zIndex: 15, duration: 0.15, ease: 'none' }, '<'],
-				['#c7C', { zIndex: 7, duration: 0.15, ease: 'none' }, '<'],
 				['#c8H', { zIndex: 6, duration: 0.15, ease: 'none' }, '<'],
+				['#c7C', { zIndex: 7, duration: 0.15, ease: 'none' }, '<'],
 			]);
 			expect(fromToSpy.mock.calls).toEqual([
 				// [
@@ -487,15 +723,15 @@ describe('useCardPositionAnimations', () => {
 				// 	'>0',
 				// ],
 				[
-					'#c7C',
-					{ top: 207.4, left: 14.035 },
-					{ top: 353.8, left: 112.281, duration: 0.3, ease: 'power1.out' },
-					'>0',
-				],
-				[
 					'#c8H',
 					{ top: 183, left: 14.035 },
 					{ top: 329.4, left: 112.281, duration: 0.3, ease: 'power1.out' },
+					'>0',
+				],
+				[
+					'#c7C',
+					{ top: 207.4, left: 14.035 },
+					{ top: 353.8, left: 112.281, duration: 0.3, ease: 'power1.out' },
 					'<0.060',
 				],
 			]);

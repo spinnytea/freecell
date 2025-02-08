@@ -1,4 +1,8 @@
-import { getMoves, seedSolutions48, seedSolutions60 } from '@/app/game/catalog/solutions-catalog';
+import {
+	getMoves,
+	SEED_SOLUTIONS_4x8,
+	SEED_SOLUTIONS_6x10,
+} from '@/app/game/catalog/solutions-catalog';
 import { FreeCell } from '@/app/game/game';
 import { parseMovesFromHistory } from '@/app/game/move/history';
 
@@ -520,6 +524,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move 53 6H→7C',
 					type: 'move',
+					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards', 'move 53 6H→7C']);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
@@ -542,6 +547,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'deal all cards',
 					type: 'deal',
+					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards']);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
@@ -581,6 +587,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move ab KS→cell',
 					type: 'move',
+					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed', 'move ab KS→cell']);
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
@@ -595,6 +602,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'hand-jammed',
 					type: 'init',
+					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed']);
 				// XXX (undo) undo should update position of cursor
@@ -638,6 +646,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move 78 AS→cascade',
 					type: 'move',
+					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed', 'move 78 AS→cascade']);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
@@ -655,6 +664,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'hand-jammed',
 					type: 'init',
+					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed']);
 				// XXX (undo) undo should update position of cursor
@@ -703,6 +713,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move 46 AC→2H',
 					type: 'move',
+					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['deal all cards', 'move 46 AC→2H']);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
@@ -723,6 +734,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'deal all cards',
 					type: 'deal',
+					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['deal all cards']);
 				// XXX (undo) undo should update position of cursor
@@ -752,7 +764,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move 53 6H→7C (auto-foundation 2 AD)',
 					type: 'move-foundation',
-					actionPrev: [
+					tweenCards: [
 						{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } },
 					],
 				});
@@ -782,6 +794,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'deal all cards',
 					type: 'deal',
+					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards']);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
@@ -800,7 +813,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)',
 					type: 'move-foundation',
-					actionPrev: [{ rank: 'king', suit: 'spades', location: { fixture: 'cell', data: [1] } }],
+					tweenCards: [{ rank: 'king', suit: 'spades', location: { fixture: 'cell', data: [1] } }],
 				});
 				expect(game.history).toEqual([
 					'hand-jammed',
@@ -818,6 +831,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'hand-jammed',
 					type: 'init',
+					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed']);
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
@@ -836,7 +850,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)',
 					type: 'move-foundation',
-					actionPrev: [
+					tweenCards: [
 						{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [7, 0] } },
 					],
 				});
@@ -857,6 +871,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'hand-jammed',
 					type: 'init',
+					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed']);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
@@ -875,7 +890,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move 46 AC→2H (flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
 					type: 'move-foundation',
-					actionPrev: [
+					tweenCards: [
 						{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [5, 6] } },
 					],
 				});
@@ -901,6 +916,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.previousAction).toEqual({
 					text: 'deal all cards',
 					type: 'deal',
+					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['deal all cards']);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
@@ -1033,8 +1049,8 @@ describe('game.undo (+ history)', () => {
 
 		describe.each`
 			cellCount | cascadeCount | seedSolutions
-			${4}      | ${8}         | ${seedSolutions48}
-			${6}      | ${10}        | ${seedSolutions60}
+			${4}      | ${8}         | ${SEED_SOLUTIONS_4x8}
+			${6}      | ${10}        | ${SEED_SOLUTIONS_6x10}
 		`(
 			'$cellCount cells, $cascadeCount cascades',
 			({
@@ -1062,7 +1078,8 @@ describe('game.undo (+ history)', () => {
 
 						// undo a in a different "branch" so we can keep marking forward
 						const afterUndo = game.undo();
-						expect(afterUndo.previousAction).toEqual(prevAction);
+						// same action as before the undo, except flagged as such
+						expect(afterUndo.previousAction).toEqual({ ...prevAction, gameFunction: 'undo' });
 						expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
 						// TODO (more-undo) (techdebt) update cursor, so we don't need to normalize the cursor
 						// expect(afterUndo.print({ includeHistory: false })).toBe(prevStateNH);

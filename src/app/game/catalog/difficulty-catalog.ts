@@ -3,7 +3,7 @@
 
 	REVIEW (gameplay) https://www.solitairelaboratory.com/fclists.html
 */
-export const taggedSeeds = new Map<number, string[]>([
+const TAGGED_SEEDS = new Map<number, string[]>([
 	[2, ['one cell']],
 	[5, ['one cell']],
 	[7, ['one cell']],
@@ -120,7 +120,7 @@ export const taggedSeeds = new Map<number, string[]>([
 ]);
 
 export function getSeedsByTag(tag: string): number[] {
-	return Array.from(taggedSeeds.entries())
+	return Array.from(TAGGED_SEEDS.entries())
 		.filter(([, tags]) => tags.includes(tag))
 		.map(([seed]) => seed);
 }

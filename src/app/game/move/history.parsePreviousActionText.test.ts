@@ -1,67 +1,53 @@
 import {
 	ACTION_TEXT_EXAMPLES,
+	FIFTY_TWO_CARD_FLOURISH,
 	pullActionTextExamples,
-} from '@/app/components/cards/constants_test';
-import { CardLocation } from '@/app/game/card/card';
-import {
-	parseCursorFromPreviousActionText,
-	parsePreviousActionType,
-	PreviousAction,
-} from '@/app/game/move/history';
+} from '@/app/game/catalog/actionText-examples';
+import { parsePreviousActionType, PreviousAction } from '@/app/game/move/history';
 
 describe('game/history.parsePreviousActionType', () => {
 	describe('specific cases', () => {
-		let actionTextExamples: string[];
-		beforeAll(() => {
-			actionTextExamples = ACTION_TEXT_EXAMPLES.slice(0);
-		});
+		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES);
 		afterAll(() => {
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(actionTextExamples).toEqual([]);
 		});
 
 		test.each`
-			actionText                                | previousAction                                                               | cursor
-			${'init'}                                 | ${{ text: 'init', type: 'init' }}                                            | ${undefined}
-			${'init with invalid history'}            | ${{ text: 'init with invalid history', type: 'init' }}                       | ${undefined}
-			${'shuffle deck (0)'}                     | ${{ text: 'shuffle deck (0)', type: 'shuffle' }}                             | ${undefined}
-			${'deal all cards'}                       | ${{ text: 'deal all cards', type: 'deal' }}                                  | ${undefined}
-			${'deal most cards'}                      | ${{ text: 'deal most cards', type: 'deal' }}                                 | ${undefined}
-			${'cursor set'}                           | ${{ text: 'cursor set', type: 'cursor' }}                                    | ${undefined}
-			${'select 6D'}                            | ${{ text: 'select 6D', type: 'select' }}                                     | ${undefined}
-			${'select 4D-3S-2D'}                      | ${{ text: 'select 4D-3S-2D', type: 'select' }}                               | ${undefined}
-			${'select 8 7D'}                          | ${{ text: 'select 8 7D', type: 'select' }}                                   | ${undefined}
-			${'select 8 4D-3S-2D'}                    | ${{ text: 'select 8 4D-3S-2D', type: 'select' }}                             | ${undefined}
-			${'deselect KS'}                          | ${{ text: 'deselect KS', type: 'deselect' }}                                 | ${undefined}
-			${'deselect 4D-3S-2D'}                    | ${{ text: 'deselect 4D-3S-2D', type: 'deselect' }}                           | ${undefined}
-			${'deselect 6 2C'}                        | ${{ text: 'deselect 6 2C', type: 'deselect' }}                               | ${undefined}
-			${'deselect 6 4D-3S-2D'}                  | ${{ text: 'deselect 6 4D-3S-2D', type: 'deselect' }}                         | ${undefined}
-			${'touch stop'}                           | ${{ text: 'touch stop', type: 'invalid' }}                                   | ${undefined}
-			${'move 3a KC→cell'}                      | ${{ text: 'move 3a KC→cell', type: 'move' }}                                 | ${{ fixture: 'cell', data: [0] }}
-			${'move 8h AD→foundation'}                | ${{ text: 'move 8h AD→foundation', type: 'move' }}                           | ${{ fixture: 'foundation', data: [0] }}
-			${'move 57 KS→cascade'}                   | ${{ text: 'move 57 KS→cascade', type: 'move' }}                              | ${{ fixture: 'cascade', data: [6, 0] }}
-			${'move 23 KC-QD-JS→cascade'}             | ${{ text: 'move 23 KC-QD-JS→cascade', type: 'move' }}                        | ${{ fixture: 'cascade', data: [2, 0] }}
-			${'move 15 TD→JS'}                        | ${{ text: 'move 15 TD→JS', type: 'move' }}                                   | ${{ fixture: 'cascade', data: [4, 99] }}
-			${'move 78 JH-TC-9H-8S-7H→QS'}            | ${{ text: 'move 78 JH-TC-9H-8S-7H→QS', type: 'move' }}                       | ${{ fixture: 'cascade', data: [7, 99] }}
-			${'move 53 6H→7C (auto-foundation 3 AD)'} | ${{ text: 'move 53 6H→7C (auto-foundation 3 AD)', type: 'move-foundation' }} | ${{ fixture: 'cascade', data: [2, 99] }}
-			${'move 53 6H→7C (flourish 4 AD)'}        | ${{ text: 'move 53 6H→7C (flourish 4 AD)', type: 'move-foundation' }}        | ${{ fixture: 'cascade', data: [2, 99] }}
-			${'auto-foundation 56 KD,KS'}             | ${{ text: 'auto-foundation 56 KD,KS', type: 'auto-foundation' }}             | ${undefined}
-			${'flourish 56 KD,KS'}                    | ${{ text: 'flourish 56 KD,KS', type: 'auto-foundation' }}                    | ${undefined}
-			${'invalid move 86 7D→9C'}                | ${{ text: 'invalid move 86 7D→9C', type: 'invalid' }}                        | ${undefined}
+			actionText                                    | previousAction
+			${'init'}                                     | ${{ text: 'init', type: 'init' }}
+			${'init with invalid history'}                | ${{ text: 'init with invalid history', type: 'init' }}
+			${'shuffle deck (0)'}                         | ${{ text: 'shuffle deck (0)', type: 'shuffle' }}
+			${'deal all cards'}                           | ${{ text: 'deal all cards', type: 'deal' }}
+			${'deal most cards'}                          | ${{ text: 'deal most cards', type: 'deal' }}
+			${'cursor set'}                               | ${{ text: 'cursor set', type: 'cursor' }}
+			${'select 6D'}                                | ${{ text: 'select 6D', type: 'select' }}
+			${'select 4D-3S-2D'}                          | ${{ text: 'select 4D-3S-2D', type: 'select' }}
+			${'select 8 7D'}                              | ${{ text: 'select 8 7D', type: 'select' }}
+			${'select 8 4D-3S-2D'}                        | ${{ text: 'select 8 4D-3S-2D', type: 'select' }}
+			${'deselect KS'}                              | ${{ text: 'deselect KS', type: 'deselect' }}
+			${'deselect 4D-3S-2D'}                        | ${{ text: 'deselect 4D-3S-2D', type: 'deselect' }}
+			${'deselect 6 2C'}                            | ${{ text: 'deselect 6 2C', type: 'deselect' }}
+			${'deselect 6 4D-3S-2D'}                      | ${{ text: 'deselect 6 4D-3S-2D', type: 'deselect' }}
+			${'touch stop'}                               | ${{ text: 'touch stop', type: 'invalid' }}
+			${'move 3a KC→cell'}                          | ${{ text: 'move 3a KC→cell', type: 'move' }}
+			${'move 8h AD→foundation'}                    | ${{ text: 'move 8h AD→foundation', type: 'move' }}
+			${'move 57 KS→cascade'}                       | ${{ text: 'move 57 KS→cascade', type: 'move' }}
+			${'move 23 KC-QD-JS→cascade'}                 | ${{ text: 'move 23 KC-QD-JS→cascade', type: 'move' }}
+			${'move 15 TD→JS'}                            | ${{ text: 'move 15 TD→JS', type: 'move' }}
+			${'move 78 JH-TC-9H-8S-7H→QS'}                | ${{ text: 'move 78 JH-TC-9H-8S-7H→QS', type: 'move' }}
+			${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${{ text: 'move 53 6H→7C (auto-foundation 2 AD)', type: 'move-foundation' }}
+			${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${{ text: 'move 14 2S→3D (auto-foundation 14 AS,2S)', type: 'move-foundation' }}
+			${'move 21 8H-7C→cascade'}                    | ${{ text: 'move 21 8H-7C→cascade', type: 'move' }}
+			${FIFTY_TWO_CARD_FLOURISH}                    | ${{ text: FIFTY_TWO_CARD_FLOURISH, type: 'move-foundation' }}
+			${'auto-foundation 56 KD,KS'}                 | ${{ text: 'auto-foundation 56 KD,KS', type: 'auto-foundation' }}
+			${'flourish 56 KD,KS'}                        | ${{ text: 'flourish 56 KD,KS', type: 'auto-foundation' }}
+			${'invalid move 86 7D→9C'}                    | ${{ text: 'invalid move 86 7D→9C', type: 'invalid' }}
 		`(
 			'$actionText',
-			({
-				actionText,
-				previousAction,
-				cursor,
-			}: {
-				actionText: string;
-				previousAction: PreviousAction;
-				cursor: CardLocation | undefined;
-			}) => {
+			({ actionText, previousAction }: { actionText: string; previousAction: PreviousAction }) => {
 				pullActionTextExamples(actionTextExamples, actionText);
 				expect(parsePreviousActionType(actionText)).toEqual(previousAction);
-				expect(parseCursorFromPreviousActionText(actionText)).toEqual(cursor);
 			}
 		);
 	});

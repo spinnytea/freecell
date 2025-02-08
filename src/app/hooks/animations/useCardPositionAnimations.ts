@@ -9,11 +9,7 @@ import { useGame } from '@/app/hooks/contexts/Game/useGame';
 // IDEA (settings) setting for "reduced motion" - disable most animations
 // IDEA (animation) faster "peek" animation - when the cards are shifting to peek the selected card
 export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<string>) {
-	const {
-		cards,
-		selection,
-		previousAction: { text: actionText, actionPrev },
-	} = useGame();
+	const { cards, selection, previousAction } = useGame();
 	const fixtureSizes = useFixtureSizes();
 
 	/**
@@ -57,8 +53,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					previousTLs: previousTLs.current,
 					cards,
 					selection,
-					actionText,
-					actionPrev,
+					previousAction,
 				});
 
 			if (!updateCardPositions.length) return;
@@ -100,7 +95,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 			});
 			previousTLs.current = nextTLs;
 		},
-		{ dependencies: [cards, selection, actionText, actionPrev, fixtureSizes] }
+		{ dependencies: [cards, selection, previousAction, fixtureSizes] }
 	);
 
 	return { previousTLs };

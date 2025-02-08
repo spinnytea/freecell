@@ -1687,7 +1687,7 @@ describe('game.touch', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move 53 6H→7C (auto-foundation 2 AD)',
 					type: 'move-foundation',
-					actionPrev: [
+					tweenCards: [
 						{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } },
 					],
 				});
@@ -1723,7 +1723,7 @@ describe('game.touch', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)',
 					type: 'move-foundation',
-					actionPrev: [{ rank: 'king', suit: 'spades', location: { fixture: 'cell', data: [1] } }],
+					tweenCards: [{ rank: 'king', suit: 'spades', location: { fixture: 'cell', data: [1] } }],
 				});
 				expect(game.history).toEqual([
 					'hand-jammed',
@@ -1760,7 +1760,7 @@ describe('game.touch', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)',
 					type: 'move-foundation',
-					actionPrev: [
+					tweenCards: [
 						{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [7, 0] } },
 					],
 				});
@@ -1803,7 +1803,7 @@ describe('game.touch', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move 46 AC→2H (flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
 					type: 'move-foundation',
-					actionPrev: [
+					tweenCards: [
 						{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [5, 6] } },
 					],
 				});

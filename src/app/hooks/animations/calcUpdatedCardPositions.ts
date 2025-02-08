@@ -6,7 +6,7 @@ import {
 	shorthandCard,
 	Suit,
 } from '@/app/game/card/card';
-import { parsePreviousActionMoveShorthands } from '@/app/game/move/history';
+import { parsePreviousActionMoveShorthands, PreviousAction } from '@/app/game/move/history';
 import { calcTopLeftZ, FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 
 export interface UpdateCardPositionsType {
@@ -36,15 +36,13 @@ export function calcUpdatedCardPositions({
 	previousTLs,
 	cards,
 	selection,
-	actionText,
-	actionPrev,
+	previousAction,
 }: {
 	fixtureSizes: FixtureSizes;
 	previousTLs: Map<string, number[]>;
 	cards: Card[];
 	selection: CardSequence | null;
-	actionText?: string;
-	actionPrev?: Card[];
+	previousAction?: PreviousAction;
 }): {
 	updateCardPositions: UpdateCardPositionsType[];
 	updateCardPositionsPrev?: UpdateCardPositionsType[];
@@ -77,20 +75,26 @@ export function calcUpdatedCardPositions({
 		}
 	});
 
-	if (!updateCardPositions.length || !actionText) {
+	if (!updateCardPositions.length || !previousAction) {
 		return { updateCardPositions, unmovedCards };
 	}
 
 	// IFF all of the cards moving are the same as the ones in action text (all of a in b, all of b in a);
 	//  - then move a to old spot, then move ALL to new spot
-	if (actionPrev) {
+	// IFF we aren't doing weird game functions like undo
+	//  - this probably isn't effected by most game functions (like restart and newGame)
+	//  - maybe it really is only undo, maybe we in the future we can skip around in time
+	//  - but basically, only want to do the in-between animation if we are in normal gameplay
+	//    (we can always come back later and add specific exceptions)
+	if (previousAction.tweenCards && !previousAction.gameFunction) {
 		// len(update) = len(union(move, auto)) -> winning may auto what we just moved, so move+auto > update
 		//  - could include some or all of move (e.g. if you move a sequence and only part gets auto)
 		//  - if we undo we could have more or less cards
 		//    we need to make sure all the cards in question are in the list
 		//    AND we need to make sure our two lists cover everything in updateCardPositions
-		const { moveShorthands, autoFoundationShorthands } =
-			parsePreviousActionMoveShorthands(actionText);
+		const { moveShorthands, autoFoundationShorthands } = parsePreviousActionMoveShorthands(
+			previousAction.text
+		);
 		if (
 			moveShorthands &&
 			updateCardPositions.length <= moveShorthands.length + autoFoundationShorthands.length
@@ -98,24 +102,16 @@ export function calcUpdatedCardPositions({
 			const { updateCardPositions: prevUpdateCardPositions } = calcUpdatedCardPositions({
 				fixtureSizes,
 				previousTLs,
-				cards: actionPrev,
+				cards: previousAction.tweenCards,
 				selection: null,
 			});
 
 			let anyMissing = false;
-			const a = moveShorthands
-				.filter((sh) => {
-					// XXX (animation) (optimize) this filter is primarily for a bug during undo
-					//  - is there a better way to say "ignore actionPrev" because it doesn't apply
-					// if the card is already in it's final position, then don't run the intermediate animation
-					const unmovedIdx = unmovedCards.findIndex(({ shorthand }) => shorthand === sh);
-					return unmovedIdx === -1;
-				})
-				.map((sh) => {
-					const position = prevUpdateCardPositions.find(({ shorthand }) => shorthand === sh);
-					if (!position) anyMissing = true;
-					return position;
-				});
+			const a = moveShorthands.map((sh) => {
+				const position = prevUpdateCardPositions.find(({ shorthand }) => shorthand === sh);
+				if (!position) anyMissing = true;
+				return position;
+			});
 
 			// filter items from updateCardPositions if they are in A and have exactly the same position
 			let secondMustComeAfter = false;

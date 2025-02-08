@@ -19,7 +19,11 @@ export default function SettingsDialog() {
 	}
 
 	function handleNewGame() {
-		setGame(() => newGame().shuffle32());
+		setGame(() => {
+			const g = newGame().shuffle32();
+			g.previousAction.gameFunction = 'newGame';
+			return g;
+		});
 	}
 
 	return (

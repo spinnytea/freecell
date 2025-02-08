@@ -44,6 +44,11 @@ const MAX_CELL_COUNT = 6;
 
 const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 
+interface OptionsAutoFoundation {
+	/** @deprecated XXX (techdebt) this is just to get unit tests passing, we should have examples that do not need this */
+	autoFoundation?: boolean;
+}
+
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
 export class FreeCell {
 	cards: Card[];
@@ -440,12 +445,13 @@ export class FreeCell {
 		e.g. select cursor, deselect cursor, move selection
 
 		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
-		- TODO (controls) click-to-move does not allow selection if !canMove
-		  - disable select-to-peek for mouse, but still allow it for keyboard
-		- TODO (controls) (2-priority) make it easier to re-select when move is invalid
+		- TODO (controls) (3-priority) click-to-move does not allow selection if !canMove
+		- TODO (controls) (3-priority) disable select-to-peek for mouse, but still allow it for keyboard
+		  - either disable them outright or lock them behind a settings flag
+		- TODO (controls) (3-priority) make it easier to re-select when move is invalid
 		  - OR disable select-to-peek for mouse
 	*/
-	touch({ autoFoundation = true }: { autoFoundation?: boolean } = {}): FreeCell {
+	touch({ autoFoundation = true }: OptionsAutoFoundation = {}): FreeCell {
 		// clear the selction, if re-touching the same spot
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
 			return this.clearSelection();
@@ -497,7 +503,7 @@ export class FreeCell {
 						action: {
 							text: `${actionText} (${foundationGame.previousAction.text})`,
 							type: 'move-foundation',
-							actionPrev: getCardsThatMoved(movedGame),
+							tweenCards: getCardsThatMoved(movedGame),
 						},
 						cards: foundationGame.cards,
 						selection: null,
@@ -526,6 +532,7 @@ export class FreeCell {
 
 		// TODO (techdebt) test init partial
 		const action = parsePreviousActionType(history.pop() ?? 'init partial');
+		action.gameFunction = 'undo';
 
 		// we _need_ an action in __clone
 		// __clone will add it back to the history
@@ -535,11 +542,11 @@ export class FreeCell {
 		if (
 			!skipActionPrev &&
 			didUndo.previousAction.type === 'move-foundation' &&
-			!didUndo.previousAction.actionPrev
+			!didUndo.previousAction.tweenCards
 		) {
 			const secondUndo = didUndo.undo({ skipActionPrev: true });
 			const { from, to } = parseActionTextMove(didUndo.previousAction.text);
-			didUndo.previousAction.actionPrev = getCardsThatMoved(
+			didUndo.previousAction.tweenCards = getCardsThatMoved(
 				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
 			);
 		}
@@ -551,10 +558,12 @@ export class FreeCell {
 		Used replaying a game, starting with a seed or otherwise known deal.
 
 		it's really just "touch the first one" then "touch the second one"
+
+		@param shorthandMove
 	*/
 	moveByShorthand(
 		shorthandMove: string,
-		{ autoFoundation = true }: { autoFoundation?: boolean } = {}
+		{ autoFoundation = true }: OptionsAutoFoundation = {}
 	): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
 		return this.setCursor(from).touch().setCursor(to).touch({ autoFoundation });
@@ -680,7 +689,7 @@ export class FreeCell {
 		@example
 			game.setCursor(loc).touch().autoMove();
 	*/
-	autoMove({ autoFoundation = true }: { autoFoundation?: boolean } = {}): FreeCell | this {
+	autoMove({ autoFoundation = true }: OptionsAutoFoundation = {}): FreeCell | this {
 		if (!this.selection) return this;
 		if (!this.availableMoves?.length) return this;
 		if (this.previousAction.type !== 'select') return this; // REVIEW (techdebt) is there a reason for this?
@@ -695,17 +704,18 @@ export class FreeCell {
 	}
 
 	restart(): FreeCell {
+		let prev: FreeCell;
 		const movesSeed = parseMovesFromHistory(this.history);
 		if (movesSeed) {
 			const cellCount = this.cells.length;
 			const cascadeCount = this.tableau.length;
-			return new FreeCell({ cellCount, cascadeCount }).shuffle32(movesSeed.seed).dealAll();
+			prev = new FreeCell({ cellCount, cascadeCount }).shuffle32(movesSeed.seed).dealAll();
 		} else {
-			let prev: FreeCell = this.undo();
-			let prevv = prev;
+			let prevv = (prev = this.undo());
 			while ((prevv = prev.undo()) !== prev) prev = prevv;
-			return prev;
 		}
+		prev.previousAction.gameFunction = 'restart';
+		return prev;
 	}
 
 	/**
@@ -1136,13 +1146,18 @@ export class FreeCell {
 			if (!matchSeed) throw new Error('unsupported shuffle');
 			const seed = parseInt(matchSeed[1], 10);
 
-			let replayGameForHistroy = new FreeCell({ cellCount, cascadeCount })
-				.shuffle32(seed)
-				.dealAll();
-			const moves = lines.reverse().join('').trim().split(/\s+/);
-			moves.forEach((move) => {
-				replayGameForHistroy = replayGameForHistroy.moveByShorthand(move);
-			});
+			let replayGameForHistroy = new FreeCell({ cellCount, cascadeCount }).shuffle32(seed);
+			if (deckLength === 0) {
+				replayGameForHistroy = replayGameForHistroy.dealAll();
+			}
+
+			// split will return [''] instead of []
+			const moves = lines.length ? lines.reverse().join('').trim().split(/\s+/) : [];
+			if (moves.length) {
+				moves.forEach((move) => {
+					replayGameForHistroy = replayGameForHistroy.moveByShorthand(move);
+				});
+			}
 
 			// verify all args to `new FreeCell`
 			const movesSeed = parseMovesFromHistory(replayGameForHistroy.history);
@@ -1283,10 +1298,10 @@ export class FreeCell {
 		}
 
 		// TODO (techdebt) copy-pasta, same as `undo`
-		if (game.previousAction.type === 'move-foundation' && !game.previousAction.actionPrev) {
+		if (game.previousAction.type === 'move-foundation' && !game.previousAction.tweenCards) {
 			const secondUndo = game.undo({ skipActionPrev: true });
 			const { from, to } = parseActionTextMove(game.previousAction.text);
-			game.previousAction.actionPrev = getCardsThatMoved(
+			game.previousAction.tweenCards = getCardsThatMoved(
 				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
 			);
 		}
