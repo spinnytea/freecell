@@ -731,7 +731,7 @@ describe('game.autoMove', () => {
 			expect(game.previousAction).toEqual({
 				text: 'move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)',
 				type: 'move-foundation',
-				actionPrev: [
+				tweenCards: [
 					{ rank: 'queen', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 1] } },
 					{ rank: 'jack', suit: 'spades', location: { fixture: 'cascade', data: [4, 2] } },
 				],

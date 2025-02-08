@@ -22,7 +22,7 @@ export type FixtureLayout = 'landscape' | 'portrait' | 'auto';
 */
 const _LR_HOME_MARGIN = 1;
 const _LR_HOME_GAP = 2;
-const TB_HOME_TOP = 0.2;
+const TB_HOME_TOP = 0.2; // TODO (hud) (4-priority) double when portrait
 const _LR_HOME_CARD_SPACING = 1 / 6;
 const TB_TABLEAU_TOP = 0.3;
 const _LR_TABLEAU_CARD_SPACING = 2 / 7;
