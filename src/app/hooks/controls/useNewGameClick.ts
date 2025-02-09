@@ -2,6 +2,15 @@ import { useContext } from 'react';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
+/**
+	Handles starting a new game
+	 - start with a game
+	 - shuffle?
+	 - deal
+	 - win -> init
+
+	FIXME rename (useEarlyGameClick, useSetupGameClick, …)
+*/
 export function useNewGameClick() {
 	const [, setSettings] = useContext(SettingsContext);
 	const [game, setGame, newGame] = useContext(GameContext);

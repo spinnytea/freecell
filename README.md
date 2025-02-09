@@ -59,8 +59,9 @@ TODO (motivation) main development tasks:
   - Some games require no free cells :D - so make a 0 cells version restricted to these games
   - Same with a list for solvable 1-cell games
 - TODO (settings) once move history is in game.print, save completed games to local storage and/or print to console (this way we can "recover" the last one after we finish, if we accidentally start a new one before we can snapshot it / archive it) - we only need the one for this
-- TODO (gameplay) (newgame) (settings) (4-priority) store current game so it survives page refresh
-  - i keep hitting the "back" button on accident (swip from size of screen)
+- FIXME (gameplay) (newgame) (settings) (4-priority) store current game so it survives page refresh
+  - i keep hitting the "back" button on accident (swipe from size of screen)
+  - if we leave for a long time and then come back, the previous game is lost
 - IDEA (settings) option to dis/enable auto-foundation until all cascades are in order (all are a single sequence, or all are ascending)
 - IDEA (animation) auto-foundation gets faster the longer it runs
 - TODO (animation) (gameplay) can move cards during auto-foundation, stops when it gets to a card the user has moved (currently stops if the user has selected a card)
