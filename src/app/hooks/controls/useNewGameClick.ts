@@ -18,10 +18,12 @@ export function useNewGameClick() {
 	/** REVIEW (controls) mouse */
 	function handleNewGameClick() {
 		if (game.win) {
-			// print game w/ history, just in case we want to archive it for testing or something
-			console.info(game.print({ includeHistory: true }));
+			// REVIEW (techdebt) (settings) this print statement should be… in localStorage? have we ever used it?
+			//  - print game w/ history, just in case we want to archive it for testing or something
+			//  - console.info(game.print({ includeHistory: true }));
+
 			// click to reset
-			setGame(() => newGame().shuffle32());
+			setGame(() => newGame());
 			setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 		} else if (game.deck.length) {
 			// click to deal
