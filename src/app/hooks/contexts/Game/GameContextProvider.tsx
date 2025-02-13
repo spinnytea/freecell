@@ -3,11 +3,12 @@ import { FreeCell } from '@/app/game/game';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 
-const LOCAL_STORAGE_KEY = 'freecell.game';
+const LOCAL_STORAGE_KEY_CURR = 'freecell.game';
+const LOCAL_STORAGE_KEY_PREV = 'freecell.game.archive';
 
 function loadFromLocalStorage(): FreeCell | null {
 	try {
-		const print = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+		const print = window.localStorage.getItem(LOCAL_STORAGE_KEY_CURR);
 		if (!print) return null;
 		return FreeCell.parse(print);
 	} catch (e) {
@@ -18,7 +19,17 @@ function loadFromLocalStorage(): FreeCell | null {
 function saveToLocalStorage(game: FreeCell): void {
 	try {
 		const print = game.print({ includeHistory: true });
-		window.localStorage.setItem(LOCAL_STORAGE_KEY, print);
+		window.localStorage.setItem(LOCAL_STORAGE_KEY_CURR, print);
+		if (game.win) {
+			// if we won the game, then save this completed game to another key
+			// this way we can recover the last one after we finish,
+			// i.e. if we accidentally start a new one before we can snapshot it / archive it
+			// we only need the one for this usecase; it's not a showcase of past games
+			// REVIEW (settings) (techdebt) we can get this from a browser/laptop, how do we get it from, say, mobile?
+			//  - may need to make another endpoint or something
+			//  - /freecell/manualtesting -> /freecell/data
+			window.localStorage.setItem(LOCAL_STORAGE_KEY_PREV, print);
+		}
 	} catch (e) {
 		void e;
 	}

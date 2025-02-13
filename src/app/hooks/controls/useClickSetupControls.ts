@@ -16,10 +16,6 @@ export function useClickSetupControls() {
 	/** REVIEW (controls) mouse */
 	function handleClickSetup() {
 		if (game.win) {
-			// REVIEW (techdebt) (settings) this print statement should be… in localStorage? have we ever used it?
-			//  - print game w/ history, just in case we want to archive it for testing or something
-			//  - console.info(game.print({ includeHistory: true }));
-
 			// click to reset
 			setGame(() => newGame());
 			setSettings((s) => ({ ...s, showKeyboardCursor: false }));

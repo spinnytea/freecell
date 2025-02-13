@@ -922,6 +922,29 @@ describe('game.undo (+ history)', () => {
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
 			});
 		});
+
+		describe('invalid', () => {
+			test('touch stop', () => {
+				const game = FreeCell.parse(
+					'' +
+						'             KD KC KS KH \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' touch stop\n' +
+						':h shuffle32 16765\n' +
+						' 13 63 68 62 72 6a 6b 62 \n' +
+						' 1c 1d c1 14 85 a8 7a 17 \n' +
+						' 71 86 8c 81 84 7h 51 b5 \n' +
+						' 57 c8 58 58 58 28 2b 14 \n' +
+						' 2c c5 25 25 d2 15 21 2c \n' +
+						' a2 c2 8h 18 31 3a 3c 37 \n' +
+						' 27 3d 37 b7 42 4b 45 '
+				);
+				expect(game.history).toEqual(['init with invalid history', 'touch stop']);
+				expect(() => game.undo()).toThrow('cannot undo move type touch stop');
+			});
+		});
 	});
 
 	describe('edges', () => {
