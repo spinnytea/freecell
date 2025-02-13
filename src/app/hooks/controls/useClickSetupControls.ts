@@ -8,15 +8,13 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 	 - shuffle?
 	 - deal
 	 - win -> init
-
-	FIXME rename (useEarlyGameClick, useSetupGameClick, …)
 */
-export function useNewGameClick() {
+export function useClickSetupControls() {
 	const [, setSettings] = useContext(SettingsContext);
 	const [game, setGame, newGame] = useContext(GameContext);
 
 	/** REVIEW (controls) mouse */
-	function handleNewGameClick() {
+	function handleClickSetup() {
 		if (game.win) {
 			// REVIEW (techdebt) (settings) this print statement should be… in localStorage? have we ever used it?
 			//  - print game w/ history, just in case we want to archive it for testing or something
@@ -33,5 +31,5 @@ export function useNewGameClick() {
 		}
 	}
 
-	return handleNewGameClick;
+	return handleClickSetup;
 }

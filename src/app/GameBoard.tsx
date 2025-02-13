@@ -13,9 +13,9 @@ import styles_gameboard from '@/app/gameboard.module.css';
 import { FixtureLayout } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
 import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
+import { useClickSetupControls } from '@/app/hooks/controls/useClickSetupControls';
 import { useKeybaordArrowControls } from '@/app/hooks/controls/useKeybaordArrowControls';
 import { useKeybaordMiscControls } from '@/app/hooks/controls/useKeybaordMiscControls';
-import { useNewGameClick } from '@/app/hooks/controls/useNewGameClick';
 
 export interface GameBoardDisplayOptions {
 	showSettingsButton?: boolean;
@@ -51,7 +51,7 @@ export default function GameBoard({
 }) {
 	useKeybaordMiscControls();
 	useKeybaordArrowControls();
-	const handleNewGameClick = useNewGameClick();
+	const handleClickSetup = useClickSetupControls();
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	const gameBoardIdRef: MutableRefObject<string> = useRef('');
 	if (!gameBoardIdRef.current) gameBoardIdRef.current = nextUid.next().value;
@@ -61,7 +61,7 @@ export default function GameBoard({
 			ref={gameBoardRef}
 			tabIndex={0}
 			className={classNames(className, styles_gameboard.common)}
-			onClick={handleNewGameClick}
+			onClick={handleClickSetup}
 		>
 			<FixtureSizesContextProvider
 				gameBoardRef={gameBoardRef}
