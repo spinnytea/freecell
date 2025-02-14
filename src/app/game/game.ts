@@ -479,13 +479,6 @@ export class FreeCell {
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length) {
-			// if we've already won the game, and there isn't anything else we can do
-			// then just return the game as-is
-			// (under normal game rules, we can't do anything else; but maybe jokers will let us mess around)
-			// (this is breaking freecell.game.archive, but i can't reproduce it in a test)
-			// FIXME remove this
-			if (this.win) return this;
-
 			// XXX (techdebt) unit tests
 			//  - if we have a selection and there are no valid moves (select a 3, no empty cells or cascades, no 4s, no foundation)
 			//  - if we didn't have a selection… but we couldn't select the thing we touched (i.e. foundation (relax this?))
@@ -969,12 +962,15 @@ export class FreeCell {
 		}
 
 		if (includeHistory) {
+			// BUG (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
+			//  - e.g. if (movesSeed && isStandardRuleset)
+			// REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
+			//  - e.g. if (movesSeed && isStandardGameplay)
 			const movesSeed = parseMovesFromHistory(this.history);
 			if (movesSeed) {
-				// BUG (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
-				// REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
-				// FIXME (history) (newgame) if we are including the history, then print the previous PREVIOUS_ACTION_TYPE_IN_HISTORY (i.e. NOT 'touch stop')
-				str += '\n ' + this.previousAction.text;
+				// print the last valid action, not previousAction.text
+				// the previous action could be a cursor movement, or a canceled touch action (touch stop)
+				str += '\n ' + this.history.slice(-1)[0];
 				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 				while (movesSeed.moves.length) {
 					str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
@@ -1189,6 +1185,7 @@ export class FreeCell {
 				// REVIEW (techdebt) compare.trim() ? it keeps messing me up, the last history item without a space...
 				replayGameForHistroy.print({ includeHistory: true }) === print;
 
+			// console.log('valid', valid);
 			// console.log('cellCount', replayGameForHistroy.cells.length === cellCount);
 			// console.log('cascadeCount', replayGameForHistroy.tableau.length === cascadeCount);
 			// console.log('cards', _isEqual(replayGameForHistroy.cards, cards));
@@ -1197,7 +1194,7 @@ export class FreeCell {
 			// console.log('actionText', replayGameForHistroy.previousAction.text === actionText);
 			// console.log('movesSeed', !!movesSeed);
 			// console.log('movesSeed.seed', movesSeed?.seed === seed);
-			// console.log('movesSeed.moves', _isEqual(movesSeed?.moves, moves));
+			// console.log('movesSeed.moves', _isEqual(movesSeed?.moves, moves), moves);
 			// console.log('print', replayGameForHistroy.print({ includeHistory: true }) === print);
 			// console.log('print includeHistory\n', replayGameForHistroy.print({ includeHistory: true }));
 
