@@ -962,11 +962,15 @@ export class FreeCell {
 		}
 
 		if (includeHistory) {
+			// BUG (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
+			//  - e.g. if (movesSeed && isStandardRuleset)
+			// REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
+			//  - e.g. if (movesSeed && isStandardGameplay)
 			const movesSeed = parseMovesFromHistory(this.history);
 			if (movesSeed) {
-				// BUG (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
-				// REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
-				str += '\n ' + this.previousAction.text;
+				// print the last valid action, not previousAction.text
+				// the previous action could be a cursor movement, or a canceled touch action (touch stop)
+				str += '\n ' + this.history.slice(-1)[0];
 				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 				while (movesSeed.moves.length) {
 					str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
@@ -1181,6 +1185,7 @@ export class FreeCell {
 				// REVIEW (techdebt) compare.trim() ? it keeps messing me up, the last history item without a space...
 				replayGameForHistroy.print({ includeHistory: true }) === print;
 
+			// console.log('valid', valid);
 			// console.log('cellCount', replayGameForHistroy.cells.length === cellCount);
 			// console.log('cascadeCount', replayGameForHistroy.tableau.length === cascadeCount);
 			// console.log('cards', _isEqual(replayGameForHistroy.cards, cards));
@@ -1189,7 +1194,7 @@ export class FreeCell {
 			// console.log('actionText', replayGameForHistroy.previousAction.text === actionText);
 			// console.log('movesSeed', !!movesSeed);
 			// console.log('movesSeed.seed', movesSeed?.seed === seed);
-			// console.log('movesSeed.moves', _isEqual(movesSeed?.moves, moves));
+			// console.log('movesSeed.moves', _isEqual(movesSeed?.moves, moves), moves);
 			// console.log('print', replayGameForHistroy.print({ includeHistory: true }) === print);
 			// console.log('print includeHistory\n', replayGameForHistroy.print({ includeHistory: true }));
 

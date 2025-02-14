@@ -2,17 +2,22 @@ import { useContext } from 'react';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
-export function useNewGameClick() {
+/**
+	Handles starting a new game
+	 - start with a game
+	 - shuffle?
+	 - deal
+	 - win -> init
+*/
+export function useClickSetupControls() {
 	const [, setSettings] = useContext(SettingsContext);
 	const [game, setGame, newGame] = useContext(GameContext);
 
 	/** REVIEW (controls) mouse */
-	function handleNewGameClick() {
+	function handleClickSetup() {
 		if (game.win) {
-			// print game w/ history, just in case we want to archive it for testing or something
-			console.info(game.print({ includeHistory: true }));
 			// click to reset
-			setGame(() => newGame().shuffle32());
+			setGame(() => newGame());
 			setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 		} else if (game.deck.length) {
 			// click to deal
@@ -22,5 +27,5 @@ export function useNewGameClick() {
 		}
 	}
 
-	return handleNewGameClick;
+	return handleClickSetup;
 }

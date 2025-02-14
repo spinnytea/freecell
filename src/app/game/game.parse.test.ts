@@ -1,3 +1,4 @@
+import { omit as _omit } from 'lodash';
 import { FreeCell } from '@/app/game/game';
 
 describe('game.parse', () => {
@@ -38,6 +39,89 @@ describe('game.parse', () => {
 				);
 				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards']);
 				expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
+			});
+		});
+
+		describe('end of game', () => {
+			test('previousAction.text', () => {
+				let game = FreeCell.parse(
+					'' +
+						'             KC KS KH KD \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)\n' +
+						':h shuffle32 1\n' +
+						' 3a 32 7b 3c 37 37 b7 8b \n' +
+						' 87 48 82 a8 4a 34 57 54 \n' +
+						' 85 8d 87 c7 d7 b8 38 23 \n' +
+						' 28 32 6b 6c 78 a3 73 7a \n' +
+						' 7c 74 c7 67 63 56 8h b8 \n' +
+						' 5b 51 b5 24 25 6h 6h 24 \n' +
+						' 26 a4 37 2a 8h 4h 1h 17 \n' +
+						' 1h 1b 8h 4h 4b 4c 4d a2 \n' +
+						' 42 46 3h 7h 13 '
+				);
+				expect(game.history.length).toBe(71);
+				expect(game.print()).toBe(
+					'' +
+						'             KC KS KH KD \n' +
+						'      >                  \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)'
+				);
+
+				// at this point, we can recover the entire game using the history
+				expect(
+					FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
+				).toBe(game.print({ includeHistory: true }));
+				expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
+				// but the whole game isn't exactly the same
+				// if write/read a game, we can recover the state, but not the history
+				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				expect(
+					_omit(FreeCell.parse(game.print()), ['history', 'previousAction.tweenCards'])
+				).toEqual(_omit(game, ['history', 'previousAction.tweenCards']));
+
+				game = game.touch();
+				expect(game.print()).toBe(
+					'' +
+						'             KC KS KH KD \n' +
+						'      >                  \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' touch stop'
+				);
+				expect(game.print({ includeHistory: true })).toBe(
+					'' +
+						'             KC KS KH KD \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)\n' +
+						':h shuffle32 1\n' +
+						' 3a 32 7b 3c 37 37 b7 8b \n' +
+						' 87 48 82 a8 4a 34 57 54 \n' +
+						' 85 8d 87 c7 d7 b8 38 23 \n' +
+						' 28 32 6b 6c 78 a3 73 7a \n' +
+						' 7c 74 c7 67 63 56 8h b8 \n' +
+						' 5b 51 b5 24 25 6h 6h 24 \n' +
+						' 26 a4 37 2a 8h 4h 1h 17 \n' +
+						' 1h 1b 8h 4h 4b 4c 4d a2 \n' +
+						' 42 46 3h 7h 13 '
+				);
+
+				// if write/read a game, we can recover the state, but not the history
+				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+				expect(_omit(FreeCell.parse(game.print()), 'history')).toEqual(_omit(game, 'history'));
+				// at this point, we've discard the previousAction (it's not the same as the last item in the history)
+				expect(
+					FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
+				).toBe(game.print({ includeHistory: true }));
+				expect(
+					_omit(FreeCell.parse(game.print({ includeHistory: true })), 'previousAction')
+				).toEqual(_omit(game, 'previousAction'));
 			});
 		});
 

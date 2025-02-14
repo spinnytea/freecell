@@ -28,7 +28,7 @@ export function useKeybaordMiscControls() {
 							return g.dealAll();
 						}
 						if (g.cursor.fixture === 'foundation' && g.win) {
-							return newGame().shuffle32();
+							return newGame();
 						}
 						return g.touch();
 					});

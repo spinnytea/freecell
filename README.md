@@ -11,7 +11,7 @@ TODO (motivation) main development tasks:
 1. ~~legible `(cards)` for mobile~~
 1. ~~move `(history)` & undo~~
 1. ~~`(animation)` https://gsap.com/resources/React/ - just basic animations, like, "stagger" the card movements~~
-1. `(newgame)` local storage, new button
+1. ~~`(newgame)` local storage, new button~~
 1. `(drag-and-drop)` (click-to-move has been working, but sometimes you need to "force" the move you want)
 
 ```
@@ -58,9 +58,6 @@ TODO (motivation) main development tasks:
   - [FreeCell lists of difficult (and extra easy) deals](https://www.solitairelaboratory.com/fclists.html)
   - Some games require no free cells :D - so make a 0 cells version restricted to these games
   - Same with a list for solvable 1-cell games
-- TODO (settings) once move history is in game.print, save completed games to local storage and/or print to console (this way we can "recover" the last one after we finish, if we accidentally start a new one before we can snapshot it / archive it) - we only need the one for this
-- TODO (gameplay) (newgame) (settings) (4-priority) store current game so it survives page refresh
-  - i keep hitting the "back" button on accident (swip from size of screen)
 - IDEA (settings) option to dis/enable auto-foundation until all cascades are in order (all are a single sequence, or all are ascending)
 - IDEA (animation) auto-foundation gets faster the longer it runs
 - TODO (animation) (gameplay) can move cards during auto-foundation, stops when it gets to a card the user has moved (currently stops if the user has selected a card)
