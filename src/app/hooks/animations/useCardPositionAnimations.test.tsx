@@ -740,5 +740,76 @@ describe('useCardPositionAnimations', () => {
 			expect(setCardIds).not.toContain('#c7C'); // 51
 			expect(setCardIds).not.toContain('#c8H'); // 52
 		});
+
+		/**
+			all cards resetting to 0,0
+			Solution: initial positions were being set in useEffect instead of useGSAP
+			          this isn't something a unit test can detect or fix
+						 it _probably_ works with `npm start` because react runs effects twice in development mode (once in prod)
+
+			This does NOT happen on the dev server (npm start), neither mobile nor desktop.
+			This DOES happen in the final build, both mobile and desktop, both spinnytea.bitbucket.io/freecell and `npm run build && npm run serve`.
+
+			This only happens on the first action if the cards don't move.
+			_Any_ action that doesn't move the cards (e.g. cursor right, touch stop).
+			It fixes itself if you resize the window (before or after), since everything moves.
+
+			This does not happen when the cards are in the deck (i.e. cursor right); there's a global click to deal the cards.
+			It only happens when there are cards on the board.
+
+			We can't reproduce this here yet, so the only way to check it is:
+			- make a change
+			- `npm run build && npm run serve`
+
+			Second paint:
+			- `updateCardPositions` sets everything (as expected)
+			- `previousTLs` is empty (as expected)
+			Initial paint:
+			- `updateCardPositions` is empty (as expected)
+			- `previousTLs` has all the correct values (as it should be)
+		*/
+		test('Setting all cards after refresh then touch stop', () => {
+			const gameStateOne = new FreeCell().shuffle32(24827).dealAll().moveByShorthand('7a');
+			expect(gameStateOne.print({ includeHistory: true })).toBe(
+				'' +
+					' 8H          AS AD       \n' +
+					' 8D 6C JS 3D 3H 9D 8C 6S \n' +
+					' 2H 9S QC 9C 7D 2S 9H JD \n' +
+					' 2C AC 5D 5C TS AH QH KH \n' +
+					' TH 6D 5H 3S TD 4H    6H \n' +
+					' 7H 8S KS TC KC QS    3C \n' +
+					' QD 2D KD 7S JH 4S    4C \n' +
+					' JC 5S 4D 7C             \n' +
+					' move 7a 8H→cell (auto-foundation 77 AS,AD)\n' +
+					':h shuffle32 24827\n' +
+					' 7a '
+			);
+			const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [0] }).touch();
+			expect(gameStateTwo.print()).toBe(
+				'' +
+					' 8H         >AS AD       \n' +
+					' 8D 6C JS 3D 3H 9D 8C 6S \n' +
+					' 2H 9S QC 9C 7D 2S 9H JD \n' +
+					' 2C AC 5D 5C TS AH QH KH \n' +
+					' TH 6D 5H 3S TD 4H    6H \n' +
+					' 7H 8S KS TC KC QS    3C \n' +
+					' QD 2D KD 7S JH 4S    4C \n' +
+					' JC 5S 4D 7C             \n' +
+					' touch stop'
+			);
+
+			const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+			expect(toSpy).not.toHaveBeenCalled();
+			expect(fromToSpy).not.toHaveBeenCalled();
+			expect(setSpy.mock.calls.length).toBe(52);
+
+			mockReset();
+			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+			expect(toSpy).not.toHaveBeenCalled();
+			expect(fromToSpy).not.toHaveBeenCalled();
+			expect(setSpy).not.toHaveBeenCalled();
+		});
 	});
 });

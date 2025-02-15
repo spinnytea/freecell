@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef } from 'react';
+import { MutableRefObject, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
 import { SELECT_ROTATION_DURATION } from '@/app/animation_constants';
@@ -53,11 +53,10 @@ function CardOnBoard({
 		rank
 	);
 
-	useEffect(() => {
+	useGSAP(() => {
 		// set the initial position, once on load
 		gsap.set(cardRef.current, { top, left, zIndex });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	});
 
 	useGSAP(
 		() => {

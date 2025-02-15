@@ -451,7 +451,7 @@ export class FreeCell {
 		- TODO (controls) (3-priority) click-to-move does not allow selection if !canMove
 		- TODO (controls) (3-priority) disable select-to-peek for mouse, but still allow it for keyboard
 		  - either disable them outright or lock them behind a settings flag
-		- TODO (controls) (3-priority) make it easier to re-select when move is invalid
+		- TODO (controls) (4-priority) make it easier to re-select when move is invalid
 		  - OR disable select-to-peek for mouse
 	*/
 	touch({ autoFoundation = true }: OptionsAutoFoundation = {}): FreeCell {

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import classNames from 'classnames';
 import { gsap } from 'gsap/all';
@@ -21,7 +21,7 @@ export function DebugCursors() {
 			{game.availableMoves?.map(({ location, priority }) => (
 				<LocationBox
 					key={`available-${shorthandPosition(location)}-${location.data[0].toString(10)}`}
-					type={`available${priority < 0 ? '-low' : '-high'}`}
+					type={`available-${priority < 0 ? 'low' : 'high'}`}
 					fixtureSizes={fixtureSizes}
 					location={location}
 				/>
@@ -80,11 +80,10 @@ function LocationBox({
 	width += OVERLAY_MARGINS * 2;
 	height += OVERLAY_MARGINS * 2;
 
-	useEffect(() => {
+	useGSAP(() => {
 		// set the initial position, once on load
 		gsap.set(boxRef.current, { top, left, height });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	});
 
 	useGSAP(
 		() => {
@@ -172,11 +171,10 @@ function SequenceBox({
 	width += OVERLAY_MARGINS * 2;
 	height += OVERLAY_MARGINS * 2;
 
-	useEffect(() => {
+	useGSAP(() => {
 		// set the initial position, once on load
 		gsap.set(boxRef.current, { top, left, height });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	});
 
 	useGSAP(
 		() => {

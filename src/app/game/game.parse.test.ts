@@ -83,6 +83,12 @@ describe('game.parse', () => {
 				expect(
 					_omit(FreeCell.parse(game.print()), ['history', 'previousAction.tweenCards'])
 				).toEqual(_omit(game, ['history', 'previousAction.tweenCards']));
+				expect(game.history.length).toBe(71);
+				expect(FreeCell.parse(game.print()).history.length).toBe(0);
+				expect(game.previousAction.tweenCards).toEqual([
+					{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 0] } },
+				]);
+				expect(FreeCell.parse(game.print()).previousAction.tweenCards).toEqual([]);
 
 				game = game.touch();
 				expect(game.print()).toBe(
@@ -115,13 +121,25 @@ describe('game.parse', () => {
 				// if write/read a game, we can recover the state, but not the history
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 				expect(_omit(FreeCell.parse(game.print()), 'history')).toEqual(_omit(game, 'history'));
-				// at this point, we've discard the previousAction (it's not the same as the last item in the history)
+				expect(game.history.length).toBe(71);
+				expect(FreeCell.parse(game.print()).history.length).toBe(0);
 				expect(
 					FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 				).toBe(game.print({ includeHistory: true }));
 				expect(
 					_omit(FreeCell.parse(game.print({ includeHistory: true })), 'previousAction')
 				).toEqual(_omit(game, 'previousAction'));
+				expect(game.previousAction).toEqual({
+					text: 'touch stop',
+					type: 'invalid',
+				});
+				expect(FreeCell.parse(game.print({ includeHistory: true })).previousAction).toEqual({
+					text: 'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
+					type: 'move-foundation',
+					tweenCards: [
+						{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 0] } },
+					],
+				});
 			});
 		});
 
