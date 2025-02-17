@@ -104,6 +104,7 @@ export type AutoFoundationLimit =
 
 	// if we have black 3,5
 	// we can put up all the red 5s
+	// i.e. since we know all the black 4s can go up
 	// (the best we can safely do)
 	| 'opp+2'
 
@@ -370,17 +371,18 @@ function prioritizeAvailableMoves(
 			break;
 		}
 
-		// TODO (controls) (3-priority) prioritize "closer" moves
-		//  - e.g.: 1350642
-		//  - right now it _always_ go right, even when right is far away
-		//  - when leaving a sequence (when d1 > 0)
-		// ---
+		// FIXME (controls) prioritize "closer" moves
+		//  - use closestAvailableMovesPriority (sometimes!)
 		//  - sequence needs to cycle
 		//    1. because there are only 2 so it doesn't matter
 		//    2. when we have jokers, we _need_ to cycle
 		//       … unless we _also_ check "was i previous stacked"
-		//  … "moving away from a stacked position" (empty, split sequence) must cycle
-		//    "moving away from an invalid sequnce" (!canStackCascade(d1 - 1)) picks closest option (favors right)
+		//  ! "moving away from a stacked position" (empty, split sequence) must cycle
+		//    (if we could move it back here)
+		//  ! "moving away from an invalid sequnce" (!canStackCascade(d1 - 1)) picks closest option (favors right)
+		//    (if we cannot move back to this position)
+		//  REVIEW Maybe the takeaway is "when changing moveDestinationType, use closest; when same moveDestinationType, use linear"
+		//  - but these aren't the same (src is "am i single or sequence"; dst is "empty cascade or stacked")
 		case 'cascade:empty':
 		case 'cascade:sequence': {
 			const useSourceD0 =
@@ -410,6 +412,10 @@ function getMoveSourceType(selection: CardSequence): MoveSourceType {
 	}
 }
 
+/**
+	always pick moves to the right, wrapping along the right edge
+	e.g. 3210654
+*/
 export function linearAvailableMovesPriority(
 	cascadeCount: number,
 	d0: number,
@@ -424,6 +430,20 @@ export function linearAvailableMovesPriority(
 		}
 	}
 	return priority;
+}
+
+/**
+	pick the closest move
+	e.g.: 1350642
+*/
+export function closestAvailableMovesPriority(
+	cascadeCount: number,
+	d0: number,
+	sourceD0?: number
+): number {
+	if (sourceD0 === undefined) return (cascadeCount - d0) * 2;
+	if (sourceD0 === d0) return 0;
+	return cascadeCount * 2 - Math.abs(sourceD0 - d0) * 2 - (sourceD0 > d0 ? 1 : 0);
 }
 
 /**

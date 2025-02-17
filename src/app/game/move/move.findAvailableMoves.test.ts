@@ -1,5 +1,5 @@
 import { FreeCell } from '@/app/game/game';
-import { linearAvailableMovesPriority } from '@/app/game/move/move';
+import { closestAvailableMovesPriority, linearAvailableMovesPriority } from '@/app/game/move/move';
 
 describe('game/move.findAvailableMoves', () => {
 	let game: FreeCell;
@@ -255,6 +255,36 @@ describe('game/move.findAvailableMoves', () => {
 			});
 			expect(game.availableMoves).toEqual([]);
 		});
+
+		// FIXME test.todo
+		//** closest: when to use it */
+		describe('linear vs closest', () => {
+			test.todo('closest A');
+
+			test.todo('closest B');
+
+			test.todo('linear A');
+
+			test.todo('linear B');
+
+			// start at 0, move to stacked, move to another stack (3S -> 4D,4H)
+			test.todo('across stacks from empty');
+
+			// 3S is on a 5 or something (3S -> 4D,4H)
+			test.todo('across stacks from invalid');
+
+			// start at 0, move to stacked, move to another stack (3S -> 4D ??)
+			test.todo('empty to single stack');
+
+			// 3S is on at some root (3S -> empty,empty)
+			test.todo('across empty from empty');
+
+			// 3S is on a 5 or something (3S -> empty,empty)
+			test.todo('across empty from invalid');
+
+			// moving a 3S, there is 4D,4H,JD,JH
+			test.todo('joker stacks');
+		});
 	});
 
 	describe('linearAvailableMovesPriority', () => {
@@ -334,6 +364,87 @@ describe('game/move.findAvailableMoves', () => {
 					);
 				}
 			);
+		});
+
+		//** closest: what it does */
+		describe('closestAvailableMovesPriority', () => {
+			describe('1 count', () => {
+				const positions = [0];
+				test.each`
+					sourceD0     | priorities
+					${undefined} | ${[2]}
+					${0}         | ${[0]}
+				`(
+					'sourceD0: $sourceD0',
+					({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+						expect(positions.map((d0) => closestAvailableMovesPriority(1, d0, sourceD0))).toEqual(
+							priorities
+						);
+					}
+				);
+			});
+
+			describe('4 count', () => {
+				const positions = [0, 1, 2, 3];
+				test.each`
+					sourceD0     | priorities
+					${undefined} | ${[8, 6, 4, 2]}
+					${0}         | ${[0, 6, 4, 2]}
+					${1}         | ${[5, 0, 6, 4]}
+					${2}         | ${[3, 5, 0, 6]}
+					${3}         | ${[1, 3, 5, 0]}
+				`(
+					'sourceD0: $sourceD0',
+					({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+						expect(positions.map((d0) => closestAvailableMovesPriority(4, d0, sourceD0))).toEqual(
+							priorities
+						);
+					}
+				);
+			});
+
+			describe('8 count', () => {
+				const positions = [0, 1, 2, 3, 4, 5, 6, 7];
+				test.each`
+					sourceD0     | priorities
+					${undefined} | ${[16, 14, 12, 10, 8, 6, 4, 2]}
+					${0}         | ${[0, 14, 12, 10, 8, 6, 4, 2]}
+					${1}         | ${[13, 0, 14, 12, 10, 8, 6, 4]}
+					${2}         | ${[11, 13, 0, 14, 12, 10, 8, 6]}
+					${3}         | ${[9, 11, 13, 0, 14, 12, 10, 8]}
+					${4}         | ${[7, 9, 11, 13, 0, 14, 12, 10]}
+					${5}         | ${[5, 7, 9, 11, 13, 0, 14, 12]}
+					${6}         | ${[3, 5, 7, 9, 11, 13, 0, 14]}
+					${7}         | ${[1, 3, 5, 7, 9, 11, 13, 0]}
+				`(
+					'sourceD0: $sourceD0',
+					({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+						expect(positions.map((d0) => closestAvailableMovesPriority(8, d0, sourceD0))).toEqual(
+							priorities
+						);
+					}
+				);
+			});
+
+			describe('10 count', () => {
+				const positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+				test.each`
+					sourceD0     | priorities
+					${undefined} | ${[20, 18, 16, 14, 12, 10, 8, 6, 4, 2]}
+					${0}         | ${[0, 18, 16, 14, 12, 10, 8, 6, 4, 2]}
+					${1}         | ${[17, 0, 18, 16, 14, 12, 10, 8, 6, 4]}
+					${5}         | ${[9, 11, 13, 15, 17, 0, 18, 16, 14, 12]}
+					${8}         | ${[3, 5, 7, 9, 11, 13, 15, 17, 0, 18]}
+					${9}         | ${[1, 3, 5, 7, 9, 11, 13, 15, 17, 0]}
+				`(
+					'sourceD0: $sourceD0',
+					({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+						expect(positions.map((d0) => closestAvailableMovesPriority(10, d0, sourceD0))).toEqual(
+							priorities
+						);
+					}
+				);
+			});
 		});
 	});
 });
