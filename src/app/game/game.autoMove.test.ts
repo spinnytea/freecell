@@ -294,11 +294,11 @@ describe('game.autoMove', () => {
 			});
 
 			/**
-				cascade:sequence cycle (jokers)
+				TODO (joker) cascade:sequence cycle
 					- there can only be 1 or 2 options in normal play
 					- jokers:wild and jokers:high allow more options
 			*/
-			test.todo('cycles through cascade:sequence (jokers)');
+			test.todo('cycles through cascade:sequence with jokers');
 
 			describe('prefers', () => {
 				/** always prefer growing a sequence, if available */
@@ -469,7 +469,7 @@ describe('game.autoMove', () => {
 					});
 				});
 
-				/** if we are moving a single king, it's _probably_ time to build a stack */
+				/** if we are moving a single king, it's _probably_ time to build a sequence */
 				test('King prefers cascade:empty', () => {
 					expect(
 						FreeCell.parse(
@@ -665,11 +665,11 @@ describe('game.autoMove', () => {
 			});
 
 			/**
-				cascade:sequence cycle (jokers)
+				TODO (joker) cascade:sequence cycle
 					- there can only be 1 or 2 options in normal play
 					- jokers:wild and jokers:high allow more options
 			*/
-			test.todo('cycles through cascade:sequence (jokers)');
+			test.todo('cycles through cascade:sequence with jokers');
 
 			describe('prefers', () => {
 				/** always prefer growing a sequence, if available */

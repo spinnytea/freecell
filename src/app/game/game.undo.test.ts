@@ -81,7 +81,7 @@ describe('game.undo (+ history)', () => {
 				});
 
 				describe('to: foundation', () => {
-					test('stack', () => {
+					test('sequence', () => {
 						let game = FreeCell.parse(
 							'' + //
 								'|KC|        >QC KD KH KS \n' + //

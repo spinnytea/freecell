@@ -316,7 +316,7 @@ export function parsePreviousActionMoveShorthands(actionText: string) {
 
 	// we don't need special animations/shorthands for regular moves
 	// the default animations are already good enough
-	// (it's just one card or stacks)
+	// (it's just one card or a sequence)
 	// match = MOVE_REGEX.exec(actionText);
 
 	return {};

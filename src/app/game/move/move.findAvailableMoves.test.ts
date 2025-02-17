@@ -98,7 +98,7 @@ describe('game/move.findAvailableMoves', () => {
 				{
 					location: { fixture: 'cascade', data: [6, 5] },
 					moveDestinationType: 'cascade:sequence',
-					priority: 10,
+					priority: 4,
 				},
 			]);
 		});
@@ -236,7 +236,7 @@ describe('game/move.findAvailableMoves', () => {
 				{
 					location: { fixture: 'cascade', data: [6, 5] },
 					moveDestinationType: 'cascade:sequence',
-					priority: 10,
+					priority: 4,
 				},
 			]);
 		});
@@ -254,36 +254,6 @@ describe('game/move.findAvailableMoves', () => {
 				canMove: true,
 			});
 			expect(game.availableMoves).toEqual([]);
-		});
-
-		// FIXME test.todo
-		//** closest: when to use it */
-		describe('linear vs closest', () => {
-			test.todo('closest A');
-
-			test.todo('closest B');
-
-			test.todo('linear A');
-
-			test.todo('linear B');
-
-			// start at 0, move to stacked, move to another stack (3S -> 4D,4H)
-			test.todo('across stacks from empty');
-
-			// 3S is on a 5 or something (3S -> 4D,4H)
-			test.todo('across stacks from invalid');
-
-			// start at 0, move to stacked, move to another stack (3S -> 4D ??)
-			test.todo('empty to single stack');
-
-			// 3S is on at some root (3S -> empty,empty)
-			test.todo('across empty from empty');
-
-			// 3S is on a 5 or something (3S -> empty,empty)
-			test.todo('across empty from invalid');
-
-			// moving a 3S, there is 4D,4H,JD,JH
-			test.todo('joker stacks');
 		});
 	});
 
