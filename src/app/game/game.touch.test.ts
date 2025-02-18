@@ -920,12 +920,12 @@ describe('game.touch', () => {
 						{
 							location: { fixture: 'cascade', data: [1, 0] },
 							moveDestinationType: 'cascade:empty',
-							priority: 7,
+							priority: 14,
 						},
 						{
 							location: { fixture: 'cascade', data: [2, 0] },
 							moveDestinationType: 'cascade:empty',
-							priority: 6,
+							priority: 12,
 						},
 					]);
 					game = game.touch({ autoFoundation: false });
@@ -1025,7 +1025,7 @@ describe('game.touch', () => {
 						{
 							location: { fixture: 'cascade', data: [6, 5] },
 							moveDestinationType: 'cascade:sequence',
-							priority: 10,
+							priority: 4,
 						},
 					]);
 					game = game.touch({ autoFoundation: false });
@@ -1185,7 +1185,7 @@ describe('game.touch', () => {
 							{
 								location: { fixture: 'cascade', data: [6, 5] },
 								moveDestinationType: 'cascade:sequence',
-								priority: 10,
+								priority: 4,
 							},
 						]);
 						game = game.touch({ autoFoundation: false });
@@ -1452,12 +1452,12 @@ describe('game.touch', () => {
 							{
 								location: { fixture: 'cascade', data: [3, 2] },
 								moveDestinationType: 'cascade:sequence',
-								priority: 13,
+								priority: 12,
 							},
 							{
 								location: { fixture: 'cascade', data: [4, 0] },
 								moveDestinationType: 'cascade:sequence',
-								priority: 12,
+								priority: 10,
 							},
 							{
 								location: { fixture: 'cascade', data: [5, 0] },
@@ -1532,12 +1532,12 @@ describe('game.touch', () => {
 								{
 									location: { fixture: 'cascade', data: [3, 2] },
 									moveDestinationType: 'cascade:sequence',
-									priority: 13,
+									priority: 12,
 								},
 								{
 									location: { fixture: 'cascade', data: [4, 0] },
 									moveDestinationType: 'cascade:sequence',
-									priority: 12,
+									priority: 10,
 								},
 								{
 									location: { fixture: 'cascade', data: [5, 0] },
@@ -1610,12 +1610,12 @@ describe('game.touch', () => {
 							{
 								location: { fixture: 'cascade', data: [3, 2] },
 								moveDestinationType: 'cascade:sequence',
-								priority: 13,
+								priority: 12,
 							},
 							{
 								location: { fixture: 'cascade', data: [4, 0] },
 								moveDestinationType: 'cascade:sequence',
-								priority: 12,
+								priority: 10,
 							},
 							{
 								location: { fixture: 'cascade', data: [5, 0] },
@@ -1845,12 +1845,12 @@ describe('game.touch', () => {
 				{
 					location: { fixture: 'cascade', data: [3, 5] },
 					moveDestinationType: 'cascade:sequence',
-					priority: 5,
+					priority: 7,
 				},
 				{
 					location: { fixture: 'cascade', data: [5, 4] },
 					moveDestinationType: 'cascade:sequence',
-					priority: 3,
+					priority: 11,
 				},
 			]);
 			game = game.touch();
@@ -1875,12 +1875,12 @@ describe('game.touch', () => {
 				{
 					location: { fixture: 'cascade', data: [3, 5] },
 					moveDestinationType: 'cascade:sequence',
-					priority: 5,
+					priority: 7,
 				},
 				{
 					location: { fixture: 'cascade', data: [5, 4] },
 					moveDestinationType: 'cascade:sequence',
-					priority: 3,
+					priority: 11,
 				},
 			]);
 		});

@@ -111,7 +111,8 @@ Bump the version in package.json. Make and push version tags with `git tag v1.3.
 **Foundation** - The four spaces to place cards, in order, from Ace - King. \
 **Free Cells** - Four empty spaces to temporarily hold any card. \
 **Tableau/Cascade** - The eight columns of cards on the playing board. Each column is a cascade, the whole lot is the tableau. \
-**Run/Sequence** - Sequences are built downward in decreasing rank, for example 4-3-2-A, 10-9-8-7-6, K-Q-J, etc.
+**Run/Sequence** - noun, Sequences are built downward in decreasing rank, for example 4-3-2-A, 10-9-8-7-6, K-Q-J, etc. \
+**Stack** - verb, to place a card or sequence on another card to sequence (note: use the noun _sequence_ instead)
 
 # Resource
 

@@ -104,6 +104,7 @@ export type AutoFoundationLimit =
 
 	// if we have black 3,5
 	// we can put up all the red 5s
+	// i.e. since we know all the black 4s can go up
 	// (the best we can safely do)
 	| 'opp+2'
 
@@ -370,29 +371,42 @@ function prioritizeAvailableMoves(
 			break;
 		}
 
-		// TODO (controls) (3-priority) prioritize "closer" moves
-		//  - e.g.: 1350642
-		//  - right now it _always_ go right, even when right is far away
-		//  - when leaving a sequence (when d1 > 0)
-		// ---
-		//  - sequence needs to cycle
-		//    1. because there are only 2 so it doesn't matter
-		//    2. when we have jokers, we _need_ to cycle
-		//       … unless we _also_ check "was i previous stacked"
-		//  … "moving away from a stacked position" (empty, split sequence) must cycle
-		//    "moving away from an invalid sequnce" (!canStackCascade(d1 - 1)) picks closest option (favors right)
 		case 'cascade:empty':
 		case 'cascade:sequence': {
-			const useSourceD0 =
+			const moveSDType: MoveDestinationType =
+				selection.location.data[1] === 0 ? 'cascade:empty' : 'cascade:sequence';
+			// if we are moving from/to the same type, then use linear
+			// if we are moving to a different type, then use closest
+			let useLinear = moveSDType === moveDestinationType;
+			// if we are moving from an invalid spot (we can't move back here), then use closest
+			if (moveSDType === 'cascade:sequence' && selection.location.fixture === 'cascade') {
+				const moving_card = selection.cards[0];
+				const [d0, d1] = moving_card.location.data;
+				const tail_card = game.tableau[d0][d1 - 1];
+				if (!canStackCascade(tail_card, moving_card)) {
+					useLinear = false;
+				}
+			}
+
+			const sourceD0OrNah =
 				moveSourceType === 'cascade:single' || moveSourceType === 'cascade:sequence'
 					? sourceD0
 					: undefined;
+
 			availableMoves.forEach((availableMove) => {
-				availableMove.priority = linearAvailableMovesPriority(
-					game.tableau.length,
-					availableMove.location.data[0],
-					useSourceD0
-				);
+				if (useLinear) {
+					availableMove.priority = linearAvailableMovesPriority(
+						game.tableau.length,
+						availableMove.location.data[0],
+						sourceD0OrNah
+					);
+				} else {
+					availableMove.priority = closestAvailableMovesPriority(
+						game.tableau.length,
+						availableMove.location.data[0],
+						sourceD0OrNah
+					);
+				}
 			});
 			break;
 		}
@@ -410,6 +424,10 @@ function getMoveSourceType(selection: CardSequence): MoveSourceType {
 	}
 }
 
+/**
+	always pick moves to the right, wrapping along the right edge
+	e.g. 3210654
+*/
 export function linearAvailableMovesPriority(
 	cascadeCount: number,
 	d0: number,
@@ -424,6 +442,20 @@ export function linearAvailableMovesPriority(
 		}
 	}
 	return priority;
+}
+
+/**
+	pick the closest move
+	e.g.: 1350642
+*/
+export function closestAvailableMovesPriority(
+	cascadeCount: number,
+	d0: number,
+	sourceD0?: number
+): number {
+	if (sourceD0 === undefined) return (cascadeCount - d0) * 2;
+	if (sourceD0 === d0) return 0;
+	return cascadeCount * 2 - Math.abs(sourceD0 - d0) * 2 - (sourceD0 > d0 ? 1 : 0);
 }
 
 /**
@@ -549,7 +581,7 @@ export function parseShorthandMove(
 
 	if (to_location.fixture === 'foundation') {
 		// adjust selection until stackable on target
-		// i.e. 2S stacks on AS, find that foundation
+		// i.e. 2S can stack on AS, find that foundation
 		// i.e. AC can go in any _empty_ foundation, find that one
 		const from_sequence = getSequenceAt(game, from_location);
 		const tail_card = from_sequence.cards[from_sequence.cards.length - 1];

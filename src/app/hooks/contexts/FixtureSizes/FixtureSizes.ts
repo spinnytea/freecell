@@ -86,7 +86,7 @@ export function calcFixtureSizes({
 	// taller playing fields can have a smaller margin
 	let aspectratio = boardWidth / boardHeight;
 
-	// wide layouts try to ensure we can see the card stacks, so we need to balanace the aspect ratio
+	// wide layouts try to ensure we can see the card sequences, so we need to balanace the aspect ratio
 	// it's ideally targetting 16:9 or 21:9, so we can just stick with that
 	if (fixtureLayout === 'landscape') aspectratio = 2;
 	// justified layouts will fit the width, regardless of height
