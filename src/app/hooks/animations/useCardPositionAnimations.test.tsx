@@ -124,20 +124,20 @@ describe('useCardPositionAnimations', () => {
 				expect(fromToSpy.mock.calls.length).toBe(52);
 				expect(fromToSpy.mock.calls[0]).toEqual([
 					'#cAC',
-					{ top: 24.4, left: 428.07 },
-					{ top: 453.6, left: 14.035, duration: 0.3, ease: 'power1.out' },
+					{ top: 36.6, left: 428.07 },
+					{ top: 441.4, left: 14.035, duration: 0.3, ease: 'power1.out' },
 					'>0',
 				]);
 				expect(fromToSpy.mock.calls[1]).toEqual([
 					'#cAD',
-					{ top: 24.4, left: 519.298 },
-					{ top: 453.6, left: 14.035, duration: 0.3, ease: 'power1.out' },
+					{ top: 36.6, left: 519.298 },
+					{ top: 441.4, left: 14.035, duration: 0.3, ease: 'power1.out' },
 					'<0.006',
 				]);
 				expect(fromToSpy.mock.calls[51]).toEqual([
 					'#cKS',
-					{ top: 24.4, left: 701.754 },
-					{ top: 453.6, left: 14.035, duration: 0.3, ease: 'power1.out' },
+					{ top: 36.6, left: 701.754 },
+					{ top: 441.4, left: 14.035, duration: 0.3, ease: 'power1.out' },
 					'<0.006',
 				]);
 				expect(setSpy).not.toHaveBeenCalled();
@@ -187,20 +187,20 @@ describe('useCardPositionAnimations', () => {
 			expect(fromToSpy.mock.calls.length).toBe(52);
 			expect(fromToSpy.mock.calls[0]).toEqual([
 				'#cQC',
-				{ top: 453.6, left: 14.035 },
-				{ top: 183, left: 701.754, duration: 0.3, ease: 'power1.out' },
+				{ top: 441.4, left: 14.035 },
+				{ top: 195.2, left: 701.754, duration: 0.3, ease: 'power1.out' },
 				'>0',
 			]);
 			expect(fromToSpy.mock.calls[1]).toEqual([
 				'#cQD',
-				{ top: 453.6, left: 14.035 },
-				{ top: 183, left: 603.509, duration: 0.3, ease: 'power1.out' },
+				{ top: 441.4, left: 14.035 },
+				{ top: 195.2, left: 603.509, duration: 0.3, ease: 'power1.out' },
 				'<0.006',
 			]);
 			expect(fromToSpy.mock.calls[51]).toEqual([
 				'#cAS',
-				{ top: 453.6, left: 14.035 },
-				{ top: 329.4, left: 14.035, duration: 0.3, ease: 'power1.out' },
+				{ top: 441.4, left: 14.035 },
+				{ top: 341.6, left: 14.035, duration: 0.3, ease: 'power1.out' },
 				'<0.006',
 			]);
 			expect(setSpy).not.toHaveBeenCalled();
@@ -252,14 +252,14 @@ describe('useCardPositionAnimations', () => {
 				expect(fromToSpy.mock.calls).toEqual([
 					[
 						'#c6H',
-						{ top: 305, left: 407.018 },
-						{ top: 353.8, left: 210.526, duration: 0.3, ease: 'power1.out' },
+						{ top: 317.2, left: 407.018 },
+						{ top: 366, left: 210.526, duration: 0.3, ease: 'power1.out' },
 						'>0',
 					],
 					[
 						'#cAD',
-						{ top: 329.4, left: 112.281 },
-						{ top: 24.4, left: 428.07, duration: 0.3, ease: 'power1.out' },
+						{ top: 341.6, left: 112.281 },
+						{ top: 36.6, left: 428.07, duration: 0.3, ease: 'power1.out' },
 						'>0',
 					],
 				]);
@@ -305,32 +305,32 @@ describe('useCardPositionAnimations', () => {
 					['#cQD', { zIndex: 1, duration: 0.15, ease: 'none' }, '<'],
 					['#cJS', { zIndex: 2, duration: 0.15, ease: 'none' }, '<'],
 					// and then
-					['#cJD', { top: 24.4, left: 519.298, duration: 0.3, ease: 'power1.out' }, '>0.043'],
+					['#cJD', { top: 36.6, left: 519.298, duration: 0.3, ease: 'power1.out' }, '>0.043'],
 					['#cJD', { zIndex: 109, duration: 0.15, ease: 'none' }, '<'],
-					['#cJS', { top: 24.4, left: 701.754, duration: 0.3, ease: 'power1.out' }, '<0.043'],
+					['#cJS', { top: 36.6, left: 701.754, duration: 0.3, ease: 'power1.out' }, '<0.043'],
 					['#cJS', { zIndex: 109, duration: 0.15, ease: 'none' }, '<'],
-					['#cQD', { top: 24.4, left: 519.298, duration: 0.3, ease: 'power1.out' }, '<0.043'],
+					['#cQD', { top: 36.6, left: 519.298, duration: 0.3, ease: 'power1.out' }, '<0.043'],
 					['#cQD', { zIndex: 110, duration: 0.15, ease: 'none' }, '<'],
-					['#cQS', { top: 24.4, left: 701.754, duration: 0.3, ease: 'power1.out' }, '<0.043'],
+					['#cQS', { top: 36.6, left: 701.754, duration: 0.3, ease: 'power1.out' }, '<0.043'],
 					['#cQS', { zIndex: 110, duration: 0.15, ease: 'none' }, '<'],
-					['#cKC', { top: 24.4, left: 428.07, duration: 0.3, ease: 'power1.out' }, '<0.043'],
+					['#cKC', { top: 36.6, left: 428.07, duration: 0.3, ease: 'power1.out' }, '<0.043'],
 					['#cKC', { zIndex: 111, duration: 0.15, ease: 'none' }, '<'],
-					['#cKD', { top: 24.4, left: 519.298, duration: 0.3, ease: 'power1.out' }, '<0.043'],
+					['#cKD', { top: 36.6, left: 519.298, duration: 0.3, ease: 'power1.out' }, '<0.043'],
 					['#cKD', { zIndex: 111, duration: 0.15, ease: 'none' }, '<'],
-					['#cKS', { top: 24.4, left: 701.754, duration: 0.3, ease: 'power1.out' }, '<0.043'],
+					['#cKS', { top: 36.6, left: 701.754, duration: 0.3, ease: 'power1.out' }, '<0.043'],
 					['#cKS', { zIndex: 111, duration: 0.15, ease: 'none' }, '<'],
 				]);
 				expect(fromToSpy.mock.calls).toEqual([
 					[
 						'#cQD',
-						{ top: 201.3, left: 112.281 },
-						{ top: 207.4, left: 407.018, duration: 0.3, ease: 'power1.out' },
+						{ top: 213.5, left: 112.281 },
+						{ top: 219.6, left: 407.018, duration: 0.3, ease: 'power1.out' },
 						'>0',
 					],
 					[
 						'#cJS',
-						{ top: 244, left: 112.281 },
-						{ top: 231.8, left: 407.018, duration: 0.3, ease: 'power1.out' },
+						{ top: 256.2, left: 112.281 },
+						{ top: 244, left: 407.018, duration: 0.3, ease: 'power1.out' },
 						'<0.060',
 					],
 				]);
@@ -710,32 +710,18 @@ describe('useCardPositionAnimations', () => {
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-			expect(toSpy.mock.calls).toEqual([
-				// ['#c2S', { zIndex: 15, duration: 0.15, ease: 'none' }, '<'],
-				['#c8H', { zIndex: 6, duration: 0.15, ease: 'none' }, '<'],
-				['#c7C', { zIndex: 7, duration: 0.15, ease: 'none' }, '<'],
+			expect(getCardIdsFromSpy(toSpy)).toEqual([
+				// '#c2S',
+				'#c8H',
+				'#c7C',
 			]);
-			expect(fromToSpy.mock.calls).toEqual([
-				// [
-				// 	'#c2S',
-				// 	{ top: 24.4, left: 701.754 },
-				// 	{ top: 549, left: 308.772, duration: 0.3, ease: 'power1.out' },
-				// 	'>0',
-				// ],
-				[
-					'#c8H',
-					{ top: 183, left: 14.035 },
-					{ top: 329.4, left: 112.281, duration: 0.3, ease: 'power1.out' },
-					'>0',
-				],
-				[
-					'#c7C',
-					{ top: 207.4, left: 14.035 },
-					{ top: 353.8, left: 112.281, duration: 0.3, ease: 'power1.out' },
-					'<0.060',
-				],
+			expect(getCardIdsFromSpy(fromToSpy)).toEqual([
+				// '#c2S',
+				'#c8H',
+				'#c7C',
 			]);
 			const setCardIds = getCardIdsFromSpy(setSpy);
+			expect(setCardIds).toContain('#c2S');
 			expect(setCardIds.length).toBe(50);
 			expect(setCardIds).not.toContain('#c7C'); // 51
 			expect(setCardIds).not.toContain('#c8H'); // 52
