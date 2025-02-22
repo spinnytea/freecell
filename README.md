@@ -71,7 +71,7 @@ TODO (motivation) main development tasks:
   - if cursor can stack with target: select, moveCard
   - if cursor cannot stack with target: setCursor
 - TODO (deployment) UI render for all options, hidden options, controls (keyboard, keyboard+selection, keyboard hotkeys, mouse click, mouse drag) w/ (settings) to enable/disable
-- TODO (settings) disable "select/peek card" i.e. selecting cards that cannot move
+- TODO (settings) disable "select-to-peek card" i.e. selecting cards that cannot move
 - TODO (deployment) rules page (SUG)
 - IDEA (joker) add joker to gameplay
   - high - any rank can stack onto them, they cannot be stacked on anything (color-fixed cascade)

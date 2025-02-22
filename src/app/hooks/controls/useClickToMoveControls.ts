@@ -3,13 +3,13 @@ import { CardLocation } from '@/app/game/card/card';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
+/** REVIEW (controls) click-to-move */
 export function useClickToMoveControls(location: CardLocation) {
 	const [, setGame] = useContext(GameContext);
 	const [, setSettings] = useContext(SettingsContext);
 
 	function handleClickToMove() {
-		// REVIEW (controls) click-to-move
-		setGame((g) => g.setCursor(location).touch().autoMove());
+		setGame((g) => g.clickToMove(location));
 		setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 	}
 

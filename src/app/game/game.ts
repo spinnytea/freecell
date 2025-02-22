@@ -448,10 +448,11 @@ export class FreeCell {
 		e.g. select cursor, deselect cursor, move selection
 
 		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
-		- TODO (controls) (3-priority) click-to-move does not allow selection if !canMove
-		- TODO (controls) (3-priority) disable select-to-peek for mouse, but still allow it for keyboard
+		- FIXME (controls) (3-priority) click-to-move does not allow selection if !canMove
+		- FIXME (controls) (3-priority) Consider: disable select-to-peek for mouse, but still allow it for keyboard
 		  - either disable them outright or lock them behind a settings flag
-		- TODO (controls) (4-priority) make it easier to re-select when move is invalid
+		  - this if only if we can't figure out how to make it easier
+		- FIXME (controls) (4-priority) make it easier to re-select when move is invalid
 		  - OR disable select-to-peek for mouse
 	*/
 	touch({ autoFoundation = true }: OptionsAutoFoundation = {}): FreeCell {
@@ -461,9 +462,9 @@ export class FreeCell {
 		}
 
 		// set selection, or move selection if applicable
-		// TODO (controls) allow "growing/shrinking sequence of current selection"
-		// TODO (controls) || !game.availableMoves?.length (if the current selection has no valid moves)
-		// TODO (controls) allow moving selection from one cell to another cell
+		// FIXME (controls) allow "growing/shrinking sequence of current selection"
+		// FIXME (controls) || !game.availableMoves?.length (if the current selection has no valid moves)
+		// FIXME (controls) allow moving selection from one cell to another cell
 		if (!this.selection?.canMove) {
 			const selection = getSequenceAt(this, this.cursor);
 			// we can't do anything with a foundation (we can move cards off of it)
@@ -687,7 +688,9 @@ export class FreeCell {
 	// }
 
 	/**
-		this is the basis for click-to-move
+		move the selected card(s) to the "best" allowable location
+
+		this is the cornerstone for click-to-move
 
 		@example
 			game.setCursor(loc).touch().autoMove();
@@ -705,6 +708,10 @@ export class FreeCell {
 		}, this.availableMoves[0]).location;
 
 		return this.setCursor(to_location).touch({ autoFoundation });
+	}
+
+	clickToMove(location: CardLocation): FreeCell | this {
+		return this.setCursor(location).touch().autoMove();
 	}
 
 	restart(): FreeCell {
@@ -1144,14 +1151,14 @@ export class FreeCell {
 
 		// attempt to parse the history
 		const history: string[] = [];
-		const peek = lines.pop();
-		if (!peek) {
+		const popped = lines.pop();
+		if (!popped) {
 			// TODO (parse-history) test
 			if (parsePreviousActionType(actionText).type === 'init') {
 				history.push(actionText);
 			}
-		} else if (peek.startsWith(':h')) {
-			const matchSeed = /:h shuffle32 (\d+)/.exec(peek);
+		} else if (popped.startsWith(':h')) {
+			const matchSeed = /:h shuffle32 (\d+)/.exec(popped);
 			if (!matchSeed) throw new Error('unsupported shuffle');
 			const seed = parseInt(matchSeed[1], 10);
 
@@ -1213,7 +1220,7 @@ export class FreeCell {
 				history,
 				lines.map((line) => line.trim())
 			);
-			history.push(peek.trim());
+			history.push(popped.trim());
 			history.push(actionText);
 			// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
 			//  - text we can use what history is valid; ['init partial history', ..., actionText]

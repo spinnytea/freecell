@@ -101,7 +101,17 @@ export interface CardSequence {
 	*/
 	cards: Card[];
 
-	/** since we are allowing any card to be selected or inspected, not all of them are movable */
+	/**
+		Since we are allowing any card to be selected or inspected, not all of them are movable.
+		`canMove` is entirely based on `location`
+
+		this is not a question of "does it have places that it can move to" (that's `availableMoves.length`)
+		this is a question of "is this selection allowed to move"
+
+		note that this is not part of a `Freecell.selection`, this is "any arbitrary card sequence"
+
+		FIXME rename (maybe peekOnly or legalSelection)
+	*/
 	canMove: boolean;
 }
 

@@ -1885,4 +1885,18 @@ describe('game.touch', () => {
 			]);
 		});
 	});
+
+	// FIXME test.todo
+	describe('dropping the selection', () => {
+		/**
+			when you have a valid selection, and it can move,
+			- and then you click on something else
+			- or when you click on a location that is not one of the availableMoves
+		*/
+		test.todo('re-select when move is invalid');
+
+		test.todo('allow "growing/shrinking sequence of current selection"');
+
+		test.todo('allow moving selection from one cell to another cell');
+	});
 });

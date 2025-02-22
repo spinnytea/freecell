@@ -8,12 +8,13 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 	 - shuffle?
 	 - deal
 	 - win -> init
+
+	REVIEW (controls) mouse
 */
 export function useClickSetupControls() {
 	const [, setSettings] = useContext(SettingsContext);
 	const [game, setGame, newGame] = useContext(GameContext);
 
-	/** REVIEW (controls) mouse */
 	function handleClickSetup() {
 		if (game.win) {
 			// click to reset
