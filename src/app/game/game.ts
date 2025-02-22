@@ -13,6 +13,7 @@ import {
 	shorthandCard,
 	shorthandPosition,
 	shorthandSequence,
+	shorthandSequenceWithPosition,
 	SuitList,
 } from '@/app/game/card/card';
 import {
@@ -438,7 +439,7 @@ export class FreeCell {
 
 	clearSelection(): FreeCell | this {
 		if (this.selection) {
-			const actionText = 'deselect ' + shorthandSequence(this.selection, true);
+			const actionText = 'deselect ' + shorthandSequenceWithPosition(this.selection);
 			return this.__clone({
 				action: { text: actionText, type: 'deselect' },
 				selection: null,
@@ -469,7 +470,7 @@ export class FreeCell {
 			// - you'd have to deselect it before you can continue with gameplay
 			if (selection.cards.length && this.cursor.fixture !== 'foundation') {
 				return this.__clone({
-					action: { text: 'select ' + shorthandSequence(selection, true), type: 'select' },
+					action: { text: 'select ' + shorthandSequenceWithPosition(selection), type: 'select' },
 					selection,
 					availableMoves: findAvailableMoves(this, selection),
 				});

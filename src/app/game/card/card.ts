@@ -276,17 +276,8 @@ export function parseShorthandCard(r: string | undefined, s: string | undefined)
 	return { rank, suit };
 }
 
-// FIXME review uses, because checking peekOnly here is _confusing_
-export function shorthandSequence(sequence: CardSequence, includePosition = false) {
-	const cards = sequence.cards.map((card) => shorthandCard(card)).join('-');
-
-	// only incluce the position if we can move this selection
-	// i.e. in some settings (disallow invalid selections), this action wouldn't be allowed
-	if (!sequence.peekOnly && includePosition) {
-		return shorthandPosition(sequence.location) + ' ' + cards;
-	}
-
-	return cards;
+export function shorthandSequence(sequence: CardSequence) {
+	return sequence.cards.map((card) => shorthandCard(card)).join('-');
 }
 
 export function shorthandPosition(location: CardLocation): Position {
@@ -308,6 +299,12 @@ export function shorthandPosition(location: CardLocation): Position {
 		}
 	}
 	throw new Error(`invalid position: ${JSON.stringify(location)}`);
+}
+
+export function shorthandSequenceWithPosition(sequence: CardSequence) {
+	// but don't include the position if this is select-to-peek
+	if (sequence.peekOnly) return shorthandSequence(sequence);
+	return shorthandPosition(sequence.location) + ' ' + shorthandSequence(sequence);
 }
 
 /**
