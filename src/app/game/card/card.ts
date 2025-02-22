@@ -285,9 +285,6 @@ export function shorthandPosition(location: CardLocation): Position {
 	if (location.fixture === 'foundation') {
 		return 'h';
 	} else if (location.fixture === 'cascade') {
-		// this doesn't check data[1], it assumes it's the final row
-		// sequences would need to check data[1] + card.length, not just the location
-		// (could pass in an optional peekOnly with default of true)
 		if (d0 === 9) {
 			return '0';
 		} else if (d0 >= 0 && d0 < 9) {

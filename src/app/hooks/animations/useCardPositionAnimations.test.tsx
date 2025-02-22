@@ -348,15 +348,17 @@ describe('useCardPositionAnimations', () => {
 			/**
 				should we animate the AS dip to "deselect" (un peek) with tweenCards
 
-				REVIEW (animation) refactor tweenCards?
+				REVIEW (techdebt) (animation) refactor tweenCards?
 				 - the more i review these animations the more i think:
 				 - replace tweenCards the _entire_ FreeCell game state
 				 - do the animation to the tweenGame
 				 - then do the animation to the final game
 				---
 				 - does that even work in this case since the deselect is masked?
+				 - yeah, because we don't need a 3 stage animation
+				 - we just want to animate everything to the "final resting state" _and then_ the auto-foundation
 			*/
-			test.skip('selection goes to foundation', () => {
+			test('selection goes to foundation', () => {
 				const gameStateOne = FreeCell.parse(
 					'' +
 						' 4S 7S 2S    AH          \n' +
@@ -385,7 +387,15 @@ describe('useCardPositionAnimations', () => {
 				// BUG (techdebt) (animation) (gameplay) finish test
 				//  - yes we animate 8H-7C→cascade
 				//  - yes we animate auto-foundation 77c AS,AD,2S
-				//  - but should we animate deselect AS
+				//  - we should animate also deselect AS
+
+				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+				mockReset();
+				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+				expect(getCardIdsFromSpy(toSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
+				expect(getCardIdsFromSpy(fromToSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
+				expect(getCardIdsFromSpy(setSpy).length).toBe(47); // 52 - 5
 			});
 		});
 

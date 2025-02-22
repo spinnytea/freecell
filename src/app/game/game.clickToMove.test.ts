@@ -40,10 +40,13 @@ describe('game.clickToMove', () => {
 	test('allow changing selection if peekOnly', () => {
 		game = game.clickToMove({ fixture: 'cascade', data: [0, 1] });
 		expect(game.previousAction.text).toBe('select 2H');
+		expect(game.selection?.peekOnly).toBe(true);
 		game = game.clickToMove({ fixture: 'cascade', data: [2, 2] });
 		expect(game.previousAction.text).toBe('select 5D');
+		expect(game.selection?.peekOnly).toBe(true);
 		game = game.clickToMove({ fixture: 'cascade', data: [3, 0] });
 		expect(game.previousAction.text).toBe('select 3D');
+		expect(game.selection?.peekOnly).toBe(true);
 	});
 
 	/** when we've selected something that could move, _if it had any (╯°□°)╯ 🏆_ */
@@ -82,10 +85,42 @@ describe('game.clickToMove', () => {
 				'      |9D|               \n' +
 				' select 3 QS-JH-TC-9D'
 		);
+		expect(game.selection).toEqual({
+			location: { fixture: 'cascade', data: [2, 6] },
+			cards: [
+				{ rank: 'queen', suit: 'spades', location: { fixture: 'cascade', data: [2, 6] } },
+				{ rank: 'jack', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } },
+				{ rank: '10', suit: 'clubs', location: { fixture: 'cascade', data: [2, 8] } },
+				{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 9] } },
+			],
+			peekOnly: false,
+		});
+
 		game = game.clickToMove({ fixture: 'cascade', data: [2, 5] });
 		expect(game.previousAction.text).toBe('select 3 KD-QS-JH-TC-9D');
+		expect(game.selection).toEqual({
+			location: { fixture: 'cascade', data: [2, 5] },
+			cards: [
+				{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 5] } },
+				{ rank: 'queen', suit: 'spades', location: { fixture: 'cascade', data: [2, 6] } },
+				{ rank: 'jack', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } },
+				{ rank: '10', suit: 'clubs', location: { fixture: 'cascade', data: [2, 8] } },
+				{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 9] } },
+			],
+			peekOnly: false,
+		});
+
 		game = game.clickToMove({ fixture: 'cascade', data: [2, 7] });
 		expect(game.previousAction.text).toBe('select 3 JH-TC-9D');
+		expect(game.selection).toEqual({
+			location: { fixture: 'cascade', data: [2, 7] },
+			cards: [
+				{ rank: 'jack', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } },
+				{ rank: '10', suit: 'clubs', location: { fixture: 'cascade', data: [2, 8] } },
+				{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 9] } },
+			],
+			peekOnly: false,
+		});
 	});
 
 	test('allow moving selection from one cell to another cell', () => {

@@ -152,7 +152,7 @@ function SequenceBox({
 			if (peekOnly) {
 				height = fixtureSizes.tableau.offsetTop;
 			}
-			if (sequence.cards.length > 1 || peekOnly) {
+			if (length > 1 || peekOnly) {
 				if (d1 > 0) {
 					top -= fixtureSizes.tableau.offsetTop * PEEK_UP;
 					height += fixtureSizes.tableau.offsetTop * PEEK_UP;

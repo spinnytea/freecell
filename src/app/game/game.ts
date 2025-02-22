@@ -478,10 +478,7 @@ export class FreeCell {
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length) {
-			// TODO (animation) (3-priority) animate invalid move + unit tests
-			//  - if we have a selection and there are no valid moves (select a 3, no empty cells or cascades, no 4s, no foundation)
-			//  - if we didn't have a selection… but we couldn't select the thing we touched (i.e. foundation (relax this?))
-			//  - if we have a selection, and we can't select the new thing (^^ relax this)
+			// TODO (animation) (3-priority) animate invalid move
 			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
 		}
 
