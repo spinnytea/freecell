@@ -22,7 +22,8 @@ export type FixtureLayout = 'landscape' | 'portrait' | 'auto';
 */
 const _LR_HOME_MARGIN = 1;
 const _LR_HOME_GAP = 2;
-const TB_HOME_TOP = 0.2; // TODO (hud) (4-priority) double when portrait
+const TB_HOME_TOP_STANDARD = 0.2;
+const TB_HOME_TOP_PORTRAIT = 0.3;
 const _LR_HOME_CARD_SPACING = 1 / 6;
 const TB_TABLEAU_TOP = 0.3;
 const _LR_TABLEAU_CARD_SPACING = 2 / 7;
@@ -93,6 +94,11 @@ export function calcFixtureSizes({
 	else if (fixtureLayout === 'portrait') aspectratio = 0.001;
 	// smooth transition across the +/-, but negative (effectively) doubles it's scale factor
 	else if (aspectratio < 1) aspectratio = 1 - (1 - aspectratio) * 2.5;
+
+	// in portrait mode, use a larger TB_GAP
+	// (it's not the card size, iPad tablet is large cards in portrait)
+	// XXX (techdebt) (hud) i don't like that this is a hard cutoff, and not scaled, but I can't get it right
+	const TB_HOME_TOP = aspectratio < 1 ? TB_HOME_TOP_PORTRAIT : TB_HOME_TOP_STANDARD;
 
 	// less spacing in portait mode, more spacing in landscape
 	const LR_HOME_CARD_SPACING_SCALED =

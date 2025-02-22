@@ -138,7 +138,7 @@ exports[`FixtureSizes portait 1`] = `
   "cardWidth": 84.211,
   "deck": {
     "left": 14.035,
-    "top": 453.6,
+    "top": 441.4,
   },
   "home": {
     "cellLeft": [
@@ -153,7 +153,7 @@ exports[`FixtureSizes portait 1`] = `
       610.526,
       701.754,
     ],
-    "top": 24.4,
+    "top": 36.6,
   },
   "tableau": {
     "cascadeLeft": [
@@ -167,7 +167,7 @@ exports[`FixtureSizes portait 1`] = `
       701.754,
     ],
     "offsetTop": 24.4,
-    "top": 183,
+    "top": 195.2,
   },
 }
 `;
