@@ -478,7 +478,7 @@ export class FreeCell {
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length) {
-			// TODO (animation) (3-priority) animate invalid move
+			// TODO (animation) (3-priority) animate invalid move; shake
 			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
 		}
 
@@ -529,7 +529,7 @@ export class FreeCell {
 			}
 		}
 
-		// TODO (animation) (3-priority) animate invalid move
+		// TODO (animation) (3-priority) animate invalid move; shake
 		return this.__clone({ action: { text: 'invalid ' + actionText, type: 'invalid' } });
 	}
 
@@ -1171,6 +1171,7 @@ export class FreeCell {
 			}
 		} else if (popped.startsWith(':h')) {
 			const matchSeed = /:h shuffle32 (\d+)/.exec(popped);
+			// TODO (techdebt) (parse-history) ¿'init with unsupported history'? no need to explode
 			if (!matchSeed) throw new Error('unsupported shuffle');
 			const seed = parseInt(matchSeed[1], 10);
 
@@ -1238,6 +1239,7 @@ export class FreeCell {
 			//  - text we can use what history is valid; ['init partial history', ..., actionText]
 			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
 			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
+			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history'
 		}
 
 		// sus out the cursor/selection locations

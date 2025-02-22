@@ -6,7 +6,12 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 /** https://www.unicode.org/reports/tr51/#def_text_presentation_selector */
 const text_presentation_selector = <>&#xFE0E;</>;
 
-// REVIEW (techdebt) (hud) icon ?, ⚙, ⋮, ⋯
+/**
+	REVIEW (techdebt) (hud) icon ?, ⚙, ⋮, ⋯
+	TODO (deployment) (hud) The settings icon is wrong on iPad.
+	- I thought I tested it with the dev server??
+	- The build didn't respect the escape character to show Un icode instead of the emoji
+*/
 export function SettingsButton() {
 	const [, setSettings] = useContext(SettingsContext);
 
