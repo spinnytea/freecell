@@ -1853,7 +1853,7 @@ describe('game.touch', () => {
 					priority: 11,
 				},
 			]);
-			game = game.touch();
+			game = game.touch({ stopWithInvalid: true });
 			expect(game.print()).toBe(
 				'' +
 					' QS AD KH 2D QC AH JS 4D \n' +
@@ -1888,6 +1888,18 @@ describe('game.touch', () => {
 
 	// FIXME test.todo
 	describe('dropping the selection', () => {
+		let game: FreeCell;
+		beforeEach(() => {
+			game = FreeCell.parse(
+				'' +
+					' 3C 3D    3S             \n' +
+					' KS 2C 2D    2S \n' +
+					' QH             \n' +
+					' JS             \n' +
+					' hand-jammed'
+			);
+		});
+
 		/**
 			when you have a valid selection, and it can move,
 			- and then you click on something else
@@ -1895,8 +1907,56 @@ describe('game.touch', () => {
 		*/
 		test.todo('re-select when move is invalid');
 
-		test.todo('allow "growing/shrinking sequence of current selection"');
+		test('allow "growing/shrinking sequence of current selection"', () => {
+			// march down
+			game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 1 KS-QH-JS');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 1] }).touch();
+			expect(game.previousAction.text).toBe('select 1 QH-JS');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
+			expect(game.previousAction.text).toBe('select 1 JS');
 
-		test.todo('allow moving selection from one cell to another cell');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
+			expect(game.previousAction.text).toBe('deselect 1 JS');
+
+			// march up
+			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
+			expect(game.previousAction.text).toBe('select 1 JS');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 1] }).touch();
+			expect(game.previousAction.text).toBe('select 1 QH-JS');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 1 KS-QH-JS');
+
+			// skip a few
+			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
+			expect(game.previousAction.text).toBe('select 1 JS');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 1 KS-QH-JS');
+		});
+
+		test('allow moving selection from one cell to another cell', () => {
+			game = game.setCursor({ fixture: 'cell', data: [0] }).touch();
+			expect(game.previousAction.text).toBe('select a 3C');
+			game = game.setCursor({ fixture: 'cell', data: [1] }).touch();
+			expect(game.previousAction.text).toBe('select b 3D');
+			game = game.setCursor({ fixture: 'cell', data: [3] }).touch();
+			expect(game.previousAction.text).toBe('select d 3S');
+
+			// semi-unrelated: w/ selection, actually moves
+			game = game.setCursor({ fixture: 'cell', data: [2] }).touch();
+			expect(game.print()).toBe(
+				'' +
+					' 3C 3D>3S                \n' +
+					' KS 2C 2D    2S \n' +
+					' QH             \n' +
+					' JS             \n' +
+					':d KH KD KC QS QD QC JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3H 2H AS AH AD AC \n' +
+					' move dc 3S→cell'
+			);
+
+			// semi-unrelated: w/o selection, cannot select empty cell
+			game = game.setCursor({ fixture: 'cell', data: [3] }).touch();
+			expect(game.previousAction.text).toBe('touch stop');
+		});
 	});
 });

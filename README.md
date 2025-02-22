@@ -17,7 +17,7 @@ TODO (motivation) main development tasks:
 ```
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
-\b(BUG|TODO|XXX|REVIEW|IDEA)\b\s+[^(]
+\b(BUG|TODO|XXX|REVIEW|IDEA)\b[^\s][^(]
 \((\d+)-priority\)
 ```
 

@@ -50,6 +50,12 @@ interface OptionsAutoFoundation {
 		XXX (techdebt) this is just to get unit tests passing, we should have examples that do not need this
 	*/
 	autoFoundation?: boolean;
+
+	/**
+	 	@deprecated
+		XXX (techdebt) this is just to get unit tests passing, and maintain this flow until we have settings
+	*/
+	stopWithInvalid?: boolean;
 }
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
@@ -455,16 +461,14 @@ export class FreeCell {
 		- FIXME (controls) (4-priority) make it easier to re-select when move is invalid
 		  - OR disable select-to-peek for mouse
 	*/
-	touch({ autoFoundation = true }: OptionsAutoFoundation = {}): FreeCell {
+	touch({ autoFoundation = true, stopWithInvalid = false }: OptionsAutoFoundation = {}): FreeCell {
 		// clear the selction, if re-touching the same spot
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
 			return this.clearSelection();
 		}
 
 		// set selection, or move selection if applicable
-		// FIXME (controls) allow "growing/shrinking sequence of current selection"
 		// FIXME (controls) || !game.availableMoves?.length (if the current selection has no valid moves)
-		// FIXME (controls) allow moving selection from one cell to another cell
 		if (!this.selection?.canMove) {
 			const selection = getSequenceAt(this, this.cursor);
 			// we can't do anything with a foundation (we can move cards off of it)
@@ -480,7 +484,7 @@ export class FreeCell {
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length) {
-			// XXX (techdebt) unit tests
+			// TODO (animation) (3-priority) animate invalid move + unit tests
 			//  - if we have a selection and there are no valid moves (select a 3, no empty cells or cascades, no 4s, no foundation)
 			//  - if we didn't have a selection… but we couldn't select the thing we touched (i.e. foundation (relax this?))
 			//  - if we have a selection, and we can't select the new thing (^^ relax this)
@@ -519,7 +523,21 @@ export class FreeCell {
 			return movedGame;
 		}
 
+		if (!stopWithInvalid) {
+			// we should't be able to get this part of the code without a selection
+			// however, IFF we change things and it's possible later,
+			// then this will infinte loop (clearSelection is a noop without a selection)
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			if (this.selection) {
+				return this.clearSelection().touch();
+			}
+		}
+
 		// TODO (animation) (3-priority) animate invalid move
+		// no actions should be invalid
+		//  - i.e. do something else
+		//  - e.g. click-to-move: instead of saying "your selection -> here is invalid" just move the selection
+		// but we should keep this fallback in case our settings get messed up
 		return this.__clone({ action: { text: 'invalid ' + actionText, type: 'invalid' } });
 	}
 
