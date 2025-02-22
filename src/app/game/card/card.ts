@@ -102,17 +102,14 @@ export interface CardSequence {
 	cards: Card[];
 
 	/**
-		Since we are allowing any card to be selected or inspected, not all of them are movable.
-		`canMove` is entirely based on `location`
+		Since we allow select-to-peek, not all selections are legal/ly movable.
 
-		this is not a question of "does it have places that it can move to" (that's `availableMoves.length`)
-		this is a question of "is this selection allowed to move"
+		If we were to act entirely based on shorthand, "select 3 JD" would mean, "select the last complete sequence in 3".
+		However, we allow something like "select JD", technically in 3, but not the last card(s) in the cascade.
 
-		note that this is not part of a `Freecell.selection`, this is "any arbitrary card sequence"
-
-		FIXME rename (maybe peekOnly or legalSelection)
+		this is _**not**_ `hasAvailableMoves = !!availableMoves?.length`
 	*/
-	canMove: boolean;
+	peekOnly: boolean;
 }
 
 /* ************** */
@@ -147,7 +144,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 					return {
 						location,
 						cards: [card],
-						canMove: false,
+						peekOnly: true,
 					};
 				}
 			}
@@ -159,7 +156,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 					return {
 						location,
 						cards: [card],
-						canMove: false,
+						peekOnly: true,
 					};
 				}
 			}
@@ -171,7 +168,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 					return {
 						location,
 						cards: [card],
-						canMove: true,
+						peekOnly: false,
 					};
 				}
 			}
@@ -185,7 +182,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 			const sequence: CardSequence = {
 				location,
 				cards: [cascade[idx]],
-				canMove: false,
+				peekOnly: true,
 			};
 
 			while (
@@ -198,7 +195,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 			}
 
 			if (idx === cascade.length - 1) {
-				sequence.canMove = true;
+				sequence.peekOnly = false;
 			}
 
 			return sequence;
@@ -206,7 +203,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 	}
 
 	// no cards at selection
-	return { location, cards: [], canMove: false };
+	return { location, cards: [], peekOnly: true };
 }
 
 /* ************* */
@@ -279,12 +276,13 @@ export function parseShorthandCard(r: string | undefined, s: string | undefined)
 	return { rank, suit };
 }
 
+// FIXME review uses, because checking peekOnly here is _confusing_
 export function shorthandSequence(sequence: CardSequence, includePosition = false) {
 	const cards = sequence.cards.map((card) => shorthandCard(card)).join('-');
 
 	// only incluce the position if we can move this selection
 	// i.e. in some settings (disallow invalid selections), this action wouldn't be allowed
-	if (sequence.canMove && includePosition) {
+	if (!sequence.peekOnly && includePosition) {
 		return shorthandPosition(sequence.location) + ' ' + cards;
 	}
 
@@ -298,7 +296,7 @@ export function shorthandPosition(location: CardLocation): Position {
 	} else if (location.fixture === 'cascade') {
 		// this doesn't check data[1], it assumes it's the final row
 		// sequences would need to check data[1] + card.length, not just the location
-		// (could pass in a optional canMove with default of true)
+		// (could pass in an optional peekOnly with default of true)
 		if (d0 === 9) {
 			return '0';
 		} else if (d0 >= 0 && d0 < 9) {

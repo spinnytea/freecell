@@ -37,7 +37,7 @@ describe('game.clickToMove', () => {
 	});
 
 	/** when we selected something within a cascade / select-to-peek */
-	test('allow changing selection if !canMove', () => {
+	test('allow changing selection if peekOnly', () => {
 		game = game.clickToMove({ fixture: 'cascade', data: [0, 1] });
 		expect(game.previousAction.text).toBe('select 2H');
 		game = game.clickToMove({ fixture: 'cascade', data: [2, 2] });

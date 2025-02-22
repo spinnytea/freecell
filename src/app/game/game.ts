@@ -462,7 +462,7 @@ export class FreeCell {
 		}
 
 		// set selection, or move selection if applicable
-		if (!this.selection?.canMove) {
+		if (!this.selection || this.selection.peekOnly) {
 			const selection = getSequenceAt(this, this.cursor);
 			// we can't do anything with a foundation (we can move cards off of it)
 			// - therefore it doesn't make sense to select it
@@ -626,8 +626,9 @@ export class FreeCell {
 				if (canAccept) {
 					game.cells.forEach((c, c_idx) => {
 						if (canAccept) {
-							const canMove = c && canStackFoundation(f, c) && !game.selection?.cards.includes(c);
-							if (canMove) {
+							const canMoveToFoundation =
+								c && canStackFoundation(f, c) && !game.selection?.cards.includes(c);
+							if (canMoveToFoundation) {
 								canAccept = false;
 								keepGoing = true;
 								didAnyMove = true;
@@ -653,8 +654,9 @@ export class FreeCell {
 						const last_idx = cascade.length - 1;
 						if (canAccept && cascade.length > 0) {
 							const c = cascade[last_idx];
-							const canMove = canStackFoundation(f, c) && !game.selection?.cards.includes(c);
-							if (canMove) {
+							const canMoveToFoundation =
+								canStackFoundation(f, c) && !game.selection?.cards.includes(c);
+							if (canMoveToFoundation) {
 								canAccept = false;
 								keepGoing = true;
 								didAnyMove = true;
@@ -858,7 +860,7 @@ export class FreeCell {
 		print the game board
 		- all card locations
 		- current cursor (keyboard)
-		- current selection (helps debug peek, needed for canMove)
+		- current selection
 
 		you can use this to play the game from a text-only interface (e.g. console) if you like
 

@@ -375,7 +375,7 @@ describe('useCardPositionAnimations', () => {
 				expect(gameStateOne.selection).toEqual({
 					location: { fixture: 'cascade', data: [6, 4] },
 					cards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [6, 4] } }],
-					canMove: false,
+					peekOnly: true,
 				});
 				const gameStateTwo = gameStateOne.clickToMove({ fixture: 'cascade', data: [6, 5] });
 				expect(gameStateTwo.previousAction.text).toBe(

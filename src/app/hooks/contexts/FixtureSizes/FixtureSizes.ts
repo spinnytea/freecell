@@ -265,7 +265,7 @@ export function calcTopLeftZ(
 			};
 			if (selection?.location.fixture === 'cascade' && selection.location.data[0] === data[0]) {
 				const sd1 = selection.location.data[1];
-				if (selection.cards.length > 1 || !selection.canMove) {
+				if (selection.cards.length > 1 || selection.peekOnly) {
 					if (data[1] > sd1) {
 						ret.top += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
 					} else if (data[1] === sd1 && sd1 > 0) {

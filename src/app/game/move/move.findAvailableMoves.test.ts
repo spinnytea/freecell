@@ -48,7 +48,7 @@ describe('game/move.findAvailableMoves', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cascade', data: [4, 5] },
 				cards: [{ rank: 'queen', suit: 'spades', location: { fixture: 'cascade', data: [4, 5] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.cells[0]).toBe(null);
 			expect(game.availableMoves).toEqual([
@@ -72,7 +72,7 @@ describe('game/move.findAvailableMoves', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cascade', data: [4, 4] },
 				cards: [{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 4] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.availableMoves).toEqual([]);
 		});
@@ -87,7 +87,7 @@ describe('game/move.findAvailableMoves', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cascade', data: [0, 6] },
 				cards: [{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [0, 6] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.foundations[0]).toBe(null);
 			expect(game.availableMoves).toEqual([
@@ -111,7 +111,7 @@ describe('game/move.findAvailableMoves', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cascade', data: [1, 6] },
 				cards: [{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 6] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			// XXX (techdebt) unsure if we should prefer foundation or cells
 			expect(game.availableMoves).toEqual([
@@ -166,7 +166,7 @@ describe('game/move.findAvailableMoves', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cascade', data: [4, 4] },
 				cards: [{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 4] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.foundations[0]).toEqual({
 				rank: 'queen',
@@ -184,7 +184,7 @@ describe('game/move.findAvailableMoves', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cell', data: [0] },
 				cards: [{ rank: 'queen', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.foundations[2]).toEqual({
 				rank: 'jack',
@@ -221,7 +221,7 @@ describe('game/move.findAvailableMoves', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cascade', data: [0, 6] },
 				cards: [{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [0, 6] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.tableau[6][5]).toEqual({
 				rank: 'king',
@@ -251,7 +251,7 @@ describe('game/move.findAvailableMoves', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cascade', data: [0, 5] },
 				cards: [{ rank: '7', suit: 'clubs', location: { fixture: 'cascade', data: [0, 5] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.availableMoves).toEqual([]);
 		});

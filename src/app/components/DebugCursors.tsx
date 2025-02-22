@@ -125,7 +125,7 @@ function SequenceBox({
 			data: [d0, d1],
 		},
 		cards: { length },
-		canMove,
+		peekOnly,
 	} = sequence;
 
 	let top = 0;
@@ -149,10 +149,10 @@ function SequenceBox({
 		case 'cascade':
 			top = fixtureSizes.tableau.top + d1 * fixtureSizes.tableau.offsetTop;
 			left = fixtureSizes.tableau.cascadeLeft[d0];
-			if (!canMove) {
+			if (peekOnly) {
 				height = fixtureSizes.tableau.offsetTop;
 			}
-			if (sequence.cards.length > 1 || !sequence.canMove) {
+			if (sequence.cards.length > 1 || peekOnly) {
 				if (d1 > 0) {
 					top -= fixtureSizes.tableau.offsetTop * PEEK_UP;
 					height += fixtureSizes.tableau.offsetTop * PEEK_UP;

@@ -454,7 +454,7 @@ describe('game.undo (+ history)', () => {
 						{ rank: '6', suit: 'clubs', location: { fixture: 'cascade', data: [7, 4] } },
 						{ rank: '5', suit: 'hearts', location: { fixture: 'cascade', data: [7, 5] } },
 					],
-					canMove: true,
+					peekOnly: false,
 				});
 				game = game.undo();
 				expect(game.print()).toBe(

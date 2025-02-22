@@ -37,7 +37,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'deck', data: [51] },
 					cards: [{ rank: 'king', suit: 'spades', location: { fixture: 'deck', data: [51] } }],
-					canMove: false,
+					peekOnly: true,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -93,7 +93,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'deck', data: [0] },
 					cards: [{ rank: '9', suit: 'diamonds', location: { fixture: 'deck', data: [0] } }],
-					canMove: false,
+					peekOnly: true,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -140,7 +140,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'cell', data: [1] },
 					cards: [{ rank: 'queen', suit: 'diamonds', location: { fixture: 'cell', data: [1] } }],
-					canMove: true,
+					peekOnly: false,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -197,7 +197,7 @@ describe('game.touch', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cell', data: [3] },
 				cards: [{ rank: '6', suit: 'spades', location: { fixture: 'cell', data: [3] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.print()).toBe(
 				'' +
@@ -283,7 +283,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'cascade', data: [4, 1] },
 					cards: [{ rank: '3', suit: 'clubs', location: { fixture: 'cascade', data: [4, 1] } }],
-					canMove: false,
+					peekOnly: true,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -332,7 +332,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'cascade', data: [5, 4] },
 					cards: [{ rank: '2', suit: 'clubs', location: { fixture: 'cascade', data: [5, 4] } }],
-					canMove: true,
+					peekOnly: false,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -385,7 +385,7 @@ describe('game.touch', () => {
 						{ rank: '3', suit: 'spades', location: { fixture: 'cascade', data: [1, 1] } },
 						{ rank: '2', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 2] } },
 					],
-					canMove: false,
+					peekOnly: true,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -437,7 +437,7 @@ describe('game.touch', () => {
 						{ rank: 'queen', suit: 'hearts', location: { fixture: 'cascade', data: [0, 4] } },
 						{ rank: 'jack', suit: 'clubs', location: { fixture: 'cascade', data: [0, 5] } },
 					],
-					canMove: true,
+					peekOnly: false,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -522,7 +522,7 @@ describe('game.touch', () => {
 						{ rank: '8', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 5] } },
 						{ rank: '7', suit: 'clubs', location: { fixture: 'cascade', data: [2, 6] } },
 					],
-					canMove: true,
+					peekOnly: false,
 				});
 				expect(game.availableMoves).toEqual([]);
 			});
@@ -549,7 +549,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'cascade', data: [7, 1] },
 					cards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [7, 1] } }],
-					canMove: false,
+					peekOnly: true,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -642,7 +642,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'cell', data: [0] },
 					cards: [{ rank: 'king', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
-					canMove: true,
+					peekOnly: false,
 				});
 				expect(game.availableMoves).toEqual([
 					{
@@ -693,7 +693,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'cell', data: [0] },
 					cards: [{ rank: 'king', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
-					canMove: true,
+					peekOnly: false,
 				});
 				expect(game.availableMoves).toEqual([
 					{
@@ -760,7 +760,7 @@ describe('game.touch', () => {
 					expect(game.selection).toEqual({
 						location: { fixture: 'cell', data: [0] },
 						cards: [{ rank: 'queen', suit: 'clubs', location: { fixture: 'cell', data: [0] } }],
-						canMove: true,
+						peekOnly: false,
 					});
 					expect(game.availableMoves).toEqual([
 						{
@@ -818,7 +818,7 @@ describe('game.touch', () => {
 						expect(game.selection).toEqual({
 							location: { fixture: 'cell', data: [0] },
 							cards: [{ rank: '10', suit: 'diamonds', location: { fixture: 'cell', data: [0] } }],
-							canMove: true,
+							peekOnly: false,
 						});
 						expect(game.availableMoves).toEqual([
 							{
@@ -914,7 +914,7 @@ describe('game.touch', () => {
 					expect(game.selection).toEqual({
 						location: { fixture: 'cell', data: [0] },
 						cards: [{ rank: 'queen', suit: 'clubs', location: { fixture: 'cell', data: [0] } }],
-						canMove: true,
+						peekOnly: false,
 					});
 					expect(game.availableMoves).toEqual([
 						{
@@ -999,7 +999,7 @@ describe('game.touch', () => {
 						cards: [
 							{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [0, 6] } },
 						],
-						canMove: true,
+						peekOnly: false,
 					});
 					expect(game.availableMoves).toEqual([
 						{
@@ -1071,7 +1071,7 @@ describe('game.touch', () => {
 						cards: [
 							{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 6] } },
 						],
-						canMove: true,
+						peekOnly: false,
 					});
 					expect(game.availableMoves).toEqual([
 						{
@@ -1159,7 +1159,7 @@ describe('game.touch', () => {
 							cards: [
 								{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [0, 6] } },
 							],
-							canMove: true,
+							peekOnly: false,
 						});
 						expect(game.availableMoves).toEqual([
 							{
@@ -1238,7 +1238,7 @@ describe('game.touch', () => {
 								cards: [
 									{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } },
 								],
-								canMove: true,
+								peekOnly: false,
 							});
 							expect(game.availableMoves).toEqual([
 								{
@@ -1330,7 +1330,7 @@ describe('game.touch', () => {
 							cards: [
 								{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } },
 							],
-							canMove: true,
+							peekOnly: false,
 						});
 						expect(game.availableMoves).toEqual([
 							{
@@ -1436,7 +1436,7 @@ describe('game.touch', () => {
 								{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 1] } },
 								{ rank: '8', suit: 'clubs', location: { fixture: 'cascade', data: [1, 2] } },
 							],
-							canMove: true,
+							peekOnly: false,
 						});
 						expect(game.availableMoves).toEqual([
 							{
@@ -1516,7 +1516,7 @@ describe('game.touch', () => {
 									{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 1] } },
 									{ rank: '8', suit: 'clubs', location: { fixture: 'cascade', data: [1, 2] } },
 								],
-								canMove: true,
+								peekOnly: false,
 							});
 							expect(game.availableMoves).toEqual([
 								{
@@ -1594,7 +1594,7 @@ describe('game.touch', () => {
 								{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 1] } },
 								{ rank: '8', suit: 'clubs', location: { fixture: 'cascade', data: [1, 2] } },
 							],
-							canMove: true,
+							peekOnly: false,
 						});
 						expect(game.availableMoves).toEqual([
 							{
@@ -1839,7 +1839,7 @@ describe('game.touch', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cascade', data: [7, 4] },
 				cards: [{ rank: '9', suit: 'clubs', location: { fixture: 'cascade', data: [7, 4] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.availableMoves).toEqual([
 				{
@@ -1869,7 +1869,7 @@ describe('game.touch', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cascade', data: [7, 4] },
 				cards: [{ rank: '9', suit: 'clubs', location: { fixture: 'cascade', data: [7, 4] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.availableMoves).toEqual([
 				{
