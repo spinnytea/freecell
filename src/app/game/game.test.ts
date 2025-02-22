@@ -490,6 +490,7 @@ describe('game', () => {
 		});
 	});
 
+	// TODO (animation) (techdebt) For all these completed games, also make an "animation" version
 	describe('complete games', () => {
 		test('Game #1', () => {
 			let game = new FreeCell().shuffle32(1).dealAll();

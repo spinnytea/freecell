@@ -942,7 +942,8 @@ describe('game.undo (+ history)', () => {
 						' 27 3d 37 b7 42 4b 45 '
 				);
 				expect(game.history).toEqual(['init with invalid history', 'touch stop']);
-				expect(() => game.undo()).toThrow('cannot undo move type touch stop');
+				// TODO (more-undo) why does this explode instead of silently skip it?
+				expect(() => game.undo()).toThrow('cannot undo move type "touch stop"');
 			});
 		});
 	});

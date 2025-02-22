@@ -11,7 +11,7 @@ import {
 import { FreeCell } from '@/app/game/game';
 import { moveCards } from '@/app/game/move/move';
 
-// TODO (techdebt) remove auto-foundation-tween
+/** TODO (techdebt) remove auto-foundation-tween */
 export type PreviousActionType =
 	| 'init'
 	| 'shuffle'
@@ -116,7 +116,7 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 		case 'deselect':
 		case 'invalid':
 		case 'auto-foundation-tween':
-			throw new Error(`cannot undo move type ${actionText}`);
+			throw new Error(`cannot undo move type "${actionText}"`);
 	}
 }
 

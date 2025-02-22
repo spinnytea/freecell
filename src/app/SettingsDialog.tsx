@@ -6,6 +6,7 @@ import styles_dialog from '@/app/components/dialog/dialog.module.css';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
+/** TODO (hud) (deployment) iPad dialog buttons are wweeeiiirddd */
 export default function SettingsDialog() {
 	const [, setGame, newGame] = useContext(GameContext);
 	const [{ showSettingsDialog }, setSettings] = useContext(SettingsContext);

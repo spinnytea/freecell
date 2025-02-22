@@ -24,13 +24,12 @@ export interface UpdateCardPositionsType {
 // IDEA (animation) animations by move type
 //  - first check all the cards that did move (updateCardPositions)
 //  - then check all the cards we expected to move based on actionText
-//  - then pick an animation based on actionType
+//  - then pick an animation based on PreviousActionType/actionText
+//    there's nuance to some of the PreviousActionType (e.g. variations on init/select)
 //  - if there's a mismatch, run the default animation
 //  - most actionTypes can use the default, esp at first
 //  ---
 //  - we are informally doing this for `move-foundation`
-// TODO (animation) (2-priority) If win -> init, always run `.to` staggered animations
-//  - it keeps forgetting and animating all at once
 export function calcUpdatedCardPositions({
 	fixtureSizes,
 	previousTLs,
