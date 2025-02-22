@@ -454,10 +454,6 @@ export class FreeCell {
 		e.g. select cursor, deselect cursor, move selection
 
 		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
-		- FIXME (controls) (3-priority) click-to-move does not allow selection if !canMove
-		- FIXME (controls) (3-priority) Consider: disable select-to-peek for mouse, but still allow it for keyboard
-		  - either disable them outright or lock them behind a settings flag
-		  - this if only if we can't figure out how to make it easier
 	*/
 	touch({ autoFoundation = true, stopWithInvalid = false }: OptionsAutoFoundation = {}): FreeCell {
 		// clear the selction, if re-touching the same spot
@@ -466,7 +462,6 @@ export class FreeCell {
 		}
 
 		// set selection, or move selection if applicable
-		// FIXME (controls) || !game.availableMoves?.length (if the current selection has no valid moves)
 		if (!this.selection?.canMove) {
 			const selection = getSequenceAt(this, this.cursor);
 			// we can't do anything with a foundation (we can move cards off of it)

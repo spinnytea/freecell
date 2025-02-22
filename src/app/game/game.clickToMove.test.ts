@@ -1,7 +1,5 @@
 import { FreeCell } from '@/app/game/game';
 
-// FIXME test.todo
-// FIXME more scenarios
 describe('game.clickToMove', () => {
 	let game: FreeCell;
 	beforeEach(() => {
@@ -39,10 +37,32 @@ describe('game.clickToMove', () => {
 	});
 
 	/** when we selected something within a cascade / select-to-peek */
-	test.todo('allow changing selection if !canMove');
+	test('allow changing selection if !canMove', () => {
+		game = game.clickToMove({ fixture: 'cascade', data: [0, 1] });
+		expect(game.previousAction.text).toBe('select 2H');
+		game = game.clickToMove({ fixture: 'cascade', data: [2, 2] });
+		expect(game.previousAction.text).toBe('select 5D');
+		game = game.clickToMove({ fixture: 'cascade', data: [3, 0] });
+		expect(game.previousAction.text).toBe('select 3D');
+	});
 
 	/** when we've selected something that could move, _if it had any (╯°□°)╯ 🏆_ */
-	test.todo('allow changing selection if !game.availableMoves?.length');
+	test('allow changing selection if !game.availableMoves?.length', () => {
+		game = game.clickToMove({ fixture: 'cascade', data: [3, 2] });
+		expect(game.previousAction.text).toBe('select 4 5C-4H-3S');
+		expect(game.availableMoves?.length).toBe(0);
+		game = game.clickToMove({ fixture: 'cascade', data: [4, 4] });
+		expect(game.previousAction.text).toBe('select 5 KC-QD-JC');
+		expect(game.availableMoves?.length).toBe(0);
+		game = game.clickToMove({ fixture: 'cascade', data: [6, 5] });
+		expect(game.previousAction.text).toBe('select 7 8H-7C');
+		expect(game.availableMoves?.length).toBe(0);
+
+		// semi-unrelated: we can move something valid
+		game = game.clickToMove({ fixture: 'cascade', data: [7, 4] });
+		expect(game.previousAction.text).toBe('move 8d 4C→cell');
+		expect(game.availableMoves).toBe(null);
+	});
 
 	test('allow "growing/shrinking sequence of current selection"', () => {
 		// REVIEW (history) `select 3` isn't clear on it's own, see how it's the same for all of these?
