@@ -458,8 +458,6 @@ export class FreeCell {
 		- FIXME (controls) (3-priority) Consider: disable select-to-peek for mouse, but still allow it for keyboard
 		  - either disable them outright or lock them behind a settings flag
 		  - this if only if we can't figure out how to make it easier
-		- FIXME (controls) (4-priority) make it easier to re-select when move is invalid
-		  - OR disable select-to-peek for mouse
 	*/
 	touch({ autoFoundation = true, stopWithInvalid = false }: OptionsAutoFoundation = {}): FreeCell {
 		// clear the selction, if re-touching the same spot
@@ -529,15 +527,16 @@ export class FreeCell {
 			// then this will infinte loop (clearSelection is a noop without a selection)
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (this.selection) {
-				return this.clearSelection().touch();
+				const game = this.clearSelection().touch();
+				if (game.previousAction.type !== 'invalid') {
+					return game;
+				}
+				// otherwise, continue with current invalid action result
+				// we don't want to mask the current action, if we can't do something better
 			}
 		}
 
 		// TODO (animation) (3-priority) animate invalid move
-		// no actions should be invalid
-		//  - i.e. do something else
-		//  - e.g. click-to-move: instead of saying "your selection -> here is invalid" just move the selection
-		// but we should keep this fallback in case our settings get messed up
 		return this.__clone({ action: { text: 'invalid ' + actionText, type: 'invalid' } });
 	}
 

@@ -1886,7 +1886,6 @@ describe('game.touch', () => {
 		});
 	});
 
-	// FIXME test.todo
 	describe('dropping the selection', () => {
 		let game: FreeCell;
 		beforeEach(() => {
@@ -1905,7 +1904,24 @@ describe('game.touch', () => {
 			- and then you click on something else
 			- or when you click on a location that is not one of the availableMoves
 		*/
-		test.todo('re-select when move is invalid');
+		test('re-select when move is invalid', () => {
+			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
+			expect(game.previousAction.text).toBe('select 1 JS');
+
+			game = game.setCursor({ fixture: 'cascade', data: [1, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 2 2C');
+			game = game.setCursor({ fixture: 'cascade', data: [2, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 3 2D');
+			game = game.setCursor({ fixture: 'cascade', data: [4, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 5 2S');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 1 KS-QH-JS');
+
+			// semi-unrelated: no room to move to empty cascade
+			// we want to use this more expressive text (rather than simply 'touch stop')
+			game = game.setCursor({ fixture: 'cascade', data: [3, 0] }).touch();
+			expect(game.previousAction.text).toBe('invalid move 14 KS-QH-JS→cascade');
+		});
 
 		test('allow "growing/shrinking sequence of current selection"', () => {
 			// march down
