@@ -116,7 +116,7 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 		case 'deselect':
 		case 'invalid':
 		case 'auto-foundation-tween':
-			throw new Error(`cannot undo move type ${actionText}`);
+			throw new Error(`cannot undo move type "${actionText}"`);
 	}
 }
 
