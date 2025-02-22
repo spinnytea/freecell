@@ -37,7 +37,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'deck', data: [51] },
 					cards: [{ rank: 'king', suit: 'spades', location: { fixture: 'deck', data: [51] } }],
-					canMove: false,
+					peekOnly: true,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -93,7 +93,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'deck', data: [0] },
 					cards: [{ rank: '9', suit: 'diamonds', location: { fixture: 'deck', data: [0] } }],
-					canMove: false,
+					peekOnly: true,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -140,7 +140,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'cell', data: [1] },
 					cards: [{ rank: 'queen', suit: 'diamonds', location: { fixture: 'cell', data: [1] } }],
-					canMove: true,
+					peekOnly: false,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -197,7 +197,7 @@ describe('game.touch', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cell', data: [3] },
 				cards: [{ rank: '6', suit: 'spades', location: { fixture: 'cell', data: [3] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.print()).toBe(
 				'' +
@@ -283,7 +283,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'cascade', data: [4, 1] },
 					cards: [{ rank: '3', suit: 'clubs', location: { fixture: 'cascade', data: [4, 1] } }],
-					canMove: false,
+					peekOnly: true,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -332,7 +332,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'cascade', data: [5, 4] },
 					cards: [{ rank: '2', suit: 'clubs', location: { fixture: 'cascade', data: [5, 4] } }],
-					canMove: true,
+					peekOnly: false,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -385,7 +385,7 @@ describe('game.touch', () => {
 						{ rank: '3', suit: 'spades', location: { fixture: 'cascade', data: [1, 1] } },
 						{ rank: '2', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 2] } },
 					],
-					canMove: false,
+					peekOnly: true,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -437,7 +437,7 @@ describe('game.touch', () => {
 						{ rank: 'queen', suit: 'hearts', location: { fixture: 'cascade', data: [0, 4] } },
 						{ rank: 'jack', suit: 'clubs', location: { fixture: 'cascade', data: [0, 5] } },
 					],
-					canMove: true,
+					peekOnly: false,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -522,7 +522,7 @@ describe('game.touch', () => {
 						{ rank: '8', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 5] } },
 						{ rank: '7', suit: 'clubs', location: { fixture: 'cascade', data: [2, 6] } },
 					],
-					canMove: true,
+					peekOnly: false,
 				});
 				expect(game.availableMoves).toEqual([]);
 			});
@@ -549,7 +549,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'cascade', data: [7, 1] },
 					cards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [7, 1] } }],
-					canMove: false,
+					peekOnly: true,
 				});
 				expect(game.print()).toBe(
 					'' +
@@ -642,7 +642,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'cell', data: [0] },
 					cards: [{ rank: 'king', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
-					canMove: true,
+					peekOnly: false,
 				});
 				expect(game.availableMoves).toEqual([
 					{
@@ -693,7 +693,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual({
 					location: { fixture: 'cell', data: [0] },
 					cards: [{ rank: 'king', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
-					canMove: true,
+					peekOnly: false,
 				});
 				expect(game.availableMoves).toEqual([
 					{
@@ -760,7 +760,7 @@ describe('game.touch', () => {
 					expect(game.selection).toEqual({
 						location: { fixture: 'cell', data: [0] },
 						cards: [{ rank: 'queen', suit: 'clubs', location: { fixture: 'cell', data: [0] } }],
-						canMove: true,
+						peekOnly: false,
 					});
 					expect(game.availableMoves).toEqual([
 						{
@@ -818,7 +818,7 @@ describe('game.touch', () => {
 						expect(game.selection).toEqual({
 							location: { fixture: 'cell', data: [0] },
 							cards: [{ rank: '10', suit: 'diamonds', location: { fixture: 'cell', data: [0] } }],
-							canMove: true,
+							peekOnly: false,
 						});
 						expect(game.availableMoves).toEqual([
 							{
@@ -914,7 +914,7 @@ describe('game.touch', () => {
 					expect(game.selection).toEqual({
 						location: { fixture: 'cell', data: [0] },
 						cards: [{ rank: 'queen', suit: 'clubs', location: { fixture: 'cell', data: [0] } }],
-						canMove: true,
+						peekOnly: false,
 					});
 					expect(game.availableMoves).toEqual([
 						{
@@ -999,7 +999,7 @@ describe('game.touch', () => {
 						cards: [
 							{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [0, 6] } },
 						],
-						canMove: true,
+						peekOnly: false,
 					});
 					expect(game.availableMoves).toEqual([
 						{
@@ -1071,7 +1071,7 @@ describe('game.touch', () => {
 						cards: [
 							{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 6] } },
 						],
-						canMove: true,
+						peekOnly: false,
 					});
 					expect(game.availableMoves).toEqual([
 						{
@@ -1159,7 +1159,7 @@ describe('game.touch', () => {
 							cards: [
 								{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [0, 6] } },
 							],
-							canMove: true,
+							peekOnly: false,
 						});
 						expect(game.availableMoves).toEqual([
 							{
@@ -1238,7 +1238,7 @@ describe('game.touch', () => {
 								cards: [
 									{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } },
 								],
-								canMove: true,
+								peekOnly: false,
 							});
 							expect(game.availableMoves).toEqual([
 								{
@@ -1330,7 +1330,7 @@ describe('game.touch', () => {
 							cards: [
 								{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } },
 							],
-							canMove: true,
+							peekOnly: false,
 						});
 						expect(game.availableMoves).toEqual([
 							{
@@ -1436,7 +1436,7 @@ describe('game.touch', () => {
 								{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 1] } },
 								{ rank: '8', suit: 'clubs', location: { fixture: 'cascade', data: [1, 2] } },
 							],
-							canMove: true,
+							peekOnly: false,
 						});
 						expect(game.availableMoves).toEqual([
 							{
@@ -1516,7 +1516,7 @@ describe('game.touch', () => {
 									{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 1] } },
 									{ rank: '8', suit: 'clubs', location: { fixture: 'cascade', data: [1, 2] } },
 								],
-								canMove: true,
+								peekOnly: false,
 							});
 							expect(game.availableMoves).toEqual([
 								{
@@ -1594,7 +1594,7 @@ describe('game.touch', () => {
 								{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 1] } },
 								{ rank: '8', suit: 'clubs', location: { fixture: 'cascade', data: [1, 2] } },
 							],
-							canMove: true,
+							peekOnly: false,
 						});
 						expect(game.availableMoves).toEqual([
 							{
@@ -1839,7 +1839,7 @@ describe('game.touch', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cascade', data: [7, 4] },
 				cards: [{ rank: '9', suit: 'clubs', location: { fixture: 'cascade', data: [7, 4] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.availableMoves).toEqual([
 				{
@@ -1853,7 +1853,7 @@ describe('game.touch', () => {
 					priority: 11,
 				},
 			]);
-			game = game.touch();
+			game = game.touch({ stopWithInvalid: true });
 			expect(game.print()).toBe(
 				'' +
 					' QS AD KH 2D QC AH JS 4D \n' +
@@ -1869,7 +1869,7 @@ describe('game.touch', () => {
 			expect(game.selection).toEqual({
 				location: { fixture: 'cascade', data: [7, 4] },
 				cards: [{ rank: '9', suit: 'clubs', location: { fixture: 'cascade', data: [7, 4] } }],
-				canMove: true,
+				peekOnly: false,
 			});
 			expect(game.availableMoves).toEqual([
 				{
@@ -1883,6 +1883,96 @@ describe('game.touch', () => {
 					priority: 11,
 				},
 			]);
+		});
+	});
+
+	describe('dropping the selection', () => {
+		let game: FreeCell;
+		beforeEach(() => {
+			game = FreeCell.parse(
+				'' +
+					' 3C 3D    3S             \n' +
+					' KS 2C 2D    2S \n' +
+					' QH             \n' +
+					' JS             \n' +
+					' hand-jammed'
+			);
+		});
+
+		/**
+			when you have a valid selection, and it can move,
+			- and then you click on something else
+			- or when you click on a location that is not one of the availableMoves
+		*/
+		test('re-select when move is invalid', () => {
+			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
+			expect(game.previousAction.text).toBe('select 1 JS');
+
+			game = game.setCursor({ fixture: 'cascade', data: [1, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 2 2C');
+			game = game.setCursor({ fixture: 'cascade', data: [2, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 3 2D');
+			game = game.setCursor({ fixture: 'cascade', data: [4, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 5 2S');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 1 KS-QH-JS');
+
+			// semi-unrelated: no room to move to empty cascade
+			// we want to use this more expressive text (rather than simply 'touch stop')
+			game = game.setCursor({ fixture: 'cascade', data: [3, 0] }).touch();
+			expect(game.previousAction.text).toBe('invalid move 14 KS-QH-JS→cascade');
+		});
+
+		test('allow "growing/shrinking sequence of current selection"', () => {
+			// march down
+			game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 1 KS-QH-JS');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 1] }).touch();
+			expect(game.previousAction.text).toBe('select 1 QH-JS');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
+			expect(game.previousAction.text).toBe('select 1 JS');
+
+			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
+			expect(game.previousAction.text).toBe('deselect 1 JS');
+
+			// march up
+			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
+			expect(game.previousAction.text).toBe('select 1 JS');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 1] }).touch();
+			expect(game.previousAction.text).toBe('select 1 QH-JS');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 1 KS-QH-JS');
+
+			// skip a few
+			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
+			expect(game.previousAction.text).toBe('select 1 JS');
+			game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+			expect(game.previousAction.text).toBe('select 1 KS-QH-JS');
+		});
+
+		test('allow moving selection from one cell to another cell', () => {
+			game = game.setCursor({ fixture: 'cell', data: [0] }).touch();
+			expect(game.previousAction.text).toBe('select a 3C');
+			game = game.setCursor({ fixture: 'cell', data: [1] }).touch();
+			expect(game.previousAction.text).toBe('select b 3D');
+			game = game.setCursor({ fixture: 'cell', data: [3] }).touch();
+			expect(game.previousAction.text).toBe('select d 3S');
+
+			// semi-unrelated: w/ selection, actually moves
+			game = game.setCursor({ fixture: 'cell', data: [2] }).touch();
+			expect(game.print()).toBe(
+				'' +
+					' 3C 3D>3S                \n' +
+					' KS 2C 2D    2S \n' +
+					' QH             \n' +
+					' JS             \n' +
+					':d KH KD KC QS QD QC JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3H 2H AS AH AD AC \n' +
+					' move dc 3S→cell'
+			);
+
+			// semi-unrelated: w/o selection, cannot select empty cell
+			game = game.setCursor({ fixture: 'cell', data: [3] }).touch();
+			expect(game.previousAction.text).toBe('touch stop');
 		});
 	});
 });

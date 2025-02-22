@@ -42,6 +42,7 @@ export type ControlInteractions =
 	| 'cell selection'
 	| 'foundation selection'
 	| 'cascade selection'
+	| 'select-to-peek'
 	| 'grow/shrink cascade selection w/ selection'
 	| 'drag-and-drop selection w/w/o selection'
 	| 'auto-foundation after move selection'

@@ -344,6 +344,59 @@ describe('useCardPositionAnimations', () => {
 				expect(setCardIds).not.toContain('#cKD');
 				expect(setCardIds).not.toContain('#cKS'); // 52
 			});
+
+			/**
+				should we animate the AS dip to "deselect" (un peek) with tweenCards
+
+				REVIEW (techdebt) (animation) refactor tweenCards?
+				 - the more i review these animations the more i think:
+				 - replace tweenCards the _entire_ FreeCell game state
+				 - do the animation to the tweenGame
+				 - then do the animation to the final game
+				---
+				 - does that even work in this case since the deselect is masked?
+				 - yeah, because we don't need a 3 stage animation
+				 - we just want to animate everything to the "final resting state" _and then_ the auto-foundation
+			*/
+			test('selection goes to foundation', () => {
+				const gameStateOne = FreeCell.parse(
+					'' +
+						' 4S 7S 2S    AH          \n' +
+						' 8D 6C JS 3D 3H    8C 6S \n' +
+						' 2H 9S QC 9C 7D    9H JD \n' +
+						' 2C AC 5D 5C TS    QH KH \n' +
+						' TH 6D 5H 4H TD    AD 6H \n' +
+						' 7H 8S KS 3S KC   >AS|3C \n' +
+						'    2D KD    QD    8H 4C \n' +
+						'    5S QS    JC    7C    \n' +
+						'    4D JH                \n' +
+						'       TC                \n' +
+						'       9D                \n' +
+						' select AS'
+				);
+				expect(gameStateOne.selection).toEqual({
+					location: { fixture: 'cascade', data: [6, 4] },
+					cards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [6, 4] } }],
+					peekOnly: true,
+				});
+				const gameStateTwo = gameStateOne.clickToMove({ fixture: 'cascade', data: [6, 5] });
+				expect(gameStateTwo.previousAction.text).toBe(
+					'move 76 8H-7C→cascade (auto-foundation 77c AS,AD,2S)'
+				);
+
+				// BUG (techdebt) (animation) (gameplay) finish test
+				//  - yes we animate 8H-7C→cascade
+				//  - yes we animate auto-foundation 77c AS,AD,2S
+				//  - we should animate also deselect AS
+
+				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+				mockReset();
+				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+				expect(getCardIdsFromSpy(toSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
+				expect(getCardIdsFromSpy(fromToSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
+				expect(getCardIdsFromSpy(setSpy).length).toBe(47); // 52 - 5
+			});
 		});
 
 		test.todo('move-flourish');

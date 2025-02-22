@@ -101,8 +101,15 @@ export interface CardSequence {
 	*/
 	cards: Card[];
 
-	/** since we are allowing any card to be selected or inspected, not all of them are movable */
-	canMove: boolean;
+	/**
+		Since we allow select-to-peek, not all selections are legal/ly movable.
+
+		If we were to act entirely based on shorthand, "select 3 JD" would mean, "select the last complete sequence in 3".
+		However, we allow something like "select JD", technically in 3, but not the last card(s) in the cascade.
+
+		this is _**not**_ `hasAvailableMoves = !!availableMoves?.length`
+	*/
+	peekOnly: boolean;
 }
 
 /* ************** */
@@ -137,7 +144,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 					return {
 						location,
 						cards: [card],
-						canMove: false,
+						peekOnly: true,
 					};
 				}
 			}
@@ -149,7 +156,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 					return {
 						location,
 						cards: [card],
-						canMove: false,
+						peekOnly: true,
 					};
 				}
 			}
@@ -161,7 +168,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 					return {
 						location,
 						cards: [card],
-						canMove: true,
+						peekOnly: false,
 					};
 				}
 			}
@@ -175,7 +182,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 			const sequence: CardSequence = {
 				location,
 				cards: [cascade[idx]],
-				canMove: false,
+				peekOnly: true,
 			};
 
 			while (
@@ -188,7 +195,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 			}
 
 			if (idx === cascade.length - 1) {
-				sequence.canMove = true;
+				sequence.peekOnly = false;
 			}
 
 			return sequence;
@@ -196,7 +203,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 	}
 
 	// no cards at selection
-	return { location, cards: [], canMove: false };
+	return { location, cards: [], peekOnly: true };
 }
 
 /* ************* */
@@ -269,16 +276,8 @@ export function parseShorthandCard(r: string | undefined, s: string | undefined)
 	return { rank, suit };
 }
 
-export function shorthandSequence(sequence: CardSequence, includePosition = false) {
-	const cards = sequence.cards.map((card) => shorthandCard(card)).join('-');
-
-	// only incluce the position if we can move this selection
-	// i.e. in some settings (disallow invalid selections), this action wouldn't be allowed
-	if (sequence.canMove && includePosition) {
-		return shorthandPosition(sequence.location) + ' ' + cards;
-	}
-
-	return cards;
+export function shorthandSequence(sequence: CardSequence) {
+	return sequence.cards.map((card) => shorthandCard(card)).join('-');
 }
 
 export function shorthandPosition(location: CardLocation): Position {
@@ -286,9 +285,6 @@ export function shorthandPosition(location: CardLocation): Position {
 	if (location.fixture === 'foundation') {
 		return 'h';
 	} else if (location.fixture === 'cascade') {
-		// this doesn't check data[1], it assumes it's the final row
-		// sequences would need to check data[1] + card.length, not just the location
-		// (could pass in a optional canMove with default of true)
 		if (d0 === 9) {
 			return '0';
 		} else if (d0 >= 0 && d0 < 9) {
@@ -300,6 +296,12 @@ export function shorthandPosition(location: CardLocation): Position {
 		}
 	}
 	throw new Error(`invalid position: ${JSON.stringify(location)}`);
+}
+
+export function shorthandSequenceWithPosition(sequence: CardSequence) {
+	// but don't include the position if this is select-to-peek
+	if (sequence.peekOnly) return shorthandSequence(sequence);
+	return shorthandPosition(sequence.location) + ' ' + shorthandSequence(sequence);
 }
 
 /**

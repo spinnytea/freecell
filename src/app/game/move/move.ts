@@ -240,7 +240,7 @@ export function findAvailableMoves(
 		selection = game.selection;
 	}
 
-	if (!selection?.canMove) {
+	if (!selection || selection.peekOnly) {
 		return availableMoves;
 	}
 

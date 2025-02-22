@@ -13,6 +13,7 @@ import {
 	shorthandCard,
 	shorthandPosition,
 	shorthandSequence,
+	shorthandSequenceWithPosition,
 	SuitList,
 } from '@/app/game/card/card';
 import {
@@ -50,6 +51,12 @@ interface OptionsAutoFoundation {
 		XXX (techdebt) this is just to get unit tests passing, we should have examples that do not need this
 	*/
 	autoFoundation?: boolean;
+
+	/**
+	 	@deprecated
+		XXX (techdebt) this is just to get unit tests passing, and maintain this flow until we have settings
+	*/
+	stopWithInvalid?: boolean;
 }
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
@@ -432,7 +439,7 @@ export class FreeCell {
 
 	clearSelection(): FreeCell | this {
 		if (this.selection) {
-			const actionText = 'deselect ' + shorthandSequence(this.selection, true);
+			const actionText = 'deselect ' + shorthandSequenceWithPosition(this.selection);
 			return this.__clone({
 				action: { text: actionText, type: 'deselect' },
 				selection: null,
@@ -448,30 +455,22 @@ export class FreeCell {
 		e.g. select cursor, deselect cursor, move selection
 
 		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
-		- TODO (controls) (3-priority) click-to-move does not allow selection if !canMove
-		- TODO (controls) (3-priority) disable select-to-peek for mouse, but still allow it for keyboard
-		  - either disable them outright or lock them behind a settings flag
-		- TODO (controls) (4-priority) make it easier to re-select when move is invalid
-		  - OR disable select-to-peek for mouse
 	*/
-	touch({ autoFoundation = true }: OptionsAutoFoundation = {}): FreeCell {
+	touch({ autoFoundation = true, stopWithInvalid = false }: OptionsAutoFoundation = {}): FreeCell {
 		// clear the selction, if re-touching the same spot
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
 			return this.clearSelection();
 		}
 
 		// set selection, or move selection if applicable
-		// TODO (controls) allow "growing/shrinking sequence of current selection"
-		// TODO (controls) || !game.availableMoves?.length (if the current selection has no valid moves)
-		// TODO (controls) allow moving selection from one cell to another cell
-		if (!this.selection?.canMove) {
+		if (!this.selection || this.selection.peekOnly) {
 			const selection = getSequenceAt(this, this.cursor);
 			// we can't do anything with a foundation (we can move cards off of it)
 			// - therefore it doesn't make sense to select it
 			// - you'd have to deselect it before you can continue with gameplay
 			if (selection.cards.length && this.cursor.fixture !== 'foundation') {
 				return this.__clone({
-					action: { text: 'select ' + shorthandSequence(selection, true), type: 'select' },
+					action: { text: 'select ' + shorthandSequenceWithPosition(selection), type: 'select' },
 					selection,
 					availableMoves: findAvailableMoves(this, selection),
 				});
@@ -479,10 +478,7 @@ export class FreeCell {
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length) {
-			// XXX (techdebt) unit tests
-			//  - if we have a selection and there are no valid moves (select a 3, no empty cells or cascades, no 4s, no foundation)
-			//  - if we didn't have a selection… but we couldn't select the thing we touched (i.e. foundation (relax this?))
-			//  - if we have a selection, and we can't select the new thing (^^ relax this)
+			// TODO (animation) (3-priority) animate invalid move
 			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
 		}
 
@@ -516,6 +512,21 @@ export class FreeCell {
 			}
 
 			return movedGame;
+		}
+
+		if (!stopWithInvalid) {
+			// we should't be able to get this part of the code without a selection
+			// however, IFF we change things and it's possible later,
+			// then this will infinte loop (clearSelection is a noop without a selection)
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			if (this.selection) {
+				const game = this.clearSelection().touch();
+				if (game.previousAction.type !== 'invalid') {
+					return game;
+				}
+				// otherwise, continue with current invalid action result
+				// we don't want to mask the current action, if we can't do something better
+			}
 		}
 
 		// TODO (animation) (3-priority) animate invalid move
@@ -613,8 +624,9 @@ export class FreeCell {
 				if (canAccept) {
 					game.cells.forEach((c, c_idx) => {
 						if (canAccept) {
-							const canMove = c && canStackFoundation(f, c) && !game.selection?.cards.includes(c);
-							if (canMove) {
+							const canMoveToFoundation =
+								c && canStackFoundation(f, c) && !game.selection?.cards.includes(c);
+							if (canMoveToFoundation) {
 								canAccept = false;
 								keepGoing = true;
 								didAnyMove = true;
@@ -640,8 +652,9 @@ export class FreeCell {
 						const last_idx = cascade.length - 1;
 						if (canAccept && cascade.length > 0) {
 							const c = cascade[last_idx];
-							const canMove = canStackFoundation(f, c) && !game.selection?.cards.includes(c);
-							if (canMove) {
+							const canMoveToFoundation =
+								canStackFoundation(f, c) && !game.selection?.cards.includes(c);
+							if (canMoveToFoundation) {
 								canAccept = false;
 								keepGoing = true;
 								didAnyMove = true;
@@ -687,7 +700,9 @@ export class FreeCell {
 	// }
 
 	/**
-		this is the basis for click-to-move
+		move the selected card(s) to the "best" allowable location
+
+		this is the cornerstone for click-to-move
 
 		@example
 			game.setCursor(loc).touch().autoMove();
@@ -705,6 +720,10 @@ export class FreeCell {
 		}, this.availableMoves[0]).location;
 
 		return this.setCursor(to_location).touch({ autoFoundation });
+	}
+
+	clickToMove(location: CardLocation): FreeCell | this {
+		return this.setCursor(location).touch().autoMove();
 	}
 
 	restart(): FreeCell {
@@ -839,7 +858,7 @@ export class FreeCell {
 		print the game board
 		- all card locations
 		- current cursor (keyboard)
-		- current selection (helps debug peek, needed for canMove)
+		- current selection
 
 		you can use this to play the game from a text-only interface (e.g. console) if you like
 
@@ -1144,14 +1163,14 @@ export class FreeCell {
 
 		// attempt to parse the history
 		const history: string[] = [];
-		const peek = lines.pop();
-		if (!peek) {
+		const popped = lines.pop();
+		if (!popped) {
 			// TODO (parse-history) test
 			if (parsePreviousActionType(actionText).type === 'init') {
 				history.push(actionText);
 			}
-		} else if (peek.startsWith(':h')) {
-			const matchSeed = /:h shuffle32 (\d+)/.exec(peek);
+		} else if (popped.startsWith(':h')) {
+			const matchSeed = /:h shuffle32 (\d+)/.exec(popped);
 			if (!matchSeed) throw new Error('unsupported shuffle');
 			const seed = parseInt(matchSeed[1], 10);
 
@@ -1213,7 +1232,7 @@ export class FreeCell {
 				history,
 				lines.map((line) => line.trim())
 			);
-			history.push(peek.trim());
+			history.push(popped.trim());
 			history.push(actionText);
 			// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
 			//  - text we can use what history is valid; ['init partial history', ..., actionText]

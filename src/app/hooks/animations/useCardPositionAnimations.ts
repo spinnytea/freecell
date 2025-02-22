@@ -7,7 +7,7 @@ import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSiz
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 
 // IDEA (settings) setting for "reduced motion" - disable most animations
-// IDEA (animation) faster "peek" animation - when the cards are shifting to peek the selected card
+// IDEA (animation) faster "select-to-peek" animation - when the cards are shifting to peek the selected card
 export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<string>) {
 	const { cards, selection, previousAction } = useGame();
 	const fixtureSizes = useFixtureSizes();

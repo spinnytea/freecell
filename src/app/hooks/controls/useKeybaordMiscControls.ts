@@ -2,11 +2,11 @@ import { useContext, useEffect } from 'react';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
+/** REVIEW (controls) keyboard */
 export function useKeybaordMiscControls() {
 	const [, setGame, newGame] = useContext(GameContext);
 	const [{ showSettingsDialog }, setSettings] = useContext(SettingsContext);
 
-	/** REVIEW (controls) keyboard */
 	useEffect(() => {
 		if (showSettingsDialog) return;
 		function handleKey(event: KeyboardEvent) {

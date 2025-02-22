@@ -301,7 +301,7 @@ describe('game.autoMove', () => {
 			test.todo('cycles through cascade:sequence with jokers');
 
 			describe('prefers', () => {
-				/** always prefer growing a sequence, if available */
+				/** always prefer an existing sequence, if available */
 				test('cascade:sequence to cell and cascade:empty', () => {
 					let game = FreeCell.parse(
 						'' + //
@@ -672,7 +672,7 @@ describe('game.autoMove', () => {
 			test.todo('cycles through cascade:sequence with jokers');
 
 			describe('prefers', () => {
-				/** always prefer growing a sequence, if available */
+				/** always prefer an existing sequence, if available */
 				test.todo('cascade:sequence to cascade:empty');
 			});
 		});
@@ -802,7 +802,7 @@ describe('game.autoMove', () => {
 			game = game.setCursor({ fixture: 'cascade', data: [7, 5] }).touch();
 			expect(game.previousAction.text).toBe('select 8 7D');
 			// invalid move
-			game = game.setCursor({ fixture: 'cascade', data: [5, 5] }).touch();
+			game = game.setCursor({ fixture: 'cascade', data: [5, 5] }).touch({ stopWithInvalid: true });
 			expect(game.previousAction.text).toBe('invalid move 86 7D→9C');
 			// do not move card
 			game = game.autoMove({ autoFoundation: false });

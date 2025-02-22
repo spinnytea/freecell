@@ -11,13 +11,15 @@ TODO (motivation) main development tasks:
 1. ~~legible `(cards)` for mobile~~
 1. ~~move `(history)` & undo~~
 1. ~~`(animation)` https://gsap.com/resources/React/ - just basic animations, like, "stagger" the card movements~~
+1. ~~`(techdebt) (animations)` refactor to help unit test animations~~
 1. ~~`(newgame)` local storage, new button~~
+1. ~~`(controls)` better ease of use for click-to-move and touch~~
 1. `(drag-and-drop)` (click-to-move has been working, but sometimes you need to "force" the move you want)
 
 ```
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
-\b(BUG|TODO|XXX|REVIEW|IDEA)\b\s+[^(]
+\b(BUG|TODO|XXX|REVIEW|IDEA)\b[^\s][^(]
 \((\d+)-priority\)
 ```
 
@@ -71,7 +73,7 @@ TODO (motivation) main development tasks:
   - if cursor can stack with target: select, moveCard
   - if cursor cannot stack with target: setCursor
 - TODO (deployment) UI render for all options, hidden options, controls (keyboard, keyboard+selection, keyboard hotkeys, mouse click, mouse drag) w/ (settings) to enable/disable
-- TODO (settings) disable "select/peek card" i.e. selecting cards that cannot move
+- TODO (settings) disable "select-to-peek card" i.e. selecting cards that cannot move
 - TODO (deployment) rules page (SUG)
 - IDEA (joker) add joker to gameplay
   - high - any rank can stack onto them, they cannot be stacked on anything (color-fixed cascade)
