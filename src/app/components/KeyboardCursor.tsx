@@ -7,7 +7,10 @@ import { calcTopLeftZ } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 
-// TODO (animation) animate cursor on select/deselect
+/**
+	REVIEW (techdebt) (hud) styles and icon →, ➡
+	TODO (animation) animate cursor on select/deselect
+*/
 export function KeyboardCursor() {
 	const cursorRef = useRef<HTMLDivElement | null>(null);
 	const fixtureSizes = useFixtureSizes();
@@ -27,5 +30,5 @@ export function KeyboardCursor() {
 		{ dependencies: [top, left] }
 	);
 
-	return <div className={styles_gameboard.keyboardcursor} ref={cursorRef}>{`->`}</div>;
+	return <div className={styles_gameboard.keyboardcursor} ref={cursorRef}>{`→`}</div>;
 }

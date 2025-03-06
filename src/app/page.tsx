@@ -1,7 +1,9 @@
 'use client';
 
 import { useGSAP } from '@gsap/react';
+import classNames from 'classnames';
 import { gsap, Draggable } from 'gsap/all';
+import styles_common from '@/app/common.module.css';
 import GameBoard from '@/app/GameBoard';
 import styles_gameboard from '@/app/gameboard.module.css';
 import GameContextProvider from '@/app/hooks/contexts/Game/GameContextProvider';
@@ -16,7 +18,7 @@ export default function Page() {
 	return (
 		<SettingsContextProvider>
 			<GameContextProvider>
-				<GameBoard className={styles_gameboard.main} />
+				<GameBoard className={classNames(styles_common.page, styles_gameboard.main)} />
 				<SettingsDialog />
 			</GameContextProvider>
 		</SettingsContextProvider>

@@ -112,10 +112,6 @@ const config = {
 		// Handle module aliases
 		'^@/(.*)$': '<rootDir>/src/$1',
 
-		// Handle @next/font
-		'@next/font/(.*)': `<rootDir>/__mocks__/nextFontMock.js`,
-		// Handle next/font
-		'next/font/(.*)': `<rootDir>/__mocks__/nextFontMock.js`,
 		// Disable server-only
 		'server-only': `<rootDir>/__mocks__/empty.js`,
 	},

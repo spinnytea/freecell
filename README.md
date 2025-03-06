@@ -84,7 +84,7 @@ TODO (motivation) main development tasks:
   - spitball impl: attempts positive and negative, display Math.abs(attempts), set neg when undo, set pos and increase when move
 - IDEA (theme) sounds - normally i don't like to, but some folio for moving cards should be okay
 - TODO (theme) more themes - card themes / decks / colors, background colors, etc
-- IDEA (deployment) download on android: "play offline"
+- IDEA (deployment) (offline) download on android: "play offline"
   - single html file? try testing that first (javascript + svg)
   - airplane mode?
 - TODO (deployment) (3-priority) Save deck back image off screen so we don't need to re-request it (or transparent where the deck goes?)

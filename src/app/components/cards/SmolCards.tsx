@@ -1,5 +1,4 @@
 import { ReactElement } from 'react';
-import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import { ASSET_FOLDER } from '@/app/components/cards/constants';
 import { ace_of_clubs, ace_of_clubs_defs } from '@/app/components/cards/smol/ace_of_clubs';
@@ -11,8 +10,6 @@ import { diamonds } from '@/app/components/cards/smol/diamonds';
 import { hearts } from '@/app/components/cards/smol/hearts';
 import { spades } from '@/app/components/cards/smol/spades';
 import { isRed, Rank, Suit } from '@/app/game/card/card';
-
-const inter = Inter({ subsets: ['latin'] });
 
 const SYMBOLS: { [suit in Suit]: ReactElement } = {
 	clubs,
@@ -104,14 +101,7 @@ function NativeCards({
 
 			<rect width="208" height="303" rx="8" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
 
-			<g
-				fill={color}
-				stroke="none"
-				textAnchor="middle"
-				dominantBaseline="middle"
-				fontWeight={500}
-				className={inter.className}
-			>
+			<g fill={color} stroke="none" textAnchor="middle" dominantBaseline="middle" fontWeight={500}>
 				<text fontSize="90" x="52" y="56" letterSpacing="-0.1em">
 					{text}
 				</text>

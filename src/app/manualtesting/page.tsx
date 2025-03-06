@@ -164,10 +164,14 @@ export default function Page() {
 	}, []);
 
 	return (
-		<main className={classNames(styles_common.main, styles_manualtesting.instructions)}>
-			<Link href="/">
-				<span>&lt;-</span> Back to game
-			</Link>
+		<main
+			className={classNames(
+				styles_common.page,
+				styles_common.main,
+				styles_manualtesting.instructions
+			)}
+		>
+			<Link href="/">← Back to game</Link>
 			<ol>
 				<li>
 					Playing Cards
@@ -276,9 +280,7 @@ export default function Page() {
 					</ol>
 				</li>
 			</ol>
-			<Link href="/">
-				<span>&lt;-</span> Back to game
-			</Link>
+			<Link href="/">← Back to game</Link>
 		</main>
 	);
 }

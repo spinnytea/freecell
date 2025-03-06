@@ -32,7 +32,8 @@
 .keyboardcursor {
 	position: absolute;
 
-	margin-left: -1em;
+	font-family: monospace;
+	margin-left: -1.25ch;
 	user-select: none;
 }
 

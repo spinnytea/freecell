@@ -1,5 +1,6 @@
 import { MouseEvent, useEffect, useRef } from 'react';
 import classNames from 'classnames';
+import styles_common from '@/app/common.module.css';
 import styles_dialog from '@/app/components/dialog/dialog.module.css';
 
 export default function Dialog({
@@ -44,7 +45,7 @@ export default function Dialog({
 		<dialog
 			ref={dialogRef}
 			aria-label={ariaLabel}
-			className={classNames(className, styles_dialog.root)}
+			className={classNames(className, styles_dialog.root, styles_common.page)}
 			onClick={handleClick}
 			onClose={handleClose}
 		>
