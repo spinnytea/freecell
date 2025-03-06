@@ -279,6 +279,16 @@ export default function Page() {
 						))}
 					</ol>
 				</li>
+				<li>
+					Verify deck is not rerequested after winning a game. To do so:
+					<ol>
+						<li>Load a game from the web.</li>
+						<li>Turn off wifi / enable airplane mode.</li>
+						<li>Finish game.</li>
+						<li>Restart and see the deck.</li>
+						<li>Start a new game and verify cards.</li>
+					</ol>
+				</li>
 			</ol>
 			<Link href="/">← Back to game</Link>
 		</main>

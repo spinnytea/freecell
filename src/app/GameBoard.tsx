@@ -1,5 +1,6 @@
 import { MutableRefObject, useRef } from 'react';
 import classNames from 'classnames';
+import { CardImage } from '@/app/components/cards/CardImage';
 import { CardsOnBoard } from '@/app/components/CardsOnBoard';
 import { DebugCursors } from '@/app/components/DebugCursors';
 import { KeyboardCursor } from '@/app/components/KeyboardCursor';
@@ -63,6 +64,9 @@ export default function GameBoard({
 			className={classNames(className, styles_gameboard.common)}
 			onClick={handleClickSetup}
 		>
+			<div className={styles_gameboard.hiddenDeckBack}>
+				<CardImage rank="king" suit="hearts" hidden width={0} />
+			</div>
 			<FixtureSizesContextProvider
 				gameBoardRef={gameBoardRef}
 				fixtureLayout={displayOptions.fixtureLayout}

@@ -55,3 +55,14 @@
 .statusspacer {
 	flex: 1;
 }
+
+/*
+	keep deck back image so we don't need to re-request it
+	transparent and off screen
+*/
+.hiddenDeckBack {
+	opacity: 0;
+	position: fixed;
+	top: 100vh;
+	left: 100vw;
+}

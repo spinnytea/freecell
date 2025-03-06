@@ -87,7 +87,6 @@ TODO (motivation) main development tasks:
 - IDEA (deployment) (offline) download on android: "play offline"
   - single html file? try testing that first (javascript + svg)
   - airplane mode?
-- TODO (deployment) (3-priority) Save deck back image off screen so we don't need to re-request it (or transparent where the deck goes?)
 - XXX (techdebt) optimize
   - i've never benchmarked memory/speed before in any meaningful way
   - is the game impl even a problem? prove that there are no memory leeks (maybe print/parse proves it)

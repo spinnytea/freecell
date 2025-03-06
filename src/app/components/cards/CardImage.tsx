@@ -16,6 +16,7 @@ import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 // TODO (theme) alternate card backs?
 // TODO (theme) deck w/ kings are lions?
 // TODO (theme) dark theme cards
+// TODO (offline) if SVGCards13 is unavailable, fallback to SmolCards
 export function CardImage({
 	hidden = false,
 	rank,
