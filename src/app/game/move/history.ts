@@ -27,7 +27,7 @@ export type PreviousActionType =
 	| 'invalid'
 	| 'auto-foundation-tween';
 
-export const PREVIOUS_ACTION_TYPE_IN_HISTORY: PreviousActionType[] = [
+const PREVIOUS_ACTION_TYPE_IN_HISTORY: PreviousActionType[] = [
 	'init',
 	'shuffle',
 	'deal',
@@ -201,6 +201,13 @@ export function parseActionTextMove(actionText: string) {
 	}
 
 	throw new Error('invalid move actionText: ' + actionText);
+}
+
+export function appendActionToHistory(action: PreviousAction, history: string[]) {
+	if (PREVIOUS_ACTION_TYPE_IN_HISTORY.includes(action.type)) {
+		return { action, history: [...history, action.text] };
+	}
+	return { action, history };
 }
 
 function undoMove(game: FreeCell, actionText: string): Card[] {

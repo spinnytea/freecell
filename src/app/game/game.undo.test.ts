@@ -965,11 +965,29 @@ describe('game.undo (+ history)', () => {
 		test.todo('if we reach a move it cannot undo, it should not break');
 	});
 
-	// TODO (optimize) (3-priority) collapse history
+	// XXX (optimize) collapse history - "when" to do this is tricky
 	describe('collapse history', () => {
 		// i.e. click-to-move picked the wrong place, so i need to move it again to the right one
 		// i.e. dithering on a single card doesn't increase history length
 		test.todo('moving the same card multiple times in a row replaces the history');
+		// ('moving the same card multiple times in a row replaces the history', () => {
+		// 		let game = FreeCell.parse(
+		// 		'' + //
+		// 			'             KC KD JH JS \n' + //
+		// 			' QS    KS                \n' + //
+		// 			' KH                      \n' + //
+		// 			':d QH \n' + //
+		// 			' hand-jammed'
+		// 	);
+		// 	expect(game.history).toEqual(['hand-jammed']);
+		// 	game = game.clickToMove({ fixture: 'cascade', data: [2, 0] });
+		// 	expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
+		// 	game = game.clickToMove({ fixture: 'cascade', data: [3, 0] });
+		// 	expect(game.history).toEqual(['hand-jammed', 'move 35 KS→cascade']);
+		//
+		// 	game = game.undo();
+		// 	expect(game.history).toEqual(['hand-jammed']);
+		// });
 
 		// i.e. 12 auto-1h 21
 		// this should be obvious, but just to be sure...

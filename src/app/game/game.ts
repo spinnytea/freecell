@@ -17,13 +17,13 @@ import {
 	SuitList,
 } from '@/app/game/card/card';
 import {
+	appendActionToHistory,
 	getCardsThatMoved,
 	parseActionTextMove,
 	parseAndUndoPreviousActionText,
 	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
 	parsePreviousActionType,
-	PREVIOUS_ACTION_TYPE_IN_HISTORY,
 	PreviousAction,
 } from '@/app/game/move/history';
 import {
@@ -196,11 +196,11 @@ export class FreeCell {
 	*/
 	__clone({
 		action,
-		cards,
+		cards = this.cards,
 		cursor = this.cursor,
 		selection = this.selection,
 		availableMoves = this.availableMoves,
-		history,
+		history = this.history,
 	}: {
 		action: PreviousAction;
 		cards?: Card[];
@@ -209,18 +209,17 @@ export class FreeCell {
 		availableMoves?: AvailableMove[] | null;
 		history?: string[];
 	}): FreeCell {
-		// XXX (techdebt) `selection && availableMoves && !cards` after removing auto-foundation-tween
+		({ action, history } = appendActionToHistory(action, history));
 		return new FreeCell({
 			cellCount: this.cells.length,
 			cascadeCount: this.tableau.length,
-			cards: cards ?? this.cards,
+			cards,
 			cursor,
+			// XXX (techdebt) `selection && availableMoves && !cards` after removing auto-foundation-tween
 			selection: selection && availableMoves ? selection : null,
 			availableMoves: selection && availableMoves ? availableMoves : null,
 			action,
-			history: PREVIOUS_ACTION_TYPE_IN_HISTORY.includes(action.type)
-				? [...(history ?? this.history), action.text]
-				: this.history,
+			history,
 		});
 	}
 
