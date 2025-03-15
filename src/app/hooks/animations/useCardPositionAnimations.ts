@@ -47,7 +47,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				},
 			});
 
-			const { updateCardPositions, updateCardPositionsPrev, secondMustComeAfter, unmovedCards } =
+			const { updateCardPositions, updateCardPositionsPrev, secondMustComeAfter, unmovedCards, invalidMoveCards } =
 				calcUpdatedCardPositions({
 					fixtureSizes,
 					previousTLs: previousTLs.current,
@@ -55,6 +55,8 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					selection,
 					previousAction,
 				});
+
+			console.log(previousAction.text, invalidMoveCards); // FIXME do a thing with the cards
 
 			if (!updateCardPositions.length) return;
 

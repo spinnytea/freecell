@@ -477,7 +477,7 @@ export class FreeCell {
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length) {
-			// TODO (animation) (3-priority) animate invalid move; shake
+			// FIXME (animation) (3-priority) animate invalid move; shake
 			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
 		}
 
@@ -528,7 +528,7 @@ export class FreeCell {
 			}
 		}
 
-		// TODO (animation) (3-priority) animate invalid move; shake
+		// FIXME (animation) (3-priority) animate invalid move; shake
 		return this.__clone({ action: { text: 'invalid ' + actionText, type: 'invalid' } });
 	}
 
@@ -576,7 +576,7 @@ export class FreeCell {
 	*/
 	moveByShorthand(
 		shorthandMove: string,
-		{ autoFoundation = true }: OptionsAutoFoundation = {}
+		{ autoFoundation }: OptionsAutoFoundation = {}
 	): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
 		return this.setCursor(from).touch().setCursor(to).touch({ autoFoundation });
@@ -706,7 +706,7 @@ export class FreeCell {
 		@example
 			game.setCursor(loc).touch().autoMove();
 	*/
-	autoMove({ autoFoundation = true }: OptionsAutoFoundation = {}): FreeCell | this {
+	autoMove({ autoFoundation }: OptionsAutoFoundation = {}): FreeCell | this {
 		if (!this.selection) return this;
 		if (!this.availableMoves?.length) return this;
 		// REVIEW (techdebt) is there a reason for this?

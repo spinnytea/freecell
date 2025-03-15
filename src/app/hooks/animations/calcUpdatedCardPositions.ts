@@ -6,7 +6,7 @@ import {
 	shorthandCard,
 	Suit,
 } from '@/app/game/card/card';
-import { parsePreviousActionMoveShorthands, PreviousAction } from '@/app/game/move/history';
+import { getCardsFromInvalid, parsePreviousActionMoveShorthands, PreviousAction } from '@/app/game/move/history';
 import { calcTopLeftZ, FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 
 export interface UpdateCardPositionsType {
@@ -17,6 +17,14 @@ export interface UpdateCardPositionsType {
 	rank: number;
 	suit: Suit;
 	previousTop: number;
+}
+
+export interface InvalidMoveCardType {
+	shorthand: string;
+	rank: number;
+	suit: Suit;
+	/** FIXME rename?? 'dir' for for keys */
+	vector: 'from' | 'to';
 }
 
 // TODO (techdebt) (combine-move-auto-foundation) unit test
@@ -47,6 +55,7 @@ export function calcUpdatedCardPositions({
 	updateCardPositionsPrev?: UpdateCardPositionsType[];
 	secondMustComeAfter?: boolean;
 	unmovedCards: UpdateCardPositionsType[];
+	invalidMoveCards?: InvalidMoveCardType[];
 } {
 	const updateCardPositions: UpdateCardPositionsType[] = [];
 	const unmovedCards: UpdateCardPositionsType[] = [];
@@ -73,6 +82,13 @@ export function calcUpdatedCardPositions({
 			unmovedCards.push(updateCardPosition);
 		}
 	});
+
+	// IFF the action is an invalid move
+	if (previousAction?.type === 'invalid') {
+		const invalidMoveCards: InvalidMoveCardType[] = [];
+		console.log(getCardsFromInvalid(previousAction, cards)); // FIXME calc the cards
+		return { updateCardPositions, unmovedCards, invalidMoveCards };
+	}
 
 	if (!updateCardPositions.length || !previousAction) {
 		return { updateCardPositions, unmovedCards };

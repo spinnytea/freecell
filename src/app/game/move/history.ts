@@ -83,6 +83,10 @@ export interface PreviousAction {
 	gameFunction?: GameFunction;
 }
 
+// REVIEW (animation) do we need a parser for every type?
+//  - i.e. do we need to understand them all to animate them?
+//  - if so, should we just _store_ that parsed info?
+//  - that said, having a regex/parser is needed for, say, parsing a history string and validation/testing
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
@@ -201,6 +205,14 @@ export function parseActionTextMove(actionText: string) {
 	}
 
 	throw new Error('invalid move actionText: ' + actionText);
+}
+
+function parseActionTextInvalidMove(actionText: string) {
+	if (actionText.startsWith('invalid ')) {
+		return parseActionTextMove(actionText.substring(8));
+	}
+
+	throw new Error('not "invalid move" actionText: ' + actionText);
 }
 
 export function appendActionToHistory(action: PreviousAction, history: string[]) {
@@ -359,4 +371,13 @@ export function getCardsThatMoved(game: FreeCell): Card[] {
 	return fromShorthand
 		.split('-')
 		.map((sh) => findCard(game.cards, parseShorthandCard(sh[0], sh[1])));
+}
+
+export function getCardsFromInvalid(previousAction: PreviousAction, cards: Card[]): { from: Card[], to: Card[] } {
+	const { fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
+	const from = fromShorthand
+		.split('-')
+		.map((sh) => findCard(cards, parseShorthandCard(sh[0], sh[1])));
+	const to = [findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1]))];
+	return { from, to };
 }

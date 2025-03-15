@@ -25,7 +25,9 @@ export const CARD_FACE_CUTOFF = 60;
 */
 export type ControlSchemes =
 	| 'keyboard' // move cursor (w/w/o selection), touch, deselect
-	| 'keyboard hotkeys' // set cursor + touch
+	| 'keyboard hotkeys' // set cursor + touch (hotkeys for columns; shorthandPosition directly)
+	| 'mouse hotcolumns' // set cursor + touch (click on columns (d0), not cards (d0, d1); shorthandPosition directly)
+	| 'click-to-select' // set cursor + touch (w/ selection, no autoMove)
 	| 'click-to-move' // set cursor + touch + autoMove (w/w/o selection)
 	| 'drag-and-drop'; // set cursor + drag start (w/w/o selection), deselect
 
