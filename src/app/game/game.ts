@@ -57,6 +57,12 @@ interface OptionsAutoFoundation {
 		XXX (techdebt) this is just to get unit tests passing, and maintain this flow until we have settings
 	*/
 	stopWithInvalid?: boolean;
+
+	/**
+	 	@deprecated
+		XXX (techdebt) this is just to get unit tests passing, and maintain this flow until we have settings
+	*/
+	autoMove?: boolean;
 }
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
@@ -455,7 +461,10 @@ export class FreeCell {
 
 		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
 	*/
-	touch({ autoFoundation = true, stopWithInvalid = false }: OptionsAutoFoundation = {}): FreeCell {
+	touch({
+		autoFoundation = true,
+		stopWithInvalid = false /* FIXME revert */,
+	}: OptionsAutoFoundation = {}): FreeCell {
 		// clear the selction, if re-touching the same spot
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
 			return this.clearSelection();
@@ -574,10 +583,7 @@ export class FreeCell {
 
 		@param shorthandMove
 	*/
-	moveByShorthand(
-		shorthandMove: string,
-		{ autoFoundation }: OptionsAutoFoundation = {}
-	): FreeCell {
+	moveByShorthand(shorthandMove: string, { autoFoundation }: OptionsAutoFoundation = {}): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
 		return this.setCursor(from).touch().setCursor(to).touch({ autoFoundation });
 	}
@@ -721,8 +727,15 @@ export class FreeCell {
 		return this.setCursor(to_location).touch({ autoFoundation });
 	}
 
-	clickToMove(location: CardLocation): FreeCell | this {
-		return this.setCursor(location).touch().autoMove();
+	clickToMove(
+		location: CardLocation,
+		{ autoMove = true /* FIXME revert */ }: OptionsAutoFoundation = {}
+	): FreeCell | this {
+		if (autoMove) {
+			return this.setCursor(location).touch().autoMove();
+		} else {
+			return this.setCursor(location).touch();
+		}
 	}
 
 	restart(): FreeCell {

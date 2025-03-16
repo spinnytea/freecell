@@ -147,6 +147,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'auto-foundation 56 KD,KS': '',
 	'flourish 56 KD,KS': '',
 	'invalid move 86 7D→9C': '',
+	// FIXME invalid from cell
 };
 
 export function pullActionTextExamples(actionTextExamples: string[], actionText: string) {

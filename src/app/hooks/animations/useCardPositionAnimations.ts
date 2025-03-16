@@ -47,55 +47,62 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				},
 			});
 
-			const { updateCardPositions, updateCardPositionsPrev, secondMustComeAfter, unmovedCards, invalidMoveCards } =
-				calcUpdatedCardPositions({
-					fixtureSizes,
-					previousTLs: previousTLs.current,
-					cards,
-					selection,
-					previousAction,
-				});
-
-			console.log(previousAction.text, invalidMoveCards); // FIXME do a thing with the cards
-
-			if (!updateCardPositions.length) return;
-
-			if (previousTimeline.current && previousTimeline.current !== timeline) {
-				previousTimeline.current
-					.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
-					.kill(); // stop animating
-			}
-			previousTimeline.current = timeline;
-
-			const nextTLs = new Map(previousTLs.current);
-			unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
-				// XXX (animation) should this be in animUpdatedCardPositions somehow?
-				const cardId =
-					'#c' + shorthand + (gameBoardIdRef?.current ? '-' + gameBoardIdRef.current : '');
-				timeline.set(cardId, { top, left, zIndex });
+			const {
+				updateCardPositions,
+				updateCardPositionsPrev,
+				secondMustComeAfter,
+				unmovedCards,
+				invalidMoveCards,
+			} = calcUpdatedCardPositions({
+				fixtureSizes,
+				previousTLs: previousTLs.current,
+				cards,
+				selection,
+				previousAction,
 			});
-			if (updateCardPositionsPrev) {
-				// XXX (techdebt) (motivation) this needs to be refactored this is the first non-trivial animation, so it's a bit of a 1-off
-				//  - everything else so far has been about making sure the cards move in the right order
+
+			if (updateCardPositions.length) {
+				if (previousTimeline.current && previousTimeline.current !== timeline) {
+					previousTimeline.current
+						.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
+						.kill(); // stop animating
+				}
+				previousTimeline.current = timeline;
+
+				const nextTLs = new Map(previousTLs.current);
+				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
+					// XXX (animation) should this be in animUpdatedCardPositions somehow?
+					const cardId =
+						'#c' + shorthand + (gameBoardIdRef?.current ? '-' + gameBoardIdRef.current : '');
+					timeline.set(cardId, { top, left, zIndex });
+				});
+				if (updateCardPositionsPrev) {
+					// XXX (techdebt) (motivation) this needs to be refactored this is the first non-trivial animation, so it's a bit of a 1-off
+					//  - everything else so far has been about making sure the cards move in the right order
+					animUpdatedCardPositions({
+						timeline,
+						list: updateCardPositionsPrev,
+						nextTLs,
+						fixtureSizes,
+						prevFixtureSizes,
+						gameBoardIdRef,
+					});
+				}
 				animUpdatedCardPositions({
 					timeline,
-					list: updateCardPositionsPrev,
+					list: updateCardPositions,
 					nextTLs,
 					fixtureSizes,
 					prevFixtureSizes,
 					gameBoardIdRef,
+					pause: secondMustComeAfter,
 				});
+				previousTLs.current = nextTLs;
 			}
-			animUpdatedCardPositions({
-				timeline,
-				list: updateCardPositions,
-				nextTLs,
-				fixtureSizes,
-				prevFixtureSizes,
-				gameBoardIdRef,
-				pause: secondMustComeAfter,
-			});
-			previousTLs.current = nextTLs;
+
+			if (invalidMoveCards) {
+				console.log(previousAction.text, invalidMoveCards); // FIXME do a thing with the cards
+			}
 		},
 		{ dependencies: [cards, selection, previousAction, fixtureSizes] }
 	);

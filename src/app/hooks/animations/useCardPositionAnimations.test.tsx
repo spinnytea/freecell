@@ -405,6 +405,7 @@ describe('useCardPositionAnimations', () => {
 
 		test.todo('auto-flourish');
 
+		// FIXME test.todo
 		describe('invalid (each MoveSourceType)', () => {
 			test.todo('deck');
 
@@ -413,6 +414,17 @@ describe('useCardPositionAnimations', () => {
 			test.todo('foundation');
 
 			test.todo('cascade:single');
+
+			test.todo('cascade:sequence');
+		});
+
+		// FIXME test.todo
+		describe('invalid (each MoveDestinationType)', () => {
+			test.todo('cell');
+
+			test.todo('foundation');
+
+			test.todo('cascade:empty');
 
 			test.todo('cascade:sequence');
 		});
@@ -440,6 +452,7 @@ describe('useCardPositionAnimations', () => {
 		describe('animate init', () => {
 			test.todo('· init');
 
+			// FIXME test.todo
 			test.todo('· init with invalid history');
 		});
 
@@ -641,6 +654,7 @@ describe('useCardPositionAnimations', () => {
 
 			test.todo('· select 8 7D');
 
+			// FIXME entire & partial cascade (top card not/move)
 			test.todo('· select 8 4D-3S-2D');
 
 			test.todo('· deselect KS');
@@ -649,8 +663,10 @@ describe('useCardPositionAnimations', () => {
 
 			test.todo('· deselect 6 2C');
 
+			// FIXME entire & partial cascade (top card not/move)
 			test.todo('· deselect 6 4D-3S-2D');
 
+			// FIXME test.todo entire & partial cascade (without autoMove=false)
 			test.todo('· invalid move 86 7D→9C');
 		});
 
@@ -682,7 +698,7 @@ describe('useCardPositionAnimations', () => {
 	});
 
 	describe('bugfix', () => {
-		test('Invalid Undo 2S (animation)', () => {
+		test('broken Undo 2S (animation)', () => {
 			const gamePrint =
 				'    3H 8D 4D AC 2D AH 2S \n' +
 				'    JC 9D 9C KD KC KS 5C \n' +

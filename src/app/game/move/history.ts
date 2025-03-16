@@ -373,11 +373,23 @@ export function getCardsThatMoved(game: FreeCell): Card[] {
 		.map((sh) => findCard(game.cards, parseShorthandCard(sh[0], sh[1])));
 }
 
-export function getCardsFromInvalid(previousAction: PreviousAction, cards: Card[]): { from: Card[], to: Card[] } {
+export function getCardsFromInvalid(
+	previousAction: PreviousAction,
+	cards: Card[]
+): { from: Card[]; to: Card[] } {
+	if (previousAction.text === 'touch stop') {
+		return { from: [], to: [] };
+	}
 	const { fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
 	const from = fromShorthand
 		.split('-')
 		.map((sh) => findCard(cards, parseShorthandCard(sh[0], sh[1])));
-	const to = [findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1]))];
+	const to = [];
+	if (toShorthand.length === 2) {
+		to.push(findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1])));
+	} else {
+		// FIXME test
+		// `toShorthand` could be 'cell' or 'cascade' or 'foundation'
+	}
 	return { from, to };
 }
