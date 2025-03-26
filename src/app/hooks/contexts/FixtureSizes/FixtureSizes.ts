@@ -31,6 +31,7 @@ const TB_CASCADE_OFFSET_STANDARD = 0.2;
 const TB_CASCADE_OFFSET_SMOL = 0.3;
 export const PEEK_UP = 0.25;
 export const PEEK_DOWN = 0.5;
+const SELECT_ROTATION_ANGLE = 10;
 
 export interface FixtureSizes {
 	boardWidth: number;
@@ -242,7 +243,9 @@ export function calcTopLeftZ(
 				left: fixtureSizes.home.cellLeft[data[0]],
 				zIndex: data[0],
 				rotation:
-					selection?.location.fixture === 'cell' && selection.location.data[0] === data[0] ? 10 : 0,
+					selection?.location.fixture === 'cell' && selection.location.data[0] === data[0]
+						? SELECT_ROTATION_ANGLE
+						: 0,
 			};
 		case 'foundation':
 			return {
@@ -253,7 +256,7 @@ export function calcTopLeftZ(
 				zIndex: (rank ? getRankForCompare(rank) : 0) + BOTTOM_OF_CASCADE,
 				rotation:
 					selection?.location.fixture === 'foundation' && selection.location.data[0] === data[0]
-						? 10
+						? SELECT_ROTATION_ANGLE
 						: 0,
 			};
 		case 'cascade': {

@@ -1,6 +1,7 @@
 import { MutableRefObject, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
+import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
 import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCardPositions';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
@@ -79,6 +80,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				if (updateCardPositionsPrev) {
 					// XXX (techdebt) (motivation) this needs to be refactored this is the first non-trivial animation, so it's a bit of a 1-off
 					//  - everything else so far has been about making sure the cards move in the right order
+					timeline.addLabel('updateCardPositionsPrev');
 					animUpdatedCardPositions({
 						timeline,
 						list: updateCardPositionsPrev,
@@ -88,6 +90,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 						gameBoardIdRef,
 					});
 				}
+				timeline.addLabel('updateCardPositions');
 				animUpdatedCardPositions({
 					timeline,
 					list: updateCardPositions,
@@ -100,8 +103,20 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				previousTLs.current = nextTLs;
 			}
 
-			if (invalidMoveCards) {
-				console.log(previousAction.text, invalidMoveCards); // FIXME do a thing with the cards
+			if (invalidMoveCards?.fromShorthands.length) {
+				if (previousTimeline.current && previousTimeline.current !== timeline) {
+					previousTimeline.current
+						.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
+						.kill(); // stop animating
+				}
+				previousTimeline.current = timeline;
+
+				timeline.addLabel('invalidMoveCards.fromShorthands');
+				animShakeCard({
+					timeline,
+					list: invalidMoveCards.fromShorthands,
+					gameBoardIdRef,
+				});
 			}
 		},
 		{ dependencies: [cards, selection, previousAction, fixtureSizes] }

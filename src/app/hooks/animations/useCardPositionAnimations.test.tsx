@@ -38,15 +38,18 @@ describe('useCardPositionAnimations', () => {
 	let fromToSpy: jest.SpyInstance;
 	let toSpy: jest.SpyInstance;
 	let setSpy: jest.SpyInstance;
+	let addLabelSpy: jest.SpyInstance;
 	beforeEach(() => {
 		fromToSpy = jest.fn();
 		toSpy = jest.fn();
 		setSpy = jest.fn();
+		addLabelSpy = jest.fn();
 		jest.spyOn(gsap, 'timeline').mockImplementation(() => {
 			const timelineMock: unknown = {
 				fromTo: fromToSpy,
 				to: toSpy,
 				set: setSpy,
+				addLabel: addLabelSpy,
 				totalProgress: () => ({
 					kill: () => {
 						/* empty */
@@ -61,6 +64,7 @@ describe('useCardPositionAnimations', () => {
 		toSpy.mockReset();
 		fromToSpy.mockReset();
 		setSpy.mockReset();
+		addLabelSpy.mockReset();
 	}
 
 	function getCardIdsFromSpy(spy: jest.SpyInstance) {
@@ -87,6 +91,7 @@ describe('useCardPositionAnimations', () => {
 				expect(setSpy.mock.calls.length).toBe(52);
 				expect(setSpy.mock.calls).toMatchSnapshot();
 				// expect(setSpy.mock.calls.map(([cardId]) => cardId as string)).toEqual(['#cAC', '#cAD', ..., '#cKH', '#cKS']);
+				expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
@@ -94,6 +99,7 @@ describe('useCardPositionAnimations', () => {
 				expect(toSpy).not.toHaveBeenCalled();
 				expect(fromToSpy).not.toHaveBeenCalled();
 				expect(setSpy).not.toHaveBeenCalled();
+				expect(addLabelSpy).not.toHaveBeenCalled();
 			});
 
 			test('win -> init', () => {
@@ -141,6 +147,7 @@ describe('useCardPositionAnimations', () => {
 					'<0.006',
 				]);
 				expect(setSpy).not.toHaveBeenCalled();
+				expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 			});
 
 			// we (read: _i_) very often win a game then set it aside
@@ -164,6 +171,7 @@ describe('useCardPositionAnimations', () => {
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
 			expect(setSpy).not.toHaveBeenCalled();
+			expect(addLabelSpy).not.toHaveBeenCalled();
 		});
 
 		test('deal', () => {
@@ -204,6 +212,7 @@ describe('useCardPositionAnimations', () => {
 				'<0.006',
 			]);
 			expect(setSpy).not.toHaveBeenCalled();
+			expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 		});
 
 		test('cursor', () => {
@@ -221,6 +230,7 @@ describe('useCardPositionAnimations', () => {
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
 			expect(setSpy).not.toHaveBeenCalled();
+			expect(addLabelSpy).not.toHaveBeenCalled();
 		});
 
 		test.todo('select');
@@ -267,6 +277,10 @@ describe('useCardPositionAnimations', () => {
 				expect(setCardIds.length).toBe(50);
 				expect(setCardIds).not.toContain('#cAD'); // 51
 				expect(setCardIds).not.toContain('#c6H'); // 52
+				expect(addLabelSpy.mock.calls).toEqual([
+					['updateCardPositionsPrev'],
+					['updateCardPositions'],
+				]);
 			});
 
 			test('multiple with overlap', () => {
@@ -343,6 +357,10 @@ describe('useCardPositionAnimations', () => {
 				expect(setCardIds).not.toContain('#cKC'); // 50
 				expect(setCardIds).not.toContain('#cKD');
 				expect(setCardIds).not.toContain('#cKS'); // 52
+				expect(addLabelSpy.mock.calls).toEqual([
+					['updateCardPositionsPrev'],
+					['updateCardPositions'],
+				]);
 			});
 
 			/**
@@ -396,6 +414,10 @@ describe('useCardPositionAnimations', () => {
 				expect(getCardIdsFromSpy(toSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
 				expect(getCardIdsFromSpy(fromToSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
 				expect(getCardIdsFromSpy(setSpy).length).toBe(47); // 52 - 5
+				expect(addLabelSpy.mock.calls).toEqual([
+					['updateCardPositionsPrev'],
+					['updateCardPositions'],
+				]);
 			});
 		});
 
@@ -406,27 +428,38 @@ describe('useCardPositionAnimations', () => {
 		test.todo('auto-flourish');
 
 		// FIXME test.todo
-		describe('invalid (each MoveSourceType)', () => {
-			test.todo('deck');
+		describe('invalid', () => {
+			describe('MoveSourceType', () => {
+				test.todo('deck');
 
-			test.todo('cell');
+				test.todo('cell');
 
-			test.todo('foundation');
+				test.todo('foundation');
 
-			test.todo('cascade:single');
+				test.todo('cascade:single');
 
-			test.todo('cascade:sequence');
-		});
+				test.todo('cascade:sequence');
+			});
 
-		// FIXME test.todo
-		describe('invalid (each MoveDestinationType)', () => {
-			test.todo('cell');
+			describe('MoveDestinationType', () => {
+				describe('cell', () => {
+					test.todo('empty');
 
-			test.todo('foundation');
+					test.todo('sequence');
+				});
 
-			test.todo('cascade:empty');
+				describe('foundation', () => {
+					test.todo('empty');
 
-			test.todo('cascade:sequence');
+					test.todo('sequence');
+				});
+
+				describe('cascade', () => {
+					test.todo('empty');
+
+					test.todo('sequence');
+				});
+			});
 		});
 	});
 
@@ -524,14 +557,14 @@ describe('useCardPositionAnimations', () => {
 			});
 
 			describe.each`
-				actionText                                    | shorthandMove | toSpyIDs                                    | fromToSpyIDs                | setSpyLength | toSpyUndoIDs         | fromToSpyUndoIDs
-				${'move 3a KC→cell'}                          | ${'3a'}       | ${['#cKC']}                                 | ${['#cKC']}                 | ${51}        | ${undefined}         | ${undefined}
-				${'move 15 TD→JS'}                            | ${'15'}       | ${['#cTD']}                                 | ${['#cTD']}                 | ${51}        | ${undefined}         | ${undefined}
-				${'move 23 KC-QD-JS→cascade'}                 | ${'23'}       | ${['#cKC', '#cQD', '#cJS']}                 | ${['#cKC', '#cQD', '#cJS']} | ${49}        | ${undefined}         | ${undefined}
-				${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${'53'}       | ${['#c6H', '#cAD']}                         | ${['#c6H', '#cAD']}         | ${50}        | ${undefined}         | ${undefined}
-				${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${'14'}       | ${['#c2S', '#cAS', '#cAS', '#c2S', '#c2S']} | ${['#c2S']}                 | ${50}        | ${['#cAS', '#c2S']}  | ${['#cAS', '#c2S']}
-				${'move 21 8H-7C→cascade'}                    | ${'21'}       | ${['#c8H', '#c7C']}                         | ${['#c8H', '#c7C']}         | ${50}        | ${undefined}         | ${undefined}
-				${FIFTY_TWO_CARD_FLOURISH}                    | ${'3b'}       | ${ftcf_toSpyIDs}                            | ${['#c8S']}                 | ${0}         | ${ftcf_toSpyUndoIDs} | ${ftcf_toSpyUndoIDs}
+				actionText                                    | shorthandMove | toSpyIDs                                    | fromToSpyIDs                | setSpyLength | toSpyUndoIDs         | fromToSpyUndoIDs     | labels
+				${'move 3a KC→cell'}                          | ${'3a'}       | ${['#cKC']}                                 | ${['#cKC']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 15 TD→JS'}                            | ${'15'}       | ${['#cTD']}                                 | ${['#cTD']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 23 KC-QD-JS→cascade'}                 | ${'23'}       | ${['#cKC', '#cQD', '#cJS']}                 | ${['#cKC', '#cQD', '#cJS']} | ${49}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${'53'}       | ${['#c6H', '#cAD']}                         | ${['#c6H', '#cAD']}         | ${50}        | ${undefined}         | ${undefined}         | ${[['updateCardPositionsPrev'], ['updateCardPositions']]}
+				${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${'14'}       | ${['#c2S', '#cAS', '#cAS', '#c2S', '#c2S']} | ${['#c2S']}                 | ${50}        | ${['#cAS', '#c2S']}  | ${['#cAS', '#c2S']}  | ${[['updateCardPositionsPrev'], ['updateCardPositions']]}
+				${'move 21 8H-7C→cascade'}                    | ${'21'}       | ${['#c8H', '#c7C']}                         | ${['#c8H', '#c7C']}         | ${50}        | ${undefined}         | ${undefined}         | ${undefined}
+				${FIFTY_TWO_CARD_FLOURISH}                    | ${'3b'}       | ${ftcf_toSpyIDs}                            | ${['#c8S']}                 | ${0}         | ${ftcf_toSpyUndoIDs} | ${ftcf_toSpyUndoIDs} | ${[['updateCardPositionsPrev'], ['updateCardPositions']]}
 			`(
 				'$actionText',
 				({
@@ -542,6 +575,7 @@ describe('useCardPositionAnimations', () => {
 					setSpyLength,
 					toSpyUndoIDs = toSpyIDs,
 					fromToSpyUndoIDs = fromToSpyIDs,
+					labels = [['updateCardPositions']],
 				}: {
 					actionText: string;
 					shorthandMove: string;
@@ -550,6 +584,7 @@ describe('useCardPositionAnimations', () => {
 					setSpyLength: number;
 					toSpyUndoIDs: string[] | undefined;
 					fromToSpyUndoIDs: string[] | undefined;
+					labels: string[][] | undefined;
 				}) => {
 					let gameStateOne: FreeCell;
 					let gameStateTwo: FreeCell;
@@ -580,6 +615,7 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+						expect(addLabelSpy.mock.calls).toEqual(labels);
 					});
 
 					test('undo ←', () => {
@@ -590,6 +626,7 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+						expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 					});
 
 					test('both →←', () => {
@@ -602,6 +639,7 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+						expect(addLabelSpy.mock.calls).toEqual(labels);
 
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
@@ -609,6 +647,7 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+						expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 					});
 				}
 			);
@@ -794,6 +833,7 @@ describe('useCardPositionAnimations', () => {
 			expect(setCardIds.length).toBe(50);
 			expect(setCardIds).not.toContain('#c7C'); // 51
 			expect(setCardIds).not.toContain('#c8H'); // 52
+			expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 		});
 
 		/**
@@ -858,6 +898,7 @@ describe('useCardPositionAnimations', () => {
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
 			expect(setSpy.mock.calls.length).toBe(52);
+			expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
@@ -865,6 +906,7 @@ describe('useCardPositionAnimations', () => {
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
 			expect(setSpy).not.toHaveBeenCalled();
+			expect(addLabelSpy).not.toHaveBeenCalled();
 		});
 	});
 });
