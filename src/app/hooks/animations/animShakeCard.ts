@@ -37,6 +37,9 @@ export function animShakeCard({
 		// back to center
 		tl.to(cardId, { x: '0', duration: INVALID_SHAKE_PORTION / 2, ease: 'sine.out' });
 
-		timeline.add(tl, index === 0 ? `>0` : `<+${INVALID_SHAKE_PORTION.toFixed(3)}`);
+		timeline.add(
+			tl,
+			index === 0 ? `invalidMoveCards.fromShorthands` : `<+${INVALID_SHAKE_PORTION.toFixed(3)}`
+		);
 	});
 }

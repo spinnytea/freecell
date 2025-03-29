@@ -445,35 +445,318 @@ describe('useCardPositionAnimations', () => {
 
 		// FIXME test.todo
 		describe('invalid', () => {
+			let gameStateOne: FreeCell;
+			beforeEach(() => {
+				gameStateOne = FreeCell.parse(
+					'' + //
+						' 3C 4C    AC 2D       \n' + //
+						'>KC TH    KD \n' + //
+						' QD       QC \n' + //
+						' JC          \n' + //
+						' hand-jammed'
+				);
+			});
+
+			test('game state checks', () => {
+				expect(gameStateOne.cells.length).toBe(3);
+				expect(gameStateOne.printFoundation()).toBe('AC 2D      ');
+				expect(gameStateOne.tableau.length).toBe(4);
+			});
+
+			// REVIEW (animation) different animations for each MoveSourceType?
 			describe('MoveSourceType', () => {
 				test.todo('deck');
 
-				test.todo('cell');
+				test('cell', () => {
+					gameStateOne = gameStateOne.setCursor({ fixture: 'cell', data: [0] }).touch();
+					expect(gameStateOne.previousAction.text).toBe('select a 3C');
+					const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [1] }).touch();
+					expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→2D');
 
-				test.todo('foundation');
+					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+					mockReset();
+					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-				test.todo('cascade:single');
+					// prettier-ignore
+					expect(getCardIdsFromSpy(toSpy)).toEqual([
+						'#c3C', '#c3C', '#c3C',
+						'#c2D', '#c2D', '#c2D',
+					]);
+					expect(fromToSpy).not.toHaveBeenCalled();
+					expect(setSpy).not.toHaveBeenCalled();
+					expect(addLabelSpy.mock.calls).toEqual([
+						['invalidMoveCards.fromShorthands'],
+						['invalidMoveCards.toShorthands'],
+					]);
+					expect(addSpy).toHaveBeenCalledTimes(2);
+				});
 
-				test.todo('cascade:sequence');
+				test('foundation', () => {
+					gameStateOne = gameStateOne
+						.setCursor({ fixture: 'foundation', data: [0] })
+						.touch({ allowSelectFoundation: true });
+					expect(gameStateOne.previousAction.text).toBe('select AC');
+					expect(gameStateOne.selection).toEqual({
+						location: { fixture: 'foundation', data: [0] },
+						cards: [{ rank: 'ace', suit: 'clubs', location: { fixture: 'foundation', data: [0] } }],
+						peekOnly: true,
+					});
+					const gameStateTwo = gameStateOne.setCursor({ fixture: 'cell', data: [2] }).touch();
+					expect(gameStateTwo.previousAction.text).toBe('invalid move hc AC→cell');
+
+					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+					mockReset();
+					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+					// prettier-ignore
+					expect(getCardIdsFromSpy(toSpy)).toEqual([
+						'#cAC', '#cAC', '#cAC',
+					]);
+					expect(fromToSpy).not.toHaveBeenCalled();
+					expect(setSpy).not.toHaveBeenCalled();
+					expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
+					expect(addSpy).toHaveBeenCalledTimes(1);
+				});
+
+				test('cascade:single', () => {
+					gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [1, 0] }).touch();
+					expect(gameStateOne.previousAction.text).toBe('select 2 TH');
+					const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [0] }).touch();
+					expect(gameStateTwo.previousAction.text).toBe('invalid move 2h TH→AC');
+
+					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+					mockReset();
+					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+					// prettier-ignore
+					expect(getCardIdsFromSpy(toSpy)).toEqual([
+						'#cTH', '#cTH', '#cTH',
+						'#cAC', '#cAC', '#cAC',
+					]);
+					expect(fromToSpy).not.toHaveBeenCalled();
+					expect(setSpy).not.toHaveBeenCalled();
+					expect(addLabelSpy.mock.calls).toEqual([
+						['invalidMoveCards.fromShorthands'],
+						['invalidMoveCards.toShorthands'],
+					]);
+					expect(addSpy).toHaveBeenCalledTimes(2);
+				});
+
+				test('cascade:sequence', () => {
+					gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+					expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+					const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [1] }).touch();
+					expect(gameStateTwo.previousAction.text).toBe('invalid move 1h KC-QD-JC→2D');
+
+					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+					mockReset();
+					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+					// prettier-ignore
+					expect(getCardIdsFromSpy(toSpy)).toEqual([
+						'#cKC', '#cKC', '#cKC',
+						'#cQD', '#cQD', '#cQD',
+						'#cJC', '#cJC', '#cJC',
+						'#c2D', '#c2D', '#c2D',
+					]);
+					expect(fromToSpy).not.toHaveBeenCalled();
+					expect(setSpy).not.toHaveBeenCalled();
+					expect(addLabelSpy.mock.calls).toEqual([
+						['invalidMoveCards.fromShorthands'],
+						['invalidMoveCards.toShorthands'],
+					]);
+					expect(addSpy).toHaveBeenCalledTimes(4);
+				});
+
+				// REVIEW (techdebt) do we really need this?
+				test.todo('peekOnly');
 			});
 
+			// REVIEW (animation) different animations for each MoveDestinationType? empty?
 			describe('MoveDestinationType', () => {
 				describe('cell', () => {
-					test.todo('empty');
+					test('empty', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						const gameStateTwo = gameStateOne.setCursor({ fixture: 'cell', data: [2] }).touch();
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 1c KC-QD-JC→cell');
 
-					test.todo('sequence');
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#cKC', '#cKC', '#cKC',
+							'#cQD', '#cQD', '#cQD',
+							'#cJC', '#cJC', '#cJC',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
+						expect(addSpy).toHaveBeenCalledTimes(3);
+					});
+
+					test('single', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						const gameStateTwo = gameStateOne
+							.setCursor({ fixture: 'cell', data: [1] })
+							.touch({ stopWithInvalid: true });
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 1b KC-QD-JC→4C');
+
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#cKC', '#cKC', '#cKC',
+							'#cQD', '#cQD', '#cQD',
+							'#cJC', '#cJC', '#cJC',
+							'#c4C', '#c4C', '#c4C',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([
+							['invalidMoveCards.fromShorthands'],
+							['invalidMoveCards.toShorthands'],
+						]);
+						expect(addSpy).toHaveBeenCalledTimes(4);
+					});
 				});
 
 				describe('foundation', () => {
-					test.todo('empty');
+					test('empty', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cell', data: [0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select a 3C');
+						const gameStateTwo = gameStateOne
+							.setCursor({ fixture: 'foundation', data: [2] })
+							.touch();
+						expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→foundation');
 
-					test.todo('sequence');
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#c3C', '#c3C', '#c3C',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
+						expect(addSpy).toHaveBeenCalledTimes(1);
+					});
+
+					test('single', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cell', data: [0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select a 3C');
+						const gameStateTwo = gameStateOne
+							.setCursor({ fixture: 'foundation', data: [1] })
+							.touch();
+						expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→2D');
+
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#c3C', '#c3C', '#c3C',
+							'#c2D', '#c2D', '#c2D',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([
+							['invalidMoveCards.fromShorthands'],
+							['invalidMoveCards.toShorthands'],
+						]);
+						expect(addSpy).toHaveBeenCalledTimes(2);
+					});
 				});
 
 				describe('cascade', () => {
-					test.todo('empty');
+					test('empty', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						const gameStateTwo = gameStateOne
+							.setCursor({ fixture: 'cascade', data: [2, 0] })
+							.touch({ stopWithInvalid: true });
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 13 KC-QD-JC→cascade');
 
-					test.todo('sequence');
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#cKC', '#cKC', '#cKC',
+							'#cQD', '#cQD', '#cQD',
+							'#cJC', '#cJC', '#cJC',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
+						expect(addSpy).toHaveBeenCalledTimes(3);
+					});
+
+					test('single', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						const gameStateTwo = gameStateOne
+							.setCursor({ fixture: 'cascade', data: [1, 0] })
+							.touch({ stopWithInvalid: true });
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 12 KC-QD-JC→TH');
+
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#cKC', '#cKC', '#cKC',
+							'#cQD', '#cQD', '#cQD',
+							'#cJC', '#cJC', '#cJC',
+							'#cTH', '#cTH', '#cTH',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([
+							['invalidMoveCards.fromShorthands'],
+							['invalidMoveCards.toShorthands'],
+						]);
+						expect(addSpy).toHaveBeenCalledTimes(4);
+					});
+
+					// REVIEW (animation) shake the whole sequence, not just the final card?
+					test('sequence', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						const gameStateTwo = gameStateOne
+							.setCursor({ fixture: 'cascade', data: [3, 0] })
+							.touch({ stopWithInvalid: true });
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 14 KC-QD-JC→QC');
+
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#cKC', '#cKC', '#cKC',
+							'#cQD', '#cQD', '#cQD',
+							'#cJC', '#cJC', '#cJC',
+							'#cQC', '#cQC', '#cQC',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([
+							['invalidMoveCards.fromShorthands'],
+							['invalidMoveCards.toShorthands'],
+						]);
+						expect(addSpy).toHaveBeenCalledTimes(4);
+					});
 				});
 			});
 		});
@@ -740,24 +1023,21 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+				// prettier-ignore
 				expect(getCardIdsFromSpy(toSpy)).toEqual([
-					'#c6D',
-					'#c6D',
-					'#c6D',
-					'#c5S',
-					'#c5S',
-					'#c5S',
-					'#c4D',
-					'#c4D',
-					'#c4D',
-					'#c3C',
-					'#c3C',
-					'#c3C',
+					'#c6D', '#c6D', '#c6D',
+					'#c5S', '#c5S', '#c5S',
+					'#c4D', '#c4D', '#c4D',
+					'#c3C', '#c3C', '#c3C',
+					'#c7C', '#c7C', '#c7C',
 				]);
 				expect(fromToSpy).not.toHaveBeenCalled();
 				expect(setSpy).not.toHaveBeenCalled();
-				expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
-				expect(addSpy).toHaveBeenCalledTimes(4);
+				expect(addLabelSpy.mock.calls).toEqual([
+					['invalidMoveCards.fromShorthands'],
+					['invalidMoveCards.toShorthands'],
+				]);
+				expect(addSpy).toHaveBeenCalledTimes(5);
 			});
 		});
 

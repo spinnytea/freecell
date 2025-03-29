@@ -117,6 +117,14 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					list: invalidMoveCards.fromShorthands,
 					gameBoardIdRef,
 				});
+				if (invalidMoveCards.toShorthands.length) {
+					timeline.addLabel('invalidMoveCards.toShorthands');
+					animShakeCard({
+						timeline,
+						list: invalidMoveCards.toShorthands,
+						gameBoardIdRef,
+					});
+				}
 			}
 		},
 		{ dependencies: [cards, selection, previousAction, fixtureSizes] }

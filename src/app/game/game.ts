@@ -53,8 +53,23 @@ interface OptionsAutoFoundation {
 	autoFoundation?: boolean;
 
 	/**
-	 	@deprecated
-		XXX (techdebt) this is just to get unit tests passing, and maintain this flow until we have settings
+		@deprecated this is just for… for testing, yeah that's it
+	*/
+	allowSelectFoundation?: boolean;
+
+	/**
+		for good game feel, the ultimate goal is to minimize any invalid moves
+		invalid moves stop gameplay
+		instead, we want to figure out what the user intended to do next, without making them do extra steps
+		(e.g. deselect something before picking a new starting move)
+
+		however, we will almost certainly get backed into a corner eventally, esp near a end-game-failure when there are no legal moves
+		so we need a flag to use during testing to make it easier to find these cases
+
+		that said, if we do ever find a way around those invalid moves (find somthing to do instead),
+		we'll still need this to test the animations, until we find another real-world example to circumvent
+
+		@deprecated this is just for unit testing - can we avoid using it even there with actual examples?
 	*/
 	stopWithInvalid?: boolean;
 
@@ -464,6 +479,7 @@ export class FreeCell {
 	touch({
 		autoFoundation = true,
 		stopWithInvalid = false /* FIXME revert */,
+		allowSelectFoundation = false,
 	}: OptionsAutoFoundation = {}): FreeCell {
 		// clear the selction, if re-touching the same spot
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
@@ -476,7 +492,10 @@ export class FreeCell {
 			// we can't do anything with a foundation (we can move cards off of it)
 			// - therefore it doesn't make sense to select it
 			// - you'd have to deselect it before you can continue with gameplay
-			if (selection.cards.length && this.cursor.fixture !== 'foundation') {
+			if (
+				selection.cards.length &&
+				(allowSelectFoundation || this.cursor.fixture !== 'foundation')
+			) {
 				return this.__clone({
 					action: { text: 'select ' + shorthandSequenceWithPosition(selection), type: 'select' },
 					selection,
