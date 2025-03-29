@@ -370,6 +370,37 @@ describe('game.parse', () => {
 		});
 	});
 
+	test('history with selection', () => {
+		const game = FreeCell.parse(
+			'' +
+				' TD       TC AH 2S       \n' +
+				' QD AC AD 5D 9H JH 4H 6S \n' +
+				' 2H 4C QS KD 8C 5C>6D|QH \n' +
+				' 3D 8H 3S 2D 3H 8D|5S|JS \n' +
+				' JD 4S 2C KC 7C JC|4D|TS \n' +
+				' 7S 9D 6H 7D    QC|3C|7H \n' +
+				' 9S TH    6C    KS    9C \n' +
+				' 8S KH    5H             \n' +
+				' move 54 6C-5H→7D\n' +
+				':h shuffle32 27571\n' +
+				' 34 4d d4 4d d4 5d 75 74 \n' +
+				' 47 4a 54 '
+		);
+
+		expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 1] });
+		expect(game.selection).toEqual({
+			location: { fixture: 'cascade', data: [6, 1] },
+			cards: [
+				{ rank: '6', suit: 'diamonds', location: { fixture: 'cascade', data: [6, 1] } },
+				{ rank: '5', suit: 'spades', location: { fixture: 'cascade', data: [6, 2] } },
+				{ rank: '4', suit: 'diamonds', location: { fixture: 'cascade', data: [6, 3] } },
+				{ rank: '3', suit: 'clubs', location: { fixture: 'cascade', data: [6, 4] } },
+			],
+			peekOnly: false,
+		});
+		expect(game.availableMoves).toEqual([]);
+	});
+
 	describe('detect cursor location', () => {
 		test('move … (auto-foundation …)', () => {
 			const game = FreeCell.parse(

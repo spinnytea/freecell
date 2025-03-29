@@ -729,12 +729,12 @@ export class FreeCell {
 
 	clickToMove(
 		location: CardLocation,
-		{ autoMove = true /* FIXME revert */ }: OptionsAutoFoundation = {}
+		{ autoMove = true /* FIXME revert */, stopWithInvalid }: OptionsAutoFoundation = {}
 	): FreeCell | this {
 		if (autoMove) {
-			return this.setCursor(location).touch().autoMove();
+			return this.setCursor(location).touch({ stopWithInvalid }).autoMove();
 		} else {
-			return this.setCursor(location).touch();
+			return this.setCursor(location).touch({ stopWithInvalid });
 		}
 	}
 

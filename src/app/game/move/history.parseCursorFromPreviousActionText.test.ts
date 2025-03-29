@@ -26,6 +26,9 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			expect(actionTextExamples).toEqual([]);
 		});
 
+		// XXX (techdebt) (cursor) init could/should be top/left?
+		// XXX (techdebt) (cursor) where is the cursor after a deal? it _was_ on the deck, where is it now?
+		// XXX (techdebt) (cursor) we could detect the location of select/deselect
 		test.each`
 			actionText                                    | cards          | cursor
 			${'init'}                                     | ${[]}          | ${undefined}
@@ -56,6 +59,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'auto-foundation 56 KD,KS'}                 | ${someCards_1} | ${undefined}
 			${'flourish 56 KD,KS'}                        | ${someCards_1} | ${undefined}
 			${'invalid move 86 7D→9C'}                    | ${[]}          | ${undefined}
+			${'invalid move 75 6D-5S-4D-3C→7C'}           | ${[]}          | ${undefined}
 		`(
 			'$actionText',
 			({

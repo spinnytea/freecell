@@ -43,6 +43,7 @@ describe('game/history.parsePreviousActionType', () => {
 			${'auto-foundation 56 KD,KS'}                 | ${{ text: 'auto-foundation 56 KD,KS', type: 'auto-foundation' }}
 			${'flourish 56 KD,KS'}                        | ${{ text: 'flourish 56 KD,KS', type: 'auto-foundation' }}
 			${'invalid move 86 7D→9C'}                    | ${{ text: 'invalid move 86 7D→9C', type: 'invalid' }}
+			${'invalid move 75 6D-5S-4D-3C→7C'}           | ${{ text: 'invalid move 75 6D-5S-4D-3C→7C', type: 'invalid' }}
 		`(
 			'$actionText',
 			({ actionText, previousAction }: { actionText: string; previousAction: PreviousAction }) => {
