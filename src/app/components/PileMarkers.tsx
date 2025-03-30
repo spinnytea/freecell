@@ -1,12 +1,13 @@
+import { MutableRefObject } from 'react';
 import classNames from 'classnames';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { CardLocation } from '@/app/game/card/card';
+import { calcPilemarkerId, CardLocation } from '@/app/game/card/card';
 import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { useClickTouchControls } from '@/app/hooks/controls/useClickTouchControls';
 
-export function PileMarkers() {
+export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObject<string> }) {
 	const { cursor } = useGame();
 	const fixtureSizes = useFixtureSizes();
 	const homeTop = fixtureSizes.home.top;
@@ -23,6 +24,7 @@ export function PileMarkers() {
 					fixtureSizes={fixtureSizes}
 					cursorPile={cursor.fixture === 'cell' && cursor.data[0] === idx}
 					location={{ fixture: 'cell', data: [idx] }}
+					gameBoardIdRef={gameBoardIdRef}
 				/>
 			))}
 			{fixtureSizes.home.foundationLeft.map((left, idx) => (
@@ -33,6 +35,7 @@ export function PileMarkers() {
 					fixtureSizes={fixtureSizes}
 					cursorPile={cursor.fixture === 'foundation' && cursor.data[0] === idx}
 					location={{ fixture: 'foundation', data: [idx] }}
+					gameBoardIdRef={gameBoardIdRef}
 				/>
 			))}
 			{fixtureSizes.tableau.cascadeLeft.map((left, idx) => (
@@ -43,6 +46,7 @@ export function PileMarkers() {
 					fixtureSizes={fixtureSizes}
 					cursorPile={cursor.fixture === 'cascade' && cursor.data[0] === idx}
 					location={{ fixture: 'cascade', data: [idx, 0] }}
+					gameBoardIdRef={gameBoardIdRef}
 				/>
 			))}
 		</div>
@@ -55,12 +59,14 @@ function Pile({
 	fixtureSizes,
 	cursorPile,
 	location,
+	gameBoardIdRef,
 }: {
 	top: number;
 	left: number;
 	fixtureSizes: FixtureSizes;
 	cursorPile: boolean;
 	location: CardLocation;
+	gameBoardIdRef: MutableRefObject<string>;
 }) {
 	const handleClickTouch = useClickTouchControls(location);
 
@@ -71,8 +77,10 @@ function Pile({
 		height: fixtureSizes.cardHeight - 2,
 	};
 
+	const pileId = calcPilemarkerId(location, gameBoardIdRef.current);
 	return (
 		<div
+			id={pileId}
 			className={classNames(styles_pilemarkers.pile, {
 				[styles_pilemarkers.cursorPile]: cursorPile,
 			})}

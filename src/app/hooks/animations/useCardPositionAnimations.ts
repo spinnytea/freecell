@@ -1,6 +1,7 @@
 import { MutableRefObject, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
+import { calcCardId } from '@/app/game/card/card';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
 import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCardPositions';
@@ -73,8 +74,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				const nextTLs = new Map(previousTLs.current);
 				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
 					// XXX (animation) should this be in animUpdatedCardPositions somehow?
-					const cardId =
-						'#c' + shorthand + (gameBoardIdRef?.current ? '-' + gameBoardIdRef.current : '');
+					const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 					timeline.set(cardId, { top, left, zIndex });
 				});
 				if (updateCardPositionsPrev) {

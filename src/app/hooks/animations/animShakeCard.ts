@@ -1,6 +1,7 @@
 import { MutableRefObject } from 'react';
 import { gsap } from 'gsap/all';
 import { INVALID_SHAKE_MAGNITUDE, INVALID_SHAKE_PORTION } from '@/app/animation_constants';
+import { calcCardId } from '@/app/game/card/card';
 
 export function animShakeCard({
 	timeline,
@@ -18,7 +19,7 @@ export function animShakeCard({
 	const signYoyo = start ? '+' : '-';
 
 	list.forEach((shorthand, index) => {
-		const cardId = '#c' + shorthand + (gameBoardIdRef?.current ? '-' + gameBoardIdRef.current : '');
+		const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 		const tl = gsap.timeline();
 		// offset left
 		tl.to(cardId, {
