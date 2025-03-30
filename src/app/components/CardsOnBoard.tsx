@@ -4,7 +4,7 @@ import { gsap } from 'gsap/all';
 import { SELECT_ROTATION_DURATION } from '@/app/animation_constants';
 import { CardImage } from '@/app/components/cards/CardImage';
 import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
-import { calcCardId, CardLocation, Rank, Suit } from '@/app/game/card/card';
+import { calcCardId, CardLocation, Rank, shorthandCard, Suit } from '@/app/game/card/card';
 import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositionAnimations';
 import { calcTopLeftZ } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
@@ -82,7 +82,7 @@ function CardOnBoard({
 		{ dependencies: [rotation] }
 	);
 
-	const cardId = calcCardId({ rank, suit }, gameBoardIdRef.current);
+	const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardIdRef.current);
 	return (
 		<div id={cardId} className={styles_cardsonboard.card} ref={cardRef} onClick={handleClickToMove}>
 			<CardImage

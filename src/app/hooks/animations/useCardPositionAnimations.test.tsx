@@ -443,7 +443,6 @@ describe('useCardPositionAnimations', () => {
 
 		test.todo('auto-flourish');
 
-		// FIXME test.todo
 		describe('invalid', () => {
 			let gameStateOne: FreeCell;
 			beforeEach(() => {
@@ -784,7 +783,6 @@ describe('useCardPositionAnimations', () => {
 		describe('animate init', () => {
 			test.todo('· init');
 
-			// FIXME test.todo
 			test.todo('· init with invalid history');
 		});
 
@@ -990,25 +988,30 @@ describe('useCardPositionAnimations', () => {
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'invalid move 86 7D→9C');
 		describe('animate', () => {
+			// peekOnly
 			test.todo('· select 6D');
 
+			// peekOnly
 			test.todo('· select 4D-3S-2D');
 
+			// (canMove), !peekOnly
 			test.todo('· select 8 7D');
 
-			// FIXME entire & partial cascade (top card not/move)
+			// (canMove), !peekOnly
 			test.todo('· select 8 4D-3S-2D');
 
+			// peekOnly
 			test.todo('· deselect KS');
 
+			// peekOnly
 			test.todo('· deselect 4D-3S-2D');
 
+			// (canMove), !peekOnly
 			test.todo('· deselect 6 2C');
 
-			// FIXME entire & partial cascade (top card not/move)
+			// (canMove), !peekOnly
 			test.todo('· deselect 6 4D-3S-2D');
 
-			// FIXME test.todo entire & partial cascade (without autoMove=false)
 			test.todo('· invalid move 86 7D→9C');
 
 			test('· invalid move 75 6D-5S-4D-3C→7C', () => {

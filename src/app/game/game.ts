@@ -478,7 +478,7 @@ export class FreeCell {
 	*/
 	touch({
 		autoFoundation = true,
-		stopWithInvalid = false /* FIXME revert */,
+		stopWithInvalid = false,
 		allowSelectFoundation = false,
 	}: OptionsAutoFoundation = {}): FreeCell {
 		// clear the selction, if re-touching the same spot
@@ -505,7 +505,11 @@ export class FreeCell {
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length) {
-			// FIXME (animation) (3-priority) animate invalid move; shake
+			// TODO (animation) (4-priority) animate touch stop
+			//  - this isn't "invalid" so much as it is "nothing to do"
+			//  - we touched this location, and there isn't an actual action
+			//  - we can add a bit of whimmsy here, behind a conditional animation
+			//  - just like a small card bump (up,left,rot, and back)
 			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
 		}
 
@@ -556,7 +560,6 @@ export class FreeCell {
 			}
 		}
 
-		// FIXME (animation) (3-priority) animate invalid move; shake
 		return this.__clone({ action: { text: 'invalid ' + actionText, type: 'invalid' } });
 	}
 
@@ -748,7 +751,7 @@ export class FreeCell {
 
 	clickToMove(
 		location: CardLocation,
-		{ autoMove = true /* FIXME revert */, stopWithInvalid }: OptionsAutoFoundation = {}
+		{ autoMove = true, stopWithInvalid }: OptionsAutoFoundation = {}
 	): FreeCell | this {
 		if (autoMove) {
 			return this.setCursor(location).touch({ stopWithInvalid }).autoMove();

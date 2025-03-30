@@ -77,6 +77,7 @@ function Pile({
 		height: fixtureSizes.cardHeight - 2,
 	};
 
+	// XXX (techdebt) use or remove
 	const pileId = calcPilemarkerId(location, gameBoardIdRef.current);
 	return (
 		<div

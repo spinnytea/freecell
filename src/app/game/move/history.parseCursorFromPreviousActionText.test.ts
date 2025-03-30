@@ -4,7 +4,12 @@ import {
 	FIFTY_TWO_CARD_FLOURISH,
 	pullActionTextExamples,
 } from '@/app/game/catalog/actionText-examples';
-import { parseCursorFromPreviousActionText } from '@/app/game/move/history';
+import {
+	parseCursorFromPreviousActionText,
+	parsePreviousActionType,
+	PREVIOUS_ACTION_TYPE_IN_HISTORY,
+	PreviousActionType,
+} from '@/app/game/move/history';
 
 describe('game/history.parseCursorFromPreviousActionText', () => {
 	const someCards_1: Card[] = [
@@ -26,16 +31,14 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			expect(actionTextExamples).toEqual([]);
 		});
 
-		// XXX (techdebt) (cursor) init could/should be top/left?
-		// XXX (techdebt) (cursor) where is the cursor after a deal? it _was_ on the deck, where is it now?
 		// XXX (techdebt) (cursor) we could detect the location of select/deselect
 		test.each`
 			actionText                                    | cards          | cursor
-			${'init'}                                     | ${[]}          | ${undefined}
-			${'init with invalid history'}                | ${[]}          | ${undefined}
-			${'shuffle deck (0)'}                         | ${[]}          | ${undefined}
-			${'deal all cards'}                           | ${[]}          | ${undefined}
-			${'deal most cards'}                          | ${[]}          | ${undefined}
+			${'init'}                                     | ${[]}          | ${{ fixture: 'deck', data: [0] }}
+			${'init with invalid history'}                | ${[]}          | ${{ fixture: 'deck', data: [0] }}
+			${'shuffle deck (0)'}                         | ${[]}          | ${{ fixture: 'deck', data: [0] }}
+			${'deal all cards'}                           | ${[]}          | ${{ fixture: 'cell', data: [0] }}
+			${'deal most cards'}                          | ${[]}          | ${{ fixture: 'cell', data: [0] }}
 			${'cursor set'}                               | ${[]}          | ${undefined}
 			${'select 6D'}                                | ${[]}          | ${undefined}
 			${'select 4D-3S-2D'}                          | ${[]}          | ${undefined}
@@ -73,6 +76,14 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			}) => {
 				pullActionTextExamples(actionTextExamples, actionText);
 				expect(parseCursorFromPreviousActionText(actionText, cards)).toEqual(cursor);
+
+				// make sure all the ones that should have a cursor do have a cursor
+				const previousAction = parsePreviousActionType(actionText);
+				const EXCEPTIONS: PreviousActionType[] = ['auto-foundation'];
+				const canBeInHistory = PREVIOUS_ACTION_TYPE_IN_HISTORY.includes(previousAction.type);
+				const isException = EXCEPTIONS.includes(previousAction.type);
+				const canFindCursor = !!cursor;
+				expect(canFindCursor || !canBeInHistory || isException).toBeTruthy();
 			}
 		);
 	});

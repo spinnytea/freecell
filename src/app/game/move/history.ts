@@ -27,7 +27,7 @@ export type PreviousActionType =
 	| 'invalid'
 	| 'auto-foundation-tween';
 
-const PREVIOUS_ACTION_TYPE_IN_HISTORY: PreviousActionType[] = [
+export const PREVIOUS_ACTION_TYPE_IN_HISTORY: PreviousActionType[] = [
 	'init',
 	'shuffle',
 	'deal',
@@ -85,6 +85,7 @@ export interface PreviousAction {
 
 // REVIEW (animation) do we need a parser for every type?
 //  - i.e. do we need to understand them all to animate them?
+//  - i.e. PREVIOUS_ACTION_TYPE_IN_HISTORY
 //  - if so, should we just _store_ that parsed info?
 //  - that said, having a regex/parser is needed for, say, parsing a history string and validation/testing
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
@@ -131,10 +132,10 @@ export function parseCursorFromPreviousActionText(
 	if (!actionText) return undefined;
 	switch (parsePreviousActionType(actionText).type) {
 		case 'init':
-			return undefined;
 		case 'shuffle':
+			return { fixture: 'deck', data: [0] };
 		case 'deal':
-			return undefined;
+			return { fixture: 'cell', data: [0] };
 		case 'move-foundation':
 		case 'move': {
 			const { to, fromShorthand, toShorthand } = parseActionTextMove(actionText);
@@ -378,6 +379,7 @@ export function getCardsFromInvalid(
 	cards: Card[]
 ): { from: Card[]; to: Card[] } {
 	if (previousAction.text === 'touch stop') {
+		// TODO (animation) (4-priority) animate touch stop
 		return { from: [], to: [] };
 	}
 	const { fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
@@ -388,8 +390,8 @@ export function getCardsFromInvalid(
 	if (toShorthand.length === 2) {
 		to.push(findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1])));
 	} else {
-		// FIXME test
-		// `toShorthand` could be 'cell' or 'cascade' or 'foundation'
+		// TODO (animation) animate piles
+		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
 	}
 	return { from, to };
 }

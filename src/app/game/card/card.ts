@@ -116,13 +116,8 @@ export interface CardSequence {
 /* HELPER METHODS */
 /* ************** */
 
-export function calcCardId(card: CardSH | string, gameBoardId?: string) {
-	let cardId = 'c';
-	if (typeof card === 'string') {
-		cardId += card;
-	} else {
-		cardId += shorthandCard(card);
-	}
+export function calcCardId(shorthand: string, gameBoardId?: string) {
+	let cardId = 'c' + shorthand;
 	if (gameBoardId) {
 		cardId += '-' + gameBoardId;
 	}
