@@ -15,6 +15,11 @@ export const MAX_ANIMATION_OVERLAP = 0.06;
 /** when we select a card, and it needs to rotate to show it's selected, this is how long that takes */
 export const SELECT_ROTATION_DURATION = 0.1;
 
+/** one part of the yoyo */
+export const INVALID_SHAKE_PORTION = 0.05;
+/** how far to offset in either direction */
+export const INVALID_SHAKE_MAGNITUDE = 3;
+
 /**
 	we want the cursor to be snappy,
 	but a little bit of animation makes it easier to track

@@ -53,10 +53,31 @@ interface OptionsAutoFoundation {
 	autoFoundation?: boolean;
 
 	/**
+		@deprecated this is just for… for testing, yeah that's it
+	*/
+	allowSelectFoundation?: boolean;
+
+	/**
+		for good game feel, the ultimate goal is to minimize any invalid moves
+		invalid moves stop gameplay
+		instead, we want to figure out what the user intended to do next, without making them do extra steps
+		(e.g. deselect something before picking a new starting move)
+
+		however, we will almost certainly get backed into a corner eventally, esp near a end-game-failure when there are no legal moves
+		so we need a flag to use during testing to make it easier to find these cases
+
+		that said, if we do ever find a way around those invalid moves (find somthing to do instead),
+		we'll still need this to test the animations, until we find another real-world example to circumvent
+
+		@deprecated this is just for unit testing - can we avoid using it even there with actual examples?
+	*/
+	stopWithInvalid?: boolean;
+
+	/**
 	 	@deprecated
 		XXX (techdebt) this is just to get unit tests passing, and maintain this flow until we have settings
 	*/
-	stopWithInvalid?: boolean;
+	autoMove?: boolean;
 }
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
@@ -455,7 +476,11 @@ export class FreeCell {
 
 		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
 	*/
-	touch({ autoFoundation = true, stopWithInvalid = false }: OptionsAutoFoundation = {}): FreeCell {
+	touch({
+		autoFoundation = true,
+		stopWithInvalid = false,
+		allowSelectFoundation = false,
+	}: OptionsAutoFoundation = {}): FreeCell {
 		// clear the selction, if re-touching the same spot
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
 			return this.clearSelection();
@@ -467,7 +492,10 @@ export class FreeCell {
 			// we can't do anything with a foundation (we can move cards off of it)
 			// - therefore it doesn't make sense to select it
 			// - you'd have to deselect it before you can continue with gameplay
-			if (selection.cards.length && this.cursor.fixture !== 'foundation') {
+			if (
+				selection.cards.length &&
+				(allowSelectFoundation || this.cursor.fixture !== 'foundation')
+			) {
 				return this.__clone({
 					action: { text: 'select ' + shorthandSequenceWithPosition(selection), type: 'select' },
 					selection,
@@ -477,7 +505,11 @@ export class FreeCell {
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length) {
-			// TODO (animation) (3-priority) animate invalid move; shake
+			// TODO (animation) (4-priority) animate touch stop
+			//  - this isn't "invalid" so much as it is "nothing to do"
+			//  - we touched this location, and there isn't an actual action
+			//  - we can add a bit of whimmsy here, behind a conditional animation
+			//  - just like a small card bump (up,left,rot, and back)
 			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
 		}
 
@@ -528,7 +560,6 @@ export class FreeCell {
 			}
 		}
 
-		// TODO (animation) (3-priority) animate invalid move; shake
 		return this.__clone({ action: { text: 'invalid ' + actionText, type: 'invalid' } });
 	}
 
@@ -574,10 +605,7 @@ export class FreeCell {
 
 		@param shorthandMove
 	*/
-	moveByShorthand(
-		shorthandMove: string,
-		{ autoFoundation = true }: OptionsAutoFoundation = {}
-	): FreeCell {
+	moveByShorthand(shorthandMove: string, { autoFoundation }: OptionsAutoFoundation = {}): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
 		return this.setCursor(from).touch().setCursor(to).touch({ autoFoundation });
 	}
@@ -706,7 +734,7 @@ export class FreeCell {
 		@example
 			game.setCursor(loc).touch().autoMove();
 	*/
-	autoMove({ autoFoundation = true }: OptionsAutoFoundation = {}): FreeCell | this {
+	autoMove({ autoFoundation }: OptionsAutoFoundation = {}): FreeCell | this {
 		if (!this.selection) return this;
 		if (!this.availableMoves?.length) return this;
 		// REVIEW (techdebt) is there a reason for this?
@@ -721,8 +749,15 @@ export class FreeCell {
 		return this.setCursor(to_location).touch({ autoFoundation });
 	}
 
-	clickToMove(location: CardLocation): FreeCell | this {
-		return this.setCursor(location).touch().autoMove();
+	clickToMove(
+		location: CardLocation,
+		{ autoMove = true, stopWithInvalid }: OptionsAutoFoundation = {}
+	): FreeCell | this {
+		if (autoMove) {
+			return this.setCursor(location).touch({ stopWithInvalid }).autoMove();
+		} else {
+			return this.setCursor(location).touch({ stopWithInvalid });
+		}
 	}
 
 	restart(): FreeCell {

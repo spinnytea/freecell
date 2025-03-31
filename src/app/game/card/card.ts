@@ -116,6 +116,26 @@ export interface CardSequence {
 /* HELPER METHODS */
 /* ************** */
 
+export function calcCardId(shorthand: string, gameBoardId?: string) {
+	let cardId = 'c' + shorthand;
+	if (gameBoardId) {
+		cardId += '-' + gameBoardId;
+	}
+	return cardId;
+}
+
+/**
+	shorthandPosition for foundation is all the same
+	XXX (techdebt) i suppose we could just target _all_ of them every time
+*/
+export function calcPilemarkerId(location: CardLocation, gameBoardId?: string) {
+	let pileId = `pilemarker-${shorthandPosition(location)}-${(location.data[0] + 1).toString(10)}`;
+	if (gameBoardId) {
+		pileId += '-' + gameBoardId;
+	}
+	return pileId;
+}
+
 export function cloneCards(cards: Card[]) {
 	// cards need to remain in consitent order for react[key=""] to work
 	return cards.map((card) => ({ ...card }));

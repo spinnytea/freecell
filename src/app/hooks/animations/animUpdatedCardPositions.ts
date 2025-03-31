@@ -5,6 +5,7 @@ import {
 	MAX_ANIMATION_OVERLAP,
 	TOTAL_DEFAULT_MOVEMENT_DURATION,
 } from '@/app/animation_constants';
+import { calcCardId } from '@/app/game/card/card';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';
 import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 
@@ -34,7 +35,7 @@ export function animUpdatedCardPositions({
 		prevFixtureSizes.current = fixtureSizes;
 	}
 	list.forEach(({ shorthand, top, left, zIndex }, index) => {
-		const cardId = '#c' + shorthand + (gameBoardIdRef?.current ? '-' + gameBoardIdRef.current : '');
+		const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 		const prevTL = nextTLs.get(shorthand);
 		nextTLs.set(shorthand, [top, left]);
 		if (prevTL) {

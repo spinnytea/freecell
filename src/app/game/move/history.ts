@@ -27,7 +27,7 @@ export type PreviousActionType =
 	| 'invalid'
 	| 'auto-foundation-tween';
 
-const PREVIOUS_ACTION_TYPE_IN_HISTORY: PreviousActionType[] = [
+export const PREVIOUS_ACTION_TYPE_IN_HISTORY: PreviousActionType[] = [
 	'init',
 	'shuffle',
 	'deal',
@@ -83,6 +83,11 @@ export interface PreviousAction {
 	gameFunction?: GameFunction;
 }
 
+// REVIEW (animation) do we need a parser for every type?
+//  - i.e. do we need to understand them all to animate them?
+//  - i.e. PREVIOUS_ACTION_TYPE_IN_HISTORY
+//  - if so, should we just _store_ that parsed info?
+//  - that said, having a regex/parser is needed for, say, parsing a history string and validation/testing
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
@@ -127,10 +132,10 @@ export function parseCursorFromPreviousActionText(
 	if (!actionText) return undefined;
 	switch (parsePreviousActionType(actionText).type) {
 		case 'init':
-			return undefined;
 		case 'shuffle':
+			return { fixture: 'deck', data: [0] };
 		case 'deal':
-			return undefined;
+			return { fixture: 'cell', data: [0] };
 		case 'move-foundation':
 		case 'move': {
 			const { to, fromShorthand, toShorthand } = parseActionTextMove(actionText);
@@ -201,6 +206,14 @@ export function parseActionTextMove(actionText: string) {
 	}
 
 	throw new Error('invalid move actionText: ' + actionText);
+}
+
+function parseActionTextInvalidMove(actionText: string) {
+	if (actionText.startsWith('invalid ')) {
+		return parseActionTextMove(actionText.substring(8));
+	}
+
+	throw new Error('not "invalid move" actionText: ' + actionText);
 }
 
 export function appendActionToHistory(action: PreviousAction, history: string[]) {
@@ -359,4 +372,26 @@ export function getCardsThatMoved(game: FreeCell): Card[] {
 	return fromShorthand
 		.split('-')
 		.map((sh) => findCard(game.cards, parseShorthandCard(sh[0], sh[1])));
+}
+
+export function getCardsFromInvalid(
+	previousAction: PreviousAction,
+	cards: Card[]
+): { from: Card[]; to: Card[] } {
+	if (previousAction.text === 'touch stop') {
+		// TODO (animation) (4-priority) animate touch stop
+		return { from: [], to: [] };
+	}
+	const { fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
+	const from = fromShorthand
+		.split('-')
+		.map((sh) => findCard(cards, parseShorthandCard(sh[0], sh[1])));
+	const to = [];
+	if (toShorthand.length === 2) {
+		to.push(findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1])));
+	} else {
+		// TODO (animation) animate piles
+		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
+	}
+	return { from, to };
 }

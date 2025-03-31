@@ -102,7 +102,7 @@ function BoardLayout({
 
 	return (
 		<>
-			<PileMarkers />
+			<PileMarkers gameBoardIdRef={gameBoardIdRef} />
 			<WinMessage />
 			{showKeyboardCursor && <KeyboardCursor />}
 			<CardsOnBoard gameBoardIdRef={gameBoardIdRef} />

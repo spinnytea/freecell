@@ -13,6 +13,9 @@ import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameConte
 jest.mock('gsap/all', () => ({
 	gsap: {
 		timeline: () => ({}),
+		utils: {
+			random: () => undefined,
+		},
 	},
 }));
 
@@ -38,15 +41,21 @@ describe('useCardPositionAnimations', () => {
 	let fromToSpy: jest.SpyInstance;
 	let toSpy: jest.SpyInstance;
 	let setSpy: jest.SpyInstance;
+	let addLabelSpy: jest.SpyInstance;
+	let addSpy: jest.SpyInstance;
 	beforeEach(() => {
 		fromToSpy = jest.fn();
 		toSpy = jest.fn();
 		setSpy = jest.fn();
+		addLabelSpy = jest.fn();
+		addSpy = jest.fn();
 		jest.spyOn(gsap, 'timeline').mockImplementation(() => {
 			const timelineMock: unknown = {
 				fromTo: fromToSpy,
 				to: toSpy,
 				set: setSpy,
+				addLabel: addLabelSpy,
+				add: addSpy,
 				totalProgress: () => ({
 					kill: () => {
 						/* empty */
@@ -61,6 +70,8 @@ describe('useCardPositionAnimations', () => {
 		toSpy.mockReset();
 		fromToSpy.mockReset();
 		setSpy.mockReset();
+		addLabelSpy.mockReset();
+		addSpy.mockReset();
 	}
 
 	function getCardIdsFromSpy(spy: jest.SpyInstance) {
@@ -84,9 +95,11 @@ describe('useCardPositionAnimations', () => {
 
 				expect(toSpy).not.toHaveBeenCalled();
 				expect(fromToSpy).not.toHaveBeenCalled();
-				expect(setSpy.mock.calls.length).toBe(52);
+				expect(setSpy).toHaveBeenCalledTimes(52);
 				expect(setSpy.mock.calls).toMatchSnapshot();
 				// expect(setSpy.mock.calls.map(([cardId]) => cardId as string)).toEqual(['#cAC', '#cAD', ..., '#cKH', '#cKS']);
+				expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
+				expect(addSpy).not.toHaveBeenCalled();
 
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
@@ -94,6 +107,8 @@ describe('useCardPositionAnimations', () => {
 				expect(toSpy).not.toHaveBeenCalled();
 				expect(fromToSpy).not.toHaveBeenCalled();
 				expect(setSpy).not.toHaveBeenCalled();
+				expect(addLabelSpy).not.toHaveBeenCalled();
+				expect(addSpy).not.toHaveBeenCalled();
 			});
 
 			test('win -> init', () => {
@@ -115,13 +130,13 @@ describe('useCardPositionAnimations', () => {
 
 				// TODO (animation) (techdebt) isn't this backwards?
 				//  - shouldn't kings be first?
-				expect(toSpy.mock.calls.length).toBe(52);
+				expect(toSpy).toHaveBeenCalledTimes(52);
 				expect(toSpy.mock.calls[0]).toEqual([
 					'#cAC',
 					{ duration: 0.15, ease: 'none', zIndex: 0 },
 					'<',
 				]);
-				expect(fromToSpy.mock.calls.length).toBe(52);
+				expect(fromToSpy).toHaveBeenCalledTimes(52);
 				expect(fromToSpy.mock.calls[0]).toEqual([
 					'#cAC',
 					{ top: 36.6, left: 428.07 },
@@ -141,6 +156,8 @@ describe('useCardPositionAnimations', () => {
 					'<0.006',
 				]);
 				expect(setSpy).not.toHaveBeenCalled();
+				expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
+				expect(addSpy).not.toHaveBeenCalled();
 			});
 
 			// we (read: _i_) very often win a game then set it aside
@@ -164,6 +181,8 @@ describe('useCardPositionAnimations', () => {
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
 			expect(setSpy).not.toHaveBeenCalled();
+			expect(addLabelSpy).not.toHaveBeenCalled();
+			expect(addSpy).not.toHaveBeenCalled();
 		});
 
 		test('deal', () => {
@@ -178,13 +197,13 @@ describe('useCardPositionAnimations', () => {
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-			expect(toSpy.mock.calls.length).toBe(52);
+			expect(toSpy).toHaveBeenCalledTimes(52);
 			expect(toSpy.mock.calls[0]).toEqual([
 				'#cQC',
 				{ duration: 0.15, ease: 'none', zIndex: 0 },
 				'<',
 			]);
-			expect(fromToSpy.mock.calls.length).toBe(52);
+			expect(fromToSpy).toHaveBeenCalledTimes(52);
 			expect(fromToSpy.mock.calls[0]).toEqual([
 				'#cQC',
 				{ top: 441.4, left: 14.035 },
@@ -204,6 +223,8 @@ describe('useCardPositionAnimations', () => {
 				'<0.006',
 			]);
 			expect(setSpy).not.toHaveBeenCalled();
+			expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
+			expect(addSpy).not.toHaveBeenCalled();
 		});
 
 		test('cursor', () => {
@@ -221,6 +242,8 @@ describe('useCardPositionAnimations', () => {
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
 			expect(setSpy).not.toHaveBeenCalled();
+			expect(addLabelSpy).not.toHaveBeenCalled();
+			expect(addSpy).not.toHaveBeenCalled();
 		});
 
 		test.todo('select');
@@ -267,6 +290,11 @@ describe('useCardPositionAnimations', () => {
 				expect(setCardIds.length).toBe(50);
 				expect(setCardIds).not.toContain('#cAD'); // 51
 				expect(setCardIds).not.toContain('#c6H'); // 52
+				expect(addLabelSpy.mock.calls).toEqual([
+					['updateCardPositionsPrev'],
+					['updateCardPositions'],
+				]);
+				expect(addSpy).not.toHaveBeenCalled();
 			});
 
 			test('multiple with overlap', () => {
@@ -300,7 +328,7 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-				expect(toSpy.mock.calls.length).toBe(16);
+				expect(toSpy).toHaveBeenCalledTimes(16);
 				expect(toSpy.mock.calls).toEqual([
 					['#cQD', { zIndex: 1, duration: 0.15, ease: 'none' }, '<'],
 					['#cJS', { zIndex: 2, duration: 0.15, ease: 'none' }, '<'],
@@ -343,6 +371,11 @@ describe('useCardPositionAnimations', () => {
 				expect(setCardIds).not.toContain('#cKC'); // 50
 				expect(setCardIds).not.toContain('#cKD');
 				expect(setCardIds).not.toContain('#cKS'); // 52
+				expect(addLabelSpy.mock.calls).toEqual([
+					['updateCardPositionsPrev'],
+					['updateCardPositions'],
+				]);
+				expect(addSpy).not.toHaveBeenCalled();
 			});
 
 			/**
@@ -396,6 +429,11 @@ describe('useCardPositionAnimations', () => {
 				expect(getCardIdsFromSpy(toSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
 				expect(getCardIdsFromSpy(fromToSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
 				expect(getCardIdsFromSpy(setSpy).length).toBe(47); // 52 - 5
+				expect(addLabelSpy.mock.calls).toEqual([
+					['updateCardPositionsPrev'],
+					['updateCardPositions'],
+				]);
+				expect(addSpy).not.toHaveBeenCalled();
 			});
 		});
 
@@ -405,16 +443,321 @@ describe('useCardPositionAnimations', () => {
 
 		test.todo('auto-flourish');
 
-		describe('invalid (each MoveSourceType)', () => {
-			test.todo('deck');
+		describe('invalid', () => {
+			let gameStateOne: FreeCell;
+			beforeEach(() => {
+				gameStateOne = FreeCell.parse(
+					'' + //
+						' 3C 4C    AC 2D       \n' + //
+						'>KC TH    KD \n' + //
+						' QD       QC \n' + //
+						' JC          \n' + //
+						' hand-jammed'
+				);
+			});
 
-			test.todo('cell');
+			test('game state checks', () => {
+				expect(gameStateOne.cells.length).toBe(3);
+				expect(gameStateOne.printFoundation()).toBe('AC 2D      ');
+				expect(gameStateOne.tableau.length).toBe(4);
+			});
 
-			test.todo('foundation');
+			// REVIEW (animation) different animations for each MoveSourceType?
+			describe('MoveSourceType', () => {
+				test.todo('deck');
 
-			test.todo('cascade:single');
+				test('cell', () => {
+					gameStateOne = gameStateOne.setCursor({ fixture: 'cell', data: [0] }).touch();
+					expect(gameStateOne.previousAction.text).toBe('select a 3C');
+					const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [1] }).touch();
+					expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→2D');
 
-			test.todo('cascade:sequence');
+					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+					mockReset();
+					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+					// prettier-ignore
+					expect(getCardIdsFromSpy(toSpy)).toEqual([
+						'#c3C', '#c3C', '#c3C',
+						'#c2D', '#c2D', '#c2D',
+					]);
+					expect(fromToSpy).not.toHaveBeenCalled();
+					expect(setSpy).not.toHaveBeenCalled();
+					expect(addLabelSpy.mock.calls).toEqual([
+						['invalidMoveCards.fromShorthands'],
+						['invalidMoveCards.toShorthands'],
+					]);
+					expect(addSpy).toHaveBeenCalledTimes(2);
+				});
+
+				test('foundation', () => {
+					gameStateOne = gameStateOne
+						.setCursor({ fixture: 'foundation', data: [0] })
+						.touch({ allowSelectFoundation: true });
+					expect(gameStateOne.previousAction.text).toBe('select AC');
+					expect(gameStateOne.selection).toEqual({
+						location: { fixture: 'foundation', data: [0] },
+						cards: [{ rank: 'ace', suit: 'clubs', location: { fixture: 'foundation', data: [0] } }],
+						peekOnly: true,
+					});
+					const gameStateTwo = gameStateOne.setCursor({ fixture: 'cell', data: [2] }).touch();
+					expect(gameStateTwo.previousAction.text).toBe('invalid move hc AC→cell');
+
+					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+					mockReset();
+					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+					// prettier-ignore
+					expect(getCardIdsFromSpy(toSpy)).toEqual([
+						'#cAC', '#cAC', '#cAC',
+					]);
+					expect(fromToSpy).not.toHaveBeenCalled();
+					expect(setSpy).not.toHaveBeenCalled();
+					expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
+					expect(addSpy).toHaveBeenCalledTimes(1);
+				});
+
+				test('cascade:single', () => {
+					gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [1, 0] }).touch();
+					expect(gameStateOne.previousAction.text).toBe('select 2 TH');
+					const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [0] }).touch();
+					expect(gameStateTwo.previousAction.text).toBe('invalid move 2h TH→AC');
+
+					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+					mockReset();
+					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+					// prettier-ignore
+					expect(getCardIdsFromSpy(toSpy)).toEqual([
+						'#cTH', '#cTH', '#cTH',
+						'#cAC', '#cAC', '#cAC',
+					]);
+					expect(fromToSpy).not.toHaveBeenCalled();
+					expect(setSpy).not.toHaveBeenCalled();
+					expect(addLabelSpy.mock.calls).toEqual([
+						['invalidMoveCards.fromShorthands'],
+						['invalidMoveCards.toShorthands'],
+					]);
+					expect(addSpy).toHaveBeenCalledTimes(2);
+				});
+
+				test('cascade:sequence', () => {
+					gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+					expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+					const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [1] }).touch();
+					expect(gameStateTwo.previousAction.text).toBe('invalid move 1h KC-QD-JC→2D');
+
+					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+					mockReset();
+					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+					// prettier-ignore
+					expect(getCardIdsFromSpy(toSpy)).toEqual([
+						'#cKC', '#cKC', '#cKC',
+						'#cQD', '#cQD', '#cQD',
+						'#cJC', '#cJC', '#cJC',
+						'#c2D', '#c2D', '#c2D',
+					]);
+					expect(fromToSpy).not.toHaveBeenCalled();
+					expect(setSpy).not.toHaveBeenCalled();
+					expect(addLabelSpy.mock.calls).toEqual([
+						['invalidMoveCards.fromShorthands'],
+						['invalidMoveCards.toShorthands'],
+					]);
+					expect(addSpy).toHaveBeenCalledTimes(4);
+				});
+
+				// REVIEW (techdebt) do we really need this?
+				test.todo('peekOnly');
+			});
+
+			// REVIEW (animation) different animations for each MoveDestinationType? empty?
+			describe('MoveDestinationType', () => {
+				describe('cell', () => {
+					test('empty', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						const gameStateTwo = gameStateOne.setCursor({ fixture: 'cell', data: [2] }).touch();
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 1c KC-QD-JC→cell');
+
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#cKC', '#cKC', '#cKC',
+							'#cQD', '#cQD', '#cQD',
+							'#cJC', '#cJC', '#cJC',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
+						expect(addSpy).toHaveBeenCalledTimes(3);
+					});
+
+					test('single', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						const gameStateTwo = gameStateOne
+							.setCursor({ fixture: 'cell', data: [1] })
+							.touch({ stopWithInvalid: true });
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 1b KC-QD-JC→4C');
+
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#cKC', '#cKC', '#cKC',
+							'#cQD', '#cQD', '#cQD',
+							'#cJC', '#cJC', '#cJC',
+							'#c4C', '#c4C', '#c4C',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([
+							['invalidMoveCards.fromShorthands'],
+							['invalidMoveCards.toShorthands'],
+						]);
+						expect(addSpy).toHaveBeenCalledTimes(4);
+					});
+				});
+
+				describe('foundation', () => {
+					test('empty', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cell', data: [0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select a 3C');
+						const gameStateTwo = gameStateOne
+							.setCursor({ fixture: 'foundation', data: [2] })
+							.touch();
+						expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→foundation');
+
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#c3C', '#c3C', '#c3C',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
+						expect(addSpy).toHaveBeenCalledTimes(1);
+					});
+
+					test('single', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cell', data: [0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select a 3C');
+						const gameStateTwo = gameStateOne
+							.setCursor({ fixture: 'foundation', data: [1] })
+							.touch();
+						expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→2D');
+
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#c3C', '#c3C', '#c3C',
+							'#c2D', '#c2D', '#c2D',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([
+							['invalidMoveCards.fromShorthands'],
+							['invalidMoveCards.toShorthands'],
+						]);
+						expect(addSpy).toHaveBeenCalledTimes(2);
+					});
+				});
+
+				describe('cascade', () => {
+					test('empty', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						const gameStateTwo = gameStateOne
+							.setCursor({ fixture: 'cascade', data: [2, 0] })
+							.touch({ stopWithInvalid: true });
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 13 KC-QD-JC→cascade');
+
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#cKC', '#cKC', '#cKC',
+							'#cQD', '#cQD', '#cQD',
+							'#cJC', '#cJC', '#cJC',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
+						expect(addSpy).toHaveBeenCalledTimes(3);
+					});
+
+					test('single', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						const gameStateTwo = gameStateOne
+							.setCursor({ fixture: 'cascade', data: [1, 0] })
+							.touch({ stopWithInvalid: true });
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 12 KC-QD-JC→TH');
+
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#cKC', '#cKC', '#cKC',
+							'#cQD', '#cQD', '#cQD',
+							'#cJC', '#cJC', '#cJC',
+							'#cTH', '#cTH', '#cTH',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([
+							['invalidMoveCards.fromShorthands'],
+							['invalidMoveCards.toShorthands'],
+						]);
+						expect(addSpy).toHaveBeenCalledTimes(4);
+					});
+
+					// REVIEW (animation) shake the whole sequence, not just the final card?
+					test('sequence', () => {
+						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
+						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						const gameStateTwo = gameStateOne
+							.setCursor({ fixture: 'cascade', data: [3, 0] })
+							.touch({ stopWithInvalid: true });
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 14 KC-QD-JC→QC');
+
+						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+						mockReset();
+						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+						// prettier-ignore
+						expect(getCardIdsFromSpy(toSpy)).toEqual([
+							'#cKC', '#cKC', '#cKC',
+							'#cQD', '#cQD', '#cQD',
+							'#cJC', '#cJC', '#cJC',
+							'#cQC', '#cQC', '#cQC',
+						]);
+						expect(fromToSpy).not.toHaveBeenCalled();
+						expect(setSpy).not.toHaveBeenCalled();
+						expect(addLabelSpy.mock.calls).toEqual([
+							['invalidMoveCards.fromShorthands'],
+							['invalidMoveCards.toShorthands'],
+						]);
+						expect(addSpy).toHaveBeenCalledTimes(4);
+					});
+				});
+			});
 		});
 	});
 
@@ -511,14 +854,14 @@ describe('useCardPositionAnimations', () => {
 			});
 
 			describe.each`
-				actionText                                    | shorthandMove | toSpyIDs                                    | fromToSpyIDs                | setSpyLength | toSpyUndoIDs         | fromToSpyUndoIDs
-				${'move 3a KC→cell'}                          | ${'3a'}       | ${['#cKC']}                                 | ${['#cKC']}                 | ${51}        | ${undefined}         | ${undefined}
-				${'move 15 TD→JS'}                            | ${'15'}       | ${['#cTD']}                                 | ${['#cTD']}                 | ${51}        | ${undefined}         | ${undefined}
-				${'move 23 KC-QD-JS→cascade'}                 | ${'23'}       | ${['#cKC', '#cQD', '#cJS']}                 | ${['#cKC', '#cQD', '#cJS']} | ${49}        | ${undefined}         | ${undefined}
-				${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${'53'}       | ${['#c6H', '#cAD']}                         | ${['#c6H', '#cAD']}         | ${50}        | ${undefined}         | ${undefined}
-				${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${'14'}       | ${['#c2S', '#cAS', '#cAS', '#c2S', '#c2S']} | ${['#c2S']}                 | ${50}        | ${['#cAS', '#c2S']}  | ${['#cAS', '#c2S']}
-				${'move 21 8H-7C→cascade'}                    | ${'21'}       | ${['#c8H', '#c7C']}                         | ${['#c8H', '#c7C']}         | ${50}        | ${undefined}         | ${undefined}
-				${FIFTY_TWO_CARD_FLOURISH}                    | ${'3b'}       | ${ftcf_toSpyIDs}                            | ${['#c8S']}                 | ${0}         | ${ftcf_toSpyUndoIDs} | ${ftcf_toSpyUndoIDs}
+				actionText                                    | shorthandMove | toSpyIDs                                    | fromToSpyIDs                | setSpyLength | toSpyUndoIDs         | fromToSpyUndoIDs     | labels
+				${'move 3a KC→cell'}                          | ${'3a'}       | ${['#cKC']}                                 | ${['#cKC']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 15 TD→JS'}                            | ${'15'}       | ${['#cTD']}                                 | ${['#cTD']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 23 KC-QD-JS→cascade'}                 | ${'23'}       | ${['#cKC', '#cQD', '#cJS']}                 | ${['#cKC', '#cQD', '#cJS']} | ${49}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${'53'}       | ${['#c6H', '#cAD']}                         | ${['#c6H', '#cAD']}         | ${50}        | ${undefined}         | ${undefined}         | ${[['updateCardPositionsPrev'], ['updateCardPositions']]}
+				${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${'14'}       | ${['#c2S', '#cAS', '#cAS', '#c2S', '#c2S']} | ${['#c2S']}                 | ${50}        | ${['#cAS', '#c2S']}  | ${['#cAS', '#c2S']}  | ${[['updateCardPositionsPrev'], ['updateCardPositions']]}
+				${'move 21 8H-7C→cascade'}                    | ${'21'}       | ${['#c8H', '#c7C']}                         | ${['#c8H', '#c7C']}         | ${50}        | ${undefined}         | ${undefined}         | ${undefined}
+				${FIFTY_TWO_CARD_FLOURISH}                    | ${'3b'}       | ${ftcf_toSpyIDs}                            | ${['#c8S']}                 | ${0}         | ${ftcf_toSpyUndoIDs} | ${ftcf_toSpyUndoIDs} | ${[['updateCardPositionsPrev'], ['updateCardPositions']]}
 			`(
 				'$actionText',
 				({
@@ -529,6 +872,7 @@ describe('useCardPositionAnimations', () => {
 					setSpyLength,
 					toSpyUndoIDs = toSpyIDs,
 					fromToSpyUndoIDs = fromToSpyIDs,
+					labels = [['updateCardPositions']],
 				}: {
 					actionText: string;
 					shorthandMove: string;
@@ -537,6 +881,7 @@ describe('useCardPositionAnimations', () => {
 					setSpyLength: number;
 					toSpyUndoIDs: string[] | undefined;
 					fromToSpyUndoIDs: string[] | undefined;
+					labels: string[][] | undefined;
 				}) => {
 					let gameStateOne: FreeCell;
 					let gameStateTwo: FreeCell;
@@ -567,6 +912,8 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+						expect(addLabelSpy.mock.calls).toEqual(labels);
+						expect(addSpy).not.toHaveBeenCalled();
 					});
 
 					test('undo ←', () => {
@@ -577,6 +924,8 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+						expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
+						expect(addSpy).not.toHaveBeenCalled();
 					});
 
 					test('both →←', () => {
@@ -589,6 +938,8 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+						expect(addLabelSpy.mock.calls).toEqual(labels);
+						expect(addSpy).not.toHaveBeenCalled();
 
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
@@ -596,6 +947,8 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+						expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
+						expect(addSpy).not.toHaveBeenCalled();
 					});
 				}
 			);
@@ -635,23 +988,60 @@ describe('useCardPositionAnimations', () => {
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'invalid move 86 7D→9C');
 		describe('animate', () => {
+			// peekOnly
 			test.todo('· select 6D');
 
+			// peekOnly
 			test.todo('· select 4D-3S-2D');
 
+			// (canMove), !peekOnly
 			test.todo('· select 8 7D');
 
+			// (canMove), !peekOnly
 			test.todo('· select 8 4D-3S-2D');
 
+			// peekOnly
 			test.todo('· deselect KS');
 
+			// peekOnly
 			test.todo('· deselect 4D-3S-2D');
 
+			// (canMove), !peekOnly
 			test.todo('· deselect 6 2C');
 
+			// (canMove), !peekOnly
 			test.todo('· deselect 6 4D-3S-2D');
 
 			test.todo('· invalid move 86 7D→9C');
+
+			test('· invalid move 75 6D-5S-4D-3C→7C', () => {
+				const gameStateOne = FreeCell.parse(ACTION_TEXT_EXAMPLES['invalid move 75 6D-5S-4D-3C→7C']);
+				const gameStateTwo = gameStateOne.clickToMove(
+					{ fixture: 'cascade', data: [4, 3] },
+					{ stopWithInvalid: true }
+				);
+				expect(gameStateTwo.previousAction.text).toBe('invalid move 75 6D-5S-4D-3C→7C');
+
+				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+				mockReset();
+				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+				// prettier-ignore
+				expect(getCardIdsFromSpy(toSpy)).toEqual([
+					'#c6D', '#c6D', '#c6D',
+					'#c5S', '#c5S', '#c5S',
+					'#c4D', '#c4D', '#c4D',
+					'#c3C', '#c3C', '#c3C',
+					'#c7C', '#c7C', '#c7C',
+				]);
+				expect(fromToSpy).not.toHaveBeenCalled();
+				expect(setSpy).not.toHaveBeenCalled();
+				expect(addLabelSpy.mock.calls).toEqual([
+					['invalidMoveCards.fromShorthands'],
+					['invalidMoveCards.toShorthands'],
+				]);
+				expect(addSpy).toHaveBeenCalledTimes(5);
+			});
 		});
 
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -682,7 +1072,7 @@ describe('useCardPositionAnimations', () => {
 	});
 
 	describe('bugfix', () => {
-		test('Invalid Undo 2S (animation)', () => {
+		test('broken Undo 2S (animation)', () => {
 			const gamePrint =
 				'    3H 8D 4D AC 2D AH 2S \n' +
 				'    JC 9D 9C KD KC KS 5C \n' +
@@ -778,6 +1168,8 @@ describe('useCardPositionAnimations', () => {
 			expect(setCardIds.length).toBe(50);
 			expect(setCardIds).not.toContain('#c7C'); // 51
 			expect(setCardIds).not.toContain('#c8H'); // 52
+			expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
+			expect(addSpy).not.toHaveBeenCalled();
 		});
 
 		/**
@@ -841,7 +1233,9 @@ describe('useCardPositionAnimations', () => {
 
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
-			expect(setSpy.mock.calls.length).toBe(52);
+			expect(setSpy).toHaveBeenCalledTimes(52);
+			expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
+			expect(addSpy).not.toHaveBeenCalled();
 
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
@@ -849,6 +1243,8 @@ describe('useCardPositionAnimations', () => {
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
 			expect(setSpy).not.toHaveBeenCalled();
+			expect(addLabelSpy).not.toHaveBeenCalled();
+			expect(addSpy).not.toHaveBeenCalled();
 		});
 	});
 });
