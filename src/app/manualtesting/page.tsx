@@ -264,6 +264,13 @@ export default function Page() {
 					</ol>
 				</li>
 				<li>
+					Invalid moves.
+					<ol>
+						<li>Select just about anything, and then click on the foundation.</li>
+						<li>Select a large stack, and try to move it to an empty cell, cascade.</li>
+					</ol>
+				</li>
+				<li>
 					Visually check settings/undo buttons in corners of gameplay.
 					<ol>
 						{supportedBrowsers.map((sb) => (
