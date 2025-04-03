@@ -5,7 +5,8 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 /** REVIEW (controls) keyboard */
 export function useKeybaordMiscControls() {
 	const [, setGame, newGame] = useContext(GameContext);
-	const [{ showSettingsDialog }, setSettings] = useContext(SettingsContext);
+	const [{ showSettingsDialog, enabledControlSchemes }, setSettings] = useContext(SettingsContext);
+	const enableKeyboard = enabledControlSchemes.has('keyboard');
 
 	useEffect(() => {
 		if (showSettingsDialog) return;
@@ -15,6 +16,7 @@ export function useKeybaordMiscControls() {
 			switch (key) {
 				case ' ':
 				case 'Enter':
+					if (!enableKeyboard) break;
 					if (target) {
 						// don't activate space/enter when focused on a button (undo) or checkbox (show debug controls)
 						const targetTagName = (target as HTMLElement).tagName.toLowerCase();
@@ -58,5 +60,5 @@ export function useKeybaordMiscControls() {
 		return () => {
 			window.removeEventListener('keydown', handleKey);
 		};
-	}, [showSettingsDialog, setGame, newGame, setSettings]);
+	}, [showSettingsDialog, enableKeyboard, setGame, newGame, setSettings]);
 }

@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useGSAP } from '@gsap/react';
 import classNames from 'classnames';
+import { Draggable, gsap } from 'gsap/all';
 import Link from 'next/link';
 import styles_common from '@/app/common.module.css';
 import { CardImage } from '@/app/components/cards/CardImage';
@@ -11,6 +13,9 @@ import styles_gameboard from '@/app/gameboard.module.css';
 import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
+
+gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(Draggable);
 
 // XXX (techdebt) replace 52CardFlourish with 1/2
 //  - it's not working because we can't make changes to a "win", how do we step between states?
@@ -294,6 +299,17 @@ export default function Page() {
 						<li>Finish game.</li>
 						<li>Restart and see the deck.</li>
 						<li>Start a new game and verify cards.</li>
+					</ol>
+				</li>
+				<li>
+					Control Schemes: test each of the ControlSchemes
+					<ol>
+						<li>keyboard</li>
+						<li>keyboard hotkeys</li>
+						<li>mouse hotcolumns</li>
+						<li>click-to-select</li>
+						<li>click-to-move</li>
+						<li>drag-and-drop</li>
 					</ol>
 				</li>
 			</ol>

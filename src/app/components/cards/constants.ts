@@ -18,10 +18,7 @@ export const CARD_FACE_CUTOFF = 60;
 /**
 	all of the various control schemes we support
 
-	right now, this is just helping to organize thoughts for testing later
-
-	XXX (controls) 'keyboard + selection' ? (it's a thing, it's part of 'keyboard')
-	XXX (controls) use or remove
+	`click-to-select` and `click-to-move` don't really make sense together; if both present, click-to-move takes precidence
 */
 export type ControlSchemes =
 	| 'keyboard' // move cursor (w/w/o selection), touch, deselect

@@ -10,6 +10,7 @@ export function ManualTestingSettingsContextProvider({
 	cardFace?: CardFaces;
 	children: ReactNode;
 }>) {
+	// FIXME comment out enabledControlSchemes - there are no lint errors
 	const [settings, setSettings] = useState<Settings>(() => ({
 		newGameCascadeCount: 8,
 		newGameCellCount: 4,
@@ -17,6 +18,7 @@ export function ManualTestingSettingsContextProvider({
 		showDebugInfo: false,
 		showKeyboardCursor: false,
 		cardFace: cardFace ?? 'SVGCards13',
+		enabledControlSchemes: new Set(['click-to-move']),
 	}));
 
 	return (
