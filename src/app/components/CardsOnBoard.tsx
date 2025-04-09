@@ -54,7 +54,7 @@ function CardOnBoard({
 		rank
 	);
 
-	useDragAndDropControls(cardRef, top, left, zIndex);
+	useDragAndDropControls(cardRef, location);
 
 	useGSAP(() => {
 		// set the initial position, once on load
