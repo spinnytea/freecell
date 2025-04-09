@@ -24,9 +24,9 @@ export function calcDefaultSettings(): Settings {
 			'keyboard',
 			// 'keyboard hotkeys', // TODO (controls) impl
 			// 'mouse hotcolumns', // TODO (controls) impl
-			'click-to-select',
-			'click-to-move',
-			// 'drag-and-drop',
+			// 'click-to-select', // FIXME enable
+			// 'click-to-move', // FIXME enable
+			'drag-and-drop',
 		]),
 	};
 }

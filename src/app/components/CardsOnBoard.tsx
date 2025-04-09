@@ -10,6 +10,7 @@ import { calcTopLeftZ } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
+import { useDragAndDropControls } from '@/app/hooks/controls/useDragAndDropControls';
 
 export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObject<string> }) {
 	const { cards } = useGame();
@@ -53,6 +54,8 @@ function CardOnBoard({
 		rank
 	);
 
+	useDragAndDropControls(cardRef, top, left, zIndex);
+
 	useGSAP(() => {
 		// set the initial position, once on load
 		gsap.set(cardRef.current, { top, left, zIndex });
@@ -65,19 +68,6 @@ function CardOnBoard({
 				duration: SELECT_ROTATION_DURATION,
 				ease: 'power1.inOut',
 			});
-
-			/*
-			REVIEW (techdebt) (drag-and-drop) use or remove
-			if (cardRef.current && contextSafe) {
-				const resetAfterDrag = contextSafe(() => {
-					gsap.to(cardRef.current, { transform, duration: DEFAULT_MOVEMENT_DURATION });
-				});
-				Draggable.create([cardRef.current], {
-					zIndexBoost: false,
-					onDragEnd: resetAfterDrag,
-				});
-			}
-			*/
 		},
 		{ dependencies: [rotation] }
 	);
