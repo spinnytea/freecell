@@ -50,6 +50,7 @@ export function useDragAndDropControls(
 
 				const resetAfterDrag = contextSafe(() => {
 					// FIXME detect drop target
+					// FIXME availableMoves; cards vs columns
 					setGame((g) => calcNextState(g, location));
 
 					// FIXME these top/left are stale if we just click but don't drag; but it's fine if we click and drag
