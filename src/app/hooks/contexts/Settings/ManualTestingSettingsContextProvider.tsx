@@ -10,7 +10,6 @@ export function ManualTestingSettingsContextProvider({
 	cardFace?: CardFaces;
 	children: ReactNode;
 }>) {
-	// FIXME comment out enabledControlSchemes - there are no lint errors
 	const [settings, setSettings] = useState<Settings>(() => ({
 		newGameCascadeCount: 8,
 		newGameCellCount: 4,

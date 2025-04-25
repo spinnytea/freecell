@@ -51,7 +51,6 @@ TODO (motivation) main development tasks:
   - snazzy explosion when you place the last card
   - based on the image svg so we can do it with any card (king, ace, whatever)
   - maybe use it for the whole animation for a win when a flourish
-- FIXME (drag-and-drop) mouse drag to move - mouse drag-drop target is entire cascade
 - TODO (settings) undo limit - all, until deal, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
 - TODO (gameplay) hard vs medium vs easy
   - [FreeCell lists of difficult (and extra easy) deals](https://www.solitairelaboratory.com/fclists.html)

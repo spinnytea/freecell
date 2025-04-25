@@ -12,9 +12,13 @@ import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 	calc the new game state at drag start and drag end \
 	this helps avoid animations simply by pressing on a card (it's weird to have it move out from under you)
 
-	FIXME i'm still not sure splitting the state update is the right way to go
+	this lets us have a lookahead to available moves without updating the state until the drag finishes
 
 	this probably won't change, but it is used twice and we _need_ it to be identical
+
+	FIXME entire cascade is drop target
+
+	FIXME how do we deselect?
 */
 function calcNextState(game: FreeCell, location: CardLocation) {
 	return game.clearSelection().setCursor(location).touch();
