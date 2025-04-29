@@ -2,11 +2,12 @@ import { MutableRefObject, useContext } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, Draggable } from 'gsap/all';
 import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
-import { CardLocation } from '@/app/game/card/card';
+import { CardLocation, shorthandSequence } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import { calcTopLeftZ } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
+import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 
 /**
 	calc the new game state at drag start and drag end \
@@ -31,6 +32,7 @@ export function useDragAndDropControls(
 	const [game, setGame] = useContext(GameContext);
 	const fixtureSizes = useFixtureSizes();
 	const { top, left, zIndex } = calcTopLeftZ(fixtureSizes, location, game.selection);
+	const { showDebugInfo } = useSettings();
 
 	useGSAP(
 		(context, contextSafe) => {
@@ -46,6 +48,26 @@ export function useDragAndDropControls(
 							draggable.endDrag(event);
 							return ng;
 						}
+
+						// FIXME these are the avilable moves
+						// console.log(ng.availableMoves);
+
+						// FIXME there has to be a better way to draw the locations :/
+						//  - move math from DebugCursors.LocationBox into helper function
+						//  - e.g. FixtureSizes or something
+						//  - calculate top/left/width/height of drop target
+						if (showDebugInfo) {
+							return ng;
+						}
+
+						// FIXME this is making the animation freak out
+						//  - it's still selected, but the card is rendered in the wrong place, as if it's not selected
+						//  - only the first card (that moved), you can see it when dragging a "sequence"
+						//  - the drag end is resetting to the wrong position
+						// if (g.selection && shorthandSequence(g.selection) === shorthandSequence(ng.selection)) {
+						// 	return g;
+						// }
+
 						return g.clearSelection();
 					});
 				});
@@ -67,6 +89,7 @@ export function useDragAndDropControls(
 						ease: 'power1.out',
 					});
 				}) as React.MouseEventHandler;
+
 				Draggable.create(cardRef.current, {
 					zIndexBoost: false,
 					onPress: function (event: PointerEvent) {
@@ -76,6 +99,6 @@ export function useDragAndDropControls(
 				});
 			}
 		},
-		{ dependencies: [location] }
+		{ dependencies: [location, showDebugInfo] }
 	);
 }

@@ -9,6 +9,15 @@ export const ASSET_FOLDER = process.env.BASE_PATH ?? '';
 	- 52 cards in the deck
 	- 26 is probably safe (not with jokers wild)
 	- 999 is definately safe
+
+	Standard Games:
+	-  7: max initial cards with 10 tableau
+	- 13: if king, max stack
+	- = 19 cards tall
+
+	Jokers Wild:
+	- 52 cards + 4 jokers, all in one pile
+	- = 56 cards tall
 */
 export const BOTTOM_OF_CASCADE = 99;
 

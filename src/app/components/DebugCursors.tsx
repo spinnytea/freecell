@@ -3,6 +3,7 @@ import { useGSAP } from '@gsap/react';
 import classNames from 'classnames';
 import { gsap } from 'gsap/all';
 import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
+import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
 import { CardLocation, CardSequence, shorthandPosition } from '@/app/game/card/card';
 import { FixtureSizes, PEEK_DOWN, PEEK_UP } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
@@ -69,9 +70,16 @@ function LocationBox({
 			break;
 		case 'cascade':
 			// XXX (hud) height of card if tail
-			top = fixtureSizes.tableau.top + d1 * fixtureSizes.tableau.offsetTop;
+			top = fixtureSizes.tableau.top;
 			left = fixtureSizes.tableau.cascadeLeft[d0];
-			height = fixtureSizes.tableau.offsetTop;
+			if (d1 !== undefined) {
+				top += d1 * fixtureSizes.tableau.offsetTop;
+			} else {
+				height += BOTTOM_OF_CASCADE * fixtureSizes.tableau.offsetTop;
+			}
+			if (type === 'cursor') {
+				height = fixtureSizes.tableau.offsetTop;
+			}
 			break;
 	}
 
