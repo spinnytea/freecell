@@ -3,6 +3,7 @@ import {
 	CARD_FACE_CUTOFF,
 	scale_height,
 } from '@/app/components/cards/constants';
+import { CursorType } from '@/app/components/DebugCursors';
 import { CardLocation, CardSequence, getRankForCompare, Rank } from '@/app/game/card/card';
 
 // IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)
@@ -282,4 +283,56 @@ export function calcTopLeftZ(
 			return ret;
 		}
 	}
+}
+
+export function calcCardCoords(
+	fixtureSizes: FixtureSizes,
+	location: CardLocation,
+	type: CursorType
+) {
+	const {
+		fixture,
+		data: [d0, d1],
+	} = location;
+	let top = 0;
+	let left = 0;
+	const width = fixtureSizes.cardWidth;
+	let height = fixtureSizes.cardHeight;
+
+	if (type === 'cursor') {
+		height = fixtureSizes.tableau.offsetTop;
+	}
+
+	switch (fixture) {
+		case 'cell':
+			top = fixtureSizes.home.top;
+			left = fixtureSizes.home.cellLeft[d0];
+			break;
+		case 'foundation':
+			top = fixtureSizes.home.top;
+			left = fixtureSizes.home.foundationLeft[d0];
+			break;
+		case 'deck':
+			top = fixtureSizes.deck.top;
+			left = fixtureSizes.deck.left;
+			break;
+		case 'cascade':
+			// XXX (hud) height of card if tail
+			top = fixtureSizes.tableau.top;
+			left = fixtureSizes.tableau.cascadeLeft[d0];
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			if (d1 !== undefined) {
+				top += d1 * fixtureSizes.tableau.offsetTop;
+			} else {
+				height += BOTTOM_OF_CASCADE * fixtureSizes.tableau.offsetTop;
+			}
+			break;
+	}
+
+	return {
+		top,
+		left,
+		width,
+		height,
+	};
 }

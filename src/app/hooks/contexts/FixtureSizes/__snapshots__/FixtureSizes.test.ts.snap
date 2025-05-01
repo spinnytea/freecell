@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`FixtureSizes adjust counts 1`] = `
+exports[`FixtureSizes calcFixtureSizes adjust counts 1`] = `
 {
   "boardHeight": 600,
   "boardWidth": 800,
@@ -46,7 +46,7 @@ exports[`FixtureSizes adjust counts 1`] = `
 }
 `;
 
-exports[`FixtureSizes basic 1`] = `
+exports[`FixtureSizes calcFixtureSizes basic 1`] = `
 {
   "boardHeight": 600,
   "boardWidth": 800,
@@ -88,7 +88,7 @@ exports[`FixtureSizes basic 1`] = `
 }
 `;
 
-exports[`FixtureSizes landscape 1`] = `
+exports[`FixtureSizes calcFixtureSizes landscape 1`] = `
 {
   "boardHeight": 600,
   "boardWidth": 800,
@@ -130,7 +130,7 @@ exports[`FixtureSizes landscape 1`] = `
 }
 `;
 
-exports[`FixtureSizes portait 1`] = `
+exports[`FixtureSizes calcFixtureSizes portait 1`] = `
 {
   "boardHeight": 600,
   "boardWidth": 800,

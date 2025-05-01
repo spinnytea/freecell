@@ -779,6 +779,7 @@ export class FreeCell {
 		These deals are numbered from 1 to 32000.
 
 		XXX (techdebt) rename to shuffle32k, including actionText and print history
+		XXX (motivation) more shuffle options bcuz why not
 
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/

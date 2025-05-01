@@ -2,7 +2,7 @@ import { MutableRefObject, useContext } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, Draggable } from 'gsap/all';
 import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
-import { CardLocation, shorthandSequence } from '@/app/game/card/card';
+import { CardLocation } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import { calcTopLeftZ } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
