@@ -58,6 +58,13 @@ export interface FixtureSizes {
 	};
 }
 
+export interface CardCoords {
+	top: number;
+	left: number;
+	width: number;
+	height: number;
+}
+
 function times<T>(count: number, cb: (i: number) => T): T[] {
 	const list: T[] = [];
 	for (let i = 0; i < count; i++) list.push(cb(i));
@@ -289,7 +296,7 @@ export function calcCardCoords(
 	fixtureSizes: FixtureSizes,
 	location: CardLocation,
 	type: CursorType
-) {
+): CardCoords {
 	const {
 		fixture,
 		data: [d0, d1],
