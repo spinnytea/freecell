@@ -2,8 +2,9 @@ import { MutableRefObject, useContext, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, Draggable } from 'gsap/all';
 import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
-import { CardLocation } from '@/app/game/card/card';
+import { CardLocation, shorthandPosition } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
+import { AvailableMove } from '@/app/game/move/move';
 import {
 	calcCardCoords,
 	calcTopLeftZ,
@@ -15,19 +16,9 @@ import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 import { useRefCurrent } from '@/app/hooks/useRefCurrent';
 
-/**
-	calc the new game state at drag start and drag end \
-	this helps avoid animations simply by pressing on a card (it's weird to have it move out from under you)
-
-	this lets us have a lookahead to available moves without updating the state until the drag finishes
-
-	this probably won't change, but it is used twice and we _need_ it to be identical
-
-	- FIXME how do we deselect?
-	- FIXME click-to-select?
-*/
-function calcNextState(game: FreeCell, location: CardLocation) {
-	return game.clearSelection().setCursor(location).touch();
+interface DropTarget {
+	availableMove: AvailableMove;
+	cardCoords: CardCoords;
 }
 
 export function useDragAndDropControls(
@@ -35,7 +26,7 @@ export function useDragAndDropControls(
 	_location: CardLocation
 ) {
 	const [, setGame] = useContext(GameContext);
-	const dropTargetsRef = useRef<CardCoords[] | undefined>(undefined);
+	const dropTargetsRef = useRef<DropTarget[] | undefined>(undefined);
 
 	const stateRef = useRefCurrent({
 		location: _location,
@@ -92,34 +83,63 @@ export function useDragAndDropControls(
 				},
 				onDrag: function (event: PointerEvent) {
 					// FIXME there has to be a better way to visualize this
-					//  - available-low -> available-high
+					//  - e.g. available-low -> available-high
 					if (stateRef.current.settings.showDebugInfo) {
-						console.log(dropTargetsRef.current);
-						console.log(event);
+						const overlapping = overlappingAvailableMove(
+							pointerCoordsToFixtureSizes(event),
+							dropTargetsRef.current
+						);
+						if (overlapping) {
+							console.log(shorthandPosition(overlapping.location));
+						}
 					}
-					if (dropTargetsRef.current?.length) {
-						const isOverlapping = dropTargetsRef.current.some((coord) => {
-							// FIXME convert X,Y into fixutreSizes coords
-							//  - pageX/pageY probably fine for the full screen app
-							//  - it is _not_ fine for the manual testing one
-							const x = event.pageX;
-							const y = event.pageY;
-							if (x < coord.left) return false;
-							if (x > coord.left + coord.width) return false;
-							if (y < coord.top) return false;
-							if (y > coord.top + coord.height) return false;
-							return true;
-						});
-						console.log(isOverlapping); // FIXME remove
-					}
+					// TODO (drag-and-drop) drop target animation? like, rotation??
 				},
-				onRelease: function () {
-					// FIXME update game state
+				onRelease: function (event: PointerEvent) {
+					const overlapping = overlappingAvailableMove(
+						pointerCoordsToFixtureSizes(event),
+						dropTargetsRef.current
+					);
+					if (overlapping) {
+						// FIXME clean this up!
+						setGame((g) =>
+							calcNextState(g, stateRef.current.location).setCursor(overlapping.location).touch()
+						);
+					}
 				},
 				onDragEnd: resetAfterDrag,
 			});
 		}
 	});
+}
+
+/**
+	calc the new game state at drag start and drag end \
+	this helps avoid animations simply by pressing on a card (it's weird to have it move out from under you)
+
+	this lets us have a lookahead to available moves without updating the state until the drag finishes
+
+	this probably won't change, but it is used twice and we _need_ it to be identical
+
+	- FIXME how do we deselect?
+	- FIXME click-to-select?
+*/
+function calcNextState(game: FreeCell, location: CardLocation) {
+	return game.clearSelection().setCursor(location).touch();
+}
+
+function overlappingAvailableMove(
+	{ x, y }: { x: number; y: number },
+	dropTargets: DropTarget[] | undefined
+): AvailableMove | undefined {
+	if (!dropTargets?.length) return undefined;
+	return dropTargets.find(({ cardCoords }) => {
+		if (x < cardCoords.left) return false;
+		if (x > cardCoords.left + cardCoords.width) return false;
+		if (y < cardCoords.top) return false;
+		if (y > cardCoords.top + cardCoords.height) return false;
+		return true;
+	})?.availableMove;
 }
 
 /**
@@ -134,7 +154,7 @@ function checkIfValidHelper(
 	fixtureSizes: FixtureSizes,
 	g: FreeCell,
 	location: CardLocation
-): { ng: FreeCell; newDropTargets?: CardCoords[] } {
+): { ng: FreeCell; newDropTargets?: DropTarget[] } {
 	const ng = calcNextState(g, location);
 	if (!ng.selection || ng.selection.peekOnly) {
 		// FIXME add a ng.selection.couldMove or something
@@ -144,9 +164,10 @@ function checkIfValidHelper(
 	}
 
 	// FIXME these are the avilable moves, but how do we _store_ them
-	const newDropTargets = ng.availableMoves?.map((availableMove) =>
-		calcCardCoords(fixtureSizes, availableMove.location, 'available-low')
-	);
+	const newDropTargets = ng.availableMoves?.map((availableMove) => ({
+		availableMove,
+		cardCoords: calcCardCoords(fixtureSizes, availableMove.location, 'drag-and-drop'),
+	}));
 
 	// FIXME this is making the animation freak out
 	//  - it's still selected, but the card is rendered in the wrong place, as if it's not selected
@@ -159,32 +180,11 @@ function checkIfValidHelper(
 	return { ng: g.clearSelection(), newDropTargets };
 }
 
-/*
-  FIXME remove
-
-  useEffect(() => {
-    const draggableInstance = Draggable.create(draggableRef.current, {
-      onDrag: () => {
-        const isOverlapping = hitTestRectangle(
-          draggableRef.current,
-          dropTargetRef.current
-        );
-        setIsOverlapping(isOverlapping);
-      },
-      onRelease: () => {
-         const isOverlappingOnRelease = hitTestRectangle(
-          draggableRef.current,
-          dropTargetRef.current
-        );
-        if (!isOverlappingOnRelease) {
-          gsap.to(draggableRef.current, { x: 0, y: 0, duration: 0.3 });
-        }
-        setIsOverlapping(isOverlappingOnRelease);
-      },
-    })[0];
-
-    return () => {
-      draggableInstance.kill();
-    };
-  }, []);
-*/
+function pointerCoordsToFixtureSizes(event: PointerEvent): { x: number; y: number } {
+	// FIXME convert X,Y into fixutreSizes coords
+	//  - pageX/pageY probably fine for the full screen app
+	//  - it is _not_ fine for the manual testing one
+	const x = event.pageX;
+	const y = event.pageY;
+	return { x, y };
+}

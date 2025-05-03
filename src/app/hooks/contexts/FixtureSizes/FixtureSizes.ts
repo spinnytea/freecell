@@ -327,11 +327,10 @@ export function calcCardCoords(
 			// XXX (hud) height of card if tail
 			top = fixtureSizes.tableau.top;
 			left = fixtureSizes.tableau.cascadeLeft[d0];
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-			if (d1 !== undefined) {
-				top += d1 * fixtureSizes.tableau.offsetTop;
-			} else {
+			if (type === 'drag-and-drop') {
 				height += BOTTOM_OF_CASCADE * fixtureSizes.tableau.offsetTop;
+			} else {
+				top += d1 * fixtureSizes.tableau.offsetTop;
 			}
 			break;
 	}

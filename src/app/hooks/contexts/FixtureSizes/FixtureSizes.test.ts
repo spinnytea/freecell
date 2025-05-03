@@ -151,7 +151,7 @@ describe('FixtureSizes', () => {
 					${-1} | ${undefined}
 				`('$d0', ({ d0, left }: { d0: number; left: number }) => {
 					const location: CardLocation = { fixture: 'cascade', data: [d0] };
-					const type = 'available-low';
+					const type = 'drag-and-drop';
 					expect(calcCardCoords(fixtureSizes, location, type)).toEqual({
 						top: 20,
 						left,
