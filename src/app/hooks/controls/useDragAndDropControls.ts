@@ -2,7 +2,7 @@ import { MutableRefObject, useContext, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, Draggable } from 'gsap/all';
 import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
-import { CardLocation, shorthandPosition } from '@/app/game/card/card';
+import { CardLocation, shorthandPosition, shorthandSequence } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import { AvailableMove } from '@/app/game/move/move';
 import {
@@ -35,8 +35,9 @@ export function useDragAndDropControls(
 	});
 
 	useGSAP((context, contextSafe) => {
-		// FIXME (techdebt) (drag-and-drop) use or remove
 		// FIXME move to animSomething
+		// - drag entire selection
+		// - zIndex
 		if (cardRef.current && contextSafe) {
 			const checkIfValid = contextSafe((draggable: Draggable, event: PointerEvent) => {
 				setGame((g) => {
@@ -52,11 +53,7 @@ export function useDragAndDropControls(
 				});
 			});
 
-			// FIXME drag whole selection
-
 			const resetAfterDrag = contextSafe(() => {
-				// FIXME detect drop target
-				// FIXME availableMoves; cards vs columns
 				setGame((g) => {
 					g = calcNextState(g, stateRef.current.location);
 					const { top, left, zIndex } = calcTopLeftZ(
@@ -77,7 +74,7 @@ export function useDragAndDropControls(
 			}) as React.MouseEventHandler;
 
 			Draggable.create(cardRef.current, {
-				zIndexBoost: false,
+				zIndexBoost: false, // this only works if you drag it twice in a row
 				onPress: function (event: PointerEvent) {
 					checkIfValid(this as Draggable, event);
 				},
@@ -101,7 +98,9 @@ export function useDragAndDropControls(
 						dropTargetsRef.current
 					);
 					if (overlapping) {
-						// FIXME clean this up!
+						// FIXME clean this up! this feels very yolo
+						// - we should store the selection AND the moves
+						// - then we can moveByShorthand
 						setGame((g) =>
 							calcNextState(g, stateRef.current.location).setCursor(overlapping.location).touch()
 						);
@@ -157,8 +156,6 @@ function checkIfValidHelper(
 ): { ng: FreeCell; newDropTargets?: DropTarget[] } {
 	const ng = calcNextState(g, location);
 	if (!ng.selection || ng.selection.peekOnly) {
-		// FIXME add a ng.selection.couldMove or something
-		// - if (ng.selection?.couldMove) {}
 		draggable.endDrag(event);
 		return { ng };
 	}
@@ -166,16 +163,13 @@ function checkIfValidHelper(
 	// FIXME these are the avilable moves, but how do we _store_ them
 	const newDropTargets = ng.availableMoves?.map((availableMove) => ({
 		availableMove,
+		// TODO (settings) (drag-and-drop) option to drop on card vs column
 		cardCoords: calcCardCoords(fixtureSizes, availableMove.location, 'drag-and-drop'),
 	}));
 
-	// FIXME this is making the animation freak out
-	//  - it's still selected, but the card is rendered in the wrong place, as if it's not selected
-	//  - only the first card (that moved), you can see it when dragging a "sequence"
-	//  - the drag end is resetting to the wrong position
-	// if (g.selection && shorthandSequence(g.selection) === shorthandSequence(ng.selection)) {
-	// 	return g;
-	// }
+	if (g.selection && shorthandSequence(g.selection) === shorthandSequence(ng.selection)) {
+		return { ng: g, newDropTargets };
+	}
 
 	return { ng: g.clearSelection(), newDropTargets };
 }
