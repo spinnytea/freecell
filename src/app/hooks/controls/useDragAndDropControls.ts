@@ -2,9 +2,16 @@ import { MutableRefObject, useContext, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, Draggable } from 'gsap/all';
 import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
-import { CardLocation, shorthandPosition, shorthandSequence } from '@/app/game/card/card';
+import {
+	CardLocation,
+	CardSequence,
+	shorthandCard,
+	shorthandPosition,
+	shorthandSequence,
+} from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import { AvailableMove } from '@/app/game/move/move';
+import { animDragSequence } from '@/app/hooks/animations/animDragSequence';
 import {
 	calcCardCoords,
 	calcTopLeftZ,
@@ -21,14 +28,22 @@ interface DropTarget {
 	cardCoords: CardCoords;
 }
 
+interface DragState {
+	selection: CardSequence;
+	shorthands: string[];
+	dropTargets: DropTarget[];
+	timeline: gsap.core.Timeline;
+}
+
 export function useDragAndDropControls(
 	cardRef: MutableRefObject<HTMLDivElement | null>,
-	_location: CardLocation
+	_location: CardLocation,
+	gameBoardIdRef: MutableRefObject<string>
 ) {
 	const [, setGame] = useContext(GameContext);
-	const dropTargetsRef = useRef<DropTarget[] | undefined>(undefined);
+	const dragStateRef = useRef<DragState | undefined>(undefined);
 
-	const stateRef = useRefCurrent({
+	const gameStateRef = useRefCurrent({
 		location: _location,
 		fixtureSizes: useFixtureSizes(),
 		settings: useSettings(),
@@ -41,24 +56,30 @@ export function useDragAndDropControls(
 		if (cardRef.current && contextSafe) {
 			const checkIfValid = contextSafe((draggable: Draggable, event: PointerEvent) => {
 				setGame((g) => {
-					const { ng, newDropTargets } = checkIfValidHelper(
+					const { ng, selection, dropTargets } = checkIfValidHelper(
 						draggable,
 						event,
-						stateRef.current.fixtureSizes,
+						gameStateRef.current.fixtureSizes,
 						g,
-						stateRef.current.location
+						gameStateRef.current.location
 					);
-					dropTargetsRef.current = newDropTargets;
+					if (selection && dropTargets) {
+						const shorthands = selection.cards.map(shorthandCard);
+						const timeline = gsap.timeline();
+						dragStateRef.current = { selection, shorthands, dropTargets, timeline };
+					} else {
+						dragStateRef.current = undefined;
+					}
 					return ng;
 				});
 			});
 
 			const resetAfterDrag = contextSafe(() => {
 				setGame((g) => {
-					g = calcNextState(g, stateRef.current.location);
+					g = calcNextState(g, gameStateRef.current.location);
 					const { top, left, zIndex } = calcTopLeftZ(
-						stateRef.current.fixtureSizes,
-						stateRef.current.location,
+						gameStateRef.current.fixtureSizes,
+						gameStateRef.current.location,
 						g.selection
 					);
 					gsap.to(cardRef.current, {
@@ -79,31 +100,47 @@ export function useDragAndDropControls(
 					checkIfValid(this as Draggable, event);
 				},
 				onDrag: function (event: PointerEvent) {
-					// FIXME there has to be a better way to visualize this
-					//  - e.g. available-low -> available-high
-					if (stateRef.current.settings.showDebugInfo) {
-						const overlapping = overlappingAvailableMove(
-							pointerCoordsToFixtureSizes(event),
-							dropTargetsRef.current
-						);
-						if (overlapping) {
-							console.log(shorthandPosition(overlapping.location));
+					if (dragStateRef.current) {
+						const pointerCoords = pointerCoordsToFixtureSizes(event);
+						dragStateRef.current.timeline.kill();
+						animDragSequence({
+							timeline: dragStateRef.current.timeline,
+							list: dragStateRef.current.shorthands,
+							pointerCoords,
+							offsetTop: gameStateRef.current.fixtureSizes.tableau.offsetTop,
+							gameBoardIdRef,
+						});
+						// TODO (drag-and-drop) drop target animation? like, rotation??
+						if (gameStateRef.current.settings.showDebugInfo) {
+							const overlapping = overlappingAvailableMove(
+								pointerCoords,
+								dragStateRef.current.dropTargets
+							);
+							if (overlapping) {
+								// FIXME there has to be a better way to visualize this
+								//  - e.g. available-low -> available-high
+								console.log(shorthandPosition(overlapping.location));
+							}
 						}
 					}
-					// TODO (drag-and-drop) drop target animation? like, rotation??
 				},
 				onRelease: function (event: PointerEvent) {
-					const overlapping = overlappingAvailableMove(
-						pointerCoordsToFixtureSizes(event),
-						dropTargetsRef.current
-					);
-					if (overlapping) {
-						// FIXME clean this up! this feels very yolo
-						// - we should store the selection AND the moves
-						// - then we can moveByShorthand
-						setGame((g) =>
-							calcNextState(g, stateRef.current.location).setCursor(overlapping.location).touch()
+					if (dragStateRef.current) {
+						dragStateRef.current.timeline.kill();
+						const overlapping = overlappingAvailableMove(
+							pointerCoordsToFixtureSizes(event),
+							dragStateRef.current.dropTargets
 						);
+						if (overlapping) {
+							// FIXME clean this up! this feels very yolo
+							// - we should store the selection AND the moves
+							// - then we can moveByShorthand
+							setGame((g) =>
+								calcNextState(g, gameStateRef.current.location)
+									.setCursor(overlapping.location)
+									.touch()
+							);
+						}
 					}
 				},
 				onDragEnd: resetAfterDrag,
@@ -129,9 +166,8 @@ function calcNextState(game: FreeCell, location: CardLocation) {
 
 function overlappingAvailableMove(
 	{ x, y }: { x: number; y: number },
-	dropTargets: DropTarget[] | undefined
+	dropTargets: DropTarget[]
 ): AvailableMove | undefined {
-	if (!dropTargets?.length) return undefined;
 	return dropTargets.find(({ cardCoords }) => {
 		if (x < cardCoords.left) return false;
 		if (x > cardCoords.left + cardCoords.width) return false;
@@ -153,7 +189,7 @@ function checkIfValidHelper(
 	fixtureSizes: FixtureSizes,
 	g: FreeCell,
 	location: CardLocation
-): { ng: FreeCell; newDropTargets?: DropTarget[] } {
+): { ng: FreeCell; selection?: CardSequence; dropTargets?: DropTarget[] } {
 	const ng = calcNextState(g, location);
 	if (!ng.selection || ng.selection.peekOnly) {
 		draggable.endDrag(event);
@@ -161,17 +197,18 @@ function checkIfValidHelper(
 	}
 
 	// FIXME these are the avilable moves, but how do we _store_ them
-	const newDropTargets = ng.availableMoves?.map((availableMove) => ({
+	const selection = ng.selection;
+	const dropTargets = ng.availableMoves?.map((availableMove) => ({
 		availableMove,
 		// TODO (settings) (drag-and-drop) option to drop on card vs column
 		cardCoords: calcCardCoords(fixtureSizes, availableMove.location, 'drag-and-drop'),
 	}));
 
 	if (g.selection && shorthandSequence(g.selection) === shorthandSequence(ng.selection)) {
-		return { ng: g, newDropTargets };
+		return { ng: g, selection, dropTargets };
 	}
 
-	return { ng: g.clearSelection(), newDropTargets };
+	return { ng: g.clearSelection(), selection, dropTargets };
 }
 
 function pointerCoordsToFixtureSizes(event: PointerEvent): { x: number; y: number } {
