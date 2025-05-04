@@ -103,6 +103,7 @@ export function useDragAndDropControls(
 					if (dragStateRef.current) {
 						const pointerCoords = pointerCoordsToFixtureSizes(event);
 						dragStateRef.current.timeline.kill();
+						// FIXME no part of this causes react to re-render
 						animDragSequence({
 							timeline: dragStateRef.current.timeline,
 							list: dragStateRef.current.shorthands,
