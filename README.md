@@ -11,7 +11,7 @@ TODO (motivation) main development tasks:
 1. ~~legible `(cards)` for mobile~~
 1. ~~move `(history)` & undo~~
 1. ~~`(animation)` https://gsap.com/resources/React/ - just basic animations, like, "stagger" the card movements~~
-1. ~~`(techdebt) (animations)` refactor to help unit test animations~~
+1. ~~`(techdebt) (animation)` refactor to help unit test animations~~
 1. ~~`(newgame)` local storage, new button~~
 1. ~~`(controls)` better ease of use for click-to-move and touch~~
 1. `(drag-and-drop)` (click-to-move has been working, but sometimes you need to "force" the move you want)
@@ -60,6 +60,7 @@ TODO (motivation) main development tasks:
 - IDEA (animation) auto-foundation gets faster the longer it runs
 - TODO (animation) animations after/during win state (celbration)
 - IDEA (settings) toggle for: move sequence as one vs animate in-between steps (sequence moves vs each card moves)
+- IDEA (animation) (motivation) instant replay after game is over
 - IDEA (motivation) implement War? just so it's flexible?
   - what is "it", the UI? the controls?
 - IDEA (motivation) implement Spider Solitaire, that could be fun

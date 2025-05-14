@@ -109,6 +109,70 @@ describe('game.autoFoundation', () => {
 					' auto-foundation 4b 3D,4D'
 			);
 		});
+
+		test('opp+1 4233, opp+2 6244', () => {
+			const game = FreeCell.parse(
+				'' +
+					' TH KH 7H    5D 2H 4S 4C \n' +
+					' KC KD 9D    4H 5C 8C 8D \n' +
+					' QH QC 6S    QD KS 3H    \n' +
+					'       5H       JS 9C    \n' +
+					'       JH       JC 6H    \n' +
+					'       TC       5S 7C    \n' +
+					'                QS TD    \n' +
+					'                JD 9S    \n' +
+					'                TS 8H    \n' +
+					'                9H 7S    \n' +
+					'                8S 6D    \n' +
+					'                7D       \n' +
+					'                6C       \n' +
+					' move 6h 4S→3S (auto-foundation 6 5D)\n' +
+					':h shuffle32 19114\n' +
+					' 56 16 46 16 16 2a 26 21 \n' +
+					' 2b 23 2c 56 36 57 b3 87 \n' +
+					' 87 87 42 42 4b 5h 6h '
+			)
+				.undo()
+				.undo()
+				.undo()
+				.moveByShorthand('4b', { autoFoundation: false });
+			expect(game.autoFoundationAll({ limit: 'opp+1' }).print()).toBe(
+				'' +
+					' TH>KH 7H    4D 2H 3S 3C \n' +
+					' KC KD 9D    4H 5C 8C 8D \n' +
+					' QH QC 6S    QD KS 3H    \n' +
+					'       5H    4C JS 9C    \n' +
+					'       JH       JC 6H    \n' +
+					'       TC       5S 7C    \n' +
+					'                QS TD    \n' +
+					'                JD 9S    \n' +
+					'                TS 8H    \n' +
+					'                9H 7S    \n' +
+					'                8S 6D    \n' +
+					'                7D       \n' +
+					'                6C       \n' +
+					'                5D       \n' +
+					'                4S       \n' +
+					' auto-foundation 46684 AC,2C,3D,3C,4D'
+			);
+			expect(game.autoFoundationAll({ limit: 'opp+2' }).print()).toBe(
+				'' +
+					' TH>KH 7H    6D 2H 4S 4C \n' +
+					' KC KD 9D    4H 5C 8C 8D \n' +
+					' QH QC 6S    QD KS 3H    \n' +
+					'       5H       JS 9C    \n' +
+					'       JH       JC 6H    \n' +
+					'       TC       5S 7C    \n' +
+					'                QS TD    \n' +
+					'                JD 9S    \n' +
+					'                TS 8H    \n' +
+					'                9H 7S    \n' +
+					'                8S       \n' +
+					'                7D       \n' +
+					'                6C       \n' +
+					' auto-foundation 466684567 AC,2C,3D,4S,3C,4D,4C,5D,6D'
+			);
+		});
 	});
 
 	describe('scenarios', () => {

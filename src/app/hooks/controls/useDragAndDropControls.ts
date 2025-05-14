@@ -104,6 +104,8 @@ export function useDragAndDropControls(
 						const pointerCoords = pointerCoordsToFixtureSizes(event);
 						dragStateRef.current.timeline.kill();
 						// FIXME no part of this causes react to re-render
+						// - instead, do this on a timer, and just tween; don't use a timeline to the drag card
+						// - make this a "simulation", not a static animation
 						animDragSequence({
 							timeline: dragStateRef.current.timeline,
 							list: dragStateRef.current.shorthands,

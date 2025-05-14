@@ -21,8 +21,19 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 		IDEA (techdebt) Store previous positions on DOM? Data attr?
 		 - It's just t/l
 		 - accessor method for unit testing
+		---
+		 - plus, a local previousTLs doesn't play with other animations
+		 - drag-and-drop needs to know card positions too
+
+		IDEA (techdebt) (animation) Initial positions
+		 - Animations don't have positions until they change
+		 - So it animates everything all at once (fine)
+		 - Iff we don't have previousTLs, then g.undo() and seed it with those.
+
+		BUG (techdebt) (animation) Refresh and then immediately "new game" doesn't animate correctly (possibly because there are no saved card positions l yet)
 	*/
 	const previousTLs = useRef(new Map<string, number[]>());
+
 	/**
 		if we change the size of the screen, then everything will animate
 		don't do any offsets, just move/update all the cards immediately
@@ -65,6 +76,8 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 
 			if (updateCardPositions.length) {
 				if (previousTimeline.current && previousTimeline.current !== timeline) {
+					// IDEA (animation) Chaining animations "finishes immediately", but that's unfortunate. Can we play at 10x speed or something?
+					//  - can I unit test by playing 3 moves at once?
 					previousTimeline.current
 						.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
 						.kill(); // stop animating
