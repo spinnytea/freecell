@@ -617,12 +617,10 @@ export class FreeCell {
 		Used replaying a game, starting with a seed or otherwise known deal.
 
 		it's really just "touch the first one" then "touch the second one"
-
-		@param shorthandMove
 	*/
 	moveByShorthand(shorthandMove: string, { autoFoundation }: OptionsAutoFoundation = {}): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
-		return this.setCursor(from).touch().setCursor(to).touch({ autoFoundation });
+		return this.clearSelection().setCursor(from).touch().setCursor(to).touch({ autoFoundation });
 	}
 
 	/**

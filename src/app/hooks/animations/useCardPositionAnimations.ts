@@ -19,7 +19,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 		keep track of card positions, we need to animate anything that moves
 		if it hasn't moved since last time, then we don't need to animate it
 
-		IDEA (drag-and-drop) Store previous positions on DOM? Data attr? Context? GSAP (like, hault an animation, and continue from current position)?
+		IDEA (techdebt) (animation) (drag-and-drop) Store previous positions on DOM? Data attr? Context? GSAP (like, hault an animation, and continue from current position)?
 		 - It's just t/l
 		 - accessor method for unit testing
 		---

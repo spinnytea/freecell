@@ -58,9 +58,6 @@ export function useDragAndDropControls(
 			return;
 		}
 
-		// FIXME move to animSomething
-		// - drag entire selection
-		// - zIndex
 		if (cardRef.current && contextSafe) {
 			const checkIfValid = contextSafe((draggable: Draggable, event: PointerEvent) => {
 				setGame((g) => {
@@ -111,10 +108,10 @@ export function useDragAndDropControls(
 					if (dragStateRef.current) {
 						const pointerCoords = pointerCoordsToFixtureSizes(event);
 						dragStateRef.current.timeline.kill();
-						// FIXME no part of this causes react to re-render
+						// FIXME this update seems to only happen _onmousemove_, gsap animation isn't running?
 						// - instead, do this on a timer, and just tween; don't use a timeline to the drag card
 						// - make this a "simulation", not a static animation
-						animDragSequence({
+						contextSafe(animDragSequence)({
 							timeline: dragStateRef.current.timeline,
 							list: dragStateRef.current.shorthands,
 							pointerCoords,
@@ -143,14 +140,8 @@ export function useDragAndDropControls(
 							dragStateRef.current.dropTargets
 						);
 						if (overlapping) {
-							// FIXME clean this up! this feels very yolo
-							// - we should store the selection AND the moves
-							// - then we can moveByShorthand
-							setGame((g) =>
-								calcNextState(g, gameStateRef.current.location)
-									.setCursor(overlapping.location)
-									.touch()
-							);
+							const shorthandMove = `${shorthandPosition(gameStateRef.current.location)}${shorthandPosition(overlapping.location)}`;
+							setGame((g) => g.moveByShorthand(shorthandMove));
 						}
 					}
 				},
