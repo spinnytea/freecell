@@ -26,7 +26,7 @@ export function calcDefaultSettings(): Settings {
 			// 'mouse hotcolumns', // TODO (controls) impl
 			// 'click-to-select', // FIXME enable
 			// 'click-to-move', // FIXME enable
-			'drag-and-drop',
+			'drag-and-drop', // TODO (controls) (drag-and-drop) impl
 		]),
 	};
 }

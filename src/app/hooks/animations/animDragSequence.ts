@@ -6,7 +6,7 @@ import { calcCardId } from '@/app/game/card/card';
 // FIXME keep refining tale
 export function animDragSequence({
 	timeline,
-	// FIXME we need first card coords, not the pointer
+	// FIXME we need first card coords, not the position of the pointer/cursor/mouse
 	pointerCoords: { x, y },
 	list,
 	offsetTop,

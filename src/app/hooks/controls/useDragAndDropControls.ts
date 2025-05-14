@@ -50,6 +50,12 @@ export function useDragAndDropControls(
 	});
 
 	useGSAP((context, contextSafe) => {
+		const enableDragAndDrop =
+			gameStateRef.current.settings.enabledControlSchemes.has('drag-and-drop');
+		if (!enableDragAndDrop) {
+			return;
+		}
+
 		// FIXME move to animSomething
 		// - drag entire selection
 		// - zIndex
