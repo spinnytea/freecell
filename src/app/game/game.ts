@@ -490,6 +490,13 @@ export class FreeCell {
 		e.g. select cursor, deselect cursor, move selection
 
 		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
+		- REVIEW (controls) `touch()` is a bit generic, wrt having both "select" and "deselect"
+		  - it's nice and simple when there aren't many ways to interact
+		  - with more control schemes sometimes overlapping, it's hard to debug exactly
+		  - some controls schemes have explicity `clearSelection().touch()` to get around it
+		 ---
+		  - drag-and-drop just wants a lookahead "what if this card were selected"
+		  - it doesn't need to change state per se
 	*/
 	touch({
 		autoFoundation = true,
@@ -762,6 +769,7 @@ export class FreeCell {
 		return this.setCursor(to_location).touch({ autoFoundation });
 	}
 
+	/** TODO (techdebt) rename this method "click to move" is weird; maybe cursorTouchMove */
 	clickToMove(
 		location: CardLocation,
 		{ autoMove = true, stopWithInvalid }: OptionsAutoFoundation = {}

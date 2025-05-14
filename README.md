@@ -14,7 +14,10 @@ TODO (motivation) main development tasks:
 1. ~~`(techdebt) (animation)` refactor to help unit test animations~~
 1. ~~`(newgame)` local storage, new button~~
 1. ~~`(controls)` better ease of use for click-to-move and touch~~
-1. `(drag-and-drop)` (click-to-move has been working, but sometimes you need to "force" the move you want)
+1. `(drag-and-drop)` move cards exactly where you want them
+   - ~~basics are established~~
+   - `(controls) (drag-and-drop)` be more precise with state management, fix conflicts with other schemes
+   - `(animation) (drag-and-drop)` better trailing animation, add some polish
 
 ```
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b

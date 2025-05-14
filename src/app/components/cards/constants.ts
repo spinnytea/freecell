@@ -39,16 +39,21 @@ export enum ControlSchemes {
 		set cursor + touch (hotkeys for columns; shorthandPosition directly)
 		@deprecated TODO (controls) not yet implemented
 	*/
-	// Hotkeys = 'keyboard hotkeys',
+	Hotkeys = 'keyboard hotkeys',
 
 	/**
 		set cursor + touch (click on columns (d0), not cards (d0, d1); shorthandPosition directly)
 		@deprecated TODO (controls) not yet implemented
 	*/
-	// MouseColumns = 'mouse hotcolumns',
+	MouseColumns = 'mouse hotcolumns',
 
 	/**
 		set cursor + touch (w/ selection, no autoMove)
+
+		doesn't really make sense to enable with {@link ClickToMove}, as that will take precidence
+		only really makes sense to enable with {@link DragAndDrop}, allowing taps along with drags
+
+		TODO (controls) (drag-and-drop) what's the difference between "click to touch" vs "click to select"
 	*/
 	ClickToSelect = 'click-to-select',
 

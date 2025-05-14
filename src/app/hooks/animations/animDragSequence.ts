@@ -3,16 +3,15 @@ import { gsap } from 'gsap/all';
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import { calcCardId } from '@/app/game/card/card';
 
-// FIXME keep refining tale
+// TODO (animation) (drag-and-drop) timingfollow the card this is stacked on top of
+//  - follow-the-leader style drag animation, each card lags behind the previous
+//  - needs to be on a timer, onDrag is basically onmousemove, so we only get updates as the cursor moves
 export function animDragSequence({
-	timeline,
-	// FIXME we need first card coords, not the position of the pointer/cursor/mouse
 	pointerCoords: { x, y },
 	list,
 	offsetTop,
 	gameBoardIdRef,
 }: {
-	timeline: gsap.core.Timeline;
 	list: string[];
 	pointerCoords: { x: number; y: number };
 	offsetTop: number;
@@ -38,13 +37,10 @@ export function animDragSequence({
 		const zIndex = BOTTOM_OF_CASCADE + index;
 		gsap.set(cardId, { zIndex });
 		if (index > 0) {
-			// follow the card this is stacked on top of
-			// an attempt at follow-the-leader style drag animation, each card lags behind the previous
 			const previousCardPosition = positions[index - 1];
 			const top = previousCardPosition.top + offsetTop;
 			const left = previousCardPosition.left;
-			const duration = 2 + index / 10; // REVIEW (drag-and-drop) timing
-			timeline.to(cardId, { top, left, duration, ease: 'linear' }, '<0');
+			gsap.set(cardId, { top, left });
 		}
 	});
 }

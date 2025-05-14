@@ -24,7 +24,7 @@ export function calcDefaultSettings(): Settings {
 			ControlSchemes.Keyboard,
 			// ControlSchemes.ClickToSelect, // FIXME enable
 			// ControlSchemes.ClickToMove, // FIXME enable
-			ControlSchemes.DragAndDrop, // TODO (controls) (drag-and-drop) impl
+			ControlSchemes.DragAndDrop, // TODO (drag-and-drop) impl
 		]),
 	};
 }

@@ -19,7 +19,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 		keep track of card positions, we need to animate anything that moves
 		if it hasn't moved since last time, then we don't need to animate it
 
-		IDEA (techdebt) (animation) (drag-and-drop) Store previous positions on DOM? Data attr? Context? GSAP (like, hault an animation, and continue from current position)?
+		IDEA (animation) (drag-and-drop) (techdebt) Store previous positions on DOM? Data attr? Context? GSAP (like, hault an animation, and continue from current position)?
 		 - It's just t/l
 		 - accessor method for unit testing
 		---
@@ -27,12 +27,12 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 		 - drag-and-drop needs to know card positions too
 
 
-		IDEA (techdebt) (animation) Initial positions
+		IDEA (animation) (techdebt) Initial positions
 		 - Animations don't have positions until they change
 		 - So it animates everything all at once (fine)
 		 - Iff we don't have previousTLs, then g.undo() and seed it with those.
 
-		BUG (techdebt) (animation) Refresh and then immediately "new game" doesn't animate correctly (possibly because there are no saved card positions l yet)
+		BUG (animation) (techdebt) Refresh and then immediately "new game" doesn't animate correctly (possibly because there are no saved card positions l yet)
 	*/
 	const previousTLs = useRef(new Map<string, number[]>());
 

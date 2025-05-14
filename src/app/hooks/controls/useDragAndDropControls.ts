@@ -33,7 +33,6 @@ interface DragState {
 	selection: CardSequence;
 	shorthands: string[];
 	dropTargets: DropTarget[];
-	timeline: gsap.core.Timeline;
 }
 
 export function useDragAndDropControls(
@@ -70,8 +69,7 @@ export function useDragAndDropControls(
 					);
 					if (selection && dropTargets) {
 						const shorthands = selection.cards.map(shorthandCard);
-						const timeline = gsap.timeline();
-						dragStateRef.current = { selection, shorthands, dropTargets, timeline };
+						dragStateRef.current = { selection, shorthands, dropTargets };
 					} else {
 						dragStateRef.current = undefined;
 					}
@@ -107,18 +105,13 @@ export function useDragAndDropControls(
 				onDrag: function (event: PointerEvent) {
 					if (dragStateRef.current) {
 						const pointerCoords = pointerCoordsToFixtureSizes(event);
-						dragStateRef.current.timeline.kill();
-						// FIXME this update seems to only happen _onmousemove_, gsap animation isn't running?
-						// - instead, do this on a timer, and just tween; don't use a timeline to the drag card
-						// - make this a "simulation", not a static animation
 						contextSafe(animDragSequence)({
-							timeline: dragStateRef.current.timeline,
 							list: dragStateRef.current.shorthands,
 							pointerCoords,
 							offsetTop: gameStateRef.current.fixtureSizes.tableau.offsetTop,
 							gameBoardIdRef,
 						});
-						// TODO (drag-and-drop) drop target animation? like, rotation??
+						// TODO (animation) (drag-and-drop) drop target animation? like, rotation??
 						if (gameStateRef.current.settings.showDebugInfo) {
 							const overlapping = overlappingAvailableMove(
 								pointerCoords,
@@ -134,13 +127,14 @@ export function useDragAndDropControls(
 				},
 				onRelease: function (event: PointerEvent) {
 					if (dragStateRef.current) {
-						dragStateRef.current.timeline.kill();
 						const overlapping = overlappingAvailableMove(
 							pointerCoordsToFixtureSizes(event),
 							dragStateRef.current.dropTargets
 						);
 						if (overlapping) {
 							const shorthandMove = `${shorthandPosition(gameStateRef.current.location)}${shorthandPosition(overlapping.location)}`;
+							// BUG (animation) (drag-and-drop) (techdebt) the following useCardPositionAnimations needs to play nicer with this
+							//  - the cards are not in their original positions
 							setGame((g) => g.moveByShorthand(shorthandMove));
 						}
 					}
@@ -159,8 +153,12 @@ export function useDragAndDropControls(
 
 	this probably won't change, but it is used twice and we _need_ it to be identical
 
-	- FIXME how do we deselect?
-	- FIXME click-to-select?
+	- TODO (controls) (drag-and-drop) how do we deselect?
+	  - only by clicking on a movable card
+	- TODO (controls) (drag-and-drop) can select non-movable cards, but not _moveable_ cards
+	- TODO (controls) (drag-and-drop) conflicts with click-to-select
+	  - we can select "moveable" but not "peek"
+	  - and like, the only real utility of click-to-select is to be paired with this
 */
 function calcNextState(game: FreeCell, location: CardLocation) {
 	return game.clearSelection().setCursor(location).touch();
@@ -183,7 +181,7 @@ function overlappingAvailableMove(
 	We've interacted with the cards, so calculate the next state.
 	If we are dragging, then store the available moves, but clear the selection (for various reasons?)
 
-	REVIEW (drag-and-drop) if we need to clear the selection, once the dust has settled
+	REVIEW (controls) (drag-and-drop) if we need to clear the selection, once the dust has settled
 */
 function checkIfValidHelper(
 	draggable: Draggable,
@@ -198,11 +196,10 @@ function checkIfValidHelper(
 		return { ng };
 	}
 
-	// FIXME these are the avilable moves, but how do we _store_ them
 	const selection = ng.selection;
 	const dropTargets = ng.availableMoves?.map((availableMove) => ({
 		availableMove,
-		// TODO (settings) (drag-and-drop) option to drop on card vs column
+		// TODO (controls) (settings) (drag-and-drop) option to drop on card vs column
 		cardCoords: calcCardCoords(fixtureSizes, availableMove.location, 'drag-and-drop'),
 	}));
 
@@ -214,7 +211,7 @@ function checkIfValidHelper(
 }
 
 function pointerCoordsToFixtureSizes(event: PointerEvent): { x: number; y: number } {
-	// FIXME convert X,Y into fixutreSizes coords
+	// TODO (controls) (drag-and-drop) convert X,Y into fixutreSizes coords
 	//  - pageX/pageY probably fine for the full screen app
 	//  - it is _not_ fine for the manual testing one
 	const x = event.pageX;
