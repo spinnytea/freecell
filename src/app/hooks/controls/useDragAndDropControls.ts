@@ -2,6 +2,7 @@ import { MutableRefObject, useContext, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, Draggable } from 'gsap/all';
 import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
+import { ControlSchemes } from '@/app/components/cards/constants';
 import {
 	CardLocation,
 	CardSequence,
@@ -50,8 +51,9 @@ export function useDragAndDropControls(
 	});
 
 	useGSAP((context, contextSafe) => {
-		const enableDragAndDrop =
-			gameStateRef.current.settings.enabledControlSchemes.has('drag-and-drop');
+		const enableDragAndDrop = gameStateRef.current.settings.enabledControlSchemes.has(
+			ControlSchemes.DragAndDrop
+		);
 		if (!enableDragAndDrop) {
 			return;
 		}

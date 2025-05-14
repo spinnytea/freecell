@@ -7,6 +7,7 @@ import { Draggable, gsap } from 'gsap/all';
 import Link from 'next/link';
 import styles_common from '@/app/common.module.css';
 import { CardImage } from '@/app/components/cards/CardImage';
+import { ControlSchemes } from '@/app/components/cards/constants';
 import { RankList, SuitList } from '@/app/game/card/card';
 import GameBoard, { GameBoardDisplayOptions } from '@/app/GameBoard';
 import styles_gameboard from '@/app/gameboard.module.css';
@@ -304,12 +305,9 @@ export default function Page() {
 				<li>
 					Control Schemes: test each of the ControlSchemes
 					<ol>
-						<li>keyboard</li>
-						<li>keyboard hotkeys</li>
-						<li>mouse hotcolumns</li>
-						<li>click-to-select</li>
-						<li>click-to-move</li>
-						<li>drag-and-drop</li>
+						{Object.values(ControlSchemes).map((v) => (
+							<li key={v}>{v}</li>
+						))}
 					</ol>
 				</li>
 			</ol>

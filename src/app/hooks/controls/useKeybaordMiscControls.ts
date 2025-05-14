@@ -1,4 +1,5 @@
 import { useContext, useEffect } from 'react';
+import { ControlSchemes } from '@/app/components/cards/constants';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
@@ -6,7 +7,7 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 export function useKeybaordMiscControls() {
 	const [, setGame, newGame] = useContext(GameContext);
 	const [{ showSettingsDialog, enabledControlSchemes }, setSettings] = useContext(SettingsContext);
-	const enableKeyboard = enabledControlSchemes.has('keyboard');
+	const enableKeyboard = enabledControlSchemes.has(ControlSchemes.Keyboard);
 
 	useEffect(() => {
 		if (showSettingsDialog) return;

@@ -21,12 +21,10 @@ export function calcDefaultSettings(): Settings {
 		showKeyboardCursor: false,
 		cardFace: 'auto',
 		enabledControlSchemes: new Set([
-			'keyboard',
-			// 'keyboard hotkeys', // TODO (controls) impl
-			// 'mouse hotcolumns', // TODO (controls) impl
-			// 'click-to-select', // FIXME enable
-			// 'click-to-move', // FIXME enable
-			'drag-and-drop', // TODO (controls) (drag-and-drop) impl
+			ControlSchemes.Keyboard,
+			// ControlSchemes.ClickToSelect, // FIXME enable
+			// ControlSchemes.ClickToMove, // FIXME enable
+			ControlSchemes.DragAndDrop, // TODO (controls) (drag-and-drop) impl
 		]),
 	};
 }

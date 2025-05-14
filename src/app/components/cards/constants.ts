@@ -29,13 +29,40 @@ export const CARD_FACE_CUTOFF = 60;
 
 	`click-to-select` and `click-to-move` don't really make sense together; if both present, click-to-move takes precidence
 */
-export type ControlSchemes =
-	| 'keyboard' // move cursor (w/w/o selection), touch, deselect
-	| 'keyboard hotkeys' // set cursor + touch (hotkeys for columns; shorthandPosition directly)
-	| 'mouse hotcolumns' // set cursor + touch (click on columns (d0), not cards (d0, d1); shorthandPosition directly)
-	| 'click-to-select' // set cursor + touch (w/ selection, no autoMove)
-	| 'click-to-move' // set cursor + touch + autoMove (w/w/o selection)
-	| 'drag-and-drop'; // set cursor + drag start (w/w/o selection)
+export enum ControlSchemes {
+	/**
+		move cursor (w/w/o selection), touch, deselect
+	*/
+	Keyboard = 'keyboard',
+
+	/**
+		set cursor + touch (hotkeys for columns; shorthandPosition directly)
+		@deprecated TODO (controls) not yet implemented
+	*/
+	// Hotkeys = 'keyboard hotkeys',
+
+	/**
+		set cursor + touch (click on columns (d0), not cards (d0, d1); shorthandPosition directly)
+		@deprecated TODO (controls) not yet implemented
+	*/
+	// MouseColumns = 'mouse hotcolumns',
+
+	/**
+		set cursor + touch (w/ selection, no autoMove)
+	*/
+	ClickToSelect = 'click-to-select',
+
+	/**
+		set cursor + touch + autoMove (w/w/o selection)
+	*/
+	ClickToMove = 'click-to-move',
+
+	/**
+		set cursor + drag start (w/w/o selection)
+		@deprecated TODO (controls) not yet implemented
+	*/
+	DragAndDrop = 'drag-and-drop',
+}
 
 /**
 	all of the "things" we can do
