@@ -12,6 +12,9 @@ export const TOTAL_DEFAULT_MOVEMENT_DURATION = Math.max(0.6, DEFAULT_TRANSLATE_D
 /** if not many cards are moving, we won't let them wait longer than this amount of time (since the previous card started moving) */
 export const MAX_ANIMATION_OVERLAP = 0.06;
 
+/** when multiple moves are played back to back (second move before previous is finished), we speed up the animations */
+export const MULTI_ANIMATION_TIMESCALE = 2;
+
 /** when we select a card, and it needs to rotate to show it's selected, this is how long that takes */
 export const SELECT_ROTATION_DURATION = 0.1;
 

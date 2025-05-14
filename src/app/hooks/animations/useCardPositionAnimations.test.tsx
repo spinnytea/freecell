@@ -43,19 +43,25 @@ describe('useCardPositionAnimations', () => {
 	let setSpy: jest.SpyInstance;
 	let addLabelSpy: jest.SpyInstance;
 	let addSpy: jest.SpyInstance;
+	let timeScaleSpy: jest.SpyInstance;
+	let timelineOnComplete: gsap.Callback | undefined;
 	beforeEach(() => {
 		fromToSpy = jest.fn();
 		toSpy = jest.fn();
 		setSpy = jest.fn();
 		addLabelSpy = jest.fn();
 		addSpy = jest.fn();
-		jest.spyOn(gsap, 'timeline').mockImplementation(() => {
+		timeScaleSpy = jest.fn();
+
+		jest.spyOn(gsap, 'timeline').mockImplementation((vars) => {
+			timelineOnComplete = vars?.onComplete;
 			const timelineMock: unknown = {
 				fromTo: fromToSpy,
 				to: toSpy,
 				set: setSpy,
 				addLabel: addLabelSpy,
 				add: addSpy,
+				timeScale: timeScaleSpy,
 				totalProgress: () => ({
 					kill: () => {
 						/* empty */
@@ -66,12 +72,17 @@ describe('useCardPositionAnimations', () => {
 		});
 	});
 
-	function mockReset() {
+	function mockReset(runOnComplete = true) {
+		if (timelineOnComplete && runOnComplete) {
+			timelineOnComplete();
+		}
+
 		toSpy.mockReset();
 		fromToSpy.mockReset();
 		setSpy.mockReset();
 		addLabelSpy.mockReset();
 		addSpy.mockReset();
+		timeScaleSpy.mockReset();
 	}
 
 	function getCardIdsFromSpy(spy: jest.SpyInstance) {
@@ -100,6 +111,7 @@ describe('useCardPositionAnimations', () => {
 				// expect(setSpy.mock.calls.map(([cardId]) => cardId as string)).toEqual(['#cAC', '#cAD', ..., '#cKH', '#cKS']);
 				expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 				expect(addSpy).not.toHaveBeenCalled();
+				expect(timeScaleSpy).not.toHaveBeenCalled();
 
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
@@ -109,6 +121,7 @@ describe('useCardPositionAnimations', () => {
 				expect(setSpy).not.toHaveBeenCalled();
 				expect(addLabelSpy).not.toHaveBeenCalled();
 				expect(addSpy).not.toHaveBeenCalled();
+				expect(timeScaleSpy).not.toHaveBeenCalled();
 			});
 
 			test('win -> init', () => {
@@ -158,6 +171,7 @@ describe('useCardPositionAnimations', () => {
 				expect(setSpy).not.toHaveBeenCalled();
 				expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 				expect(addSpy).not.toHaveBeenCalled();
+				expect(timeScaleSpy).not.toHaveBeenCalled();
 			});
 
 			// we (read: _i_) very often win a game then set it aside
@@ -183,6 +197,7 @@ describe('useCardPositionAnimations', () => {
 			expect(setSpy).not.toHaveBeenCalled();
 			expect(addLabelSpy).not.toHaveBeenCalled();
 			expect(addSpy).not.toHaveBeenCalled();
+			expect(timeScaleSpy).not.toHaveBeenCalled();
 		});
 
 		test('deal', () => {
@@ -225,6 +240,7 @@ describe('useCardPositionAnimations', () => {
 			expect(setSpy).not.toHaveBeenCalled();
 			expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 			expect(addSpy).not.toHaveBeenCalled();
+			expect(timeScaleSpy).not.toHaveBeenCalled();
 		});
 
 		test('cursor', () => {
@@ -244,6 +260,7 @@ describe('useCardPositionAnimations', () => {
 			expect(setSpy).not.toHaveBeenCalled();
 			expect(addLabelSpy).not.toHaveBeenCalled();
 			expect(addSpy).not.toHaveBeenCalled();
+			expect(timeScaleSpy).not.toHaveBeenCalled();
 		});
 
 		test.todo('select');
@@ -295,6 +312,7 @@ describe('useCardPositionAnimations', () => {
 					['updateCardPositions'],
 				]);
 				expect(addSpy).not.toHaveBeenCalled();
+				expect(timeScaleSpy).not.toHaveBeenCalled();
 			});
 
 			test('multiple with overlap', () => {
@@ -376,6 +394,7 @@ describe('useCardPositionAnimations', () => {
 					['updateCardPositions'],
 				]);
 				expect(addSpy).not.toHaveBeenCalled();
+				expect(timeScaleSpy).not.toHaveBeenCalled();
 			});
 
 			/**
@@ -434,6 +453,7 @@ describe('useCardPositionAnimations', () => {
 					['updateCardPositions'],
 				]);
 				expect(addSpy).not.toHaveBeenCalled();
+				expect(timeScaleSpy).not.toHaveBeenCalled();
 			});
 		});
 
@@ -488,6 +508,7 @@ describe('useCardPositionAnimations', () => {
 						['invalidMoveCards.toShorthands'],
 					]);
 					expect(addSpy).toHaveBeenCalledTimes(2);
+					expect(timeScaleSpy).not.toHaveBeenCalled();
 				});
 
 				test('foundation', () => {
@@ -515,6 +536,7 @@ describe('useCardPositionAnimations', () => {
 					expect(setSpy).not.toHaveBeenCalled();
 					expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
 					expect(addSpy).toHaveBeenCalledTimes(1);
+					expect(timeScaleSpy).not.toHaveBeenCalled();
 				});
 
 				test('cascade:single', () => {
@@ -539,6 +561,7 @@ describe('useCardPositionAnimations', () => {
 						['invalidMoveCards.toShorthands'],
 					]);
 					expect(addSpy).toHaveBeenCalledTimes(2);
+					expect(timeScaleSpy).not.toHaveBeenCalled();
 				});
 
 				test('cascade:sequence', () => {
@@ -565,6 +588,7 @@ describe('useCardPositionAnimations', () => {
 						['invalidMoveCards.toShorthands'],
 					]);
 					expect(addSpy).toHaveBeenCalledTimes(4);
+					expect(timeScaleSpy).not.toHaveBeenCalled();
 				});
 
 				// REVIEW (techdebt) do we really need this?
@@ -594,6 +618,7 @@ describe('useCardPositionAnimations', () => {
 						expect(setSpy).not.toHaveBeenCalled();
 						expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
 						expect(addSpy).toHaveBeenCalledTimes(3);
+						expect(timeScaleSpy).not.toHaveBeenCalled();
 					});
 
 					test('single', () => {
@@ -622,6 +647,7 @@ describe('useCardPositionAnimations', () => {
 							['invalidMoveCards.toShorthands'],
 						]);
 						expect(addSpy).toHaveBeenCalledTimes(4);
+						expect(timeScaleSpy).not.toHaveBeenCalled();
 					});
 				});
 
@@ -646,6 +672,7 @@ describe('useCardPositionAnimations', () => {
 						expect(setSpy).not.toHaveBeenCalled();
 						expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
 						expect(addSpy).toHaveBeenCalledTimes(1);
+						expect(timeScaleSpy).not.toHaveBeenCalled();
 					});
 
 					test('single', () => {
@@ -672,6 +699,7 @@ describe('useCardPositionAnimations', () => {
 							['invalidMoveCards.toShorthands'],
 						]);
 						expect(addSpy).toHaveBeenCalledTimes(2);
+						expect(timeScaleSpy).not.toHaveBeenCalled();
 					});
 				});
 
@@ -698,6 +726,7 @@ describe('useCardPositionAnimations', () => {
 						expect(setSpy).not.toHaveBeenCalled();
 						expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
 						expect(addSpy).toHaveBeenCalledTimes(3);
+						expect(timeScaleSpy).not.toHaveBeenCalled();
 					});
 
 					test('single', () => {
@@ -726,6 +755,7 @@ describe('useCardPositionAnimations', () => {
 							['invalidMoveCards.toShorthands'],
 						]);
 						expect(addSpy).toHaveBeenCalledTimes(4);
+						expect(timeScaleSpy).not.toHaveBeenCalled();
 					});
 
 					// REVIEW (animation) shake the whole sequence, not just the final card?
@@ -755,6 +785,7 @@ describe('useCardPositionAnimations', () => {
 							['invalidMoveCards.toShorthands'],
 						]);
 						expect(addSpy).toHaveBeenCalledTimes(4);
+						expect(timeScaleSpy).not.toHaveBeenCalled();
 					});
 				});
 			});
@@ -914,6 +945,7 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
 						expect(addLabelSpy.mock.calls).toEqual(labels);
 						expect(addSpy).not.toHaveBeenCalled();
+						expect(timeScaleSpy).not.toHaveBeenCalled();
 					});
 
 					test('undo ←', () => {
@@ -926,6 +958,7 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
 						expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 						expect(addSpy).not.toHaveBeenCalled();
+						expect(timeScaleSpy).not.toHaveBeenCalled();
 					});
 
 					test('both →←', () => {
@@ -940,6 +973,7 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
 						expect(addLabelSpy.mock.calls).toEqual(labels);
 						expect(addSpy).not.toHaveBeenCalled();
+						expect(timeScaleSpy).not.toHaveBeenCalled();
 
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
@@ -949,6 +983,7 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
 						expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 						expect(addSpy).not.toHaveBeenCalled();
+						expect(timeScaleSpy).not.toHaveBeenCalled();
 					});
 				}
 			);
@@ -1041,6 +1076,7 @@ describe('useCardPositionAnimations', () => {
 					['invalidMoveCards.toShorthands'],
 				]);
 				expect(addSpy).toHaveBeenCalledTimes(5);
+				expect(timeScaleSpy).not.toHaveBeenCalled();
 			});
 		});
 
@@ -1170,6 +1206,7 @@ describe('useCardPositionAnimations', () => {
 			expect(setCardIds).not.toContain('#c8H'); // 52
 			expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 			expect(addSpy).not.toHaveBeenCalled();
+			expect(timeScaleSpy).not.toHaveBeenCalled();
 		});
 
 		/**
@@ -1236,6 +1273,7 @@ describe('useCardPositionAnimations', () => {
 			expect(setSpy).toHaveBeenCalledTimes(52);
 			expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 			expect(addSpy).not.toHaveBeenCalled();
+			expect(timeScaleSpy).not.toHaveBeenCalled();
 
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
@@ -1245,6 +1283,7 @@ describe('useCardPositionAnimations', () => {
 			expect(setSpy).not.toHaveBeenCalled();
 			expect(addLabelSpy).not.toHaveBeenCalled();
 			expect(addSpy).not.toHaveBeenCalled();
+			expect(timeScaleSpy).not.toHaveBeenCalled();
 		});
 	});
 });

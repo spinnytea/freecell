@@ -1,6 +1,7 @@
 import { MutableRefObject, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
+import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
 import { calcCardId } from '@/app/game/card/card';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
@@ -76,11 +77,11 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 
 			if (updateCardPositions.length) {
 				if (previousTimeline.current && previousTimeline.current !== timeline) {
-					// IDEA (animation) Chaining animations "finishes immediately", but that's unfortunate. Can we play at 10x speed or something?
-					//  - can I unit test by playing 3 moves at once?
-					previousTimeline.current
-						.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
-						.kill(); // stop animating
+					// FIXME test
+					previousTimeline.current.timeScale(MULTI_ANIMATION_TIMESCALE); // speed up the previous animations
+					// previousTimeline.current
+					// 	.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
+					// 	.kill(); // stop animating
 				}
 				previousTimeline.current = timeline;
 
@@ -118,9 +119,11 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 
 			if (invalidMoveCards?.fromShorthands.length) {
 				if (previousTimeline.current && previousTimeline.current !== timeline) {
-					previousTimeline.current
-						.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
-						.kill(); // stop animating
+					// FIXME test
+					previousTimeline.current.timeScale(MULTI_ANIMATION_TIMESCALE);
+					// previousTimeline.current
+					// 	.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
+					// 	.kill(); // stop animating
 				}
 				previousTimeline.current = timeline;
 
