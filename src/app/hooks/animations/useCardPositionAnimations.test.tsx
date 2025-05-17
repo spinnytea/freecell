@@ -45,6 +45,7 @@ describe('useCardPositionAnimations', () => {
 	let addSpy: jest.SpyInstance;
 	let timeScaleSpy: jest.SpyInstance;
 	let timelineOnComplete: gsap.Callback | undefined;
+	let consoleDebugSpy: jest.SpyInstance;
 	beforeEach(() => {
 		fromToSpy = jest.fn();
 		toSpy = jest.fn();
@@ -69,6 +70,9 @@ describe('useCardPositionAnimations', () => {
 				}),
 			};
 			return timelineMock as gsap.core.Timeline;
+		});
+		consoleDebugSpy = jest.spyOn(console, 'debug').mockImplementation(() => {
+			throw new Error('must mock console.debug');
 		});
 	});
 
@@ -209,7 +213,8 @@ describe('useCardPositionAnimations', () => {
 			});
 
 			const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
-			mockReset();
+			mockReset(false);
+			consoleDebugSpy.mockReturnValueOnce(undefined);
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 			expect(toSpy).toHaveBeenCalledTimes(52);
@@ -240,7 +245,8 @@ describe('useCardPositionAnimations', () => {
 			expect(setSpy).not.toHaveBeenCalled();
 			expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 			expect(addSpy).not.toHaveBeenCalled();
-			expect(timeScaleSpy).not.toHaveBeenCalled();
+			expect(timeScaleSpy).toHaveBeenCalledTimes(1);
+			expect(consoleDebugSpy.mock.calls).toEqual([['speedup updateCardPositions', 'deal']]);
 		});
 
 		test('cursor', () => {
@@ -525,7 +531,8 @@ describe('useCardPositionAnimations', () => {
 					expect(gameStateTwo.previousAction.text).toBe('invalid move hc AC→cell');
 
 					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
-					mockReset();
+					mockReset(false);
+					consoleDebugSpy.mockReturnValueOnce(undefined);
 					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 					// prettier-ignore
@@ -536,7 +543,8 @@ describe('useCardPositionAnimations', () => {
 					expect(setSpy).not.toHaveBeenCalled();
 					expect(addLabelSpy.mock.calls).toEqual([['invalidMoveCards.fromShorthands']]);
 					expect(addSpy).toHaveBeenCalledTimes(1);
-					expect(timeScaleSpy).not.toHaveBeenCalled();
+					expect(timeScaleSpy).toHaveBeenCalledTimes(1);
+					expect(consoleDebugSpy.mock.calls).toEqual([['speedup invalidMoveCards', 'invalid']]);
 				});
 
 				test('cascade:single', () => {

@@ -78,7 +78,9 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 
 			if (updateCardPositions.length) {
 				if (previousTimeline.current && previousTimeline.current !== timeline) {
-					// FIXME test
+					if (process.env.NODE_ENV === 'test') {
+						console.debug('speedup updateCardPositions', previousAction.type);
+					}
 					previousTimeline.current.timeScale(MULTI_ANIMATION_TIMESCALE); // speed up the previous animations
 					// previousTimeline.current
 					// 	.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
@@ -120,7 +122,9 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 
 			if (invalidMoveCards?.fromShorthands.length) {
 				if (previousTimeline.current && previousTimeline.current !== timeline) {
-					// FIXME test
+					if (process.env.NODE_ENV === 'test') {
+						console.debug('speedup invalidMoveCards', previousAction.type);
+					}
 					previousTimeline.current.timeScale(MULTI_ANIMATION_TIMESCALE);
 					// previousTimeline.current
 					// 	.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
