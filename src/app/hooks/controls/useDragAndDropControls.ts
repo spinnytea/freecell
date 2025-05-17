@@ -118,8 +118,9 @@ export function useDragAndDropControls(
 								dragStateRef.current.dropTargets
 							);
 							if (overlapping) {
-								// FIXME there has to be a better way to visualize this
+								// TODO (animation) (drag-and-drop) there has to be a better way to visualize this
 								//  - e.g. available-low -> available-high
+								//  - maybe we need a whole "DragDropStateContext" that useCardPositionAnimations can import
 								console.log(shorthandPosition(overlapping.location));
 							}
 						}

@@ -22,9 +22,9 @@ export function calcDefaultSettings(): Settings {
 		cardFace: 'auto',
 		enabledControlSchemes: new Set([
 			ControlSchemes.Keyboard,
-			// ControlSchemes.ClickToSelect, // FIXME enable
-			// ControlSchemes.ClickToMove, // FIXME enable
-			ControlSchemes.DragAndDrop, // TODO (drag-and-drop) impl
+			ControlSchemes.ClickToSelect,
+			ControlSchemes.ClickToMove,
+			// ControlSchemes.DragAndDrop, // TODO (drag-and-drop) impl
 		]),
 	};
 }
