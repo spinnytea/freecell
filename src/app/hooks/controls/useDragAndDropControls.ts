@@ -35,6 +35,7 @@ interface DragState {
 	dropTargets: DropTarget[];
 }
 
+/** REVIEW (controls) drag-and-drop */
 export function useDragAndDropControls(
 	cardRef: MutableRefObject<HTMLDivElement | null>,
 	_location: CardLocation,

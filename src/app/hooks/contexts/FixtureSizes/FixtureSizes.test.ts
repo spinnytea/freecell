@@ -53,6 +53,8 @@ describe('FixtureSizes', () => {
 		test.todo('cascadeCount > homeCount');
 	});
 
+	test.todo('calcTopLeftZ');
+
 	describe('calcCardCoords', () => {
 		const fixtureSizes: FixtureSizes = dummyFixtureSizes;
 		describe('cell', () => {
@@ -180,4 +182,7 @@ describe('FixtureSizes', () => {
 			});
 		});
 	});
+
+	// in many cases, the top/left should be the same
+	test.todo('calcTopLeftZ ⨉ calcCardCoords');
 });

@@ -14,7 +14,7 @@ TODO (motivation) main development tasks:
 1. ~~`(techdebt) (animation)` refactor to help unit test animations~~
 1. ~~`(newgame)` local storage, new button~~
 1. ~~`(controls)` better ease of use for click-to-move and touch~~
-1. `(drag-and-drop)` move cards exactly where you want them
+1. `(drag-and-drop)` mouse drag to move - mouse drag-drop target is entire cascade
    - ~~basics are established~~
    - `(controls) (drag-and-drop)` be more precise with state management, fix conflicts with other schemes
    - `(animation) (drag-and-drop)` better trailing animation, add some polish
@@ -28,6 +28,9 @@ TODO (motivation) main development tasks:
 
 ## Top-Level TODOs
 
+- TODO (techdebt) (motivation) unit test the "complete games" with the UI
+  - this will add some coverage to the components etc
+  - it's an integration test to prove we can start, finish, restart a game
 - TODO (more-undo) undo all the back to start
   - new games can start with a shuffle, so we don't need to click through that (unit test it / unit test history)
   - undo before deal

@@ -35,17 +35,17 @@ export enum ControlSchemes {
 	*/
 	Keyboard = 'keyboard',
 
-	/**
+	/*
 		set cursor + touch (hotkeys for columns; shorthandPosition directly)
 		@deprecated TODO (controls) not yet implemented
 	*/
-	Hotkeys = 'keyboard hotkeys',
+	// Hotkeys = 'keyboard hotkeys',
 
-	/**
+	/*
 		set cursor + touch (click on columns (d0), not cards (d0, d1); shorthandPosition directly)
 		@deprecated TODO (controls) not yet implemented
 	*/
-	MouseColumns = 'mouse hotcolumns',
+	// MouseColumns = 'mouse hotcolumns',
 
 	/**
 		set cursor + touch (w/ selection, no autoMove)

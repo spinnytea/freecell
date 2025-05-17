@@ -16,20 +16,27 @@ export function useKeybaordArrowControls() {
 			const { key } = event;
 			let consumed = false;
 			switch (key) {
-				// TODO (controls) wasd
 				case 'ArrowLeft':
+				case 'a':
+				case 'A':
 					consumed = true;
 					setGame((g) => g.moveCursor('left'));
 					break;
 				case 'ArrowRight':
+				case 'd':
+				case 'D':
 					consumed = true;
 					setGame((g) => g.moveCursor('right'));
 					break;
 				case 'ArrowUp':
+				case 'w':
+				case 'W':
 					consumed = true;
 					setGame((g) => g.moveCursor('up'));
 					break;
 				case 'ArrowDown':
+				case 's':
+				case 'S':
 					consumed = true;
 					setGame((g) => g.moveCursor('down'));
 					break;

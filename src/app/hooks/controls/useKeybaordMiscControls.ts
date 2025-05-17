@@ -16,6 +16,7 @@ export function useKeybaordMiscControls() {
 			let consumed = false;
 			switch (key) {
 				case ' ':
+				case 'Spacebar':
 				case 'Enter':
 					if (!enableKeyboard) break;
 					if (target) {

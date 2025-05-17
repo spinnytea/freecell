@@ -114,7 +114,7 @@ export class FreeCell {
 	// settings
 	// autoFoundationLimit: AutoFoundationLimit; // XXX (techdebt) use or remove
 
-	/**
+	/*
 		IDEA (motivation) (gameplay) Automatically check "can you flourish this ace" (are the cards above it sorted?)
 		or I guess, assuming all the _other_ cards are sorted, and you auto foundation, is it a win/flourish?
 
@@ -494,6 +494,7 @@ export class FreeCell {
 		  - it's nice and simple when there aren't many ways to interact
 		  - with more control schemes sometimes overlapping, it's hard to debug exactly
 		  - some controls schemes have explicity `clearSelection().touch()` to get around it
+		  - even {@link moveByShorthand} has to do this
 		 ---
 		  - drag-and-drop just wants a lookahead "what if this card were selected"
 		  - it doesn't need to change state per se
