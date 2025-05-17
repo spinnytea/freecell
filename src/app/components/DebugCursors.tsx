@@ -5,11 +5,23 @@ import { gsap } from 'gsap/all';
 import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
 import { CardLocation, CardSequence, shorthandPosition } from '@/app/game/card/card';
-import { FixtureSizes, PEEK_DOWN, PEEK_UP } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import {
+	calcCardCoords,
+	FixtureSizes,
+	PEEK_DOWN,
+	PEEK_UP,
+} from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 
 const OVERLAY_MARGINS = 4;
+
+export type CursorType =
+	| 'available-high'
+	| 'available-low'
+	| 'cursor'
+	| 'selection'
+	| 'drag-and-drop';
 
 export function DebugCursors() {
 	const fixtureSizes = useFixtureSizes();
@@ -39,41 +51,13 @@ function LocationBox({
 	fixtureSizes,
 	location,
 }: {
-	type: string;
+	type: CursorType;
 	fixtureSizes: FixtureSizes;
 	location: CardLocation;
 }) {
 	const boxRef = useRef<HTMLDivElement | null>(null);
-	const {
-		fixture,
-		data: [d0, d1],
-	} = location;
 
-	let top = 0;
-	let left = 0;
-	let width = fixtureSizes.cardWidth;
-	let height = fixtureSizes.cardHeight;
-
-	switch (fixture) {
-		case 'cell':
-			top = fixtureSizes.home.top;
-			left = fixtureSizes.home.cellLeft[d0];
-			break;
-		case 'foundation':
-			top = fixtureSizes.home.top;
-			left = fixtureSizes.home.foundationLeft[d0];
-			break;
-		case 'deck':
-			top = fixtureSizes.deck.top;
-			left = fixtureSizes.deck.left;
-			break;
-		case 'cascade':
-			// XXX (hud) height of card if tail
-			top = fixtureSizes.tableau.top + d1 * fixtureSizes.tableau.offsetTop;
-			left = fixtureSizes.tableau.cascadeLeft[d0];
-			height = fixtureSizes.tableau.offsetTop;
-			break;
-	}
+	let { top, left, width, height } = calcCardCoords(fixtureSizes, location, type);
 
 	top -= OVERLAY_MARGINS;
 	left -= OVERLAY_MARGINS;

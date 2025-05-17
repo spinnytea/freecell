@@ -11,10 +11,13 @@ TODO (motivation) main development tasks:
 1. ~~legible `(cards)` for mobile~~
 1. ~~move `(history)` & undo~~
 1. ~~`(animation)` https://gsap.com/resources/React/ - just basic animations, like, "stagger" the card movements~~
-1. ~~`(techdebt) (animations)` refactor to help unit test animations~~
+1. ~~`(techdebt) (animation)` refactor to help unit test animations~~
 1. ~~`(newgame)` local storage, new button~~
 1. ~~`(controls)` better ease of use for click-to-move and touch~~
-1. `(drag-and-drop)` (click-to-move has been working, but sometimes you need to "force" the move you want)
+1. `(drag-and-drop)` mouse drag to move - mouse drag-drop target is entire cascade
+   - ~~basics are established~~
+   - `(controls) (drag-and-drop)` be more precise with state management, fix conflicts with other schemes
+   - `(animation) (drag-and-drop)` better trailing animation, add some polish
 
 ```
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b
@@ -25,6 +28,9 @@ TODO (motivation) main development tasks:
 
 ## Top-Level TODOs
 
+- TODO (techdebt) (motivation) unit test the "complete games" with the UI
+  - this will add some coverage to the components etc
+  - it's an integration test to prove we can start, finish, restart a game
 - TODO (more-undo) undo all the back to start
   - new games can start with a shuffle, so we don't need to click through that (unit test it / unit test history)
   - undo before deal
@@ -51,7 +57,6 @@ TODO (motivation) main development tasks:
   - snazzy explosion when you place the last card
   - based on the image svg so we can do it with any card (king, ace, whatever)
   - maybe use it for the whole animation for a win when a flourish
-- TODO (drag-and-drop) mouse drag to move - mouse drag-drop target is entire cascade
 - TODO (settings) undo limit - all, until deal, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
 - TODO (gameplay) hard vs medium vs easy
   - [FreeCell lists of difficult (and extra easy) deals](https://www.solitairelaboratory.com/fclists.html)
@@ -61,6 +66,7 @@ TODO (motivation) main development tasks:
 - IDEA (animation) auto-foundation gets faster the longer it runs
 - TODO (animation) animations after/during win state (celbration)
 - IDEA (settings) toggle for: move sequence as one vs animate in-between steps (sequence moves vs each card moves)
+- IDEA (animation) (motivation) instant replay after game is over
 - IDEA (motivation) implement War? just so it's flexible?
   - what is "it", the UI? the controls?
 - IDEA (motivation) implement Spider Solitaire, that could be fun

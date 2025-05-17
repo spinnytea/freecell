@@ -1,4 +1,4 @@
-import { CardFaces } from '@/app/components/cards/constants';
+import { CardFaces, ControlSchemes } from '@/app/components/cards/constants';
 
 export interface Settings {
 	newGameCascadeCount: number;
@@ -8,6 +8,7 @@ export interface Settings {
 	// XXX (techdebt) maybe showKeyboardCursor doesn't belong in settings, but we don't have another shared state setup yet
 	showKeyboardCursor: boolean;
 	cardFace: CardFaces | 'auto';
+	enabledControlSchemes: Set<ControlSchemes>;
 }
 
 // TODO (settings) two different deck positions, with 2 different keyboard layouts
@@ -19,5 +20,11 @@ export function calcDefaultSettings(): Settings {
 		showDebugInfo: false,
 		showKeyboardCursor: false,
 		cardFace: 'auto',
+		enabledControlSchemes: new Set([
+			ControlSchemes.Keyboard,
+			ControlSchemes.ClickToSelect,
+			ControlSchemes.ClickToMove,
+			// ControlSchemes.DragAndDrop, // TODO (drag-and-drop) impl
+		]),
 	};
 }

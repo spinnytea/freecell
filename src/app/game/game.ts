@@ -114,6 +114,21 @@ export class FreeCell {
 	// settings
 	// autoFoundationLimit: AutoFoundationLimit; // XXX (techdebt) use or remove
 
+	/*
+		IDEA (motivation) (gameplay) Automatically check "can you flourish this ace" (are the cards above it sorted?)
+		or I guess, assuming all the _other_ cards are sorted, and you auto foundation, is it a win/flourish?
+
+		I suppose a 52 check would be "sort every except, aces, above, and the card on top the ace). Can you move 1 card to get a flourishing?
+
+		Try that on the known one.
+
+		Got it: return the cards to the deck, sort the deck, and deal it all to an empty column - and then you only have to check 4 moves
+
+		Settings to check if possible (undefined, false, true). I suppose you could make a set of all possible flourishes (4×3×2×1 checks)
+	*/
+	// canFlourish?: boolean;
+	// can52CardFlourish?: boolean;
+
 	constructor({
 		cellCount = DEFAULT_NUMBER_OF_CELLS,
 		cascadeCount = DEFAULT_NUMBER_OF_CASCADES,
@@ -475,6 +490,14 @@ export class FreeCell {
 		e.g. select cursor, deselect cursor, move selection
 
 		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
+		- REVIEW (controls) `touch()` is a bit generic, wrt having both "select" and "deselect"
+		  - it's nice and simple when there aren't many ways to interact
+		  - with more control schemes sometimes overlapping, it's hard to debug exactly
+		  - some controls schemes have explicity `clearSelection().touch()` to get around it
+		  - even {@link moveByShorthand} has to do this
+		 ---
+		  - drag-and-drop just wants a lookahead "what if this card were selected"
+		  - it doesn't need to change state per se
 	*/
 	touch({
 		autoFoundation = true,
@@ -602,12 +625,10 @@ export class FreeCell {
 		Used replaying a game, starting with a seed or otherwise known deal.
 
 		it's really just "touch the first one" then "touch the second one"
-
-		@param shorthandMove
 	*/
 	moveByShorthand(shorthandMove: string, { autoFoundation }: OptionsAutoFoundation = {}): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
-		return this.setCursor(from).touch().setCursor(to).touch({ autoFoundation });
+		return this.clearSelection().setCursor(from).touch().setCursor(to).touch({ autoFoundation });
 	}
 
 	/**
@@ -749,6 +770,7 @@ export class FreeCell {
 		return this.setCursor(to_location).touch({ autoFoundation });
 	}
 
+	/** TODO (techdebt) rename this method "click to move" is weird; maybe cursorTouchMove */
 	clickToMove(
 		location: CardLocation,
 		{ autoMove = true, stopWithInvalid }: OptionsAutoFoundation = {}
@@ -779,6 +801,7 @@ export class FreeCell {
 		These deals are numbered from 1 to 32000.
 
 		XXX (techdebt) rename to shuffle32k, including actionText and print history
+		XXX (motivation) more shuffle options bcuz why not
 
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/

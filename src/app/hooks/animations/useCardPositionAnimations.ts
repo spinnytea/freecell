@@ -1,6 +1,7 @@
 import { MutableRefObject, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
+import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
 import { calcCardId } from '@/app/game/card/card';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
@@ -18,11 +19,23 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 		keep track of card positions, we need to animate anything that moves
 		if it hasn't moved since last time, then we don't need to animate it
 
-		IDEA (techdebt) Store previous positions on DOM? Data attr?
+		IDEA (animation) (drag-and-drop) (techdebt) Store previous positions on DOM? Data attr? Context? GSAP (like, hault an animation, and continue from current position)?
 		 - It's just t/l
 		 - accessor method for unit testing
+		---
+		 - a local previousTLs doesn't play with other animations
+		 - drag-and-drop needs to know card positions too
+
+
+		IDEA (animation) (techdebt) Initial positions
+		 - Animations don't have positions until they change
+		 - So it animates everything all at once (fine)
+		 - Iff we don't have previousTLs, then g.undo() and seed it with those.
+
+		BUG (animation) (techdebt) Refresh and then immediately "new game" doesn't animate correctly (possibly because there are no saved card positions l yet)
 	*/
 	const previousTLs = useRef(new Map<string, number[]>());
+
 	/**
 		if we change the size of the screen, then everything will animate
 		don't do any offsets, just move/update all the cards immediately
@@ -65,9 +78,13 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 
 			if (updateCardPositions.length) {
 				if (previousTimeline.current && previousTimeline.current !== timeline) {
-					previousTimeline.current
-						.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
-						.kill(); // stop animating
+					if (process.env.NODE_ENV === 'test') {
+						console.debug('speedup updateCardPositions', previousAction.type);
+					}
+					previousTimeline.current.timeScale(MULTI_ANIMATION_TIMESCALE); // speed up the previous animations
+					// previousTimeline.current
+					// 	.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
+					// 	.kill(); // stop animating
 				}
 				previousTimeline.current = timeline;
 
@@ -105,9 +122,13 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 
 			if (invalidMoveCards?.fromShorthands.length) {
 				if (previousTimeline.current && previousTimeline.current !== timeline) {
-					previousTimeline.current
-						.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
-						.kill(); // stop animating
+					if (process.env.NODE_ENV === 'test') {
+						console.debug('speedup invalidMoveCards', previousAction.type);
+					}
+					previousTimeline.current.timeScale(MULTI_ANIMATION_TIMESCALE);
+					// previousTimeline.current
+					// 	.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
+					// 	.kill(); // stop animating
 				}
 				previousTimeline.current = timeline;
 
