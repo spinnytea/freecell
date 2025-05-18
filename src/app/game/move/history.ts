@@ -379,7 +379,7 @@ export function getCardsFromInvalid(
 	cards: Card[]
 ): { from: Card[]; to: Card[] } {
 	if (previousAction.text === 'touch stop') {
-		// TODO (animation) (4-priority) animate touch stop
+		// TODO (animation) (2-priority) animate touch stop
 		return { from: [], to: [] };
 	}
 	const { fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);

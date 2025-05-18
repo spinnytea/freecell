@@ -28,10 +28,10 @@ TODO (motivation) main development tasks:
 
 ## Top-Level TODOs
 
-- TODO (techdebt) (motivation) unit test the "complete games" with the UI
+- TODO (techdebt) (motivation) (4-priority) unit test the "complete games" with the UI
   - this will add some coverage to the components etc
   - it's an integration test to prove we can start, finish, restart a game
-- TODO (more-undo) undo all the back to start
+- TODO (more-undo) (4-priority) undo all the back to start
   - new games can start with a shuffle, so we don't need to click through that (unit test it / unit test history)
   - undo before deal
   - undo before shuffle
@@ -89,7 +89,7 @@ TODO (motivation) main development tasks:
   - spitball impl: attempts positive and negative, display Math.abs(attempts), set neg when undo, set pos and increase when move
 - IDEA (theme) sounds - normally i don't like to, but some folio for moving cards should be okay
 - TODO (theme) more themes - card themes / decks / colors, background colors, etc
-- IDEA (deployment) (offline) download on android: "play offline"
+- IDEA (deployment) (offline) (3-priority) download on android: "play offline"
   - single html file? try testing that first (javascript + svg)
   - airplane mode?
 - XXX (techdebt) optimize

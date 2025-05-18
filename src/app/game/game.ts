@@ -528,7 +528,7 @@ export class FreeCell {
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length) {
-			// TODO (animation) (4-priority) animate touch stop
+			// TODO (animation) (2-priority) animate touch stop
 			//  - this isn't "invalid" so much as it is "nothing to do"
 			//  - we touched this location, and there isn't an actual action
 			//  - we can add a bit of whimmsy here, behind a conditional animation

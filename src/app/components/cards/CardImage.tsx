@@ -16,7 +16,16 @@ import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 // TODO (theme) alternate card backs?
 // TODO (theme) deck w/ kings are lions?
 // TODO (theme) dark theme cards
-// TODO (offline) if SVGCards13 is unavailable, fallback to SmolCards
+// TODO (offline) (2-priority) if SVGCards13 is unavailable, fallback to SmolCards
+// TODO (deployment) (offline) (4-priority) cardback unavailable offline
+//  - SmolCards are part of of source
+//  - CardBack image is re-requested each time
+//  - maybe keep it on/off screen, transparent, or whatever. keep it loaded
+//  - maybe use a src="data:," version as fallback
+//  - https://css-tricks.com/lodge/svg/09-svg-data-uris/
+// ---
+//  - import Logo from '../public/logo.svg';
+//  - <Image src={Logo} unoptimized />
 export function CardImage({
 	hidden = false,
 	rank,

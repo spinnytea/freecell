@@ -24,6 +24,8 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 // IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
 /*
 TODO (controls) (3-priority) More control over where next card moves (i.e. cannot move to foundation if multiple valid moves)
+ - which is really because click-to-move is the only available control scheme on mobile
+ - this is solved with click-to-select, any keyboard, and drag-and-drop
 TODO (controls) (3-priority) Can't put the three in the foundation
  9C KC 8S 4D AC 2H 2D
  AS KD 2C 7C 6S 7D 9H JC
