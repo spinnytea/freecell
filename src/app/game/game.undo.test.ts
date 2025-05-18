@@ -15,7 +15,10 @@ function undoUntilStart(game: FreeCell): FreeCell {
 	return game;
 }
 
+// FIXME test.todo
 // TODO (techdebt) (more-undo) (history) unit test history
+// TODO (techdebt) confirm all MoveSourceType ⨉ MoveDestinationType
+//  - make a generic helper (like actionText-examples)
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
 		// TODO (more-undo) init does not undo
@@ -336,12 +339,32 @@ describe('game.undo (+ history)', () => {
 			describe('from: cascade', () => {
 				describe('single', () => {
 					// REVIEW (techdebt) do we have any control of where cards move from the deck?
-					// we can't really undo that
+					//  - we can't really undo that
+					//  - but we can write a test to prove that when we undo, the state stays the same
 					test.todo('to: deck');
 
 					test.todo('to: cell');
 
-					test.todo('to: foundation');
+					test('to: foundation', () => {
+						const game = FreeCell.parse(
+							'' + //
+								' KC         >JC QD KH KS \n' + //
+								'|QC|KD                   \n' + //
+								' hand-jammed'
+						).touch({ autoFoundation: false });
+						expect(game.print()).toBe(
+							'' + //
+								' KC         >QC QD KH KS \n' + //
+								'    KD                   \n' + //
+								' move 1h QC→JC'
+						);
+						expect(game.undo().print()).toBe(
+							'' + //
+								' KC         >JC QD KH KS \n' + //
+								' QC KD                   \n' + //
+								' hand-jammed'
+						);
+					});
 
 					describe('to: cascade', () => {
 						test('single', () => {

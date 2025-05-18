@@ -41,6 +41,7 @@ TODO (controls) (3-priority) Can't put the three in the foundation
  move 53 3D→4C
 */
 
+/** higher priorities take precidence */
 export const MoveDestinationTypePriorities: {
 	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
 } = {
@@ -57,7 +58,7 @@ export const MoveDestinationTypePriorities: {
 		'cascade:empty': 2,
 		'cascade:sequence': 4,
 	},
-	// XXX (controls) foundation: down from foundation means "back into play?"
+	// XXX (controls) foundation: down from foundation means "back into play?" that's not a valid move
 	'foundation': {
 		'cell': 1,
 		'foundation': 4,

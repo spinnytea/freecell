@@ -28,6 +28,7 @@ TODO (motivation) main development tasks:
 
 ## Top-Level TODOs
 
+- FIXME review all (more-undo), are the done, do they need to be renamed?
 - TODO (techdebt) (motivation) (4-priority) unit test the "complete games" with the UI
   - this will add some coverage to the components etc
   - it's an integration test to prove we can start, finish, restart a game
