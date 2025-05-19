@@ -1399,9 +1399,63 @@ describe('game.touch', () => {
 			describe('sequence', () => {
 				test.todo('to: deck');
 
-				test.todo('to: cell');
+				test('to: cell', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'>            7C 8D TH KS \n' + //
+							'   |TC|   KD JH          \n' + //
+							'   |9D|   QC             \n' + //
+							'   |8C|   JD             \n' + //
+							' hand-jammed'
+					).touch();
+					expect(game.print()).toBe(
+						'' + //
+							'>            7C 8D TH KS \n' + //
+							'   |TC|   KD JH          \n' + //
+							'   |9D|   QC             \n' + //
+							'   |8C|   JD             \n' + //
+							':d KH KC QH QD JC TD 9C \n' +
+							' invalid move 2a TC-9D-8C→cell'
+					);
+					expect(game.print({ includeHistory: true })).toBe(
+						'' + //
+							'             7C 8D TH KS \n' + //
+							'    TC    KD JH          \n' + //
+							'    9D    QC             \n' + //
+							'    8C    JD             \n' + //
+							':d KH KC QH QD JC TD 9C \n' +
+							' hand-jammed'
+					);
+				});
 
-				test.todo('to: foundation');
+				test('to: foundation', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'            >7C 8D TH KS \n' + //
+							'   |TC|   KD JH          \n' + //
+							'   |9D|   QC             \n' + //
+							'   |8C|   JD             \n' + //
+							' hand-jammed'
+					).touch();
+					expect(game.print()).toBe(
+						'' + //
+							'            >7C 8D TH KS \n' + //
+							'   |TC|   KD JH          \n' + //
+							'   |9D|   QC             \n' + //
+							'   |8C|   JD             \n' + //
+							':d KH KC QH QD JC TD 9C \n' +
+							' invalid move 2h TC-9D-8C→7C'
+					);
+					expect(game.print({ includeHistory: true })).toBe(
+						'' + //
+							'             7C 8D TH KS \n' + //
+							'    TC    KD JH          \n' + //
+							'    9D    QC             \n' + //
+							'    8C    JD             \n' + //
+							':d KH KC QH QD JC TD 9C \n' +
+							' hand-jammed'
+					);
+				});
 
 				describe('to: cascade', () => {
 					beforeEach(() => {

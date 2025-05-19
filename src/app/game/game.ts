@@ -970,6 +970,11 @@ export class FreeCell {
 				isLocationEqual(selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
 			) {
 				str += '|';
+			} else if (
+				selection &&
+				isLocationEqual(selection.location, { fixture: 'foundation', data: [0] })
+			) {
+				str += '|';
 			} else {
 				str += ' ';
 			}
@@ -981,11 +986,17 @@ export class FreeCell {
 				.join('');
 
 			// last col
-			str += getPrintSeparator(
-				{ fixture: 'foundation', data: [this.foundations.length - 1] },
-				null,
-				selection
-			);
+			if (
+				selection &&
+				isLocationEqual(selection.location, {
+					fixture: 'foundation',
+					data: [this.foundations.length - 1],
+				})
+			) {
+				str += '|';
+			} else {
+				str += ' ';
+			}
 		} else {
 			// if no cursor/selection in home row
 			str += ' ' + this.cells.map((card) => shorthandCard(card)).join(' ');
@@ -1324,7 +1335,11 @@ export class FreeCell {
 			} else {
 				cursor = { fixture: 'foundation', data: [home_cursor_index - cellCount] };
 			}
-			if (home_selection_index > -1 && home_cursor_index === home_selection_index - 1) {
+			if (
+				home_selection_index > -1 &&
+				home_cursor_index === home_selection_index - 1 &&
+				home_spaces[home_selection_index + 1] !== '|'
+			) {
 				home_selection_index--;
 			}
 		}
@@ -1345,7 +1360,11 @@ export class FreeCell {
 					Math.floor(tableau_cursor_index / (cascadeCount + 1)),
 				],
 			};
-			if (tableau_selection_index > -1 && tableau_cursor_index === tableau_selection_index - 1) {
+			if (
+				tableau_selection_index > -1 &&
+				tableau_cursor_index === tableau_selection_index - 1 &&
+				tableau_spaces[tableau_selection_index + 1] !== '|'
+			) {
 				tableau_selection_index--;
 			}
 		}
