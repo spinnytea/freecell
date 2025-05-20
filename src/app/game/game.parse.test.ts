@@ -707,10 +707,36 @@ describe('game.parse', () => {
 			test.each(cursor_locations)('cursor %s', (c) => {
 				const selection_location = JSON.parse(s) as CardLocation;
 				const cursor_location = JSON.parse(c) as CardLocation;
+
 				const g2 = game.setCursor(selection_location).touch().setCursor(cursor_location);
 				expect(g2.cursor).toEqual(cursor_location);
 				expect(g2.selection?.location).toEqual(selection_location);
-				expect(game.print()).toBe(FreeCell.parse(game.print()).print());
+
+				const print = g2.print();
+				expect(print).toBe(FreeCell.parse(g2.print()).print());
+
+				// there is always 1 cursor
+				expect((print.match(/>/g) ?? []).length).toBe(1);
+
+				// there is always 2 selection bars (in these cases, no squences), unless...
+				let selCount = 2;
+				// the cursor and selection are the same (overlaps left)
+				if (c === s) selCount = 1;
+				// the curror is immediatly after the selection (overlaps right)
+				if (
+					cursor_location.fixture === selection_location.fixture &&
+					cursor_location.data[0] === selection_location.data[0] + 1 &&
+					cursor_location.data[1] === selection_location.data[1]
+				)
+					selCount = 1;
+				// special case for curror is immediatly after the selection (straddles home row, overlaps right)
+				// (no special case for left, because they would be the same position)
+				if (
+					c === '{ "fixture": "foundation", "data": [0] }' &&
+					s === '{ "fixture": "cell", "data": [3] }'
+				)
+					selCount = 1;
+				expect((print.match(/\|/g) ?? []).length).toBe(selCount);
 			});
 		});
 	});
