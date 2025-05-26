@@ -3,6 +3,7 @@ import {
 	CardLocation,
 	findCard,
 	getSequenceAt,
+	initializeDeck,
 	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
 	shorthandPosition,
@@ -103,10 +104,12 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 	switch (parsePreviousActionType(actionText).type) {
 		case 'init':
 			// silent failure
-			// it's not wrong to try to undo this, it just doesn't do anything
+			// it's not "wrong" to attempt an undo, it just doesn't do anything
 			return null;
-		case 'shuffle': // TODO (history) undo shuffle: confirm seed
-		case 'deal': // TODO (history) undo deal: options (demo, most)
+		case 'shuffle':
+			// we don't have a chain of shuffles, so we can just reset to initial values
+			return initializeDeck();
+		case 'deal': // TODO (history) (more-undo) undo deal: options (demo, most)
 			return null;
 		case 'move':
 			return undoMove(game, actionText);

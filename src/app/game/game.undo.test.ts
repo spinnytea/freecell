@@ -28,10 +28,17 @@ describe('game.undo (+ history)', () => {
 			expect(game.undo()).toBe(game);
 		});
 
-		// TODO (more-undo) undo before shuffle for a new seed
-		test.todo('shuffle');
+		test('shuffle', () => {
+			const game = new FreeCell();
+			const shuffled = game.shuffle32();
+			expect(shuffled.previousAction.type).toBe('shuffle');
+			const undid = shuffled.undo();
+			expect(undid.previousAction.gameFunction).toBe('undo');
+			delete undid.previousAction.gameFunction;
+			expect(undid).toEqual(game);
+		});
 
-		// TODO (more-undo) undo before deal
+		// FIXME test (more-undo) undo before deal
 		test.todo('deal');
 
 		// history does not keep track of the cursor

@@ -7,6 +7,7 @@ import {
 	CardSH,
 	cloneCards,
 	getSequenceAt,
+	initializeDeck,
 	isLocationEqual,
 	parseShorthandCard,
 	RankList,
@@ -44,6 +45,7 @@ const DEFAULT_NUMBER_OF_CASCADES = 8;
 const MIN_CELL_COUNT = 1;
 const MAX_CELL_COUNT = 6;
 
+const INIT_CURSOR_LOCATION: CardLocation = { fixture: 'deck', data: [0] };
 const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 
 interface OptionsAutoFoundation {
@@ -195,27 +197,15 @@ export class FreeCell {
 					`Cannot have more then 10 cascades; requested "${cascadeCount.toString(10)}".`
 				);
 
-			this.cards = new Array<Card>();
-
-			// initialize deck
-			RankList.forEach((rank) => {
-				SuitList.forEach((suit) => {
-					const card: Card = {
-						rank,
-						suit,
-						location: { fixture: 'deck', data: [this.deck.length] },
-					};
-					this.cards.push(card);
-					this.deck.push(card);
-				});
-			});
+			this.deck = initializeDeck();
+			this.cards = [...this.deck];
 
 			this.win = false;
 		}
 
 		// clamp cursor is a helper in case the game changes and the cursor is no longer valid
 		// it prevents us from having to manually specify it every time
-		this.cursor = this.__clampCursor(cursor);
+		this.cursor = this.__clampCursor(cursor ?? INIT_CURSOR_LOCATION);
 
 		// selection & available moves are _not_ checked for validity
 		// they should be reset any time we move a card
@@ -620,6 +610,12 @@ export class FreeCell {
 			availableMoves: null,
 			history,
 		});
+
+		// HACK (techdebt) because new game history is not ['init']
+		if (action.text === 'init partial' && moveToUndo.startsWith('shuffle')) {
+			didUndo.history.pop();
+			didUndo.previousAction.text = 'init';
+		}
 
 		// redo single move
 		if (
