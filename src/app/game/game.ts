@@ -118,6 +118,8 @@ export class FreeCell {
 		IDEA (motivation) (gameplay) Automatically check "can you flourish this ace" (are the cards above it sorted?)
 		or I guess, assuming all the _other_ cards are sorted, and you auto foundation, is it a win/flourish?
 
+		TODO (motivation) (animation) Animation around aces that can flourish, immediately after dealing.
+
 		I suppose a 52 check would be "sort every except, aces, above, and the card on top the ace). Can you move 1 card to get a flourishing?
 
 		Try that on the known one.
@@ -601,9 +603,22 @@ export class FreeCell {
 		const action = parsePreviousActionType(history.pop() ?? 'init partial');
 		action.gameFunction = 'undo';
 
+		// TODO (techdebt) remove 'hand-jammed' special case from here?
+		const cursor =
+			action.text === 'hand-jammed'
+				? undefined
+				: parseCursorFromPreviousActionText(action.text, cards);
+
 		// we _need_ an action in __clone
 		// __clone will add it back to the history
-		const didUndo = this.__clone({ action, history, cards, selection: null, availableMoves: null });
+		const didUndo = this.__clone({
+			action,
+			cards,
+			cursor,
+			selection: null,
+			availableMoves: null,
+			history,
+		});
 
 		// redo single move
 		if (
@@ -957,6 +972,11 @@ export class FreeCell {
 				isLocationEqual(selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
 			) {
 				str += '|';
+			} else if (
+				selection &&
+				isLocationEqual(selection.location, { fixture: 'foundation', data: [0] })
+			) {
+				str += '|';
 			} else {
 				str += ' ';
 			}
@@ -968,11 +988,17 @@ export class FreeCell {
 				.join('');
 
 			// last col
-			str += getPrintSeparator(
-				{ fixture: 'foundation', data: [this.foundations.length - 1] },
-				null,
-				selection
-			);
+			if (
+				selection &&
+				isLocationEqual(selection.location, {
+					fixture: 'foundation',
+					data: [this.foundations.length - 1],
+				})
+			) {
+				str += '|';
+			} else {
+				str += ' ';
+			}
 		} else {
 			// if no cursor/selection in home row
 			str += ' ' + this.cells.map((card) => shorthandCard(card)).join(' ');
@@ -1311,7 +1337,11 @@ export class FreeCell {
 			} else {
 				cursor = { fixture: 'foundation', data: [home_cursor_index - cellCount] };
 			}
-			if (home_selection_index > -1 && home_cursor_index === home_selection_index - 1) {
+			if (
+				home_selection_index > -1 &&
+				home_cursor_index === home_selection_index - 1 &&
+				home_spaces[home_selection_index + 1] !== '|'
+			) {
 				home_selection_index--;
 			}
 		}
@@ -1332,7 +1362,11 @@ export class FreeCell {
 					Math.floor(tableau_cursor_index / (cascadeCount + 1)),
 				],
 			};
-			if (tableau_selection_index > -1 && tableau_cursor_index === tableau_selection_index - 1) {
+			if (
+				tableau_selection_index > -1 &&
+				tableau_cursor_index === tableau_selection_index - 1 &&
+				tableau_spaces[tableau_selection_index + 1] !== '|'
+			) {
 				tableau_selection_index--;
 			}
 		}

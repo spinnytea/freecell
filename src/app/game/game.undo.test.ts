@@ -15,11 +15,19 @@ function undoUntilStart(game: FreeCell): FreeCell {
 	return game;
 }
 
+// TODO (more-undo) test.todo
 // TODO (techdebt) (more-undo) (history) unit test history
+// TODO (techdebt) confirm all MoveSourceType ⨉ MoveDestinationType
+//  - make a generic helper (like actionText-examples)
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
 		// TODO (more-undo) init does not undo
-		test.todo('init');
+		test('init', () => {
+			const game = new FreeCell();
+			expect(game.previousAction.type).toBe('init');
+			expect(game).toBe(game);
+			expect(game.undo()).toBe(game);
+		});
 
 		// TODO (more-undo) undo before shuffle for a new seed
 		test.todo('shuffle');
@@ -28,13 +36,138 @@ describe('game.undo (+ history)', () => {
 		test.todo('deal');
 
 		// history does not keep track of the cursor
-		test.todo('cursor');
+		test('cursor', () => {
+			let game = FreeCell.parse(
+				'' + //
+					' KC>QC       JC KD KH KS \n' + //
+					'                         \n' + //
+					' move cb QC→cell\n' +
+					' hand-jammed'
+			)
+				.moveCursor('left')
+				.moveCursor('left');
+
+			expect(game.print()).toBe(
+				'' + //
+					' KC QC       JC KD KH>KS \n' + //
+					'                         \n' + //
+					' cursor left w'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					' KC QC       JC KD KH KS \n' + //
+					'                         \n' + //
+					' move cb QC→cell\n' +
+					' hand-jammed'
+			);
+			expect(game.cursor).toEqual({ fixture: 'foundation', data: [3] });
+			expect(game.history).toEqual(['hand-jammed', 'move cb QC→cell']);
+
+			game = game.undo();
+
+			expect(game.print()).toBe(
+				'' + //
+					' KC    QC    JC KD KH>KS \n' + //
+					'                         \n' + //
+					' hand-jammed'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					' KC    QC    JC KD KH KS \n' + //
+					'                         \n' + //
+					' hand-jammed'
+			);
+			expect(game.cursor).toEqual({ fixture: 'foundation', data: [3] });
+			expect(game.history).toEqual(['hand-jammed']);
+		});
 
 		// history does not keep track of the selection
-		test.todo('select');
+		test('select', () => {
+			let game = FreeCell.parse(
+				'' + //
+					' KC>QC       JC KD KH KS \n' + //
+					'                         \n' + //
+					' move cb QC→cell\n' +
+					' hand-jammed'
+			).touch();
+
+			expect(game.print()).toBe(
+				'' + //
+					' KC>QC|      JC KD KH KS \n' + //
+					'                         \n' + //
+					' select b QC'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					' KC QC       JC KD KH KS \n' + //
+					'                         \n' + //
+					' move cb QC→cell\n' +
+					' hand-jammed'
+			);
+			expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+			expect(game.history).toEqual(['hand-jammed', 'move cb QC→cell']);
+
+			game = game.undo();
+
+			expect(game.print()).toBe(
+				'' + //
+					' KC>   QC    JC KD KH KS \n' + //
+					'                         \n' + //
+					' hand-jammed'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					' KC    QC    JC KD KH KS \n' + //
+					'                         \n' + //
+					' hand-jammed'
+			);
+			expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+			expect(game.history).toEqual(['hand-jammed']);
+		});
 
 		// history does not keep track of the selection
-		test.todo('deselect');
+		test('deselect', () => {
+			let game = FreeCell.parse(
+				'' + //
+					' KC>QC|      JC KD KH KS \n' + //
+					'                         \n' + //
+					' move cb QC→cell\n' +
+					' hand-jammed'
+			).touch();
+
+			expect(game.print()).toBe(
+				'' + //
+					' KC>QC       JC KD KH KS \n' + //
+					'                         \n' + //
+					' deselect b QC'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					' KC QC       JC KD KH KS \n' + //
+					'                         \n' + //
+					' move cb QC→cell\n' +
+					' hand-jammed'
+			);
+			expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+			expect(game.history).toEqual(['hand-jammed', 'move cb QC→cell']);
+
+			game = game.undo();
+
+			expect(game.print()).toBe(
+				'' + //
+					' KC>   QC    JC KD KH KS \n' + //
+					'                         \n' + //
+					' hand-jammed'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					' KC    QC    JC KD KH KS \n' + //
+					'                         \n' + //
+					' hand-jammed'
+			);
+			expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+			expect(game.history).toEqual(['hand-jammed']);
+		});
 
 		/** written as original move from→to, so we run the undo from←to */
 		describe('move', () => {
@@ -213,6 +346,16 @@ describe('game.undo (+ history)', () => {
 						// 	expect(game.previousAction.text).toEqual('invalid move b2 TC→JD');
 						// 	expect(game.history).toEqual(['hand-jammed']);
 						// 	// XXX (techdebt) what is should be
+						// 	expect(game.print()).toBe(
+						// 		'' + //
+						// 			'             9C TD KH KS \n' + //
+						// 			' KC KD                   \n' + //
+						// 			' QD QC                   \n' + //
+						// 			' JC JD                   \n' + //
+						// 			'    TC                   \n' + //
+						// 			' move b2 TC→JD\n' + //
+						// 			' hand-jammed'
+						// 	);
 						// 	expect(game.print({ includeHistory: true })).toBe(
 						// 		'' + //
 						// 			'             9C TD KH KS \n' + //
@@ -336,12 +479,53 @@ describe('game.undo (+ history)', () => {
 			describe('from: cascade', () => {
 				describe('single', () => {
 					// REVIEW (techdebt) do we have any control of where cards move from the deck?
-					// we can't really undo that
+					//  - we can't really undo that
+					//  - but we can write a test to prove that when we undo, the state stays the same
 					test.todo('to: deck');
 
-					test.todo('to: cell');
+					test('to: cell', () => {
+						const game = FreeCell.parse(
+							'' + //
+								' KC>         JC QD KH KS \n' + //
+								'|QC|KD                   \n' + //
+								' hand-jammed'
+						).touch({ autoFoundation: false });
+						expect(game.print({ includeHistory: true })).toBe(
+							'' + //
+								' KC QC       JC QD KH KS \n' + //
+								'    KD                   \n' + //
+								' move 1b QC→cell\n' +
+								' hand-jammed'
+						);
+						expect(game.undo().print()).toBe(
+							'' + //
+								' KC>         JC QD KH KS \n' + //
+								' QC KD                   \n' + //
+								' hand-jammed'
+						);
+					});
 
-					test.todo('to: foundation');
+					test('to: foundation', () => {
+						const game = FreeCell.parse(
+							'' + //
+								' KC         >JC QD KH KS \n' + //
+								'|QC|KD                   \n' + //
+								' hand-jammed'
+						).touch({ autoFoundation: false });
+						expect(game.print({ includeHistory: true })).toBe(
+							'' + //
+								' KC          QC QD KH KS \n' + //
+								'    KD                   \n' + //
+								' move 1h QC→JC\n' +
+								' hand-jammed'
+						);
+						expect(game.undo().print()).toBe(
+							'' + //
+								' KC         >JC QD KH KS \n' + //
+								' QC KD                   \n' + //
+								' hand-jammed'
+						);
+					});
 
 					describe('to: cascade', () => {
 						test('single', () => {
@@ -382,7 +566,56 @@ describe('game.undo (+ history)', () => {
 
 							test.todo('middle');
 
-							test.todo('bottom');
+							test('bottom', () => {
+								let game = FreeCell.parse(
+									'' + //
+										'>            TC 8D KH KS \n' + //
+										'    TD KC KD    9D       \n' + //
+										'       QD QC             \n' + //
+										'       JC JD             \n' + //
+										' hand-jammed'
+								)
+									.setCursor({ fixture: 'cascade', data: [1, 0] })
+									.touch()
+									.setCursor({ fixture: 'cascade', data: [2, 2] })
+									.touch({ autoFoundation: false });
+								expect(game.print()).toBe(
+									'' + //
+										'             TC 8D KH KS \n' + //
+										'       KC KD    9D       \n' + //
+										'       QD QC             \n' + //
+										'      >JC JD             \n' + //
+										'       TD                \n' + //
+										' move 23 TD→JC'
+								);
+								expect(game.print({ includeHistory: true })).toBe(
+									'' + //
+										'             TC 8D KH KS \n' + //
+										'       KC KD    9D       \n' + //
+										'       QD QC             \n' + //
+										'       JC JD             \n' + //
+										'       TD                \n' + //
+										' move 23 TD→JC\n' +
+										' hand-jammed'
+								);
+								game = game.undo();
+								expect(game.print()).toBe(
+									'' + //
+										'             TC 8D KH KS \n' + //
+										'    TD KC KD    9D       \n' + //
+										'       QD QC             \n' + //
+										'      >JC JD             \n' + //
+										' hand-jammed'
+								);
+								expect(game.print({ includeHistory: true })).toBe(
+									'' + //
+										'             TC 8D KH KS \n' + //
+										'    TD KC KD    9D       \n' + //
+										'       QD QC             \n' + //
+										'       JC JD             \n' + //
+										' hand-jammed'
+								);
+							});
 						});
 
 						test.todo('empty');
@@ -394,9 +627,11 @@ describe('game.undo (+ history)', () => {
 					// we can't really undo that
 					test.todo('to: deck');
 
-					test.todo('to: cell');
+					// invalid, cannot move a sequence to a cell, so cannot undo
+					// ('to: cell');
 
-					test.todo('to: foundation');
+					// invalid, cannot move a sequence to a cell, so cannot undo
+					// todo('to: foundation');
 
 					describe('to: cascade', () => {
 						test.todo('single');
@@ -463,10 +698,10 @@ describe('game.undo (+ history)', () => {
 						' AH 8S 2D QS 4C 9H 2S 3D \n' +
 						' 5C AS 9C KH 4D    3C 4S \n' +
 						' 3S 5D KC 3H KD    6S 8D \n' +
-						' TD 7S JD 7H 8H    JC>7D \n' +
+						' TD 7S JD 7H 8H    JC 7D \n' +
 						' 5S QH 8C 9D KS    4H 6C \n' +
 						' 2H    TH 6D QD    QC 5H \n' +
-						' 9S    7C TS JS    JH    \n' +
+						' 9S    7C TS JS   >JH    \n' +
 						'       6H          TC    \n' +
 						' move 27 TC→JH'
 				);
@@ -550,8 +785,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards']);
-				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
-				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards']);
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 
 			test('win', () => {
@@ -716,7 +950,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['deal all cards', 'move 46 AC→2H']);
-				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
+				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 5] });
 
 				game = game.undo();
 				expect(game.print({ includeHistory: true })).toEqual(
@@ -737,9 +971,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['deal all cards']);
-				// XXX (undo) undo should update position of cursor
-				// expect(game.cursor).toEqual({ fixture: 'cascade', data: [3, 6] });
-				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 		});
 
@@ -797,7 +1029,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards']);
-				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 
 			test('win', () => {
@@ -919,7 +1151,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['deal all cards']);
-				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 		});
 
@@ -1112,8 +1344,7 @@ describe('game.undo (+ history)', () => {
 					getMoves(seed, { cellCount, cascadeCount }).forEach((move) => {
 						const prevState = game.print({ includeHistory: true });
 						const prevAction = game.previousAction;
-						// TODO (more-undo) (techdebt) update cursor, so we don't need to normalize the cursor
-						// const prevStateNH = game.print({ includeHistory: false });
+						const prevStateNH = game.print({ includeHistory: false });
 
 						game = game.moveByShorthand(move);
 						expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
@@ -1123,8 +1354,7 @@ describe('game.undo (+ history)', () => {
 						// same action as before the undo, except flagged as such
 						expect(afterUndo.previousAction).toEqual({ ...prevAction, gameFunction: 'undo' });
 						expect(afterUndo.print({ includeHistory: true })).toBe(prevState);
-						// TODO (more-undo) (techdebt) update cursor, so we don't need to normalize the cursor
-						// expect(afterUndo.print({ includeHistory: false })).toBe(prevStateNH);
+						expect(afterUndo.print({ includeHistory: false })).toBe(prevStateNH);
 					});
 					expect(game.win).toBe(true);
 					const movesSeed = parseMovesFromHistory(game.history);
@@ -1133,12 +1363,12 @@ describe('game.undo (+ history)', () => {
 
 					game = undoUntilStart(game);
 					expect(game.history).toEqual([`shuffle deck (${seed.toString(10)})`, 'deal all cards']);
-					let newGame = new FreeCell({ cellCount, cascadeCount }).shuffle32(seed).dealAll();
+					const newGame = new FreeCell({ cellCount, cascadeCount }).shuffle32(seed).dealAll();
 					expect(game.cards).toEqual(newGame.cards);
 
-					// TODO (more-undo) (techdebt) update cursor, so we don't need to normalize the cursor
-					game = game.setCursor({ fixture: 'cell', data: [0] });
-					newGame = newGame.setCursor({ fixture: 'cell', data: [0] });
+					expect(game.previousAction.gameFunction).toBe('undo');
+					delete game.previousAction.gameFunction;
+
 					expect(newGame).toEqual(game);
 				});
 			}
