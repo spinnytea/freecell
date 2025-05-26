@@ -15,7 +15,6 @@ function undoUntilStart(game: FreeCell): FreeCell {
 	return game;
 }
 
-// TODO (more-undo) test.todo
 // TODO (techdebt) (more-undo) (history) unit test history
 // TODO (techdebt) confirm all MoveSourceType ⨉ MoveDestinationType
 //  - make a generic helper (like actionText-examples)
