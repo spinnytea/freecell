@@ -24,6 +24,7 @@ import {
 	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
 	parsePreviousActionType,
+	PREVIOUS_ACTION_TYPE_IS_START_OF_GAME,
 	PreviousAction,
 } from '@/app/game/move/history';
 import {
@@ -798,6 +799,10 @@ export class FreeCell {
 	}
 
 	restart(): FreeCell {
+		if (PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(this.previousAction.type)) {
+			return this;
+		}
+
 		let prev: FreeCell;
 		const movesSeed = parseMovesFromHistory(this.history);
 		if (movesSeed) {
@@ -805,8 +810,18 @@ export class FreeCell {
 			const cascadeCount = this.tableau.length;
 			prev = new FreeCell({ cellCount, cascadeCount }).shuffle32(movesSeed.seed).dealAll();
 		} else {
-			let prevv = (prev = this.undo());
-			while ((prevv = prev.undo()) !== prev) prev = prevv;
+			// FIXME simplify
+			prev = this.undo();
+			if (!PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(prev.previousAction.type)) {
+				let prevv = prev.undo();
+				while (
+					prevv !== prev &&
+					!PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(prev.previousAction.type)
+				) {
+					prev = prevv;
+					prevv = prev.undo();
+				}
+			}
 		}
 		prev.previousAction.gameFunction = 'restart';
 		return prev;

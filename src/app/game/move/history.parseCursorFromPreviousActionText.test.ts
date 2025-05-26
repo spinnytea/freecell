@@ -80,7 +80,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 				// make sure all the ones that should have a cursor do have a cursor
 				const previousAction = parsePreviousActionType(actionText);
 				const EXCEPTIONS: PreviousActionType[] = ['auto-foundation'];
-				const canBeInHistory = PREVIOUS_ACTION_TYPE_IN_HISTORY.includes(previousAction.type);
+				const canBeInHistory = PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type);
 				const isException = EXCEPTIONS.includes(previousAction.type);
 				const canFindCursor = !!cursor;
 				expect(canFindCursor || !canBeInHistory || isException).toBeTruthy();

@@ -1,6 +1,9 @@
 import { getMoves } from '@/app/game/catalog/solutions-catalog';
 import { FreeCell } from '@/app/game/game';
-import { parseMovesFromHistory } from '@/app/game/move/history';
+import {
+	parseMovesFromHistory,
+	PREVIOUS_ACTION_TYPE_IS_START_OF_GAME,
+} from '@/app/game/move/history';
 
 describe('game', () => {
 	test('init', () => {
@@ -382,6 +385,31 @@ describe('game', () => {
 				text: 'deal all cards',
 				type: 'deal',
 				gameFunction: 'restart',
+			});
+		});
+
+		describe('PREVIOUS_ACTION_TYPE_IS_START_OF_GAME', () => {
+			test('values', () => {
+				// if this fails, add another test
+				expect(PREVIOUS_ACTION_TYPE_IS_START_OF_GAME).toEqual(new Set(['init', 'shuffle', 'deal']));
+			});
+
+			test('init', () => {
+				const game = new FreeCell();
+				expect(game.previousAction.type).toBe('init');
+				expect(game.restart()).toBe(game);
+			});
+
+			test('shuffle', () => {
+				const game = new FreeCell().shuffle32();
+				expect(game.previousAction.type).toBe('shuffle');
+				expect(game.restart()).toBe(game);
+			});
+
+			test('deal', () => {
+				const game = new FreeCell().dealAll();
+				expect(game.previousAction.type).toBe('deal');
+				expect(game.restart()).toBe(game);
 			});
 		});
 	});
