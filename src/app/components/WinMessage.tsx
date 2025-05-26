@@ -30,6 +30,8 @@ export function WinMessage() {
 					// IDEA (animation) 52-card flourish cycles color forever
 					//  - basically, disable s/l and repeat h
 					// animate color hue, to white
+					// TODO (animation) "you win" animation should start after the cards finish moving?
+					//  - Or at least during the last one and after the auto-foundation
 					const color = { h: 0, s: 100, l: 44 }; /* #df0000 */
 					const applyColor: gsap.Callback = () => {
 						if (elementRef.current) {

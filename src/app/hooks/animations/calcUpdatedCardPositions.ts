@@ -172,6 +172,8 @@ export function calcUpdatedCardPositions({
 		// IDEA (motivation) (animation) different animations for "auto-foundation" vs "win" vs "flourish" (can just check previousAction.type)
 		// IDEA (animation) auto-foundation win needs more drama than just "do the same thing"
 		// IDEA (animation) flourish: first card goes up. then second card goes up. then third card overlaps abit ... second-to-last AND last go up at the same time
+		//  - Maybe flourish is, move one card at a time (remove overlap)
+		//  - maybe flourish is, 0 overlap at start, 100% overlap for last card
 		updateCardPositions
 			.sort((a, b) => a.previousTop - b.previousTop)
 			.sort((a, b) => a.rank - b.rank);
