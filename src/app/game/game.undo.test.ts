@@ -39,7 +39,37 @@ describe('game.undo (+ history)', () => {
 		});
 
 		// FIXME test (more-undo) undo before deal
-		test.todo('deal');
+		describe('deal', () => {
+			test('default', () => {
+				const game = new FreeCell();
+				const dealt = game.dealAll();
+				expect(dealt.previousAction).toEqual({
+					text: 'deal all cards',
+					type: 'deal',
+				});
+				const undid = dealt.undo();
+				expect(undid.previousAction.gameFunction).toBe('undo');
+				delete undid.previousAction.gameFunction;
+				expect(undid).toEqual(game);
+			});
+
+			test.skip('shuffled', () => {
+				const game = new FreeCell().shuffle32(0);
+				const dealt = game.dealAll();
+				expect(dealt.previousAction).toEqual({
+					text: 'deal all cards',
+					type: 'deal',
+				});
+				const undid = dealt.undo();
+				expect(undid.previousAction.gameFunction).toBe('undo');
+				delete undid.previousAction.gameFunction;
+				expect(undid).toEqual(game);
+			});
+
+			test.todo('demo');
+
+			test.todo('keepDeck');
+		});
 
 		// history does not keep track of the cursor
 		test('cursor', () => {

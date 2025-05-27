@@ -109,8 +109,8 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 		case 'shuffle':
 			// we don't have a chain of shuffles, so we can just reset to initial values
 			return initializeDeck();
-		case 'deal': // TODO (history) (more-undo) undo deal: options (demo, most)
-			return null;
+		case 'deal':
+			return unDealAll(game);
 		case 'move':
 			return undoMove(game, actionText);
 		case 'auto-foundation':
@@ -395,4 +395,37 @@ export function getCardsFromInvalid(
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
 	}
 	return { from, to };
+}
+
+/**
+	symmetric pair to {@link FreeCell.dealAll}
+*/
+export function unDealAll(game: FreeCell): Card[] {
+	const deck: Card[] = [];
+
+	game.deck.forEach((card) => {
+		deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+	});
+
+	const maxCascadeLength = game.tableau.reduce((ret, cascade) => Math.max(cascade.length, ret), 0);
+	for (let c = maxCascadeLength; c >= 0; c--) {
+		for (let t = game.tableau.length - 1; t >= 0; t--) {
+			const card = game.tableau[t][c];
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			if (card) {
+				deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+			}
+		}
+	}
+
+	if (deck.length !== game.cards.length) {
+		throw new Error(
+			`incomplete implementation -- missing some cards (${deck.length.toString(10)} / ${game.cards.length.toString(10)})`
+		);
+	}
+
+	// FIXME copy foundation
+	// FIXME copy cell
+
+	return deck;
 }

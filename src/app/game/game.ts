@@ -612,7 +612,11 @@ export class FreeCell {
 		});
 
 		// HACK (techdebt) because new game history is not ['init']
-		if (action.text === 'init partial' && moveToUndo.startsWith('shuffle')) {
+		if (
+			action.type === 'init' &&
+			action.text === 'init partial' &&
+			(moveToUndo.startsWith('shuffle') || moveToUndo.startsWith('deal'))
+		) {
 			didUndo.history.pop();
 			didUndo.previousAction.text = 'init';
 		}
