@@ -6,6 +6,7 @@ import {
 	initializeDeck,
 	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
+	shorthandCard,
 	shorthandPosition,
 	shorthandSequence,
 } from '@/app/game/card/card';
@@ -28,12 +29,20 @@ export type PreviousActionType =
 	| 'invalid'
 	| 'auto-foundation-tween';
 
-export const PREVIOUS_ACTION_TYPE_IN_HISTORY: Set<PreviousActionType> = new Set<PreviousActionType>(
-	['init', 'shuffle', 'deal', 'move', 'move-foundation', 'auto-foundation']
-);
+export const PREVIOUS_ACTION_TYPE_IN_HISTORY = new Set<PreviousActionType>([
+	'init',
+	'shuffle',
+	'deal',
+	'move',
+	'move-foundation',
+	'auto-foundation',
+]);
 
-export const PREVIOUS_ACTION_TYPE_IS_START_OF_GAME: Set<PreviousActionType> =
-	new Set<PreviousActionType>(['init', 'shuffle', 'deal']);
+export const PREVIOUS_ACTION_TYPE_IS_START_OF_GAME = new Set<PreviousActionType>([
+	'init',
+	'shuffle',
+	'deal',
+]);
 
 /**
 	REVIEW (techdebt) (animation) is newGame even valid?
@@ -417,6 +426,20 @@ export function unDealAll(game: FreeCell): Card[] {
 			}
 		}
 	}
+
+	const order = new Map<string, number>();
+	game.cards.forEach((card, idx) => {
+		order.set(shorthandCard(card), idx);
+	});
+	deck.sort((a, b) => {
+		const oa = order.get(shorthandCard(a));
+		const ob = order.get(shorthandCard(b));
+
+		if (oa == undefined) throw new Error(`missing ${shorthandCard(a)} from undeal`);
+		if (ob == undefined) throw new Error(`missing ${shorthandCard(b)} from undeal`);
+
+		return oa - ob;
+	});
 
 	if (deck.length !== game.cards.length) {
 		throw new Error(

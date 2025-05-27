@@ -53,7 +53,7 @@ describe('game.undo (+ history)', () => {
 				expect(undid).toEqual(game);
 			});
 
-			test.skip('shuffled', () => {
+			test('shuffled', () => {
 				const game = new FreeCell().shuffle32(0);
 				const dealt = game.dealAll();
 				expect(dealt.previousAction).toEqual({
