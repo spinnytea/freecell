@@ -28,8 +28,10 @@ export function useKeybaordMiscControls() {
 					consumed = true;
 					setGame((g) => {
 						if (g.cursor.fixture === 'deck') {
-							// TODO (more-undo) shuffle if no seed
-							return g.dealAll();
+							if (g.previousAction.type === 'shuffle') {
+								return g.dealAll();
+							}
+							return g.shuffle32();
 						}
 						if (g.cursor.fixture === 'foundation' && g.win) {
 							return newGame();

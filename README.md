@@ -37,7 +37,7 @@ TODO (motivation) main development tasks:
   - undo before deal
   - undo before shuffle
   - touch deck to shuffle
-  - animate shuffle
+  - FIXME animate shuffle
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO (deployment) IPad performance is kind of awful?
 - TODO (motivation) (animation) movement needs to be fun, animations are important, every time a card moves, it must not jump

@@ -38,7 +38,6 @@ describe('game.undo (+ history)', () => {
 			expect(undid).toEqual(game);
 		});
 
-		// FIXME test (more-undo) undo before deal
 		describe('deal', () => {
 			test('default', () => {
 				const game = new FreeCell();

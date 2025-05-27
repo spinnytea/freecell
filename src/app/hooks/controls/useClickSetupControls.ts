@@ -22,8 +22,7 @@ export function useClickSetupControls() {
 			setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 		} else if (game.deck.length) {
 			// click to deal
-			// TODO (more-undo) shuffle if no seed
-			setGame((g) => g.dealAll());
+			setGame((g) => (g.previousAction.type === 'shuffle' ? g.dealAll() : g.shuffle32()));
 			setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 		}
 	}
