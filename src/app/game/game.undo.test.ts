@@ -47,6 +47,18 @@ describe('game.undo (+ history)', () => {
 					text: 'deal all cards',
 					type: 'deal',
 				});
+				expect(dealt.print()).toBe(
+					'' +
+						'>                        \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+						' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
+						' AS AH AD AC             \n' +
+						' deal all cards'
+				);
 				const undid = dealt.undo();
 				expect(undid.previousAction.gameFunction).toBe('undo');
 				delete undid.previousAction.gameFunction;
@@ -60,15 +72,73 @@ describe('game.undo (+ history)', () => {
 					text: 'deal all cards',
 					type: 'deal',
 				});
+				// FIXME print
 				const undid = dealt.undo();
 				expect(undid.previousAction.gameFunction).toBe('undo');
 				delete undid.previousAction.gameFunction;
 				expect(undid).toEqual(game);
 			});
 
-			test.todo('demo');
+			test('demo', () => {
+				const game = new FreeCell();
+				const dealt = game.dealAll({ demo: true });
+				expect(dealt.previousAction).toEqual({
+					text: 'deal all cards',
+					type: 'deal',
+				});
+				expect(dealt.print()).toBe(
+					'' +
+						'>2S 2H 2D 2C AS AH AD AC \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+						' 3S 3H 3D 3C             \n' +
+						' deal all cards'
+				);
+				const undid = dealt.undo();
+				expect(undid.previousAction.gameFunction).toBe('undo');
+				delete undid.previousAction.gameFunction;
+				expect(undid).toEqual(game);
+			});
 
-			test.todo('keepDeck');
+			test('keepDeck', () => {
+				const game = new FreeCell();
+				const dealt = game.dealAll({ demo: true, keepDeck: true });
+				expect(dealt.previousAction).toEqual({
+					text: 'deal most cards',
+					type: 'deal',
+				});
+				expect(dealt.print()).toBe(
+					'' +
+						'                         \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+						' 3S 3H 3D 3C             \n' +
+						':d 2S 2H 2D 2C AS AH AD AC \n' + // FIXME cursor
+						' deal most cards'
+				);
+				const undid = dealt.undo();
+				expect(undid.previousAction.gameFunction).toBe('undo');
+				delete undid.previousAction.gameFunction;
+				expect(undid).toEqual(game);
+			});
+
+			describe('mangled', () => {
+				test.todo('card missing from structure (in cards)');
+
+				test.todo('card missing from cards (in deck)');
+
+				test.todo('card missing from cards (in cells)');
+
+				test.todo('card missing from cards (in foundations)');
+
+				test.todo('card missing from cards (in tableau)');
+			});
 		});
 
 		// history does not keep track of the cursor

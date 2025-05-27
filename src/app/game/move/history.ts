@@ -416,10 +416,26 @@ export function unDealAll(game: FreeCell): Card[] {
 		deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
 	});
 
+	for (let idx = game.foundations.length - 1; idx >= 0; idx--) {
+		const card = game.foundations[idx];
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (card) {
+			deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+		}
+	}
+
+	for (let idx = game.cells.length - 1; idx >= 0; idx--) {
+		const card = game.cells[idx];
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (card) {
+			deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+		}
+	}
+
 	const maxCascadeLength = game.tableau.reduce((ret, cascade) => Math.max(cascade.length, ret), 0);
-	for (let c = maxCascadeLength; c >= 0; c--) {
-		for (let t = game.tableau.length - 1; t >= 0; t--) {
-			const card = game.tableau[t][c];
+	for (let d1 = maxCascadeLength; d1 >= 0; d1--) {
+		for (let c = game.tableau.length - 1; c >= 0; c--) {
+			const card = game.tableau[c][d1];
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (card) {
 				deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
@@ -435,8 +451,10 @@ export function unDealAll(game: FreeCell): Card[] {
 		const oa = order.get(shorthandCard(a));
 		const ob = order.get(shorthandCard(b));
 
-		if (oa == undefined) throw new Error(`missing ${shorthandCard(a)} from undeal`);
-		if (ob == undefined) throw new Error(`missing ${shorthandCard(b)} from undeal`);
+		if (oa == undefined)
+			throw new Error(`undeal deck has ${shorthandCard(a)}, but game cards do not?`);
+		if (ob == undefined)
+			throw new Error(`undeal deck has ${shorthandCard(b)}, but game cards do not?`);
 
 		return oa - ob;
 	});
@@ -446,9 +464,6 @@ export function unDealAll(game: FreeCell): Card[] {
 			`incomplete implementation -- missing some cards (${deck.length.toString(10)} / ${game.cards.length.toString(10)})`
 		);
 	}
-
-	// FIXME copy foundation
-	// FIXME copy cell
 
 	return deck;
 }
