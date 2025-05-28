@@ -7,6 +7,38 @@ describe('game.parse', () => {
 		expect(() => FreeCell.parse('')).toThrow('No game string provided.');
 	});
 
+	test('init', () => {
+		const g = new FreeCell();
+		const gamePrint = g.print();
+		const gamePrintHist = g.print({ includeHistory: true });
+		const game = FreeCell.parse(gamePrint);
+		const gameHist = FreeCell.parse(gamePrintHist);
+
+		// bugfix, these got messed up
+		expect(game.history).toEqual([]);
+		expect(game.previousAction).toEqual({
+			text: 'init',
+			type: 'init',
+		});
+		expect(gameHist.history).toEqual([]);
+		expect(gameHist.previousAction).toEqual({
+			text: 'init',
+			type: 'init',
+		});
+
+		// this should have been all we needed to check, lol
+		expect(game).toEqual(gameHist);
+		// and we may as well check this too
+		expect(game).toEqual(g);
+		expect(gameHist).toEqual(g);
+
+		// this is how we started out testing
+		expect(game.print()).toEqual(gamePrint);
+		expect(game.print({ includeHistory: true })).toEqual(gamePrintHist);
+		expect(gameHist.print()).toEqual(gamePrint);
+		expect(gameHist.print({ includeHistory: true })).toEqual(gamePrintHist);
+	});
+
 	describe('history shorthand', () => {
 		describe('start of game', () => {
 			test('not dealt', () => {

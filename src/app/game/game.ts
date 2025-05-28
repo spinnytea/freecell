@@ -1301,15 +1301,18 @@ export class FreeCell {
 		});
 
 		line.pop();
-		const actionText = line.reverse().join('');
+		const actionText = line.reverse().join('') || 'init';
 
 		// attempt to parse the history
 		const history: string[] = [];
 		const popped = lines.pop();
 		if (!popped) {
-			// TODO (parse-history) test
 			if (parsePreviousActionType(actionText).type === 'init') {
-				history.push(actionText);
+				// XXX (techdebt) (parse-history) does 'init' belong in the history?
+				//  - so far, it's been omitted, but like, sometimes we have 'init with invalid history'
+				if (actionText && actionText !== 'init') {
+					history.push(actionText);
+				}
 			}
 		} else if (popped.startsWith(':h')) {
 			const matchSeed = /:h shuffle32 (\d+)/.exec(popped);
@@ -1381,7 +1384,7 @@ export class FreeCell {
 			//  - text we can use what history is valid; ['init partial history', ..., actionText]
 			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
 			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
-			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history'
+			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history'
 		}
 
 		// sus out the cursor/selection locations
@@ -1460,8 +1463,7 @@ export class FreeCell {
 		if (!cursor) {
 			// try to figure out the location of the cursor based on the previous move
 			for (let i = history.length - 1; !cursor && i >= 0; i--) {
-				const actionText = history[i];
-				cursor = parseCursorFromPreviousActionText(actionText, cards);
+				cursor = parseCursorFromPreviousActionText(history[i], cards);
 			}
 		}
 

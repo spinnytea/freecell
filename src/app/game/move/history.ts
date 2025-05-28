@@ -108,16 +108,23 @@ const MOVE_FOUNDATION_REGEX =
 	XXX (techdebt) `parsePreviousActionText`, allow for both "undo" and "replay"
 	 - but like, that's not important for now
 	 - yes, i want to do this, but first i should focus on history
+	 - "replay" is already being done during {@link FreeCell.parse}
+	 - check out {@link parseMovesFromHistory}
 */
 export function parseAndUndoPreviousActionText(game: FreeCell, actionText: string): Card[] | null {
 	switch (parsePreviousActionType(actionText).type) {
 		case 'init':
 			// silent failure
-			// it's not "wrong" to attempt an undo, it just doesn't do anything
+			// it's not wrong to attempt an undo, it just doesn't do anything
 			// cannot undo past this
+			// …although, this doesn't end up in the history either (yet?)
+			// FIXME test with 'init with invalid history' or 'hand-jammed'
 			return null;
 		case 'shuffle':
-			// we don't have a chain of shuffles, so we can just reset to initial values
+			// we don't have a chain of shuffles in the history, so we can just reset to initial values
+			// (there is some sugar where we can shuffle -> init -> shuffle, but that basically replaces the shuffle, it does not stack)
+			// if there _were_ multiple shuffles in the history, this would be invalid
+			// but we have to assume there are not
 			return initializeDeck();
 		case 'deal':
 			return unDealAll(game);
@@ -130,8 +137,8 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 		case 'cursor':
 		case 'select':
 		case 'deselect':
-			// no change, but i guess we can pop the history item
-			// how did this end up in the history in the first place?
+			// no change, just pop the history item
+			// …how did this end up in the history in the first place?
 			return game.cards;
 		case 'invalid':
 		case 'auto-foundation-tween':

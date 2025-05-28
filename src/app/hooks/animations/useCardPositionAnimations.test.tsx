@@ -844,13 +844,51 @@ describe('useCardPositionAnimations', () => {
 		});
 
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'shuffle deck (0)');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal all cards');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal most cards');
 		describe('game setup', () => {
-			test.todo('· shuffle deck (0)');
+			test('· shuffle deck (0)', () => {
+				const actionText = 'shuffle deck (0)';
+				const gameStateOne = FreeCell.parse(ACTION_TEXT_EXAMPLES[actionText]);
+				const gameStateTwo = gameStateOne.shuffle32(0);
+				const gameStateThree = gameStateTwo.undo();
+
+				// spot check
+				expect(gameStateOne.print({ includeHistory: true })).toBe(
+					new FreeCell().print({ includeHistory: true })
+				);
+				expect(gameStateOne.print({ includeHistory: true })).toBe(ACTION_TEXT_EXAMPLES[actionText]);
+				expect(gameStateTwo.previousAction.text).toBe(actionText);
+				expect(gameStateThree.print({ includeHistory: true })).toBe(
+					gameStateOne.print({ includeHistory: true })
+				);
+
+				// both →←
+				const { rerender } = render(
+					<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />
+				);
+				mockReset();
+				rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
+
+				// shuffle animation
+				expect(getCardIdsFromSpy(toSpy)).toEqual(['#cAD', '#cAD', '#cAH', '#cAH']);
+				expect(getCardIdsFromSpy(fromToSpy)).toEqual([]);
+				expect(getCardIdsFromSpy(setSpy)).toEqual(['#cAD', '#cAH']);
+				expect(addLabelSpy.mock.calls).toEqual([['shuffle']]);
+				expect(addSpy.mock.calls.length).toBe(2);
+				expect(timeScaleSpy).not.toHaveBeenCalled();
+
+				mockReset();
+				rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
+
+				expect(toSpy).not.toHaveBeenCalled();
+				expect(fromToSpy).not.toHaveBeenCalled();
+				expect(setSpy).not.toHaveBeenCalled();
+				expect(addLabelSpy).not.toHaveBeenCalled();
+				expect(addSpy).not.toHaveBeenCalled();
+				expect(timeScaleSpy).not.toHaveBeenCalled();
+			});
 
 			test.todo('· deal all cards');
 
