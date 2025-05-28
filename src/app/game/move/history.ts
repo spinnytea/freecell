@@ -114,6 +114,7 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 		case 'init':
 			// silent failure
 			// it's not "wrong" to attempt an undo, it just doesn't do anything
+			// cannot undo past this
 			return null;
 		case 'shuffle':
 			// we don't have a chain of shuffles, so we can just reset to initial values
@@ -129,9 +130,15 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 		case 'cursor':
 		case 'select':
 		case 'deselect':
+			// no change, but i guess we can pop the history item
+			// how did this end up in the history in the first place?
+			return game.cards;
 		case 'invalid':
 		case 'auto-foundation-tween':
-			throw new Error(`cannot undo move type "${actionText}"`);
+			// silent failure
+			// these shouldn't be in the history in the first place
+			// canot undo past these (stuck with them in the history)
+			return null;
 	}
 }
 

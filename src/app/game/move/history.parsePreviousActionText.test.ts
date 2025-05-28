@@ -21,6 +21,15 @@ describe('game/history.parsePreviousActionType', () => {
 			${'deal all cards'}                           | ${{ text: 'deal all cards', type: 'deal' }}
 			${'deal most cards'}                          | ${{ text: 'deal most cards', type: 'deal' }}
 			${'cursor set'}                               | ${{ text: 'cursor set', type: 'cursor' }}
+			${'cursor up'}                                | ${{ text: 'cursor up', type: 'cursor' }}
+			${'cursor left'}                              | ${{ text: 'cursor left', type: 'cursor' }}
+			${'cursor down'}                              | ${{ text: 'cursor down', type: 'cursor' }}
+			${'cursor right'}                             | ${{ text: 'cursor right', type: 'cursor' }}
+			${'cursor up w'}                              | ${{ text: 'cursor up w', type: 'cursor' }}
+			${'cursor left w'}                            | ${{ text: 'cursor left w', type: 'cursor' }}
+			${'cursor down w'}                            | ${{ text: 'cursor down w', type: 'cursor' }}
+			${'cursor right w'}                           | ${{ text: 'cursor right w', type: 'cursor' }}
+			${'cursor stop'}                              | ${{ text: 'cursor stop', type: 'cursor' }}
 			${'select 6D'}                                | ${{ text: 'select 6D', type: 'select' }}
 			${'select 4D-3S-2D'}                          | ${{ text: 'select 4D-3S-2D', type: 'select' }}
 			${'select 8 7D'}                              | ${{ text: 'select 8 7D', type: 'select' }}

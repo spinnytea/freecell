@@ -40,6 +40,15 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'deal all cards'}                           | ${[]}          | ${{ fixture: 'cell', data: [0] }}
 			${'deal most cards'}                          | ${[]}          | ${{ fixture: 'cell', data: [0] }}
 			${'cursor set'}                               | ${[]}          | ${undefined}
+			${'cursor up'}                                | ${[]}          | ${undefined}
+			${'cursor left'}                              | ${[]}          | ${undefined}
+			${'cursor down'}                              | ${[]}          | ${undefined}
+			${'cursor right'}                             | ${[]}          | ${undefined}
+			${'cursor up w'}                              | ${[]}          | ${undefined}
+			${'cursor left w'}                            | ${[]}          | ${undefined}
+			${'cursor down w'}                            | ${[]}          | ${undefined}
+			${'cursor right w'}                           | ${[]}          | ${undefined}
+			${'cursor stop'}                              | ${[]}          | ${undefined}
 			${'select 6D'}                                | ${[]}          | ${undefined}
 			${'select 4D-3S-2D'}                          | ${[]}          | ${undefined}
 			${'select 8 7D'}                              | ${[]}          | ${undefined}

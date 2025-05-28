@@ -18,7 +18,9 @@ function undoUntilStart(game: FreeCell): FreeCell {
 // TODO (techdebt) (history) finish unit tests for history
 // TODO (techdebt) confirm all MoveSourceType ⨉ MoveDestinationType
 //  - make a generic helper (like actionText-examples)
-// FIXME ACTION_TEXT_EXAMPLES
+// XXX (techdebt) (history) (more-undo) ACTION_TEXT_EXAMPLES
+//  - although, many of these don't end up in the history, so we can't really undo them
+//  - i guess this is a "but what if they _were_ in the history"
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
 		test('init', () => {
@@ -153,138 +155,147 @@ describe('game.undo (+ history)', () => {
 			});
 		});
 
-		// history does not keep track of the cursor
-		test('cursor', () => {
-			let game = FreeCell.parse(
-				'' + //
-					' KC>QC       JC KD KH KS \n' + //
-					'                         \n' + //
-					' move cb QC→cell\n' +
-					' hand-jammed'
-			)
-				.moveCursor('left')
-				.moveCursor('left');
+		describe('cursor', () => {
+			test('history does not keep track of the cursor', () => {
+				let game = FreeCell.parse(
+					'' + //
+						' KC>QC       JC KD KH KS \n' + //
+						'                         \n' + //
+						' move cb QC→cell\n' +
+						' hand-jammed'
+				)
+					.moveCursor('left')
+					.moveCursor('left');
 
-			expect(game.print()).toBe(
-				'' + //
-					' KC QC       JC KD KH>KS \n' + //
-					'                         \n' + //
-					' cursor left w'
-			);
-			expect(game.print({ includeHistory: true })).toBe(
-				'' + //
-					' KC QC       JC KD KH KS \n' + //
-					'                         \n' + //
-					' move cb QC→cell\n' +
-					' hand-jammed'
-			);
-			expect(game.cursor).toEqual({ fixture: 'foundation', data: [3] });
-			expect(game.history).toEqual(['hand-jammed', 'move cb QC→cell']);
+				expect(game.print()).toBe(
+					'' + //
+						' KC QC       JC KD KH>KS \n' + //
+						'                         \n' + //
+						' cursor left w'
+				);
+				expect(game.print({ includeHistory: true })).toBe(
+					'' + //
+						' KC QC       JC KD KH KS \n' + //
+						'                         \n' + //
+						' move cb QC→cell\n' +
+						' hand-jammed'
+				);
+				expect(game.cursor).toEqual({ fixture: 'foundation', data: [3] });
+				expect(game.history).toEqual(['hand-jammed', 'move cb QC→cell']);
 
-			game = game.undo();
+				game = game.undo();
 
-			expect(game.print()).toBe(
-				'' + //
-					' KC    QC    JC KD KH>KS \n' + //
-					'                         \n' + //
-					' hand-jammed'
-			);
-			expect(game.print({ includeHistory: true })).toBe(
-				'' + //
-					' KC    QC    JC KD KH KS \n' + //
-					'                         \n' + //
-					' hand-jammed'
-			);
-			expect(game.cursor).toEqual({ fixture: 'foundation', data: [3] });
-			expect(game.history).toEqual(['hand-jammed']);
+				expect(game.print()).toBe(
+					'' + //
+						' KC    QC    JC KD KH>KS \n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
+				expect(game.print({ includeHistory: true })).toBe(
+					'' + //
+						' KC    QC    JC KD KH KS \n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
+				expect(game.cursor).toEqual({ fixture: 'foundation', data: [3] });
+				expect(game.history).toEqual(['hand-jammed']);
+			});
+
+			test.todo('made it into history');
 		});
 
-		// history does not keep track of the selection
-		test('select', () => {
-			let game = FreeCell.parse(
-				'' + //
-					' KC>QC       JC KD KH KS \n' + //
-					'                         \n' + //
-					' move cb QC→cell\n' +
-					' hand-jammed'
-			).touch();
+		describe('select', () => {
+			test('history does not keep track of the selection', () => {
+				let game = FreeCell.parse(
+					'' + //
+						' KC>QC       JC KD KH KS \n' + //
+						'                         \n' + //
+						' move cb QC→cell\n' +
+						' hand-jammed'
+				).touch();
 
-			expect(game.print()).toBe(
-				'' + //
-					' KC>QC|      JC KD KH KS \n' + //
-					'                         \n' + //
-					' select b QC'
-			);
-			expect(game.print({ includeHistory: true })).toBe(
-				'' + //
-					' KC QC       JC KD KH KS \n' + //
-					'                         \n' + //
-					' move cb QC→cell\n' +
-					' hand-jammed'
-			);
-			expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
-			expect(game.history).toEqual(['hand-jammed', 'move cb QC→cell']);
+				expect(game.print()).toBe(
+					'' + //
+						' KC>QC|      JC KD KH KS \n' + //
+						'                         \n' + //
+						' select b QC'
+				);
+				expect(game.print({ includeHistory: true })).toBe(
+					'' + //
+						' KC QC       JC KD KH KS \n' + //
+						'                         \n' + //
+						' move cb QC→cell\n' +
+						' hand-jammed'
+				);
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+				expect(game.history).toEqual(['hand-jammed', 'move cb QC→cell']);
 
-			game = game.undo();
+				game = game.undo();
 
-			expect(game.print()).toBe(
-				'' + //
-					' KC>   QC    JC KD KH KS \n' + //
-					'                         \n' + //
-					' hand-jammed'
-			);
-			expect(game.print({ includeHistory: true })).toBe(
-				'' + //
-					' KC    QC    JC KD KH KS \n' + //
-					'                         \n' + //
-					' hand-jammed'
-			);
-			expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
-			expect(game.history).toEqual(['hand-jammed']);
+				expect(game.print()).toBe(
+					'' + //
+						' KC>   QC    JC KD KH KS \n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
+				expect(game.print({ includeHistory: true })).toBe(
+					'' + //
+						' KC    QC    JC KD KH KS \n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+				expect(game.history).toEqual(['hand-jammed']);
+			});
+
+			test.todo('made it into history');
 		});
 
-		// history does not keep track of the selection
-		test('deselect', () => {
-			let game = FreeCell.parse(
-				'' + //
-					' KC>QC|      JC KD KH KS \n' + //
-					'                         \n' + //
-					' move cb QC→cell\n' +
-					' hand-jammed'
-			).touch();
+		describe('deselect', () => {
+			test('history does not keep track of the selection', () => {
+				let game = FreeCell.parse(
+					'' + //
+						' KC>QC|      JC KD KH KS \n' + //
+						'                         \n' + //
+						' move cb QC→cell\n' +
+						' hand-jammed'
+				).touch();
 
-			expect(game.print()).toBe(
-				'' + //
-					' KC>QC       JC KD KH KS \n' + //
-					'                         \n' + //
-					' deselect b QC'
-			);
-			expect(game.print({ includeHistory: true })).toBe(
-				'' + //
-					' KC QC       JC KD KH KS \n' + //
-					'                         \n' + //
-					' move cb QC→cell\n' +
-					' hand-jammed'
-			);
-			expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
-			expect(game.history).toEqual(['hand-jammed', 'move cb QC→cell']);
+				expect(game.print()).toBe(
+					'' + //
+						' KC>QC       JC KD KH KS \n' + //
+						'                         \n' + //
+						' deselect b QC'
+				);
+				expect(game.print({ includeHistory: true })).toBe(
+					'' + //
+						' KC QC       JC KD KH KS \n' + //
+						'                         \n' + //
+						' move cb QC→cell\n' +
+						' hand-jammed'
+				);
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+				expect(game.history).toEqual(['hand-jammed', 'move cb QC→cell']);
 
-			game = game.undo();
+				game = game.undo();
 
-			expect(game.print()).toBe(
-				'' + //
-					' KC>   QC    JC KD KH KS \n' + //
-					'                         \n' + //
-					' hand-jammed'
-			);
-			expect(game.print({ includeHistory: true })).toBe(
-				'' + //
-					' KC    QC    JC KD KH KS \n' + //
-					'                         \n' + //
-					' hand-jammed'
-			);
-			expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
-			expect(game.history).toEqual(['hand-jammed']);
+				expect(game.print()).toBe(
+					'' + //
+						' KC>   QC    JC KD KH KS \n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
+				expect(game.print({ includeHistory: true })).toBe(
+					'' + //
+						' KC    QC    JC KD KH KS \n' + //
+						'                         \n' + //
+						' hand-jammed'
+				);
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+				expect(game.history).toEqual(['hand-jammed']);
+			});
+
+			test.todo('made it into history');
 		});
 
 		/** written as original move from→to, so we run the undo from←to */
@@ -1291,9 +1302,13 @@ describe('game.undo (+ history)', () => {
 						' a2 c2 8h 18 31 3a 3c 37 \n' +
 						' 27 3d 37 b7 42 4b 45 '
 				);
+				expect(game.previousAction).toEqual({
+					text: 'touch stop',
+					type: 'invalid',
+				});
 				expect(game.history).toEqual(['init with invalid history', 'touch stop']);
-				// FIXME why does this explode instead of silently skip it?
-				expect(() => game.undo()).toThrow('cannot undo move type "touch stop"');
+				expect(() => game.undo()).not.toThrow();
+				expect(game.undo()).toBe(game);
 			});
 		});
 	});
