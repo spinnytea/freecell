@@ -638,9 +638,11 @@ export class FreeCell {
 	}
 
 	/**
+		don't leave the game at 'init', always have a shuffled deck
+
 		helper controls
 
-		don't leave the game at 'init', always have a shuffled deck
+		a better game feel than just {@link shuffleOrDealAll}
 
 		XXX (techdebt) move to FreeCellQOL extends FreeCell?
 	*/
@@ -650,6 +652,23 @@ export class FreeCell {
 			return game.shuffle32();
 		}
 		return game;
+	}
+
+	/**
+		at the start of the game, you need to shuffle before you deal
+
+		helper controls
+
+		redundant when used with {@link undoThenShuffle},
+		but it's good to always have an … hole card
+
+		XXX (techdebt) move to FreeCellQOL extends FreeCell?
+	*/
+	shuffleOrDealAll(): FreeCell | this {
+		if (this.previousAction.type === 'shuffle') {
+			return this.dealAll();
+		}
+		return this.shuffle32();
 	}
 
 	/**

@@ -199,7 +199,7 @@ describe('useCardPositionAnimations', () => {
 			expect(toSpy).toHaveBeenCalledTimes(4);
 			expect(toSpy.mock.calls[0]).toEqual([
 				'#cAD',
-				{ x: '-=8.000', y: '-=25.000', rotation: -8, duration: 0.15, ease: 'sine.out' },
+				{ x: '-=8', y: '-=25', rotation: '-=8', duration: 0.15, ease: 'sine.out' },
 			]);
 			expect(toSpy.mock.calls[1]).toEqual([
 				'#cAD',
@@ -207,7 +207,7 @@ describe('useCardPositionAnimations', () => {
 			]);
 			expect(toSpy.mock.calls[2]).toEqual([
 				'#cAH',
-				{ x: '+=8.000', y: '-=25.000', rotation: 8, duration: 0.15, ease: 'sine.in' },
+				{ x: '+=8', y: '-=25', rotation: '+=8', duration: 0.15, ease: 'sine.in' },
 			]);
 			expect(toSpy.mock.calls[3]).toEqual([
 				'#cAH',

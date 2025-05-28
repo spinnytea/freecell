@@ -28,10 +28,7 @@ export function useKeybaordMiscControls() {
 					consumed = true;
 					setGame((g) => {
 						if (g.cursor.fixture === 'deck') {
-							if (g.previousAction.type === 'shuffle') {
-								return g.dealAll();
-							}
-							return g.shuffle32();
+							return g.shuffleOrDealAll();
 						}
 						if (g.cursor.fixture === 'foundation' && g.win) {
 							return newGame();

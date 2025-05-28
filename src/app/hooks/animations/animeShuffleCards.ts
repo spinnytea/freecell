@@ -33,9 +33,9 @@ export function animShuffleCards({
 		tl.set(cardId, { zIndex: -BOTTOM_OF_CASCADE - 1 });
 
 		tl.to(cardId, {
-			x: `-=${SHUFFLE_X.toFixed(3)}`,
-			y: `-=${SHUFFLE_Y.toFixed(3)}`,
-			rotation: `-=${SHUFFLE_R}`,
+			x: `-=${SHUFFLE_X.toFixed(0)}`,
+			y: `-=${SHUFFLE_Y.toFixed(0)}`,
+			rotation: `-=${SHUFFLE_R.toFixed(0)}`,
 			duration: SHUFFLE_DURATION / 2,
 			ease: 'sine.out',
 		});
@@ -57,9 +57,9 @@ export function animShuffleCards({
 		tl.set(cardId, { zIndex: -BOTTOM_OF_CASCADE });
 
 		tl.to(cardId, {
-			x: `+=${SHUFFLE_X.toFixed(3)}`,
-			y: `-=${SHUFFLE_Y.toFixed(3)}`,
-			rotation: `+=${SHUFFLE_R}`,
+			x: `+=${SHUFFLE_X.toFixed(0)}`,
+			y: `-=${SHUFFLE_Y.toFixed(0)}`,
+			rotation: `+=${SHUFFLE_R.toFixed(0)}`,
 			duration: SHUFFLE_DURATION / 2,
 			ease: 'sine.in',
 		});
