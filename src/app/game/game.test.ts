@@ -376,6 +376,36 @@ describe('game', () => {
 			expect(resetWithSeed).toEqual(resetWithoutSeed);
 		});
 
+		test('won game', () => {
+			const startOfGame = new FreeCell().dealAll();
+			expect(startOfGame.print()).toEqual(
+				'' +
+					'>                        \n' +
+					' KS KH KD KC QS QH QD QC \n' +
+					' JS JH JD JC TS TH TD TC \n' +
+					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
+					' AS AH AD AC             \n' +
+					' deal all cards'
+			);
+			const winGame = startOfGame.clickToMove({ fixture: 'cascade', data: [0, 6] });
+			expect(winGame.print()).toBe(
+				'' + //
+					'            >KS KH KD KC \n' + //
+					'                         \n' + //
+					':    Y O U   W I N !    :\n' + //
+					'                         \n' + //
+					' move 1h AS→foundation (flourish 523467812345678123456781234567812345678123456781234 2S,AH,AD,AC,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)'
+			);
+			const undid = winGame.undo();
+			expect(undid.previousAction.gameFunction).toBe('undo');
+			delete undid.previousAction.gameFunction;
+			expect(undid).toEqual(startOfGame);
+			expect(undid.print()).toBe(startOfGame.print());
+		});
+
 		// new game will show the deck, restart should put us at the beginning of the game AFTER deal
 		// it would be weird and confusing to move them back to the deck
 		// it's also extra actions we don't want

@@ -849,17 +849,11 @@ export class FreeCell {
 			const cascadeCount = this.tableau.length;
 			prev = new FreeCell({ cellCount, cascadeCount }).shuffle32(movesSeed.seed).dealAll();
 		} else {
-			// FIXME simplify
 			prev = this.undo();
-			if (!PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(prev.previousAction.type)) {
-				let prevv = prev.undo();
-				while (
-					prevv !== prev &&
-					!PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(prev.previousAction.type)
-				) {
-					prev = prevv;
-					prevv = prev.undo();
-				}
+			while (!PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(prev.previousAction.type)) {
+				const prevv = prev.undo();
+				if (prevv === prev) break;
+				prev = prevv;
 			}
 		}
 		prev.previousAction.gameFunction = 'restart';
