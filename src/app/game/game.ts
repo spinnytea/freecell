@@ -822,7 +822,10 @@ export class FreeCell {
 		return this.setCursor(to_location).touch({ autoFoundation });
 	}
 
-	/** TODO (techdebt) rename this method "click to move" is weird; maybe cursorTouchMove */
+	/**
+		TODO (techdebt) rename this method "click to move" is weird; maybe cursorTouchMove
+		 - esp obvs now that it's a keyboard action, too
+	*/
 	clickToMove(
 		location: CardLocation,
 		{ autoMove = true, stopWithInvalid }: OptionsAutoFoundation = {}
