@@ -28,16 +28,9 @@ TODO (motivation) main development tasks:
 
 ## Top-Level TODOs
 
-- FIXME review all (more-undo), are the done, do they need to be renamed?
-- TODO (techdebt) (motivation) (4-priority) unit test the "complete games" with the UI
+- TODO (techdebt) (motivation) (4-priority) unit test the "complete games" (solutions-catalog) with the UI
   - this will add some coverage to the components etc
   - it's an integration test to prove we can start, finish, restart a game
-- TODO (more-undo) (4-priority) undo all the back to start
-  - new games can start with a shuffle, so we don't need to click through that (unit test it / unit test history)
-  - undo before deal
-  - undo before shuffle
-  - touch deck to shuffle
-  - animate shuffle
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO (deployment) IPad performance is kind of awful?
 - TODO (motivation) (animation) movement needs to be fun, animations are important, every time a card moves, it must not jump

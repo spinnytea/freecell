@@ -18,7 +18,7 @@ function undoUntilStart(game: FreeCell): FreeCell {
 // TODO (techdebt) (history) finish unit tests for history
 // TODO (techdebt) confirm all MoveSourceType ⨉ MoveDestinationType
 //  - make a generic helper (like actionText-examples)
-// TODO (more-undo) ACTION_TEXT_EXAMPLES
+// FIXME ACTION_TEXT_EXAMPLES
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
 		test('init', () => {
@@ -1292,7 +1292,7 @@ describe('game.undo (+ history)', () => {
 						' 27 3d 37 b7 42 4b 45 '
 				);
 				expect(game.history).toEqual(['init with invalid history', 'touch stop']);
-				// TODO (more-undo) why does this explode instead of silently skip it?
+				// FIXME why does this explode instead of silently skip it?
 				expect(() => game.undo()).toThrow('cannot undo move type "touch stop"');
 			});
 		});

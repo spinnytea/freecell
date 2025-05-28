@@ -15,7 +15,7 @@ export default function SettingsDialog() {
 		setSettings((s) => ({ ...s, showSettingsDialog: false }));
 	}
 
-	// TODO (more-undo) const disableRestart = PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(game.previousAction.type);
+	// XXX (techdebt) const disableRestart = PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(game.previousAction.type);
 	//  - Warning: Prop `disabled` did not match. Server: "" Client: "false"
 	//  - this error appears on refresh when not at the start of the game
 
