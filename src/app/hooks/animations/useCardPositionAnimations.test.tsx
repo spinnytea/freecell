@@ -196,11 +196,30 @@ describe('useCardPositionAnimations', () => {
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-			expect(toSpy).not.toHaveBeenCalled();
+			expect(toSpy).toHaveBeenCalledTimes(4);
+			expect(toSpy.mock.calls[0]).toEqual([
+				'#cAD',
+				{ x: '-=8.000', y: '-=25.000', rotation: -8, duration: 0.15, ease: 'sine.out' },
+			]);
+			expect(toSpy.mock.calls[1]).toEqual([
+				'#cAD',
+				{ x: '0', y: '0', rotation: 0, duration: 0.15, ease: 'sine.in' },
+			]);
+			expect(toSpy.mock.calls[2]).toEqual([
+				'#cAH',
+				{ x: '+=8.000', y: '-=25.000', rotation: 8, duration: 0.15, ease: 'sine.in' },
+			]);
+			expect(toSpy.mock.calls[3]).toEqual([
+				'#cAH',
+				{ x: '0', y: '0', rotation: 0, duration: 0.15, ease: 'sine.out' },
+			]);
+			// FIXME other three
 			expect(fromToSpy).not.toHaveBeenCalled();
-			expect(setSpy).not.toHaveBeenCalled();
-			expect(addLabelSpy).not.toHaveBeenCalled();
-			expect(addSpy).not.toHaveBeenCalled();
+			expect(setSpy).toHaveBeenCalledTimes(2);
+			expect(setSpy.mock.calls[0]).toEqual(['#cAD', { zIndex: -100 }]);
+			expect(setSpy.mock.calls[1]).toEqual(['#cAH', { zIndex: -99 }]);
+			expect(addLabelSpy.mock.calls).toEqual([['shuffle']]);
+			expect(addSpy).toHaveBeenCalledTimes(2);
 			expect(timeScaleSpy).not.toHaveBeenCalled();
 		});
 
