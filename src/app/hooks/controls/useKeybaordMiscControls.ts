@@ -47,9 +47,7 @@ export function useKeybaordMiscControls() {
 				case 'Z':
 					consumed = true;
 					// REVIEW (techdebt) why does g.undo run twice? (this keypress is only ran once; is this a react thing??)
-					// TODO (more-undo) if init, then shuffle
-					//  - i.e. don't just sit on it, redo/animate shuffle immediately
-					setGame((g) => g.undo());
+					setGame((g) => g.undoThenShuffle());
 					break;
 				// default:
 				// 	console.log(`unused key: "${key}"`);

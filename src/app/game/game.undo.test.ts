@@ -15,12 +15,12 @@ function undoUntilStart(game: FreeCell): FreeCell {
 	return game;
 }
 
-// TODO (techdebt) (more-undo) (history) unit test history
+// TODO (techdebt) (history) finish unit tests for history
 // TODO (techdebt) confirm all MoveSourceType ⨉ MoveDestinationType
 //  - make a generic helper (like actionText-examples)
+// TODO (more-undo) ACTION_TEXT_EXAMPLES
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
-		// TODO (more-undo) init does not undo
 		test('init', () => {
 			const game = new FreeCell();
 			expect(game.previousAction.type).toBe('init');

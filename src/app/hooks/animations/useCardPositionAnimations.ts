@@ -129,7 +129,10 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				// this is really more of an "abuse of the animation" and "fixing when something breaks"
 				// while it would be good to prevent this in the first place, it's not particularly important?
 				// and if/when we do prevent it, we still want this "just in case"
-				// FIXME fix unit tests
+				// ---
+				// adding a new animation seems to overwrite the previous (usually a good thing)
+				// e.g. move `x: here` will cancel overwrite the previous x animation
+				// but then we
 				// unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
 				// 	// XXX (animation) should this be in animUpdatedCardPositions somehow?
 				// 	const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);

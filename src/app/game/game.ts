@@ -638,9 +638,26 @@ export class FreeCell {
 	}
 
 	/**
+		helper controls
+
+		don't leave the game at 'init', always have a shuffled deck
+
+		XXX (techdebt) move to FreeCellQOL extends FreeCell?
+	*/
+	undoThenShuffle(): FreeCell | this {
+		const game = this.undo();
+		if (game !== this && game.previousAction.type === 'init') {
+			return game.shuffle32();
+		}
+		return game;
+	}
+
+	/**
 		Used replaying a game, starting with a seed or otherwise known deal.
 
 		it's really just "touch the first one" then "touch the second one"
+
+		XXX (techdebt) move to FreeCellQOL extends FreeCell?
 	*/
 	moveByShorthand(shorthandMove: string, { autoFoundation }: OptionsAutoFoundation = {}): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);

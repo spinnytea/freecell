@@ -35,7 +35,7 @@ export function animShuffleCards({
 		tl.to(cardId, {
 			x: `-=${SHUFFLE_X.toFixed(3)}`,
 			y: `-=${SHUFFLE_Y.toFixed(3)}`,
-			rotation: -SHUFFLE_R,
+			rotation: `-=${SHUFFLE_R}`,
 			duration: SHUFFLE_DURATION / 2,
 			ease: 'sine.out',
 		});
@@ -59,7 +59,7 @@ export function animShuffleCards({
 		tl.to(cardId, {
 			x: `+=${SHUFFLE_X.toFixed(3)}`,
 			y: `-=${SHUFFLE_Y.toFixed(3)}`,
-			rotation: SHUFFLE_R,
+			rotation: `+=${SHUFFLE_R}`,
 			duration: SHUFFLE_DURATION / 2,
 			ease: 'sine.in',
 		});
