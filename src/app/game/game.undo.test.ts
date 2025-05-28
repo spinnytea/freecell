@@ -71,7 +71,18 @@ describe('game.undo (+ history)', () => {
 					text: 'deal all cards',
 					type: 'deal',
 				});
-				// FIXME print
+				expect(dealt.print()).toBe(
+					'' +
+						'>                        \n' +
+						' TH 5H KS TC 6S AC TS 6C \n' +
+						' 6H QD 4S JD JS 3C 5D 3S \n' +
+						' TD QH 2D 8C 5C QS 7D 3D \n' +
+						' 9D 9H 6D JC 7S 9C 2C AH \n' +
+						' 7H 8H KH 8D KC QC 3H JH \n' +
+						' AD AS 4D 8S 9S KD 4H 7C \n' +
+						' 2S 4C 2H 5S             \n' +
+						' deal all cards'
+				);
 				const undid = dealt.undo();
 				expect(undid.previousAction.gameFunction).toBe('undo');
 				delete undid.previousAction.gameFunction;
@@ -109,6 +120,8 @@ describe('game.undo (+ history)', () => {
 					text: 'deal most cards',
 					type: 'deal',
 				});
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(dealt.cursor).toEqual({ fixture: 'deck', data: [0] });
 				expect(dealt.print()).toBe(
 					'' +
 						'                         \n' +
@@ -118,7 +131,7 @@ describe('game.undo (+ history)', () => {
 						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
 						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
 						' 3S 3H 3D 3C             \n' +
-						':d 2S 2H 2D 2C AS AH AD AC \n' + // FIXME cursor
+						':d 2S 2H 2D 2C AS AH AD>AC \n' +
 						' deal most cards'
 				);
 				const undid = dealt.undo();

@@ -213,7 +213,6 @@ describe('useCardPositionAnimations', () => {
 				'#cAH',
 				{ x: '0', y: '0', rotation: 0, duration: 0.15, ease: 'sine.out' },
 			]);
-			// FIXME other three
 			expect(fromToSpy).not.toHaveBeenCalled();
 			expect(setSpy).toHaveBeenCalledTimes(2);
 			expect(setSpy.mock.calls[0]).toEqual(['#cAD', { zIndex: -100 }]);

@@ -258,11 +258,11 @@ export class FreeCell {
 		const [d0, d1] = location.data;
 		switch (location.fixture) {
 			case 'cell':
-				if (d0 <= 0) return { fixture: 'cell', data: [0] };
+				if (d0 < 0) return { fixture: 'cell', data: [0] };
 				else if (d0 >= this.cells.length) return { fixture: 'cell', data: [this.cells.length - 1] };
 				else return location;
 			case 'foundation':
-				if (d0 <= 0) return { fixture: 'foundation', data: [0] };
+				if (d0 < 0) return { fixture: 'foundation', data: [0] };
 				else if (d0 >= this.foundations.length)
 					return { fixture: 'foundation', data: [this.foundations.length - 1] };
 				else return location;
@@ -272,7 +272,7 @@ export class FreeCell {
 				return { fixture: 'cascade', data: [n0, n1] };
 			}
 			case 'deck':
-				if (d0 <= 0) return { fixture: 'deck', data: [0] };
+				if (d0 < 0) return { fixture: 'deck', data: [0] };
 				else if (d0 >= this.deck.length) return { fixture: 'deck', data: [this.deck.length - 1] };
 				else return location;
 		}
@@ -964,7 +964,7 @@ export class FreeCell {
 				// we could just subtract one every time we deal a card
 				const reversePrevD0 = this.deck.length - this.cursor.data[0] - 1;
 				const clampD0 = Math.max(0, Math.min(reversePrevD0, game.deck.length));
-				const nextD0 = game.deck.length - 1 - clampD0;
+				const nextD0 = Math.max(0, game.deck.length - 1 - clampD0);
 				game.cursor.data[0] = nextD0;
 			}
 		}
@@ -978,6 +978,31 @@ export class FreeCell {
 
 	printFoundation(): string {
 		return this.foundations.map((card) => shorthandCard(card)).join(' ');
+	}
+
+	printDeck(cursor = this.cursor, selection = this.selection): string {
+		if (this.deck.length) {
+			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
+				// prettier-ignore
+				const deckStr = this.deck
+					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
+					.reverse()
+					.join('');
+				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
+				return `${deckStr}${lastCol}`;
+			} else {
+				// if no cursor/selection in deck
+				const deckStr = this.deck
+					.map((card) => shorthandCard(card))
+					.reverse()
+					.join(' ');
+				return ` ${deckStr} `;
+			}
+		} else if (cursor.fixture === 'deck') {
+			return `>   `;
+		} else {
+			return '';
+		}
 	}
 
 	/**
@@ -1086,25 +1111,11 @@ export class FreeCell {
 			}
 		}
 
-		if (this.deck.length && !skipDeck) {
-			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
-				// prettier-ignore
-				const deckStr = this.deck
-					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-					.reverse()
-					.join('');
-				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
-				str += `\n:d${deckStr}${lastCol}`;
-			} else {
-				// if no cursor/selection in deck
-				const deckStr = this.deck
-					.map((card) => shorthandCard(card))
-					.reverse()
-					.join(' ');
-				str += `\n:d ${deckStr} `;
+		if ((this.deck.length || cursor.fixture === 'deck') && !skipDeck) {
+			const printDeck = this.printDeck(cursor, selection);
+			if (printDeck) {
+				str += `\n:d${printDeck}`;
 			}
-		} else if (cursor.fixture === 'deck') {
-			str += `\n:d>   `;
 		}
 
 		if (this.win) {

@@ -414,6 +414,68 @@ describe('game', () => {
 		});
 	});
 
+	describe('deallAll', () => {
+		describe('update cursor', () => {
+			test('standard', () => {
+				let game = new FreeCell();
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				game = game.dealAll();
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
+				expect(game.deck.length).toBe(0);
+			});
+
+			test('demo', () => {
+				let game = new FreeCell();
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				game = game.dealAll({ demo: true });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
+				expect(game.deck.length).toBe(0);
+			});
+
+			describe('keepDeck', () => {
+				test.each`
+					startD0 | endD0 | printDeck
+					${0}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${1}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${2}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${7}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${8}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${9}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${10}   | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${11}   | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${43}   | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${44}   | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${45}   | ${1}  | ${' 2S 2H 2D 2C AS AH>AD AC '}
+					${46}   | ${2}  | ${' 2S 2H 2D 2C AS>AH AD AC '}
+					${47}   | ${3}  | ${' 2S 2H 2D 2C>AS AH AD AC '}
+					${48}   | ${4}  | ${' 2S 2H 2D>2C AS AH AD AC '}
+					${49}   | ${5}  | ${' 2S 2H>2D 2C AS AH AD AC '}
+					${50}   | ${6}  | ${' 2S>2H 2D 2C AS AH AD AC '}
+					${51}   | ${7}  | ${'>2S 2H 2D 2C AS AH AD AC '}
+				`(
+					'cursor at $startD0',
+					({
+						startD0,
+						endD0,
+						printDeck,
+					}: {
+						startD0: number;
+						endD0: number;
+						printDeck: string;
+					}) => {
+						let game = new FreeCell();
+						game = game.setCursor({ fixture: 'deck', data: [startD0] });
+						expect(game.cursor).toEqual({ fixture: 'deck', data: [startD0] });
+						game = game.dealAll({ demo: true, keepDeck: true });
+						expect(game.cursor).toEqual({ fixture: 'deck', data: [endD0] });
+						expect(game.deck.length).toBe(8);
+						expect(game.printDeck()).toBe(printDeck);
+					}
+				);
+			});
+		});
+	});
+
 	describe('parse', () => {
 		test('first (stock)', () => {
 			const game = new FreeCell().dealAll({ demo: true }).setCursor({ fixture: 'cell', data: [1] });
