@@ -17,6 +17,7 @@ describe('game/history.parsePreviousActionType', () => {
 			actionText                                    | previousAction
 			${'init'}                                     | ${{ text: 'init', type: 'init' }}
 			${'init with invalid history'}                | ${{ text: 'init with invalid history', type: 'init' }}
+			${'init partial'}                             | ${{ text: 'init partial', type: 'init' }}
 			${'shuffle deck (0)'}                         | ${{ text: 'shuffle deck (0)', type: 'shuffle' }}
 			${'deal all cards'}                           | ${{ text: 'deal all cards', type: 'deal' }}
 			${'deal most cards'}                          | ${{ text: 'deal most cards', type: 'deal' }}

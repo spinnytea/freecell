@@ -837,10 +837,14 @@ describe('useCardPositionAnimations', () => {
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init with invalid history');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init partial');
 		describe('animate init', () => {
 			test.todo('· init');
 
 			test.todo('· init with invalid history');
+
+			test.todo('· init partial');
 		});
 
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

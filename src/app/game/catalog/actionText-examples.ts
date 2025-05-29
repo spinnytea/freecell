@@ -9,6 +9,7 @@ export const FIFTY_TWO_CARD_FLOURISH =
 export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'init': '', // we cannot "take an action" to make an init
 	'init with invalid history': '', // we cannot "take an action" to make an init with invalid history
+	'init partial': '',
 	// 'hand-jammed': '', // XXX (techdebt) as much as this isn't _supposed_ to be supported, it kind of is part of the tests now
 	'shuffle deck (0)':
 		'                         \n' +

@@ -611,7 +611,7 @@ export class FreeCell {
 			history,
 		});
 
-		// HACK (techdebt) because new game history is not ['init']
+		// HACK (techdebt) (history) because new game history is not ['init']
 		if (
 			action.type === 'init' &&
 			action.text === 'init partial' &&
@@ -1385,7 +1385,7 @@ export class FreeCell {
 			//  - text we can use what history is valid; ['init partial history', ..., actionText]
 			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
 			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
-			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history'
+			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
 		}
 
 		// sus out the cursor/selection locations

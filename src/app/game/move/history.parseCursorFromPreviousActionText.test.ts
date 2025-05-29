@@ -36,6 +36,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			actionText                                    | cards          | cursor
 			${'init'}                                     | ${[]}          | ${{ fixture: 'deck', data: [0] }}
 			${'init with invalid history'}                | ${[]}          | ${{ fixture: 'deck', data: [0] }}
+			${'init partial'}                             | ${[]}          | ${{ fixture: 'deck', data: [0] }}
 			${'shuffle deck (0)'}                         | ${[]}          | ${{ fixture: 'deck', data: [0] }}
 			${'deal all cards'}                           | ${[]}          | ${{ fixture: 'cell', data: [0] }}
 			${'deal most cards'}                          | ${[]}          | ${{ fixture: 'cell', data: [0] }}

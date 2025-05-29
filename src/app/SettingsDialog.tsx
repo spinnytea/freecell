@@ -23,7 +23,7 @@ export default function SettingsDialog() {
 		// TODO (settings) (animation) two options for restart:
 		//  - as is: jump to init and do a single animation
 		//  - animate every undo step until back to the beginning
-		setGame((g) => g.restart());
+		setGame((game) => game.restart());
 	}
 
 	function handleNewGame() {
