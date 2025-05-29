@@ -196,11 +196,29 @@ describe('useCardPositionAnimations', () => {
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-			expect(toSpy).not.toHaveBeenCalled();
+			expect(toSpy).toHaveBeenCalledTimes(4);
+			expect(toSpy.mock.calls[0]).toEqual([
+				'#cAD',
+				{ x: '-=8', y: '-=25', rotation: '-=8', duration: 0.15, ease: 'sine.out' },
+			]);
+			expect(toSpy.mock.calls[1]).toEqual([
+				'#cAD',
+				{ x: '0', y: '0', rotation: 0, duration: 0.15, ease: 'sine.in' },
+			]);
+			expect(toSpy.mock.calls[2]).toEqual([
+				'#cAH',
+				{ x: '+=8', y: '-=25', rotation: '+=8', duration: 0.15, ease: 'sine.in' },
+			]);
+			expect(toSpy.mock.calls[3]).toEqual([
+				'#cAH',
+				{ x: '0', y: '0', rotation: 0, duration: 0.15, ease: 'sine.out' },
+			]);
 			expect(fromToSpy).not.toHaveBeenCalled();
-			expect(setSpy).not.toHaveBeenCalled();
-			expect(addLabelSpy).not.toHaveBeenCalled();
-			expect(addSpy).not.toHaveBeenCalled();
+			expect(setSpy).toHaveBeenCalledTimes(2);
+			expect(setSpy.mock.calls[0]).toEqual(['#cAD', { zIndex: -100 }]);
+			expect(setSpy.mock.calls[1]).toEqual(['#cAH', { zIndex: -99 }]);
+			expect(addLabelSpy.mock.calls).toEqual([['shuffle']]);
+			expect(addSpy).toHaveBeenCalledTimes(2);
 			expect(timeScaleSpy).not.toHaveBeenCalled();
 		});
 
@@ -819,20 +837,62 @@ describe('useCardPositionAnimations', () => {
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init with invalid history');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init partial');
 		describe('animate init', () => {
 			test.todo('· init');
 
 			test.todo('· init with invalid history');
+
+			test.todo('· init partial');
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'shuffle deck (0)');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal all cards');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal most cards');
 		describe('game setup', () => {
-			test.todo('· shuffle deck (0)');
+			test('· shuffle deck (0)', () => {
+				const actionText = 'shuffle deck (0)';
+				const gameStateOne = FreeCell.parse(ACTION_TEXT_EXAMPLES[actionText]);
+				const gameStateTwo = gameStateOne.shuffle32(0);
+				const gameStateThree = gameStateTwo.undo();
+
+				// spot check
+				expect(gameStateOne.print({ includeHistory: true })).toBe(
+					new FreeCell().print({ includeHistory: true })
+				);
+				expect(gameStateOne.print({ includeHistory: true })).toBe(ACTION_TEXT_EXAMPLES[actionText]);
+				expect(gameStateTwo.previousAction.text).toBe(actionText);
+				expect(gameStateThree.print({ includeHistory: true })).toBe(
+					gameStateOne.print({ includeHistory: true })
+				);
+
+				// both →←
+				const { rerender } = render(
+					<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />
+				);
+				mockReset();
+				rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
+
+				// shuffle animation
+				expect(getCardIdsFromSpy(toSpy)).toEqual(['#cAD', '#cAD', '#cAH', '#cAH']);
+				expect(getCardIdsFromSpy(fromToSpy)).toEqual([]);
+				expect(getCardIdsFromSpy(setSpy)).toEqual(['#cAD', '#cAH']);
+				expect(addLabelSpy.mock.calls).toEqual([['shuffle']]);
+				expect(addSpy.mock.calls.length).toBe(2);
+				expect(timeScaleSpy).not.toHaveBeenCalled();
+
+				mockReset();
+				rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
+
+				expect(toSpy).not.toHaveBeenCalled();
+				expect(fromToSpy).not.toHaveBeenCalled();
+				expect(setSpy).not.toHaveBeenCalled();
+				expect(addLabelSpy).not.toHaveBeenCalled();
+				expect(addSpy).not.toHaveBeenCalled();
+				expect(timeScaleSpy).not.toHaveBeenCalled();
+			});
 
 			test.todo('· deal all cards');
 
@@ -1091,9 +1151,45 @@ describe('useCardPositionAnimations', () => {
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor up');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor left');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor down');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor right');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor up w');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor left w');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor down w');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor right w');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'touch stop');
 		describe('do not animate', () => {
 			test.todo('· cursor set');
+
+			test.todo('· cursor up');
+
+			test.todo('· cursor left');
+
+			test.todo('· cursor down');
+
+			test.todo('· cursor right');
+
+			test.todo('· cursor up w');
+
+			test.todo('· cursor left w');
+
+			test.todo('· cursor down w');
+
+			test.todo('· cursor right w');
+
+			test.todo('· cursor stop');
 
 			test.todo('· touch stop');
 		});

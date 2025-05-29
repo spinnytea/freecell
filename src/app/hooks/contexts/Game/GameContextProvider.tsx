@@ -43,7 +43,9 @@ export default function GameContextProvider({
 	const settingsRef = useRef(useSettings());
 
 	const newGame = useCallback(() => {
-		// TODO (more-undo) remove shuffle32 and animate shuffle
+		// new games can start with a shuffle
+		// consider the animation an eegg
+		// TODO (techdebt) (4-priority) unit test initial state is shuffled
 		return new FreeCell({
 			cellCount: settingsRef.current.newGameCellCount,
 			cascadeCount: settingsRef.current.newGameCascadeCount,

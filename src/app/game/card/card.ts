@@ -116,6 +116,25 @@ export interface CardSequence {
 /* HELPER METHODS */
 /* ************** */
 
+// XXX (joker) will need to add an argument
+export function initializeDeck(): Card[] {
+	const deck = new Array<Card>();
+
+	// initialize deck
+	RankList.forEach((rank) => {
+		SuitList.forEach((suit) => {
+			const card: Card = {
+				rank,
+				suit,
+				location: { fixture: 'deck', data: [deck.length] },
+			};
+			deck.push(card);
+		});
+	});
+
+	return deck;
+}
+
 export function calcCardId(shorthand: string, gameBoardId?: string) {
 	let cardId = 'c' + shorthand;
 	if (gameBoardId) {

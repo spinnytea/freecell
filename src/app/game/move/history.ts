@@ -3,8 +3,10 @@ import {
 	CardLocation,
 	findCard,
 	getSequenceAt,
+	initializeDeck,
 	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
+	shorthandCard,
 	shorthandPosition,
 	shorthandSequence,
 } from '@/app/game/card/card';
@@ -27,14 +29,20 @@ export type PreviousActionType =
 	| 'invalid'
 	| 'auto-foundation-tween';
 
-export const PREVIOUS_ACTION_TYPE_IN_HISTORY: PreviousActionType[] = [
+export const PREVIOUS_ACTION_TYPE_IN_HISTORY = new Set<PreviousActionType>([
 	'init',
 	'shuffle',
 	'deal',
 	'move',
 	'move-foundation',
 	'auto-foundation',
-];
+]);
+
+export const PREVIOUS_ACTION_TYPE_IS_START_OF_GAME = new Set<PreviousActionType>([
+	'init',
+	'shuffle',
+	'deal',
+]);
 
 /**
 	REVIEW (techdebt) (animation) is newGame even valid?
@@ -100,16 +108,24 @@ const MOVE_FOUNDATION_REGEX =
 	XXX (techdebt) `parsePreviousActionText`, allow for both "undo" and "replay"
 	 - but like, that's not important for now
 	 - yes, i want to do this, but first i should focus on history
+	 - "replay" is already being done during {@link FreeCell.parse}
+	 - check out {@link parseMovesFromHistory}
 */
 export function parseAndUndoPreviousActionText(game: FreeCell, actionText: string): Card[] | null {
 	switch (parsePreviousActionType(actionText).type) {
 		case 'init':
 			// silent failure
-			// it's not wrong to try to undo this, it just doesn't do anything
+			// it's not wrong to attempt an undo, it just doesn't do anything
+			// cannot undo past this
 			return null;
-		case 'shuffle': // TODO (history) undo shuffle: confirm seed
-		case 'deal': // TODO (history) undo deal: options (demo, most)
-			return null;
+		case 'shuffle':
+			// we don't have a chain of shuffles in the history, so we can just reset to initial values
+			// (there is some sugar where we can shuffle -> init -> shuffle, but that basically replaces the shuffle, it does not stack)
+			// if there _were_ multiple shuffles in the history, this would be invalid
+			// but we have to assume there are not
+			return initializeDeck();
+		case 'deal':
+			return unDealAll(game);
 		case 'move':
 			return undoMove(game, actionText);
 		case 'auto-foundation':
@@ -119,9 +135,15 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 		case 'cursor':
 		case 'select':
 		case 'deselect':
+			// no change, just pop the history item
+			// …how did this end up in the history in the first place?
+			return game.cards;
 		case 'invalid':
 		case 'auto-foundation-tween':
-			throw new Error(`cannot undo move type "${actionText}"`);
+			// silent failure
+			// these shouldn't be in the history in the first place
+			// canot undo past these (stuck with them in the history)
+			return null;
 	}
 }
 
@@ -217,7 +239,7 @@ function parseActionTextInvalidMove(actionText: string) {
 }
 
 export function appendActionToHistory(action: PreviousAction, history: string[]) {
-	if (PREVIOUS_ACTION_TYPE_IN_HISTORY.includes(action.type)) {
+	if (PREVIOUS_ACTION_TYPE_IN_HISTORY.has(action.type)) {
 		return { action, history: [...history, action.text] };
 	}
 	return { action, history };
@@ -394,4 +416,66 @@ export function getCardsFromInvalid(
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
 	}
 	return { from, to };
+}
+
+/**
+	symmetric pair to {@link FreeCell.dealAll}
+*/
+export function unDealAll(game: FreeCell): Card[] {
+	const deck: Card[] = [];
+
+	game.deck.forEach((card) => {
+		deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+	});
+
+	for (let idx = game.foundations.length - 1; idx >= 0; idx--) {
+		const card = game.foundations[idx];
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (card) {
+			deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+		}
+	}
+
+	for (let idx = game.cells.length - 1; idx >= 0; idx--) {
+		const card = game.cells[idx];
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (card) {
+			deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+		}
+	}
+
+	const maxCascadeLength = game.tableau.reduce((ret, cascade) => Math.max(cascade.length, ret), 0);
+	for (let d1 = maxCascadeLength; d1 >= 0; d1--) {
+		for (let c = game.tableau.length - 1; c >= 0; c--) {
+			const card = game.tableau[c][d1];
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			if (card) {
+				deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+			}
+		}
+	}
+
+	const order = new Map<string, number>();
+	game.cards.forEach((card, idx) => {
+		order.set(shorthandCard(card), idx);
+	});
+	deck.sort((a, b) => {
+		const oa = order.get(shorthandCard(a));
+		const ob = order.get(shorthandCard(b));
+
+		if (oa == undefined)
+			throw new Error(`undeal deck has ${shorthandCard(a)}, but game cards do not?`);
+		if (ob == undefined)
+			throw new Error(`undeal deck has ${shorthandCard(b)}, but game cards do not?`);
+
+		return oa - ob;
+	});
+
+	if (deck.length !== game.cards.length) {
+		throw new Error(
+			`incomplete implementation -- missing some cards (${deck.length.toString(10)} / ${game.cards.length.toString(10)})`
+		);
+	}
+
+	return deck;
 }

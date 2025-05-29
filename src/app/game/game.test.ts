@@ -1,6 +1,9 @@
 import { getMoves } from '@/app/game/catalog/solutions-catalog';
 import { FreeCell } from '@/app/game/game';
-import { parseMovesFromHistory } from '@/app/game/move/history';
+import {
+	parseMovesFromHistory,
+	PREVIOUS_ACTION_TYPE_IS_START_OF_GAME,
+} from '@/app/game/move/history';
 
 describe('game', () => {
 	test('init', () => {
@@ -33,9 +36,9 @@ describe('game', () => {
 		});
 		expect(game.print()).toBe(
 			'' +
-				'>                        \n' +
 				'                         \n' +
-				':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
+				'                         \n' +
+				':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD>AC \n' +
 				' init'
 		);
 	});
@@ -373,6 +376,36 @@ describe('game', () => {
 			expect(resetWithSeed).toEqual(resetWithoutSeed);
 		});
 
+		test('won game', () => {
+			const startOfGame = new FreeCell().dealAll();
+			expect(startOfGame.print()).toEqual(
+				'' +
+					'>                        \n' +
+					' KS KH KD KC QS QH QD QC \n' +
+					' JS JH JD JC TS TH TD TC \n' +
+					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
+					' AS AH AD AC             \n' +
+					' deal all cards'
+			);
+			const winGame = startOfGame.clickToMove({ fixture: 'cascade', data: [0, 6] });
+			expect(winGame.print()).toBe(
+				'' + //
+					'            >KS KH KD KC \n' + //
+					'                         \n' + //
+					':    Y O U   W I N !    :\n' + //
+					'                         \n' + //
+					' move 1h AS→foundation (flourish 523467812345678123456781234567812345678123456781234 2S,AH,AD,AC,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)'
+			);
+			const undid = winGame.undo();
+			expect(undid.previousAction.gameFunction).toBe('undo');
+			delete undid.previousAction.gameFunction;
+			expect(undid).toEqual(startOfGame);
+			expect(undid.print()).toBe(startOfGame.print());
+		});
+
 		// new game will show the deck, restart should put us at the beginning of the game AFTER deal
 		// it would be weird and confusing to move them back to the deck
 		// it's also extra actions we don't want
@@ -382,6 +415,93 @@ describe('game', () => {
 				text: 'deal all cards',
 				type: 'deal',
 				gameFunction: 'restart',
+			});
+		});
+
+		describe('PREVIOUS_ACTION_TYPE_IS_START_OF_GAME', () => {
+			test('values', () => {
+				// if this fails, add another test
+				expect(PREVIOUS_ACTION_TYPE_IS_START_OF_GAME).toEqual(new Set(['init', 'shuffle', 'deal']));
+			});
+
+			test('init', () => {
+				const game = new FreeCell();
+				expect(game.previousAction.type).toBe('init');
+				expect(game.restart()).toBe(game);
+			});
+
+			test('shuffle', () => {
+				const game = new FreeCell().shuffle32();
+				expect(game.previousAction.type).toBe('shuffle');
+				expect(game.restart()).toBe(game);
+			});
+
+			test('deal', () => {
+				const game = new FreeCell().dealAll();
+				expect(game.previousAction.type).toBe('deal');
+				expect(game.restart()).toBe(game);
+			});
+		});
+	});
+
+	describe('deallAll', () => {
+		describe('update cursor', () => {
+			test('standard', () => {
+				let game = new FreeCell();
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				game = game.dealAll();
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
+				expect(game.deck.length).toBe(0);
+			});
+
+			test('demo', () => {
+				let game = new FreeCell();
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				game = game.dealAll({ demo: true });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
+				expect(game.deck.length).toBe(0);
+			});
+
+			describe('keepDeck', () => {
+				test.each`
+					startD0 | endD0 | printDeck
+					${0}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${1}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${2}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${7}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${8}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${9}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${10}   | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${11}   | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${43}   | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${44}   | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
+					${45}   | ${1}  | ${' 2S 2H 2D 2C AS AH>AD AC '}
+					${46}   | ${2}  | ${' 2S 2H 2D 2C AS>AH AD AC '}
+					${47}   | ${3}  | ${' 2S 2H 2D 2C>AS AH AD AC '}
+					${48}   | ${4}  | ${' 2S 2H 2D>2C AS AH AD AC '}
+					${49}   | ${5}  | ${' 2S 2H>2D 2C AS AH AD AC '}
+					${50}   | ${6}  | ${' 2S>2H 2D 2C AS AH AD AC '}
+					${51}   | ${7}  | ${'>2S 2H 2D 2C AS AH AD AC '}
+				`(
+					'cursor at $startD0',
+					({
+						startD0,
+						endD0,
+						printDeck,
+					}: {
+						startD0: number;
+						endD0: number;
+						printDeck: string;
+					}) => {
+						let game = new FreeCell();
+						game = game.setCursor({ fixture: 'deck', data: [startD0] });
+						expect(game.cursor).toEqual({ fixture: 'deck', data: [startD0] });
+						game = game.dealAll({ demo: true, keepDeck: true });
+						expect(game.cursor).toEqual({ fixture: 'deck', data: [endD0] });
+						expect(game.deck.length).toBe(8);
+						expect(game.printDeck()).toBe(printDeck);
+					}
+				);
 			});
 		});
 	});

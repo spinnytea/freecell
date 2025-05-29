@@ -3,6 +3,7 @@ import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
 import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
 import { calcCardId } from '@/app/game/card/card';
+import { animShuffleCards } from '@/app/hooks/animations/animeShuffleCards';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
 import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCardPositions';
@@ -118,6 +119,34 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					pause: secondMustComeAfter,
 				});
 				previousTLs.current = nextTLs;
+			} else {
+				// repeated deal and undo can leave the positions stranded - reset them now
+				// it's something to do with the animation overlap
+				// like, dealing takes longer than undealing
+				// so we end up with a "dealt" location, even when all the cards are in the deck
+				// swapping timeScale for totalProgress doesn't fix it
+				// ---
+				// this is really more of an "abuse of the animation" and "fixing when something breaks"
+				// while it would be good to prevent this in the first place, it's not particularly important?
+				// and if/when we do prevent it, we still want this "just in case"
+				// ---
+				// adding a new animation seems to overwrite the previous (usually a good thing)
+				// e.g. move `x: here` will cancel overwrite the previous x animation
+				// but then we
+				// unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
+				// 	// XXX (animation) should this be in animUpdatedCardPositions somehow?
+				// 	const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
+				// 	timeline.to(cardId, { top, left, zIndex, duration: 0.1 }, '<0');
+				// });
+			}
+
+			if (!updateCardPositions.length && previousAction.type === 'shuffle') {
+				timeline.addLabel('shuffle');
+				animShuffleCards({
+					timeline,
+					list: cards.filter((c) => c.location.fixture === 'deck'),
+					gameBoardIdRef,
+				});
 			}
 
 			if (invalidMoveCards?.fromShorthands.length) {

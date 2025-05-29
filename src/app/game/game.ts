@@ -7,6 +7,7 @@ import {
 	CardSH,
 	cloneCards,
 	getSequenceAt,
+	initializeDeck,
 	isLocationEqual,
 	parseShorthandCard,
 	RankList,
@@ -24,6 +25,7 @@ import {
 	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
 	parsePreviousActionType,
+	PREVIOUS_ACTION_TYPE_IS_START_OF_GAME,
 	PreviousAction,
 } from '@/app/game/move/history';
 import {
@@ -43,6 +45,7 @@ const DEFAULT_NUMBER_OF_CASCADES = 8;
 const MIN_CELL_COUNT = 1;
 const MAX_CELL_COUNT = 6;
 
+const INIT_CURSOR_LOCATION: CardLocation = { fixture: 'deck', data: [0] };
 const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 
 interface OptionsAutoFoundation {
@@ -194,27 +197,15 @@ export class FreeCell {
 					`Cannot have more then 10 cascades; requested "${cascadeCount.toString(10)}".`
 				);
 
-			this.cards = new Array<Card>();
-
-			// initialize deck
-			RankList.forEach((rank) => {
-				SuitList.forEach((suit) => {
-					const card: Card = {
-						rank,
-						suit,
-						location: { fixture: 'deck', data: [this.deck.length] },
-					};
-					this.cards.push(card);
-					this.deck.push(card);
-				});
-			});
+			this.deck = initializeDeck();
+			this.cards = [...this.deck];
 
 			this.win = false;
 		}
 
 		// clamp cursor is a helper in case the game changes and the cursor is no longer valid
 		// it prevents us from having to manually specify it every time
-		this.cursor = this.__clampCursor(cursor);
+		this.cursor = this.__clampCursor(cursor ?? INIT_CURSOR_LOCATION);
 
 		// selection & available moves are _not_ checked for validity
 		// they should be reset any time we move a card
@@ -267,11 +258,11 @@ export class FreeCell {
 		const [d0, d1] = location.data;
 		switch (location.fixture) {
 			case 'cell':
-				if (d0 <= 0) return { fixture: 'cell', data: [0] };
+				if (d0 < 0) return { fixture: 'cell', data: [0] };
 				else if (d0 >= this.cells.length) return { fixture: 'cell', data: [this.cells.length - 1] };
 				else return location;
 			case 'foundation':
-				if (d0 <= 0) return { fixture: 'foundation', data: [0] };
+				if (d0 < 0) return { fixture: 'foundation', data: [0] };
 				else if (d0 >= this.foundations.length)
 					return { fixture: 'foundation', data: [this.foundations.length - 1] };
 				else return location;
@@ -281,7 +272,7 @@ export class FreeCell {
 				return { fixture: 'cascade', data: [n0, n1] };
 			}
 			case 'deck':
-				if (d0 <= 0) return { fixture: 'deck', data: [0] };
+				if (d0 < 0) return { fixture: 'deck', data: [0] };
 				else if (d0 >= this.deck.length) return { fixture: 'deck', data: [this.deck.length - 1] };
 				else return location;
 		}
@@ -620,6 +611,16 @@ export class FreeCell {
 			history,
 		});
 
+		// HACK (techdebt) (history) because new game history is not ['init']
+		if (
+			action.type === 'init' &&
+			action.text === 'init partial' &&
+			(moveToUndo.startsWith('shuffle') || moveToUndo.startsWith('deal'))
+		) {
+			didUndo.history.pop();
+			didUndo.previousAction.text = 'init';
+		}
+
 		// redo single move
 		if (
 			!skipActionPrev &&
@@ -637,9 +638,45 @@ export class FreeCell {
 	}
 
 	/**
+		don't leave the game at 'init', always have a shuffled deck
+
+		helper controls
+
+		a better game feel than just {@link shuffleOrDealAll}
+
+		XXX (techdebt) move to FreeCellQOL extends FreeCell?
+	*/
+	undoThenShuffle(): FreeCell | this {
+		const game = this.undo();
+		if (game !== this && game.previousAction.type === 'init') {
+			return game.shuffle32();
+		}
+		return game;
+	}
+
+	/**
+		at the start of the game, you need to shuffle before you deal
+
+		helper controls
+
+		redundant when used with {@link undoThenShuffle},
+		but it's good to always have an … hole card
+
+		XXX (techdebt) move to FreeCellQOL extends FreeCell?
+	*/
+	shuffleOrDealAll(): FreeCell | this {
+		if (this.previousAction.type === 'shuffle') {
+			return this.dealAll();
+		}
+		return this.shuffle32();
+	}
+
+	/**
 		Used replaying a game, starting with a seed or otherwise known deal.
 
 		it's really just "touch the first one" then "touch the second one"
+
+		XXX (techdebt) move to FreeCellQOL extends FreeCell?
 	*/
 	moveByShorthand(shorthandMove: string, { autoFoundation }: OptionsAutoFoundation = {}): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
@@ -785,7 +822,10 @@ export class FreeCell {
 		return this.setCursor(to_location).touch({ autoFoundation });
 	}
 
-	/** TODO (techdebt) rename this method "click to move" is weird; maybe cursorTouchMove */
+	/**
+		TODO (techdebt) rename this method "click to move" is weird; maybe cursorTouchMove
+		 - esp obvs now that it's a keyboard action, too
+	*/
 	clickToMove(
 		location: CardLocation,
 		{ autoMove = true, stopWithInvalid }: OptionsAutoFoundation = {}
@@ -798,6 +838,10 @@ export class FreeCell {
 	}
 
 	restart(): FreeCell {
+		if (PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(this.previousAction.type)) {
+			return this;
+		}
+
 		let prev: FreeCell;
 		const movesSeed = parseMovesFromHistory(this.history);
 		if (movesSeed) {
@@ -805,8 +849,12 @@ export class FreeCell {
 			const cascadeCount = this.tableau.length;
 			prev = new FreeCell({ cellCount, cascadeCount }).shuffle32(movesSeed.seed).dealAll();
 		} else {
-			let prevv = (prev = this.undo());
-			while ((prevv = prev.undo()) !== prev) prev = prevv;
+			prev = this.undo();
+			while (!PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(prev.previousAction.type)) {
+				const prevv = prev.undo();
+				if (prevv === prev) break;
+				prev = prevv;
+			}
 		}
 		prev.previousAction.gameFunction = 'restart';
 		return prev;
@@ -910,7 +958,7 @@ export class FreeCell {
 				// we could just subtract one every time we deal a card
 				const reversePrevD0 = this.deck.length - this.cursor.data[0] - 1;
 				const clampD0 = Math.max(0, Math.min(reversePrevD0, game.deck.length));
-				const nextD0 = game.deck.length - 1 - clampD0;
+				const nextD0 = Math.max(0, game.deck.length - 1 - clampD0);
 				game.cursor.data[0] = nextD0;
 			}
 		}
@@ -924,6 +972,31 @@ export class FreeCell {
 
 	printFoundation(): string {
 		return this.foundations.map((card) => shorthandCard(card)).join(' ');
+	}
+
+	printDeck(cursor = this.cursor, selection = this.selection): string {
+		if (this.deck.length) {
+			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
+				// prettier-ignore
+				const deckStr = this.deck
+					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
+					.reverse()
+					.join('');
+				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
+				return `${deckStr}${lastCol}`;
+			} else {
+				// if no cursor/selection in deck
+				const deckStr = this.deck
+					.map((card) => shorthandCard(card))
+					.reverse()
+					.join(' ');
+				return ` ${deckStr} `;
+			}
+		} else if (cursor.fixture === 'deck') {
+			return `>   `;
+		} else {
+			return '';
+		}
 	}
 
 	/**
@@ -1032,25 +1105,11 @@ export class FreeCell {
 			}
 		}
 
-		if (this.deck.length && !skipDeck) {
-			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
-				// prettier-ignore
-				const deckStr = this.deck
-					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-					.reverse()
-					.join('');
-				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
-				str += `\n:d${deckStr}${lastCol}`;
-			} else {
-				// if no cursor/selection in deck
-				const deckStr = this.deck
-					.map((card) => shorthandCard(card))
-					.reverse()
-					.join(' ');
-				str += `\n:d ${deckStr} `;
+		if ((this.deck.length || cursor.fixture === 'deck') && !skipDeck) {
+			const printDeck = this.printDeck(cursor, selection);
+			if (printDeck) {
+				str += `\n:d${printDeck}`;
 			}
-		} else if (cursor.fixture === 'deck') {
-			str += `\n:d>   `;
 		}
 
 		if (this.win) {
@@ -1070,8 +1129,9 @@ export class FreeCell {
 			//  - e.g. if (movesSeed && isStandardGameplay)
 			const movesSeed = parseMovesFromHistory(this.history);
 			if (movesSeed) {
-				// print the last valid action, not previousAction.text
+				// print the last valid action, _not_ previousAction.text
 				// the previous action could be a cursor movement, or a canceled touch action (touch stop)
+				// REVIEW (history) (print) should we even print the last action?
 				str += '\n ' + this.history.slice(-1)[0];
 				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 				while (movesSeed.moves.length) {
@@ -1242,15 +1302,18 @@ export class FreeCell {
 		});
 
 		line.pop();
-		const actionText = line.reverse().join('');
+		const actionText = line.reverse().join('') || 'init';
 
 		// attempt to parse the history
 		const history: string[] = [];
 		const popped = lines.pop();
 		if (!popped) {
-			// TODO (parse-history) test
 			if (parsePreviousActionType(actionText).type === 'init') {
-				history.push(actionText);
+				// XXX (techdebt) (parse-history) does 'init' belong in the history?
+				//  - so far, it's been omitted, but like, sometimes we have 'init with invalid history'
+				if (actionText && actionText !== 'init') {
+					history.push(actionText);
+				}
 			}
 		} else if (popped.startsWith(':h')) {
 			const matchSeed = /:h shuffle32 (\d+)/.exec(popped);
@@ -1322,7 +1385,7 @@ export class FreeCell {
 			//  - text we can use what history is valid; ['init partial history', ..., actionText]
 			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
 			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
-			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history'
+			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
 		}
 
 		// sus out the cursor/selection locations
@@ -1401,8 +1464,7 @@ export class FreeCell {
 		if (!cursor) {
 			// try to figure out the location of the cursor based on the previous move
 			for (let i = history.length - 1; !cursor && i >= 0; i--) {
-				const actionText = history[i];
-				cursor = parseCursorFromPreviousActionText(actionText, cards);
+				cursor = parseCursorFromPreviousActionText(history[i], cards);
 			}
 		}
 

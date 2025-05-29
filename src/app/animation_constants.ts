@@ -23,6 +23,11 @@ export const INVALID_SHAKE_PORTION = 0.05;
 /** how far to offset in either direction */
 export const INVALID_SHAKE_MAGNITUDE = 3;
 
+export const SHUFFLE_X = 8;
+export const SHUFFLE_Y = 25;
+export const SHUFFLE_R = 8;
+export const SHUFFLE_DURATION = 0.3;
+
 /**
 	we want the cursor to be snappy,
 	but a little bit of animation makes it easier to track

@@ -15,6 +15,10 @@ export function useClickToMoveControls(location: CardLocation) {
 		return undefined;
 	}
 
+	// TODO (controls) what if we click on the deck?
+	//  - shuffle/deal is conflicting with useClickSetupControls
+	if (location.fixture === 'deck') return;
+
 	function handleClickToMove() {
 		setGame((g) => g.clickToMove(location, { autoMove: enableClickToMove }));
 		setSettings((s) => ({ ...s, showKeyboardCursor: false }));

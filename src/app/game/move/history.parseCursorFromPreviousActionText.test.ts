@@ -36,10 +36,20 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			actionText                                    | cards          | cursor
 			${'init'}                                     | ${[]}          | ${{ fixture: 'deck', data: [0] }}
 			${'init with invalid history'}                | ${[]}          | ${{ fixture: 'deck', data: [0] }}
+			${'init partial'}                             | ${[]}          | ${{ fixture: 'deck', data: [0] }}
 			${'shuffle deck (0)'}                         | ${[]}          | ${{ fixture: 'deck', data: [0] }}
 			${'deal all cards'}                           | ${[]}          | ${{ fixture: 'cell', data: [0] }}
 			${'deal most cards'}                          | ${[]}          | ${{ fixture: 'cell', data: [0] }}
 			${'cursor set'}                               | ${[]}          | ${undefined}
+			${'cursor up'}                                | ${[]}          | ${undefined}
+			${'cursor left'}                              | ${[]}          | ${undefined}
+			${'cursor down'}                              | ${[]}          | ${undefined}
+			${'cursor right'}                             | ${[]}          | ${undefined}
+			${'cursor up w'}                              | ${[]}          | ${undefined}
+			${'cursor left w'}                            | ${[]}          | ${undefined}
+			${'cursor down w'}                            | ${[]}          | ${undefined}
+			${'cursor right w'}                           | ${[]}          | ${undefined}
+			${'cursor stop'}                              | ${[]}          | ${undefined}
 			${'select 6D'}                                | ${[]}          | ${undefined}
 			${'select 4D-3S-2D'}                          | ${[]}          | ${undefined}
 			${'select 8 7D'}                              | ${[]}          | ${undefined}
@@ -80,7 +90,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 				// make sure all the ones that should have a cursor do have a cursor
 				const previousAction = parsePreviousActionType(actionText);
 				const EXCEPTIONS: PreviousActionType[] = ['auto-foundation'];
-				const canBeInHistory = PREVIOUS_ACTION_TYPE_IN_HISTORY.includes(previousAction.type);
+				const canBeInHistory = PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type);
 				const isException = EXCEPTIONS.includes(previousAction.type);
 				const canFindCursor = !!cursor;
 				expect(canFindCursor || !canBeInHistory || isException).toBeTruthy();

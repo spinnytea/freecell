@@ -18,6 +18,11 @@ export function KeyboardCursor() {
 
 	const { top, left } = calcTopLeftZ(fixtureSizes, cursor, selection);
 
+	useGSAP(() => {
+		// set the initial position, once on load
+		gsap.set(cursorRef.current, { top, left });
+	});
+
 	useGSAP(
 		() => {
 			gsap.to(cursorRef.current, {

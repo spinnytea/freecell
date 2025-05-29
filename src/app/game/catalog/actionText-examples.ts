@@ -1,13 +1,32 @@
 export const FIFTY_TWO_CARD_FLOURISH =
 	'move 3b 8S→cell (flourish 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)';
 
+/**
+	these are <action> -> <state immediately before the action>
+
+	that is to say, here is a game state, where, we can apply this specific action
+*/
 export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
-	'init': '',
-	'init with invalid history': '',
-	'shuffle deck (0)': '',
+	'init': '', // we cannot "take an action" to make an init
+	'init with invalid history': '', // we cannot "take an action" to make an init with invalid history
+	'init partial': '',
+	// 'hand-jammed': '', // XXX (techdebt) as much as this isn't _supposed_ to be supported, it kind of is part of the tests now
+	'shuffle deck (0)':
+		'                         \n' +
+		'                         \n' +
+		':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC ',
 	'deal all cards': '',
 	'deal most cards': '',
 	'cursor set': '',
+	'cursor up': '',
+	'cursor left': '',
+	'cursor down': '',
+	'cursor right': '',
+	'cursor up w': '',
+	'cursor left w': '',
+	'cursor down w': '',
+	'cursor right w': '',
+	'cursor stop': '',
 	'select 6D': '',
 	'select 4D-3S-2D': '',
 	'select 8 7D': '',

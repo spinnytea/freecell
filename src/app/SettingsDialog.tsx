@@ -15,6 +15,10 @@ export default function SettingsDialog() {
 		setSettings((s) => ({ ...s, showSettingsDialog: false }));
 	}
 
+	// XXX (techdebt) const disableRestart = PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(game.previousAction.type);
+	//  - Warning: Prop `disabled` did not match. Server: "" Client: "false"
+	//  - this error appears on refresh when not at the start of the game
+
 	function handleRestart() {
 		// TODO (settings) (animation) two options for restart:
 		//  - as is: jump to init and do a single animation

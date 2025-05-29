@@ -8,7 +8,7 @@ export function UndoButton() {
 
 	function handleClick(event: MouseEvent) {
 		event.stopPropagation();
-		setGame((g) => g.undo());
+		setGame((g) => g.undoThenShuffle());
 	}
 
 	return (

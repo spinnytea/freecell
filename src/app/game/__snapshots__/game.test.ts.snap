@@ -1206,7 +1206,7 @@ FreeCell {
     "data": [
       0,
     ],
-    "fixture": "cell",
+    "fixture": "deck",
   },
   "deck": [
     {
