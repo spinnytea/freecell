@@ -117,8 +117,6 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 			// silent failure
 			// it's not wrong to attempt an undo, it just doesn't do anything
 			// cannot undo past this
-			// …although, this doesn't end up in the history either (yet?)
-			// FIXME test with 'init with invalid history' or 'hand-jammed'
 			return null;
 		case 'shuffle':
 			// we don't have a chain of shuffles in the history, so we can just reset to initial values

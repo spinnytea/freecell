@@ -1129,8 +1129,9 @@ export class FreeCell {
 			//  - e.g. if (movesSeed && isStandardGameplay)
 			const movesSeed = parseMovesFromHistory(this.history);
 			if (movesSeed) {
-				// print the last valid action, not previousAction.text
+				// print the last valid action, _not_ previousAction.text
 				// the previous action could be a cursor movement, or a canceled touch action (touch stop)
+				// REVIEW (history) (print) should we even print the last action?
 				str += '\n ' + this.history.slice(-1)[0];
 				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 				while (movesSeed.moves.length) {
