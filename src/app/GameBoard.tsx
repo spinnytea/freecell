@@ -89,7 +89,7 @@ function BoardLayout({
 	gameBoardIdRef,
 }: {
 	displayOptions: GameBoardDisplayOptions;
-	gameBoardIdRef: MutableRefObject<string>;
+	gameBoardIdRef?: MutableRefObject<string>;
 }) {
 	const { showDebugInfo, showKeyboardCursor } = useSettings();
 

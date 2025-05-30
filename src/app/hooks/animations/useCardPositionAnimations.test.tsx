@@ -12,6 +12,8 @@ import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameConte
 
 jest.mock('gsap/all', () => ({
 	gsap: {
+		to: () => ({}),
+		set: () => ({}),
 		timeline: () => ({}),
 		utils: {
 			random: () => undefined,
@@ -38,6 +40,9 @@ describe('useCardPositionAnimations', () => {
 	// we can use this for a lot of tests, so we don't need to keep remaking it
 	const newGameState = new FreeCell();
 
+	// REVIEW (techdebt) this is a _lot_ of mocking, duplicated in page.test
+	let toGsapSpy: jest.SpyInstance;
+	let setGsapSpy: jest.SpyInstance;
 	let fromToSpy: jest.SpyInstance;
 	let toSpy: jest.SpyInstance;
 	let setSpy: jest.SpyInstance;
@@ -47,6 +52,8 @@ describe('useCardPositionAnimations', () => {
 	let timelineOnComplete: gsap.Callback | undefined;
 	let consoleDebugSpy: jest.SpyInstance;
 	beforeEach(() => {
+		toGsapSpy = jest.spyOn(gsap, 'to');
+		setGsapSpy = jest.spyOn(gsap, 'set');
 		fromToSpy = jest.fn();
 		toSpy = jest.fn();
 		setSpy = jest.fn();
@@ -81,8 +88,10 @@ describe('useCardPositionAnimations', () => {
 			timelineOnComplete();
 		}
 
-		toSpy.mockReset();
+		toGsapSpy.mockReset();
+		setGsapSpy.mockReset();
 		fromToSpy.mockReset();
+		toSpy.mockReset();
 		setSpy.mockReset();
 		addLabelSpy.mockReset();
 		addSpy.mockReset();
@@ -108,6 +117,8 @@ describe('useCardPositionAnimations', () => {
 
 				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+				expect(toGsapSpy).not.toHaveBeenCalled();
+				expect(setGsapSpy).not.toHaveBeenCalled();
 				expect(toSpy).not.toHaveBeenCalled();
 				expect(fromToSpy).not.toHaveBeenCalled();
 				expect(setSpy).toHaveBeenCalledTimes(52);
@@ -120,6 +131,8 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+				expect(toGsapSpy).not.toHaveBeenCalled();
+				expect(setGsapSpy).not.toHaveBeenCalled();
 				expect(toSpy).not.toHaveBeenCalled();
 				expect(fromToSpy).not.toHaveBeenCalled();
 				expect(setSpy).not.toHaveBeenCalled();
@@ -147,6 +160,8 @@ describe('useCardPositionAnimations', () => {
 
 				// TODO (animation) (techdebt) isn't this backwards?
 				//  - shouldn't kings be first?
+				expect(toGsapSpy).not.toHaveBeenCalled();
+				expect(setGsapSpy).not.toHaveBeenCalled();
 				expect(toSpy).toHaveBeenCalledTimes(52);
 				expect(toSpy.mock.calls[0]).toEqual([
 					'#cAC',
@@ -196,6 +211,8 @@ describe('useCardPositionAnimations', () => {
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+			expect(toGsapSpy).not.toHaveBeenCalled();
+			expect(setGsapSpy).not.toHaveBeenCalled();
 			expect(toSpy).toHaveBeenCalledTimes(4);
 			expect(toSpy.mock.calls[0]).toEqual([
 				'#cAD',
@@ -235,6 +252,8 @@ describe('useCardPositionAnimations', () => {
 			consoleDebugSpy.mockReturnValueOnce(undefined);
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+			expect(toGsapSpy).not.toHaveBeenCalled();
+			expect(setGsapSpy).not.toHaveBeenCalled();
 			expect(toSpy).toHaveBeenCalledTimes(52);
 			expect(toSpy.mock.calls[0]).toEqual([
 				'#cQC',
@@ -279,6 +298,8 @@ describe('useCardPositionAnimations', () => {
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+			expect(toGsapSpy).not.toHaveBeenCalled();
+			expect(setGsapSpy).not.toHaveBeenCalled();
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
 			expect(setSpy).not.toHaveBeenCalled();
@@ -309,6 +330,8 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+				expect(toGsapSpy).not.toHaveBeenCalled();
+				expect(setGsapSpy).not.toHaveBeenCalled();
 				expect(toSpy.mock.calls).toEqual([
 					['#c6H', { zIndex: 7, duration: 0.15, ease: 'none' }, '<'],
 					['#cAD', { zIndex: 99, duration: 0.15, ease: 'none' }, '<'],
@@ -370,6 +393,8 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+				expect(toGsapSpy).not.toHaveBeenCalled();
+				expect(setGsapSpy).not.toHaveBeenCalled();
 				expect(toSpy).toHaveBeenCalledTimes(16);
 				expect(toSpy.mock.calls).toEqual([
 					['#cQD', { zIndex: 1, duration: 0.15, ease: 'none' }, '<'],
@@ -469,6 +494,8 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+				expect(toGsapSpy).not.toHaveBeenCalled();
+				expect(setGsapSpy).not.toHaveBeenCalled();
 				expect(getCardIdsFromSpy(toSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
 				expect(getCardIdsFromSpy(fromToSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
 				expect(getCardIdsFromSpy(setSpy).length).toBe(47); // 52 - 5
@@ -520,6 +547,8 @@ describe('useCardPositionAnimations', () => {
 					mockReset();
 					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+					expect(toGsapSpy).not.toHaveBeenCalled();
+					expect(setGsapSpy).not.toHaveBeenCalled();
 					// prettier-ignore
 					expect(getCardIdsFromSpy(toSpy)).toEqual([
 						'#c3C', '#c3C', '#c3C',
@@ -553,6 +582,8 @@ describe('useCardPositionAnimations', () => {
 					consoleDebugSpy.mockReturnValueOnce(undefined);
 					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+					expect(toGsapSpy).not.toHaveBeenCalled();
+					expect(setGsapSpy).not.toHaveBeenCalled();
 					// prettier-ignore
 					expect(getCardIdsFromSpy(toSpy)).toEqual([
 						'#cAC', '#cAC', '#cAC',
@@ -575,6 +606,8 @@ describe('useCardPositionAnimations', () => {
 					mockReset();
 					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+					expect(toGsapSpy).not.toHaveBeenCalled();
+					expect(setGsapSpy).not.toHaveBeenCalled();
 					// prettier-ignore
 					expect(getCardIdsFromSpy(toSpy)).toEqual([
 						'#cTH', '#cTH', '#cTH',
@@ -600,6 +633,8 @@ describe('useCardPositionAnimations', () => {
 					mockReset();
 					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+					expect(toGsapSpy).not.toHaveBeenCalled();
+					expect(setGsapSpy).not.toHaveBeenCalled();
 					// prettier-ignore
 					expect(getCardIdsFromSpy(toSpy)).toEqual([
 						'#cKC', '#cKC', '#cKC',
@@ -634,6 +669,8 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+						expect(toGsapSpy).not.toHaveBeenCalled();
+						expect(setGsapSpy).not.toHaveBeenCalled();
 						// prettier-ignore
 						expect(getCardIdsFromSpy(toSpy)).toEqual([
 							'#cKC', '#cKC', '#cKC',
@@ -659,6 +696,8 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+						expect(toGsapSpy).not.toHaveBeenCalled();
+						expect(setGsapSpy).not.toHaveBeenCalled();
 						// prettier-ignore
 						expect(getCardIdsFromSpy(toSpy)).toEqual([
 							'#cKC', '#cKC', '#cKC',
@@ -690,6 +729,8 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+						expect(toGsapSpy).not.toHaveBeenCalled();
+						expect(setGsapSpy).not.toHaveBeenCalled();
 						// prettier-ignore
 						expect(getCardIdsFromSpy(toSpy)).toEqual([
 							'#c3C', '#c3C', '#c3C',
@@ -713,6 +754,8 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+						expect(toGsapSpy).not.toHaveBeenCalled();
+						expect(setGsapSpy).not.toHaveBeenCalled();
 						// prettier-ignore
 						expect(getCardIdsFromSpy(toSpy)).toEqual([
 							'#c3C', '#c3C', '#c3C',
@@ -742,6 +785,8 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+						expect(toGsapSpy).not.toHaveBeenCalled();
+						expect(setGsapSpy).not.toHaveBeenCalled();
 						// prettier-ignore
 						expect(getCardIdsFromSpy(toSpy)).toEqual([
 							'#cKC', '#cKC', '#cKC',
@@ -767,6 +812,8 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+						expect(toGsapSpy).not.toHaveBeenCalled();
+						expect(setGsapSpy).not.toHaveBeenCalled();
 						// prettier-ignore
 						expect(getCardIdsFromSpy(toSpy)).toEqual([
 							'#cKC', '#cKC', '#cKC',
@@ -797,6 +844,8 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+						expect(toGsapSpy).not.toHaveBeenCalled();
+						expect(setGsapSpy).not.toHaveBeenCalled();
 						// prettier-ignore
 						expect(getCardIdsFromSpy(toSpy)).toEqual([
 							'#cKC', '#cKC', '#cKC',
@@ -876,6 +925,8 @@ describe('useCardPositionAnimations', () => {
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
 
 				// shuffle animation
+				expect(toGsapSpy).not.toHaveBeenCalled();
+				expect(setGsapSpy).not.toHaveBeenCalled();
 				expect(getCardIdsFromSpy(toSpy)).toEqual(['#cAD', '#cAD', '#cAH', '#cAH']);
 				expect(getCardIdsFromSpy(fromToSpy)).toEqual([]);
 				expect(getCardIdsFromSpy(setSpy)).toEqual(['#cAD', '#cAH']);
@@ -886,6 +937,8 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
 
+				expect(toGsapSpy).not.toHaveBeenCalled();
+				expect(setGsapSpy).not.toHaveBeenCalled();
 				expect(toSpy).not.toHaveBeenCalled();
 				expect(fromToSpy).not.toHaveBeenCalled();
 				expect(setSpy).not.toHaveBeenCalled();
@@ -1008,6 +1061,8 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+						expect(toGsapSpy).not.toHaveBeenCalled();
+						expect(setGsapSpy).not.toHaveBeenCalled();
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
@@ -1021,6 +1076,8 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateTwo, gameStateThree]} />);
 
+						expect(toGsapSpy).not.toHaveBeenCalled();
+						expect(setGsapSpy).not.toHaveBeenCalled();
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
@@ -1036,6 +1093,8 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
 
+						expect(toGsapSpy).not.toHaveBeenCalled();
+						expect(setGsapSpy).not.toHaveBeenCalled();
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
@@ -1046,6 +1105,8 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
 
+						expect(toGsapSpy).not.toHaveBeenCalled();
+						expect(setGsapSpy).not.toHaveBeenCalled();
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
@@ -1129,6 +1190,8 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+				expect(toGsapSpy).not.toHaveBeenCalled();
+				expect(setGsapSpy).not.toHaveBeenCalled();
 				// prettier-ignore
 				expect(getCardIdsFromSpy(toSpy)).toEqual([
 					'#c6D', '#c6D', '#c6D',
@@ -1293,6 +1356,8 @@ describe('useCardPositionAnimations', () => {
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+			expect(toGsapSpy).not.toHaveBeenCalled();
+			expect(setGsapSpy).not.toHaveBeenCalled();
 			expect(getCardIdsFromSpy(toSpy)).toEqual([
 				// '#c2S',
 				'#c8H',
@@ -1372,6 +1437,8 @@ describe('useCardPositionAnimations', () => {
 
 			const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+			expect(toGsapSpy).not.toHaveBeenCalled();
+			expect(setGsapSpy).not.toHaveBeenCalled();
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
 			expect(setSpy).toHaveBeenCalledTimes(52);
@@ -1382,6 +1449,8 @@ describe('useCardPositionAnimations', () => {
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+			expect(toGsapSpy).not.toHaveBeenCalled();
+			expect(setGsapSpy).not.toHaveBeenCalled();
 			expect(toSpy).not.toHaveBeenCalled();
 			expect(fromToSpy).not.toHaveBeenCalled();
 			expect(setSpy).not.toHaveBeenCalled();

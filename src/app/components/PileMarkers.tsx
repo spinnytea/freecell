@@ -7,7 +7,7 @@ import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSiz
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { useClickTouchControls } from '@/app/hooks/controls/useClickTouchControls';
 
-export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObject<string> }) {
+export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObject<string> }) {
 	const { cursor } = useGame();
 	const fixtureSizes = useFixtureSizes();
 	const homeTop = fixtureSizes.home.top;
@@ -66,7 +66,7 @@ function Pile({
 	fixtureSizes: FixtureSizes;
 	cursorPile: boolean;
 	location: CardLocation;
-	gameBoardIdRef: MutableRefObject<string>;
+	gameBoardIdRef?: MutableRefObject<string>;
 }) {
 	const handleClickTouch = useClickTouchControls(location);
 
@@ -78,7 +78,7 @@ function Pile({
 	};
 
 	// XXX (techdebt) use or remove
-	const pileId = calcPilemarkerId(location, gameBoardIdRef.current);
+	const pileId = calcPilemarkerId(location, gameBoardIdRef?.current);
 	return (
 		<div
 			id={pileId}

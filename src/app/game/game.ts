@@ -804,6 +804,12 @@ export class FreeCell {
 
 		this is the cornerstone for click-to-move
 
+		IDEA (controls) compare how often this aligns with saved gameplay
+		 - note that it will never be perfect
+		 - we can move however we want in games (with keyboard, drag and drop)
+		 - and we will notably move in ways counter to the autoMove (that's their whole point)
+		 - but it'd be interesting to compare, i guess its, my move preferences to, i guess, this one piece of documentation
+
 		@example
 			game.setCursor(loc).touch().autoMove();
 	*/

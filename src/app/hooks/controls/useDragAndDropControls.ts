@@ -39,7 +39,7 @@ interface DragState {
 export function useDragAndDropControls(
 	cardRef: MutableRefObject<HTMLDivElement | null>,
 	_location: CardLocation,
-	gameBoardIdRef: MutableRefObject<string>
+	gameBoardIdRef?: MutableRefObject<string>
 ) {
 	const [, setGame] = useContext(GameContext);
 	const dragStateRef = useRef<DragState | undefined>(undefined);
