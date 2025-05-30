@@ -43,6 +43,7 @@ const nextUid = (function* () {
 // BUG (controls) generally speaking, the keyboard controls are greedy
 //  - cannot interact with status bar -> manual teating
 //  - when you undo or leave settings, focus is still there; arrow keys should move focus back to the game board
+// REVIEW (techdebt) (deployment) verify that the card back is always available
 export default function GameBoard({
 	className,
 	displayOptions = {},

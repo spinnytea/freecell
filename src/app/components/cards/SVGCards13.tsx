@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import { ASSET_FOLDER } from '@/app/components/cards/constants';
+import { SmolCards } from '@/app/components/cards/SmolCards';
 import { isRed, Rank, Suit } from '@/app/game/card/card';
 
 export function SVGCards13({
@@ -13,6 +15,14 @@ export function SVGCards13({
 	rank: Rank;
 	suit: Suit;
 }>) {
+	// if we fail to load a card, fallback to a SmolCards
+	// once we finish a game and cycle the deck back, this _should_ get reset
+	// REVIEW (techdebt) (deployment) verify that this actually gets reset
+	const [hasError, setError] = useState(false);
+	if (hasError) {
+		return <SmolCards width={width} height={height} rank={rank} suit={suit} />;
+	}
+
 	const filename = ASSET_FOLDER + '/i/SVG-cards-1.3/' + getFilename(rank, suit);
 	return (
 		<Image
@@ -22,6 +32,9 @@ export function SVGCards13({
 			height={height}
 			draggable={false}
 			priority
+			onError={() => {
+				setError(true);
+			}}
 		/>
 	);
 }
