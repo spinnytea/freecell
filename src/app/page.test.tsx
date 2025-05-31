@@ -131,5 +131,14 @@ describe('Free Cell UI', () => {
 
 	// FIXME test.todo, reimpl moveByShorthand into clicks(screen)
 	/** https://www.solitairelaboratory.com/tutorial.html */
-	test.todo('Game #5 (tutorial)');
+	test('Game #5 (tutorial)', () => {
+		const { container } = render(<MockGamePage game={new FreeCell().shuffle32(5)} />);
+		expect(container).toMatchSnapshot();
+		fireEvent.click(screen.getAllByAltText('card back')[0]);
+
+		// REVIEW (techdebt) this is very hard to understand from the snapshot
+		//  - confirmed Aces and Kings are in the right place
+		//  - lots of cross checking with game.test.js
+		expect(container).toMatchSnapshot();
+	});
 });

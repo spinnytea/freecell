@@ -56,6 +56,10 @@
 	flex: 1;
 }
 
+.hiddenActionText {
+	display: none;
+}
+
 /*
 	keep deck back image so we don't need to re-request it
 	transparent and off screen
