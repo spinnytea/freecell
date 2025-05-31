@@ -27,82 +27,82 @@ exports[`Free Cell UI renders a game 1`] = `
       <div
         class="pile cursorPile"
         id="pilemarker-a-1-0"
-        style="top: 17px; left: 74.846px; width: 53.385px; height: 78px;"
+        style="top: 6px; left: 11px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-b-2-0"
-        style="top: 17px; left: 142.538px; width: 53.385px; height: 78px;"
+        style="top: 6px; left: 21px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-c-3-0"
-        style="top: 17px; left: 210.231px; width: 53.385px; height: 78px;"
+        style="top: 6px; left: 31px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-d-4-0"
-        style="top: 17px; left: 277.923px; width: 53.385px; height: 78px;"
+        style="top: 6px; left: 41px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-h-1-0"
-        style="top: 17px; left: 468.692px; width: 53.385px; height: 78px;"
+        style="top: 6px; left: 51px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-h-2-0"
-        style="top: 17px; left: 536.385px; width: 53.385px; height: 78px;"
+        style="top: 6px; left: 61px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-h-3-0"
-        style="top: 17px; left: 604.077px; width: 53.385px; height: 78px;"
+        style="top: 6px; left: 71px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-h-4-0"
-        style="top: 17px; left: 671.769px; width: 53.385px; height: 78px;"
+        style="top: 6px; left: 81px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-1-1-0"
-        style="top: 121px; left: 124.077px; width: 53.385px; height: 78px;"
+        style="top: 21px; left: 11px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-2-2-0"
-        style="top: 121px; left: 195.286px; width: 53.385px; height: 78px;"
+        style="top: 21px; left: 21px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-3-3-0"
-        style="top: 121px; left: 266.495px; width: 53.385px; height: 78px;"
+        style="top: 21px; left: 31px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-4-4-0"
-        style="top: 121px; left: 337.703px; width: 53.385px; height: 78px;"
+        style="top: 21px; left: 41px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-5-5-0"
-        style="top: 121px; left: 408.912px; width: 53.385px; height: 78px;"
+        style="top: 21px; left: 51px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-6-6-0"
-        style="top: 121px; left: 480.121px; width: 53.385px; height: 78px;"
+        style="top: 21px; left: 61px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-7-7-0"
-        style="top: 121px; left: 551.33px; width: 53.385px; height: 78px;"
+        style="top: 21px; left: 71px; width: 8px; height: 18px;"
       />
       <div
         class="pile"
         id="pilemarker-8-8-0"
-        style="top: 121px; left: 622.538px; width: 53.385px; height: 78px;"
+        style="top: 21px; left: 81px; width: 8px; height: 18px;"
       />
     </div>
     <div
@@ -110,6 +110,9 @@ exports[`Free Cell UI renders a game 1`] = `
     >
       <div
         class="card"
+        data-left="60"
+        data-top="20"
+        data-zindex="0"
         id="cAC-0"
       >
         <img
@@ -118,14 +121,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/ace_of_clubs.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="10"
+        data-top="25"
+        data-zindex="5"
         id="cAD-0"
       >
         <img
@@ -134,14 +140,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/ace_of_diamonds.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="80"
+        data-top="23"
+        data-zindex="3"
         id="cAH-0"
       >
         <img
@@ -150,14 +159,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/ace_of_hearts.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="20"
+        data-top="25"
+        data-zindex="5"
         id="cAS-0"
       >
         <img
@@ -166,14 +178,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/ace_of_spades.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="70"
+        data-top="23"
+        data-zindex="3"
         id="c2C-0"
       >
         <img
@@ -182,14 +197,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/2_of_clubs.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="30"
+        data-top="22"
+        data-zindex="2"
         id="c2D-0"
       >
         <img
@@ -198,14 +216,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/2_of_diamonds.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="30"
+        data-top="26"
+        data-zindex="6"
         id="c2H-0"
       >
         <img
@@ -214,14 +235,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/2_of_hearts.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="10"
+        data-top="26"
+        data-zindex="6"
         id="c2S-0"
       >
         <img
@@ -230,14 +254,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/2_of_spades.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="60"
+        data-top="21"
+        data-zindex="1"
         id="c3C-0"
       >
         <img
@@ -246,14 +273,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/3_of_clubs.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="80"
+        data-top="22"
+        data-zindex="2"
         id="c3D-0"
       >
         <img
@@ -262,14 +292,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/3_of_diamonds.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="70"
+        data-top="24"
+        data-zindex="4"
         id="c3H-0"
       >
         <img
@@ -278,14 +311,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/3_of_hearts.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="80"
+        data-top="21"
+        data-zindex="1"
         id="c3S-0"
       >
         <img
@@ -294,14 +330,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/3_of_spades.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="20"
+        data-top="26"
+        data-zindex="6"
         id="c4C-0"
       >
         <img
@@ -310,14 +349,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/4_of_clubs.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="30"
+        data-top="25"
+        data-zindex="5"
         id="c4D-0"
       >
         <img
@@ -326,14 +368,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/4_of_diamonds.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="70"
+        data-top="25"
+        data-zindex="5"
         id="c4H-0"
       >
         <img
@@ -342,14 +387,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/4_of_hearts.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="30"
+        data-top="21"
+        data-zindex="1"
         id="c4S-0"
       >
         <img
@@ -358,14 +406,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/4_of_spades.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="50"
+        data-top="22"
+        data-zindex="2"
         id="c5C-0"
       >
         <img
@@ -374,14 +425,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/5_of_clubs.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="70"
+        data-top="21"
+        data-zindex="1"
         id="c5D-0"
       >
         <img
@@ -390,14 +444,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/5_of_diamonds.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="20"
+        data-top="20"
+        data-zindex="0"
         id="c5H-0"
       >
         <img
@@ -406,14 +463,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/5_of_hearts.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="40"
+        data-top="26"
+        data-zindex="6"
         id="c5S-0"
       >
         <img
@@ -422,14 +482,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/5_of_spades.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="80"
+        data-top="20"
+        data-zindex="0"
         id="c6C-0"
       >
         <img
@@ -438,14 +501,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/6_of_clubs.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="30"
+        data-top="23"
+        data-zindex="3"
         id="c6D-0"
       >
         <img
@@ -454,14 +520,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/6_of_diamonds.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="10"
+        data-top="21"
+        data-zindex="1"
         id="c6H-0"
       >
         <img
@@ -470,14 +539,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/6_of_hearts.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="50"
+        data-top="20"
+        data-zindex="0"
         id="c6S-0"
       >
         <img
@@ -486,14 +558,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/6_of_spades.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="80"
+        data-top="25"
+        data-zindex="5"
         id="c7C-0"
       >
         <img
@@ -502,14 +577,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/7_of_clubs.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="70"
+        data-top="22"
+        data-zindex="2"
         id="c7D-0"
       >
         <img
@@ -518,14 +596,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/7_of_diamonds.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="10"
+        data-top="24"
+        data-zindex="4"
         id="c7H-0"
       >
         <img
@@ -534,14 +615,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/7_of_hearts.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="50"
+        data-top="23"
+        data-zindex="3"
         id="c7S-0"
       >
         <img
@@ -550,14 +634,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/7_of_spades.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="40"
+        data-top="22"
+        data-zindex="2"
         id="c8C-0"
       >
         <img
@@ -566,14 +653,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/8_of_clubs.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="40"
+        data-top="24"
+        data-zindex="4"
         id="c8D-0"
       >
         <img
@@ -582,14 +672,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/8_of_diamonds.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="20"
+        data-top="24"
+        data-zindex="4"
         id="c8H-0"
       >
         <img
@@ -598,14 +691,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/8_of_hearts.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="40"
+        data-top="25"
+        data-zindex="5"
         id="c8S-0"
       >
         <img
@@ -614,14 +710,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/8_of_spades.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="60"
+        data-top="23"
+        data-zindex="3"
         id="c9C-0"
       >
         <img
@@ -630,14 +729,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/9_of_clubs.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="10"
+        data-top="23"
+        data-zindex="3"
         id="c9D-0"
       >
         <img
@@ -646,14 +748,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/9_of_diamonds.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="20"
+        data-top="23"
+        data-zindex="3"
         id="c9H-0"
       >
         <img
@@ -662,14 +767,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/9_of_hearts.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="50"
+        data-top="25"
+        data-zindex="5"
         id="c9S-0"
       >
         <img
@@ -678,14 +786,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/9_of_spades.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="40"
+        data-top="20"
+        data-zindex="0"
         id="cTC-0"
       >
         <img
@@ -694,14 +805,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/10_of_clubs.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="10"
+        data-top="22"
+        data-zindex="2"
         id="cTD-0"
       >
         <img
@@ -710,14 +824,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/10_of_diamonds.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="10"
+        data-top="20"
+        data-zindex="0"
         id="cTH-0"
       >
         <img
@@ -726,14 +843,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/10_of_hearts.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="70"
+        data-top="20"
+        data-zindex="0"
         id="cTS-0"
       >
         <img
@@ -742,14 +862,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/10_of_spades.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="40"
+        data-top="23"
+        data-zindex="3"
         id="cJC-0"
       >
         <img
@@ -758,14 +881,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/jack_of_clubs2.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="40"
+        data-top="21"
+        data-zindex="1"
         id="cJD-0"
       >
         <img
@@ -774,14 +900,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/jack_of_diamonds2.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="80"
+        data-top="24"
+        data-zindex="4"
         id="cJH-0"
       >
         <img
@@ -790,14 +919,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/jack_of_hearts2.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="50"
+        data-top="21"
+        data-zindex="1"
         id="cJS-0"
       >
         <img
@@ -806,14 +938,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/jack_of_spades2.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="60"
+        data-top="24"
+        data-zindex="4"
         id="cQC-0"
       >
         <img
@@ -822,14 +957,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/queen_of_clubs2.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="20"
+        data-top="21"
+        data-zindex="1"
         id="cQD-0"
       >
         <img
@@ -838,14 +976,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/queen_of_diamonds2.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="20"
+        data-top="22"
+        data-zindex="2"
         id="cQH-0"
       >
         <img
@@ -854,14 +995,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/queen_of_hearts2.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="60"
+        data-top="22"
+        data-zindex="2"
         id="cQS-0"
       >
         <img
@@ -870,14 +1014,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/queen_of_spades2.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="50"
+        data-top="24"
+        data-zindex="4"
         id="cKC-0"
       >
         <img
@@ -886,14 +1033,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/king_of_clubs2.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="60"
+        data-top="25"
+        data-zindex="5"
         id="cKD-0"
       >
         <img
@@ -902,14 +1052,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/king_of_diamonds2.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="30"
+        data-top="24"
+        data-zindex="4"
         id="cKH-0"
       >
         <img
@@ -918,14 +1071,17 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/king_of_hearts2.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
       <div
         class="card"
+        data-left="30"
+        data-top="20"
+        data-zindex="0"
         id="cKS-0"
       >
         <img
@@ -934,10 +1090,10 @@ exports[`Free Cell UI renders a game 1`] = `
           decoding="async"
           draggable="false"
           fetchpriority="high"
-          height="80"
+          height="14"
           src="http://localhost/i/SVG-cards-1.3/king_of_spades2.svg"
           style="color: transparent;"
-          width="55"
+          width="10"
         />
       </div>
     </div>

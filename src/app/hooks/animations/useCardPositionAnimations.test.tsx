@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import { gsap } from 'gsap/all';
+import { domUtils } from '@/app/components/element/domUtils';
 import {
 	ACTION_TEXT_EXAMPLES,
 	FIFTY_TWO_CARD_FLOURISH,
@@ -20,6 +21,21 @@ jest.mock('gsap/all', () => ({
 		},
 	},
 }));
+
+jest.mock('@/app/components/element/domUtils.ts', () => {
+	const domTLZ = new Map<string, { top: number; left: number; zIndex: number }>();
+	return {
+		domUtils: {
+			domTLZ,
+			getDomAttributes: (cardId: string) => {
+				return domTLZ.get(cardId);
+			},
+			setDomAttributes: (cardId: string, tlz: { top: number; left: number; zIndex: number }) => {
+				domTLZ.set(cardId, tlz);
+			},
+		},
+	};
+});
 
 function MockGamePage({ games }: { games: (FreeCell | string)[] }) {
 	return (
@@ -52,6 +68,8 @@ describe('useCardPositionAnimations', () => {
 	let timelineOnComplete: gsap.Callback | undefined;
 	let consoleDebugSpy: jest.SpyInstance;
 	beforeEach(() => {
+		domUtils.domTLZ.clear();
+
 		toGsapSpy = jest.spyOn(gsap, 'to');
 		setGsapSpy = jest.spyOn(gsap, 'set');
 		fromToSpy = jest.fn();
@@ -1400,10 +1418,10 @@ describe('useCardPositionAnimations', () => {
 
 			Second paint:
 			- `updateCardPositions` sets everything (as expected)
-			- `previousTLs` is empty (as expected)
+			- `previousTLZ` is empty (as expected)
 			Initial paint:
 			- `updateCardPositions` is empty (as expected)
-			- `previousTLs` has all the correct values (as it should be)
+			- `previousTLZ` has all the correct values (as it should be)
 		*/
 		test('Setting all cards after refresh then touch stop', () => {
 			const gameStateOne = new FreeCell().shuffle32(24827).dealAll().moveByShorthand('7a');

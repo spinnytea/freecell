@@ -35,6 +35,9 @@ export const PEEK_DOWN = 0.5;
 const SELECT_ROTATION_ANGLE = 10;
 
 export interface FixtureSizes {
+	/** HACK (techdebt) used for StaticFixtureSizesContextProvider for testing */
+	existsFixtureSizes?: true;
+
 	boardWidth: number;
 	boardHeight: number;
 	cardWidth: number;

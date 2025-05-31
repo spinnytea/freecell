@@ -1,3 +1,4 @@
+import { TLZ } from '@/app/components/element/domUtils';
 import {
 	Card,
 	CardSequence,
@@ -42,13 +43,13 @@ export interface InvalidMoveCardType {
 //  - we are informally doing this for `move-foundation`
 export function calcUpdatedCardPositions({
 	fixtureSizes,
-	previousTLs,
+	previousTLZ,
 	cards,
 	selection,
 	previousAction,
 }: {
 	fixtureSizes: FixtureSizes;
-	previousTLs: Map<string, number[]>;
+	previousTLZ: Map<string, TLZ>;
 	cards: Card[];
 	selection: CardSequence | null;
 	previousAction?: PreviousAction;
@@ -67,7 +68,7 @@ export function calcUpdatedCardPositions({
 		const { top, left, zIndex } = calcTopLeftZ(fixtureSizes, card.location, selection, card.rank);
 		const shorthand = shorthandCard(card);
 
-		const prev = previousTLs.get(shorthand);
+		const prev = previousTLZ.get(shorthand);
 		const updateCardPosition: UpdateCardPositionsType = {
 			shorthand,
 			top,
@@ -75,9 +76,9 @@ export function calcUpdatedCardPositions({
 			zIndex,
 			rank: getRankForCompare(card.rank),
 			suit: card.suit,
-			previousTop: prev?.[0] ?? top,
+			previousTop: prev?.top ?? top,
 		};
-		if (!prev || prev[0] !== top || prev[1] !== left) {
+		if (!prev || prev.top !== top || prev.left !== left) {
 			updateCardPositions.push(updateCardPosition);
 			fixtures.add(card.location.fixture);
 		} else {
@@ -121,7 +122,7 @@ export function calcUpdatedCardPositions({
 		) {
 			const { updateCardPositions: prevUpdateCardPositions } = calcUpdatedCardPositions({
 				fixtureSizes,
-				previousTLs,
+				previousTLZ,
 				cards: previousAction.tweenCards,
 				selection: null,
 			});

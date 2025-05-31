@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { gsap } from 'gsap/all';
 import { FreeCell } from '@/app/game/game';
 import GameBoard from '@/app/GameBoard';
+import { StaticFixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/StaticFixtureSizesContextProvider';
 import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
@@ -19,13 +20,15 @@ jest.mock('gsap/all', () => ({
 
 function MockGamePage({ game }: { game: FreeCell }) {
 	return (
-		<ManualTestingSettingsContextProvider>
-			<StaticGameContextProvider games={[game]}>
-				<ErrorBoundary>
-					<GameBoard className="none" />
-				</ErrorBoundary>
-			</StaticGameContextProvider>
-		</ManualTestingSettingsContextProvider>
+		<ErrorBoundary>
+			<ManualTestingSettingsContextProvider>
+				<StaticGameContextProvider games={[game]}>
+					<StaticFixtureSizesContextProvider>
+						<GameBoard className="none" />
+					</StaticFixtureSizesContextProvider>
+				</StaticGameContextProvider>
+			</ManualTestingSettingsContextProvider>
+		</ErrorBoundary>
 	);
 }
 
@@ -126,6 +129,7 @@ describe('Free Cell UI', () => {
 		expect(container).toMatchSnapshot();
 	});
 
+	// FIXME test.todo, reimpl moveByShorthand into clicks(screen)
 	/** https://www.solitairelaboratory.com/tutorial.html */
-	test.todo('Game #5 (tutorial)'); // FIXME test.todo, reimpl moveByShorthand into clicks(screen)
+	test.todo('Game #5 (tutorial)');
 });

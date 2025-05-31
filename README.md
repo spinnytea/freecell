@@ -28,7 +28,7 @@ TODO (motivation) main development tasks:
 
 ## Top-Level TODOs
 
-- TODO (techdebt) (motivation) (4-priority) unit test the "complete games" (solutions-catalog) with the UI
+- FIXME (techdebt) (motivation) (4-priority) unit test the "complete games" (solutions-catalog) with the UI
   - this will add some coverage to the components etc
   - it's an integration test to prove we can start, finish, restart a game
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)

@@ -1,33 +1,6 @@
 import { CardLocation } from '@/app/game/card/card';
-import {
-	calcCardCoords,
-	calcFixtureSizes,
-	FixtureSizes,
-} from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
-
-const dummyFixtureSizes: FixtureSizes = {
-	boardWidth: 100,
-	boardHeight: 100,
-	cardWidth: 10,
-	cardHeight: 20,
-
-	home: {
-		top: 5,
-		cellLeft: [10, 20, 30, 40],
-		foundationLeft: [50, 60, 70, 80],
-	},
-
-	tableau: {
-		top: 20,
-		cascadeLeft: [10, 20, 30, 40, 50, 60, 70, 80],
-		offsetTop: 1,
-	},
-
-	deck: {
-		top: 90,
-		left: 10,
-	},
-};
+import { calcCardCoords, calcFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import { calcStaticFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/StaticFixtureSizesContextProvider';
 
 describe('FixtureSizes', () => {
 	describe('calcFixtureSizes', () => {
@@ -56,7 +29,7 @@ describe('FixtureSizes', () => {
 	test.todo('calcTopLeftZ');
 
 	describe('calcCardCoords', () => {
-		const fixtureSizes: FixtureSizes = dummyFixtureSizes;
+		const fixtureSizes = calcStaticFixtureSizes(4, 4, 8);
 		describe('cell', () => {
 			test.each`
 				d0    | left

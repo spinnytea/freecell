@@ -2,7 +2,8 @@ import { MutableRefObject, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
 import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
-import { calcCardId } from '@/app/game/card/card';
+import { domUtils, TLZ } from '@/app/components/element/domUtils';
+import { calcCardId, shorthandCard } from '@/app/game/card/card';
 import { animShuffleCards } from '@/app/hooks/animations/animeShuffleCards';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
@@ -15,27 +16,6 @@ import { useGame } from '@/app/hooks/contexts/Game/useGame';
 export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<string>) {
 	const { cards, selection, previousAction } = useGame();
 	const fixtureSizes = useFixtureSizes();
-
-	/**
-		keep track of card positions, we need to animate anything that moves
-		if it hasn't moved since last time, then we don't need to animate it
-
-		IDEA (animation) (drag-and-drop) (techdebt) Store previous positions on DOM? Data attr? Context? GSAP (like, hault an animation, and continue from current position)?
-		 - It's just t/l
-		 - accessor method for unit testing
-		---
-		 - a local previousTLs doesn't play with other animations
-		 - drag-and-drop needs to know card positions too
-
-
-		IDEA (animation) (techdebt) Initial positions
-		 - Animations don't have positions until they change
-		 - So it animates everything all at once (fine)
-		 - Iff we don't have previousTLs, then g.undo() and seed it with those.
-
-		BUG (animation) (techdebt) Refresh and then immediately "new game" doesn't animate correctly (possibly because there are no saved card positions l yet)
-	*/
-	const previousTLs = useRef(new Map<string, number[]>());
 
 	/**
 		if we change the size of the screen, then everything will animate
@@ -63,6 +43,16 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				},
 			});
 
+			const previousTLZ = new Map<string, TLZ>();
+			cards.forEach((card) => {
+				const shorthand = shorthandCard(card);
+				const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
+				const tlz = domUtils.getDomAttributes(cardId);
+				if (tlz) {
+					previousTLZ.set(shorthand, tlz);
+				}
+			});
+
 			const {
 				updateCardPositions,
 				updateCardPositionsPrev,
@@ -71,7 +61,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				invalidMoveCards,
 			} = calcUpdatedCardPositions({
 				fixtureSizes,
-				previousTLs: previousTLs.current,
+				previousTLZ,
 				cards,
 				selection,
 				previousAction,
@@ -89,7 +79,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				}
 				previousTimeline.current = timeline;
 
-				const nextTLs = new Map(previousTLs.current);
+				const nextTLZ = new Map(previousTLZ);
 				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
 					// XXX (animation) should this be in animUpdatedCardPositions somehow?
 					const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
@@ -102,7 +92,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					animUpdatedCardPositions({
 						timeline,
 						list: updateCardPositionsPrev,
-						nextTLs,
+						nextTLZ,
 						fixtureSizes,
 						prevFixtureSizes,
 						gameBoardIdRef,
@@ -112,13 +102,17 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				animUpdatedCardPositions({
 					timeline,
 					list: updateCardPositions,
-					nextTLs,
+					nextTLZ,
 					fixtureSizes,
 					prevFixtureSizes,
 					gameBoardIdRef,
 					pause: secondMustComeAfter,
 				});
-				previousTLs.current = nextTLs;
+
+				nextTLZ.forEach((tlz, shorthand) => {
+					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
+					domUtils.setDomAttributes(cardId, tlz);
+				});
 			} else {
 				// repeated deal and undo can leave the positions stranded - reset them now
 				// it's something to do with the animation overlap
@@ -179,6 +173,4 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 		},
 		{ dependencies: [cards, selection, previousAction, fixtureSizes] }
 	);
-
-	return { previousTLs };
 }
