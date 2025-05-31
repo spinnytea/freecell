@@ -1,5 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { ControlSchemes } from '@/app/components/cards/constants';
+import { PREVIOUS_ACTION_TYPE_IS_START_OF_GAME } from '@/app/game/move/history';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
@@ -56,10 +57,14 @@ export function useKeybaordMiscControls() {
 					break;
 				case 'z':
 				case 'Z':
-					consumed = true;
-					// REVIEW (techdebt) why does g.undo run twice? (this keypress is only ran once; is this a react thing??)
 					// REVIEW (controls) update cursor - where would you like it to be?
-					setGame((g) => g.undoThenShuffle());
+					consumed = true;
+					setGame((g) => {
+						if (event.repeat && PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(g.previousAction.type)) {
+							return g;
+						}
+						return g.undoThenShuffle();
+					});
 					break;
 				// default:
 				// 	console.log(`unused key: "${key}"`);

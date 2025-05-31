@@ -64,7 +64,7 @@ TODO (motivation) main development tasks:
 - IDEA (motivation) implement War? just so it's flexible?
   - what is "it", the UI? the controls?
 - IDEA (motivation) implement Spider Solitaire, that could be fun
-- TODO (controls) (2-priority) keyboard hotkeys (1-8 (1234567890), abcd, h, ¿qwerty?, ¿uiop?)
+- TODO (controls) (3-priority) keyboard hotkeys (1-8 (1234567890), abcd, h, ¿qwerty?, ¿uiop?)
   - if cursor can stack with target: select, moveCard
   - if cursor cannot stack with target: setCursor
 - TODO (controls) mouse column mode (like keyboard hotkeys)
