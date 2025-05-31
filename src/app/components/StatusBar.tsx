@@ -32,7 +32,9 @@ export function StatusBar() {
 				text="Show Debug Info"
 				onChange={handleShowDebugInfoChange}
 			/>
-			<output className={styles_gameboard.hiddenActionText}>{previousAction.text}</output>
+			<output className={styles_gameboard.hiddenActionText} role="status">
+				{previousAction.text}
+			</output>
 			<span className={styles_gameboard.statusspacer} />
 			{showManualTestingLink && <Link href="/manualtesting">↗ Manual Testing</Link>}
 			<span>{version}</span>

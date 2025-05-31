@@ -6,8 +6,10 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 export function ManualTestingSettingsContextProvider({
 	cardFace,
 	children,
+	controlScheme = ControlSchemes.ClickToMove,
 }: Readonly<{
 	cardFace?: CardFaces;
+	controlScheme?: ControlSchemes;
 	children: ReactNode;
 }>) {
 	const [settings, setSettings] = useState<Settings>(() => ({
@@ -17,7 +19,7 @@ export function ManualTestingSettingsContextProvider({
 		showDebugInfo: false,
 		showKeyboardCursor: false,
 		cardFace: cardFace ?? 'SVGCards13',
-		enabledControlSchemes: new Set([ControlSchemes.ClickToMove]),
+		enabledControlSchemes: new Set([controlScheme]),
 	}));
 
 	return (

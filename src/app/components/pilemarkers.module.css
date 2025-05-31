@@ -4,6 +4,12 @@
 	background: rgba(var(--pile-rgb), 0.1);
 	border: 3px solid rgba(var(--pile-border-rgb), 0.3);
 	border-radius: var(--pile-border-radius);
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: uppercase;
+	color: transparent;
 }
 
 /* TODO (hud) (2-priority) piles don't need the focus style for mouse, only for keyboard */

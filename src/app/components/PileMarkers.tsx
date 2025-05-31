@@ -1,7 +1,7 @@
 import { MutableRefObject } from 'react';
 import classNames from 'classnames';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { calcPilemarkerId, CardLocation } from '@/app/game/card/card';
+import { calcPilemarkerId, CardLocation, shorthandPosition } from '@/app/game/card/card';
 import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
@@ -87,6 +87,8 @@ function Pile({
 			})}
 			style={style}
 			onClick={handleClickTouch}
-		/>
+		>
+			{shorthandPosition(location)}
+		</div>
 	);
 }
