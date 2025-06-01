@@ -43,7 +43,7 @@ function CribTheGame() {
 
 		if (card) {
 			fireEvent.click(screen.getByAltText(`${card.rank} of ${card.suit}`));
-		} else if (location.data[0] === 0) {
+		} else if ([0, -1, undefined].includes(location.data[1])) {
 			// pilemarker
 			fireEvent.click(screen.getByText(shorthandPosition(location)));
 		} else {
@@ -243,6 +243,146 @@ describe('Free Cell UI', () => {
 		mockReset();
 
 		expect(container).toMatchSnapshot();
+
+		// Move the nine of spades to a freecell
+		moveByShorthand('1a');
+		expect(screen.getByRole('status').textContent).toBe('move 1a 9S→cell');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// and the two of hearts to another freecell
+		moveByShorthand('1b');
+		expect(screen.getByRole('status').textContent).toBe('move 1b 2H→cell');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// Move the five of spades onto the six of hearts,
+		moveByShorthand('13');
+		expect(screen.getByRole('status').textContent).toBe('move 13 5S→6H');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// and the ten of diamonds (followed by the nine of spades) onto the jack of spades.
+		moveByShorthand('15');
+		expect(screen.getByRole('status').textContent).toBe('move 15 TD→JS');
+		moveByShorthand('a5');
+		expect(screen.getByRole('status').textContent).toBe('move a5 9S→TD');
+		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
+		expect(addLabelSpy.mock.calls).toEqual([
+			['updateCardPositions'],
+			['updateCardPositions'],
+			['updateCardPositions'],
+		]);
+		mockReset();
+		// Now move the three of spades and the five of clubs each to a freecell,
+		// and the ace of hearts and two of hearts automatically move to a new homecell.
+		moveByShorthand('1a');
+		expect(screen.getByRole('status').textContent).toBe('move 1a 3S→cell');
+		moveByShorthand('1c');
+		expect(screen.getByRole('status').textContent).toBe(
+			'move 1c 5C→cell (auto-foundation 1b AH,2H)'
+		);
+		expect(addLabelSpy.mock.calls).toEqual([
+			['updateCardPositions'],
+			['updateCardPositions'],
+			['updateCardPositions'],
+			['updateCardPositionsPrev'],
+			['updateCardPositions'],
+		]);
+		mockReset();
+		// Click on the five of hearts now to select it, then click on the empty sixth column.
+		moveByShorthand('86');
+		expect(screen.getByRole('status').textContent).toBe('move 86 7D-6C-5H→cascade');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+
+		expect(container).toMatchSnapshot();
+
+		// Next move the eight of diamonds onto the nine of spades,
+		moveByShorthand('85');
+		expect(screen.getByRole('status').textContent).toBe('move 85 8D→9S');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// and the four of spades and three of diamonds onto the five of hearts, clearing column eight.
+		moveByShorthand('86');
+		expect(screen.getByRole('status').textContent).toBe('move 86 4S→5H');
+		moveByShorthand('86');
+		expect(screen.getByRole('status').textContent).toBe('move 86 3D→4S');
+		expect(addLabelSpy.mock.calls).toEqual([
+			['updateCardPositions'],
+			['updateCardPositions'],
+			['updateCardPositions'],
+			['updateCardPositions'],
+		]);
+		mockReset();
+		// Next move the queen of hearts into the empty first column
+		moveByShorthand('21');
+		expect(screen.getByRole('status').textContent).toBe('move 21 QH→cascade');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// Move the seven of spades onto the eight of diamonds,
+		moveByShorthand('25');
+		expect(screen.getByRole('status').textContent).toBe('move 25 7S→8D');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// the five of diamonds to a freecell (sending the ace of spades home),
+		moveByShorthand('2b');
+		expect(screen.getByRole('status').textContent).toBe('move 2b 5D→cell (auto-foundation 2 AS)');
+		expect(addLabelSpy.mock.calls).toEqual([
+			['updateCardPositions'],
+			['updateCardPositionsPrev'],
+			['updateCardPositions'],
+		]);
+		mockReset();
+		// and the eight of spades onto the nine of hearts.
+		moveByShorthand('27');
+		expect(screen.getByRole('status').textContent).toBe('move 27 8S→9H');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// Move the ten of spades into the empty second column,
+		moveByShorthand('42');
+		expect(screen.getByRole('status').textContent).toBe('move 42 TS→cascade');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// the six of diamonds (followed by the five of clubs) onto the seven of spades,
+		moveByShorthand('45');
+		expect(screen.getByRole('status').textContent).toBe('move 45 6D→7S');
+		moveByShorthand('c5');
+		expect(screen.getByRole('status').textContent).toBe('move c5 5C→6D');
+		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select c, then rotate back
+		expect(addLabelSpy.mock.calls).toEqual([
+			['updateCardPositions'],
+			['updateCardPositions'],
+			['updateCardPositions'],
+		]);
+		mockReset();
+		// the nine of diamonds onto the ten of spades,
+		moveByShorthand('42');
+		expect(screen.getByRole('status').textContent).toBe('move 42 9D→TS');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// and the seven of hearts onto the eight of spades.
+		moveByShorthand('47');
+		expect(screen.getByRole('status').textContent).toBe('move 47 7H→8S');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+
+		// it is perfectly safe to move the three of hearts to its homecell,
+		// and you can do so yourself by selecting it, then clicking on the two of hearts.
+		moveByShorthand('4h');
+		expect(screen.getByRole('status').textContent).toBe('move 4h 3H→2H');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// Now reverse the backwards sequence in the fourth column by moving the king of hearts,
+		// followed by the queen of spades, to the empty eighth column.
+		moveByShorthand('48');
+		expect(screen.getByRole('status').textContent).toBe('move 48 KH→cascade');
+		moveByShorthand('48');
+		expect(screen.getByRole('status').textContent).toBe('move 48 QS→KH');
+		expect(addLabelSpy.mock.calls).toEqual([
+			['updateCardPositions'],
+			['updateCardPositions'],
+			['updateCardPositions'],
+			['updateCardPositions'],
+		]);
+		mockReset();
 
 		// FIXME finish following game.test.js
 

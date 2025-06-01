@@ -3686,14 +3686,14 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
         5
       </div>
       <div
-        class="pile"
+        class="pile cursorPile"
         id="pilemarker-6-6-1"
         style="top: 21px; left: 61px; width: 8px; height: 18px;"
       >
         6
       </div>
       <div
-        class="pile cursorPile"
+        class="pile"
         id="pilemarker-7-7-1"
         style="top: 21px; left: 71px; width: 8px; height: 18px;"
       >
@@ -3750,9 +3750,9 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="20"
-        data-zindex="0"
+        data-left="70"
+        data-top="5"
+        data-zindex="99"
         id="cAH-1"
       >
         <img
@@ -3826,9 +3826,9 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="25"
-        data-zindex="5"
+        data-left="70"
+        data-top="5"
+        data-zindex="100"
         id="c2H-1"
       >
         <img
@@ -3922,8 +3922,8 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="10"
-        data-top="22"
-        data-zindex="2"
+        data-top="5"
+        data-zindex="0"
         id="c3S-1"
       >
         <img
@@ -4016,9 +4016,9 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="21"
-        data-zindex="1"
+        data-left="30"
+        data-top="5"
+        data-zindex="2"
         id="c5C-1"
       >
         <img
@@ -4054,9 +4054,9 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="25"
-        data-zindex="5"
+        data-left="60"
+        data-top="22"
+        data-zindex="2"
         id="c5H-1"
       >
         <img
@@ -4073,9 +4073,9 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="24"
-        data-zindex="4"
+        data-left="30"
+        data-top="28"
+        data-zindex="8"
         id="c5S-1"
       >
         <img
@@ -4092,9 +4092,9 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="24"
-        data-zindex="4"
+        data-left="60"
+        data-top="21"
+        data-zindex="1"
         id="c6C-1"
       >
         <img
@@ -4187,9 +4187,9 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="23"
-        data-zindex="3"
+        data-left="60"
+        data-top="20"
+        data-zindex="0"
         id="c7D-1"
       >
         <img
@@ -4377,9 +4377,9 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="26"
-        data-zindex="6"
+        data-left="50"
+        data-top="28"
+        data-zindex="8"
         id="c9S-1"
       >
         <img
@@ -4415,9 +4415,9 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="23"
-        data-zindex="3"
+        data-left="50"
+        data-top="27"
+        data-zindex="7"
         id="cTD-1"
       >
         <img
@@ -4742,7 +4742,1197 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
         class="hiddenActionText"
         role="status"
       >
-        move 67 9H→TC
+        move 86 7D-6C-5H→cascade
+      </output>
+      <span
+        class="statusspacer"
+      />
+      <a
+        href="/manualtesting"
+      >
+        ↗ Manual Testing
+      </a>
+      <span>
+        vUnknown
+      </span>
+    </section>
+  </main>
+</div>
+`;
+
+exports[`Free Cell UI Game #5 (tutorial) 5`] = `
+<div>
+  <main
+    class="none common"
+    tabindex="0"
+  >
+    <div
+      class="hiddenDeckBack"
+    >
+      <img
+        alt="card back"
+        data-nimg="1"
+        decoding="async"
+        draggable="false"
+        fetchpriority="high"
+        height="0"
+        src="/i/Card_back_10.svg"
+        style="color: transparent;"
+        width="0"
+      />
+    </div>
+    <div
+      id="piles"
+    >
+      <div
+        class="pile"
+        id="pilemarker-a-1-1"
+        style="top: 6px; left: 11px; width: 8px; height: 18px;"
+      >
+        a
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-b-2-1"
+        style="top: 6px; left: 21px; width: 8px; height: 18px;"
+      >
+        b
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-c-3-1"
+        style="top: 6px; left: 31px; width: 8px; height: 18px;"
+      >
+        c
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-d-4-1"
+        style="top: 6px; left: 41px; width: 8px; height: 18px;"
+      >
+        d
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-h-1-1"
+        style="top: 6px; left: 51px; width: 8px; height: 18px;"
+      >
+        h
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-h-2-1"
+        style="top: 6px; left: 61px; width: 8px; height: 18px;"
+      >
+        h
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-h-3-1"
+        style="top: 6px; left: 71px; width: 8px; height: 18px;"
+      >
+        h
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-h-4-1"
+        style="top: 6px; left: 81px; width: 8px; height: 18px;"
+      >
+        h
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-1-1-1"
+        style="top: 21px; left: 11px; width: 8px; height: 18px;"
+      >
+        1
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-2-2-1"
+        style="top: 21px; left: 21px; width: 8px; height: 18px;"
+      >
+        2
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-3-3-1"
+        style="top: 21px; left: 31px; width: 8px; height: 18px;"
+      >
+        3
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-4-4-1"
+        style="top: 21px; left: 41px; width: 8px; height: 18px;"
+      >
+        4
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-5-5-1"
+        style="top: 21px; left: 51px; width: 8px; height: 18px;"
+      >
+        5
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-6-6-1"
+        style="top: 21px; left: 61px; width: 8px; height: 18px;"
+      >
+        6
+      </div>
+      <div
+        class="pile"
+        id="pilemarker-7-7-1"
+        style="top: 21px; left: 71px; width: 8px; height: 18px;"
+      >
+        7
+      </div>
+      <div
+        class="pile cursorPile"
+        id="pilemarker-8-8-1"
+        style="top: 21px; left: 81px; width: 8px; height: 18px;"
+      >
+        8
+      </div>
+    </div>
+    <div
+      id="cards"
+    >
+      <div
+        class="card"
+        data-left="60"
+        data-top="5"
+        data-zindex="99"
+        id="cAC-1"
+      >
+        <img
+          alt="ace of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/ace_of_clubs.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="5"
+        data-zindex="99"
+        id="cAD-1"
+      >
+        <img
+          alt="ace of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/ace_of_diamonds.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="5"
+        data-zindex="99"
+        id="cAH-1"
+      >
+        <img
+          alt="ace of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/ace_of_hearts.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="80"
+        data-top="5"
+        data-zindex="99"
+        id="cAS-1"
+      >
+        <img
+          alt="ace of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/ace_of_spades.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="60"
+        data-top="5"
+        data-zindex="100"
+        id="c2C-1"
+      >
+        <img
+          alt="2 of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/2_of_clubs.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="30"
+        data-top="20"
+        data-zindex="0"
+        id="c2D-1"
+      >
+        <img
+          alt="2 of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/2_of_diamonds.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="5"
+        data-zindex="100"
+        id="c2H-1"
+      >
+        <img
+          alt="2 of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/2_of_hearts.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="20"
+        data-zindex="0"
+        id="c2S-1"
+      >
+        <img
+          alt="2 of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/2_of_spades.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="21"
+        data-zindex="1"
+        id="c3C-1"
+      >
+        <img
+          alt="3 of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/3_of_clubs.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="60"
+        data-top="24"
+        data-zindex="4"
+        id="c3D-1"
+      >
+        <img
+          alt="3 of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/3_of_diamonds.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="5"
+        data-zindex="101"
+        id="c3H-1"
+      >
+        <img
+          alt="3 of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/3_of_hearts.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="10"
+        data-top="5"
+        data-zindex="0"
+        id="c3S-1"
+      >
+        <img
+          alt="3 of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/3_of_spades.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="20"
+        data-zindex="0"
+        id="c4C-1"
+      >
+        <img
+          alt="4 of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/4_of_clubs.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="21"
+        data-zindex="1"
+        id="c4D-1"
+      >
+        <img
+          alt="4 of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/4_of_diamonds.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="24"
+        data-zindex="4"
+        id="c4H-1"
+      >
+        <img
+          alt="4 of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/4_of_hearts.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="60"
+        data-top="23"
+        data-zindex="3"
+        id="c4S-1"
+      >
+        <img
+          alt="4 of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/4_of_spades.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="32"
+        data-zindex="12"
+        id="c5C-1"
+      >
+        <img
+          alt="5 of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/5_of_clubs.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="20"
+        data-top="5"
+        data-zindex="1"
+        id="c5D-1"
+      >
+        <img
+          alt="5 of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/5_of_diamonds.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="60"
+        data-top="22"
+        data-zindex="2"
+        id="c5H-1"
+      >
+        <img
+          alt="5 of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/5_of_hearts.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="30"
+        data-top="28"
+        data-zindex="8"
+        id="c5S-1"
+      >
+        <img
+          alt="5 of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/5_of_spades.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="60"
+        data-top="21"
+        data-zindex="1"
+        id="c6C-1"
+      >
+        <img
+          alt="6 of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/6_of_clubs.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="31"
+        data-zindex="11"
+        id="c6D-1"
+      >
+        <img
+          alt="6 of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/6_of_diamonds.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="30"
+        data-top="27"
+        data-zindex="7"
+        id="c6H-1"
+      >
+        <img
+          alt="6 of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/6_of_hearts.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="22"
+        data-zindex="2"
+        id="c6S-1"
+      >
+        <img
+          alt="6 of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/6_of_spades.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="30"
+        data-top="26"
+        data-zindex="6"
+        id="c7C-1"
+      >
+        <img
+          alt="7 of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/7_of_clubs.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="60"
+        data-top="20"
+        data-zindex="0"
+        id="c7D-1"
+      >
+        <img
+          alt="7 of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/7_of_diamonds.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="30"
+        data-zindex="10"
+        id="c7H-1"
+      >
+        <img
+          alt="7 of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/7_of_hearts.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="30"
+        data-zindex="10"
+        id="c7S-1"
+      >
+        <img
+          alt="7 of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/7_of_spades.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="30"
+        data-top="24"
+        data-zindex="4"
+        id="c8C-1"
+      >
+        <img
+          alt="8 of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/8_of_clubs.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="29"
+        data-zindex="9"
+        id="c8D-1"
+      >
+        <img
+          alt="8 of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/8_of_diamonds.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="23"
+        data-zindex="3"
+        id="c8H-1"
+      >
+        <img
+          alt="8 of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/8_of_hearts.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="29"
+        data-zindex="9"
+        id="c8S-1"
+      >
+        <img
+          alt="8 of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/8_of_spades.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="30"
+        data-top="21"
+        data-zindex="1"
+        id="c9C-1"
+      >
+        <img
+          alt="9 of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/9_of_clubs.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="20"
+        data-top="21"
+        data-zindex="1"
+        id="c9D-1"
+      >
+        <img
+          alt="9 of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/9_of_diamonds.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="28"
+        data-zindex="8"
+        id="c9H-1"
+      >
+        <img
+          alt="9 of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/9_of_hearts.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="28"
+        data-zindex="8"
+        id="c9S-1"
+      >
+        <img
+          alt="9 of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/9_of_spades.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="27"
+        data-zindex="7"
+        id="cTC-1"
+      >
+        <img
+          alt="10 of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/10_of_clubs.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="27"
+        data-zindex="7"
+        id="cTD-1"
+      >
+        <img
+          alt="10 of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/10_of_diamonds.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="30"
+        data-top="25"
+        data-zindex="5"
+        id="cTH-1"
+      >
+        <img
+          alt="10 of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/10_of_hearts.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="20"
+        data-top="20"
+        data-zindex="0"
+        id="cTS-1"
+      >
+        <img
+          alt="10 of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/10_of_spades.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="23"
+        data-zindex="3"
+        id="cJC-1"
+      >
+        <img
+          alt="jack of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/jack_of_clubs2.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="30"
+        data-top="23"
+        data-zindex="3"
+        id="cJD-1"
+      >
+        <img
+          alt="jack of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/jack_of_diamonds2.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="26"
+        data-zindex="6"
+        id="cJH-1"
+      >
+        <img
+          alt="jack of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/jack_of_hearts2.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="26"
+        data-zindex="6"
+        id="cJS-1"
+      >
+        <img
+          alt="jack of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/jack_of_spades2.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="70"
+        data-top="25"
+        data-zindex="5"
+        id="cQC-1"
+      >
+        <img
+          alt="queen of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/queen_of_clubs2.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="25"
+        data-zindex="5"
+        id="cQD-1"
+      >
+        <img
+          alt="queen of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/queen_of_diamonds2.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="10"
+        data-top="20"
+        data-zindex="0"
+        id="cQH-1"
+      >
+        <img
+          alt="queen of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/queen_of_hearts2.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="80"
+        data-top="21"
+        data-zindex="1"
+        id="cQS-1"
+      >
+        <img
+          alt="queen of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/queen_of_spades2.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="30"
+        data-top="22"
+        data-zindex="2"
+        id="cKC-1"
+      >
+        <img
+          alt="king of clubs"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/king_of_clubs2.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="22"
+        data-zindex="2"
+        id="cKD-1"
+      >
+        <img
+          alt="king of diamonds"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/king_of_diamonds2.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="80"
+        data-top="20"
+        data-zindex="0"
+        id="cKH-1"
+      >
+        <img
+          alt="king of hearts"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/king_of_hearts2.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+      <div
+        class="card"
+        data-left="50"
+        data-top="24"
+        data-zindex="4"
+        id="cKS-1"
+      >
+        <img
+          alt="king of spades"
+          data-nimg="1"
+          decoding="async"
+          draggable="false"
+          fetchpriority="high"
+          height="14"
+          src="http://localhost/i/SVG-cards-1.3/king_of_spades2.svg"
+          style="color: transparent;"
+          width="10"
+        />
+      </div>
+    </div>
+    <button
+      aria-label="Open settings dialog"
+      class="btn square settingsButton"
+      title="Settings"
+    >
+      <span
+        class="squareText"
+      >
+        ⚙
+        ︎
+      </span>
+    </button>
+    <button
+      aria-label="Undo previous action"
+      class="btn square undoButton"
+      title="Undo"
+    >
+      <span
+        class="squareText"
+      >
+        ⎌
+      </span>
+    </button>
+    <section
+      class="status"
+    >
+      <label
+        class="checkbox"
+        for="showDebugInfo"
+      >
+        <input
+          id="showDebugInfo"
+          name="showDebugInfo"
+          type="checkbox"
+        />
+        <span>
+          Show Debug Info
+        </span>
+      </label>
+      <output
+        class="hiddenActionText"
+        role="status"
+      >
+        move 48 QS→KH
       </output>
       <span
         class="statusspacer"
