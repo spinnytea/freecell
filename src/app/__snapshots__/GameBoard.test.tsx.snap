@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Free Cell UI Game #5 (tutorial) 1`] = `
+exports[`GameBoard Game #5 (tutorial) 1`] = `
 <div>
   <main
     class="none common"
@@ -1190,7 +1190,7 @@ exports[`Free Cell UI Game #5 (tutorial) 1`] = `
 </div>
 `;
 
-exports[`Free Cell UI Game #5 (tutorial) 2`] = `
+exports[`GameBoard Game #5 (tutorial) 2`] = `
 <div>
   <main
     class="none common"
@@ -2380,7 +2380,7 @@ exports[`Free Cell UI Game #5 (tutorial) 2`] = `
 </div>
 `;
 
-exports[`Free Cell UI Game #5 (tutorial) 3`] = `
+exports[`GameBoard Game #5 (tutorial) 3`] = `
 <div>
   <main
     class="none common"
@@ -3570,7 +3570,7 @@ exports[`Free Cell UI Game #5 (tutorial) 3`] = `
 </div>
 `;
 
-exports[`Free Cell UI Game #5 (tutorial) 4`] = `
+exports[`GameBoard Game #5 (tutorial) 4`] = `
 <div>
   <main
     class="none common"
@@ -4760,7 +4760,7 @@ exports[`Free Cell UI Game #5 (tutorial) 4`] = `
 </div>
 `;
 
-exports[`Free Cell UI Game #5 (tutorial) 5`] = `
+exports[`GameBoard Game #5 (tutorial) 5`] = `
 <div>
   <main
     class="none common"
@@ -5950,7 +5950,7 @@ exports[`Free Cell UI Game #5 (tutorial) 5`] = `
 </div>
 `;
 
-exports[`Free Cell UI Game #5 (tutorial) 6`] = `
+exports[`GameBoard Game #5 (tutorial) 6`] = `
 <div>
   <main
     class="none common"
@@ -7140,7 +7140,7 @@ exports[`Free Cell UI Game #5 (tutorial) 6`] = `
 </div>
 `;
 
-exports[`Free Cell UI Game #5 (tutorial) 7`] = `
+exports[`GameBoard Game #5 (tutorial) 7`] = `
 <div>
   <main
     class="none common"
@@ -8336,7 +8336,7 @@ exports[`Free Cell UI Game #5 (tutorial) 7`] = `
 </div>
 `;
 
-exports[`Free Cell UI renders a game 1`] = `
+exports[`GameBoard renders a game 1`] = `
 <div>
   <main
     class="none common"

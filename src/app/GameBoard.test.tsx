@@ -79,7 +79,8 @@ function MockGamePage({ game }: { game: FreeCell }) {
 }
 
 // FIXME review test coverage and stub out some tests
-describe('Free Cell UI', () => {
+// FIXME test.todo
+describe('GameBoard', () => {
 	// REVIEW (techdebt) this is a _lot_ of mocking, duplicated in useCardPositionAnimations.test
 	let toGsapSpy: jest.SpyInstance;
 	let setGsapSpy: jest.SpyInstance;
@@ -173,11 +174,12 @@ describe('Free Cell UI', () => {
 		expect(container).toMatchSnapshot();
 	});
 
-	// FIXME test.todo
 	//  - start with a win state
 	//  - click to reset it
 	//  - click to deal
 	test.todo('can click through to new game');
+
+	test.todo('enable debug mode');
 
 	// XXX (techdebt) instead of just checking toGsapSpy call count, actually check what it did
 	//  - expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
