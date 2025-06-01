@@ -18,6 +18,7 @@ import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameConte
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
+import { spyOnGsap } from '@/app/testUtils';
 
 jest.mock('gsap/all', () => ({
 	gsap: {
@@ -80,95 +81,54 @@ function MockGamePage({ game, gameBoardId }: { game: FreeCell; gameBoardId?: str
 
 // FIXME review test coverage and stub out some tests
 describe('GameBoard', () => {
-	// REVIEW (techdebt) this is a _lot_ of mocking, duplicated in useCardPositionAnimations.test
 	let toGsapSpy: jest.SpyInstance;
-	let setGsapSpy: jest.SpyInstance;
 	let fromGsapSpy: jest.SpyInstance;
-	let fromToSpy: jest.SpyInstance;
-	let toSpy: jest.SpyInstance;
-	let setSpy: jest.SpyInstance;
 	let addLabelSpy: jest.SpyInstance;
-	let addSpy: jest.SpyInstance;
-	let timeScaleSpy: jest.SpyInstance;
-	let timelineOnComplete: gsap.Callback | undefined;
 	let consoleDebugSpy: jest.SpyInstance;
+	let mockReset: (runOnComplete?: boolean) => void;
+	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
-		toGsapSpy = jest.spyOn(gsap, 'to');
-		setGsapSpy = jest.spyOn(gsap, 'set');
-		fromGsapSpy = jest.spyOn(gsap, 'from');
-		fromToSpy = jest.fn();
-		toSpy = jest.fn();
-		setSpy = jest.fn();
-		addLabelSpy = jest.fn();
-		addSpy = jest.fn();
-		timeScaleSpy = jest.fn();
-
-		jest.spyOn(gsap, 'timeline').mockImplementation((vars) => {
-			timelineOnComplete = vars?.onComplete;
-			const timelineMock: unknown = {
-				fromTo: fromToSpy,
-				to: toSpy,
-				set: setSpy,
-				addLabel: addLabelSpy,
-				add: addSpy,
-				timeScale: timeScaleSpy,
-				totalProgress: () => ({
-					kill: () => {
-						/* empty */
-					},
-				}),
-			};
-			return timelineMock as gsap.core.Timeline;
-		});
-		consoleDebugSpy = jest.spyOn(console, 'debug').mockImplementation();
+		({ toGsapSpy, fromGsapSpy, addLabelSpy, consoleDebugSpy, mockReset, mockCallTimes } =
+			spyOnGsap(gsap));
+		consoleDebugSpy.mockReturnValue(undefined);
 	});
-
-	function mockReset(runOnComplete = true) {
-		if (timelineOnComplete && runOnComplete) {
-			timelineOnComplete();
-		}
-
-		toGsapSpy.mockReset();
-		setGsapSpy.mockReset();
-		fromGsapSpy.mockReset();
-		toSpy.mockReset();
-		fromToSpy.mockReset();
-		setSpy.mockReset();
-		addLabelSpy.mockReset();
-		addSpy.mockReset();
-		timeScaleSpy.mockReset();
-	}
 
 	/** https://www.solitairelaboratory.com/tutorial.html */
 	test('renders a game', () => {
 		const { container } = render(<MockGamePage game={new FreeCell().shuffle32(0)} />);
 
 		// initial state
-		expect(toGsapSpy).toHaveBeenCalledTimes(52);
-		expect(setGsapSpy).toHaveBeenCalledTimes(52);
-		expect(fromGsapSpy).toHaveBeenCalledTimes(0);
-		expect(toSpy).toHaveBeenCalledTimes(0);
-		expect(fromToSpy).toHaveBeenCalledTimes(0);
-		expect(setSpy).toHaveBeenCalledTimes(52);
 		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
-		expect(addSpy).toHaveBeenCalledTimes(0);
-		expect(timeScaleSpy).toHaveBeenCalledTimes(0);
-		expect(consoleDebugSpy.mock.calls).toEqual([]);
+		expect(mockCallTimes()).toEqual({
+			toGsapSpy: 52,
+			setGsapSpy: 52,
+			fromGsapSpy: 0,
+			fromToSpy: 0,
+			toSpy: 0,
+			setSpy: 52,
+			addLabelSpy: 1,
+			addSpy: 0,
+			timeScaleSpy: 0,
+			consoleDebugSpy: 0,
+		});
 
 		mockReset();
 		fireEvent.click(screen.getAllByAltText('card back')[0]);
 
 		// animations
-		expect(toGsapSpy).toHaveBeenCalledTimes(0);
-		expect(setGsapSpy).toHaveBeenCalledTimes(0);
-		expect(fromGsapSpy).toHaveBeenCalledTimes(0);
-		expect(toSpy).toHaveBeenCalledTimes(52);
-		expect(fromToSpy).toHaveBeenCalledTimes(52);
-		expect(setSpy).toHaveBeenCalledTimes(0);
 		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
-		expect(addSpy).toHaveBeenCalledTimes(0);
-		expect(timeScaleSpy).toHaveBeenCalledTimes(0);
-		expect(consoleDebugSpy.mock.calls).toEqual([]);
+		expect(mockCallTimes()).toEqual({
+			toGsapSpy: 0,
+			setGsapSpy: 0,
+			fromGsapSpy: 0,
+			fromToSpy: 52,
+			toSpy: 52,
+			setSpy: 0,
+			addLabelSpy: 1,
+			addSpy: 0,
+			timeScaleSpy: 0,
+			consoleDebugSpy: 0,
+		});
 
 		expect(container).toMatchSnapshot();
 	});

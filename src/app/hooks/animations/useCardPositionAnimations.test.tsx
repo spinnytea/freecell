@@ -10,11 +10,13 @@ import { FreeCell } from '@/app/game/game';
 import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositionAnimations';
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
 import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
+import { spyOnGsap } from '@/app/testUtils';
 
 jest.mock('gsap/all', () => ({
 	gsap: {
 		to: () => ({}),
 		set: () => ({}),
+		from: () => ({}),
 		timeline: () => ({}),
 		utils: {
 			random: () => undefined,
@@ -56,7 +58,7 @@ describe('useCardPositionAnimations', () => {
 	// we can use this for a lot of tests, so we don't need to keep remaking it
 	const newGameState = new FreeCell();
 
-	// REVIEW (techdebt) this is a _lot_ of mocking, duplicated in page.test
+	// REVIEW (techdebt) this is a _lot_ of mocking, can we make some accessors to simplify this?
 	let toGsapSpy: jest.SpyInstance;
 	let setGsapSpy: jest.SpyInstance;
 	let fromToSpy: jest.SpyInstance;
@@ -65,56 +67,26 @@ describe('useCardPositionAnimations', () => {
 	let addLabelSpy: jest.SpyInstance;
 	let addSpy: jest.SpyInstance;
 	let timeScaleSpy: jest.SpyInstance;
-	let timelineOnComplete: gsap.Callback | undefined;
 	let consoleDebugSpy: jest.SpyInstance;
+	let mockReset: (runOnComplete?: boolean) => void;
+	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
 		domUtils.domTLZ.clear();
 
-		toGsapSpy = jest.spyOn(gsap, 'to');
-		setGsapSpy = jest.spyOn(gsap, 'set');
-		fromToSpy = jest.fn();
-		toSpy = jest.fn();
-		setSpy = jest.fn();
-		addLabelSpy = jest.fn();
-		addSpy = jest.fn();
-		timeScaleSpy = jest.fn();
-
-		jest.spyOn(gsap, 'timeline').mockImplementation((vars) => {
-			timelineOnComplete = vars?.onComplete;
-			const timelineMock: unknown = {
-				fromTo: fromToSpy,
-				to: toSpy,
-				set: setSpy,
-				addLabel: addLabelSpy,
-				add: addSpy,
-				timeScale: timeScaleSpy,
-				totalProgress: () => ({
-					kill: () => {
-						/* empty */
-					},
-				}),
-			};
-			return timelineMock as gsap.core.Timeline;
-		});
-		consoleDebugSpy = jest.spyOn(console, 'debug').mockImplementation(() => {
-			throw new Error('must mock console.debug');
-		});
+		({
+			toGsapSpy,
+			setGsapSpy,
+			fromToSpy,
+			toSpy,
+			setSpy,
+			addLabelSpy,
+			addSpy,
+			timeScaleSpy,
+			consoleDebugSpy,
+			mockReset,
+			mockCallTimes,
+		} = spyOnGsap(gsap));
 	});
-
-	function mockReset(runOnComplete = true) {
-		if (timelineOnComplete && runOnComplete) {
-			timelineOnComplete();
-		}
-
-		toGsapSpy.mockReset();
-		setGsapSpy.mockReset();
-		fromToSpy.mockReset();
-		toSpy.mockReset();
-		setSpy.mockReset();
-		addLabelSpy.mockReset();
-		addSpy.mockReset();
-		timeScaleSpy.mockReset();
-	}
 
 	function getCardIdsFromSpy(spy: jest.SpyInstance) {
 		return spy.mock.calls.map(([cardId]: [string]) => cardId);
@@ -135,28 +107,37 @@ describe('useCardPositionAnimations', () => {
 
 				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-				expect(toGsapSpy).not.toHaveBeenCalled();
-				expect(setGsapSpy).not.toHaveBeenCalled();
-				expect(toSpy).not.toHaveBeenCalled();
-				expect(fromToSpy).not.toHaveBeenCalled();
-				expect(setSpy).toHaveBeenCalledTimes(52);
 				expect(setSpy.mock.calls).toMatchSnapshot();
 				// expect(setSpy.mock.calls.map(([cardId]) => cardId as string)).toEqual(['#cAC', '#cAD', ..., '#cKH', '#cKS']);
 				expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
-				expect(addSpy).not.toHaveBeenCalled();
-				expect(timeScaleSpy).not.toHaveBeenCalled();
+				expect(mockCallTimes()).toEqual({
+					toGsapSpy: 0,
+					setGsapSpy: 0,
+					fromGsapSpy: 0,
+					fromToSpy: 0,
+					toSpy: 0,
+					setSpy: 52,
+					addLabelSpy: 1,
+					addSpy: 0,
+					timeScaleSpy: 0,
+					consoleDebugSpy: 0,
+				});
 
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-				expect(toGsapSpy).not.toHaveBeenCalled();
-				expect(setGsapSpy).not.toHaveBeenCalled();
-				expect(toSpy).not.toHaveBeenCalled();
-				expect(fromToSpy).not.toHaveBeenCalled();
-				expect(setSpy).not.toHaveBeenCalled();
-				expect(addLabelSpy).not.toHaveBeenCalled();
-				expect(addSpy).not.toHaveBeenCalled();
-				expect(timeScaleSpy).not.toHaveBeenCalled();
+				expect(mockCallTimes()).toEqual({
+					toGsapSpy: 0,
+					setGsapSpy: 0,
+					fromGsapSpy: 0,
+					fromToSpy: 0,
+					toSpy: 0,
+					setSpy: 0,
+					addLabelSpy: 0,
+					addSpy: 0,
+					timeScaleSpy: 0,
+					consoleDebugSpy: 0,
+				});
 			});
 
 			test('win -> init', () => {
