@@ -1,7 +1,7 @@
 export interface TLZ {
 	top: number;
 	left: number;
-	zIndex?: number;
+	zIndex: number;
 }
 
 export const domUtils = {
@@ -30,7 +30,7 @@ export const domUtils = {
 		if (cardEl) {
 			cardEl.setAttribute('data-top', top.toString(10));
 			cardEl.setAttribute('data-left', left.toString(10));
-			cardEl.setAttribute('data-zIndex', (zIndex ?? 0).toString(10));
+			cardEl.setAttribute('data-zIndex', zIndex.toString(10));
 		}
 	},
 

@@ -1,7 +1,15 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { gsap } from 'gsap/all';
 import { ControlSchemes } from '@/app/components/cards/constants';
-import { CardLocation, shorthandPosition } from '@/app/game/card/card';
+import { domUtils } from '@/app/components/element/domUtils';
+import {
+	calcCardId,
+	CardLocation,
+	RankList,
+	shorthandCard,
+	shorthandPosition,
+	SuitList,
+} from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import { parseShorthandMove } from '@/app/game/move/move';
 import GameBoard from '@/app/GameBoard';
@@ -15,6 +23,7 @@ jest.mock('gsap/all', () => ({
 	gsap: {
 		to: () => ({}),
 		set: () => ({}),
+		from: () => ({}),
 		timeline: () => ({}),
 		utils: {
 			random: () => undefined,
@@ -69,10 +78,12 @@ function MockGamePage({ game }: { game: FreeCell }) {
 	);
 }
 
+// FIXME review test coverage and stub out some tests
 describe('Free Cell UI', () => {
 	// REVIEW (techdebt) this is a _lot_ of mocking, duplicated in useCardPositionAnimations.test
 	let toGsapSpy: jest.SpyInstance;
 	let setGsapSpy: jest.SpyInstance;
+	let fromGsapSpy: jest.SpyInstance;
 	let fromToSpy: jest.SpyInstance;
 	let toSpy: jest.SpyInstance;
 	let setSpy: jest.SpyInstance;
@@ -84,6 +95,7 @@ describe('Free Cell UI', () => {
 	beforeEach(() => {
 		toGsapSpy = jest.spyOn(gsap, 'to');
 		setGsapSpy = jest.spyOn(gsap, 'set');
+		fromGsapSpy = jest.spyOn(gsap, 'from');
 		fromToSpy = jest.fn();
 		toSpy = jest.fn();
 		setSpy = jest.fn();
@@ -118,6 +130,7 @@ describe('Free Cell UI', () => {
 
 		toGsapSpy.mockReset();
 		setGsapSpy.mockReset();
+		fromGsapSpy.mockReset();
 		toSpy.mockReset();
 		fromToSpy.mockReset();
 		setSpy.mockReset();
@@ -126,14 +139,6 @@ describe('Free Cell UI', () => {
 		timeScaleSpy.mockReset();
 	}
 
-	// just pick a seed for an easy game
-	//  - click to move single
-	//  - click to move sequence
-	//  - click to move to/from cell
-	//  - click to send home
-	//  - some auto-plays are fine
-	test.todo('we can win a game by clicking through cards');
-
 	/** https://www.solitairelaboratory.com/tutorial.html */
 	test('renders a game', () => {
 		const { container } = render(<MockGamePage game={new FreeCell().shuffle32(0)} />);
@@ -141,6 +146,7 @@ describe('Free Cell UI', () => {
 		// initial state
 		expect(toGsapSpy).toHaveBeenCalledTimes(52);
 		expect(setGsapSpy).toHaveBeenCalledTimes(52);
+		expect(fromGsapSpy).toHaveBeenCalledTimes(0);
 		expect(toSpy).toHaveBeenCalledTimes(0);
 		expect(fromToSpy).toHaveBeenCalledTimes(0);
 		expect(setSpy).toHaveBeenCalledTimes(52);
@@ -155,6 +161,7 @@ describe('Free Cell UI', () => {
 		// animations
 		expect(toGsapSpy).toHaveBeenCalledTimes(0);
 		expect(setGsapSpy).toHaveBeenCalledTimes(0);
+		expect(fromGsapSpy).toHaveBeenCalledTimes(0);
 		expect(toSpy).toHaveBeenCalledTimes(52);
 		expect(fromToSpy).toHaveBeenCalledTimes(52);
 		expect(setSpy).toHaveBeenCalledTimes(0);
@@ -166,16 +173,23 @@ describe('Free Cell UI', () => {
 		expect(container).toMatchSnapshot();
 	});
 
+	// FIXME test.todo
+	//  - start with a win state
+	//  - click to reset it
+	//  - click to deal
+	test.todo('can click through to new game');
+
+	// XXX (techdebt) instead of just checking toGsapSpy call count, actually check what it did
+	//  - expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 	/** https://www.solitairelaboratory.com/tutorial.html */
 	test('Game #5 (tutorial)', () => {
 		const { container } = render(<MockGamePage game={new FreeCell().shuffle32(5)} />);
-		expect(container).toMatchSnapshot();
-		fireEvent.click(screen.getAllByAltText('card back')[0]);
 
-		// REVIEW (techdebt) this is very hard to understand from the snapshot
-		//  - confirmed Aces and Kings are in the right place
-		//  - lots of cross checking with game.test.js
-		//  - and then we can confirm each step as we go (e.g. move 53 6H→7C is easy to track)
+		expect(container).toMatchSnapshot();
+		expect(screen.queryByText('You Win!')).toBeFalsy();
+
+		// Deal the game
+		fireEvent.click(screen.getAllByAltText('card back')[0]);
 		expect(container).toMatchSnapshot();
 		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
 		mockReset();
@@ -384,8 +398,177 @@ describe('Free Cell UI', () => {
 		]);
 		mockReset();
 
-		// FIXME finish following game.test.js
+		expect(container).toMatchSnapshot();
+
+		// move five cards (up to the jack of hearts) from column seven onto the queen of spades in column eight.
+		moveByShorthand('78');
+		expect(screen.getByRole('status').textContent).toBe('move 78 JH-TC-9H-8S-7H→QS');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// move the queen of clubs to a freecell,
+		moveByShorthand('7c');
+		expect(screen.getByRole('status').textContent).toBe('move 7c QC→cell');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// the four of hearts to its homecell
+		moveByShorthand('7h');
+		expect(screen.getByRole('status').textContent).toBe('move 7h 4H→3H');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// move the jack of clubs onto the queen of hearts,
+		moveByShorthand('71');
+		expect(screen.getByRole('status').textContent).toBe('move 71 JC→QH');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// and the six of spades onto the seven of hearts.
+		moveByShorthand('78');
+		expect(screen.getByRole('status').textContent).toBe('move 78 6S→7H');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// Move the three of clubs to its homecell
+		// The two of spades goes automatically, since both red aces are already home.
+		moveByShorthand('7h');
+		expect(screen.getByRole('status').textContent).toBe('move 7h 3C→2C (auto-foundation 7 2S)');
+		expect(addLabelSpy.mock.calls).toEqual([
+			['updateCardPositions'],
+			['updateCardPositionsPrev'],
+			['updateCardPositions'],
+		]);
+		mockReset();
+		// Move the three of spades home
+		moveByShorthand('ah');
+		expect(screen.getByRole('status').textContent).toBe('move ah 3S→2S');
+		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
+		mockReset();
+		// and the five of diamonds onto the six of spades.
+		moveByShorthand('b8');
+		expect(screen.getByRole('status').textContent).toBe('move b8 5D→6S');
+		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select b, then rotate back
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
+		mockReset();
 
 		expect(container).toMatchSnapshot();
+
+		// Move the five of spades through seven of clubs from column three to column four,
+		moveByShorthand('34');
+		expect(screen.getByRole('status').textContent).toBe('move 34 7C-6H-5S→cascade');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// the ten of hearts onto the jack of clubs,
+		moveByShorthand('31');
+		expect(screen.getByRole('status').textContent).toBe('move 31 TH→JC');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// the eight of clubs onto the nine of diamonds,
+		moveByShorthand('32');
+		expect(screen.getByRole('status').textContent).toBe('move 32 8C→9D');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// the queen of clubs from its freecell to the empty seventh column,
+		moveByShorthand('c7');
+		expect(screen.getByRole('status').textContent).toBe('move c7 QC→cascade');
+		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select c, then rotate back
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
+		mockReset();
+		// and the jack of diamonds onto it.
+		moveByShorthand('37');
+		expect(screen.getByRole('status').textContent).toBe('move 37 JD→QC');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// Move the king of clubs to a freecell,
+		moveByShorthand('3a');
+		expect(screen.getByRole('status').textContent).toBe('move 3a KC→cell');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// and the nine of clubs onto the ten of hearts
+		// (sending the two and three of diamonds and the four of spades home).
+		moveByShorthand('31');
+		expect(screen.getByRole('status').textContent).toBe(
+			'move 31 9C→TH (auto-foundation 366 2D,3D,4S)'
+		);
+		expect(addLabelSpy.mock.calls).toEqual([
+			['updateCardPositions'],
+			['updateCardPositionsPrev'],
+			['updateCardPositions'],
+		]);
+		mockReset();
+		// Move the king of clubs back into the empty third column,
+		moveByShorthand('a3');
+		expect(screen.getByRole('status').textContent).toBe('move a3 KC→cascade');
+		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
+		mockReset();
+		// and the entire first column onto it.
+		moveByShorthand('13');
+		expect(screen.getByRole('status').textContent).toBe('move 13 QH-JC-TH-9C→KC');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// Move the entire second column onto the seventh column,
+		moveByShorthand('27');
+		expect(screen.getByRole('status').textContent).toBe('move 27 TS-9D-8C→JD');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// then the sixth column onto the seventh column.
+		moveByShorthand('67');
+		expect(screen.getByRole('status').textContent).toBe('move 67 7D-6C-5H→8C');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// The long nine-card sequence at the bottom of the fifth column can be moved in ~~two pieces~~ one supermove:
+		// first select the five of clubs, then any empty column.
+		// NOTE Next: we skip '51' from the original solution
+		//  - "Clicking the Move Column button in the dialogue box will move five cards to the empty column you selected."
+		//  - "Now select the ten of diamonds, and another empty column, to move the other four cards of the sequence."
+		//  - essentially, the game asks to move move this in two parts
+		//  - but we are moving it one supermove
+		moveByShorthand('52');
+		expect(screen.getByRole('status').textContent).toBe(
+			'move 52 KS-QD-JS-TD-9S-8D-7S-6D-5C→cascade'
+		);
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// To finish the game, move the eight of hearts onto the nine of clubs,
+		moveByShorthand('53');
+		expect(screen.getByRole('status').textContent).toBe('move 53 8H→9C');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions'], ['updateCardPositions']]);
+		mockReset();
+		// and the king of diamonds into an empty column.
+		// The 38 cards remaining are now in sequence,
+		// and will all go automatically to the homecells,
+		// winning the game.
+		moveByShorthand('56');
+		expect(screen.getByRole('status').textContent).toBe(
+			'move 56 KD→cascade (auto-foundation 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)'
+		);
+		expect(addLabelSpy.mock.calls).toEqual([
+			['updateCardPositions'],
+			['updateCardPositionsPrev'],
+			['updateCardPositions'],
+		]);
+		expect(fromGsapSpy).toHaveBeenCalledTimes(1); // animate win message
+		mockReset();
+
+		expect(container).toMatchSnapshot();
+		expect(screen.queryByText('You Win!')).toBeTruthy();
+
+		const gameBoardId = '1'; // HACK (techdebt) we don't have a way to get/force a game board id
+		SuitList.forEach((suit) => {
+			const aceTLZ = domUtils.getDomAttributes(
+				calcCardId(shorthandCard({ rank: 'ace', suit }), gameBoardId)
+			);
+			if (!aceTLZ) throw new Error(`Card not found: ace of ${suit}`);
+
+			RankList.forEach((rank, idx) => {
+				const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardId);
+				const tlz = domUtils.getDomAttributes(cardId);
+				if (!tlz) throw new Error(`Card not found: ${cardId}`);
+
+				// cards are stacked on aces
+				expect(tlz.top).toBe(aceTLZ.top);
+				expect(tlz.left).toBe(aceTLZ.left);
+				// cards are stacked in order by rank
+				expect(tlz.zIndex).toBe(aceTLZ.zIndex + idx);
+			});
+		});
 	});
 });
