@@ -63,13 +63,13 @@ function CribTheGame() {
 	return null;
 }
 
-function MockGamePage({ game }: { game: FreeCell }) {
+function MockGamePage({ game, gameBoardId }: { game: FreeCell; gameBoardId?: string }) {
 	return (
 		<ErrorBoundary>
 			<ManualTestingSettingsContextProvider controlScheme={ControlSchemes.ClickToSelect}>
 				<StaticGameContextProvider games={[game]}>
 					<StaticFixtureSizesContextProvider>
-						<GameBoard className="none" />
+						<GameBoard className="none" gameBoardId={gameBoardId} />
 						<CribTheGame />
 					</StaticFixtureSizesContextProvider>
 				</StaticGameContextProvider>
@@ -79,7 +79,6 @@ function MockGamePage({ game }: { game: FreeCell }) {
 }
 
 // FIXME review test coverage and stub out some tests
-// FIXME test.todo
 describe('GameBoard', () => {
 	// REVIEW (techdebt) this is a _lot_ of mocking, duplicated in useCardPositionAnimations.test
 	let toGsapSpy: jest.SpyInstance;
@@ -174,18 +173,21 @@ describe('GameBoard', () => {
 		expect(container).toMatchSnapshot();
 	});
 
-	//  - start with a win state
-	//  - click to reset it
-	//  - click to deal
-	test.todo('can click through to new game');
-
-	test.todo('enable debug mode');
+	test('enable debug mode', () => {
+		const { container } = render(<MockGamePage game={new FreeCell().shuffle32(0).dealAll()} />);
+		fireEvent.click(screen.getByRole('checkbox', { name: 'Show Debug Info' }));
+		fireEvent.click(screen.getByAltText('4 of hearts'));
+		expect(container).toMatchSnapshot();
+	});
 
 	// XXX (techdebt) instead of just checking toGsapSpy call count, actually check what it did
 	//  - expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 	/** https://www.solitairelaboratory.com/tutorial.html */
 	test('Game #5 (tutorial)', () => {
-		const { container } = render(<MockGamePage game={new FreeCell().shuffle32(5)} />);
+		const gameBoardId = 'GameBoard.test-#5';
+		const { container } = render(
+			<MockGamePage game={new FreeCell().shuffle32(5)} gameBoardId={gameBoardId} />
+		);
 
 		expect(container).toMatchSnapshot();
 		expect(screen.queryByText('You Win!')).toBeFalsy();
@@ -553,7 +555,6 @@ describe('GameBoard', () => {
 		expect(container).toMatchSnapshot();
 		expect(screen.queryByText('You Win!')).toBeTruthy();
 
-		const gameBoardId = '1'; // HACK (techdebt) we don't have a way to get/force a game board id
 		SuitList.forEach((suit) => {
 			const aceTLZ = domUtils.getDomAttributes(
 				calcCardId(shorthandCard({ rank: 'ace', suit }), gameBoardId)
@@ -572,5 +573,14 @@ describe('GameBoard', () => {
 				expect(tlz.zIndex).toBe(aceTLZ.zIndex + idx);
 			});
 		});
+
+		// now click throught to a new game
+		// (ManualTestingSettingsContextProvider will set the original game)
+		fireEvent.click(screen.getByAltText('king of hearts'));
+		expect(container).toMatchSnapshot();
+		expect(screen.queryByText('You Win!')).toBeFalsy();
+		expect(screen.getByRole('status').textContent).toBe('shuffle deck (5)');
+		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
+		mockReset();
 	});
 });

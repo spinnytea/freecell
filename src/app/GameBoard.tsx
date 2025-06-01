@@ -48,9 +48,11 @@ const nextUid = (function* () {
 export default function GameBoard({
 	className,
 	displayOptions = {},
+	gameBoardId,
 }: {
 	className: string;
 	displayOptions?: GameBoardDisplayOptions;
+	gameBoardId?: string;
 }) {
 	const existsFixtureSizes = useContext(FixtureSizesContext).existsFixtureSizes;
 
@@ -59,7 +61,7 @@ export default function GameBoard({
 	const handleClickSetup = useClickSetupControls();
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	const gameBoardIdRef: MutableRefObject<string> = useRef('');
-	if (!gameBoardIdRef.current) gameBoardIdRef.current = nextUid.next().value;
+	if (!gameBoardIdRef.current) gameBoardIdRef.current = gameBoardId ?? nextUid.next().value;
 
 	return (
 		<main
