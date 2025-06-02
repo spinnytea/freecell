@@ -12,7 +12,7 @@ import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
 import { useDragAndDropControls } from '@/app/hooks/controls/useDragAndDropControls';
 
-export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef: MutableRefObject<string> }) {
+export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObject<string> }) {
 	const { cards } = useGame();
 	useCardPositionAnimations(gameBoardIdRef);
 
@@ -41,7 +41,7 @@ function CardOnBoard({
 	rank: Rank;
 	suit: Suit;
 	location: CardLocation;
-	gameBoardIdRef: MutableRefObject<string>;
+	gameBoardIdRef?: MutableRefObject<string>;
 }) {
 	const cardRef = useRef<HTMLDivElement | null>(null);
 	const game = useGame();
@@ -72,7 +72,7 @@ function CardOnBoard({
 		{ dependencies: [rotation] }
 	);
 
-	const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardIdRef.current);
+	const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardIdRef?.current);
 	return (
 		<div id={cardId} className={styles_cardsonboard.card} ref={cardRef} onClick={handleClickToMove}>
 			<CardImage

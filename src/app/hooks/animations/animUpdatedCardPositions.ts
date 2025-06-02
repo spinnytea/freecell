@@ -5,6 +5,7 @@ import {
 	MAX_ANIMATION_OVERLAP,
 	TOTAL_DEFAULT_MOVEMENT_DURATION,
 } from '@/app/animation_constants';
+import { TLZ } from '@/app/components/element/domUtils';
 import { calcCardId } from '@/app/game/card/card';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';
 import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
@@ -12,7 +13,7 @@ import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 export function animUpdatedCardPositions({
 	timeline,
 	list,
-	nextTLs,
+	nextTLZ,
 	fixtureSizes,
 	prevFixtureSizes,
 	gameBoardIdRef,
@@ -20,7 +21,7 @@ export function animUpdatedCardPositions({
 }: {
 	timeline: gsap.core.Timeline;
 	list: UpdateCardPositionsType[];
-	nextTLs: Map<string, number[]>;
+	nextTLZ: Map<string, TLZ>;
 	fixtureSizes: FixtureSizes;
 	prevFixtureSizes: MutableRefObject<FixtureSizes>;
 	gameBoardIdRef?: MutableRefObject<string>;
@@ -36,15 +37,15 @@ export function animUpdatedCardPositions({
 	}
 	list.forEach(({ shorthand, top, left, zIndex }, index) => {
 		const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
-		const prevTL = nextTLs.get(shorthand);
-		nextTLs.set(shorthand, [top, left]);
+		const prevTL = nextTLZ.get(shorthand);
+		nextTLZ.set(shorthand, { top, left, zIndex });
 		if (prevTL) {
 			if (!pause) {
 				// bugfix: timeline.to should be enough, but mobile sometimes remakes cards at 0,0
 				//  - timeline.fromTo ensures we start the animation from the actual previous place
 				timeline.fromTo(
 					cardId,
-					{ top: prevTL[0], left: prevTL[1] },
+					{ top: prevTL.top, left: prevTL.left },
 					{ top, left, duration: DEFAULT_TRANSLATE_DURATION, ease: 'power1.out' },
 					index === 0 ? `>0` : `<${overlap.toFixed(3)}`
 				);

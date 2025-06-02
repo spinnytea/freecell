@@ -769,7 +769,7 @@ describe('game', () => {
 			expect(game.printFoundation()).toBe('AD 2C 2H   ');
 
 			// Click on the five of hearts now to select it, then click on the empty sixth column.
-			// (try once, as-stated)
+			// (try move directly as-stated)
 			// (don't save it, so we can use the shorthand)
 			expect(
 				game
@@ -795,6 +795,7 @@ describe('game', () => {
 
 			// (same thing, just using the shorthand)
 			game = game.moveByShorthand('86');
+			expect(game.previousAction.text).toBe('move 86 7D-6C-5H→cascade');
 
 			expect(game.print()).toBe(
 				'' +

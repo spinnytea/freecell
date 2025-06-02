@@ -1,4 +1,4 @@
-import { MutableRefObject, useRef } from 'react';
+import { MutableRefObject, useContext, useRef } from 'react';
 import classNames from 'classnames';
 import { CardImage } from '@/app/components/cards/CardImage';
 import { CardsOnBoard } from '@/app/components/CardsOnBoard';
@@ -12,6 +12,7 @@ import { UndoButton } from '@/app/components/UndoButton';
 import { WinMessage } from '@/app/components/WinMessage';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { FixtureLayout } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import { FixtureSizesContext } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContext';
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
 import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 import { useClickSetupControls } from '@/app/hooks/controls/useClickSetupControls';
@@ -47,15 +48,22 @@ const nextUid = (function* () {
 export default function GameBoard({
 	className,
 	displayOptions = {},
+	gameBoardId,
 }: {
 	className: string;
 	displayOptions?: GameBoardDisplayOptions;
+	gameBoardId?: string;
 }) {
+	const existsFixtureSizes = useContext(FixtureSizesContext).existsFixtureSizes;
+
 	useKeybaordMiscControls();
 	useKeybaordArrowControls();
 	const handleClickSetup = useClickSetupControls();
 	const gameBoardRef = useRef<HTMLElement | null>(null);
-	const gameBoardIdRef: MutableRefObject<string> = useRef('');
+	// REVIEW (techdebt) when should we use gameBoardIdRef vs gameBoardId?
+	//  - should gameBoardIdRef always be required, while gameBoardId is optional?
+	//  - useCardPositionAnimations needs gameBoardIdRef (not gameBoardId), and is optional to make unit tests simpler
+	const gameBoardIdRef: MutableRefObject<string> = useRef(gameBoardId ?? '');
 	if (!gameBoardIdRef.current) gameBoardIdRef.current = nextUid.next().value;
 
 	return (
@@ -68,12 +76,16 @@ export default function GameBoard({
 			<div className={styles_gameboard.hiddenDeckBack}>
 				<CardImage rank="king" suit="hearts" hidden width={0} />
 			</div>
-			<FixtureSizesContextProvider
-				gameBoardRef={gameBoardRef}
-				fixtureLayout={displayOptions.fixtureLayout}
-			>
+			{existsFixtureSizes ? (
 				<BoardLayout displayOptions={displayOptions} gameBoardIdRef={gameBoardIdRef} />
-			</FixtureSizesContextProvider>
+			) : (
+				<FixtureSizesContextProvider
+					gameBoardRef={gameBoardRef}
+					fixtureLayout={displayOptions.fixtureLayout}
+				>
+					<BoardLayout displayOptions={displayOptions} gameBoardIdRef={gameBoardIdRef} />
+				</FixtureSizesContextProvider>
+			)}
 		</main>
 	);
 }
@@ -89,7 +101,7 @@ function BoardLayout({
 	gameBoardIdRef,
 }: {
 	displayOptions: GameBoardDisplayOptions;
-	gameBoardIdRef: MutableRefObject<string>;
+	gameBoardIdRef?: MutableRefObject<string>;
 }) {
 	const { showDebugInfo, showKeyboardCursor } = useSettings();
 

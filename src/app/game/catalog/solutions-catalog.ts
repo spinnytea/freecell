@@ -1,3 +1,4 @@
+/** @see https://www.solitairelaboratory.com/solutioncatalog.html */
 export const SEED_SOLUTIONS_4x8 = new Map<number, string>([
 	[
 		1,
