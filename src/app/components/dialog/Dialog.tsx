@@ -25,7 +25,7 @@ export default function Dialog({
 				dialog.showModal();
 			} else if (process.env.NODE_ENV !== 'test') {
 				// HACK (techdebt) dialog.close is not present during the unit tests?
-				//  - we shouldn't have this condition
+				//  - we shouldn't have to check against the environment
 				dialog.close();
 			}
 		}

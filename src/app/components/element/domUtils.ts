@@ -5,13 +5,12 @@ export interface TLZ {
 }
 
 export const domUtils = {
-	// HACK (techdebt) this is used by some unit tests when there is no DOM
+	/** @deprecated this is used by some unit tests when there is no DOM */
 	domTLZ: new Map<string, TLZ>(),
 
 	getDomAttributes(cardId: string): TLZ | undefined {
 		const cardEl = document.getElementById(cardId);
 		if (cardEl) {
-			// REVIEW (techdebt) we don't use zIndex yet, but storing x,y,z seems like a good idea
 			const dataTop = cardEl.getAttribute('data-top');
 			const dataLeft = cardEl.getAttribute('data-left');
 			const dataZIndex = cardEl.getAttribute('data-zIndex');

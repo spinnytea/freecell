@@ -18,9 +18,9 @@ jest.mock('gsap/all', () => ({
 }));
 
 describe('page', () => {
-	let consoleDebugSpy: jest.SpyInstance;
+	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
-		({ consoleDebugSpy } = spyOnGsap(gsap));
+		({ mockCallTimes } = spyOnGsap(gsap));
 	});
 
 	it('should render without crashing', () => {
@@ -29,8 +29,18 @@ describe('page', () => {
 				<Page />
 			</ErrorBoundary>
 		);
-		// XXX (techdebt) there's a hidden card, so this count is not obvious
-		expect(screen.queryAllByAltText('card back').length).toBe(53);
-		expect(consoleDebugSpy).not.toHaveBeenCalled();
+		expect(screen.queryAllByAltText('card back').length).toBe(53); // there is hidden card back
+		expect(mockCallTimes()).toEqual({
+			toGsapSpy: 52,
+			setGsapSpy: 52,
+			fromGsapSpy: 0,
+			fromToSpy: 0,
+			toSpy: 0,
+			setSpy: 52,
+			addLabelSpy: 1,
+			addSpy: 0,
+			timeScaleSpy: 0,
+			consoleDebugSpy: 0,
+		});
 	});
 });

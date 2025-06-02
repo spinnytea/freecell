@@ -67,7 +67,7 @@ function CribTheGame() {
 function MockGamePage({ game, gameBoardId }: { game: FreeCell; gameBoardId?: string }) {
 	return (
 		<ErrorBoundary>
-			<ManualTestingSettingsContextProvider controlScheme={ControlSchemes.ClickToSelect}>
+			<ManualTestingSettingsContextProvider controlSchemes={[ControlSchemes.ClickToSelect]}>
 				<StaticGameContextProvider games={[game]}>
 					<StaticFixtureSizesContextProvider>
 						<GameBoard className="none" gameBoardId={gameBoardId} />
@@ -79,7 +79,6 @@ function MockGamePage({ game, gameBoardId }: { game: FreeCell; gameBoardId?: str
 	);
 }
 
-// FIXME review test coverage and stub out some tests
 describe('GameBoard', () => {
 	let toGsapSpy: jest.SpyInstance;
 	let fromGsapSpy: jest.SpyInstance;

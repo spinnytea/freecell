@@ -60,8 +60,11 @@ export default function GameBoard({
 	useKeybaordArrowControls();
 	const handleClickSetup = useClickSetupControls();
 	const gameBoardRef = useRef<HTMLElement | null>(null);
-	const gameBoardIdRef: MutableRefObject<string> = useRef('');
-	if (!gameBoardIdRef.current) gameBoardIdRef.current = gameBoardId ?? nextUid.next().value;
+	// REVIEW (techdebt) when should we use gameBoardIdRef vs gameBoardId?
+	//  - should gameBoardIdRef always be required, while gameBoardId is optional?
+	//  - useCardPositionAnimations needs gameBoardIdRef (not gameBoardId), and is optional to make unit tests simpler
+	const gameBoardIdRef: MutableRefObject<string> = useRef(gameBoardId ?? '');
+	if (!gameBoardIdRef.current) gameBoardIdRef.current = nextUid.next().value;
 
 	return (
 		<main

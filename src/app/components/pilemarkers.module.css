@@ -5,6 +5,12 @@
 	border: 3px solid rgba(var(--pile-border-rgb), 0.3);
 	border-radius: var(--pile-border-radius);
 
+	/*
+		pile have their shorthandPosition inside for unit testing,
+		but it doesn't look nice in the UI
+		I can't find a more aria appropriate way to do this.
+		REVIEW (hud) Is invisible still accessible?
+	*/
 	display: flex;
 	align-items: center;
 	justify-content: center;
