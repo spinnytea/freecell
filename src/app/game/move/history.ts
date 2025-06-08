@@ -255,7 +255,24 @@ export function appendActionToHistory(action: PreviousAction, history: string[])
 }
 
 function collapseHistory(history: string[], action: PreviousAction): string[] {
-	// FIXME impl
+	const previousText = history.at(-1);
+	if (previousText && action.type === 'move') {
+		const p = _parseActionTextMove(previousText);
+		if (p) {
+			// action.type should parse, the condition is just a formality
+			const a = _parseActionTextMove(action.text);
+			if (a) {
+				const { from: pf, to: pt, fromShorthand: pfs } = p;
+				const { from: af, to: at, fromShorthand: afs, toShorthand: ats } = a;
+				if (pt === af && pfs === afs) {
+					// move 34 KS→cascade
+					// move 35 KS→cascade
+					action.text = `move ${pf}${at} ${pfs}→${ats}`;
+					return history.slice(0, -1).concat(action.text);
+				}
+			}
+		}
+	}
 	return [...history, action.text];
 }
 

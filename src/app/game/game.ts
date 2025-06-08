@@ -1138,7 +1138,8 @@ export class FreeCell {
 				// print the last valid action, _not_ previousAction.text
 				// the previous action could be a cursor movement, or a canceled touch action (touch stop)
 				// REVIEW (history) (print) should we even print the last action?
-				str += '\n ' + this.history.slice(-1)[0];
+				// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+				str += '\n ' + this.history.at(-1);
 				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 				while (movesSeed.moves.length) {
 					str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';

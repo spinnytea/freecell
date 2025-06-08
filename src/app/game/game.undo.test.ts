@@ -1,3 +1,4 @@
+import { ACTION_TEXT_EXAMPLES } from '@/app/game/catalog/actionText-examples';
 import {
 	getMoves,
 	SEED_SOLUTIONS_4x8,
@@ -1378,25 +1379,37 @@ describe('game.undo (+ history)', () => {
 	describe('collapse history', () => {
 		// i.e. click-to-move picked the wrong place, so i need to move it again to the right one
 		// i.e. dithering on a single card doesn't increase history length
-		test.todo('moving the same card multiple times in a row replaces the history');
-		// ('moving the same card multiple times in a row replaces the history', () => {
-		// 		let game = FreeCell.parse(
-		// 		'' + //
-		// 			'             KC KD JH JS \n' + //
-		// 			' QS    KS                \n' + //
-		// 			' QH                      \n' + //
-		// 			' KH                      \n' + //
-		// 			' hand-jammed'
-		// 	);
-		// 	expect(game.history).toEqual(['hand-jammed']);
-		// 	game = game.clickToMove({ fixture: 'cascade', data: [2, 0] });
-		// 	expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
-		// 	game = game.clickToMove({ fixture: 'cascade', data: [3, 0] });
-		// 	expect(game.history).toEqual(['hand-jammed', 'move 35 KS→cascade']);
-		//
-		// 	game = game.undo();
-		// 	expect(game.history).toEqual(['hand-jammed']);
-		// });
+		test('moving the same card multiple times in a row replaces the history', () => {
+			let game = FreeCell.parse(
+				'' + //
+					'             KC KD JH JS \n' + //
+					' QS    KS                \n' + //
+					' QH                      \n' + //
+					' KH                      \n' + //
+					' hand-jammed'
+			);
+			expect(game.history).toEqual(['hand-jammed']);
+			game = game.clickToMove({ fixture: 'cascade', data: [2, 0] });
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
+			game = game.clickToMove({ fixture: 'cascade', data: [3, 0] });
+			expect(game.history).toEqual(['hand-jammed', 'move 35 KS→cascade']);
+			game = game.clickToMove({ fixture: 'cascade', data: [4, 0] });
+			expect(game.history).toEqual(['hand-jammed', 'move 36 KS→cascade']);
+			game = game.clickToMove({ fixture: 'cascade', data: [5, 0] });
+			expect(game.history).toEqual(['hand-jammed', 'move 37 KS→cascade']);
+
+			expect(game.print()).toBe(
+				'' + //
+					'             KC KD JH JS \n' + //
+					' QS               >KS    \n' + //
+					' QH                      \n' + //
+					' KH                      \n' + //
+					' move 37 KS→cascade'
+			);
+
+			game = game.undo();
+			expect(game.history).toEqual(['hand-jammed']);
+		});
 
 		test.todo('works for sequences');
 
@@ -1434,55 +1447,54 @@ describe('game.undo (+ history)', () => {
 	});
 
 	test('parse history actions', () => {
-		let game = FreeCell.parse(
-			'' + //
-				' QC         >JC KD KH KS \n' + //
-				' KC                      \n' + //
+		const game = FreeCell.parse(ACTION_TEXT_EXAMPLES['move 3a KC→cell']);
+		game.history.splice(0, game.history.length - 8);
+		game.history.unshift('hand-jammed');
+		expect(game.history).toEqual([
+			'hand-jammed',
+			// 'move 7c QC→cell',
+			// 'move 7h 4H→3H',
+			// 'move 71 JC→QH',
+			// 'move 78 6S→7H',
+			'move 7h 3C→2C (auto-foundation 7 2S)',
+			'move ah 3S→2S',
+			'move b8 5D→6S',
+			'move 34 7C-6H-5S→cascade',
+			'move 31 TH→JC',
+			'move 32 8C→9D',
+			'move c7 QC→cascade',
+			'move 37 JD→QC',
+		]);
+		const gamePrintHist = game.print({ includeHistory: true });
+		expect(gamePrintHist).toBe(
+			'' +
+				'             AD 3C 4H 3S \n' +
+				' QH TS 2D 7C 4C 7D QC KH \n' +
+				' JC 9D 9C 6H 4D 6C JD QS \n' +
+				' TH 8C KC 5S KD 5H    JH \n' +
+				'             8H 4S    TC \n' +
+				'             KS 3D    9H \n' +
+				'             QD       8S \n' +
+				'             JS       7H \n' +
+				'             TD       6S \n' +
+				'             9S       5D \n' +
+				'             8D          \n' +
+				'             7S          \n' +
+				'             6D          \n' +
+				'             5C          \n' +
+				' move 37 JD→QC\n' +
+				' move c7 QC→cascade\n' +
+				' move 32 8C→9D\n' +
+				' move 31 TH→JC\n' +
+				' move 34 7C-6H-5S→cascade\n' +
+				' move b8 5D→6S\n' +
+				' move ah 3S→2S\n' +
+				' move 7h 3C→2C (auto-foundation 7 2S)\n' +
 				' hand-jammed'
 		);
-		game = game
-			.setCursor({ fixture: 'cascade', data: [0, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		game = game
-			.setCursor({ fixture: 'cascade', data: [1, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		game = game
-			.setCursor({ fixture: 'cascade', data: [2, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		game = game
-			.setCursor({ fixture: 'cascade', data: [3, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		game = game
-			.setCursor({ fixture: 'cascade', data: [4, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		game = game
-			.setCursor({ fixture: 'cascade', data: [5, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		game = game
-			.setCursor({ fixture: 'cascade', data: [6, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		expect(game.print({ includeHistory: true })).toEqual(
-			'' + //
-				' QC          JC KD KH KS \n' + //
-				'                      KC \n' + //
-				' move 78 KC→cascade\n' +
-				' move 67 KC→cascade\n' +
-				' move 56 KC→cascade\n' +
-				' move 45 KC→cascade\n' +
-				' move 34 KC→cascade\n' +
-				' move 23 KC→cascade\n' +
-				' move 12 KC→cascade\n' +
-				' hand-jammed'
-		);
-		const parsed = FreeCell.parse(game.print({ includeHistory: true }));
-		expect(parsed.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+
+		const parsed = FreeCell.parse(gamePrintHist);
+		expect(parsed.print({ includeHistory: true })).toBe(gamePrintHist);
 		expect(parsed.history).toEqual(game.history);
 		expect(parsed.cards).toEqual(game.cards);
 
