@@ -544,10 +544,12 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 */
 export function parseShorthandMove(
 	game: FreeCell,
-	shorthandMove: string
+	shorthandMove: string,
+	/** @deprecated HACK (techdebt) there's a lot of packing and unpacking simply to make `moveCardToPosition` work */
+	from_shorthand_arg?: CardLocation
 ): [CardLocation, CardLocation] {
 	const [from_shorthand, to_shorthand] = shorthandMove.split('');
-	const from_location = parseShorthandPosition_INCOMPLETE(from_shorthand);
+	const from_location = from_shorthand_arg ?? parseShorthandPosition_INCOMPLETE(from_shorthand);
 	const to_location = parseShorthandPosition_INCOMPLETE(to_shorthand);
 
 	if (to_location.fixture === 'cascade') {
@@ -555,7 +557,7 @@ export function parseShorthandMove(
 		to_location.data[1] = game.tableau[to_location.data[0]].length - 1;
 	}
 
-	if (from_location.fixture === 'cascade') {
+	if (!from_shorthand_arg && from_location.fixture === 'cascade') {
 		// clamp
 		from_location.data[1] = game.tableau[from_location.data[0]].length - 1;
 

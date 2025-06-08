@@ -6,10 +6,12 @@ import {
 	CardSequence,
 	CardSH,
 	cloneCards,
+	findCard,
 	getSequenceAt,
 	initializeDeck,
 	isLocationEqual,
 	parseShorthandCard,
+	Position,
 	RankList,
 	shorthandCard,
 	shorthandPosition,
@@ -106,6 +108,7 @@ export class FreeCell {
 	cursor: CardLocation;
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
+	// flashRank: Rank | null; // FIXME this guy
 
 	// history
 	history: string[];
@@ -278,7 +281,10 @@ export class FreeCell {
 		}
 	}
 
-	setCursor(cursor: CardLocation): FreeCell {
+	setCursor(cursor: CardLocation | string): FreeCell {
+		if (typeof cursor === 'string') {
+			cursor = findCard(this.cards, parseShorthandCard(cursor)).location;
+		}
 		return this.__clone({ action: { text: 'cursor set', type: 'cursor' }, cursor });
 	}
 
@@ -683,6 +689,17 @@ export class FreeCell {
 		return this.clearSelection().setCursor(from).touch().setCursor(to).touch({ autoFoundation });
 	}
 
+	// FIXME unit test
+	moveCardToPosition(
+		shorthand: string,
+		position: Position,
+		{ autoFoundation }: OptionsAutoFoundation = {}
+	): FreeCell {
+		const g = this.clearSelection().setCursor(shorthand).touch();
+		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${position}`, g.cursor);
+		return g.setCursor(to).touch({ autoFoundation });
+	}
+
 	/**
 		TODO (techdebt) break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
 		REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
@@ -1018,6 +1035,8 @@ export class FreeCell {
 		by default, we do not print the "available moves", that's important for good gameplay
 
 		XXX (techdebt) print is super messy, can we clean this up?
+		 - what if we just draw the board, and then precision-replace the HUD elements?
+		 - we only swap out whitespace, we know the location of everything
 		TODO (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
 		XXX (techdebt) remove skipDeck
 	*/

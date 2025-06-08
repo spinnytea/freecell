@@ -340,7 +340,7 @@ function parseActionTextAutoFoundation(actionText: string) {
 	if (match) {
 		// match[1] === 'auto-foundation' || match[1] === 'flourish'
 		const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
-		const shorthands = match[3].split(',').map((s) => parseShorthandCard(s[0], s[1]));
+		const shorthands = match[3].split(',').map((s) => parseShorthandCard(s));
 		if (froms.length !== shorthands.length)
 			throw new Error('invalid move actionText: ' + actionText);
 		return { froms, shorthands };
@@ -350,7 +350,7 @@ function parseActionTextAutoFoundation(actionText: string) {
 	if (match) {
 		// match[5] === 'auto-foundation' || match[5] === 'flourish'
 		const froms = match[6].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
-		const shorthands = match[7].split(',').map((s) => parseShorthandCard(s[0], s[1]));
+		const shorthands = match[7].split(',').map((s) => parseShorthandCard(s));
 		if (froms.length !== shorthands.length)
 			throw new Error('invalid move actionText: ' + actionText);
 		return { froms, shorthands };
@@ -446,9 +446,7 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 export function getCardsThatMoved(game: FreeCell): Card[] {
 	if (game.previousAction.type !== 'move') return [];
 	const { fromShorthand } = parseActionTextMove(game.previousAction.text);
-	return fromShorthand
-		.split('-')
-		.map((sh) => findCard(game.cards, parseShorthandCard(sh[0], sh[1])));
+	return fromShorthand.split('-').map((sh) => findCard(game.cards, parseShorthandCard(sh)));
 }
 
 export function getCardsFromInvalid(
@@ -460,14 +458,12 @@ export function getCardsFromInvalid(
 		return { from: [], to: [] };
 	}
 	const { fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
-	const from = fromShorthand
-		.split('-')
-		.map((sh) => findCard(cards, parseShorthandCard(sh[0], sh[1])));
+	const from = fromShorthand.split('-').map((sh) => findCard(cards, parseShorthandCard(sh)));
 	const to = [];
 	if (toShorthand.length === 2) {
 		to.push(findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1])));
 	} else {
-		// TODO (animation) animate piles
+		// TODO (animation) (motivation) animate piles
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
 	}
 	return { from, to };
