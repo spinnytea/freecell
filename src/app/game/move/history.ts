@@ -239,10 +239,15 @@ function parseActionTextInvalidMove(actionText: string) {
 }
 
 export function appendActionToHistory(action: PreviousAction, history: string[]) {
-	if (PREVIOUS_ACTION_TYPE_IN_HISTORY.has(action.type)) {
-		return { action, history: [...history, action.text] };
+	if (!PREVIOUS_ACTION_TYPE_IN_HISTORY.has(action.type)) {
+		return { action, history };
 	}
-	return { action, history };
+	return { action, history: collapseHistory(history, action) };
+}
+
+function collapseHistory(history: string[], action: PreviousAction): string[] {
+	// FIXME impl
+	return [...history, action.text];
 }
 
 function undoMove(game: FreeCell, actionText: string): Card[] {
