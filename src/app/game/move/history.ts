@@ -247,16 +247,28 @@ function parseActionTextInvalidMove(actionText: string) {
 	throw new Error('not "invalid move" actionText: ' + actionText);
 }
 
-export function appendActionToHistory(action: PreviousAction, history: string[]) {
+interface PaH {
+	action: PreviousAction;
+	history: string[];
+}
+
+export function appendActionToHistory(action: PreviousAction, history: string[]): PaH {
 	if (!PREVIOUS_ACTION_TYPE_IN_HISTORY.has(action.type)) {
 		return { action, history };
 	}
-	return { action, history: collapseHistory(history, action) };
+
+	const collapsed = collapseHistory(action, history);
+	if (collapsed) {
+		return collapsed;
+	}
+
+	return { action, history: [...history, action.text] };
 }
 
-function collapseHistory(history: string[], action: PreviousAction): string[] {
+function collapseHistory(action: PreviousAction, history: string[]): PaH | undefined {
 	const previousText = history.at(-1);
 	if (previousText && action.type === 'move') {
+		// p may not be a move
 		const p = _parseActionTextMove(previousText);
 		if (p) {
 			// action.type should parse, the condition is just a formality
@@ -265,15 +277,27 @@ function collapseHistory(history: string[], action: PreviousAction): string[] {
 				const { from: pf, to: pt, fromShorthand: pfs } = p;
 				const { from: af, to: at, fromShorthand: afs, toShorthand: ats } = a;
 				if (pt === af && pfs === afs) {
-					// move 34 KS→cascade
-					// move 35 KS→cascade
-					action.text = `move ${pf}${at} ${pfs}→${ats}`;
-					return history.slice(0, -1).concat(action.text);
+					// move 34 KH→cascade
+					// move 43 KH→cascade
+					if (pf === at) {
+						return {
+							action: parsePreviousActionType(history.at(-2) ?? 'init'),
+							history: history.slice(0, -1),
+						};
+					}
+
+					// move 34 KH→cascade
+					// move 35 KH→cascade
+					const actionText = `move ${pf}${at} ${pfs}→${ats}`;
+					return {
+						action: { text: actionText, type: 'move' },
+						history: history.slice(0, -1).concat(actionText),
+					};
 				}
 			}
 		}
 	}
-	return [...history, action.text];
+	return undefined;
 }
 
 function undoMove(game: FreeCell, actionText: string): Card[] {

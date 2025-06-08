@@ -98,13 +98,12 @@ describe('game.autoMove', () => {
 
 				game = game.autoMove({ autoFoundation: false });
 
-				// FIXME aa will be removed
 				expect(game.print()).toBe(
 					'' +
 						'>JC          9C 9D 9H 9S \n' +
 						' QC QD QH QS KC KD KH KS \n' +
 						' TC TD TH TS    JD JH JS \n' +
-						' move aa JC→cell'
+						' hand-jammed'
 				);
 			});
 
@@ -195,12 +194,11 @@ describe('game.autoMove', () => {
 
 				game = game.touch().autoMove({ autoFoundation: false });
 
-				// FIXME 11 will be removed
 				expect(game.print()).toBe(
 					'' + //
 						' QC KD KH KS JC QD QH QS \n' + //
 						'>KC          \n' + //
-						' move 11 KC→cascade'
+						' hand-jammed'
 				);
 			});
 
@@ -254,12 +252,11 @@ describe('game.autoMove', () => {
 
 				game = game.touch().autoMove({ autoFoundation: false });
 
-				// FIXME 11 will be removed
 				expect(game.print()).toBe(
 					'' + //
 						' QC KD KH KS JC QD QH QS \n' + //
 						'>KC                      \n' + //
-						' move 11 KC→cascade'
+						' hand-jammed'
 				);
 			});
 
@@ -287,13 +284,12 @@ describe('game.autoMove', () => {
 					.touch()
 					.autoMove({ autoFoundation: false });
 
-				// FIXME 22 will be removed
 				expect(game.print()).toBe(
 					'' + //
 						'             QC TD KH QS \n' + //
 						' JD>KC       KS          \n' + //
 						' KD QD                   \n' + //
-						' move 22 QD→KC'
+						' hand-jammed'
 				);
 			});
 
@@ -622,14 +618,13 @@ describe('game.autoMove', () => {
 					.touch()
 					.autoMove({ autoFoundation: false });
 
-				// FIXME this 22 will be removed
 				expect(game.print()).toBe(
 					'' + //
 						'             QC TD KH TS \n' + //
 						' KD>KC       KS          \n' + //
 						' QS QD                   \n' + //
 						' JD JS                   \n' + //
-						' move 22 KC-QD-JS→cascade'
+						' hand-jammed'
 				);
 			});
 
@@ -665,7 +660,7 @@ describe('game.autoMove', () => {
 						' KD>KC       KS          \n' + //
 						' QS QD                   \n' + //
 						' JD JS                   \n' + //
-						' move 22 QD-JS→KC'
+						' hand-jammed'
 				);
 			});
 
