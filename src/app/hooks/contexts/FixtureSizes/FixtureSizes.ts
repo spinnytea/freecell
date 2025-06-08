@@ -242,6 +242,7 @@ export function calcTopLeftZ(
 	switch (fixture) {
 		case 'deck':
 			// TODO (animation) animate cursor (selection?) within deck
+			// TODO (animation) (controls) (flash-rank) (hud) (4-priority) peek
 			return {
 				top: fixtureSizes.deck.top,
 				left: fixtureSizes.deck.left,
@@ -259,6 +260,7 @@ export function calcTopLeftZ(
 						: 0,
 			};
 		case 'foundation':
+			// TODO (animation) (controls) (flash-rank) (hud) (4-priority) peek
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.foundationLeft[data[0]],

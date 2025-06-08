@@ -1,0 +1,108 @@
+// XXX (techdebt) more unit testing
+//  - try to move the tests elsewhere:
+//    - standard moves: `game.touch.test.ts`
+//      - already has from each x to each
+//      - it may have just omitted some
+//    - special edge case testing: `move.parseShorthandMove.test.ts`
+//  - if it doesn't make sense to move it there, test here anyways
+//  - what we want in this file is a test for: Position x Position
+describe('moveByShorthand', () => {
+	describe('from each position', () => {
+		describe('cell', () => {
+			test.todo('a, b, c, d, e, f');
+
+			test.todo('cellCount of 1, 4, 6');
+
+			test.todo('empty vs not');
+		});
+
+		describe('foundation', () => {
+			test.todo('empty first');
+
+			test.todo('only first');
+
+			test.todo('only second');
+
+			test.todo('only third');
+
+			test.todo('only fourth');
+
+			test.todo('all');
+		});
+
+		describe('cascade', () => {
+			test.todo('1, 2, 3, 4, 5, 6, 7, 8, 9, 0');
+
+			test.todo('cascadeCount of 4, 8, 10');
+
+			test.todo('empty');
+
+			test.todo('single');
+
+			test.todo('sequence');
+
+			// i.e. 1 cell and 2 cascades empty = max 4 cards move
+			test.todo('size sequence to allowable space');
+		});
+
+		describe('deck', () => {
+			test.todo('empty');
+
+			test.todo('single');
+		});
+	});
+
+	// impl edge cases
+	test.todo('from: special');
+
+	describe('to each position', () => {
+		describe('cell', () => {
+			test.todo('a, b, c, d, e, f');
+
+			test.todo('cellCount of 1, 4, 6');
+
+			test.todo('empty vs not');
+		});
+
+		describe('foundation', () => {
+			test.todo('first');
+
+			test.todo('second');
+
+			test.todo('third');
+
+			test.todo('fourth');
+
+			test.todo('find existing');
+		});
+
+		describe('cascade', () => {
+			test.todo('1, 2, 3, 4, 5, 6, 7, 8, 9, 0');
+
+			test.todo('cascadeCount of 4, 8, 10');
+
+			test.todo('empty');
+
+			test.todo('single');
+
+			test.todo('sequence');
+		});
+
+		describe('deck', () => {
+			test.todo('empty');
+
+			test.todo('not empty');
+		});
+	});
+
+	// impl edge cases
+	test.todo('to: special');
+
+	test.todo('something else selected');
+
+	describe('invalid move', () => {
+		test.todo('no card at from');
+
+		test.todo('cannot stack that');
+	});
+});

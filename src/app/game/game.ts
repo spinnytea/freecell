@@ -108,7 +108,7 @@ export class FreeCell {
 	cursor: CardLocation;
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
-	// flashRank: Rank | null; // FIXME this guy
+	// flashRank: Rank | null; // TODO (animation) (controls) (flash-rank) (hud) (4-priority) can we do like "peek all"
 
 	// history
 	history: string[];
@@ -678,9 +678,9 @@ export class FreeCell {
 	}
 
 	/**
-		Used replaying a game, starting with a seed or otherwise known deal.
-
-		it's really just "touch the first one" then "touch the second one"
+		Play a move using the standard notation.
+		The standard notation is used to print the game history.
+		This make it easy to replay a known game.
 
 		XXX (techdebt) move to FreeCellQOL extends FreeCell?
 	*/
@@ -689,7 +689,17 @@ export class FreeCell {
 		return this.clearSelection().setCursor(from).touch().setCursor(to).touch({ autoFoundation });
 	}
 
-	// FIXME unit test
+	/**
+		This is super clear when you are looking at the game board.
+		If you know the card you want to move and where, it just "this card goes here".
+
+		@deprecated for unit testing _ONLY_ until we write _all the tests_
+		 - "let's just pluck any card and move it anywhere"
+		 - …yeah, that won't break anything
+		 - this _is_ just "touch first" then "touch second"
+		 - what's new here though is we aren't using game rules to pick the starting card, we can pick _any_ card
+		 - (we need to be more thurough about from: deck and from: foundation)
+	*/
 	moveCardToPosition(
 		shorthand: string,
 		position: Position,

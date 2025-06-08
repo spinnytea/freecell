@@ -1375,7 +1375,6 @@ describe('game.undo (+ history)', () => {
 		test.todo('if we reach a move it cannot undo, it should not break');
 	});
 
-	// FIXME (optimize) collapse history - "when" to do this is tricky
 	describe('collapse history', () => {
 		// i.e. click-to-move picked the wrong place, so i need to move it again to the right one
 		// i.e. dithering on a single card doesn't increase history length
@@ -1542,6 +1541,7 @@ describe('game.undo (+ history)', () => {
 			});
 		});
 
+		// FIXME test.todo
 		// i.e. move 12 TH->QS, move 21 KH-QS-TH->cascade
 		test.todo('do not collapse when moving a different sequence');
 
