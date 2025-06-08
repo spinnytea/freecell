@@ -215,19 +215,28 @@ export function parseCursorFromPreviousActionText(
 }
 
 export function parseActionTextMove(actionText: string) {
-	let match = MOVE_REGEX.exec(actionText);
-	if (match) {
-		const [, from, to, fromShorthand, toShorthand] = match;
-		return { from, to, fromShorthand, toShorthand };
-	}
-
-	match = MOVE_FOUNDATION_REGEX.exec(actionText);
-	if (match) {
-		const [, from, to, fromShorthand, toShorthand] = match;
-		return { from, to, fromShorthand, toShorthand };
-	}
+	const result = _parseActionTextMove(actionText) ?? _parseActionTextMoveFoundation(actionText);
+	if (result) return result;
 
 	throw new Error('invalid move actionText: ' + actionText);
+}
+
+function _parseActionTextMove(actionText: string) {
+	const match = MOVE_REGEX.exec(actionText);
+	if (match) {
+		const [, from, to, fromShorthand, toShorthand] = match;
+		return { from, to, fromShorthand, toShorthand };
+	}
+	return undefined;
+}
+
+function _parseActionTextMoveFoundation(actionText: string) {
+	const match = MOVE_FOUNDATION_REGEX.exec(actionText);
+	if (match) {
+		const [, from, to, fromShorthand, toShorthand] = match;
+		return { from, to, fromShorthand, toShorthand };
+	}
+	return undefined;
 }
 
 function parseActionTextInvalidMove(actionText: string) {
