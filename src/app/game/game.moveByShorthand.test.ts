@@ -1,11 +1,13 @@
-// XXX (techdebt) more unit testing
-//  - try to move the tests elsewhere:
-//    - standard moves: `game.touch.test.ts`
-//      - already has from each x to each
-//      - it may have just omitted some
-//    - special edge case testing: `move.parseShorthandMove.test.ts`
-//  - if it doesn't make sense to move it there, test here anyways
-//  - what we want in this file is a test for: Position x Position
+/*
+	XXX (techdebt) more unit testing
+	 - try to move the tests elsewhere:
+	   - standard moves: `game.touch.test.ts`
+	     - already has from each x to each
+	     - it may have just omitted some
+	   - special edge case testing: `move.parseShorthandMove.test.ts`
+	 - if it doesn't make sense to move it there, test here anyways
+	 - what we want in this file is a test for: Position x Position
+*/
 describe('moveByShorthand', () => {
 	describe('from each position', () => {
 		describe('cell', () => {

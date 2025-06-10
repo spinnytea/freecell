@@ -700,6 +700,7 @@ export class FreeCell {
 		 - this _is_ just "touch first" then "touch second"
 		 - what's new here though is we aren't using game rules to pick the starting card, we can pick _any_ card
 		 - (we need to be more thurough about from: deck and from: foundation)
+		 - the unit test proves moving a card form the deck will explode
 	*/
 	moveCardToPosition(
 		shorthand: string,
