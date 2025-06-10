@@ -1,3 +1,4 @@
+import { ACTION_TEXT_EXAMPLES } from '@/app/game/catalog/actionText-examples';
 import {
 	getMoves,
 	SEED_SOLUTIONS_4x8,
@@ -1374,110 +1375,423 @@ describe('game.undo (+ history)', () => {
 		test.todo('if we reach a move it cannot undo, it should not break');
 	});
 
-	// XXX (optimize) collapse history - "when" to do this is tricky
 	describe('collapse history', () => {
 		// i.e. click-to-move picked the wrong place, so i need to move it again to the right one
 		// i.e. dithering on a single card doesn't increase history length
-		test.todo('moving the same card multiple times in a row replaces the history');
-		// ('moving the same card multiple times in a row replaces the history', () => {
-		// 		let game = FreeCell.parse(
-		// 		'' + //
-		// 			'             KC KD JH JS \n' + //
-		// 			' QS    KS                \n' + //
-		// 			' KH                      \n' + //
-		// 			':d QH \n' + //
-		// 			' hand-jammed'
-		// 	);
-		// 	expect(game.history).toEqual(['hand-jammed']);
-		// 	game = game.clickToMove({ fixture: 'cascade', data: [2, 0] });
-		// 	expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
-		// 	game = game.clickToMove({ fixture: 'cascade', data: [3, 0] });
-		// 	expect(game.history).toEqual(['hand-jammed', 'move 35 KS→cascade']);
-		//
-		// 	game = game.undo();
-		// 	expect(game.history).toEqual(['hand-jammed']);
-		// });
+		test('moving the same card multiple times in a row replaces the history', () => {
+			let game = FreeCell.parse(
+				'' + //
+					'             KC KD JH JS \n' + //
+					' QS    KS                \n' + //
+					' QH                      \n' + //
+					' KH                      \n' + //
+					' hand-jammed'
+			);
+			expect(game.history).toEqual(['hand-jammed']);
+			game = game.clickToMove({ fixture: 'cascade', data: [2, 0] });
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
+			game = game.clickToMove({ fixture: 'cascade', data: [3, 0] });
+			expect(game.history).toEqual(['hand-jammed', 'move 35 KS→cascade']);
+			game = game.clickToMove({ fixture: 'cascade', data: [4, 0] });
+			expect(game.history).toEqual(['hand-jammed', 'move 36 KS→cascade']);
+			game = game.clickToMove({ fixture: 'cascade', data: [5, 0] });
+			expect(game.history).toEqual(['hand-jammed', 'move 37 KS→cascade']);
+
+			expect(game.print()).toBe(
+				'' + //
+					'             KC KD JH JS \n' + //
+					' QS               >KS    \n' + //
+					' QH                      \n' + //
+					' KH                      \n' + //
+					' move 37 KS→cascade'
+			);
+
+			game = game.undo();
+			expect(game.history).toEqual(['hand-jammed']);
+		});
+
+		// i.e. cell -> sequence a -> sequence b -> sequence a
+		test('dithering across two sequences', () => {
+			let game = new FreeCell().shuffle32(6).dealAll();
+			expect(
+				game
+					.setCursor({ fixture: 'cascade', data: [1, 5] })
+					.touch()
+					.print()
+			).toBe(
+				'' +
+					'                         \n' +
+					' 2H JS 5S 5C 6H 2C TH 2S \n' +
+					' JC QH 3H 9H 7C QC 3C AC \n' +
+					' AD TS QD KS 8D 8H TC QS \n' +
+					' 4S 9D KH 7S KD JD 4H 8S \n' +
+					' 3S 5H 5D 4D 8C 3D TD 2D \n' +
+					' 4C>7H|AS 6S 7D 9S KC 6D \n' +
+					' 9C|6C|JH AH             \n' +
+					' select 2 7H-6C'
+			);
+			game = game
+				.setCursor({ fixture: 'cascade', data: [1, 6] })
+				.touch()
+				.autoMove({ autoFoundation: false });
+			expect(game.history).toEqual(['shuffle deck (6)', 'deal all cards', 'move 25 6C→7D']);
+			game = game
+				.setCursor({ fixture: 'cascade', data: [4, 6] })
+				.touch()
+				.autoMove({ autoFoundation: false });
+			expect(game.history).toEqual(['shuffle deck (6)', 'deal all cards']);
+			expect(game.print()).toBe(
+				'' +
+					'                         \n' +
+					' 2H JS 5S 5C 6H 2C TH 2S \n' +
+					' JC QH 3H 9H 7C QC 3C AC \n' +
+					' AD TS QD KS 8D 8H TC QS \n' +
+					' 4S 9D KH 7S KD JD 4H 8S \n' +
+					' 3S 5H 5D 4D 8C 3D TD 2D \n' +
+					' 4C>7H AS 6S 7D 9S KC 6D \n' +
+					' 9C 6C JH AH             \n' +
+					' deal all cards'
+			);
+		});
 
 		// i.e. 12 auto-1h 21
 		// this should be obvious, but just to be sure...
-		test.todo('cannot collapse moves if auto-foundation in between');
+		describe('cannot collapse moves if auto-foundation in between', () => {
+			test('move-foundation', () => {
+				let game = FreeCell.parse(
+					'' + //
+						'             QC TD KH TS \n' + //
+						' KD>KC       JS          \n' + //
+						' QS QD       KS          \n' + //
+						' JD                      \n' + //
+						' hand-jammed'
+				);
+				game = game.moveByShorthand('23').moveByShorthand('34').moveByShorthand('46');
 
-		// i.e. move 12 TH->QS, move 21 KH-QS-TH->cascade
-		test.todo('do not collapse when moving a different sequence');
+				expect(game.print({ includeHistory: true })).toBe(
+					'' + //
+						'             QC JD KH TS \n' + //
+						' KD          JS KC       \n' + //
+						' QS          KS QD       \n' + //
+						' move 36 KC-QD→cascade\n' + //
+						' move 23 KC-QD→cascade (auto-foundation 1 JD)\n' + //
+						' hand-jammed'
+				);
 
-		// which is to say, if auto-foundation should have already run before
-		// this should also be obvious
-		test.todo('can collapse moves if auto-foundation is never run');
+				expect(game.history).toEqual([
+					'hand-jammed',
+					'move 23 KC-QD→cascade (auto-foundation 1 JD)',
+					'move 36 KC-QD→cascade',
+				]);
+
+				game = game.undo();
+				expect(game.history).toEqual([
+					'hand-jammed',
+					'move 23 KC-QD→cascade (auto-foundation 1 JD)',
+				]);
+				game = game.undo();
+				expect(game.history).toEqual(['hand-jammed']);
+			});
+
+			test('auto-foundation', () => {
+				let game = FreeCell.parse(
+					'' + //
+						'             QC TD KH TS \n' + //
+						' KD>KC       JS          \n' + //
+						' QS QD       KS          \n' + //
+						' JD                      \n' + //
+						' hand-jammed'
+				);
+				game = game
+					.moveByShorthand('23', { autoFoundation: false })
+					.autoFoundationAll()
+					.moveByShorthand('34', { autoFoundation: false })
+					.autoFoundationAll()
+					.moveByShorthand('46', { autoFoundation: false })
+					.autoFoundationAll();
+
+				expect(game.print({ includeHistory: true })).toBe(
+					'' + //
+						'             QC JD KH TS \n' + //
+						' KD          JS KC       \n' + //
+						' QS          KS QD       \n' + //
+						' move 36 KC-QD→cascade\n' + //
+						' auto-foundation 1 JD\n' + //
+						' move 23 KC-QD→cascade\n' + //
+						' hand-jammed'
+				);
+
+				expect(game.history).toEqual([
+					'hand-jammed',
+					'move 23 KC-QD→cascade',
+					'auto-foundation 1 JD',
+					'move 36 KC-QD→cascade',
+				]);
+
+				game = game.undo();
+				expect(game.history).toEqual([
+					'hand-jammed',
+					'move 23 KC-QD→cascade',
+					'auto-foundation 1 JD',
+				]);
+				game = game.undo();
+				expect(game.history).toEqual(['hand-jammed', 'move 23 KC-QD→cascade']);
+				game = game.undo();
+				expect(game.history).toEqual(['hand-jammed']);
+			});
+		});
+
+		// i.e. move 12 JH→QS, move 21 KH-QS-JH→cascade
+		test('do not collapse when moving a different sequence', () => {
+			let game = FreeCell.parse(
+				'' + //
+					'>            KC KD 9H TS \n' + //
+					' JH KH                KS \n' + //
+					'    QS                TH \n' + //
+					'                      JS \n' + //
+					'                      QH \n' + //
+					' hand-jammed'
+			);
+			game = game.moveByShorthand('12');
+			expect(game.history).toEqual(['hand-jammed', 'move 12 JH→QS']);
+			game = game.moveByShorthand('21');
+			expect(game.history).toEqual(['hand-jammed', 'move 12 JH→QS', 'move 21 KH-QS-JH→cascade']);
+			game = game.undo().undo().moveByShorthand('13');
+			expect(game.history).toEqual(['hand-jammed', 'move 13 JH→cascade']);
+			game = game.moveByShorthand('34');
+			expect(game.history).toEqual(['hand-jammed', 'move 14 JH→cascade']);
+			game = game.undo().moveByShorthand('12');
+			expect(game.history).toEqual(['hand-jammed', 'move 12 JH→QS']);
+			game = game.moveCardToPosition('JH', '3');
+			expect(game.history).toEqual(['hand-jammed', 'move 13 JH→cascade']);
+		});
 
 		// similar to collapsing the moves into one
 		// this is essentially a free undo, except that "back to it's original location" is a valid move
-		test.todo('moving a card back to its original location remove the move from the history');
+		test('moving a card back to its original location remove the move from the history', () => {
+			let game = FreeCell.parse(
+				'' + //
+					' QD          QC JD KH TS \n' + //
+					' KD KC       JS          \n' + //
+					' QS          KS          \n' + //
+					' hand-jammed'
+			);
+			game = game.moveByShorthand('ab');
+			expect(game.history).toEqual(['hand-jammed', 'move ab QD→cell']);
+			expect(game.previousAction).toEqual({
+				text: 'move ab QD→cell',
+				type: 'move',
+			});
+			game = game.moveByShorthand('bc');
+			expect(game.history).toEqual(['hand-jammed', 'move ac QD→cell']);
+			expect(game.previousAction).toEqual({
+				text: 'move ac QD→cell',
+				type: 'move',
+			});
+			game = game.moveByShorthand('cd');
+			expect(game.history).toEqual(['hand-jammed', 'move ad QD→cell']);
+			expect(game.previousAction).toEqual({
+				text: 'move ad QD→cell',
+				type: 'move',
+			});
+			expect(game.print()).toBe(
+				'' + //
+					'         >QD QC JD KH TS \n' + //
+					' KD KC       JS          \n' + //
+					' QS          KS          \n' + //
+					' move ad QD→cell'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					'          QD QC JD KH TS \n' + //
+					' KD KC       JS          \n' + //
+					' QS          KS          \n' + //
+					' move ad QD→cell\n' +
+					' hand-jammed'
+			);
+			game = game.moveByShorthand('da');
+			expect(game.history).toEqual(['hand-jammed']);
+			expect(game.previousAction).toEqual({
+				text: 'hand-jammed',
+				type: 'init',
+			});
+			expect(game.print()).toBe(
+				'' + //
+					'>QD          QC JD KH TS \n' + //
+					' KD KC       JS          \n' + //
+					' QS          KS          \n' + //
+					' hand-jammed'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					' QD          QC JD KH TS \n' + //
+					' KD KC       JS          \n' + //
+					' QS          KS          \n' + //
+					' hand-jammed'
+			);
+		});
 
-		// move card a
-		// move card b
-		// move card c around a bit
-		// move card d a bit
-		// move card c a bit
-		// (still only 5 moves)
-		// move card c back
-		// move card d a bit, then back
-		// move card c back
-		// move card b back
-		// move card a back
-		// (no moves anymore, just shuffle and deal)
-		test.todo('a wild example');
+		/*
+			move card a
+			move card b
+			move card c around a bit
+			move card d a bit
+			move card c a bit
+			(still only 5 moves)
+			move card c back
+			move card d a bit, then back
+			move card c back
+			move card b back
+			move card a back
+			(no moves anymore, just shuffle and deal)
+		*/
+		test('a wild example', () => {
+			let game = FreeCell.parse(
+				'' + //
+					' QD          9C 9D TH JS \n' + //
+					' QH KH KS          JH QS \n' + //
+					' JC                TD TC \n' + //
+					'                   KD KC \n' + //
+					':d QC JD \n' + //
+					' hand-jammed'
+			);
+			// move card a
+			// move card b
+			game = game.moveCardToPosition('KS', '4');
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
+			game = game.setCursor('QD').touch().autoMove();
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS']);
+			expect(game.print()).toBe(
+				'' + //
+					'             9C 9D TH JS \n' + //
+					' QH KH   >KS       JH QS \n' + //
+					' JC       QD       TD TC \n' + //
+					'                   KD KC \n' + //
+					':d QC JD \n' + //
+					' move a4 QD→KS'
+			);
+
+			// move card c around a bit
+			game = game.setCursor('QH').touch().autoMove();
+			// prettier-ignore
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 18 QH-JC→KC']);
+			game = game.moveCardToPosition('QH', '3');
+			// prettier-ignore
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 13 QH-JC→cascade']);
+			game = game.moveCardToPosition('QH', '5');
+			// prettier-ignore
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade']);
+			expect(game.print()).toBe(
+				'' + //
+					'             9C 9D TH JS \n' + //
+					'    KH    KS>QH    JH QS \n' + //
+					'          QD JC    TD TC \n' + //
+					'                   KD KC \n' + //
+					':d QC JD \n' + //
+					' move 15 QH-JC→cascade'
+			);
+
+			// move card d a bit, and then back
+			game = game.setCursor('KH').touch().autoMove();
+			// prettier-ignore
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade', 'move 23 KH→cascade']);
+			game = game.touch().autoMove();
+			// prettier-ignore
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade', 'move 26 KH→cascade']);
+			game = game.touch().autoMove();
+			// prettier-ignore
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade', 'move 21 KH→cascade']);
+			game = game.touch().autoMove();
+			// prettier-ignore
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade']);
+			expect(game.print()).toBe(
+				'' + //
+					'             9C 9D TH JS \n' + //
+					'   >KH    KS QH    JH QS \n' + //
+					'          QD JC    TD TC \n' + //
+					'                   KD KC \n' + //
+					':d QC JD \n' + //
+					' move 15 QH-JC→cascade'
+			);
+
+			// move card c back
+			// move card b back
+			game = game.moveCardToPosition('QH', '6');
+			// prettier-ignore
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 16 QH-JC→cascade']);
+			game = game.moveCardToPosition('QH', '1');
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS']);
+			game = game.moveCardToPosition('QD', 'a');
+			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
+			game = game.setCursor('KS').touch().autoMove();
+			expect(game.history).toEqual(['hand-jammed', 'move 35 KS→cascade']);
+			game = game.touch().autoMove();
+			expect(game.history).toEqual(['hand-jammed', 'move 36 KS→cascade']);
+			// move card a back
+			// (no moves anymore, just shuffle and deal)
+			game = game.touch().autoMove();
+			expect(game.history).toEqual(['hand-jammed']);
+			expect(game.print()).toBe(
+				'' + //
+					' QD          9C 9D TH JS \n' + //
+					' QH KH>KS          JH QS \n' + //
+					' JC                TD TC \n' + //
+					'                   KD KC \n' + //
+					':d QC JD \n' + //
+					' hand-jammed'
+			);
+		});
 	});
 
 	test('parse history actions', () => {
-		let game = FreeCell.parse(
-			'' + //
-				' QC         >JC KD KH KS \n' + //
-				' KC                      \n' + //
+		const game = FreeCell.parse(ACTION_TEXT_EXAMPLES['move 3a KC→cell']);
+		game.history.splice(0, game.history.length - 8);
+		game.history.unshift('hand-jammed');
+		expect(game.history).toEqual([
+			'hand-jammed',
+			// 'move 7c QC→cell',
+			// 'move 7h 4H→3H',
+			// 'move 71 JC→QH',
+			// 'move 78 6S→7H',
+			'move 7h 3C→2C (auto-foundation 7 2S)',
+			'move ah 3S→2S',
+			'move b8 5D→6S',
+			'move 34 7C-6H-5S→cascade',
+			'move 31 TH→JC',
+			'move 32 8C→9D',
+			'move c7 QC→cascade',
+			'move 37 JD→QC',
+		]);
+		const gamePrintHist = game.print({ includeHistory: true });
+		expect(gamePrintHist).toBe(
+			'' +
+				'             AD 3C 4H 3S \n' +
+				' QH TS 2D 7C 4C 7D QC KH \n' +
+				' JC 9D 9C 6H 4D 6C JD QS \n' +
+				' TH 8C KC 5S KD 5H    JH \n' +
+				'             8H 4S    TC \n' +
+				'             KS 3D    9H \n' +
+				'             QD       8S \n' +
+				'             JS       7H \n' +
+				'             TD       6S \n' +
+				'             9S       5D \n' +
+				'             8D          \n' +
+				'             7S          \n' +
+				'             6D          \n' +
+				'             5C          \n' +
+				' move 37 JD→QC\n' +
+				' move c7 QC→cascade\n' +
+				' move 32 8C→9D\n' +
+				' move 31 TH→JC\n' +
+				' move 34 7C-6H-5S→cascade\n' +
+				' move b8 5D→6S\n' +
+				' move ah 3S→2S\n' +
+				' move 7h 3C→2C (auto-foundation 7 2S)\n' +
 				' hand-jammed'
 		);
-		game = game
-			.setCursor({ fixture: 'cascade', data: [0, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		game = game
-			.setCursor({ fixture: 'cascade', data: [1, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		game = game
-			.setCursor({ fixture: 'cascade', data: [2, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		game = game
-			.setCursor({ fixture: 'cascade', data: [3, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		game = game
-			.setCursor({ fixture: 'cascade', data: [4, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		game = game
-			.setCursor({ fixture: 'cascade', data: [5, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		game = game
-			.setCursor({ fixture: 'cascade', data: [6, 0] })
-			.touch()
-			.autoMove({ autoFoundation: false });
-		expect(game.print({ includeHistory: true })).toEqual(
-			'' + //
-				' QC          JC KD KH KS \n' + //
-				'                      KC \n' + //
-				' move 78 KC→cascade\n' +
-				' move 67 KC→cascade\n' +
-				' move 56 KC→cascade\n' +
-				' move 45 KC→cascade\n' +
-				' move 34 KC→cascade\n' +
-				' move 23 KC→cascade\n' +
-				' move 12 KC→cascade\n' +
-				' hand-jammed'
-		);
-		const parsed = FreeCell.parse(game.print({ includeHistory: true }));
-		expect(parsed.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+
+		const parsed = FreeCell.parse(gamePrintHist);
+		expect(parsed.print({ includeHistory: true })).toBe(gamePrintHist);
 		expect(parsed.history).toEqual(game.history);
 		expect(parsed.cards).toEqual(game.cards);
 

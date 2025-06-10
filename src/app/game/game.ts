@@ -6,10 +6,12 @@ import {
 	CardSequence,
 	CardSH,
 	cloneCards,
+	findCard,
 	getSequenceAt,
 	initializeDeck,
 	isLocationEqual,
 	parseShorthandCard,
+	Position,
 	RankList,
 	shorthandCard,
 	shorthandPosition,
@@ -106,6 +108,8 @@ export class FreeCell {
 	cursor: CardLocation;
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
+	// flashRank: Rank | null; // TODO (animation) (controls) (flash-rank) (hud) (4-priority) can we do like "peek all"
+	// IDEA (controls) flashRank: touch = wheel select; keyboard = ??; mouse = ??
 
 	// history
 	history: string[];
@@ -278,7 +282,10 @@ export class FreeCell {
 		}
 	}
 
-	setCursor(cursor: CardLocation): FreeCell {
+	setCursor(cursor: CardLocation | string): FreeCell {
+		if (typeof cursor === 'string') {
+			cursor = findCard(this.cards, parseShorthandCard(cursor)).location;
+		}
 		return this.__clone({ action: { text: 'cursor set', type: 'cursor' }, cursor });
 	}
 
@@ -672,15 +679,37 @@ export class FreeCell {
 	}
 
 	/**
-		Used replaying a game, starting with a seed or otherwise known deal.
-
-		it's really just "touch the first one" then "touch the second one"
+		Play a move using the standard notation.
+		The standard notation is used to print the game history.
+		This make it easy to replay a known game.
 
 		XXX (techdebt) move to FreeCellQOL extends FreeCell?
 	*/
 	moveByShorthand(shorthandMove: string, { autoFoundation }: OptionsAutoFoundation = {}): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
 		return this.clearSelection().setCursor(from).touch().setCursor(to).touch({ autoFoundation });
+	}
+
+	/**
+		This is super clear when you are looking at the game board.
+		If you know the card you want to move and where, it just "this card goes here".
+
+		@deprecated for unit testing _ONLY_ until we write _all the tests_
+		 - "let's just pluck any card and move it anywhere"
+		 - …yeah, that won't break anything
+		 - this _is_ just "touch first" then "touch second"
+		 - what's new here though is we aren't using game rules to pick the starting card, we can pick _any_ card
+		 - (we need to be more thurough about from: deck and from: foundation)
+		 - the unit test proves moving a card form the deck will explode
+	*/
+	moveCardToPosition(
+		shorthand: string,
+		position: Position,
+		{ autoFoundation }: OptionsAutoFoundation = {}
+	): FreeCell {
+		const g = this.clearSelection().setCursor(shorthand).touch();
+		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${position}`, g.cursor);
+		return g.setCursor(to).touch({ autoFoundation });
 	}
 
 	/**
@@ -1018,6 +1047,8 @@ export class FreeCell {
 		by default, we do not print the "available moves", that's important for good gameplay
 
 		XXX (techdebt) print is super messy, can we clean this up?
+		 - what if we just draw the board, and then precision-replace the HUD elements?
+		 - we only swap out whitespace, we know the location of everything
 		TODO (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
 		XXX (techdebt) remove skipDeck
 	*/
@@ -1138,7 +1169,8 @@ export class FreeCell {
 				// print the last valid action, _not_ previousAction.text
 				// the previous action could be a cursor movement, or a canceled touch action (touch stop)
 				// REVIEW (history) (print) should we even print the last action?
-				str += '\n ' + this.history.slice(-1)[0];
+				// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+				str += '\n ' + this.history.at(-1);
 				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 				while (movesSeed.moves.length) {
 					str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';

@@ -46,7 +46,7 @@ describe('game/card', () => {
 				RankList.forEach((rank) => {
 					const card = { rank, suit } as Card; // card, sans location
 					const shorthand = shorthandCard(card);
-					expect(parseShorthandCard(shorthand[0], shorthand[1])).toEqual({ rank, suit });
+					expect(parseShorthandCard(shorthand)).toEqual({ rank, suit });
 				});
 			});
 		});
@@ -62,7 +62,7 @@ describe('game/card', () => {
 			`('$shorthand', ({ card, shorthand }: { card: Card; shorthand: string }) => {
 				// card, sans location
 				expect(shorthandCard(card)).toBe(shorthand);
-				expect(parseShorthandCard(shorthand[0], shorthand[1])).toEqual(card);
+				expect(parseShorthandCard(shorthand)).toEqual(card);
 			});
 		});
 

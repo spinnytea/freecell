@@ -215,19 +215,28 @@ export function parseCursorFromPreviousActionText(
 }
 
 export function parseActionTextMove(actionText: string) {
-	let match = MOVE_REGEX.exec(actionText);
-	if (match) {
-		const [, from, to, fromShorthand, toShorthand] = match;
-		return { from, to, fromShorthand, toShorthand };
-	}
-
-	match = MOVE_FOUNDATION_REGEX.exec(actionText);
-	if (match) {
-		const [, from, to, fromShorthand, toShorthand] = match;
-		return { from, to, fromShorthand, toShorthand };
-	}
+	const result = _parseActionTextMove(actionText) ?? _parseActionTextMoveFoundation(actionText);
+	if (result) return result;
 
 	throw new Error('invalid move actionText: ' + actionText);
+}
+
+function _parseActionTextMove(actionText: string) {
+	const match = MOVE_REGEX.exec(actionText);
+	if (match) {
+		const [, from, to, fromShorthand, toShorthand] = match;
+		return { from, to, fromShorthand, toShorthand };
+	}
+	return undefined;
+}
+
+function _parseActionTextMoveFoundation(actionText: string) {
+	const match = MOVE_FOUNDATION_REGEX.exec(actionText);
+	if (match) {
+		const [, from, to, fromShorthand, toShorthand] = match;
+		return { from, to, fromShorthand, toShorthand };
+	}
+	return undefined;
 }
 
 function parseActionTextInvalidMove(actionText: string) {
@@ -238,11 +247,57 @@ function parseActionTextInvalidMove(actionText: string) {
 	throw new Error('not "invalid move" actionText: ' + actionText);
 }
 
-export function appendActionToHistory(action: PreviousAction, history: string[]) {
-	if (PREVIOUS_ACTION_TYPE_IN_HISTORY.has(action.type)) {
-		return { action, history: [...history, action.text] };
+interface PaH {
+	action: PreviousAction;
+	history: string[];
+}
+
+export function appendActionToHistory(action: PreviousAction, history: string[]): PaH {
+	if (!PREVIOUS_ACTION_TYPE_IN_HISTORY.has(action.type)) {
+		return { action, history };
 	}
-	return { action, history };
+
+	const collapsed = collapseHistory(action, history);
+	if (collapsed) {
+		return collapsed;
+	}
+
+	return { action, history: [...history, action.text] };
+}
+
+function collapseHistory(action: PreviousAction, history: string[]): PaH | undefined {
+	const previousText = history.at(-1);
+	if (previousText && action.type === 'move') {
+		// p may not be a move
+		const p = _parseActionTextMove(previousText);
+		if (p) {
+			// action.type should parse, the condition is just a formality
+			const a = _parseActionTextMove(action.text);
+			if (a) {
+				const { from: pf, to: pt, fromShorthand: pfs } = p;
+				const { from: af, to: at, fromShorthand: afs, toShorthand: ats } = a;
+				if (pt === af && pfs === afs) {
+					// move 34 KH→cascade
+					// move 43 KH→cascade
+					if (pf === at) {
+						return {
+							action: parsePreviousActionType(history.at(-2) ?? 'init'),
+							history: history.slice(0, -1),
+						};
+					}
+
+					// move 34 KH→cascade
+					// move 35 KH→cascade
+					const actionText = `move ${pf}${at} ${pfs}→${ats}`;
+					return {
+						action: { text: actionText, type: 'move' },
+						history: history.slice(0, -1).concat(actionText),
+					};
+				}
+			}
+		}
+	}
+	return undefined;
 }
 
 function undoMove(game: FreeCell, actionText: string): Card[] {
@@ -285,7 +340,7 @@ function parseActionTextAutoFoundation(actionText: string) {
 	if (match) {
 		// match[1] === 'auto-foundation' || match[1] === 'flourish'
 		const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
-		const shorthands = match[3].split(',').map((s) => parseShorthandCard(s[0], s[1]));
+		const shorthands = match[3].split(',').map((s) => parseShorthandCard(s));
 		if (froms.length !== shorthands.length)
 			throw new Error('invalid move actionText: ' + actionText);
 		return { froms, shorthands };
@@ -295,7 +350,7 @@ function parseActionTextAutoFoundation(actionText: string) {
 	if (match) {
 		// match[5] === 'auto-foundation' || match[5] === 'flourish'
 		const froms = match[6].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
-		const shorthands = match[7].split(',').map((s) => parseShorthandCard(s[0], s[1]));
+		const shorthands = match[7].split(',').map((s) => parseShorthandCard(s));
 		if (froms.length !== shorthands.length)
 			throw new Error('invalid move actionText: ' + actionText);
 		return { froms, shorthands };
@@ -391,9 +446,7 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 export function getCardsThatMoved(game: FreeCell): Card[] {
 	if (game.previousAction.type !== 'move') return [];
 	const { fromShorthand } = parseActionTextMove(game.previousAction.text);
-	return fromShorthand
-		.split('-')
-		.map((sh) => findCard(game.cards, parseShorthandCard(sh[0], sh[1])));
+	return fromShorthand.split('-').map((sh) => findCard(game.cards, parseShorthandCard(sh)));
 }
 
 export function getCardsFromInvalid(
@@ -405,14 +458,12 @@ export function getCardsFromInvalid(
 		return { from: [], to: [] };
 	}
 	const { fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
-	const from = fromShorthand
-		.split('-')
-		.map((sh) => findCard(cards, parseShorthandCard(sh[0], sh[1])));
+	const from = fromShorthand.split('-').map((sh) => findCard(cards, parseShorthandCard(sh)));
 	const to = [];
 	if (toShorthand.length === 2) {
 		to.push(findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1])));
 	} else {
-		// TODO (animation) animate piles
+		// TODO (animation) (motivation) animate piles
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
 	}
 	return { from, to };
