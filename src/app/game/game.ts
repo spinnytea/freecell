@@ -109,6 +109,7 @@ export class FreeCell {
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
 	// flashRank: Rank | null; // TODO (animation) (controls) (flash-rank) (hud) (4-priority) can we do like "peek all"
+	// IDEA (controls) flashRank: touch = wheel select; keyboard = ??; mouse = ??
 
 	// history
 	history: string[];

@@ -32,6 +32,9 @@ export function WinMessage() {
 					// animate color hue, to white
 					// TODO (animation) "you win" animation should start after the cards finish moving?
 					//  - Or at least during the last one and after the auto-foundation
+					//  - we may need a useContext so we can use a single global timeline
+					//  - and then never use gsap directly, always add it to a timeline
+					//  - maybe we need a wrapper around gsap
 					const color = { h: 0, s: 100, l: 44 }; /* #df0000 */
 					const applyColor: gsap.Callback = () => {
 						if (elementRef.current) {

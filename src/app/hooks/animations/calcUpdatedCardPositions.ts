@@ -182,6 +182,12 @@ export function calcUpdatedCardPositions({
 		// order by top
 		updateCardPositions.sort(({ top: a }, { top: b }) => a - b);
 	}
+	// TODO (animations) if we are resetting from a deal, then move the Kings first (highest cards on foundation)
+	// TODO (animations) can we wait to mark them as hidden? or maybe we need to always make hidden animation when it changes?
+	// if (previousAction.type === 'init') {
+	// 	updateCardPositions
+	// 		.sort((a, b) => b.rank - a.rank);
+	// }
 
 	return { updateCardPositions, unmovedCards };
 }
