@@ -1,4 +1,4 @@
-// FIXME test.todo
+// XXX (techdebt) more unit testing
 //  - try to move the tests elsewhere:
 //    - standard moves: `game.touch.test.ts`
 //      - already has from each x to each

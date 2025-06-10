@@ -1541,9 +1541,30 @@ describe('game.undo (+ history)', () => {
 			});
 		});
 
-		// FIXME test.todo
-		// i.e. move 12 TH->QS, move 21 KH-QS-TH->cascade
-		test.todo('do not collapse when moving a different sequence');
+		// i.e. move 12 JH→QS, move 21 KH-QS-JH→cascade
+		test('do not collapse when moving a different sequence', () => {
+			let game = FreeCell.parse(
+				'' + //
+					'>            KC KD 9H TS \n' + //
+					' JH KH                KS \n' + //
+					'    QS                TH \n' + //
+					'                      JS \n' + //
+					'                      QH \n' + //
+					' hand-jammed'
+			);
+			game = game.moveByShorthand('12');
+			expect(game.history).toEqual(['hand-jammed', 'move 12 JH→QS']);
+			game = game.moveByShorthand('21');
+			expect(game.history).toEqual(['hand-jammed', 'move 12 JH→QS', 'move 21 KH-QS-JH→cascade']);
+			game = game.undo().undo().moveByShorthand('13');
+			expect(game.history).toEqual(['hand-jammed', 'move 13 JH→cascade']);
+			game = game.moveByShorthand('34');
+			expect(game.history).toEqual(['hand-jammed', 'move 14 JH→cascade']);
+			game = game.undo().moveByShorthand('12');
+			expect(game.history).toEqual(['hand-jammed', 'move 12 JH→QS']);
+			game = game.moveCardToPosition('JH', '3');
+			expect(game.history).toEqual(['hand-jammed', 'move 13 JH→cascade']);
+		});
 
 		// similar to collapsing the moves into one
 		// this is essentially a free undo, except that "back to it's original location" is a valid move
