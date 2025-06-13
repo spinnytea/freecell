@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { gsap } from 'gsap/all';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
 import Page from '@/app/page';
@@ -18,9 +18,10 @@ jest.mock('gsap/all', () => ({
 }));
 
 describe('page', () => {
+	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
-		({ mockCallTimes } = spyOnGsap(gsap));
+		({ mockCallTimes, mockReset } = spyOnGsap(gsap));
 	});
 
 	it('should render without crashing', () => {
@@ -42,5 +43,24 @@ describe('page', () => {
 			timeScaleSpy: 0,
 			consoleDebugSpy: 0,
 		});
+
+		mockReset(true);
+		fireEvent.click(screen.getAllByAltText('card back')[0]);
+
+		expect(mockCallTimes()).toEqual({
+			toGsapSpy: 0,
+			setGsapSpy: 0,
+			fromGsapSpy: 0,
+			fromToSpy: 52,
+			toSpy: 52,
+			setSpy: 0,
+			addLabelSpy: 1,
+			addSpy: 0,
+			timeScaleSpy: 0,
+			consoleDebugSpy: 0,
+		});
+
+		expect(screen.queryAllByAltText('card back').length).toBe(1); // there is hidden card back
+		expect(screen.getByText('king of hearts')).toBeTruthy();
 	});
 });

@@ -61,6 +61,7 @@ export function SmolCards({
 		return <NativeCards width={width} height={height} rank={rank} suit={suit} />;
 	}
 
+	// XXX (accessibility) consider adding title={rank or suit}
 	const filename = getFilename(rank, suit);
 	return (
 		<Image
@@ -89,6 +90,7 @@ function NativeCards({
 	const text = TEXT[rank];
 	const symbol = SYMBOLS[suit];
 
+	// XXX (accessibility) consider adding <title>rank or suit</title>
 	return (
 		<svg
 			width={width}
@@ -97,6 +99,10 @@ function NativeCards({
 			xmlns="http://www.w3.org/2000/svg"
 			xmlnsXlink="http://www.w3.org/1999/xlink"
 		>
+			<desc>
+				{rank} of {suit}
+			</desc>
+
 			{rank === 'ace' && ACE_SYMBOL_DEFS[suit]}
 
 			<rect width="208" height="303" rx="8" fill="#FFFFFF" stroke="#000000" strokeWidth="0.5" />
