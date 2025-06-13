@@ -708,6 +708,8 @@ export class FreeCell {
 		{ autoFoundation }: OptionsAutoFoundation = {}
 	): FreeCell {
 		const g = this.clearSelection().setCursor(shorthand).touch();
+		if (g.selection?.peekOnly) return this;
+		if (!g.availableMoves?.length) return this;
 		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${position}`, g.cursor);
 		return g.setCursor(to).touch({ autoFoundation });
 	}

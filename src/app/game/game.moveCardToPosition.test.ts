@@ -1,3 +1,4 @@
+import { shorthandPosition } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 
 /*
@@ -29,13 +30,22 @@ describe('moveCardToPosition', () => {
 				':d 2S 2H 2D 2C AS>AH|AD AC \n' +
 				' select AH'
 		);
-		// TODO (techdebt) (2-priority) this move isn't allowed
+
+		// REVIEW (techdebt) this move isn't allowed
 		// one part of the logic allows moving a card from the deck into play
 		// another but a bunch of code relies on shorthand moves that don't allow for the deck to be interacted with
 		// if we are going to rely on the deck so much, we shouldn't attempt this move
-		expect(() => game.moveCardToPosition('AH', 'a')).toThrow(
+		// we block it with moveCardToPosition, but it shouldn't explode if we don't
+		expect(() => game.moveCardToPosition('AH', 'a')).not.toThrow();
+		// basically, we can't "move to or from" the deck, because it's there's no move shorthand for it
+		// ~~maybe we should treat it like "foundation", but it's a stack or a queue (not a set of spots)~~
+		// maybe we should give it a single letter, like foundation
+		// but then we also need to allow actually moving to and from it - or at least, ... how far do we take this
+		// maybe throwing _is_ fine if we can't get there
+		expect(() => shorthandPosition(game.setCursor('AH').cursor)).toThrow(
 			'invalid position: {"fixture":"deck","data":[2]}'
 		);
+		expect(game.moveCardToPosition('AH', 'a')).toBe(game);
 
 		game = game.dealAll();
 		expect(game.print()).toBe(
@@ -59,16 +69,17 @@ describe('moveCardToPosition', () => {
 				' move 5h AS→foundation (flourish 167823412345678123456781234567812345678123456781234 2S,AH,AD,AC,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)'
 		);
 
-		// TODO (techdebt) (2-priority) this move isn't allowed
+		// REVIEW (techdebt) this move isn't allowed
 		// this move is correctly blocked
-		game = game.moveCardToPosition('AH', 'a');
-		expect(game.print()).toBe(
-			'>            KS KH KD KC \n' + //
-				'                         \n' + //
-				':    Y O U   W I N !    :\n' + //
-				'                         \n' + //
-				' touch stop'
-		);
+		expect(game.moveCardToPosition('AH', 'a')).toBe(game);
+		// game = game.moveCardToPosition('AH', 'a');
+		// expect(game.print()).toBe(
+		// 	'>            KS KH KD KC \n' + //
+		// 		'                         \n' + //
+		// 		':    Y O U   W I N !    :\n' + //
+		// 		'                         \n' + //
+		// 		' touch stop'
+		// );
 
 		// TODO (techdebt) (2-priority) should we allow selecting the foundation; we allow that with the deck?
 		//  - the only time the deck is on screen, touching it will deal cards
@@ -80,6 +91,7 @@ describe('moveCardToPosition', () => {
 				'                         \n' + //
 				' touch stop'
 		);
+		expect(game.selection).toBe(null);
 	});
 
 	describe('from', () => {
