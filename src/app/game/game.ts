@@ -1,5 +1,4 @@
 import { isEqual as _isEqual } from 'lodash';
-import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import {
 	Card,
 	CardLocation,
@@ -30,6 +29,7 @@ import {
 	PREVIOUS_ACTION_TYPE_IS_START_OF_GAME,
 	PreviousAction,
 } from '@/app/game/move/history';
+import { KeyboardArrowDirection, moveCursorWithBasicArrows } from '@/app/game/move/keyboard';
 import {
 	AutoFoundationLimit,
 	AvailableMove,
@@ -286,187 +286,8 @@ export class FreeCell {
 		return this.__clone({ action: { text: 'cursor set', type: 'cursor' }, cursor });
 	}
 
-	// FIXME actually play the game and see what's not quite right
-	//  - left right wraps between home/tableau
-	//  - entering a cascade (l/r, u/d) cascade always moves to the "last sequence"
-	// FIXME move this function into a dedicated keyboard controls folder/file
-	moveCursor(dir: 'up' | 'right' | 'left' | 'down'): FreeCell {
-		const {
-			fixture,
-			data: [d0, d1],
-		} = this.cursor;
-		if (fixture === 'cell') {
-			switch (dir) {
-				case 'up':
-					break;
-				case 'left':
-					if (d0 <= 0)
-						return this.__clone({
-							action: { text: 'cursor left w', type: 'cursor' },
-							cursor: { fixture: 'foundation', data: [this.foundations.length - 1] },
-						});
-					return this.__clone({
-						action: { text: 'cursor left', type: 'cursor' },
-						cursor: { fixture, data: [d0 - 1] },
-					});
-				case 'right': {
-					if (d0 >= this.cells.length - 1)
-						return this.__clone({
-							action: { text: 'cursor right w', type: 'cursor' },
-							cursor: { fixture: 'foundation', data: [0] },
-						});
-					return this.__clone({
-						action: { text: 'cursor right', type: 'cursor' },
-						cursor: { fixture, data: [d0 + 1] },
-					});
-				}
-				case 'down':
-					return this.__clone({
-						action: { text: 'cursor down w', type: 'cursor' },
-						cursor: { fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] },
-					});
-			}
-		} else if (fixture === 'foundation') {
-			switch (dir) {
-				case 'up':
-					break;
-				case 'left':
-					if (d0 <= 0)
-						return this.__clone({
-							action: { text: 'cursor left w', type: 'cursor' },
-							cursor: { fixture: 'cell', data: [this.cells.length - 1] },
-						});
-					return this.__clone({
-						action: { text: 'cursor left', type: 'cursor' },
-						cursor: { fixture, data: [d0 - 1] },
-					});
-				case 'right': {
-					if (d0 >= this.foundations.length - 1)
-						return this.__clone({
-							action: { text: 'cursor right w', type: 'cursor' },
-							cursor: { fixture: 'cell', data: [0] },
-						});
-					return this.__clone({
-						action: { text: 'cursor right', type: 'cursor' },
-						cursor: { fixture, data: [d0 + 1] },
-					});
-				}
-				case 'down':
-					return this.__clone({
-						action: { text: 'cursor down w', type: 'cursor' },
-						cursor: {
-							fixture: 'cascade',
-							data: [this.tableau.length - this.foundations.length + d0, BOTTOM_OF_CASCADE],
-						},
-					});
-			}
-		} else if (fixture === 'cascade') {
-			switch (dir) {
-				case 'up':
-					if (d1 <= 0) {
-						// REVIEW (card | stop | fond) vs (ccaarrdd | fond)
-						//         0123   4567   89ab      01234567   89ab
-						if (d0 < this.cells.length) {
-							return this.__clone({
-								action: { text: 'cursor up w', type: 'cursor' },
-								cursor: { fixture: 'cell', data: [d0] },
-							});
-						}
-						if (this.tableau.length - 1 - d0 < this.foundations.length) {
-							return this.__clone({
-								action: { text: 'cursor up w', type: 'cursor' },
-								cursor: {
-									fixture: 'foundation',
-									data: [this.foundations.length - (this.tableau.length - d0)],
-								},
-							});
-						}
-					}
-					return this.__clone({
-						action: { text: 'cursor up', type: 'cursor' },
-						cursor: { fixture, data: [d0, d1 - 1] },
-					});
-				case 'left':
-					// if d1 is too large, it will be fixed with __clampCursor
-					if (d0 <= 0)
-						return this.__clone({
-							action: { text: 'cursor left w', type: 'cursor' },
-							cursor: { fixture: 'cascade', data: [this.tableau.length - 1, d1] },
-						});
-					return this.__clone({
-						action: { text: 'cursor left', type: 'cursor' },
-						cursor: { fixture, data: [d0 - 1, d1] },
-					});
-				case 'right':
-					// if d1 is too large, it will be fixed with __clampCursor
-					if (d0 >= this.tableau.length - 1)
-						return this.__clone({
-							action: { text: 'cursor right w', type: 'cursor' },
-							cursor: { fixture: 'cascade', data: [0, d1] },
-						});
-					return this.__clone({
-						action: { text: 'cursor right', type: 'cursor' },
-						cursor: { fixture, data: [d0 + 1, d1] },
-					});
-				case 'down':
-					if (d1 >= this.tableau[d0].length - 1) {
-						if (this.deck.length) {
-							// deck is rendered in reverse
-							return this.__clone({
-								action: { text: 'cursor down w', type: 'cursor' },
-								cursor: { fixture: 'deck', data: [this.deck.length - 1 - d0] },
-							});
-						}
-						// FIXME same as up (from top)
-						break;
-					}
-					return this.__clone({
-						action: { text: 'cursor down', type: 'cursor' },
-						cursor: { fixture, data: [d0, d1 + 1] },
-					});
-			}
-		} else {
-			switch (dir) {
-				case 'up':
-					// if d0 is wrong, it will be fixed with __clampCursor
-					// d1 will be fixed with __clampCursor
-					// FIXME spread up/down between cascade and deck?
-					//  - i.e. use the cascade to jump multiple cards in the deck
-					return this.__clone({
-						action: { text: 'cursor up w', type: 'cursor' },
-						cursor: { fixture: 'cascade', data: [this.deck.length - 1 - d0, BOTTOM_OF_CASCADE] },
-					});
-				case 'left':
-					// left and right are reversed in the deck
-					if (d0 === this.deck.length - 1) {
-						return this.__clone({
-							action: { text: 'cursor left w', type: 'cursor' },
-							cursor: { fixture, data: [0] },
-						});
-					}
-					return this.__clone({
-						action: { text: 'cursor left', type: 'cursor' },
-						cursor: { fixture, data: [d0 + 1] },
-					});
-				case 'right':
-					// left and right are reversed in the deck
-					if (d0 === 0) {
-						return this.__clone({
-							action: { text: 'cursor right w', type: 'cursor' },
-							cursor: { fixture, data: [this.deck.length - 1] },
-						});
-					}
-					return this.__clone({
-						action: { text: 'cursor right', type: 'cursor' },
-						cursor: { fixture, data: [d0 - 1] },
-					});
-				case 'down':
-					break;
-			}
-		}
-
-		// noop
-		return this.__clone({ action: { text: 'cursor stop', type: 'cursor' } });
+	moveCursor(dir: KeyboardArrowDirection): FreeCell {
+		return this.__clone(moveCursorWithBasicArrows(this, dir));
 	}
 
 	clearSelection(): FreeCell | this {
@@ -824,6 +645,7 @@ export class FreeCell {
 			const movedCardsStr = moved.map((card) => shorthandCard(card)).join(',');
 			const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
 			const name = game.win && countEmptyFoundations(this) > 0 ? 'flourish' : 'auto-foundation';
+			// FIXME if game.win, move cursor to home
 			return game.__clone({
 				action: { text: `${name} ${movedPositionsStr} ${movedCardsStr}`, type: 'auto-foundation' },
 			});

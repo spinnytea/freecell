@@ -359,6 +359,7 @@ function parseActionTextAutoFoundation(actionText: string) {
 	throw new Error('invalid move actionText: ' + actionText);
 }
 
+// FIXME remove game.__clone
 function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 	const { froms, shorthands } = parseActionTextAutoFoundation(actionText);
 

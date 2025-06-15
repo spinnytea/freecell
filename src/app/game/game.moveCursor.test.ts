@@ -1,6 +1,8 @@
 import { CardLocation } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 
+// FIXME pair down these unit tests to match whats in moveCursor
+//  - very the cursor text picks the right method
 describe('game.moveCursor', () => {
 	describe('selection empty', () => {
 		describe('cell', () => {
