@@ -17,7 +17,7 @@ function ignoreTarget(target: EventTarget | null): boolean {
 	return false;
 }
 
-/** REVIEW (controls) keyboard */
+/** FIXME keyboard */
 export function useKeybaordMiscControls() {
 	const [, setGame, newGame] = useContext(GameContext);
 	const [{ showSettingsDialog, enabledControlSchemes }, setSettings] = useContext(SettingsContext);
@@ -47,7 +47,7 @@ export function useKeybaordMiscControls() {
 						if (key === 'Enter') {
 							return g.touch();
 						}
-						// REVIEW (controls) update cursor - where would you like it to be?
+						// FIXME update cursor - where would you like it to be?
 						return g.clickToMove(g.cursor);
 					});
 					break;
@@ -57,7 +57,7 @@ export function useKeybaordMiscControls() {
 					break;
 				case 'z':
 				case 'Z':
-					// REVIEW (controls) update cursor - where would you like it to be?
+					// FIXME update cursor - where would you like it to be?
 					consumed = true;
 					setGame((g) => {
 						if (event.repeat && PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(g.previousAction.type)) {

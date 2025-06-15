@@ -37,15 +37,15 @@ export enum ControlSchemes {
 
 	/*
 		set cursor + touch (hotkeys for columns; shorthandPosition directly)
-		@deprecated TODO (controls) not yet implemented
+		FIXME impl
 	*/
-	// Hotkeys = 'keyboard hotkeys',
+	Hotkeys = 'keyboard hotkeys',
 
 	/*
 		set cursor + touch (click on columns (d0), not cards (d0, d1); shorthandPosition directly)
-		@deprecated TODO (controls) not yet implemented
+		FIXME impl
 	*/
-	// MouseColumns = 'mouse hotcolumns',
+	MouseColumns = 'mouse hotcolumns',
 
 	/**
 		set cursor + touch (w/ selection, no autoMove)
@@ -78,7 +78,7 @@ export enum ControlSchemes {
 	`GameplayInteractions` is apparently a few "explain what just happened" commentaries.
 	- grow cascade selection is just a "select" followed by another "select"
 
-	XXX (controls) use or remove - not sure what the point of this is (testing? animations?)
+	FIXME (controls) use or remove - not sure what the point of this is (testing? animations?)
 */
 export type GameplayInteractions =
 	| 'move cursor w/w/o selection'

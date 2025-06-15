@@ -108,8 +108,8 @@ export class FreeCell {
 	cursor: CardLocation;
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
-	// flashRank: Rank | null; // TODO (animation) (controls) (flash-rank) (hud) (4-priority) can we do like "peek all"
-	// IDEA (controls) flashRank: touch = wheel select; keyboard = ??; mouse = ??
+	// flashRank: Rank | null; // TODO (animation) (flash-rank) (hud) (4-priority) can we do like "peek all"
+	// IDEA (flash-rank) flashRank: touch = wheel select; keyboard = ??; mouse = ?? -- or just menu in settings dialog
 
 	// history
 	history: string[];
@@ -282,6 +282,8 @@ export class FreeCell {
 		}
 	}
 
+	// FIXME remove overload for setCursor; change to selectCard
+	// FIXME make selectCursor (which should be if selectCard has no argument?)
 	setCursor(cursor: CardLocation | string): FreeCell {
 		if (typeof cursor === 'string') {
 			cursor = findCard(this.cards, parseShorthandCard(cursor)).location;
@@ -289,10 +291,10 @@ export class FreeCell {
 		return this.__clone({ action: { text: 'cursor set', type: 'cursor' }, cursor });
 	}
 
-	// REVIEW (controls) actually play the game and see what's not quite right
+	// FIXME actually play the game and see what's not quite right
 	//  - left right wraps between home/tableau
 	//  - entering a cascade (l/r, u/d) cascade always moves to the "last sequence"
-	// REVIEW (techdebt) move this function into a dedicated keyboard controls folder/file
+	// FIXME move this function into a dedicated keyboard controls folder/file
 	moveCursor(dir: 'up' | 'right' | 'left' | 'down'): FreeCell {
 		const {
 			fixture,
@@ -420,7 +422,7 @@ export class FreeCell {
 								cursor: { fixture: 'deck', data: [this.deck.length - 1 - d0] },
 							});
 						}
-						// TODO (controls) same as up (from top)
+						// FIXME same as up (from top)
 						break;
 					}
 					return this.__clone({
@@ -433,7 +435,7 @@ export class FreeCell {
 				case 'up':
 					// if d0 is wrong, it will be fixed with __clampCursor
 					// d1 will be fixed with __clampCursor
-					// REVIEW (controls) spread up/down between cascade and deck?
+					// FIXME spread up/down between cascade and deck?
 					//  - i.e. use the cascade to jump multiple cards in the deck
 					return this.__clone({
 						action: { text: 'cursor up w', type: 'cursor' },
@@ -644,6 +646,8 @@ export class FreeCell {
 		return didUndo;
 	}
 
+	// FIXME vv do we need a "sugar" namespace? vv
+
 	/**
 		don't leave the game at 'init', always have a shuffled deck
 
@@ -714,9 +718,12 @@ export class FreeCell {
 		return g.setCursor(to).touch({ autoFoundation });
 	}
 
+	// FIXME ^^ do we need a "sugar" namespace? ^^
+
 	/**
 		TODO (techdebt) break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
 		REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
+		 - historyIsInvalidAtIdx?
 		REVIEW (techdebt) autoFoundation needs some serious refactoring
 
 		XXX (settings) (AutoFoundationMethod) if we want more ways to do the "autoFoundation" logic, we can split it out
@@ -1538,7 +1545,7 @@ export class FreeCell {
 	}
 }
 
-// XXX (techdebt) refactor to src/app/game/move/move.ts
+// FIXME refactor to src/app/game/move/move.ts
 function calcMoveActionText(from: CardSequence, to: CardSequence): string {
 	const from_location = from.cards[0].location;
 	const to_card: Card | undefined = to.cards[to.cards.length - 1];

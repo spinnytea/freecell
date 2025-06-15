@@ -24,7 +24,7 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 // IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
 // IDEA (controls) Prioritize moving cards to a completed sequence
 //  - (when the root of it is at the top of a column)
-//  - (unless we are breaking a stack??)
+//  - (unless we are breaking a sequence??)
 /*
 TODO (controls) (3-priority) More control over where next card moves (i.e. cannot move to foundation if multiple valid moves)
  - which is really because click-to-move is the only available control scheme on mobile
@@ -48,7 +48,7 @@ TODO (controls) (3-priority) Can't put the three in the foundation
 export const MoveDestinationTypePriorities: {
 	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
 } = {
-	// XXX (controls) deck: when will we get to do this?
+	// FIXME (controls) deck: when will we get to do this?
 	'deck': {
 		'cell': 1,
 		'foundation': 4,
@@ -61,7 +61,7 @@ export const MoveDestinationTypePriorities: {
 		'cascade:empty': 2,
 		'cascade:sequence': 4,
 	},
-	// XXX (controls) foundation: down from foundation means "back into play?" that's not a valid move
+	// FIXME (controls) foundation: down from foundation means "back into play?" that's not a valid move
 	'foundation': {
 		'cell': 1,
 		'foundation': 4,

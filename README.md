@@ -41,6 +41,10 @@ TODO (motivation) main development tasks:
   - card drag animation (drag waggles the sequence)
   - auto-foundation each card
   - win -> init
+- IDEA (motivation) (hud) (controls) so I have a robust text i/o, make a termainal version
+  - console.clear, console.log; maybe look for a library?
+  - light and dark mode?
+  - basically just, same keyboard controls as the web ui, just, a terminal ui
 - TODO (motivation) (animation) learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
 - REVIEW (hud) (mobile) icon for bookmarks / save link to home screen (Andriod, iOS)
 - TODO (motivation) animate card flash for use in flourishes and end of game
@@ -61,7 +65,7 @@ TODO (motivation) main development tasks:
 - IDEA (motivation) implement War? just so it's flexible?
   - what is "it", the UI? the controls?
 - IDEA (motivation) implement Spider Solitaire, that could be fun
-- TODO (controls) (3-priority) keyboard hotkeys (1-8 (1234567890), abcd, h, ¿qwerty?, ¿uiop?)
+- FIXME (3-priority) keyboard hotkeys (1-8 (1234567890), abcd, h, ¿qwerty?, ¿uiop?)
   - if cursor can stack with target: select, moveCard
   - if cursor cannot stack with target: setCursor
 - TODO (controls) mouse column mode (like keyboard hotkeys)

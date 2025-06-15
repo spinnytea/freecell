@@ -504,7 +504,7 @@ describe('game.moveCursor', () => {
 	});
 
 	describe('has selection only moves to valid locations', () => {
-		// TODO (controls) only cycle between places that the selection can move
+		// FIXME only cycle between places that the selection can move
 		describe('cell', () => {
 			test.todo('with left and right');
 
