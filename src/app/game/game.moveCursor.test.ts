@@ -506,43 +506,93 @@ describe('game.moveCursor', () => {
 	describe('has selection only moves to valid locations', () => {
 		// FIXME only cycle between places that the selection can move
 		describe('cell', () => {
-			test.todo('with left and right');
+			test.todo('within left and right');
 
-			test.todo('going off-right wraps to foundation');
+			describe('going off-right', () => {
+				test.todo('wraps to foundation');
 
-			test.todo('going off-left wraps to cascade');
+				test.todo('wraps to cascade when no foundation');
+
+				test.todo('wraps to cell when no foundation or cascade');
+			});
+
+			describe('going off-left', () => {
+				test.todo('wraps to cascade');
+
+				test.todo('wraps to foundation when no cascade');
+
+				test.todo('wraps to cell when no foundation or cascade');
+			});
 
 			test.todo('going off-top stops');
 
-			test.todo('gogin off-bottom wraps to cascade');
+			describe('going off-bottom', () => {
+				test.todo('wraps to cascade');
+
+				test.todo('stops when no cascade');
+			});
 		});
 
 		describe('foundation', () => {
-			test.todo('with left and right');
+			test.todo('within left and right');
 
-			test.todo('going off-right wraps to cascade');
+			describe('going off-right', () => {
+				test.todo('wraps to cascade');
 
-			test.todo('going off-left wraps to cell');
+				test.todo('wraps to cell when no founcation');
+
+				test.todo('wraps to foundation when no cell or cascade');
+			});
+
+			describe('going off-left', () => {
+				test.todo('wraps to cell');
+
+				test.todo('wraps to cascade when no cell');
+
+				test.todo('wraps to foundation when no cell or cascade');
+			});
 
 			test.todo('going off-top stops');
 
-			test.todo('gogin off-bottom wraps to cascade');
+			describe('going off-bottom', () => {
+				test.todo('wraps to cascade');
+
+				test.todo('stops when no cascade');
+			});
 		});
 
 		describe('cascade', () => {
-			test.todo('with left and right');
+			test.todo('within left and right');
 
-			test.todo('going off-right wraps to cell');
+			describe('going off-right', () => {
+				test.todo('wraps to cell');
 
-			test.todo('going off-left wraps to foundation');
+				test.todo('wraps to foundation when no cell');
+
+				test.todo('wraps to cascade when no cell or foundation');
+			});
+
+			describe('going off-left', () => {
+				test.todo('wraps to foundation');
+
+				test.todo('wraps to cell when no foundation');
+
+				test.todo('wraps to cascade when no cell or foundation');
+			});
 
 			describe('going off-top', () => {
 				test.todo('wraps to cell');
 
+				test.todo('wraps to foundation when no cell');
+
 				test.todo('wraps to foundation');
+
+				test.todo('wraps to cell when no founcation');
+
+				test.todo('stop when no cell or foundation');
 			});
 
-			test.todo('gogin off-bottom stops');
+			test.todo('going off-bottom stops');
 		});
 	});
 });

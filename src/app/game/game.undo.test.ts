@@ -1659,7 +1659,7 @@ describe('game.undo (+ history)', () => {
 			// move card b
 			game = game.moveCardToPosition('KS', '4');
 			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
-			game = game.setCursor('QD').touch().autoMove();
+			game = game.selectCard('QD').autoMove();
 			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS']);
 			expect(game.print()).toBe(
 				'' + //
@@ -1672,7 +1672,7 @@ describe('game.undo (+ history)', () => {
 			);
 
 			// move card c around a bit
-			game = game.setCursor('QH').touch().autoMove();
+			game = game.selectCard('QH').autoMove();
 			// prettier-ignore
 			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 18 QH-JC→KC']);
 			game = game.moveCardToPosition('QH', '3');
@@ -1692,7 +1692,7 @@ describe('game.undo (+ history)', () => {
 			);
 
 			// move card d a bit, and then back
-			game = game.setCursor('KH').touch().autoMove();
+			game = game.selectCard('KH').autoMove();
 			// prettier-ignore
 			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade', 'move 23 KH→cascade']);
 			game = game.touch().autoMove();
@@ -1723,7 +1723,7 @@ describe('game.undo (+ history)', () => {
 			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS']);
 			game = game.moveCardToPosition('QD', 'a');
 			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
-			game = game.setCursor('KS').touch().autoMove();
+			game = game.selectCard('KS').autoMove();
 			expect(game.history).toEqual(['hand-jammed', 'move 35 KS→cascade']);
 			game = game.touch().autoMove();
 			expect(game.history).toEqual(['hand-jammed', 'move 36 KS→cascade']);

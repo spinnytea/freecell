@@ -17,7 +17,7 @@ describe('moveCardToPosition', () => {
 	test('spot some concerns', () => {
 		let game = new FreeCell().dealAll({ demo: true, keepDeck: true });
 		// TODO (techdebt) (2-priority) should we allow selecting the deck if we can't do anything with it?
-		game = game.setCursor('AH').touch();
+		game = game.selectCard('AH');
 		expect(game.print()).toBe(
 			'' +
 				'                         \n' +
@@ -42,7 +42,9 @@ describe('moveCardToPosition', () => {
 		// maybe we should give it a single letter, like foundation
 		// but then we also need to allow actually moving to and from it - or at least, ... how far do we take this
 		// maybe throwing _is_ fine if we can't get there
-		expect(() => shorthandPosition(game.setCursor('AH').cursor)).toThrow(
+		expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
+		expect(game.selectCard('AH').cursor).toEqual({ fixture: 'deck', data: [2] });
+		expect(() => shorthandPosition(game.cursor)).toThrow(
 			'invalid position: {"fixture":"deck","data":[2]}'
 		);
 		expect(game.moveCardToPosition('AH', 'a')).toBe(game);
@@ -60,7 +62,7 @@ describe('moveCardToPosition', () => {
 				' 2S 2H 2D 2C             \n' +
 				' deal all cards'
 		);
-		game = game.setCursor('AS').touch().autoMove();
+		game = game.selectCard('AS').autoMove();
 		expect(game.print()).toBe(
 			'            >KS KH KD KC \n' + //
 				'                         \n' + //
@@ -83,7 +85,7 @@ describe('moveCardToPosition', () => {
 
 		// TODO (techdebt) (2-priority) should we allow selecting the foundation; we allow that with the deck?
 		//  - the only time the deck is on screen, touching it will deal cards
-		game = game.setCursor('JS').touch();
+		game = game.selectCard('JS');
 		expect(game.print()).toBe(
 			'            >KS KH KD KC \n' + //
 				'                         \n' + //

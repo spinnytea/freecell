@@ -282,12 +282,7 @@ export class FreeCell {
 		}
 	}
 
-	// FIXME remove overload for setCursor; change to selectCard
-	// FIXME make selectCursor (which should be if selectCard has no argument?)
-	setCursor(cursor: CardLocation | string): FreeCell {
-		if (typeof cursor === 'string') {
-			cursor = findCard(this.cards, parseShorthandCard(cursor)).location;
-		}
+	setCursor(cursor: CardLocation): FreeCell {
 		return this.__clone({ action: { text: 'cursor set', type: 'cursor' }, cursor });
 	}
 
@@ -487,7 +482,9 @@ export class FreeCell {
 	}
 
 	/**
-		interact with the cursor
+		interact with the cursor, touch a card
+
+		this can mean different things depending on context
 
 		e.g. select cursor, deselect cursor, move selection
 
@@ -646,7 +643,12 @@ export class FreeCell {
 		return didUndo;
 	}
 
-	// FIXME vv do we need a "sugar" namespace? vv
+	// FIXME vv do we need a "sugar" or "macros" namespace? vv
+
+	selectCard(shorthand: string): FreeCell {
+		const location = findCard(this.cards, parseShorthandCard(shorthand)).location;
+		return this.clearSelection().setCursor(location).touch();
+	}
 
 	/**
 		don't leave the game at 'init', always have a shuffled deck
@@ -711,14 +713,14 @@ export class FreeCell {
 		position: Position,
 		{ autoFoundation }: OptionsAutoFoundation = {}
 	): FreeCell {
-		const g = this.clearSelection().setCursor(shorthand).touch();
+		const g = this.selectCard(shorthand);
 		if (g.selection?.peekOnly) return this;
 		if (!g.availableMoves?.length) return this;
 		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${position}`, g.cursor);
 		return g.setCursor(to).touch({ autoFoundation });
 	}
 
-	// FIXME ^^ do we need a "sugar" namespace? ^^
+	// FIXME ^^ do we need a "sugar" or "macros" namespace? ^^
 
 	/**
 		TODO (techdebt) break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
