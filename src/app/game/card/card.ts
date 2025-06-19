@@ -155,8 +155,11 @@ export function calcPilemarkerId(location: CardLocation, gameBoardId?: string) {
 	return pileId;
 }
 
+/**
+	we need to duplicate cards to detect when it changes
+	cards need to remain in consitent order for react[key=""] to work
+*/
 export function cloneCards(cards: Card[]) {
-	// cards need to remain in consitent order for react[key=""] to work
 	return cards.map((card) => ({ ...card }));
 }
 

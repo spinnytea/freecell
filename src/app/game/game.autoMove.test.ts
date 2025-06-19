@@ -722,10 +722,10 @@ describe('game.autoMove', () => {
 				.autoMove();
 			expect(game.print()).toBe(
 				'' +
-					'             KC KD KH KS \n' + //
-					'            >            \n' + //
-					':    Y O U   W I N !    :\n' + //
-					'                         \n' + //
+					'            >KC KD KH KS \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
 					' move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)'
 			);
 			expect(game.previousAction).toEqual({
@@ -761,10 +761,10 @@ describe('game.autoMove', () => {
 				.autoFoundationAll();
 			expect(game.print()).toBe(
 				'' +
-					'             KC KD KH KS \n' + //
-					'            >            \n' + //
-					':    Y O U   W I N !    :\n' + //
-					'                         \n' + //
+					'            >KC KD KH KS \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
 					' auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS'
 			);
 			expect(game.previousAction).toEqual({

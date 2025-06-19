@@ -1722,7 +1722,7 @@ describe('game.touch', () => {
 		describe('autoFoundation', () => {
 			test('few', () => {
 				game = new FreeCell().shuffle32(5).dealAll();
-				game = game.moveByShorthand('53');
+				game = game.$moveByShorthand('53');
 				expect(game.print({ includeHistory: true })).toBe(
 					'' +
 						'             AD          \n' +
@@ -1783,7 +1783,7 @@ describe('game.touch', () => {
 					'hand-jammed',
 					'move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)',
 				]);
-				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 				expect(game.selection).toEqual(null);
 				expect(game.availableMoves).toEqual(null);
 			});
@@ -1822,7 +1822,7 @@ describe('game.touch', () => {
 					'hand-jammed',
 					'move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)',
 				]);
-				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
+				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 				expect(game.selection).toEqual(null);
 				expect(game.availableMoves).toEqual(null);
 			});
@@ -1865,7 +1865,7 @@ describe('game.touch', () => {
 					'deal all cards',
 					'move 46 AC→2H (flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
 				]);
-				expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
+				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 				expect(game.selection).toEqual(null);
 				expect(game.availableMoves).toEqual(null);
 			});

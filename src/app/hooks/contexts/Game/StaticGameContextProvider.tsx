@@ -21,10 +21,7 @@ export default function StaticGameContextProvider({
 }>) {
 	const step = useRef(0);
 	const firstGame = games[0];
-	const newGame = useCallback(
-		() => (firstGame ? castGame(firstGame) : new FreeCell()), // REVIEW (techdebt) settings for new game?
-		[firstGame]
-	);
+	const newGame = useCallback(() => castGame(firstGame), [firstGame]);
 	// eslint-disable-next-line prefer-const
 	let [game, setGame] = useState(() => newGame());
 

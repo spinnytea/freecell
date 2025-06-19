@@ -20,7 +20,7 @@ export function useClickToMoveControls(location: CardLocation) {
 	if (location.fixture === 'deck') return;
 
 	function handleClickToMove() {
-		setGame((g) => g.clickToMove(location, { autoMove: enableClickToMove }));
+		setGame((g) => g.$touchAndMove(location, { autoMove: enableClickToMove }));
 		setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 	}
 

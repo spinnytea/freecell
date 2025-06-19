@@ -1,6 +1,6 @@
 import { FreeCell } from '@/app/game/game';
 
-describe('game.clickToMove', () => {
+describe('game.$touchAndMove', () => {
 	let game: FreeCell;
 	beforeEach(() => {
 		game = FreeCell.parse(
@@ -21,7 +21,7 @@ describe('game.clickToMove', () => {
 	});
 
 	test('basic', () => {
-		expect(game.clickToMove({ fixture: 'cascade', data: [2, 8] }).print()).toBe(
+		expect(game.$touchAndMove({ fixture: 'cascade', data: [2, 8] }).print()).toBe(
 			'' +
 				' 4S 7S 2S    AH          \n' +
 				' 8D 6C JS 3D 3H>JD 8C 6S \n' +
@@ -38,38 +38,38 @@ describe('game.clickToMove', () => {
 
 	/** when we selected something within a cascade / select-to-peek */
 	test('allow changing selection if peekOnly', () => {
-		game = game.clickToMove({ fixture: 'cascade', data: [0, 1] });
+		game = game.$touchAndMove({ fixture: 'cascade', data: [0, 1] });
 		expect(game.previousAction.text).toBe('select 2H');
 		expect(game.selection?.peekOnly).toBe(true);
-		game = game.clickToMove({ fixture: 'cascade', data: [2, 2] });
+		game = game.$touchAndMove({ fixture: 'cascade', data: [2, 2] });
 		expect(game.previousAction.text).toBe('select 5D');
 		expect(game.selection?.peekOnly).toBe(true);
-		game = game.clickToMove({ fixture: 'cascade', data: [3, 0] });
+		game = game.$touchAndMove({ fixture: 'cascade', data: [3, 0] });
 		expect(game.previousAction.text).toBe('select 3D');
 		expect(game.selection?.peekOnly).toBe(true);
 	});
 
 	/** when we've selected something that could move, _if it had any (╯°□°)╯ 🏆_ */
 	test('allow changing selection if !game.availableMoves?.length', () => {
-		game = game.clickToMove({ fixture: 'cascade', data: [3, 2] });
+		game = game.$touchAndMove({ fixture: 'cascade', data: [3, 2] });
 		expect(game.previousAction.text).toBe('select 4 5C-4H-3S');
 		expect(game.availableMoves?.length).toBe(0);
-		game = game.clickToMove({ fixture: 'cascade', data: [4, 4] });
+		game = game.$touchAndMove({ fixture: 'cascade', data: [4, 4] });
 		expect(game.previousAction.text).toBe('select 5 KC-QD-JC');
 		expect(game.availableMoves?.length).toBe(0);
-		game = game.clickToMove({ fixture: 'cascade', data: [6, 5] });
+		game = game.$touchAndMove({ fixture: 'cascade', data: [6, 5] });
 		expect(game.previousAction.text).toBe('select 7 8H-7C');
 		expect(game.availableMoves?.length).toBe(0);
 
 		// semi-unrelated: we can move something valid
-		game = game.clickToMove({ fixture: 'cascade', data: [7, 4] });
+		game = game.$touchAndMove({ fixture: 'cascade', data: [7, 4] });
 		expect(game.previousAction.text).toBe('move 8d 4C→cell');
 		expect(game.availableMoves).toBe(null);
 	});
 
 	test('allow "growing/shrinking sequence of current selection"', () => {
 		// REVIEW (history) `select 3` isn't clear on it's own, see how it's the same for all of these?
-		game = game.clickToMove({ fixture: 'cascade', data: [2, 6] });
+		game = game.$touchAndMove({ fixture: 'cascade', data: [2, 6] });
 		expect(game.print()).toBe(
 			'' +
 				' 4S 7S 2S    AH          \n' +
@@ -96,7 +96,7 @@ describe('game.clickToMove', () => {
 			peekOnly: false,
 		});
 
-		game = game.clickToMove({ fixture: 'cascade', data: [2, 5] });
+		game = game.$touchAndMove({ fixture: 'cascade', data: [2, 5] });
 		expect(game.previousAction.text).toBe('select 3 KD-QS-JH-TC-9D');
 		expect(game.selection).toEqual({
 			location: { fixture: 'cascade', data: [2, 5] },
@@ -110,7 +110,7 @@ describe('game.clickToMove', () => {
 			peekOnly: false,
 		});
 
-		game = game.clickToMove({ fixture: 'cascade', data: [2, 7] });
+		game = game.$touchAndMove({ fixture: 'cascade', data: [2, 7] });
 		expect(game.previousAction.text).toBe('select 3 JH-TC-9D');
 		expect(game.selection).toEqual({
 			location: { fixture: 'cascade', data: [2, 7] },
@@ -125,30 +125,30 @@ describe('game.clickToMove', () => {
 
 	test('allow moving selection from one cell to another cell', () => {
 		// setup to fill all cells
-		game = game.clickToMove({ fixture: 'cascade', data: [0, 4] });
+		game = game.$touchAndMove({ fixture: 'cascade', data: [0, 4] });
 		expect(game.previousAction.text).toBe('move 1d 7H→cell');
 		// select first
-		game = game.clickToMove({ fixture: 'cell', data: [0] });
+		game = game.$touchAndMove({ fixture: 'cell', data: [0] });
 		expect(game.previousAction.text).toBe('select a 4S');
 
 		// start test
 
 		// change cell selection
-		game = game.clickToMove({ fixture: 'cell', data: [1] });
+		game = game.$touchAndMove({ fixture: 'cell', data: [1] });
 		expect(game.previousAction.text).toBe('select b 7S');
-		game = game.clickToMove({ fixture: 'cell', data: [2] });
+		game = game.$touchAndMove({ fixture: 'cell', data: [2] });
 		expect(game.previousAction.text).toBe('select c 2S');
-		game = game.clickToMove({ fixture: 'cell', data: [3] });
+		game = game.$touchAndMove({ fixture: 'cell', data: [3] });
 		expect(game.previousAction.text).toBe('select d 7H');
 
 		// jump around
-		game = game.clickToMove({ fixture: 'cell', data: [2] });
+		game = game.$touchAndMove({ fixture: 'cell', data: [2] });
 		expect(game.previousAction.text).toBe('select c 2S');
-		game = game.clickToMove({ fixture: 'cell', data: [0] });
+		game = game.$touchAndMove({ fixture: 'cell', data: [0] });
 		expect(game.previousAction.text).toBe('select a 4S');
-		game = game.clickToMove({ fixture: 'cell', data: [3] });
+		game = game.$touchAndMove({ fixture: 'cell', data: [3] });
 		expect(game.previousAction.text).toBe('select d 7H');
-		game = game.clickToMove({ fixture: 'cell', data: [1] });
+		game = game.$touchAndMove({ fixture: 'cell', data: [1] });
 		expect(game.previousAction.text).toBe('select b 7S');
 	});
 });

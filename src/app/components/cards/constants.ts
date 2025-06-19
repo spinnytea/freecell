@@ -37,7 +37,8 @@ export enum ControlSchemes {
 
 	/*
 		set cursor + touch (hotkeys for columns; shorthandPosition directly)
-		@deprecated TODO (controls) not yet implemented
+		{@link Position}
+		@deprecated TODO (controls) (4-priority) not yet implemented
 	*/
 	// Hotkeys = 'keyboard hotkeys',
 
@@ -75,19 +76,31 @@ export enum ControlSchemes {
 
 	A `PreviousAction.text` tracks how the game state changes.
 
-	`GameplayInteractions` is apparently a few "explain what just happened" commentaries.
-	- grow cascade selection is just a "select" followed by another "select"
+	`GameplayMetaInteractions` is apparently a few "explain what just happened" commentaries.
+	 - grow cascade selection is just a "select" followed by another "select"
+	   but such that we still have the previous selected cards, it's just a larger set
+	 - "select" followed by another "select" could also just be a re-select, qol so we don't need to first deselect
+	   where the second select is entirely unrelated to the first
+	 - move cursor w/w/o selection might have different keyboard arrow functionality
+	   e.g. w/o a selection, only move the cursor to other cards
+	   e.g. w/ a selection, only move the cursor to valid moves
 
-	XXX (controls) use or remove - not sure what the point of this is (testing? animations?)
+	TODO (animations) (controls) use or remove - not sure what the point of this is
+	 - when I glace at this: waste of time, extra work
+	 - when I read the options: much potential for animations, validation, eeggs
+	 - we can make a list for each {@link ControlSchemes} for meta/validation
 */
-export type GameplayInteractions =
-	| 'move cursor w/w/o selection'
+export type GameplayMetaInteractions =
+	| 'move cursor w/o selection'
+	| 'move cursor w/ selection'
+	| 'deck selection'
 	| 'cell selection'
 	| 'foundation selection'
-	| 'cascade selection'
+	| 'cascade:single selection'
+	| 'cascade:sequence selection'
 	| 'select-to-peek'
-	| 'grow/shrink cascade selection w/ selection'
+	| 'grow/shrink cascade selection'
 	| 'drag-and-drop selection w/w/o selection'
-	| 'auto-foundation after move selection'
+	| 'auto-foundation after move'
 	| 'deal cards'
 	| 'start new game';

@@ -13,11 +13,11 @@ import { FreeCell } from '@/app/game/game';
 	 - what we want in this file is a test for: "from any conceivable start" to "any given position"
 	 - this will make it easier to test a bunch more "invalid scenarios" more than anything
 */
-describe('moveCardToPosition', () => {
+describe('game.$moveCardToPosition', () => {
 	test('spot some concerns', () => {
 		let game = new FreeCell().dealAll({ demo: true, keepDeck: true });
 		// TODO (techdebt) (2-priority) should we allow selecting the deck if we can't do anything with it?
-		game = game.setCursor('AH').touch();
+		game = game.$selectCard('AH');
 		expect(game.print()).toBe(
 			'' +
 				'                         \n' +
@@ -36,16 +36,18 @@ describe('moveCardToPosition', () => {
 		// another but a bunch of code relies on shorthand moves that don't allow for the deck to be interacted with
 		// if we are going to rely on the deck so much, we shouldn't attempt this move
 		// we block it with moveCardToPosition, but it shouldn't explode if we don't
-		expect(() => game.moveCardToPosition('AH', 'a')).not.toThrow();
+		expect(() => game.$moveCardToPosition('AH', 'a')).not.toThrow();
 		// basically, we can't "move to or from" the deck, because it's there's no move shorthand for it
 		// ~~maybe we should treat it like "foundation", but it's a stack or a queue (not a set of spots)~~
 		// maybe we should give it a single letter, like foundation
 		// but then we also need to allow actually moving to and from it - or at least, ... how far do we take this
 		// maybe throwing _is_ fine if we can't get there
-		expect(() => shorthandPosition(game.setCursor('AH').cursor)).toThrow(
+		expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
+		expect(game.$selectCard('AH').cursor).toEqual({ fixture: 'deck', data: [2] });
+		expect(() => shorthandPosition(game.cursor)).toThrow(
 			'invalid position: {"fixture":"deck","data":[2]}'
 		);
-		expect(game.moveCardToPosition('AH', 'a')).toBe(game);
+		expect(game.$moveCardToPosition('AH', 'a')).toBe(game);
 
 		game = game.dealAll();
 		expect(game.print()).toBe(
@@ -60,7 +62,7 @@ describe('moveCardToPosition', () => {
 				' 2S 2H 2D 2C             \n' +
 				' deal all cards'
 		);
-		game = game.setCursor('AS').touch().autoMove();
+		game = game.$touchAndMove('AS');
 		expect(game.print()).toBe(
 			'            >KS KH KD KC \n' + //
 				'                         \n' + //
@@ -71,7 +73,7 @@ describe('moveCardToPosition', () => {
 
 		// REVIEW (techdebt) this move isn't allowed
 		// this move is correctly blocked
-		expect(game.moveCardToPosition('AH', 'a')).toBe(game);
+		expect(game.$moveCardToPosition('AH', 'a')).toBe(game);
 		// game = game.moveCardToPosition('AH', 'a');
 		// expect(game.print()).toBe(
 		// 	'>            KS KH KD KC \n' + //
@@ -83,7 +85,7 @@ describe('moveCardToPosition', () => {
 
 		// TODO (techdebt) (2-priority) should we allow selecting the foundation; we allow that with the deck?
 		//  - the only time the deck is on screen, touching it will deal cards
-		game = game.setCursor('JS').touch();
+		game = game.$selectCard('JS');
 		expect(game.print()).toBe(
 			'            >KS KH KD KC \n' + //
 				'                         \n' + //

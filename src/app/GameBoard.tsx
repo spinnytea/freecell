@@ -40,8 +40,8 @@ const nextUid = (function* () {
 	}
 })();
 
-// BUG (controls) keyboard controls are global for the entire window, not isolated to the specific game board
-// BUG (controls) generally speaking, the keyboard controls are greedy
+// TODO (controls) keyboard controls are global for the entire window, not isolated to the specific game board
+// TODO (controls) generally speaking, the keyboard controls are greedy
 //  - cannot interact with status bar -> manual teating
 //  - when you undo or leave settings, focus is still there; arrow keys should move focus back to the game board
 // REVIEW (techdebt) (deployment) verify that the card back is always available

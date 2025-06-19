@@ -8,7 +8,7 @@
 	 - if it doesn't make sense to move it there, test here anyways
 	 - what we want in this file is a test for: Position x Position
 */
-describe('moveByShorthand', () => {
+describe('game.$moveByShorthand', () => {
 	describe('from each position', () => {
 		describe('cell', () => {
 			test.todo('a, b, c, d, e, f');
@@ -107,4 +107,12 @@ describe('moveByShorthand', () => {
 
 		test.todo('cannot stack that');
 	});
+
+	// TODO (techdebt) (4-priority) shorthandMove is idealized, but we can move anything
+	//  - make an example where shorthandMove is the same for various actual moves
+	//  - moveByShorthand (and the solutions catalog) always move the "largest" sequence
+	//  - when you move a sequence to an empty cascade, it can be ambiguous
+	//  - notably, it's _only_ to an empty cascade that's ambiguous
+	//  - well, and (joker)
+	test.todo('mismatch between shorthandMove and actual move');
 });

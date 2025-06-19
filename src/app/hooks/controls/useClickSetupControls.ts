@@ -22,7 +22,7 @@ export function useClickSetupControls() {
 			setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 		} else if (game.deck.length) {
 			// click to deal
-			setGame((g) => g.shuffleOrDealAll());
+			setGame((g) => g.$shuffleOrDealAll());
 			setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 		}
 	}

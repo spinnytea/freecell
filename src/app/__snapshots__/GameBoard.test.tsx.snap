@@ -7193,7 +7193,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
         d
       </div>
       <div
-        class="pile"
+        class="pile cursorPile"
         id="pilemarker-h-1-GameBoard.test-#5"
         style="top: 6px; left: 51px; width: 8px; height: 18px;"
       >
@@ -7256,7 +7256,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
         5
       </div>
       <div
-        class="pile cursorPile"
+        class="pile"
         id="pilemarker-6-6-GameBoard.test-#5"
         style="top: 21px; left: 61px; width: 8px; height: 18px;"
       >
