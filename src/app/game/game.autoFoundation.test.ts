@@ -135,7 +135,7 @@ describe('game.autoFoundation', () => {
 				.undo()
 				.undo()
 				.undo()
-				.moveByShorthand('4b', { autoFoundation: false });
+				.$moveByShorthand('4b', { autoFoundation: false });
 			expect(game.autoFoundationAll({ limit: 'opp+1' }).print()).toBe(
 				'' +
 					' TH>KH 7H    4D 2H 3S 3C \n' +
@@ -234,10 +234,10 @@ describe('game.autoFoundation', () => {
 							.print()
 					).toBe(
 						'' + //
-							'>            KH KS KD KC \n' + //
-							'                         \n' + //
-							':    Y O U   W I N !    :\n' + //
-							'                         \n' + //
+							'            >KH KS KD KC \n' +
+							'                         \n' +
+							':    Y O U   W I N !    :\n' +
+							'                         \n' +
 							` flourish ${movedPositionsStr} ${movedCardsStr}`
 					);
 				}

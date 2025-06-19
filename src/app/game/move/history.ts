@@ -1,6 +1,7 @@
 import {
 	Card,
 	CardLocation,
+	cloneCards,
 	findCard,
 	getSequenceAt,
 	initializeDeck,
@@ -42,6 +43,12 @@ export const PREVIOUS_ACTION_TYPE_IS_START_OF_GAME = new Set<PreviousActionType>
 	'init',
 	'shuffle',
 	'deal',
+]);
+
+export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
+	'move',
+	'move-foundation',
+	'auto-foundation',
 ]);
 
 /**
@@ -362,24 +369,41 @@ function parseActionTextAutoFoundation(actionText: string) {
 function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 	const { froms, shorthands } = parseActionTextAutoFoundation(actionText);
 
-	game = game.__clone({
-		action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
-	});
+	const cards = cloneCards(game.cards);
+	const tableauLengths = game.tableau.map((cascade) => cascade.length);
 
 	while (froms.length) {
 		const from = froms.pop();
 		const shorthand = shorthands.pop();
-		const card = findCard(game.cards, shorthand);
+		const card = findCard(cards, shorthand);
 		if (!from || !shorthand) throw new Error('invalid move actionText: ' + actionText);
 
-		const cards = moveCards(game, getSequenceAt(game, card.location), from);
-		game = game.__clone({
-			action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
-			cards,
-		});
+		if (card.location.fixture !== 'foundation') {
+			throw new Error(
+				`Undoing auto-foundation of card not in foundation? ${JSON.stringify(card.location)}`
+			);
+		}
+
+		switch (from.fixture) {
+			case 'cascade':
+				from.data[1] = tableauLengths[from.data[0]];
+				tableauLengths[from.data[0]]++;
+				card.location = from;
+				break;
+			case 'cell':
+				card.location = from;
+				break;
+			case 'deck':
+			case 'foundation':
+				throw new Error(`Invalid auto-foundation card destination: ${JSON.stringify(from)}`);
+		}
 	}
 
-	return game;
+	// XXX (techdebt) can we remove this __clone? probably not…
+	return game.__clone({
+		action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
+		cards,
+	});
 }
 
 export function parsePreviousActionType(actionText: string): PreviousAction {

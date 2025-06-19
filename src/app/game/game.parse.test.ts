@@ -112,8 +112,8 @@ describe('game.parse', () => {
 				expect(game.history.length).toBe(71);
 				expect(game.print()).toBe(
 					'' +
-						'             KC KS KH KD \n' +
-						'      >                  \n' +
+						'            >KC KS KH KD \n' +
+						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +
 						' move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)'
@@ -137,14 +137,14 @@ describe('game.parse', () => {
 				]);
 				expect(FreeCell.parse(game.print()).previousAction.tweenCards).toEqual([]);
 
-				game = game.touch();
+				game = game.moveCursor('right');
 				expect(game.print()).toBe(
 					'' +
-						'             KC KS KH KD \n' +
-						'      >                  \n' +
+						'             KC>KS KH KD \n' +
+						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +
-						' touch stop'
+						' cursor right'
 				);
 				expect(game.print({ includeHistory: true })).toBe(
 					'' +
@@ -174,11 +174,15 @@ describe('game.parse', () => {
 					FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
 				).toBe(game.print({ includeHistory: true }));
 				expect(
-					_omit(FreeCell.parse(game.print({ includeHistory: true })), 'previousAction')
-				).toEqual(_omit(game, 'previousAction'));
+					_omit(FreeCell.parse(game.print({ includeHistory: true })), ['previousAction', 'cursor'])
+				).toEqual(_omit(game, ['previousAction', 'cursor']));
 				expect(game.previousAction).toEqual({
-					text: 'touch stop',
-					type: 'invalid',
+					text: 'cursor right',
+					type: 'cursor',
+				});
+				expect(game.cursor).toEqual({
+					fixture: 'foundation',
+					data: [1],
 				});
 				expect(FreeCell.parse(game.print({ includeHistory: true })).previousAction).toEqual({
 					text: 'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
@@ -798,11 +802,11 @@ describe('game.parse', () => {
 					' move 42 JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)\n' +
 					' init hand-jammed'
 			);
-			expect(game.cursor).toEqual({ fixture: 'cascade', data: [1, 0] });
+			expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 			expect(game.print()).toBe(
 				'' +
-					'             KH KC KS KD \n' +
-					'   >                     \n' +
+					'            >KH KC KS KD \n' +
+					'                         \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
 					' move 42 JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)'

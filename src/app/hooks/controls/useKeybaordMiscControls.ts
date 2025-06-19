@@ -17,7 +17,7 @@ function ignoreTarget(target: EventTarget | null): boolean {
 	return false;
 }
 
-/** REVIEW (controls) keyboard */
+/** TODO (controls) keyboard */
 export function useKeybaordMiscControls() {
 	const [, setGame, newGame] = useContext(GameContext);
 	const [{ showSettingsDialog, enabledControlSchemes }, setSettings] = useContext(SettingsContext);
@@ -38,7 +38,7 @@ export function useKeybaordMiscControls() {
 					consumed = true;
 					setGame((g) => {
 						if (g.cursor.fixture === 'deck') {
-							return g.shuffleOrDealAll();
+							return g.$shuffleOrDealAll();
 						}
 						if (g.cursor.fixture === 'foundation' && g.win) {
 							return newGame();
@@ -47,23 +47,45 @@ export function useKeybaordMiscControls() {
 						if (key === 'Enter') {
 							return g.touch();
 						}
-						// REVIEW (controls) update cursor - where would you like it to be?
-						return g.clickToMove(g.cursor);
+						// IDEA (controls) (toggle-cursor) - move should be in the "after" position
+						return g.$touchAndMove(g.cursor);
 					});
 					break;
 				case 'Escape':
 					consumed = true;
 					setGame((g) => g.clearSelection());
 					break;
+				// IDEA (controls) (toggle-cursor) I want a hotkey that move the cursor to the previous spot
+				//  - e.g. :h shuffle32 7852
+				//          74 7a 7b a7 b7
+				//  - e.g. :h shuffle32 7852
+				//          74 7a 7b 7c 78 c7 a7 b7
+				//          87
+				//  - maybe it's a key that toggles between:
+				//    # "the cursor after the move"
+				//    # "the cursor before the move"
+				//  - when you click with the cursor, it's just "hover over col 7 and click a bunch / unload the cells"
+				//  - with the keyboard, it's quite a few arrow keys to reset the cursor
+				//  - maybe this is rendered entirely obsolete with hotkeys
+				//  - move 23 KC-QD-JS→cascade
+				//    after: `KS` is in 3, but just findCard().location
+				//    before: `KS` was in 2, either:
+				//             cell (well numbered)
+				//             bottom of the cascade (tableau[position].length)
+				//             shouldn't be h (foundation), just default to { fixture, data: [0] }, no need to search for it
+				//             can't be deck, but just use { fixture, data: [deck.length] }, because lolwhynot
 				case 'z':
 				case 'Z':
-					// REVIEW (controls) update cursor - where would you like it to be?
+					// IDEA (controls) (toggle-cursor) - undo should be in the "before" position
+					//  - we want the "play forwards" + "play backwards" to match
+					//  - so maybe we just "toggle position" here?
+					//  - add this to sugar "undoThenShuffle", rather than undo itself
 					consumed = true;
 					setGame((g) => {
 						if (event.repeat && PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(g.previousAction.type)) {
 							return g;
 						}
-						return g.undoThenShuffle();
+						return g.$undoThenShuffle();
 					});
 					break;
 				// default:

@@ -45,6 +45,7 @@ export default function GameContextProvider({
 	const newGame = useCallback(() => {
 		// new games can start with a shuffle
 		// consider the animation an eegg
+		// REVIEW (techdebt) (joker) (settings) settings for new game?
 		return new FreeCell({
 			cellCount: settingsRef.current.newGameCellCount,
 			cascadeCount: settingsRef.current.newGameCascadeCount,

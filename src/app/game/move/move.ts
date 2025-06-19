@@ -9,6 +9,9 @@ import {
 	isAdjacent,
 	isRed,
 	parseShorthandPosition_INCOMPLETE,
+	shorthandCard,
+	shorthandPosition,
+	shorthandSequence,
 	Suit,
 } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
@@ -24,7 +27,7 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 // IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
 // IDEA (controls) Prioritize moving cards to a completed sequence
 //  - (when the root of it is at the top of a column)
-//  - (unless we are breaking a stack??)
+//  - (unless we are breaking a sequence??)
 /*
 TODO (controls) (3-priority) More control over where next card moves (i.e. cannot move to foundation if multiple valid moves)
  - which is really because click-to-move is the only available control scheme on mobile
@@ -48,7 +51,7 @@ TODO (controls) (3-priority) Can't put the three in the foundation
 export const MoveDestinationTypePriorities: {
 	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
 } = {
-	// XXX (controls) deck: when will we get to do this?
+	// XXX (controls) MoveSourceType deck: move from the deck directly is not a valid move
 	'deck': {
 		'cell': 1,
 		'foundation': 4,
@@ -61,7 +64,7 @@ export const MoveDestinationTypePriorities: {
 		'cascade:empty': 2,
 		'cascade:sequence': 4,
 	},
-	// XXX (controls) foundation: down from foundation means "back into play?" that's not a valid move
+	// XXX (controls) MoveSourceType foundation: once on the foundation, a card cannot be removed
 	'foundation': {
 		'cell': 1,
 		'foundation': 4,
@@ -486,7 +489,7 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 		//  - do we shuffle the deck every time we do this?
 		return game.cards;
 	}
-	if (to.fixture !== 'cascade' && from.cards.length > 1) {
+	if (from.cards.length > 1 && to.fixture !== 'cascade') {
 		// you can only move multiple cards to a cascade
 		return game.cards;
 	}
@@ -521,6 +524,21 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 /* ************* */
 /* PRINT / PARSE */
 /* ************* */
+
+export function calcMoveActionText(from: CardSequence, to: CardSequence): string {
+	const from_location = from.cards[0].location;
+	const to_card: Card | undefined = to.cards.at(to.cards.length - 1);
+	const to_location = to_card?.location ?? to.location;
+	const shorthandMove = `${shorthandPosition(from_location)}${shorthandPosition(to_location)}`;
+	return `move ${shorthandMove} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`;
+}
+
+export function calcAutoFoundationActionText(moved: Card[], isFlourish: boolean): string {
+	const movedCardsStr = moved.map((card) => shorthandCard(card)).join(',');
+	const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
+	const firstWord = isFlourish ? 'flourish' : 'auto-foundation';
+	return `${firstWord} ${movedPositionsStr} ${movedCardsStr}`;
+}
 
 /**
 	To parse a move correctly, we need the full game state AND the shorthand (from/to positions).

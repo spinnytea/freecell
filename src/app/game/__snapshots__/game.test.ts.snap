@@ -533,10 +533,9 @@ FreeCell {
   ],
   "cursor": {
     "data": [
-      5,
       0,
     ],
-    "fixture": "cascade",
+    "fixture": "foundation",
   },
   "deck": [],
   "foundations": [

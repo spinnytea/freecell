@@ -1,5 +1,4 @@
 import { isEqual as _isEqual } from 'lodash';
-import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import {
 	Card,
 	CardLocation,
@@ -15,7 +14,6 @@ import {
 	RankList,
 	shorthandCard,
 	shorthandPosition,
-	shorthandSequence,
 	shorthandSequenceWithPosition,
 	SuitList,
 } from '@/app/game/card/card';
@@ -27,12 +25,16 @@ import {
 	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
 	parsePreviousActionType,
+	PREVIOUS_ACTION_TYPE_IS_MOVE,
 	PREVIOUS_ACTION_TYPE_IS_START_OF_GAME,
 	PreviousAction,
 } from '@/app/game/move/history';
+import { KeyboardArrowDirection, moveCursorWithBasicArrows } from '@/app/game/move/keyboard';
 import {
 	AutoFoundationLimit,
 	AvailableMove,
+	calcAutoFoundationActionText,
+	calcMoveActionText,
 	canStackFoundation,
 	countEmptyFoundations,
 	findAvailableMoves,
@@ -108,8 +110,8 @@ export class FreeCell {
 	cursor: CardLocation;
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
-	// flashRank: Rank | null; // TODO (animation) (controls) (flash-rank) (hud) (4-priority) can we do like "peek all"
-	// IDEA (controls) flashRank: touch = wheel select; keyboard = ??; mouse = ??
+	// flashRank: Rank | null; // TODO (animation) (flash-rank) (hud) (4-priority) can we do like "peek all"
+	// IDEA (flash-rank) flashRank: touch = wheel select; keyboard = ??; mouse = ?? -- or just menu in settings dialog
 
 	// history
 	history: string[];
@@ -207,6 +209,13 @@ export class FreeCell {
 			this.win = false;
 		}
 
+		if (this.win && PREVIOUS_ACTION_TYPE_IS_MOVE.has(action.type)) {
+			// when using only the arrow keys to play the game,
+			// it helps to reset the cursor when we win the game
+			// after we win the game, we don't want to reset
+			cursor = { fixture: 'foundation', data: [0] };
+		}
+
 		// clamp cursor is a helper in case the game changes and the cursor is no longer valid
 		// it prevents us from having to manually specify it every time
 		this.cursor = this.__clampCursor(cursor ?? INIT_CURSOR_LOCATION);
@@ -262,11 +271,11 @@ export class FreeCell {
 		const [d0, d1] = location.data;
 		switch (location.fixture) {
 			case 'cell':
-				if (d0 < 0) return { fixture: 'cell', data: [0] };
+				if (d0 <= 0) return { fixture: 'cell', data: [0] };
 				else if (d0 >= this.cells.length) return { fixture: 'cell', data: [this.cells.length - 1] };
 				else return location;
 			case 'foundation':
-				if (d0 < 0) return { fixture: 'foundation', data: [0] };
+				if (d0 <= 0) return { fixture: 'foundation', data: [0] };
 				else if (d0 >= this.foundations.length)
 					return { fixture: 'foundation', data: [this.foundations.length - 1] };
 				else return location;
@@ -276,200 +285,19 @@ export class FreeCell {
 				return { fixture: 'cascade', data: [n0, n1] };
 			}
 			case 'deck':
-				if (d0 < 0) return { fixture: 'deck', data: [0] };
-				else if (d0 >= this.deck.length) return { fixture: 'deck', data: [this.deck.length - 1] };
+				if (d0 <= 0) return { fixture: 'deck', data: [0] };
+				else if (d0 >= this.deck.length)
+					return { fixture: 'deck', data: [Math.max(0, this.deck.length - 1)] };
 				else return location;
 		}
 	}
 
-	setCursor(cursor: CardLocation | string): FreeCell {
-		if (typeof cursor === 'string') {
-			cursor = findCard(this.cards, parseShorthandCard(cursor)).location;
-		}
+	setCursor(cursor: CardLocation): FreeCell {
 		return this.__clone({ action: { text: 'cursor set', type: 'cursor' }, cursor });
 	}
 
-	// REVIEW (controls) actually play the game and see what's not quite right
-	//  - left right wraps between home/tableau
-	//  - entering a cascade (l/r, u/d) cascade always moves to the "last sequence"
-	// REVIEW (techdebt) move this function into a dedicated keyboard controls folder/file
-	moveCursor(dir: 'up' | 'right' | 'left' | 'down'): FreeCell {
-		const {
-			fixture,
-			data: [d0, d1],
-		} = this.cursor;
-		if (fixture === 'cell') {
-			switch (dir) {
-				case 'up':
-					break;
-				case 'left':
-					if (d0 <= 0)
-						return this.__clone({
-							action: { text: 'cursor left w', type: 'cursor' },
-							cursor: { fixture: 'foundation', data: [this.foundations.length - 1] },
-						});
-					return this.__clone({
-						action: { text: 'cursor left', type: 'cursor' },
-						cursor: { fixture, data: [d0 - 1] },
-					});
-				case 'right': {
-					if (d0 >= this.cells.length - 1)
-						return this.__clone({
-							action: { text: 'cursor right w', type: 'cursor' },
-							cursor: { fixture: 'foundation', data: [0] },
-						});
-					return this.__clone({
-						action: { text: 'cursor right', type: 'cursor' },
-						cursor: { fixture, data: [d0 + 1] },
-					});
-				}
-				case 'down':
-					return this.__clone({
-						action: { text: 'cursor down w', type: 'cursor' },
-						cursor: { fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] },
-					});
-			}
-		} else if (fixture === 'foundation') {
-			switch (dir) {
-				case 'up':
-					break;
-				case 'left':
-					if (d0 <= 0)
-						return this.__clone({
-							action: { text: 'cursor left w', type: 'cursor' },
-							cursor: { fixture: 'cell', data: [this.cells.length - 1] },
-						});
-					return this.__clone({
-						action: { text: 'cursor left', type: 'cursor' },
-						cursor: { fixture, data: [d0 - 1] },
-					});
-				case 'right': {
-					if (d0 >= this.foundations.length - 1)
-						return this.__clone({
-							action: { text: 'cursor right w', type: 'cursor' },
-							cursor: { fixture: 'cell', data: [0] },
-						});
-					return this.__clone({
-						action: { text: 'cursor right', type: 'cursor' },
-						cursor: { fixture, data: [d0 + 1] },
-					});
-				}
-				case 'down':
-					return this.__clone({
-						action: { text: 'cursor down w', type: 'cursor' },
-						cursor: {
-							fixture: 'cascade',
-							data: [this.tableau.length - this.foundations.length + d0, BOTTOM_OF_CASCADE],
-						},
-					});
-			}
-		} else if (fixture === 'cascade') {
-			switch (dir) {
-				case 'up':
-					if (d1 <= 0) {
-						// REVIEW (card | stop | fond) vs (ccaarrdd | fond)
-						//         0123   4567   89ab      01234567   89ab
-						if (d0 < this.cells.length) {
-							return this.__clone({
-								action: { text: 'cursor up w', type: 'cursor' },
-								cursor: { fixture: 'cell', data: [d0] },
-							});
-						}
-						if (this.tableau.length - 1 - d0 < this.foundations.length) {
-							return this.__clone({
-								action: { text: 'cursor up w', type: 'cursor' },
-								cursor: {
-									fixture: 'foundation',
-									data: [this.foundations.length - (this.tableau.length - d0)],
-								},
-							});
-						}
-					}
-					return this.__clone({
-						action: { text: 'cursor up', type: 'cursor' },
-						cursor: { fixture, data: [d0, d1 - 1] },
-					});
-				case 'left':
-					// if d1 is too large, it will be fixed with __clampCursor
-					if (d0 <= 0)
-						return this.__clone({
-							action: { text: 'cursor left w', type: 'cursor' },
-							cursor: { fixture: 'cascade', data: [this.tableau.length - 1, d1] },
-						});
-					return this.__clone({
-						action: { text: 'cursor left', type: 'cursor' },
-						cursor: { fixture, data: [d0 - 1, d1] },
-					});
-				case 'right':
-					// if d1 is too large, it will be fixed with __clampCursor
-					if (d0 >= this.tableau.length - 1)
-						return this.__clone({
-							action: { text: 'cursor right w', type: 'cursor' },
-							cursor: { fixture: 'cascade', data: [0, d1] },
-						});
-					return this.__clone({
-						action: { text: 'cursor right', type: 'cursor' },
-						cursor: { fixture, data: [d0 + 1, d1] },
-					});
-				case 'down':
-					if (d1 >= this.tableau[d0].length - 1) {
-						if (this.deck.length) {
-							// deck is rendered in reverse
-							return this.__clone({
-								action: { text: 'cursor down w', type: 'cursor' },
-								cursor: { fixture: 'deck', data: [this.deck.length - 1 - d0] },
-							});
-						}
-						// TODO (controls) same as up (from top)
-						break;
-					}
-					return this.__clone({
-						action: { text: 'cursor down', type: 'cursor' },
-						cursor: { fixture, data: [d0, d1 + 1] },
-					});
-			}
-		} else {
-			switch (dir) {
-				case 'up':
-					// if d0 is wrong, it will be fixed with __clampCursor
-					// d1 will be fixed with __clampCursor
-					// REVIEW (controls) spread up/down between cascade and deck?
-					//  - i.e. use the cascade to jump multiple cards in the deck
-					return this.__clone({
-						action: { text: 'cursor up w', type: 'cursor' },
-						cursor: { fixture: 'cascade', data: [this.deck.length - 1 - d0, BOTTOM_OF_CASCADE] },
-					});
-				case 'left':
-					// left and right are reversed in the deck
-					if (d0 === this.deck.length - 1) {
-						return this.__clone({
-							action: { text: 'cursor left w', type: 'cursor' },
-							cursor: { fixture, data: [0] },
-						});
-					}
-					return this.__clone({
-						action: { text: 'cursor left', type: 'cursor' },
-						cursor: { fixture, data: [d0 + 1] },
-					});
-				case 'right':
-					// left and right are reversed in the deck
-					if (d0 === 0) {
-						return this.__clone({
-							action: { text: 'cursor right w', type: 'cursor' },
-							cursor: { fixture, data: [this.deck.length - 1] },
-						});
-					}
-					return this.__clone({
-						action: { text: 'cursor right', type: 'cursor' },
-						cursor: { fixture, data: [d0 - 1] },
-					});
-				case 'down':
-					break;
-			}
-		}
-
-		// noop
-		return this.__clone({ action: { text: 'cursor stop', type: 'cursor' } });
+	moveCursor(dir: KeyboardArrowDirection): FreeCell {
+		return this.__clone(moveCursorWithBasicArrows(this, dir));
 	}
 
 	clearSelection(): FreeCell | this {
@@ -485,16 +313,19 @@ export class FreeCell {
 	}
 
 	/**
-		interact with the cursor
+		interact with the cursor, touch a card
 
-		e.g. select cursor, deselect cursor, move selection
+		this can mean different things depending on context
+
+		e.g. select cursor, deselect cursor, move selection to location
 
 		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
-		- REVIEW (controls) `touch()` is a bit generic, wrt having both "select" and "deselect"
+		- REVIEW (techdebt) (controls) (3-priority) `touch()` is a bit generic, wrt having both "select" and "deselect"
 		  - it's nice and simple when there aren't many ways to interact
 		  - with more control schemes sometimes overlapping, it's hard to debug exactly
 		  - some controls schemes have explicity `clearSelection().touch()` to get around it
-		  - even {@link moveByShorthand} has to do this
+		  - even {@link $moveByShorthand} has to do this
+		  - it seems there are a lot of places that call "touch" with the express intent of selecting, review _all_ callers
 		 ---
 		  - drag-and-drop just wants a lookahead "what if this card were selected"
 		  - it doesn't need to change state per se
@@ -511,6 +342,11 @@ export class FreeCell {
 
 		// set selection, or move selection if applicable
 		if (!this.selection || this.selection.peekOnly) {
+			if (this.win && this.cursor.fixture === 'foundation') {
+				// REVIEW (techdebt) (joker) (settings) settings for new game?
+				return new FreeCell({ cellCount: this.cells.length, cascadeCount: this.tableau.length });
+			}
+
 			const selection = getSequenceAt(this, this.cursor);
 			// we can't do anything with a foundation (we can move cards off of it)
 			// - therefore it doesn't make sense to select it
@@ -637,7 +473,7 @@ export class FreeCell {
 			const secondUndo = didUndo.undo({ skipActionPrev: true });
 			const { from, to } = parseActionTextMove(didUndo.previousAction.text);
 			didUndo.previousAction.tweenCards = getCardsThatMoved(
-				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
+				secondUndo.$moveByShorthand(from + to, { autoFoundation: false })
 			);
 		}
 
@@ -645,78 +481,9 @@ export class FreeCell {
 	}
 
 	/**
-		don't leave the game at 'init', always have a shuffled deck
-
-		helper controls
-
-		a better game feel than just {@link shuffleOrDealAll}
-
-		XXX (techdebt) move to FreeCellQOL extends FreeCell?
-	*/
-	undoThenShuffle(): FreeCell | this {
-		const game = this.undo();
-		if (game !== this && game.previousAction.type === 'init') {
-			return game.shuffle32();
-		}
-		return game;
-	}
-
-	/**
-		at the start of the game, you need to shuffle before you deal
-
-		helper controls
-
-		redundant when used with {@link undoThenShuffle},
-		but it's good to always have an … hole card
-
-		XXX (techdebt) move to FreeCellQOL extends FreeCell?
-	*/
-	shuffleOrDealAll(): FreeCell | this {
-		if (this.previousAction.type === 'shuffle') {
-			return this.dealAll();
-		}
-		return this.shuffle32();
-	}
-
-	/**
-		Play a move using the standard notation.
-		The standard notation is used to print the game history.
-		This make it easy to replay a known game.
-
-		XXX (techdebt) move to FreeCellQOL extends FreeCell?
-	*/
-	moveByShorthand(shorthandMove: string, { autoFoundation }: OptionsAutoFoundation = {}): FreeCell {
-		const [from, to] = parseShorthandMove(this, shorthandMove);
-		return this.clearSelection().setCursor(from).touch().setCursor(to).touch({ autoFoundation });
-	}
-
-	/**
-		This is super clear when you are looking at the game board.
-		If you know the card you want to move and where, it just "this card goes here".
-
-		@deprecated for unit testing _ONLY_ until we write _all the tests_
-		 - "let's just pluck any card and move it anywhere"
-		 - …yeah, that won't break anything
-		 - this _is_ just "touch first" then "touch second"
-		 - what's new here though is we aren't using game rules to pick the starting card, we can pick _any_ card
-		 - (we need to be more thurough about from: deck and from: foundation)
-		 - the unit test proves moving a card form the deck will explode
-	*/
-	moveCardToPosition(
-		shorthand: string,
-		position: Position,
-		{ autoFoundation }: OptionsAutoFoundation = {}
-	): FreeCell {
-		const g = this.clearSelection().setCursor(shorthand).touch();
-		if (g.selection?.peekOnly) return this;
-		if (!g.availableMoves?.length) return this;
-		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${position}`, g.cursor);
-		return g.setCursor(to).touch({ autoFoundation });
-	}
-
-	/**
 		TODO (techdebt) break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
 		REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
+		 - historyIsInvalidAtIdx?
 		REVIEW (techdebt) autoFoundation needs some serious refactoring
 
 		XXX (settings) (AutoFoundationMethod) if we want more ways to do the "autoFoundation" logic, we can split it out
@@ -812,11 +579,9 @@ export class FreeCell {
 		// XXX (techdebt) can we write this function in a way that doesn't confuse typescript?
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (didAnyMove) {
-			const movedCardsStr = moved.map((card) => shorthandCard(card)).join(',');
-			const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
-			const name = game.win && countEmptyFoundations(this) > 0 ? 'flourish' : 'auto-foundation';
+			const isFlourish = game.win && countEmptyFoundations(this) > 0;
 			return game.__clone({
-				action: { text: `${name} ${movedPositionsStr} ${movedCardsStr}`, type: 'auto-foundation' },
+				action: { text: calcAutoFoundationActionText(moved, isFlourish), type: 'auto-foundation' },
 			});
 		}
 
@@ -859,21 +624,6 @@ export class FreeCell {
 		return this.setCursor(to_location).touch({ autoFoundation });
 	}
 
-	/**
-		TODO (techdebt) rename this method "click to move" is weird; maybe cursorTouchMove
-		 - esp obvs now that it's a keyboard action, too
-	*/
-	clickToMove(
-		location: CardLocation,
-		{ autoMove = true, stopWithInvalid }: OptionsAutoFoundation = {}
-	): FreeCell | this {
-		if (autoMove) {
-			return this.setCursor(location).touch({ stopWithInvalid }).autoMove();
-		} else {
-			return this.setCursor(location).touch({ stopWithInvalid });
-		}
-	}
-
 	restart(): FreeCell {
 		if (PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(this.previousAction.type)) {
 			return this;
@@ -884,6 +634,7 @@ export class FreeCell {
 		if (movesSeed) {
 			const cellCount = this.cells.length;
 			const cascadeCount = this.tableau.length;
+			// REVIEW (techdebt) (joker) (settings) settings for new game?
 			prev = new FreeCell({ cellCount, cascadeCount }).shuffle32(movesSeed.seed).dealAll();
 		} else {
 			prev = this.undo();
@@ -1005,6 +756,105 @@ export class FreeCell {
 		}
 
 		return game;
+	}
+
+	/**
+		don't leave the game at 'init', always have a shuffled deck
+
+		a better game feel than just {@link $shuffleOrDealAll}
+
+		sugar/helper controls
+	*/
+	$undoThenShuffle(): FreeCell | this {
+		const game = this.undo();
+		if (game !== this && game.previousAction.type === 'init') {
+			return game.shuffle32();
+		}
+		return game;
+	}
+
+	/**
+		at the start of the game, you need to shuffle before you deal
+
+		redundant when used with {@link $undoThenShuffle},
+		but it's good to always have an … hole card
+
+		sugar/helper controls
+	*/
+	$shuffleOrDealAll(): FreeCell | this {
+		if (this.previousAction.type === 'shuffle') {
+			return this.dealAll();
+		}
+		return this.shuffle32();
+	}
+
+	/**
+		this is basically the whole basis of mouse input
+
+		"click on this card -> attempt to autoMove this card"
+
+		sugar/helper controls
+	*/
+	$touchAndMove(
+		location: CardLocation | string = this.cursor,
+		{ autoFoundation, autoMove = true, stopWithInvalid }: OptionsAutoFoundation = {}
+	): FreeCell | this {
+		if (typeof location === 'string') {
+			location = findCard(this.cards, parseShorthandCard(location)).location;
+		}
+
+		if (autoMove) {
+			return this.setCursor(location).touch({ stopWithInvalid }).autoMove({ autoFoundation });
+		} else {
+			return this.setCursor(location).touch({ stopWithInvalid });
+		}
+	}
+
+	/**
+		just select the desired card (if possible)
+
+		sugar/helper controls
+	*/
+	$selectCard(shorthand: string): FreeCell {
+		const location = findCard(this.cards, parseShorthandCard(shorthand)).location;
+		const game = this.clearSelection().setCursor(location).touch();
+		if (game.previousAction.type !== 'select') {
+			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
+		}
+		return game;
+	}
+
+	/**
+		Play a move using the standard notation.
+		The standard notation is used to print the game history.
+		This make it easy to replay a known game.
+
+		sugar/helper controls
+	*/
+	$moveByShorthand(
+		shorthandMove: string,
+		{ autoFoundation }: OptionsAutoFoundation = {}
+	): FreeCell {
+		const [from, to] = parseShorthandMove(this, shorthandMove);
+		return this.clearSelection().setCursor(from).touch().setCursor(to).touch({ autoFoundation });
+	}
+
+	/**
+		This is super clear when you are looking at the game board.
+		If you know the card you want to move and where, it just "this card goes here".
+
+		sugar/helper controls
+	*/
+	$moveCardToPosition(
+		shorthand: string,
+		position: Position,
+		{ autoFoundation }: OptionsAutoFoundation = {}
+	): FreeCell {
+		const g = this.$selectCard(shorthand);
+		if (g.selection?.peekOnly) return this;
+		if (!g.availableMoves?.length) return this;
+		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${position}`, g.cursor);
+		return g.setCursor(to).touch({ autoFoundation });
 	}
 
 	printFoundation(): string {
@@ -1210,7 +1060,9 @@ export class FreeCell {
 
 		// XXX (techdebt) do we need to build a whole game to get the deck of cards?
 		//  - split the cards into their own utils method?
-		// REVIEW (joker) how do we know if we should include jokers?
+		// REVIEW (joker) (settings) how do we know if we should include jokers?
+		//  - this isn't an issue of settings (probably?) because we just need a deck
+		//  - we will make the actual game later, once we have all the card locations
 		const cards = new FreeCell().cards;
 		const remaining = cards.slice(0);
 
@@ -1361,6 +1213,7 @@ export class FreeCell {
 			if (!matchSeed) throw new Error('unsupported shuffle');
 			const seed = parseInt(matchSeed[1], 10);
 
+			// REVIEW (techdebt) (joker) (settings) settings for new game?
 			let replayGameForHistroy = new FreeCell({ cellCount, cascadeCount }).shuffle32(seed);
 			if (deckLength === 0) {
 				replayGameForHistroy = replayGameForHistroy.dealAll();
@@ -1370,7 +1223,7 @@ export class FreeCell {
 			const moves = lines.length ? lines.reverse().join('').trim().split(/\s+/) : [];
 			if (moves.length) {
 				moves.forEach((move) => {
-					replayGameForHistroy = replayGameForHistroy.moveByShorthand(move);
+					replayGameForHistroy = replayGameForHistroy.$moveByShorthand(move);
 				});
 			}
 
@@ -1508,6 +1361,7 @@ export class FreeCell {
 			}
 		}
 
+		// REVIEW (techdebt) (joker) (settings) settings for new game?
 		const game = new FreeCell({
 			action: parsePreviousActionType(actionText),
 			cellCount,
@@ -1526,7 +1380,7 @@ export class FreeCell {
 			const secondUndo = game.undo({ skipActionPrev: true });
 			const { from, to } = parseActionTextMove(game.previousAction.text);
 			game.previousAction.tweenCards = getCardsThatMoved(
-				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
+				secondUndo.$moveByShorthand(from + to, { autoFoundation: false })
 			);
 		}
 
@@ -1536,15 +1390,6 @@ export class FreeCell {
 		// if (reprint !== print) throw new Error(`whoops!\n${print}\n${reprint}`);
 		return game;
 	}
-}
-
-// XXX (techdebt) refactor to src/app/game/move/move.ts
-function calcMoveActionText(from: CardSequence, to: CardSequence): string {
-	const from_location = from.cards[0].location;
-	const to_card: Card | undefined = to.cards[to.cards.length - 1];
-	const to_location = to_card?.location || to.location; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-	const shorthandMove = `${shorthandPosition(from_location)}${shorthandPosition(to_location)}`;
-	return `move ${shorthandMove} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
 }
 
 export function getPrintSeparator(

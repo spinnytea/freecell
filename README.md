@@ -41,6 +41,14 @@ TODO (motivation) main development tasks:
   - card drag animation (drag waggles the sequence)
   - auto-foundation each card
   - win -> init
+- IDEA (motivation) (hud) (controls) so I have a robust text i/o, make a termainal version
+  - console.clear, console.log; `npm install chalk`
+  - light and dark mode?
+  - basically just, same keyboard controls as the web ui, just, a terminal ui
+  - if i'm not careful tho, i'll end up making a whole new "render game" instead of just "game.print" (which isn't bad -- how about underline the home row, and the extra :x lines are a different color/background - maybe the foundation is a different color)
+  - console.clear, console.log; maybe look for a library?
+  - light and dark mode?
+  - basically just, same keyboard controls as the web ui, just, a terminal ui
 - TODO (motivation) (animation) learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
 - REVIEW (hud) (mobile) icon for bookmarks / save link to home screen (Andriod, iOS)
 - TODO (motivation) animate card flash for use in flourishes and end of game
