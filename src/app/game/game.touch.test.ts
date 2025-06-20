@@ -1722,7 +1722,7 @@ describe('game.touch', () => {
 		describe('autoFoundation', () => {
 			test('few', () => {
 				game = new FreeCell().shuffle32(5).dealAll();
-				game = game.$moveByShorthand('53');
+				game = game.moveByShorthand('53');
 				expect(game.print({ includeHistory: true })).toBe(
 					'' +
 						'             AD          \n' +

@@ -8,7 +8,7 @@
 	 - if it doesn't make sense to move it there, test here anyways
 	 - what we want in this file is a test for: Position x Position
 */
-describe('game.$moveByShorthand', () => {
+describe('game.moveByShorthand', () => {
 	describe('from each position', () => {
 		describe('cell', () => {
 			test.todo('a, b, c, d, e, f');

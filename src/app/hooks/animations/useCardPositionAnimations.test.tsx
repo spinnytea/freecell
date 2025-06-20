@@ -325,7 +325,7 @@ describe('useCardPositionAnimations', () => {
 		describe('move-foundation', () => {
 			test('one and one', () => {
 				const gameStateOne = new FreeCell().shuffle32(5).dealAll();
-				const gameStateTwo = gameStateOne.$moveByShorthand('53');
+				const gameStateTwo = gameStateOne.moveByShorthand('53');
 				expect(gameStateTwo.previousAction).toEqual({
 					text: 'move 53 6H→7C (auto-foundation 2 AD)',
 					type: 'move-foundation',
@@ -1149,7 +1149,7 @@ describe('useCardPositionAnimations', () => {
 					let gameStateThree: FreeCell;
 					beforeAll(() => {
 						gameStateOne = FreeCell.parse(ACTION_TEXT_EXAMPLES[actionText]);
-						gameStateTwo = gameStateOne.$moveByShorthand(shorthandMove);
+						gameStateTwo = gameStateOne.moveByShorthand(shorthandMove);
 						gameStateThree = gameStateTwo.undo();
 						pullActionTextExamples(actionTextExamples, actionText);
 					});
@@ -1448,7 +1448,7 @@ describe('useCardPositionAnimations', () => {
 				' 73 57 53 57 54 13 a5 16 \n' +
 				' 14 ';
 			expect(gamePrint).toEqual(ACTION_TEXT_EXAMPLES['move 21 8H-7C→cascade']);
-			const gameStateOne = FreeCell.parse(gamePrint).$moveByShorthand('21');
+			const gameStateOne = FreeCell.parse(gamePrint).moveByShorthand('21');
 			expect(gameStateOne.previousAction).toEqual({
 				text: 'move 21 8H-7C→cascade',
 				type: 'move',
@@ -1562,7 +1562,7 @@ describe('useCardPositionAnimations', () => {
 			- `previousTLZ` has all the correct values (as it should be)
 		*/
 		test('Setting all cards after refresh then touch stop', () => {
-			const gameStateOne = new FreeCell().shuffle32(24827).dealAll().$moveByShorthand('7a');
+			const gameStateOne = new FreeCell().shuffle32(24827).dealAll().moveByShorthand('7a');
 			expect(gameStateOne.print({ includeHistory: true })).toBe(
 				'' +
 					' 8H          AS AD       \n' +

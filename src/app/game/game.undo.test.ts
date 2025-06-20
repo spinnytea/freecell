@@ -1466,7 +1466,7 @@ describe('game.undo (+ history)', () => {
 						' JD                      \n' + //
 						' hand-jammed'
 				);
-				game = game.$moveByShorthand('23').$moveByShorthand('34').$moveByShorthand('46');
+				game = game.moveByShorthand('23').moveByShorthand('34').moveByShorthand('46');
 
 				expect(game.print({ includeHistory: true })).toBe(
 					'' + //
@@ -1503,11 +1503,11 @@ describe('game.undo (+ history)', () => {
 						' hand-jammed'
 				);
 				game = game
-					.$moveByShorthand('23', { autoFoundation: false })
+					.moveByShorthand('23', { autoFoundation: false })
 					.autoFoundationAll()
-					.$moveByShorthand('34', { autoFoundation: false })
+					.moveByShorthand('34', { autoFoundation: false })
 					.autoFoundationAll()
-					.$moveByShorthand('46', { autoFoundation: false })
+					.moveByShorthand('46', { autoFoundation: false })
 					.autoFoundationAll();
 
 				expect(game.print({ includeHistory: true })).toBe(
@@ -1552,15 +1552,15 @@ describe('game.undo (+ history)', () => {
 					'                      QH \n' + //
 					' hand-jammed'
 			);
-			game = game.$moveByShorthand('12');
+			game = game.moveByShorthand('12');
 			expect(game.history).toEqual(['hand-jammed', 'move 12 JH→QS']);
-			game = game.$moveByShorthand('21');
+			game = game.moveByShorthand('21');
 			expect(game.history).toEqual(['hand-jammed', 'move 12 JH→QS', 'move 21 KH-QS-JH→cascade']);
-			game = game.undo().undo().$moveByShorthand('13');
+			game = game.undo().undo().moveByShorthand('13');
 			expect(game.history).toEqual(['hand-jammed', 'move 13 JH→cascade']);
-			game = game.$moveByShorthand('34');
+			game = game.moveByShorthand('34');
 			expect(game.history).toEqual(['hand-jammed', 'move 14 JH→cascade']);
-			game = game.undo().$moveByShorthand('12');
+			game = game.undo().moveByShorthand('12');
 			expect(game.history).toEqual(['hand-jammed', 'move 12 JH→QS']);
 			game = game.$moveCardToPosition('JH', '3');
 			expect(game.history).toEqual(['hand-jammed', 'move 13 JH→cascade']);
@@ -1576,19 +1576,19 @@ describe('game.undo (+ history)', () => {
 					' QS          KS          \n' + //
 					' hand-jammed'
 			);
-			game = game.$moveByShorthand('ab');
+			game = game.moveByShorthand('ab');
 			expect(game.history).toEqual(['hand-jammed', 'move ab QD→cell']);
 			expect(game.previousAction).toEqual({
 				text: 'move ab QD→cell',
 				type: 'move',
 			});
-			game = game.$moveByShorthand('bc');
+			game = game.moveByShorthand('bc');
 			expect(game.history).toEqual(['hand-jammed', 'move ac QD→cell']);
 			expect(game.previousAction).toEqual({
 				text: 'move ac QD→cell',
 				type: 'move',
 			});
-			game = game.$moveByShorthand('cd');
+			game = game.moveByShorthand('cd');
 			expect(game.history).toEqual(['hand-jammed', 'move ad QD→cell']);
 			expect(game.previousAction).toEqual({
 				text: 'move ad QD→cell',
@@ -1609,7 +1609,7 @@ describe('game.undo (+ history)', () => {
 					' move ad QD→cell\n' +
 					' hand-jammed'
 			);
-			game = game.$moveByShorthand('da');
+			game = game.moveByShorthand('da');
 			expect(game.history).toEqual(['hand-jammed']);
 			expect(game.previousAction).toEqual({
 				text: 'hand-jammed',
@@ -1862,7 +1862,7 @@ describe('game.undo (+ history)', () => {
 						const prevAction = game.previousAction;
 						const prevStateNH = game.print({ includeHistory: false });
 
-						game = game.$moveByShorthand(move);
+						game = game.moveByShorthand(move);
 						expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
 
 						// undo a in a different "branch" so we can keep marking forward

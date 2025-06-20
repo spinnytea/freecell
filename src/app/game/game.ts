@@ -324,7 +324,7 @@ export class FreeCell {
 		  - it's nice and simple when there aren't many ways to interact
 		  - with more control schemes sometimes overlapping, it's hard to debug exactly
 		  - some controls schemes have explicity `clearSelection().touch()` to get around it
-		  - even {@link $moveByShorthand} has to do this
+		  - even {@link moveByShorthand} has to do this
 		  - it seems there are a lot of places that call "touch" with the express intent of selecting, review _all_ callers
 		 ---
 		  - drag-and-drop just wants a lookahead "what if this card were selected"
@@ -473,7 +473,7 @@ export class FreeCell {
 			const secondUndo = didUndo.undo({ skipActionPrev: true });
 			const { from, to } = parseActionTextMove(didUndo.previousAction.text);
 			didUndo.previousAction.tweenCards = getCardsThatMoved(
-				secondUndo.$moveByShorthand(from + to, { autoFoundation: false })
+				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
 			);
 		}
 
@@ -622,6 +622,20 @@ export class FreeCell {
 		}, this.availableMoves[0]).location;
 
 		return this.setCursor(to_location).touch({ autoFoundation });
+	}
+
+	/**
+		Play a move using the standard notation.
+		The standard notation is used to print the game history.
+		This make it easy to replay a known game.
+	*/
+	moveByShorthand(shorthandMove: string, { autoFoundation }: OptionsAutoFoundation = {}): FreeCell {
+		const [from, to] = parseShorthandMove(this, shorthandMove);
+		// REVIEW (techdebt) break touch up unto:
+		//  - "selcet this card"
+		//  - "moveCards here"
+		//  -  current impl works, but feels… wrong
+		return this.clearSelection().setCursor(from).touch().setCursor(to).touch({ autoFoundation });
 	}
 
 	restart(): FreeCell {
@@ -825,21 +839,6 @@ export class FreeCell {
 	}
 
 	/**
-		Play a move using the standard notation.
-		The standard notation is used to print the game history.
-		This make it easy to replay a known game.
-
-		sugar/helper controls
-	*/
-	$moveByShorthand(
-		shorthandMove: string,
-		{ autoFoundation }: OptionsAutoFoundation = {}
-	): FreeCell {
-		const [from, to] = parseShorthandMove(this, shorthandMove);
-		return this.clearSelection().setCursor(from).touch().setCursor(to).touch({ autoFoundation });
-	}
-
-	/**
 		This is super clear when you are looking at the game board.
 		If you know the card you want to move and where, it just "this card goes here".
 
@@ -853,6 +852,7 @@ export class FreeCell {
 		const g = this.$selectCard(shorthand);
 		if (g.selection?.peekOnly) return this;
 		if (!g.availableMoves?.length) return this;
+		// HACK (techdebt) (controls) using parseShorthandMove just to come up with `to` is a bit overkill
 		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${position}`, g.cursor);
 		return g.setCursor(to).touch({ autoFoundation });
 	}
@@ -1223,7 +1223,7 @@ export class FreeCell {
 			const moves = lines.length ? lines.reverse().join('').trim().split(/\s+/) : [];
 			if (moves.length) {
 				moves.forEach((move) => {
-					replayGameForHistroy = replayGameForHistroy.$moveByShorthand(move);
+					replayGameForHistroy = replayGameForHistroy.moveByShorthand(move);
 				});
 			}
 
@@ -1380,7 +1380,7 @@ export class FreeCell {
 			const secondUndo = game.undo({ skipActionPrev: true });
 			const { from, to } = parseActionTextMove(game.previousAction.text);
 			game.previousAction.tweenCards = getCardsThatMoved(
-				secondUndo.$moveByShorthand(from + to, { autoFoundation: false })
+				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
 			);
 		}
 

@@ -138,7 +138,7 @@ export function useDragAndDropControls(
 								const shorthandMove = `${shorthandPosition(gameStateRef.current.location)}${shorthandPosition(overlapping.location)}`;
 								// BUG (animation) (drag-and-drop) (techdebt) the following useCardPositionAnimations needs to play nicer with this
 								//  - the cards are not in their original positions
-								setGame((g) => g.$moveByShorthand(shorthandMove));
+								setGame((g) => g.moveByShorthand(shorthandMove));
 							}
 						}
 					},
