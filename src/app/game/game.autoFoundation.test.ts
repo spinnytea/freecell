@@ -13,19 +13,19 @@ describe('game.autoFoundation', () => {
 		`('$limit', ({ limit, homeStr }: { limit: AutoFoundationLimit; homeStr: string }) => {
 			const print = FreeCell.parse(
 				'' + //
-					'>            AH AS    AC \n' + //
-					' KC KD 4H KS    AD       \n' + //
-					' QC QD KH QS             \n' + //
-					' JC JD QH JS             \n' + //
-					' TC TD JH TS             \n' + //
-					' 9C 9D TH 9S             \n' + //
-					' 8C 8D 9H 8S             \n' + //
-					' 7C 7D 8H 7S             \n' + //
-					' 6C 6D 7H 6S             \n' + //
-					' 5C 5D 6H 5S             \n' + //
-					' 4C 4D 5H 4S             \n' + //
-					' 3C 3D 3H 3S             \n' + //
-					' 2C 2D 2H 2S             \n' + //
+					'>            AH AS    AC \n' +
+					' KC KD 4H KS    AD       \n' +
+					' QC QD KH QS             \n' +
+					' JC JD QH JS             \n' +
+					' TC TD JH TS             \n' +
+					' 9C 9D TH 9S             \n' +
+					' 8C 8D 9H 8S             \n' +
+					' 7C 7D 8H 7S             \n' +
+					' 6C 6D 7H 6S             \n' +
+					' 5C 5D 6H 5S             \n' +
+					' 4C 4D 5H 4S             \n' +
+					' 3C 3D 3H 3S             \n' +
+					' 2C 2D 2H 2S             \n' +
 					' hand-jammed'
 			)
 				.autoFoundationAll({ limit, anytime: true })
@@ -45,19 +45,19 @@ describe('game.autoFoundation', () => {
 		`('$limit', ({ limit, homeStr }: { limit: AutoFoundationLimit; homeStr: string }) => {
 			const print = FreeCell.parse(
 				'' + //
-					'>         5S       AD AC \n' + //
-					' KC KD 4H 4S    AH       \n' + //
-					' QC QD KH 3S             \n' + //
-					' JC JD QH 2S             \n' + //
-					' TC TD JH AS             \n' + //
-					' 9C 9D TH KS             \n' + //
-					' 8C 8D 9H QS             \n' + //
-					' 7C 7D 8H JS             \n' + //
-					' 6C 6D 7H TS             \n' + //
-					' 5C 5D 6H 9S             \n' + //
-					' 4C 4D 5H 8S             \n' + //
-					' 3C 3D 3H 7S             \n' + //
-					' 2C 2D 2H 6S             \n' + //
+					'>         5S       AD AC \n' +
+					' KC KD 4H 4S    AH       \n' +
+					' QC QD KH 3S             \n' +
+					' JC JD QH 2S             \n' +
+					' TC TD JH AS             \n' +
+					' 9C 9D TH KS             \n' +
+					' 8C 8D 9H QS             \n' +
+					' 7C 7D 8H JS             \n' +
+					' 6C 6D 7H TS             \n' +
+					' 5C 5D 6H 9S             \n' +
+					' 4C 4D 5H 8S             \n' +
+					' 3C 3D 3H 7S             \n' +
+					' 2C 2D 2H 6S             \n' +
 					' hand-jammed'
 			)
 				.autoFoundationAll({ limit, anytime: true })
@@ -67,7 +67,7 @@ describe('game.autoFoundation', () => {
 
 		test('opp+1 4320, opp+2 4420', () => {
 			const game = FreeCell.parse(
-				'' +
+				'' + //
 					' KS 4D       4C 2D 2S    \n' +
 					' 7D>7S 5C 6S 9D 8C QC AH \n' +
 					' TD 6D QD 5D 8S 8H JD KH \n' +
@@ -81,7 +81,7 @@ describe('game.autoFoundation', () => {
 					' copy-pasta'
 			);
 			expect(game.autoFoundationAll({ limit: 'opp+1', anytime: true }).print()).toBe(
-				'' +
+				'' + //
 					' KS 4D       4C 3D 2S    \n' +
 					' 7D>7S 5C 6S 9D 8C QC AH \n' +
 					' TD 6D QD 5D 8S 8H JD KH \n' +
@@ -95,7 +95,7 @@ describe('game.autoFoundation', () => {
 					' auto-foundation 4 3D'
 			);
 			expect(game.autoFoundationAll({ limit: 'opp+2', anytime: true }).print()).toBe(
-				'' +
+				'' + //
 					' KS          4C 4D 2S    \n' +
 					' 7D>7S 5C 6S 9D 8C QC AH \n' +
 					' TD 6D QD 5D 8S 8H JD KH \n' +
@@ -112,7 +112,7 @@ describe('game.autoFoundation', () => {
 
 		test('opp+1 4233, opp+2 6244', () => {
 			const game = FreeCell.parse(
-				'' +
+				'' + //
 					' TH KH 7H    5D 2H 4S 4C \n' +
 					' KC KD 9D    4H 5C 8C 8D \n' +
 					' QH QC 6S    QD KS 3H    \n' +
@@ -137,7 +137,7 @@ describe('game.autoFoundation', () => {
 				.undo()
 				.moveByShorthand('4b', { autoFoundation: false });
 			expect(game.autoFoundationAll({ limit: 'opp+1' }).print()).toBe(
-				'' +
+				'' + //
 					' TH>KH 7H    4D 2H 3S 3C \n' +
 					' KC KD 9D    4H 5C 8C 8D \n' +
 					' QH QC 6S    QD KS 3H    \n' +
@@ -156,7 +156,7 @@ describe('game.autoFoundation', () => {
 					' auto-foundation 46684 AC,2C,3D,3C,4D'
 			);
 			expect(game.autoFoundationAll({ limit: 'opp+2' }).print()).toBe(
-				'' +
+				'' + //
 					' TH>KH 7H    6D 2H 4S 4C \n' +
 					' KC KD 9D    4H 5C 8C 8D \n' +
 					' QH QC 6S    QD KS 3H    \n' +
@@ -216,18 +216,18 @@ describe('game.autoFoundation', () => {
 					expect(
 						FreeCell.parse(
 							'' + //
-								'>KS KC KD KH AH AS    AC \n' + //
-								' QC QD QH QS    AD       \n' + //
-								' JC JD JH JS             \n' + //
-								' TC TD TH TS             \n' + //
-								' 9C 9D 9H 9S             \n' + //
-								' 8C 8D 8H 8S             \n' + //
-								' 7C 7D 7H 7S             \n' + //
-								' 6C 6D 6H 6S             \n' + //
-								' 5C 5D 5H 5S             \n' + //
-								' 4C 4D 4H 4S             \n' + //
-								' 3C 3D 3H 3S             \n' + //
-								' 2C 2D 2H 2S             \n' + //
+								'>KS KC KD KH AH AS    AC \n' +
+								' QC QD QH QS    AD       \n' +
+								' JC JD JH JS             \n' +
+								' TC TD TH TS             \n' +
+								' 9C 9D 9H 9S             \n' +
+								' 8C 8D 8H 8S             \n' +
+								' 7C 7D 7H 7S             \n' +
+								' 6C 6D 6H 6S             \n' +
+								' 5C 5D 5H 5S             \n' +
+								' 4C 4D 4H 4S             \n' +
+								' 3C 3D 3H 3S             \n' +
+								' 2C 2D 2H 2S             \n' +
 								' hand-jammed'
 						)
 							.autoFoundationAll({ limit, anytime: true })

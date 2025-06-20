@@ -35,7 +35,7 @@ describe('game', () => {
 			location: { fixture: 'deck', data: [51] },
 		});
 		expect(game.print()).toBe(
-			'' +
+			'' + //
 				'                         \n' +
 				'                         \n' +
 				':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD>AC \n' +
@@ -48,7 +48,7 @@ describe('game', () => {
 			let game = new FreeCell({ cellCount: 4, cascadeCount: 8 });
 			game = game.dealAll({ demo: true });
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'>2S 2H 2D 2C AS AH AD AC \n' +
 					' KS KH KD KC QS QH QD QC \n' +
 					' JS JH JD JC TS TH TD TC \n' +
@@ -67,7 +67,7 @@ describe('game', () => {
 			let game = new FreeCell({ cellCount: 4, cascadeCount: 4 });
 			game = game.dealAll({ demo: true });
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'>2S 2H 2D 2C AS AH AD AC \n' +
 					' KS KH KD KC \n' +
 					' QS QH QD QC \n' +
@@ -92,7 +92,7 @@ describe('game', () => {
 			let game = new FreeCell({ cellCount: 1, cascadeCount: 10 });
 			game = game.dealAll({ demo: true });
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'>2C AS AH AD AC \n' +
 					' KS KH KD KC QS QH QD QC JS JH \n' +
 					' JD JC TS TH TD TC 9S 9H 9D 9C \n' +
@@ -111,7 +111,7 @@ describe('game', () => {
 			let game = new FreeCell({ cellCount: 6, cascadeCount: 10 });
 			game = game.dealAll({ demo: true });
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'>3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
 					' KS KH KD KC QS QH QD QC JS JH \n' +
 					' JD JC TS TH TD TC 9S 9H 9D 9C \n' +
@@ -153,7 +153,7 @@ describe('game', () => {
 
 	test('inspecting foundation always uses highest card', () => {
 		let game = FreeCell.parse(
-			'' +
+			'' + //
 				'>                        \n' +
 				' KS KH KD KC             \n' +
 				' QS QH QD QC             \n' +
@@ -192,7 +192,7 @@ describe('game', () => {
 		game = game.moveByShorthand('1h', { autoFoundation: false });
 		game = game.moveByShorthand('1h', { autoFoundation: false });
 		expect(game.print()).toBe(
-			'' +
+			'' + //
 				'            >KS          \n' +
 				'    KH KD KC             \n' +
 				'    QH QD QC             \n' +
@@ -227,7 +227,7 @@ describe('game', () => {
 		expect(game.printFoundation()).toBe('AS         ');
 		game = game.undo();
 		expect(game.print()).toEqual(
-			'' +
+			'' + //
 				'            >            \n' +
 				' KS KH KD KC             \n' +
 				' QS QH QD QC             \n' +
@@ -268,7 +268,7 @@ describe('game', () => {
 			const movesSeed = parseMovesFromHistory(game.history);
 			expect(movesSeed?.seed).toBe(5);
 			expect(game.restart().print({ includeHistory: true })).toBe(
-				'' +
+				'' + //
 					'                         \n' +
 					' AH 8S 2D QS 4C 9H 2S 3D \n' +
 					' 5C AS 9C KH 4D 2C 3C 4S \n' +
@@ -291,7 +291,7 @@ describe('game', () => {
 			expect(movesSeed).toBe(null);
 
 			expect(game.restart().print({ includeHistory: true })).toBe(
-				'' +
+				'' + //
 					'                         \n' +
 					' AH 8S 2D QS 4C 9H 2S 3D \n' +
 					' 5C AS 9C KH 4D 2C 3C 4S \n' +
@@ -318,7 +318,7 @@ describe('game', () => {
 
 			// this is a weirdly clipped history
 			expect(game.print({ includeHistory: true })).toBe(
-				'' +
+				'' + //
 					'             AD 2C       \n' +
 					' AH 8S 2D QS 4C    2S 3D \n' +
 					' 5C AS 9C KH 4D    3C 4S \n' +
@@ -339,7 +339,7 @@ describe('game', () => {
 
 			// so we can only go back as far as possible
 			expect(game.restart().print({ includeHistory: true })).toBe(
-				'' +
+				'' + //
 					' 6C          AD          \n' +
 					' AH 8S 2D QS 4C 9H 2S 3D \n' +
 					' 5C AS 9C KH 4D 2C 3C 4S \n' +
@@ -379,7 +379,7 @@ describe('game', () => {
 		test('won game', () => {
 			const startOfGame = new FreeCell().dealAll();
 			expect(startOfGame.print()).toEqual(
-				'' +
+				'' + //
 					'>                        \n' +
 					' KS KH KD KC QS QH QD QC \n' +
 					' JS JH JD JC TS TH TD TC \n' +
@@ -393,10 +393,10 @@ describe('game', () => {
 			const winGame = startOfGame.$touchAndMove({ fixture: 'cascade', data: [0, 6] });
 			expect(winGame.print()).toBe(
 				'' + //
-					'            >KS KH KD KC \n' + //
-					'                         \n' + //
-					':    Y O U   W I N !    :\n' + //
-					'                         \n' + //
+					'            >KS KH KD KC \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
 					' move 1h AS→foundation (flourish 523467812345678123456781234567812345678123456781234 2S,AH,AD,AC,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)'
 			);
 			const undid = winGame.undo();
@@ -510,7 +510,7 @@ describe('game', () => {
 		test('first (stock)', () => {
 			const game = new FreeCell().dealAll({ demo: true }).setCursor({ fixture: 'cell', data: [1] });
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					' 2S>2H 2D 2C AS AH AD AC \n' +
 					' KS KH KD KC QS QH QD QC \n' +
 					' JS JH JD JC TS TH TD TC \n' +
@@ -521,7 +521,7 @@ describe('game', () => {
 					' cursor set'
 			);
 			expect(FreeCell.parse(game.print()).print()).toBe(
-				'' +
+				'' + //
 					' 2S>2H 2D 2C AS AH AD AC \n' +
 					' KS KH KD KC QS QH QD QC \n' +
 					' JS JH JD JC TS TH TD TC \n' +
@@ -554,17 +554,17 @@ describe('game', () => {
 			test('first', () => {
 				const game = FreeCell.parse(
 					'' + //
-						'>            KC KD KH KS \n' + //
-						'                         \n' + //
+						'>            KC KD KH KS \n' +
+						'                         \n' +
 						' hand-jammed'
 				);
 				expect(game).toMatchSnapshot();
 				expect(game.print()).toBe(
 					'' + //
-						'>            KC KD KH KS \n' + //
-						'                         \n' + //
-						':    Y O U   W I N !    :\n' + //
-						'                         \n' + //
+						'>            KC KD KH KS \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
 						' hand-jammed'
 				);
 			});
@@ -572,18 +572,18 @@ describe('game', () => {
 			test('second', () => {
 				const game = FreeCell.parse(
 					'' + //
-						'>            KC KD KH KS \n' + //
-						'                         \n' + //
-						':    Y O U   W I N !    :\n' + //
-						'                         \n' + //
+						'>            KC KD KH KS \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
 						' hand-jammed'
 				);
 				expect(game.print()).toBe(
 					'' + //
-						'>            KC KD KH KS \n' + //
-						'                         \n' + //
-						':    Y O U   W I N !    :\n' + //
-						'                         \n' + //
+						'>            KC KD KH KS \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
 						' hand-jammed'
 				);
 			});
@@ -662,7 +662,7 @@ describe('game', () => {
 				expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
 			});
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'            >KC KS KH KD \n' +
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
@@ -681,7 +681,7 @@ describe('game', () => {
 				expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
 			});
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'            >KH KC KS KD \n' +
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
@@ -697,7 +697,7 @@ describe('game', () => {
 			let game = new FreeCell().shuffle32(5).dealAll();
 
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'>                        \n' +
 					' AH 8S 2D QS 4C 9H 2S 3D \n' +
 					' 5C AS 9C KH 4D 2C 3C 4S \n' +
@@ -709,7 +709,7 @@ describe('game', () => {
 					' deal all cards'
 			);
 			expect(game.print({ includeHistory: true })).toBe(
-				'' +
+				'' + //
 					'                         \n' +
 					' AH 8S 2D QS 4C 9H 2S 3D \n' +
 					' 5C AS 9C KH 4D 2C 3C 4S \n' +
@@ -757,7 +757,7 @@ describe('game', () => {
 			expect(game.previousAction.text).toBe('move 67 9H→TC');
 
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'             AD 2C       \n' +
 					' AH 8S 2D QS 4C    2S 3D \n' +
 					' 5C AS 9C KH 4D    3C 4S \n' +
@@ -771,7 +771,7 @@ describe('game', () => {
 					' move 67 9H→TC'
 			);
 			expect(game.print({ includeHistory: true })).toBe(
-				'' +
+				'' + //
 					'             AD 2C       \n' +
 					' AH 8S 2D QS 4C    2S 3D \n' +
 					' 5C AS 9C KH 4D    3C 4S \n' +
@@ -821,7 +821,7 @@ describe('game', () => {
 					.touch()
 					.print()
 			).toBe(
-				'' +
+				'' + //
 					' 3S    5C    AD 2C 2H    \n' +
 					'    8S 2D QS 4C>7D 2S 3D \n' +
 					'    AS 9C KH 4D 6C 3C 4S \n' +
@@ -840,7 +840,7 @@ describe('game', () => {
 			expect(game.previousAction.text).toBe('move 86 7D-6C-5H→cascade');
 
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					' 3S    5C    AD 2C 2H    \n' +
 					'    8S 2D QS 4C>7D 2S 3D \n' +
 					'    AS 9C KH 4D 6C 3C 4S \n' +
@@ -854,7 +854,7 @@ describe('game', () => {
 					' move 86 7D-6C-5H→cascade'
 			);
 			expect(game.print({ includeHistory: true })).toBe(
-				'' +
+				'' + //
 					' 3S    5C    AD 2C 2H    \n' +
 					'    8S 2D QS 4C 7D 2S 3D \n' +
 					'    AS 9C KH 4D 6C 3C 4S \n' +
@@ -921,7 +921,7 @@ describe('game', () => {
 			expect(game.previousAction.text).toBe('move 48 QS→KH');
 
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					' 3S 5D       AD 2C 3H AS \n' +
 					' QH TS 2D    4C 7D 2S>KH \n' +
 					'    9D 9C    4D 6C 3C QS \n' +
@@ -939,7 +939,7 @@ describe('game', () => {
 					' move 48 QS→KH'
 			);
 			expect(game.print({ includeHistory: true })).toBe(
-				'' +
+				'' + //
 					' 3S 5D       AD 2C 3H AS \n' +
 					' QH TS 2D    4C 7D 2S KH \n' +
 					'    9D 9C    4D 6C 3C QS \n' +
@@ -992,7 +992,7 @@ describe('game', () => {
 			expect(game.previousAction.text).toBe('move b8 5D→6S');
 
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'       QC    AD 3C 4H 3S \n' +
 					' QH TS 2D    4C 7D    KH \n' +
 					' JC 9D 9C    4D 6C    QS \n' +
@@ -1010,7 +1010,7 @@ describe('game', () => {
 					' move b8 5D→6S'
 			);
 			expect(game.print({ includeHistory: true })).toBe(
-				'' +
+				'' + //
 					'       QC    AD 3C 4H 3S \n' +
 					' QH TS 2D    4C 7D    KH \n' +
 					' JC 9D 9C    4D 6C    QS \n' +
@@ -1092,7 +1092,7 @@ describe('game', () => {
 			expect(game.printFoundation()).toBe('KD KC KH KS');
 
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'            >KD KC KH KS \n' +
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
@@ -1100,7 +1100,7 @@ describe('game', () => {
 					' move 56 KD→cascade (auto-foundation 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)'
 			);
 			expect(game.print({ includeHistory: true })).toBe(
-				'' +
+				'' + //
 					'             KD KC KH KS \n' +
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
@@ -1132,7 +1132,7 @@ describe('game', () => {
 				expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
 			});
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'            >KC KS KD KH \n' +
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
@@ -1152,7 +1152,7 @@ describe('game', () => {
 				expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
 			});
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'            >KS KD KC KH \n' +
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +

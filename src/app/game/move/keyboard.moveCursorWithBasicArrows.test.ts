@@ -416,7 +416,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 
 				game = game.dealAll({ demo: true, keepDeck: true });
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						'                         \n' +
 						' KS KH KD KC QS QH QD QC \n' +
 						' JS JH JD JC TS TH TD TC \n' +

@@ -19,7 +19,7 @@ describe('game.touch', () => {
 			// but we only want to test selections, so it's OK for this
 			// i suppose we could instead FreeCell.parse this instead of shuffle
 			expect(game.dealAll({ demo: true }).print()).toBe(
-				'' +
+				'' + //
 					'>4C QD 8S 6S TH 7C 9S 9D \n' +
 					' KS 4D 9C 5C 8H 7S 7H AD \n' +
 					' 5D 3S KD TC 3C TD JH AS \n' +
@@ -40,7 +40,7 @@ describe('game.touch', () => {
 					peekOnly: true,
 				});
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						'                         \n' +
 						'                         \n' +
 						':d>KS|4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
@@ -50,7 +50,7 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'deck', data: [42] });
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						'                         \n' +
 						'                         \n' +
 						':d|KS|4D 9C 5C 8H 7S 7H AD 5D>3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
@@ -75,7 +75,7 @@ describe('game.touch', () => {
 					game.print()
 				);
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						' 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' KS 4D 9C 5C 8H 7S 7H AD \n' +
 						' 5D 3S KD TC 3C TD JH AS \n' +
@@ -96,7 +96,7 @@ describe('game.touch', () => {
 					peekOnly: true,
 				});
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						'                         \n' +
 						'                         \n' +
 						':d KS 4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S>9D|\n' +
@@ -120,7 +120,7 @@ describe('game.touch', () => {
 						.touch()
 						.setCursor({ fixture: 'deck', data: [d0] });
 					expect(game.print()).toBe(
-						'' +
+						'' + //
 							'                         \n' +
 							'                         \n' +
 							`:d KS 4D 9C 5C 8H ${printSubstr} JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n` +
@@ -143,7 +143,7 @@ describe('game.touch', () => {
 					peekOnly: false,
 				});
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						' 4C>QD|8S 6S TH 7C 9S 9D \n' +
 						' KS 4D 9C 5C 8H 7S 7H AD \n' +
 						' 5D 3S KD TC 3C TD JH AS \n' +
@@ -159,7 +159,7 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'cascade', data: [3, 3] });
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						' 4C|QD|8S 6S TH 7C 9S 9D \n' +
 						' KS 4D 9C 5C 8H 7S 7H AD \n' +
 						' 5D 3S KD TC 3C TD JH AS \n' +
@@ -200,7 +200,7 @@ describe('game.touch', () => {
 				peekOnly: false,
 			});
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					' 4C QD 8S>6S|TH 7C 9S 9D \n' +
 					' KS 4D 9C 5C 8H 7S 7H AD \n' +
 					' 5D 3S KD TC 3C TD JH AS \n' +
@@ -214,7 +214,7 @@ describe('game.touch', () => {
 
 			game = game.setCursor({ fixture: 'foundation', data: [0] });
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					' 4C QD 8S|6S>TH 7C 9S 9D \n' +
 					' KS 4D 9C 5C 8H 7S 7H AD \n' +
 					' 5D 3S KD TC 3C TD JH AS \n' +
@@ -235,7 +235,7 @@ describe('game.touch', () => {
 			expect(game.selection).toEqual(null);
 			expect(game.cursor).toEqual({ fixture: 'foundation', data: [2] });
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					' 4C QD 8S 6S TH 7C>9S 9D \n' +
 					' KS 4D 9C 5C 8H 7S 7H AD \n' +
 					' 5D 3S KD TC 3C TD JH AS \n' +
@@ -261,7 +261,7 @@ describe('game.touch', () => {
 			expect(game.selection).toEqual(null);
 			expect(game.cursor).toEqual({ fixture: 'foundation', data: [3] });
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					' 4C QD 8S 6S TH 7C 9S>9D \n' +
 					' KS 4D 9C 5C 8H 7S 7H AD \n' +
 					' 5D 3S KD TC 3C TD JH AS \n' +
@@ -286,7 +286,7 @@ describe('game.touch', () => {
 					peekOnly: true,
 				});
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						' 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' KS 4D 9C 5C 8H 7S 7H AD \n' +
 						' 5D 3S KD TC>3C|TD JH AS \n' +
@@ -302,7 +302,7 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'foundation', data: [2] });
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						' 4C QD 8S 6S TH 7C>9S 9D \n' +
 						' KS 4D 9C 5C 8H 7S 7H AD \n' +
 						' 5D 3S KD TC|3C|TD JH AS \n' +
@@ -335,7 +335,7 @@ describe('game.touch', () => {
 					peekOnly: false,
 				});
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						' 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' KS 4D 9C 5C 8H 7S 7H AD \n' +
 						' 5D 3S KD TC 3C TD JH AS \n' +
@@ -351,7 +351,7 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'cell', data: [1] });
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						' 4C>QD 8S 6S TH 7C 9S 9D \n' +
 						' KS 4D 9C 5C 8H 7S 7H AD \n' +
 						' 5D 3S KD TC 3C TD JH AS \n' +
@@ -388,7 +388,7 @@ describe('game.touch', () => {
 					peekOnly: true,
 				});
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						' 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' KS>4D|9C 5C 8H 7S 7H AD \n' +
 						' 5D|3S|KD TC 3C TD JH AS \n' +
@@ -404,7 +404,7 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'foundation', data: [2] });
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						' 4C QD 8S 6S TH 7C>9S 9D \n' +
 						' KS|4D|9C 5C 8H 7S 7H AD \n' +
 						' 5D|3S|KD TC 3C TD JH AS \n' +
@@ -440,7 +440,7 @@ describe('game.touch', () => {
 					peekOnly: false,
 				});
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						' 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' KS 4D 9C 5C 8H 7S 7H AD \n' +
 						' 5D 3S KD TC 3C TD JH AS \n' +
@@ -456,7 +456,7 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'cell', data: [3] });
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						' 4C QD 8S>6S TH 7C 9S 9D \n' +
 						' KS 4D 9C 5C 8H 7S 7H AD \n' +
 						' 5D 3S KD TC 3C TD JH AS \n' +
@@ -481,28 +481,28 @@ describe('game.touch', () => {
 			test('sequence too tall', () => {
 				game = FreeCell.parse(
 					'' + //
-						'>         2D             \n' + //
-						' AS AH KC KD AD AC    2C \n' + //
-						'       QD QC             \n' + //
-						'       JC JD             \n' + //
-						'       TD TC             \n' + //
-						'       9C 9D             \n' + //
-						'       8D 8C             \n' + //
-						'       7C 7D             \n' + //
+						'>         2D             \n' +
+						' AS AH KC KD AD AC    2C \n' +
+						'       QD QC             \n' +
+						'       JC JD             \n' +
+						'       TD TC             \n' +
+						'       9C 9D             \n' +
+						'       8D 8C             \n' +
+						'       7C 7D             \n' +
 						' hand-jammed'
 				)
 					.setCursor({ fixture: 'cascade', data: [2, 1] })
 					.touch();
 				expect(game.print()).toBe(
 					'' + //
-						'          2D             \n' + //
-						' AS AH KC KD AD AC    2C \n' + //
-						'      >QD|QC             \n' + //
-						'      |JC|JD             \n' + //
-						'      |TD|TC             \n' + //
-						'      |9C|9D             \n' + //
-						'      |8D|8C             \n' + //
-						'      |7C|7D             \n' + //
+						'          2D             \n' +
+						' AS AH KC KD AD AC    2C \n' +
+						'      >QD|QC             \n' +
+						'      |JC|JD             \n' +
+						'      |TD|TC             \n' +
+						'      |9C|9D             \n' +
+						'      |8D|8C             \n' +
+						'      |7C|7D             \n' +
 						':d KS KH QS QH JS JH TS TH 9S 9H 8S 8H 7S 7H 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H \n' +
 						' select 3 QD-JC-TD-9C-8D-7C'
 				);
@@ -532,7 +532,7 @@ describe('game.touch', () => {
 				expect(game.selection).toEqual(null);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] });
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						'                         \n' +
 						'      >                  \n' +
 						':d KS 4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
@@ -552,7 +552,7 @@ describe('game.touch', () => {
 					peekOnly: true,
 				});
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						' 4C QD 8S 6S TH 7C 9S 9D \n' +
 						' KS 4D 9C 5C 8H 7S 7H AD \n' +
 						' 5D 3S KD TC 3C TD JH>AS|\n' +
@@ -575,7 +575,7 @@ describe('game.touch', () => {
 					.touch();
 
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						'                         \n' +
 						' 8H 5D KS 3C 3S 3H JD AC \n' +
 						' 9H 7D KC 5C 9D 5H 2C 2H \n' +
@@ -626,16 +626,16 @@ describe('game.touch', () => {
 			test('to: cell', () => {
 				game = FreeCell.parse(
 					'' + //
-						'>KS          JC JD JH TS \n' + //
-						' KC KD KH JS QC QD QH QS \n' + //
+						'>KS          JC JD JH TS \n' +
+						' KC KD KH JS QC QD QH QS \n' +
 						' hand-jammed'
 				)
 					.touch()
 					.setCursor({ fixture: 'cell', data: [1] });
 				expect(game.print()).toBe(
 					'' + //
-						'|KS>         JC JD JH TS \n' + //
-						' KC KD KH JS QC QD QH QS \n' + //
+						'|KS>         JC JD JH TS \n' +
+						' KC KD KH JS QC QD QH QS \n' +
 						' cursor set'
 				);
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
@@ -664,8 +664,8 @@ describe('game.touch', () => {
 				game = game.touch({ autoFoundation: false });
 				expect(game.print()).toBe(
 					'' + //
-						'   >KS       JC JD JH TS \n' + //
-						' KC KD KH JS QC QD QH QS \n' + //
+						'   >KS       JC JD JH TS \n' +
+						' KC KD KH JS QC QD QH QS \n' +
 						' move ab KS→cell'
 				);
 				expect(game.previousAction.type).toBe('move');
@@ -677,16 +677,16 @@ describe('game.touch', () => {
 			test('to: foundation', () => {
 				game = FreeCell.parse(
 					'' + //
-						'>KS          JC JD JH QS \n' + //
-						' KC KD KH    QC QD QH   \n' + //
+						'>KS          JC JD JH QS \n' +
+						' KC KD KH    QC QD QH   \n' +
 						' hand-jammed'
 				)
 					.touch()
 					.setCursor({ fixture: 'foundation', data: [3] });
 				expect(game.print()).toBe(
 					'' + //
-						'|KS|         JC JD JH>QS \n' + //
-						' KC KD KH    QC QD QH    \n' + //
+						'|KS|         JC JD JH>QS \n' +
+						' KC KD KH    QC QD QH    \n' +
 						' cursor set'
 				);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [3] });
@@ -730,8 +730,8 @@ describe('game.touch', () => {
 				game = game.touch({ autoFoundation: false });
 				expect(game.print()).toBe(
 					'' + //
-						'             JC JD JH>KS \n' + //
-						' KC KD KH    QC QD QH    \n' + //
+						'             JC JD JH>KS \n' +
+						' KC KD KH    QC QD QH    \n' +
 						' move ah KS→QS'
 				);
 				expect(game.previousAction.type).toBe('move');
@@ -744,16 +744,16 @@ describe('game.touch', () => {
 				test('single', () => {
 					game = FreeCell.parse(
 						'' + //
-							'>QC QD QH QS TC TD TH TS \n' + //
-							' KC KD KH KS JC JD JH JS \n' + //
+							'>QC QD QH QS TC TD TH TS \n' +
+							' KC KD KH KS JC JD JH JS \n' +
 							' hand-jammed'
 					)
 						.touch()
 						.setCursor({ fixture: 'cascade', data: [1, 0] });
 					expect(game.print()).toBe(
 						'' + //
-							'|QC|QD QH QS TC TD TH TS \n' + //
-							' KC>KD KH KS JC JD JH JS \n' + //
+							'|QC|QD QH QS TC TD TH TS \n' +
+							' KC>KD KH KS JC JD JH JS \n' +
 							' cursor set'
 					);
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [1, 0] });
@@ -777,9 +777,9 @@ describe('game.touch', () => {
 					game = game.touch({ autoFoundation: false });
 					expect(game.print()).toBe(
 						'' + //
-							'    QD QH QS TC TD TH TS \n' + //
-							' KC>KD KH KS JC JD JH JS \n' + //
-							'    QC                   \n' + //
+							'    QD QH QS TC TD TH TS \n' +
+							' KC>KD KH KS JC JD JH JS \n' +
+							'    QC                   \n' +
 							' move a2 QC→KD'
 					);
 					expect(game.previousAction.type).toBe('move');
@@ -792,10 +792,10 @@ describe('game.touch', () => {
 					beforeEach(() => {
 						game = FreeCell.parse(
 							'' + //
-								'>TD          TC 9D KH KS \n' + //
-								' KC                   KD \n' + //
-								' QD                   QC \n' + //
-								' JC                   JD \n' + //
+								'>TD          TC 9D KH KS \n' +
+								' KC                   KD \n' +
+								' QD                   QC \n' +
+								' JC                   JD \n' +
 								' hand-jammed'
 						).touch();
 					});
@@ -808,10 +808,10 @@ describe('game.touch', () => {
 						game = game.setCursor({ fixture: 'cascade', data: [0, 2] });
 						expect(game.print()).toBe(
 							'' + //
-								'|TD|         TC 9D KH KS \n' + //
-								' KC                   KD \n' + //
-								' QD                   QC \n' + //
-								'>JC                   JD \n' + //
+								'|TD|         TC 9D KH KS \n' +
+								' KC                   KD \n' +
+								' QD                   QC \n' +
+								'>JC                   JD \n' +
 								' cursor set'
 						);
 						expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 2] });
@@ -880,11 +880,11 @@ describe('game.touch', () => {
 						game = game.touch({ autoFoundation: false });
 						expect(game.print()).toBe(
 							'' + //
-								'             TC 9D KH KS \n' + //
-								' KC                   KD \n' + //
-								' QD                   QC \n' + //
-								'>JC                   JD \n' + //
-								' TD                      \n' + //
+								'             TC 9D KH KS \n' +
+								' KC                   KD \n' +
+								' QD                   QC \n' +
+								'>JC                   JD \n' +
+								' TD                      \n' +
 								' move a1 TD→JC'
 						);
 						expect(game.previousAction.type).toBe('move');
@@ -897,17 +897,17 @@ describe('game.touch', () => {
 				test('empty', () => {
 					game = FreeCell.parse(
 						'' + //
-							'>QC QD QH QS TC TD TH TS \n' + //
-							' KC       KS JC JD JH JS \n' + //
+							'>QC QD QH QS TC TD TH TS \n' +
+							' KC       KS JC JD JH JS \n' +
 							' hand-jammed'
 					)
 						.touch()
 						.setCursor({ fixture: 'cascade', data: [2, 0] });
 					expect(game.print()).toBe(
 						'' + //
-							'|QC|QD QH QS TC TD TH TS \n' + //
-							' KC   >   KS JC JD JH JS \n' + //
-							':d KH KD \n' + //
+							'|QC|QD QH QS TC TD TH TS \n' +
+							' KC   >   KS JC JD JH JS \n' +
+							':d KH KD \n' +
 							' cursor set'
 					);
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] });
@@ -931,9 +931,9 @@ describe('game.touch', () => {
 					game = game.touch({ autoFoundation: false });
 					expect(game.print()).toBe(
 						'' + //
-							'    QD QH QS TC TD TH TS \n' + //
-							' KC   >QC KS JC JD JH JS \n' + //
-							':d KH KD \n' + //
+							'    QD QH QS TC TD TH TS \n' +
+							' KC   >QC KS JC JD JH JS \n' +
+							':d KH KD \n' +
 							' move a3 QC→cascade'
 					);
 					expect(game.previousAction.type).toBe('move');
@@ -982,7 +982,7 @@ describe('game.touch', () => {
 						.touch()
 						.setCursor({ fixture: 'cell', data: [1] });
 					expect(game.print()).toBe(
-						'' +
+						'' + //
 							'   >                     \n' +
 							' 8H 5D KS 3C 3S 3H JD AC \n' +
 							' 9H 7D KC 5C 9D 5H 2C 2H \n' +
@@ -1030,7 +1030,7 @@ describe('game.touch', () => {
 					]);
 					game = game.touch({ autoFoundation: false });
 					expect(game.print()).toBe(
-						'' +
+						'' + //
 							'   >QC                   \n' +
 							' 8H 5D KS 3C 3S 3H JD AC \n' +
 							' 9H 7D KC 5C 9D 5H 2C 2H \n' +
@@ -1054,7 +1054,7 @@ describe('game.touch', () => {
 						.touch()
 						.setCursor({ fixture: 'foundation', data: [0] });
 					expect(game.print()).toBe(
-						'' +
+						'' + //
 							'            >            \n' +
 							' 8H 5D KS 3C 3S 3H JD AC \n' +
 							' 9H 7D KC 5C 9D 5H 2C 2H \n' +
@@ -1117,7 +1117,7 @@ describe('game.touch', () => {
 					]);
 					game = game.touch({ autoFoundation: false });
 					expect(game.print()).toBe(
-						'' +
+						'' + //
 							'            >AH          \n' +
 							' 8H 5D KS 3C 3S 3H JD AC \n' +
 							' 9H 7D KC 5C 9D 5H 2C 2H \n' +
@@ -1142,7 +1142,7 @@ describe('game.touch', () => {
 							.touch()
 							.setCursor({ fixture: 'cascade', data: [6, 5] });
 						expect(game.print()).toBe(
-							'' +
+							'' + //
 								'                         \n' +
 								' 8H 5D KS 3C 3S 3H JD AC \n' +
 								' 9H 7D KC 5C 9D 5H 2C 2H \n' +
@@ -1190,7 +1190,7 @@ describe('game.touch', () => {
 						]);
 						game = game.touch({ autoFoundation: false });
 						expect(game.print()).toBe(
-							'' +
+							'' + //
 								'                         \n' +
 								' 8H 5D KS 3C 3S 3H JD AC \n' +
 								' 9H 7D KC 5C 9D 5H 2C 2H \n' +
@@ -1215,10 +1215,10 @@ describe('game.touch', () => {
 						test('bottom', () => {
 							game = FreeCell.parse(
 								'' + //
-									'>            TC 8D KH KS \n' + //
-									'    TD KC KD    9D       \n' + //
-									'       QD QC             \n' + //
-									'       JC JD             \n' + //
+									'>            TC 8D KH KS \n' +
+									'    TD KC KD    9D       \n' +
+									'       QD QC             \n' +
+									'       JC JD             \n' +
 									' hand-jammed'
 							)
 								.setCursor({ fixture: 'cascade', data: [1, 0] })
@@ -1226,10 +1226,10 @@ describe('game.touch', () => {
 								.setCursor({ fixture: 'cascade', data: [2, 2] });
 							expect(game.print()).toBe(
 								'' + //
-									'             TC 8D KH KS \n' + //
-									'   |TD|KC KD    9D       \n' + //
-									'       QD QC             \n' + //
-									'      >JC JD             \n' + //
+									'             TC 8D KH KS \n' +
+									'   |TD|KC KD    9D       \n' +
+									'       QD QC             \n' +
+									'      >JC JD             \n' +
 									' cursor set'
 							);
 							expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 2] });
@@ -1290,11 +1290,11 @@ describe('game.touch', () => {
 							game = game.touch({ autoFoundation: false });
 							expect(game.print()).toBe(
 								'' + //
-									'             TC 8D KH KS \n' + //
-									'       KC KD    9D       \n' + //
-									'       QD QC             \n' + //
-									'      >JC JD             \n' + //
-									'       TD                \n' + //
+									'             TC 8D KH KS \n' +
+									'       KC KD    9D       \n' +
+									'       QD QC             \n' +
+									'      >JC JD             \n' +
+									'       TD                \n' +
 									' move 23 TD→JC'
 							);
 							expect(game.previousAction.type).toBe('move');
@@ -1307,10 +1307,10 @@ describe('game.touch', () => {
 					test('empty', () => {
 						game = FreeCell.parse(
 							'' + //
-								'>            TC 8D KH KS \n' + //
-								'    TD KC KD    9D       \n' + //
-								'       QD QC             \n' + //
-								'       JC JD             \n' + //
+								'>            TC 8D KH KS \n' +
+								'    TD KC KD    9D       \n' +
+								'       QD QC             \n' +
+								'       JC JD             \n' +
 								' hand-jammed'
 						)
 							.setCursor({ fixture: 'cascade', data: [1, 0] })
@@ -1318,10 +1318,10 @@ describe('game.touch', () => {
 							.setCursor({ fixture: 'cascade', data: [6, 0] });
 						expect(game.print()).toBe(
 							'' + //
-								'             TC 8D KH KS \n' + //
-								'   |TD|KC KD    9D>      \n' + //
-								'       QD QC             \n' + //
-								'       JC JD             \n' + //
+								'             TC 8D KH KS \n' +
+								'   |TD|KC KD    9D>      \n' +
+								'       QD QC             \n' +
+								'       JC JD             \n' +
 								' cursor set'
 						);
 						expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 0] });
@@ -1382,10 +1382,10 @@ describe('game.touch', () => {
 						game = game.touch({ autoFoundation: false });
 						expect(game.print()).toBe(
 							'' + //
-								'             TC 8D KH KS \n' + //
-								'       KC KD    9D>TD    \n' + //
-								'       QD QC             \n' + //
-								'       JC JD             \n' + //
+								'             TC 8D KH KS \n' +
+								'       KC KD    9D>TD    \n' +
+								'       QD QC             \n' +
+								'       JC JD             \n' +
 								' move 27 TD→cascade'
 						);
 						expect(game.previousAction.type).toBe('move');
@@ -1402,27 +1402,27 @@ describe('game.touch', () => {
 				test('to: cell', () => {
 					const game = FreeCell.parse(
 						'' + //
-							'>            7C 8D TH KS \n' + //
-							'   |TC|   KD JH          \n' + //
-							'   |9D|   QC             \n' + //
-							'   |8C|   JD             \n' + //
+							'>            7C 8D TH KS \n' +
+							'   |TC|   KD JH          \n' +
+							'   |9D|   QC             \n' +
+							'   |8C|   JD             \n' +
 							' hand-jammed'
 					).touch();
 					expect(game.print()).toBe(
 						'' + //
-							'>            7C 8D TH KS \n' + //
-							'   |TC|   KD JH          \n' + //
-							'   |9D|   QC             \n' + //
-							'   |8C|   JD             \n' + //
+							'>            7C 8D TH KS \n' +
+							'   |TC|   KD JH          \n' +
+							'   |9D|   QC             \n' +
+							'   |8C|   JD             \n' +
 							':d KH KC QH QD JC TD 9C \n' +
 							' invalid move 2a TC-9D-8C→cell'
 					);
 					expect(game.print({ includeHistory: true })).toBe(
 						'' + //
-							'             7C 8D TH KS \n' + //
-							'    TC    KD JH          \n' + //
-							'    9D    QC             \n' + //
-							'    8C    JD             \n' + //
+							'             7C 8D TH KS \n' +
+							'    TC    KD JH          \n' +
+							'    9D    QC             \n' +
+							'    8C    JD             \n' +
 							':d KH KC QH QD JC TD 9C \n' +
 							' hand-jammed'
 					);
@@ -1431,27 +1431,27 @@ describe('game.touch', () => {
 				test('to: foundation', () => {
 					const game = FreeCell.parse(
 						'' + //
-							'            >7C 8D TH KS \n' + //
-							'   |TC|   KD JH          \n' + //
-							'   |9D|   QC             \n' + //
-							'   |8C|   JD             \n' + //
+							'            >7C 8D TH KS \n' +
+							'   |TC|   KD JH          \n' +
+							'   |9D|   QC             \n' +
+							'   |8C|   JD             \n' +
 							' hand-jammed'
 					).touch();
 					expect(game.print()).toBe(
 						'' + //
-							'            >7C 8D TH KS \n' + //
-							'   |TC|   KD JH          \n' + //
-							'   |9D|   QC             \n' + //
-							'   |8C|   JD             \n' + //
+							'            >7C 8D TH KS \n' +
+							'   |TC|   KD JH          \n' +
+							'   |9D|   QC             \n' +
+							'   |8C|   JD             \n' +
 							':d KH KC QH QD JC TD 9C \n' +
 							' invalid move 2h TC-9D-8C→7C'
 					);
 					expect(game.print({ includeHistory: true })).toBe(
 						'' + //
-							'             7C 8D TH KS \n' + //
-							'    TC    KD JH          \n' + //
-							'    9D    QC             \n' + //
-							'    8C    JD             \n' + //
+							'             7C 8D TH KS \n' +
+							'    TC    KD JH          \n' +
+							'    9D    QC             \n' +
+							'    8C    JD             \n' +
 							':d KH KC QH QD JC TD 9C \n' +
 							' hand-jammed'
 					);
@@ -1461,10 +1461,10 @@ describe('game.touch', () => {
 					beforeEach(() => {
 						game = FreeCell.parse(
 							'' + //
-								'>            7C 8D TH KS \n' + //
-								'    TC    KD JH          \n' + //
-								'    9D    QC             \n' + //
-								'    8C    JD             \n' + //
+								'>            7C 8D TH KS \n' +
+								'    TC    KD JH          \n' +
+								'    9D    QC             \n' +
+								'    8C    JD             \n' +
 								' hand-jammed'
 						)
 							.setCursor({ fixture: 'cascade', data: [1, 0] })
@@ -1475,11 +1475,11 @@ describe('game.touch', () => {
 						game = game.setCursor({ fixture: 'cascade', data: [4, 0] });
 						expect(game.print()).toBe(
 							'' + //
-								'             7C 8D TH KS \n' + //
-								'   |TC|   KD>JH          \n' + //
-								'   |9D|   QC             \n' + //
-								'   |8C|   JD             \n' + //
-								':d KH KC QH QD JC TD 9C \n' + //
+								'             7C 8D TH KS \n' +
+								'   |TC|   KD>JH          \n' +
+								'   |9D|   QC             \n' +
+								'   |8C|   JD             \n' +
+								':d KH KC QH QD JC TD 9C \n' +
 								' cursor set'
 						);
 						expect(game.cursor).toEqual({ fixture: 'cascade', data: [4, 0] });
@@ -1532,12 +1532,12 @@ describe('game.touch', () => {
 						game = game.touch({ autoFoundation: false });
 						expect(game.print()).toBe(
 							'' + //
-								'             7C 8D TH KS \n' + //
-								'          KD>JH          \n' + //
-								'          QC TC          \n' + //
-								'          JD 9D          \n' + //
-								'             8C          \n' + //
-								':d KH KC QH QD JC TD 9C \n' + //
+								'             7C 8D TH KS \n' +
+								'          KD>JH          \n' +
+								'          QC TC          \n' +
+								'          JD 9D          \n' +
+								'             8C          \n' +
+								':d KH KC QH QD JC TD 9C \n' +
 								' move 25 TC-9D-8C→JH'
 						);
 						expect(game.previousAction.type).toBe('move');
@@ -1555,11 +1555,11 @@ describe('game.touch', () => {
 							game = game.setCursor({ fixture: 'cascade', data: [3, 2] });
 							expect(game.print()).toBe(
 								'' + //
-									'             7C 8D TH KS \n' + //
-									'   |TC|   KD JH          \n' + //
-									'   |9D|   QC             \n' + //
-									'   |8C|  >JD             \n' + //
-									':d KH KC QH QD JC TD 9C \n' + //
+									'             7C 8D TH KS \n' +
+									'   |TC|   KD JH          \n' +
+									'   |9D|   QC             \n' +
+									'   |8C|  >JD             \n' +
+									':d KH KC QH QD JC TD 9C \n' +
 									' cursor set'
 							);
 							expect(game.cursor).toEqual({ fixture: 'cascade', data: [3, 2] });
@@ -1612,14 +1612,14 @@ describe('game.touch', () => {
 							game = game.touch({ autoFoundation: false });
 							expect(game.print()).toBe(
 								'' + //
-									'             7C 8D TH KS \n' + //
-									'          KD JH          \n' + //
-									'          QC             \n' + //
-									'         >JD             \n' + //
-									'          TC             \n' + //
-									'          9D             \n' + //
-									'          8C             \n' + //
-									':d KH KC QH QD JC TD 9C \n' + //
+									'             7C 8D TH KS \n' +
+									'          KD JH          \n' +
+									'          QC             \n' +
+									'         >JD             \n' +
+									'          TC             \n' +
+									'          9D             \n' +
+									'          8C             \n' +
+									':d KH KC QH QD JC TD 9C \n' +
 									' move 24 TC-9D-8C→JD'
 							);
 							expect(game.previousAction.type).toBe('move');
@@ -1633,11 +1633,11 @@ describe('game.touch', () => {
 						game = game.setCursor({ fixture: 'cascade', data: [5, 0] });
 						expect(game.print()).toBe(
 							'' + //
-								'             7C 8D TH KS \n' + //
-								'   |TC|   KD JH>         \n' + //
-								'   |9D|   QC             \n' + //
-								'   |8C|   JD             \n' + //
-								':d KH KC QH QD JC TD 9C \n' + //
+								'             7C 8D TH KS \n' +
+								'   |TC|   KD JH>         \n' +
+								'   |9D|   QC             \n' +
+								'   |8C|   JD             \n' +
+								':d KH KC QH QD JC TD 9C \n' +
 								' cursor set'
 						);
 						expect(game.cursor).toEqual({ fixture: 'cascade', data: [5, 0] });
@@ -1690,11 +1690,11 @@ describe('game.touch', () => {
 						game = game.touch({ autoFoundation: false });
 						expect(game.print()).toBe(
 							'' + //
-								'             7C 8D TH KS \n' + //
-								'          KD JH>TC       \n' + //
-								'          QC    9D       \n' + //
-								'          JD    8C       \n' + //
-								':d KH KC QH QD JC TD 9C \n' + //
+								'             7C 8D TH KS \n' +
+								'          KD JH>TC       \n' +
+								'          QC    9D       \n' +
+								'          JD    8C       \n' +
+								':d KH KC QH QD JC TD 9C \n' +
 								' move 26 TC-9D-8C→cascade'
 						);
 						expect(game.previousAction.type).toBe('move');
@@ -1724,7 +1724,7 @@ describe('game.touch', () => {
 				game = new FreeCell().shuffle32(5).dealAll();
 				game = game.moveByShorthand('53');
 				expect(game.print({ includeHistory: true })).toBe(
-					'' +
+					'' + //
 						'             AD          \n' +
 						' AH 8S 2D QS 4C 9H 2S 3D \n' +
 						' 5C AS 9C KH 4D 2C 3C 4S \n' +
@@ -1758,15 +1758,15 @@ describe('game.touch', () => {
 			test('win', () => {
 				game = FreeCell.parse(
 					'' + //
-						'>KS          JC JD JH TS \n' + //
-						' KC KD KH JS QC QD QH QS \n' + //
+						'>KS          JC JD JH TS \n' +
+						' KC KD KH JS QC QD QH QS \n' +
 						' hand-jammed'
 				)
 					.touch()
 					.setCursor({ fixture: 'cell', data: [1] })
 					.touch();
 				expect(game.print({ includeHistory: true })).toEqual(
-					'' +
+					'' + //
 						'             KC KD KH KS \n' +
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
@@ -1790,7 +1790,7 @@ describe('game.touch', () => {
 
 			test('flourish', () => {
 				game = FreeCell.parse(
-					'' +
+					'' + //
 						'>               KH KD KC \n' +
 						' KS JS 9S 7S 5S 3S AS    \n' +
 						' QS TS 8S 6S 4S 2S       \n' +
@@ -1803,7 +1803,7 @@ describe('game.touch', () => {
 					.touch();
 
 				expect(game.print({ includeHistory: true })).toEqual(
-					'' +
+					'' + //
 						'             KS KH KD KC \n' +
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
@@ -1830,7 +1830,7 @@ describe('game.touch', () => {
 			test('52-cardflourish', () => {
 				game = new FreeCell().dealAll().setCursor({ fixture: 'cascade', data: [3, 6] });
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						'                         \n' +
 						' KS KH KD KC QS QH QD QC \n' +
 						' JS JH JD JC TS TH TD TC \n' +
@@ -1846,7 +1846,7 @@ describe('game.touch', () => {
 					.setCursor({ fixture: 'cascade', data: [5, 5] })
 					.touch();
 				expect(game.print({ includeHistory: true })).toEqual(
-					'' +
+					'' + //
 						'             KS KH KD KC \n' +
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
@@ -1879,7 +1879,7 @@ describe('game.touch', () => {
 				.touch()
 				.setCursor({ fixture: 'cascade', data: [4, 4] });
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					' QS AD KH 2D QC AH JS 4D \n' +
 					' 8H 5D KS 3C 3S 3H JD AC \n' +
 					' 9H 7D KC 5C 9D 5H 2C 2H \n' +
@@ -1909,7 +1909,7 @@ describe('game.touch', () => {
 			]);
 			game = game.touch({ stopWithInvalid: true });
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					' QS AD KH 2D QC AH JS 4D \n' +
 					' 8H 5D KS 3C 3S 3H JD AC \n' +
 					' 9H 7D KC 5C 9D 5H 2C 2H \n' +
@@ -1944,7 +1944,7 @@ describe('game.touch', () => {
 		let game: FreeCell;
 		beforeEach(() => {
 			game = FreeCell.parse(
-				'' +
+				'' + //
 					' 3C 3D    3S             \n' +
 					' KS 2C 2D    2S \n' +
 					' QH             \n' +
@@ -2015,7 +2015,7 @@ describe('game.touch', () => {
 			// semi-unrelated: w/ selection, actually moves
 			game = game.setCursor({ fixture: 'cell', data: [2] }).touch();
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					' 3C 3D>3S                \n' +
 					' KS 2C 2D    2S \n' +
 					' QH             \n' +

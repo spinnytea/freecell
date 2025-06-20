@@ -15,7 +15,7 @@ describe('prioritizeAvailableMoves', () => {
 		// start at 0, move to stacked, move to another sequence (3S -> 4D,4H)
 		test('across sequences from empty', () => {
 			let game = FreeCell.parse(
-				'' +
+				'' + //
 					'             KC JD JH TS \n' +
 					'       KS>JS    QH KH    \n' +
 					'       QD                \n' +
@@ -37,7 +37,7 @@ describe('prioritizeAvailableMoves', () => {
 			expect(game.previousAction.text).toBe('select 6 JS');
 			expect(shorthandPositionPriority(game.availableMoves)).toEqual([['3', 6]]);
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'             KC JD JH TS \n' +
 					'       KS       QH KH    \n' +
 					'       QD      >JS|      \n' +
@@ -49,7 +49,7 @@ describe('prioritizeAvailableMoves', () => {
 		// 3S is on a 5 or something (3S -> 4D,4H)
 		test('across sequences from invalid', () => {
 			let game = FreeCell.parse(
-				'' +
+				'' + //
 					'             KC JD JH TS \n' +
 					'       KS       QH KH    \n' +
 					'       QD         >JS    \n' +
@@ -71,7 +71,7 @@ describe('prioritizeAvailableMoves', () => {
 			expect(game.previousAction.text).toBe('select 3 JS');
 			expect(shorthandPositionPriority(game.availableMoves)).toEqual([['6', 11]]);
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'             KC JD JH TS \n' +
 					'       KS       QH KH    \n' +
 					'       QD                \n' +

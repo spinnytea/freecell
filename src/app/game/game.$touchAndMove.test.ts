@@ -4,7 +4,7 @@ describe('game.$touchAndMove', () => {
 	let game: FreeCell;
 	beforeEach(() => {
 		game = FreeCell.parse(
-			'' +
+			'' + //
 				' 4S 7S 2S   >AH          \n' +
 				' 8D 6C JS 3D 3H JD 8C 6S \n' +
 				' 2H 9S QC 9C 7D    9H KH \n' +
@@ -22,7 +22,7 @@ describe('game.$touchAndMove', () => {
 
 	test('basic', () => {
 		expect(game.$touchAndMove({ fixture: 'cascade', data: [2, 8] }).print()).toBe(
-			'' +
+			'' + //
 				' 4S 7S 2S    AH          \n' +
 				' 8D 6C JS 3D 3H>JD 8C 6S \n' +
 				' 2H 9S QC 9C 7D TC 9H KH \n' +
@@ -71,7 +71,7 @@ describe('game.$touchAndMove', () => {
 		// REVIEW (history) `select 3` isn't clear on it's own, see how it's the same for all of these?
 		game = game.$touchAndMove({ fixture: 'cascade', data: [2, 6] });
 		expect(game.print()).toBe(
-			'' +
+			'' + //
 				' 4S 7S 2S    AH          \n' +
 				' 8D 6C JS 3D 3H JD 8C 6S \n' +
 				' 2H 9S QC 9C 7D    9H KH \n' +

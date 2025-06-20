@@ -27,7 +27,7 @@ describe('game.autoMove', () => {
 		describe('cell', () => {
 			test('cycle through cell', () => {
 				let game = FreeCell.parse(
-					'' +
+					'' + //
 						'>JC          9C 9D 9H 9S \n' +
 						' QC QD QH QS KC KD KH KS \n' +
 						' TC TD TH TS    JD JH JS \n' +
@@ -45,7 +45,7 @@ describe('game.autoMove', () => {
 				game = game.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						'   >JC       9C 9D 9H 9S \n' +
 						' QC QD QH QS KC KD KH KS \n' +
 						' TC TD TH TS    JD JH JS \n' +
@@ -63,7 +63,7 @@ describe('game.autoMove', () => {
 				game = game.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						'      >JC    9C 9D 9H 9S \n' +
 						' QC QD QH QS KC KD KH KS \n' +
 						' TC TD TH TS    JD JH JS \n' +
@@ -81,7 +81,7 @@ describe('game.autoMove', () => {
 				game = game.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						'         >JC 9C 9D 9H 9S \n' +
 						' QC QD QH QS KC KD KH KS \n' +
 						' TC TD TH TS    JD JH JS \n' +
@@ -99,7 +99,7 @@ describe('game.autoMove', () => {
 				game = game.autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
-					'' +
+					'' + //
 						'>JC          9C 9D 9H 9S \n' +
 						' QC QD QH QS KC KD KH KS \n' +
 						' TC TD TH TS    JD JH JS \n' +
@@ -128,8 +128,8 @@ describe('game.autoMove', () => {
 			test('cycles through cascade:empty (4)', () => {
 				let game = FreeCell.parse(
 					'' + //
-						' QC KD KH KS JC QD QH QS \n' + //
-						'>KC          \n' + //
+						' QC KD KH KS JC QD QH QS \n' +
+						'>KC          \n' +
 						' hand-jammed'
 				);
 				expect(game.tableau.length).toBe(4);
@@ -158,8 +158,8 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' QC KD KH KS JC QD QH QS \n' + //
-						'   >KC       \n' + //
+						' QC KD KH KS JC QD QH QS \n' +
+						'   >KC       \n' +
 						' move 12 KC→cascade'
 				);
 
@@ -187,8 +187,8 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' QC KD KH KS JC QD QH QS \n' + //
-						'         >KC \n' + //
+						' QC KD KH KS JC QD QH QS \n' +
+						'         >KC \n' +
 						' move 14 KC→cascade'
 				);
 
@@ -196,8 +196,8 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' QC KD KH KS JC QD QH QS \n' + //
-						'>KC          \n' + //
+						' QC KD KH KS JC QD QH QS \n' +
+						'>KC          \n' +
 						' hand-jammed'
 				);
 			});
@@ -205,8 +205,8 @@ describe('game.autoMove', () => {
 			test('cycles through cascade:empty (8)', () => {
 				let game = FreeCell.parse(
 					'' + //
-						' QC KD KH KS JC QD QH QS \n' + //
-						'>KC                      \n' + //
+						' QC KD KH KS JC QD QH QS \n' +
+						'>KC                      \n' +
 						' hand-jammed'
 				);
 				expect(game.tableau.length).toBe(8);
@@ -215,8 +215,8 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' QC KD KH KS JC QD QH QS \n' + //
-						'   >KC                   \n' + //
+						' QC KD KH KS JC QD QH QS \n' +
+						'   >KC                   \n' +
 						' move 12 KC→cascade'
 				);
 
@@ -232,8 +232,8 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' QC KD KH KS JC QD QH QS \n' + //
-						'               >KC       \n' + //
+						' QC KD KH KS JC QD QH QS \n' +
+						'               >KC       \n' +
 						' move 16 KC→cascade'
 				);
 
@@ -245,8 +245,8 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' QC KD KH KS JC QD QH QS \n' + //
-						'                     >KC \n' + //
+						' QC KD KH KS JC QD QH QS \n' +
+						'                     >KC \n' +
 						' move 18 KC→cascade'
 				);
 
@@ -254,8 +254,8 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' QC KD KH KS JC QD QH QS \n' + //
-						'>KC                      \n' + //
+						' QC KD KH KS JC QD QH QS \n' +
+						'>KC                      \n' +
 						' hand-jammed'
 				);
 			});
@@ -263,9 +263,9 @@ describe('game.autoMove', () => {
 			test('cycles through cascade:sequence', () => {
 				let game = FreeCell.parse(
 					'' + //
-						'             QC TD KH QS \n' + //
-						' JD KC       KS          \n' + //
-						' KD>QD                   \n' + //
+						'             QC TD KH QS \n' +
+						' JD KC       KS          \n' +
+						' KD>QD                   \n' +
 						' hand-jammed'
 				);
 
@@ -273,9 +273,9 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						'             QC TD KH QS \n' + //
-						' JD KC      >KS          \n' + //
-						' KD          QD          \n' + //
+						'             QC TD KH QS \n' +
+						' JD KC      >KS          \n' +
+						' KD          QD          \n' +
 						' move 25 QD→KS'
 				);
 
@@ -286,9 +286,9 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						'             QC TD KH QS \n' + //
-						' JD>KC       KS          \n' + //
-						' KD QD                   \n' + //
+						'             QC TD KH QS \n' +
+						' JD>KC       KS          \n' +
+						' KD QD                   \n' +
 						' hand-jammed'
 				);
 			});
@@ -305,9 +305,9 @@ describe('game.autoMove', () => {
 				test('cascade:sequence to cell and cascade:empty', () => {
 					let game = FreeCell.parse(
 						'' + //
-							'             QC TD KH QS \n' + //
-							' JD KC       KS          \n' + //
-							' KD>QD                   \n' + //
+							'             QC TD KH QS \n' +
+							' JD KC       KS          \n' +
+							' KD>QD                   \n' +
 							' hand-jammed'
 					).touch();
 
@@ -374,9 +374,9 @@ describe('game.autoMove', () => {
 
 					expect(game.print()).toBe(
 						'' + //
-							'             QC TD KH QS \n' + //
-							' JD KC      >KS          \n' + //
-							' KD          QD          \n' + //
+							'             QC TD KH QS \n' +
+							' JD KC      >KS          \n' +
+							' KD          QD          \n' +
 							' move 25 QD→KS'
 					);
 				});
@@ -403,7 +403,7 @@ describe('game.autoMove', () => {
 					test('one', () => {
 						expect(
 							FreeCell.parse(
-								'' +
+								'' + //
 									'    6H QS    AS 3C 3H 3D \n' +
 									' JD 9S 6C KH KC 2S QH JH \n' +
 									' TS 8D 5D QC QD KD JS TC \n' +
@@ -419,7 +419,7 @@ describe('game.autoMove', () => {
 								.autoMove({ autoFoundation: false })
 								.print()
 						).toBe(
-							'' +
+							'' + //
 								'    6H QS    AS>4C 3H 3D \n' +
 								' JD 9S 6C KH KC 2S QH JH \n' +
 								' TS 8D 5D QC QD KD JS TC \n' +
@@ -440,7 +440,7 @@ describe('game.autoMove', () => {
 					test('two', () => {
 						expect(
 							FreeCell.parse(
-								'' +
+								'' + //
 									' JC 9C>3S 4S AH 2C 2S    \n' +
 									'    TH 4C JS KD 2H QD 5H \n' +
 									'    7C 6D KH QH 6S 4D 5S \n' +
@@ -455,7 +455,7 @@ describe('game.autoMove', () => {
 								.autoMove({ autoFoundation: false })
 								.print()
 						).toBe(
-							'' +
+							'' + //
 								' JC 9C    4S AH 2C>3S    \n' +
 								'    TH 4C JS KD 2H QD 5H \n' +
 								'    7C 6D KH QH 6S 4D 5S \n' +
@@ -473,7 +473,7 @@ describe('game.autoMove', () => {
 				test('King prefers cascade:empty', () => {
 					expect(
 						FreeCell.parse(
-							'' +
+							'' + //
 								' KD QD 7S    AS AD       \n' +
 								' 2C JC 6C 2D AH 9D    QC \n' +
 								' 9S TD 4H QS 2S 8S    8H \n' +
@@ -493,7 +493,7 @@ describe('game.autoMove', () => {
 							.autoMove({ autoFoundation: false })
 							.print()
 					).toBe(
-						'' +
+						'' + //
 							' KD QD 7S    AS AD       \n' +
 							' 2C JC 6C 2D AH 9D>KS QC \n' +
 							' 9S TD 4H QS 2S 8S    8H \n' +
@@ -513,7 +513,7 @@ describe('game.autoMove', () => {
 
 				test('Ace prefers foundation', () => {
 					const game = FreeCell.parse(
-						'' +
+						'' + //
 							'                         \n' +
 							' 3C TS 6S 5D 9H QC AH 9C \n' +
 							' 4H 8S 8C JS 2S 2H 3D 3H \n' +
@@ -558,7 +558,7 @@ describe('game.autoMove', () => {
 					]);
 
 					expect(game.autoMove({ autoFoundation: false }).print()).toBe(
-						'' +
+						'' + //
 							'            >AD          \n' +
 							' 3C TS 6S 5D 9H QC AH 9C \n' +
 							' 4H 8S 8C JS 2S 2H 3D 3H \n' +
@@ -577,10 +577,10 @@ describe('game.autoMove', () => {
 			test('cycles through cascade:empty', () => {
 				let game = FreeCell.parse(
 					'' + //
-						'             QC TD KH TS \n' + //
-						' KD>KC       KS          \n' + //
-						' QS QD                   \n' + //
-						' JD JS                   \n' + //
+						'             QC TD KH TS \n' +
+						' KD>KC       KS          \n' +
+						' QS QD                   \n' +
+						' JD JS                   \n' +
 						' hand-jammed'
 				);
 
@@ -588,10 +588,10 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						'             QC TD KH TS \n' + //
-						' KD   >KC    KS          \n' + //
-						' QS    QD                \n' + //
-						' JD    JS                \n' + //
+						'             QC TD KH TS \n' +
+						' KD   >KC    KS          \n' +
+						' QS    QD                \n' +
+						' JD    JS                \n' +
 						' move 23 KC-QD-JS→cascade'
 				);
 
@@ -603,10 +603,10 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						'             QC TD KH TS \n' + //
-						' KD          KS>KC       \n' + //
-						' QS             QD       \n' + //
-						' JD             JS       \n' + //
+						'             QC TD KH TS \n' +
+						' KD          KS>KC       \n' +
+						' QS             QD       \n' +
+						' JD             JS       \n' +
 						' move 26 KC-QD-JS→cascade'
 				);
 
@@ -620,10 +620,10 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						'             QC TD KH TS \n' + //
-						' KD>KC       KS          \n' + //
-						' QS QD                   \n' + //
-						' JD JS                   \n' + //
+						'             QC TD KH TS \n' +
+						' KD>KC       KS          \n' +
+						' QS QD                   \n' +
+						' JD JS                   \n' +
 						' hand-jammed'
 				);
 			});
@@ -631,10 +631,10 @@ describe('game.autoMove', () => {
 			test('cycles through cascade:sequence', () => {
 				let game = FreeCell.parse(
 					'' + //
-						'             QC TD KH TS \n' + //
-						' KD KC       KS          \n' + //
-						' QS>QD                   \n' + //
-						' JD JS                   \n' + //
+						'             QC TD KH TS \n' +
+						' KD KC       KS          \n' +
+						' QS>QD                   \n' +
+						' JD JS                   \n' +
 						' hand-jammed'
 				);
 
@@ -642,10 +642,10 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						'             QC TD KH TS \n' + //
-						' KD KC      >KS          \n' + //
-						' QS          QD          \n' + //
-						' JD          JS          \n' + //
+						'             QC TD KH TS \n' +
+						' KD KC      >KS          \n' +
+						' QS          QD          \n' +
+						' JD          JS          \n' +
 						' move 25 QD-JS→KS'
 				);
 
@@ -656,10 +656,10 @@ describe('game.autoMove', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						'             QC TD KH TS \n' + //
-						' KD>KC       KS          \n' + //
-						' QS QD                   \n' + //
-						' JD JS                   \n' + //
+						'             QC TD KH TS \n' +
+						' KD>KC       KS          \n' +
+						' QS QD                   \n' +
+						' JD JS                   \n' +
 						' hand-jammed'
 				);
 			});
@@ -682,19 +682,19 @@ describe('game.autoMove', () => {
 		test('move', () => {
 			const game = FreeCell.parse(
 				'' + //
-					'             QC TD KH QS \n' + //
-					' JD KC       KS          \n' + //
-					' KD>QD                   \n' + //
+					'             QC TD KH QS \n' +
+					' JD KC       KS          \n' +
+					' KD>QD                   \n' +
 					' hand-jammed'
 			)
 				.touch()
 				.autoMove();
 
 			expect(game.print()).toBe(
-				'' +
-					'             QC TD KH QS \n' + //
-					' JD KC      >KS          \n' + //
-					' KD          QD          \n' + //
+				'' + //
+					'             QC TD KH QS \n' +
+					' JD KC      >KS          \n' +
+					' KD          QD          \n' +
 					' move 25 QD→KS'
 			);
 			expect(game.previousAction).toEqual({
@@ -712,16 +712,16 @@ describe('game.autoMove', () => {
 		test('move-foundation', () => {
 			const game = FreeCell.parse(
 				'' + //
-					'             QC TD KH TS \n' + //
-					' KD KC       KS          \n' + //
-					' QS>QD                   \n' + //
-					' JD JS                   \n' + //
+					'             QC TD KH TS \n' +
+					' KD KC       KS          \n' +
+					' QS>QD                   \n' +
+					' JD JS                   \n' +
 					' hand-jammed'
 			)
 				.touch()
 				.autoMove();
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'            >KC KD KH KS \n' +
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
@@ -750,17 +750,17 @@ describe('game.autoMove', () => {
 		test('auto-foundation', () => {
 			const game = FreeCell.parse(
 				'' + //
-					'             QC TD KH TS \n' + //
-					' KD KC       KS          \n' + //
-					' QS>QD                   \n' + //
-					' JD JS                   \n' + //
+					'             QC TD KH TS \n' +
+					' KD KC       KS          \n' +
+					' QS>QD                   \n' +
+					' JD JS                   \n' +
 					' hand-jammed'
 			)
 				.touch()
 				.autoMove({ autoFoundation: false })
 				.autoFoundationAll();
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'            >KC KD KH KS \n' +
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
@@ -787,7 +787,7 @@ describe('game.autoMove', () => {
 	describe('edges', () => {
 		test('do not autoMove if previous touch was invalid', () => {
 			let game = FreeCell.parse(
-				'' +
+				'' + //
 					'>                        \n' +
 					' 3H 4S 9H 5C 2H 9S KC QC \n' +
 					' 7S 4D 5D 9D KS 2S 3C TC \n' +
@@ -807,7 +807,7 @@ describe('game.autoMove', () => {
 			// do not move card
 			game = game.autoMove({ autoFoundation: false });
 			expect(game.print()).toBe(
-				'' +
+				'' + //
 					'                         \n' +
 					' 3H 4S 9H 5C 2H 9S KC QC \n' +
 					' 7S 4D 5D 9D KS 2S 3C TC \n' +

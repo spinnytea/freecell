@@ -57,7 +57,7 @@ describe('game.shuffle32', () => {
 			location: { fixture: 'cascade', data: [3, 6] },
 		});
 		expect(game.print()).toBe(
-			'' +
+			'' + //
 				'>                        \n' +
 				' JD 2D 9H JC 5D 7H 7C 5H \n' +
 				' KD KC 9S 5S AD QC KH 3H \n' +
@@ -77,7 +77,7 @@ describe('game.shuffle32', () => {
 		game = game.dealAll();
 		expect(game.previousAction).toEqual({ text: 'deal all cards', type: 'deal' });
 		expect(game.print()).toBe(
-			'' +
+			'' + //
 				'>                        \n' +
 				' 7D AD 5C 3S 5S 8C 2D AH \n' +
 				' TD 7S QD AC 6D 8H AS KH \n' +
@@ -101,30 +101,30 @@ describe('game.shuffle32', () => {
 	test('partial deck', () => {
 		const game = FreeCell.parse(
 			'' + //
-				'>JC          9C 9D 9H 9S \n' + //
-				'                         \n' + //
+				'>JC          9C 9D 9H 9S \n' +
+				'                         \n' +
 				' hand-jammed'
 		);
 
 		expect(game.print()).toBe(
 			'' + //
-				'>JC          9C 9D 9H 9S \n' + //
-				'                         \n' + //
-				':d KS KH KD KC QS QH QD QC JS JH JD TS TH TD TC \n' + //
+				'>JC          9C 9D 9H 9S \n' +
+				'                         \n' +
+				':d KS KH KD KC QS QH QD QC JS JH JD TS TH TD TC \n' +
 				' hand-jammed'
 		);
 		expect(game.shuffle32(0).print()).toBe(
 			'' + //
-				'>JC          9C 9D 9H 9S \n' + //
-				'                         \n' + //
-				':d QD JH QH TD TC QC JD KH JS QS TS KD TH KC KS \n' + //
+				'>JC          9C 9D 9H 9S \n' +
+				'                         \n' +
+				':d QD JH QH TD TC QC JD KH JS QS TS KD TH KC KS \n' +
 				' shuffle deck (0)'
 		);
 		expect(game.shuffle32(0).shuffle32(0).print()).toBe(
 			'' + //
-				'>JC          9C 9D 9H 9S \n' + //
-				'                         \n' + //
-				':d JD QS QC KC KS KH TS JH JS TC KD QH TH TD QD \n' + //
+				'>JC          9C 9D 9H 9S \n' +
+				'                         \n' +
+				':d JD QS QC KC KS KH TS JH JS TC KD QH TH TD QD \n' +
 				' shuffle deck (0)'
 		);
 	});

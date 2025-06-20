@@ -19,7 +19,7 @@ describe('game.$moveCardToPosition', () => {
 		// TODO (techdebt) (2-priority) should we allow selecting the deck if we can't do anything with it?
 		game = game.$selectCard('AH');
 		expect(game.print()).toBe(
-			'' +
+			'' + //
 				'                         \n' +
 				' KS KH KD KC QS QH QD QC \n' +
 				' JS JH JD JC TS TH TD TC \n' +
@@ -51,7 +51,7 @@ describe('game.$moveCardToPosition', () => {
 
 		game = game.dealAll();
 		expect(game.print()).toBe(
-			'' +
+			'' + //
 				'>                        \n' +
 				' KS KH KD KC QS QH QD QC \n' +
 				' JS JH JD JC TS TH TD TC \n' +
@@ -64,10 +64,11 @@ describe('game.$moveCardToPosition', () => {
 		);
 		game = game.$touchAndMove('AS');
 		expect(game.print()).toBe(
-			'            >KS KH KD KC \n' + //
-				'                         \n' + //
-				':    Y O U   W I N !    :\n' + //
-				'                         \n' + //
+			'' + //
+				'            >KS KH KD KC \n' +
+				'                         \n' +
+				':    Y O U   W I N !    :\n' +
+				'                         \n' +
 				' move 5h AS→foundation (flourish 167823412345678123456781234567812345678123456781234 2S,AH,AD,AC,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)'
 		);
 
@@ -76,10 +77,11 @@ describe('game.$moveCardToPosition', () => {
 		expect(game.$moveCardToPosition('AH', 'a')).toBe(game);
 		// game = game.moveCardToPosition('AH', 'a');
 		// expect(game.print()).toBe(
-		// 	'>            KS KH KD KC \n' + //
-		// 		'                         \n' + //
-		// 		':    Y O U   W I N !    :\n' + //
-		// 		'                         \n' + //
+		// 	'' + //
+		// 		'>            KS KH KD KC \n' +
+		// 		'                         \n' +
+		// 		':    Y O U   W I N !    :\n' +
+		// 		'                         \n' +
 		// 		' touch stop'
 		// );
 
@@ -87,10 +89,11 @@ describe('game.$moveCardToPosition', () => {
 		//  - the only time the deck is on screen, touching it will deal cards
 		game = game.$selectCard('JS');
 		expect(game.print()).toBe(
-			'            >KS KH KD KC \n' + //
-				'                         \n' + //
-				':    Y O U   W I N !    :\n' + //
-				'                         \n' + //
+			'' + //
+				'            >KS KH KD KC \n' +
+				'                         \n' +
+				':    Y O U   W I N !    :\n' +
+				'                         \n' +
 				' touch stop'
 		);
 		expect(game.selection).toBe(null);

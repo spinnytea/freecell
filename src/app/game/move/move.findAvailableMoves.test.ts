@@ -11,7 +11,7 @@ describe('game/move.findAvailableMoves', () => {
 	test('init deal default', () => {
 		game = game.dealAll();
 		expect(game.print()).toBe(
-			'' +
+			'' + //
 				'>                        \n' +
 				' 8H 5D KS 3C 3S 3H JD AC \n' +
 				' 9H 7D KC 5C 9D 5H 2C 2H \n' +
@@ -27,7 +27,7 @@ describe('game/move.findAvailableMoves', () => {
 	test('init deal demo', () => {
 		game = game.dealAll({ demo: true });
 		expect(game.print()).toBe(
-			'' +
+			'' + //
 				'>QS AD KH 2D QC AH JS 4D \n' +
 				' 8H 5D KS 3C 3S 3H JD AC \n' +
 				' 9H 7D KC 5C 9D 5H 2C 2H \n' +

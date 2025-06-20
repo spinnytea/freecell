@@ -25,7 +25,7 @@ gsap.registerPlugin(Draggable);
 // const gamePrint_52CardFlourish2 = '>            KH KC KD KS \n                         \n hand-jammed';
 // XXX (techdebt) somehow this one is getting shuffled when it's reset??
 // const gamePrint_52CardFlourish =
-// '' +
+// '' + //
 // 	   '>                        \n'+
 //       '                         \n'+
 //       ':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
@@ -96,10 +96,10 @@ const gamePrint_animations: { nextActionText: string; gamePrint: string }[] = [
 	// 	//  - we need to set it during `useState` and allow `newGame` to start a new game
 	// 	nextActionText: 'init',
 	// 	gamePrint:
-	// 		'>            KH KS KD KC \n' + //
-	// 		'                         \n' + //
-	// 		':    Y O U   W I N !    :\n' + //
-	// 		'                         \n' + //
+	// 		'>            KH KS KD KC \n' +
+	// 		'                         \n' +
+	// 		':    Y O U   W I N !    :\n' +
+	// 		'                         \n' +
 	// 		` hand-jammed`,
 	// },
 ];

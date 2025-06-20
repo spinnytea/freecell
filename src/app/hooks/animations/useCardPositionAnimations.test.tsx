@@ -127,10 +127,10 @@ describe('useCardPositionAnimations', () => {
 
 			test('win -> init', () => {
 				const gameStateOne =
-					'>            KC KD KH KS \n' + //
-					'                         \n' + //
-					':    Y O U   W I N !    :\n' + //
-					'                         \n' + //
+					'>            KC KD KH KS \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
 					' hand-jammed';
 				const gameStateTwo = newGameState;
 				expect(gameStateTwo.previousAction).toEqual({
@@ -381,19 +381,19 @@ describe('useCardPositionAnimations', () => {
 			test('multiple with overlap', () => {
 				const gameStateOne = FreeCell.parse(
 					'' + //
-						'             QC TD KH TS \n' + //
-						' KD KC       KS          \n' + //
-						' QS>QD|                  \n' + //
-						' JD|JS|                  \n' + //
+						'             QC TD KH TS \n' +
+						' KD KC       KS          \n' +
+						' QS>QD|                  \n' +
+						' JD|JS|                  \n' +
 						' select 2 QD-JS'
 				);
 				const gameStateTwo = gameStateOne.autoMove();
 				expect(gameStateTwo.print()).toBe(
-					'' +
-						'            >KC KD KH KS \n' + //
-						'                         \n' + //
-						':    Y O U   W I N !    :\n' + //
-						'                         \n' + //
+					'' + //
+						'            >KC KD KH KS \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
 						' move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)'
 				);
 				expect(gameStateTwo.previousAction).toEqual({
@@ -484,7 +484,7 @@ describe('useCardPositionAnimations', () => {
 			*/
 			test('selection goes to foundation', () => {
 				const gameStateOne = FreeCell.parse(
-					'' +
+					'' + //
 						' 4S 7S 2S    AH          \n' +
 						' 8D 6C JS 3D 3H    8C 6S \n' +
 						' 2H 9S QC 9C 7D    9H JD \n' +
@@ -551,10 +551,10 @@ describe('useCardPositionAnimations', () => {
 			beforeEach(() => {
 				gameStateOne = FreeCell.parse(
 					'' + //
-						' 3C 4C    AC 2D       \n' + //
-						'>KC TH    KD \n' + //
-						' QD       QC \n' + //
-						' JC          \n' + //
+						' 3C 4C    AC 2D       \n' +
+						'>KC TH    KD \n' +
+						' QD       QC \n' +
+						' JC          \n' +
 						' hand-jammed'
 				);
 			});
@@ -1454,7 +1454,7 @@ describe('useCardPositionAnimations', () => {
 				type: 'move',
 			});
 			expect(gameStateOne.print({ includeHistory: true })).toBe(
-				'' +
+				'' + //
 					'    3H 8D 4D AC 2D AH 2S \n' +
 					' 8H JC 9D 9C KD KC KS 5C \n' +
 					' 7C JD 8S 4C QS    QH 2H \n' +
@@ -1564,7 +1564,7 @@ describe('useCardPositionAnimations', () => {
 		test('Setting all cards after refresh then touch stop', () => {
 			const gameStateOne = new FreeCell().shuffle32(24827).dealAll().moveByShorthand('7a');
 			expect(gameStateOne.print({ includeHistory: true })).toBe(
-				'' +
+				'' + //
 					' 8H          AS AD       \n' +
 					' 8D 6C JS 3D 3H 9D 8C 6S \n' +
 					' 2H 9S QC 9C 7D 2S 9H JD \n' +
@@ -1579,7 +1579,7 @@ describe('useCardPositionAnimations', () => {
 			);
 			const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [0] }).touch();
 			expect(gameStateTwo.print()).toBe(
-				'' +
+				'' + //
 					' 8H         >AS AD       \n' +
 					' 8D 6C JS 3D 3H 9D 8C 6S \n' +
 					' 2H 9S QC 9C 7D 2S 9H JD \n' +
