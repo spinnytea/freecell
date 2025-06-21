@@ -122,6 +122,10 @@ describe('game.$touchByPosition', () => {
 				]);
 			});
 
+			// we are making a selection _without regard to the next move_
+			// and to preserve some of the mystery
+			// if we cannot move to the next place selected, we will try moveByShorthand, which will account for maxinim suze
+			// but maybe that's not the intent, this is just a first selection
 			test('picks the whole sequence even when we cannot move the whole thing', () => {
 				const game = FreeCell.parse(gamePrint).$touchByPosition('4');
 				expect(game.previousAction).toEqual({
@@ -142,6 +146,33 @@ describe('game.$touchByPosition', () => {
 					peekOnly: false,
 				});
 				expect(game.availableMoves).toEqual([]);
+			});
+
+			test('tanget: can then go on to other tasks', () => {
+				let game = FreeCell.parse(gamePrint).$touchByPosition('4');
+				expect(game.previousAction).toEqual({
+					text: 'select 4 KC-QD-JS-TD-9C-8D-7C',
+					type: 'select',
+				});
+				expect(game.selection).toBeTruthy();
+				expect(game.availableMoves).toBeTruthy();
+
+				game = game.moveCursor('down').moveCursor('down').touch();
+				expect(game.previousAction).toEqual({
+					text: 'select 4 JS-TD-9C-8D-7C',
+					type: 'select',
+				});
+				expect(game.selection).toBeTruthy();
+				expect(game.availableMoves).toBeTruthy();
+
+				// 4 is already selected, this will clear it
+				game = game.$touchByPosition('4');
+				expect(game.previousAction).toEqual({
+					text: 'deselect 4 JS-TD-9C-8D-7C',
+					type: 'deselect',
+				});
+				expect(game.selection).toBeFalsy();
+				expect(game.availableMoves).toBeFalsy();
 			});
 		});
 

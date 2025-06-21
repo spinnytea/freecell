@@ -832,6 +832,12 @@ export class FreeCell {
 			// FIXME refactor out select from touch
 			return this.setCursor(location).touch();
 		}
+
+		// clear selection if touching the same position
+		if (position === shorthandPosition(this.selection.location)) {
+			return this.clearSelection();
+		}
+
 		// FIXME move card to destination
 		//  - try to move the card as selected
 		//  - try to move by shorthand
