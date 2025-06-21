@@ -78,6 +78,8 @@ interface OptionsAutoFoundation {
 		we'll still need this to test the animations, until we find another real-world example to circumvent
 
 		@deprecated this is just for unit testing - can we avoid using it even there with actual examples?
+		 - {@link moveByShorthand} has a valid usecase for this
+		 - {@link $moveCardToPosition} has a valid usecase for this
 	*/
 	stopWithInvalid?: boolean;
 
@@ -633,10 +635,14 @@ export class FreeCell {
 	moveByShorthand(shorthandMove: string, { autoFoundation }: OptionsAutoFoundation = {}): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
 		// REVIEW (techdebt) break touch up unto:
-		//  - "selcet this card"
+		//  - "select this card"
 		//  - "moveCards here"
 		//  -  current impl works, but feels… wrong
-		return this.clearSelection().setCursor(from).touch().setCursor(to).touch({ autoFoundation });
+		return this.clearSelection()
+			.setCursor(from)
+			.touch()
+			.setCursor(to)
+			.touch({ autoFoundation, stopWithInvalid: true });
 	}
 
 	restart(): FreeCell {
@@ -871,11 +877,11 @@ export class FreeCell {
 		{ autoFoundation }: OptionsAutoFoundation = {}
 	): FreeCell {
 		const g = this.$selectCard(shorthand);
-		if (g.selection?.peekOnly) return this;
-		if (!g.availableMoves?.length) return this;
+		if (!g.selection || !g.availableMoves) return g;
+		if (g.selection.peekOnly) return this;
 		// HACK (techdebt) (controls) using parseShorthandMove just to come up with `to` is a bit overkill
 		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${position}`, g.cursor);
-		return g.setCursor(to).touch({ autoFoundation });
+		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
 	}
 
 	printFoundation(): string {

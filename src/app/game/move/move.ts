@@ -575,7 +575,7 @@ export function parseShorthandMove(
 
 	if (to_location.fixture === 'cascade') {
 		// clamp
-		to_location.data[1] = game.tableau[to_location.data[0]].length - 1;
+		to_location.data[1] = Math.max(0, game.tableau[to_location.data[0]].length - 1);
 	}
 
 	// clean up from_location based on MoveSourceType
@@ -639,16 +639,11 @@ export function parseShorthandPositionForSelect(
 ): CardLocation | null {
 	const from_location = parseShorthandPosition_INCOMPLETE(position);
 
-	// FIXME verify position wrt game - e.g. cellCount,cascadeCount
+	// verify position wrt game - e.g. cellCount,cascadeCount
 	switch (from_location.fixture) {
 		case 'deck':
-			// there is no shorthand for deck
-			// it's not a location to move from/to
-			// but even IFF there was, __clampCursor can handle it
-			// (each index is NOT getting it's own letter,
-			//  so iff we can pick any place,
-			//  it'll be the start or end or by numberical value
-			//  so why _not_ just clamp it)
+			// there is no shorthand for deck (it's not a location to move from/to), but even IFF there was, __clampCursor can handle it
+			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
 			break;
 		case 'cell':
 			if (from_location.data[0] < 0) return null; // can't happen?
@@ -670,11 +665,8 @@ export function parseShorthandPositionForSelect(
 			let d1 = from_location.data[1];
 			// moving to cascade:empty, move entire sequence
 			// while adhearing to the max sequence length
-			// FIXME do we account for mmsl here?
-			// const mmsl = maxMovableSequenceLength(game) / 2;
 			while (
 				d1 > 0 &&
-				// from_location.data[1] - d1 + 1 < mmsl &&
 				canStackCascade(
 					game.tableau[from_location.data[0]][d1 - 1],
 					game.tableau[from_location.data[0]][d1]

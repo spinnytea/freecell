@@ -36,13 +36,15 @@ export enum ControlSchemes {
 	Keyboard = 'keyboard',
 
 	/**
-		set cursor + move (hotkeys for columns; shorthandPositio/{@link Position} directly)
-		FIXME implementé
+		set cursor + move
+
+		hotkeys for columns, shorthandPosition / Position directly
 	*/
 	Hotkeys = 'keyboard hotkeys',
 
 	/*
 		set cursor + touch (click on columns (d0), not cards (d0, d1); shorthandPosition directly)
+
 		FIXME implementé
 		 - touchByPosition but with the mouse
 		 - this could be "clicking on the background" rather than "clicking on a card"
