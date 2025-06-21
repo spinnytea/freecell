@@ -18,6 +18,7 @@ import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 import { useClickSetupControls } from '@/app/hooks/controls/useClickSetupControls';
 import { useKeybaordArrowControls } from '@/app/hooks/controls/useKeybaordArrowControls';
 import { useKeybaordMiscControls } from '@/app/hooks/controls/useKeybaordMiscControls';
+import { useKeyboardHotkeysControls } from '@/app/hooks/controls/useKeyboardHotkeysControls';
 
 export interface GameBoardDisplayOptions {
 	showSettingsButton?: boolean;
@@ -58,6 +59,7 @@ export default function GameBoard({
 
 	useKeybaordMiscControls();
 	useKeybaordArrowControls();
+	useKeyboardHotkeysControls();
 	const handleClickSetup = useClickSetupControls();
 	const gameBoardRef = useRef<HTMLElement | null>(null);
 	// REVIEW (techdebt) when should we use gameBoardIdRef vs gameBoardId?

@@ -35,16 +35,19 @@ export enum ControlSchemes {
 	*/
 	Keyboard = 'keyboard',
 
-	/*
-		set cursor + touch (hotkeys for columns; shorthandPosition directly)
-		{@link Position}
-		@deprecated TODO (controls) (4-priority) not yet implemented
+	/**
+		set cursor + move (hotkeys for columns; shorthandPositio/{@link Position} directly)
+		FIXME implementé
 	*/
-	// Hotkeys = 'keyboard hotkeys',
+	Hotkeys = 'keyboard hotkeys',
 
 	/*
 		set cursor + touch (click on columns (d0), not cards (d0, d1); shorthandPosition directly)
-		@deprecated TODO (controls) not yet implemented
+		FIXME implementé
+		 - touchByPosition but with the mouse
+		 - this could be "clicking on the background" rather than "clicking on a card"
+		 - is "clicking on a placeholder" identical (touch vs touchByPosition)? (probably‽ test it! :D :D)
+		   i guess we can just disable it for cell/foundation specifically
 	*/
 	// MouseColumns = 'mouse hotcolumns',
 

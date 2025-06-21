@@ -8,6 +8,7 @@ export function useKeybaordArrowControls() {
 	const [, setGame] = useContext(GameContext);
 	const [{ showSettingsDialog, enabledControlSchemes }, setSettings] = useContext(SettingsContext);
 	const enableKeyboard = enabledControlSchemes.has(ControlSchemes.Keyboard);
+	const enableHotkeys = enabledControlSchemes.has(ControlSchemes.Hotkeys);
 
 	useEffect(() => {
 		if (showSettingsDialog) return;
@@ -16,27 +17,39 @@ export function useKeybaordArrowControls() {
 			const { key } = event;
 			let consumed = false;
 			switch (key) {
-				case 'ArrowLeft':
 				case 'a':
 				case 'A':
+					// disable WASD controls when Hotkeys are enabled
+					if (enableHotkeys) break;
+				// eslint-disable-next-line no-fallthrough
+				case 'ArrowLeft':
 					consumed = true;
 					setGame((g) => g.moveCursor('left'));
 					break;
-				case 'ArrowRight':
 				case 'd':
 				case 'D':
+					// disable WASD controls when Hotkeys are enabled
+					if (enableHotkeys) break;
+				// eslint-disable-next-line no-fallthrough
+				case 'ArrowRight':
 					consumed = true;
 					setGame((g) => g.moveCursor('right'));
 					break;
-				case 'ArrowUp':
 				case 'w':
 				case 'W':
+					// disable WASD controls when Hotkeys are enabled
+					if (enableHotkeys) break;
+				// eslint-disable-next-line no-fallthrough
+				case 'ArrowUp':
 					consumed = true;
 					setGame((g) => g.moveCursor('up'));
 					break;
-				case 'ArrowDown':
 				case 's':
 				case 'S':
+					// disable WASD controls when Hotkeys are enabled
+					if (enableHotkeys) break;
+				// eslint-disable-next-line no-fallthrough
+				case 'ArrowDown':
 					consumed = true;
 					setGame((g) => g.moveCursor('down'));
 					break;
@@ -52,5 +65,5 @@ export function useKeybaordArrowControls() {
 		return () => {
 			window.removeEventListener('keydown', handleKey);
 		};
-	}, [showSettingsDialog, enableKeyboard, setGame, setSettings]);
+	}, [showSettingsDialog, enableKeyboard, enableHotkeys, setGame, setSettings]);
 }

@@ -9,6 +9,7 @@ import {
 	isAdjacent,
 	isRed,
 	parseShorthandPosition_INCOMPLETE,
+	Position,
 	shorthandCard,
 	shorthandPosition,
 	shorthandSequence,
@@ -559,6 +560,8 @@ export function calcAutoFoundationActionText(moved: Card[], isFlourish: boolean)
 	3. Column 4 to first (leftmost) freecell: 4a
 	4. Third freecell to home: ch \
 	etc.
+
+	similar to {@link parseShorthandPositionForSelect}, however parseShorthandMove can to account for both locations
 */
 export function parseShorthandMove(
 	game: FreeCell,
@@ -575,6 +578,8 @@ export function parseShorthandMove(
 		to_location.data[1] = game.tableau[to_location.data[0]].length - 1;
 	}
 
+	// clean up from_location based on MoveSourceType
+	// (pick the right starting sequence)
 	if (!from_shorthand_arg && from_location.fixture === 'cascade') {
 		// clamp
 		from_location.data[1] = game.tableau[from_location.data[0]].length - 1;
@@ -605,6 +610,8 @@ export function parseShorthandMove(
 		}
 	}
 
+	// clean up to_location based on MoveDestinationType
+	// (pick the right foundation idx)
 	if (to_location.fixture === 'foundation') {
 		// adjust selection until stackable on target
 		// i.e. 2S can stack on AS, find that foundation
@@ -619,4 +626,65 @@ export function parseShorthandMove(
 	}
 
 	return [from_location, to_location];
+}
+
+/**
+	find the largest possible sequence at this location
+
+	similar to {@link parseShorthandMove}, but independent of any further action
+*/
+export function parseShorthandPositionForSelect(
+	game: FreeCell,
+	position: Position
+): CardLocation | null {
+	const from_location = parseShorthandPosition_INCOMPLETE(position);
+
+	// FIXME verify position wrt game - e.g. cellCount,cascadeCount
+	switch (from_location.fixture) {
+		case 'deck':
+			// there is no shorthand for deck
+			// it's not a location to move from/to
+			// but even IFF there was, __clampCursor can handle it
+			// (each index is NOT getting it's own letter,
+			//  so iff we can pick any place,
+			//  it'll be the start or end or by numberical value
+			//  so why _not_ just clamp it)
+			break;
+		case 'cell':
+			if (from_location.data[0] < 0) return null; // can't happen?
+			if (from_location.data[0] >= game.cells.length) return null;
+			break;
+		case 'foundation':
+			if (from_location.data[0] < 0) return null; // can't happen?
+			if (from_location.data[0] >= game.foundations.length) return null;
+			break;
+
+		case 'cascade': {
+			if (from_location.data[0] < 0) return null; // can't happen?
+			if (from_location.data[0] >= game.tableau.length) return null;
+
+			// clamp
+			from_location.data[1] = game.tableau[from_location.data[0]].length - 1;
+
+			// adjust selection to largest sequence
+			let d1 = from_location.data[1];
+			// moving to cascade:empty, move entire sequence
+			// while adhearing to the max sequence length
+			// FIXME do we account for mmsl here?
+			// const mmsl = maxMovableSequenceLength(game) / 2;
+			while (
+				d1 > 0 &&
+				// from_location.data[1] - d1 + 1 < mmsl &&
+				canStackCascade(
+					game.tableau[from_location.data[0]][d1 - 1],
+					game.tableau[from_location.data[0]][d1]
+				)
+			)
+				d1--;
+			from_location.data[1] = d1;
+			break;
+		}
+	}
+
+	return from_location;
 }

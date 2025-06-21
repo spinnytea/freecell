@@ -41,6 +41,7 @@ import {
 	foundationCanAcceptCards,
 	moveCards,
 	parseShorthandMove,
+	parseShorthandPositionForSelect,
 } from '@/app/game/move/move';
 
 const DEFAULT_NUMBER_OF_CELLS = 4;
@@ -822,6 +823,20 @@ export class FreeCell {
 		} else {
 			return this.setCursor(location).touch({ stopWithInvalid });
 		}
+	}
+
+	$touchByPosition(position: Position): FreeCell | this {
+		if (!this.selection) {
+			const location = parseShorthandPositionForSelect(this, position);
+			if (!location) return this;
+			// FIXME refactor out select from touch
+			return this.setCursor(location).touch();
+		}
+		// FIXME move card to destination
+		//  - try to move the card as selected
+		//  - try to move by shorthand
+		//  - clear selection and touchByPosition
+		return this.clearSelection().$touchByPosition(position);
 	}
 
 	/**
