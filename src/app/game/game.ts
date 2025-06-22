@@ -41,6 +41,7 @@ import {
 	foundationCanAcceptCards,
 	moveCards,
 	parseShorthandMove,
+	parseShorthandPositionForMove,
 	parseShorthandPositionForSelect,
 } from '@/app/game/move/move';
 
@@ -645,6 +646,47 @@ export class FreeCell {
 			.touch({ autoFoundation, stopWithInvalid: true });
 	}
 
+	/**
+		meant to turn keypress into game moves.
+		OG FreeCell only let you move in this manner.
+
+		similar to {@link moveByShorthand},
+		but meant for gameplay (not replay history)
+	*/
+	touchByPosition(
+		position: Position,
+		{ autoFoundation, stopWithInvalid = false }: OptionsAutoFoundation = {}
+	): FreeCell | this {
+		if (!this.selection) {
+			const from_location = parseShorthandPositionForSelect(this, position);
+			if (!from_location) return this;
+			// FIXME refactor out select from touch
+			return this.setCursor(from_location).touch({ autoFoundation });
+		}
+
+		// clear selection if touching the same position
+		if (position === shorthandPosition(this.selection.location)) {
+			return this.clearSelection();
+		}
+
+		// try this move as selected
+		const to_location = parseShorthandPositionForMove(this, position);
+		if (!to_location) return this;
+		const game = this.setCursor(to_location).touch({ autoFoundation, stopWithInvalid: true });
+		if (game.previousAction.type !== 'invalid') return game;
+
+		// try to move by shorthand
+		const g = this.moveByShorthand(`${shorthandPosition(this.selection.location)}${position}`, {
+			autoFoundation,
+		});
+		if (g.previousAction.type !== 'invalid') return g;
+
+		if (stopWithInvalid) return game;
+
+		// clear selection and touchByPosition (like touch)
+		return this.clearSelection().touchByPosition(position, { autoFoundation, stopWithInvalid });
+	}
+
 	restart(): FreeCell {
 		if (PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(this.previousAction.type)) {
 			return this;
@@ -829,26 +871,6 @@ export class FreeCell {
 		} else {
 			return this.setCursor(location).touch({ stopWithInvalid });
 		}
-	}
-
-	$touchByPosition(position: Position): FreeCell | this {
-		if (!this.selection) {
-			const location = parseShorthandPositionForSelect(this, position);
-			if (!location) return this;
-			// FIXME refactor out select from touch
-			return this.setCursor(location).touch();
-		}
-
-		// clear selection if touching the same position
-		if (position === shorthandPosition(this.selection.location)) {
-			return this.clearSelection();
-		}
-
-		// FIXME move card to destination
-		//  - try to move the card as selected
-		//  - try to move by shorthand
-		//  - clear selection and touchByPosition
-		return this.clearSelection().$touchByPosition(position);
 	}
 
 	/**

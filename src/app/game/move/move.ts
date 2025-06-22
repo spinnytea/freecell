@@ -581,8 +581,12 @@ export function parseShorthandMove(
 	// clean up from_location based on MoveSourceType
 	// (pick the right starting sequence)
 	if (!from_shorthand_arg && from_location.fixture === 'cascade') {
+		// REVIEW (techdebt) (controls) text: "invalid board size", this isn't just a key press
+		if (from_location.data[0] >= game.tableau.length)
+			from_location.data[0] = game.tableau.length - 1;
+
 		// clamp
-		from_location.data[1] = game.tableau[from_location.data[0]].length - 1;
+		from_location.data[1] = Math.max(0, game.tableau[from_location.data[0]].length - 1);
 
 		if (to_location.fixture === 'cascade') {
 			// adjust selection until stackable on target
@@ -591,7 +595,16 @@ export function parseShorthandMove(
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (tail_card) {
 				// moving to cascade:sequence, pick rank we can stack
-				while (d1 > 0 && !canStackCascade(tail_card, game.tableau[from_location.data[0]][d1])) d1--;
+				while (
+					d1 > 0 &&
+					!canStackCascade(tail_card, game.tableau[from_location.data[0]][d1]) &&
+					canStackCascade(
+						game.tableau[from_location.data[0]][d1 - 1],
+						game.tableau[from_location.data[0]][d1]
+					)
+				) {
+					d1--;
+				}
 			} else {
 				// moving to cascade:empty, move entire sequence
 				// while adhearing to the max sequence length
@@ -603,8 +616,9 @@ export function parseShorthandMove(
 						game.tableau[from_location.data[0]][d1 - 1],
 						game.tableau[from_location.data[0]][d1]
 					)
-				)
+				) {
 					d1--;
+				}
 			}
 			from_location.data[1] = d1;
 		}
@@ -646,16 +660,13 @@ export function parseShorthandPositionForSelect(
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
 			break;
 		case 'cell':
-			if (from_location.data[0] < 0) return null; // can't happen?
 			if (from_location.data[0] >= game.cells.length) return null;
 			break;
 		case 'foundation':
-			if (from_location.data[0] < 0) return null; // can't happen?
 			if (from_location.data[0] >= game.foundations.length) return null;
 			break;
 
 		case 'cascade': {
-			if (from_location.data[0] < 0) return null; // can't happen?
 			if (from_location.data[0] >= game.tableau.length) return null;
 
 			// clamp
@@ -679,4 +690,53 @@ export function parseShorthandPositionForSelect(
 	}
 
 	return from_location;
+}
+
+/**
+	pre-req, game already has a selection
+
+	now find the move destination
+
+	similar to {@link parseShorthandMove}, but from is fixed
+*/
+export function parseShorthandPositionForMove(
+	game: FreeCell,
+	position: Position
+): CardLocation | null {
+	if (!game.selection) return null;
+	// const from_location = game.selection.location;
+	const to_location = parseShorthandPosition_INCOMPLETE(position);
+
+	// verify position wrt game - e.g. cellCount,cascadeCount
+	switch (to_location.fixture) {
+		case 'deck':
+			// there is no shorthand for deck (it's not a location to move from/to), but even IFF there was, __clampCursor can handle it
+			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
+			break;
+		case 'cell':
+			if (to_location.data[0] >= game.cells.length) return null;
+			break;
+		case 'foundation': {
+			// adjust selection until stackable on target
+			// i.e. 2S can stack on AS, find that foundation
+			// i.e. AC can go in any _empty_ foundation, find that one
+			const from_sequence = game.selection;
+			const tail_card = from_sequence.cards[from_sequence.cards.length - 1];
+			let d0 = 0;
+			while (d0 < game.foundations.length && !canStackFoundation(game.foundations[d0], tail_card)) {
+				d0++;
+			}
+			to_location.data[0] = d0;
+			break;
+		}
+
+		case 'cascade':
+			if (to_location.data[0] >= game.tableau.length) return null;
+
+			// clamp
+			to_location.data[1] = Math.max(0, game.tableau[to_location.data[0]].length - 1);
+			break;
+	}
+
+	return to_location;
 }

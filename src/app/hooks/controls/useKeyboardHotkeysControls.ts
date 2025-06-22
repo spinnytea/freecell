@@ -42,7 +42,7 @@ export function useKeyboardHotkeysControls() {
 				case '9':
 				case '0':
 					consumed = true;
-					setGame((g) => g.$touchByPosition(key.toLowerCase() as Position));
+					setGame((g) => g.touchByPosition(key.toLowerCase() as Position));
 					break;
 			}
 			if (consumed) {
