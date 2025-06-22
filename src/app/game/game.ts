@@ -371,15 +371,9 @@ export class FreeCell {
 					availableMoves: findAvailableMoves(this, selection),
 				});
 			}
-
-			if (selectionOnly) {
-				// FIXME review / test?
-				//  - invalid move h ?
-				return this;
-			}
 		}
 
-		if (!this.availableMoves || !this.selection?.cards.length) {
+		if (!this.availableMoves || !this.selection?.cards.length || selectionOnly) {
 			// TODO (animation) (2-priority) animate touch stop
 			//  - this isn't "invalid" so much as it is "nothing to do"
 			//  - we touched this location, and there isn't an actual action
