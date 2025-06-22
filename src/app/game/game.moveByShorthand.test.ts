@@ -20,6 +20,8 @@ describe('game.moveByShorthand', () => {
 			test.todo('empty vs not');
 		});
 
+		// it doesn't particularly matter what this looks like,
+		// because we cannot select the foundation / move off the foundation
 		describe('foundation', () => {
 			test.todo('empty first');
 

@@ -565,7 +565,8 @@ export function calcAutoFoundationActionText(moved: Card[], isFlourish: boolean)
 	4. Third freecell to home: ch \
 	etc.
 
-	similar to {@link parseShorthandPositionForSelect}, however parseShorthandMove can to account for both locations
+	@see {@link parseShorthandPositionForSelect}
+	@see {@link parseShorthandPositionForMove}
 */
 export function parseShorthandMove(
 	game: FreeCell,
@@ -586,6 +587,8 @@ export function parseShorthandMove(
 	// (pick the right starting sequence)
 	if (!from_shorthand_arg && from_location.fixture === 'cascade') {
 		// REVIEW (techdebt) (controls) text: "invalid board size", this isn't just a key press
+		//  - we need an altrenate return type or soemthing
+		//  - formulate the error message in whatever calls this…
 		if (from_location.data[0] >= game.tableau.length)
 			from_location.data[0] = game.tableau.length - 1;
 
@@ -652,7 +655,11 @@ export function parseShorthandMove(
 /**
 	find the largest possible sequence at this location
 
-	similar to {@link parseShorthandMove}, but independent of any further action
+	this happens without regard to selection,
+	and is independent of other moves (we don't know what will happen next)
+
+	@see {@link parseShorthandMove}
+	@see {@link parseShorthandPositionForMove}
 */
 export function parseShorthandPositionForSelect(
 	game: FreeCell,
@@ -674,6 +681,9 @@ export function parseShorthandPositionForSelect(
 		case 'foundation':
 			// there is only one 'h' for foundation
 			// d0 === 0
+			// REVIEW (techdebt) why can't we just return null here?
+			//  - this should be invalid
+			//  - `allowSelectFoundation` does not apply in this context
 			break;
 
 		case 'cascade': {
@@ -703,11 +713,14 @@ export function parseShorthandPositionForSelect(
 }
 
 /**
-	pre-req, game already has a selection
+	find the move destination
 
-	now find the move destination
+	pre-req: game already has a selection
+	(required for 'h')
+	(if there is no selection, you should call {@link parseShorthandPositionForSelect}) instead
 
-	similar to {@link parseShorthandMove}, but from is fixed
+	@see {@link parseShorthandMove}
+	@see {@link parseShorthandPositionForSelect}
 */
 export function parseShorthandPositionForMove(
 	game: FreeCell,
