@@ -339,21 +339,256 @@ describe('game.touchByPosition', () => {
 
 		// ('deck'); there is no Position for deck
 
-		// FIXME test.todo
 		describe('cell', () => {
-			test.todo('empty');
+			test('empty', () => {
+				expect(
+					FreeCell.parse(gamePrint).$selectCard('3H').touchByPosition('a').previousAction
+				).toEqual({
+					text: 'move 3a 3H→cell',
+					type: 'move',
+				});
+			});
 
-			test.todo('single');
+			test('single', () => {
+				expect(
+					FreeCell.parse(gamePrint).$selectCard('3H').touchByPosition('b').previousAction
+				).toEqual({
+					text: 'select b TH',
+					type: 'select',
+				});
+			});
 
-			test.todo('selected');
+			test('selected', () => {
+				expect(
+					FreeCell.parse(gamePrint).$selectCard('TH').touchByPosition('b').previousAction
+				).toEqual({
+					text: 'deselect b TH',
+					type: 'deselect',
+				});
+			});
 		});
 
 		describe('foundation', () => {
-			test.todo('empty');
+			describe('empty', () => {
+				test('can move', () => {
+					let game = new FreeCell().shuffle32(6).dealAll().touchByPosition('4');
+					expect(game.print()).toBe(
+						'' + //
+							'                         \n' +
+							' 2H JS 5S 5C 6H 2C TH 2S \n' +
+							' JC QH 3H 9H 7C QC 3C AC \n' +
+							' AD TS QD KS 8D 8H TC QS \n' +
+							' 4S 9D KH 7S KD JD 4H 8S \n' +
+							' 3S 5H 5D 4D 8C 3D TD 2D \n' +
+							' 4C 7H AS 6S 7D 9S KC 6D \n' +
+							' 9C 6C JH>AH|            \n' +
+							' select 4 AH'
+					);
+					game = game.touchByPosition('h');
+					expect(game.previousAction).toEqual({
+						text: 'move 4h AH→foundation',
+						type: 'move',
+					});
+					expect(game.printFoundation()).toBe('AH         ');
+				});
 
-			test.todo('single');
+				test('invalid move', () => {
+					// FIXME REVIEW (techdebt) should text be `invalid move 1h 9C→foundation`
+					const game = new FreeCell()
+						.shuffle32(6)
+						.dealAll()
+						.touchByPosition('1')
+						.touchByPosition('h');
+					expect(game.previousAction).toEqual({
+						text: 'touch stop',
+						type: 'invalid',
+					});
+					expect(game.printFoundation()).toBe('           ');
+				});
+			});
 
-			test.todo('selected');
+			describe('single', () => {
+				test('can move', () => {
+					expect(
+						FreeCell.parse(gamePrint).$selectCard('3H').touchByPosition('h').previousAction
+					).toEqual({
+						text: 'move 3h 3H→2H',
+						type: 'move',
+					});
+				});
+
+				test('invalid move', () => {
+					// FIXME REVIEW (techdebt) should text be `invalid move 1h 8C→foundation` or `invalid move 1h 8C→AC`
+					expect(
+						FreeCell.parse(gamePrint).$selectCard('8C').touchByPosition('h').previousAction
+					).toEqual({
+						text: 'touch stop',
+						type: 'invalid',
+					});
+				});
+			});
+
+			// while it's not a valid start move,
+			// maybe we should still try to deselect
+			describe('deselect one', () => {
+				test('0', () => {
+					let game = FreeCell.parse(
+						'' + //
+							'            >AH|         \n' +
+							' 2H JS 5S 5C 6H 2C TH 2S \n' +
+							' JC QH 3H 9H 7C QC 3C AC \n' +
+							' AD TS QD KS 8D 8H TC QS \n' +
+							' 4S 9D KH 7S KD JD 4H 8S \n' +
+							' 3S 5H 5D 4D 8C 3D TD 2D \n' +
+							' 4C 7H AS 6S 7D 9S KC 6D \n' +
+							' 9C 6C JH                '
+					);
+					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [0] });
+					game = game.touchByPosition('h');
+					expect(game.previousAction).toEqual({
+						text: 'deselect AH',
+						type: 'deselect',
+					});
+				});
+
+				test('1', () => {
+					let game = FreeCell.parse(
+						'' + //
+							'               >AH|      \n' +
+							' 2H JS 5S 5C 6H 2C TH 2S \n' +
+							' JC QH 3H 9H 7C QC 3C AC \n' +
+							' AD TS QD KS 8D 8H TC QS \n' +
+							' 4S 9D KH 7S KD JD 4H 8S \n' +
+							' 3S 5H 5D 4D 8C 3D TD 2D \n' +
+							' 4C 7H AS 6S 7D 9S KC 6D \n' +
+							' 9C 6C JH                '
+					);
+					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [1] });
+					game = game.touchByPosition('h');
+					expect(game.previousAction).toEqual({
+						text: 'deselect AH',
+						type: 'deselect',
+					});
+				});
+
+				test('2', () => {
+					let game = FreeCell.parse(
+						'' + //
+							'                  >AH|   \n' +
+							' 2H JS 5S 5C 6H 2C TH 2S \n' +
+							' JC QH 3H 9H 7C QC 3C AC \n' +
+							' AD TS QD KS 8D 8H TC QS \n' +
+							' 4S 9D KH 7S KD JD 4H 8S \n' +
+							' 3S 5H 5D 4D 8C 3D TD 2D \n' +
+							' 4C 7H AS 6S 7D 9S KC 6D \n' +
+							' 9C 6C JH                '
+					);
+					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [2] });
+					game = game.touchByPosition('h');
+					expect(game.previousAction).toEqual({
+						text: 'deselect AH',
+						type: 'deselect',
+					});
+				});
+
+				test('3', () => {
+					let game = FreeCell.parse(
+						'' + //
+							'                     >AH|\n' +
+							' 2H JS 5S 5C 6H 2C TH 2S \n' +
+							' JC QH 3H 9H 7C QC 3C AC \n' +
+							' AD TS QD KS 8D 8H TC QS \n' +
+							' 4S 9D KH 7S KD JD 4H 8S \n' +
+							' 3S 5H 5D 4D 8C 3D TD 2D \n' +
+							' 4C 7H AS 6S 7D 9S KC 6D \n' +
+							' 9C 6C JH                '
+					);
+					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [3] });
+					game = game.touchByPosition('h');
+					expect(game.previousAction).toEqual({
+						text: 'deselect AH',
+						type: 'deselect',
+					});
+				});
+			});
+
+			describe('deselect all', () => {
+				test('0', () => {
+					let game = FreeCell.parse(
+						'' + //
+							'            >AC|AD AH AS \n' +
+							' 2H JS 5S 5C 6H 2C TH 2S \n' +
+							' JC QH 3H 9H 7C QC 3C QS \n' +
+							' 4S TS QD KS 8D 8H TC 8S \n' +
+							' 3S 9D KH 7S KD JD 4H 2D \n' +
+							' 4C 5H 5D 4D 8C 3D TD 6D \n' +
+							' 9C 7H JH 6S 7D 9S KC 6C '
+					);
+					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [0] });
+					game = game.touchByPosition('h');
+					expect(game.previousAction).toEqual({
+						text: 'deselect AC',
+						type: 'deselect',
+					});
+				});
+
+				test('1', () => {
+					let game = FreeCell.parse(
+						'' + //
+							'             AC>AD|AH AS \n' +
+							' 2H JS 5S 5C 6H 2C TH 2S \n' +
+							' JC QH 3H 9H 7C QC 3C QS \n' +
+							' 4S TS QD KS 8D 8H TC 8S \n' +
+							' 3S 9D KH 7S KD JD 4H 2D \n' +
+							' 4C 5H 5D 4D 8C 3D TD 6D \n' +
+							' 9C 7H JH 6S 7D 9S KC 6C '
+					);
+					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [1] });
+					game = game.touchByPosition('h');
+					expect(game.previousAction).toEqual({
+						text: 'deselect AD',
+						type: 'deselect',
+					});
+				});
+
+				test('2', () => {
+					let game = FreeCell.parse(
+						'' + //
+							'             AC AD>AH|AS \n' +
+							' 2H JS 5S 5C 6H 2C TH 2S \n' +
+							' JC QH 3H 9H 7C QC 3C QS \n' +
+							' 4S TS QD KS 8D 8H TC 8S \n' +
+							' 3S 9D KH 7S KD JD 4H 2D \n' +
+							' 4C 5H 5D 4D 8C 3D TD 6D \n' +
+							' 9C 7H JH 6S 7D 9S KC 6C '
+					);
+					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [2] });
+					game = game.touchByPosition('h');
+					expect(game.previousAction).toEqual({
+						text: 'deselect AH',
+						type: 'deselect',
+					});
+				});
+
+				test('3', () => {
+					let game = FreeCell.parse(
+						'' + //
+							'             AC AD AH>AS|\n' +
+							' 2H JS 5S 5C 6H 2C TH 2S \n' +
+							' JC QH 3H 9H 7C QC 3C QS \n' +
+							' 4S TS QD KS 8D 8H TC 8S \n' +
+							' 3S 9D KH 7S KD JD 4H 2D \n' +
+							' 4C 5H 5D 4D 8C 3D TD 6D \n' +
+							' 9C 7H JH 6S 7D 9S KC 6C '
+					);
+					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [3] });
+					game = game.touchByPosition('h');
+					expect(game.previousAction).toEqual({
+						text: 'deselect AS',
+						type: 'deselect',
+					});
+				});
+			});
 		});
 
 		describe('cascade', () => {
@@ -422,10 +657,38 @@ describe('game.touchByPosition', () => {
 				});
 			});
 
-			// FIXME test.todo
-			test.todo('deselect');
+			test('deselect', () => {
+				let game = FreeCell.parse(gamePrint).$selectCard('4D');
+				expect(game.selection).toEqual({
+					location: { fixture: 'cascade', data: [1, 5] },
+					cards: [
+						{ rank: '4', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 5] } },
+						{ rank: '3', suit: 'clubs', location: { fixture: 'cascade', data: [1, 6] } },
+					],
+					peekOnly: false,
+				});
+				expect(game.previousAction.text).toBe('select 2 4D-3C');
+				game = game.touchByPosition('2');
+				expect(game.previousAction).toEqual({
+					text: 'deselect 2 4D-3C',
+					type: 'deselect',
+				});
+			});
 
-			test.todo('deselect peekOnly');
+			test('deselect peekOnly', () => {
+				let game = FreeCell.parse(gamePrint).$selectCard('7H');
+				expect(game.selection).toEqual({
+					location: { fixture: 'cascade', data: [1, 4] },
+					cards: [{ rank: '7', suit: 'hearts', location: { fixture: 'cascade', data: [1, 4] } }],
+					peekOnly: true,
+				});
+				expect(game.previousAction.text).toBe('select 7H');
+				game = game.touchByPosition('2');
+				expect(game.previousAction).toEqual({
+					text: 'deselect 7H',
+					type: 'deselect',
+				});
+			});
 		});
 
 		describe('by position', () => {
