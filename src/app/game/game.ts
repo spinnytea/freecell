@@ -684,7 +684,7 @@ export class FreeCell {
 		if (game.previousAction.type !== 'invalid') return game;
 
 		// try to move by shorthand
-		const g = this.moveByShorthand(`${shorthandPosition(this.selection.location)}${position}`, {
+		let g = this.moveByShorthand(`${shorthandPosition(this.selection.location)}${position}`, {
 			autoFoundation,
 		});
 		if (g.previousAction.type !== 'invalid') return g;
@@ -692,7 +692,10 @@ export class FreeCell {
 		if (stopWithInvalid) return game;
 
 		// clear selection and touchByPosition (like touch)
-		return this.clearSelection().touchByPosition(position, { autoFoundation, stopWithInvalid });
+		g = this.clearSelection().touchByPosition(position, { autoFoundation, stopWithInvalid });
+		if (g.previousAction.type !== 'invalid') return g;
+
+		return game;
 	}
 
 	restart(): FreeCell {

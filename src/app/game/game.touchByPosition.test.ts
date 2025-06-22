@@ -393,14 +393,13 @@ describe('game.touchByPosition', () => {
 				});
 
 				test('invalid move', () => {
-					// FIXME REVIEW (techdebt) should text be `invalid move 1h 9C→foundation`
 					const game = new FreeCell()
 						.shuffle32(6)
 						.dealAll()
 						.touchByPosition('1')
 						.touchByPosition('h');
 					expect(game.previousAction).toEqual({
-						text: 'touch stop',
+						text: 'invalid move 1h 9C→foundation',
 						type: 'invalid',
 					});
 					expect(game.printFoundation()).toBe('           ');
@@ -418,11 +417,10 @@ describe('game.touchByPosition', () => {
 				});
 
 				test('invalid move', () => {
-					// FIXME REVIEW (techdebt) should text be `invalid move 1h 8C→foundation` or `invalid move 1h 8C→AC`
 					expect(
 						FreeCell.parse(gamePrint).$selectCard('8C').touchByPosition('h').previousAction
 					).toEqual({
-						text: 'touch stop',
+						text: 'invalid move 1h 8C→AC',
 						type: 'invalid',
 					});
 				});
@@ -701,7 +699,7 @@ describe('game.touchByPosition', () => {
 					${'d'}   | ${{ text: 'select d 2C', type: 'select' }}
 					${'e'}   | ${{ text: 'select 5H', type: 'select' }}
 					${'f'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'h'}   | ${{ text: 'touch stop', type: 'invalid' }}
+					${'h'}   | ${{ text: 'invalid move 2h 5H→AH', type: 'invalid' }}
 					${'1'}   | ${{ text: 'select 1 3S', type: 'select' }}
 					${'2'}   | ${{ text: 'deselect 5H', type: 'deselect' }}
 					${'3'}   | ${{ text: 'select 3 3D', type: 'select' }}
@@ -777,7 +775,7 @@ describe('game.touchByPosition', () => {
 					${'d'}   | ${{ text: 'select d 2H', type: 'select' }}
 					${'e'}   | ${{ text: 'select e 2D', type: 'select' }}
 					${'f'}   | ${{ text: 'select f 2C', type: 'select' }}
-					${'h'}   | ${{ text: 'touch stop', type: 'invalid' }}
+					${'h'}   | ${{ text: 'invalid move 4h 5H→AH', type: 'invalid' }}
 					${'1'}   | ${{ text: 'select 1 3S', type: 'select' }}
 					${'2'}   | ${{ text: 'select 2 3H', type: 'select' }}
 					${'3'}   | ${{ text: 'select 3 5S', type: 'select' }}

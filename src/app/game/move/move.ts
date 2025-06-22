@@ -217,13 +217,17 @@ function getFoundationRankForColor(game: FreeCell, card: Card): number {
 	return foundation_rank_for_color;
 }
 
-export function canStackFoundation(foundation_card: Card | null, moving_card: Card): boolean {
+export function canStackFoundation(
+	foundation_card: Card | null,
+	moving_card: Card,
+	laxAdjacent = false
+): boolean {
 	if (!foundation_card && moving_card.rank === 'ace') {
 		return true;
 	} else if (
 		foundation_card &&
 		foundation_card.suit === moving_card.suit &&
-		isAdjacent({ min: foundation_card.rank, max: moving_card.rank })
+		(laxAdjacent || isAdjacent({ min: foundation_card.rank, max: moving_card.rank }))
 	) {
 		return true;
 	}
@@ -633,7 +637,10 @@ export function parseShorthandMove(
 		const from_sequence = getSequenceAt(game, from_location);
 		const tail_card = from_sequence.cards[from_sequence.cards.length - 1];
 		let d0 = to_location.data[0];
-		while (d0 < game.foundations.length && !canStackFoundation(game.foundations[d0], tail_card)) {
+		while (
+			d0 < game.foundations.length &&
+			!canStackFoundation(game.foundations[d0], tail_card, true)
+		) {
 			d0++;
 		}
 		to_location.data[0] = d0;
@@ -726,7 +733,10 @@ export function parseShorthandPositionForMove(
 			const from_sequence = game.selection;
 			const tail_card = from_sequence.cards[from_sequence.cards.length - 1];
 			let d0 = 0;
-			while (d0 < game.foundations.length && !canStackFoundation(game.foundations[d0], tail_card)) {
+			while (
+				d0 < game.foundations.length &&
+				!canStackFoundation(game.foundations[d0], tail_card, true)
+			) {
 				d0++;
 			}
 			to_location.data[0] = d0;
