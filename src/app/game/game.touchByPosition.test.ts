@@ -1,3 +1,4 @@
+import { omit as _omit } from 'lodash';
 import { Position } from '@/app/game/card/card';
 import { getMoves } from '@/app/game/catalog/solutions-catalog';
 import { FreeCell } from '@/app/game/game';
@@ -24,6 +25,8 @@ describe('game.touchByPosition', () => {
 			':h shuffle32 11737\n' +
 			' 2a 14 13 64 68 5b 54 34 \n' +
 			' 32 57 5c a8 ';
+
+		// ('deck'); there is no Position for deck
 
 		describe('cell', () => {
 			test('empty', () => {
@@ -56,6 +59,28 @@ describe('game.touchByPosition', () => {
 						priority: 8,
 					},
 				]);
+			});
+		});
+
+		describe('foundation', () => {
+			test('is a noop', () => {
+				const game = FreeCell.parse(gamePrint);
+				const g = game.touchByPosition('h');
+				expect(g.previousAction).toEqual({
+					text: 'touch stop',
+					type: 'invalid',
+				});
+				expect(g.cursor).toEqual({
+					fixture: 'foundation',
+					data: [0],
+				});
+				expect(g.selection).toBe(null);
+				expect(g.availableMoves).toBe(null);
+				expect(g.history).toEqual(game.history);
+
+				expect(_omit(g, ['previousAction', 'cursor'])).toEqual(
+					_omit(game, ['previousAction', 'cursor'])
+				);
 			});
 		});
 
@@ -312,69 +337,95 @@ describe('game.touchByPosition', () => {
 			' 2a 14 13 64 68 5b 54 34 \n' +
 			' 32 57 5c a8 ';
 
-		test('valid move', () => {
-			const game = FreeCell.parse(gamePrint);
-			expect(game.$selectCard('7D').touchByPosition('1').previousAction).toEqual({
-				text: 'move 71 7D-6S→8C',
-				type: 'move',
-			});
-			expect(game.$selectCard('4H').touchByPosition('5').previousAction).toEqual({
-				text: 'move c5 4H→cascade',
-				type: 'move',
-			});
+		// ('deck'); there is no Position for deck
+
+		// FIXME test.todo
+		describe('cell', () => {
+			test.todo('empty');
+
+			test.todo('single');
+
+			test.todo('selected');
 		});
 
-		test('adjust move', () => {
-			const game = FreeCell.parse(gamePrint);
-			expect(game.$selectCard('QD').touchByPosition('5').previousAction).toEqual({
-				text: 'move 45 9C-8D-7C→cascade',
-				type: 'move',
-			});
-			// this is because…
-			expect(game.touchByPosition('4').previousAction).toEqual({
-				text: 'select 4 KC-QD-JS-TD-9C-8D-7C',
-				type: 'select',
-			});
-			expect(game.touchByPosition('4').touchByPosition('5').previousAction).toEqual({
-				text: 'move 45 9C-8D-7C→cascade',
-				type: 'move',
-			});
+		describe('foundation', () => {
+			test.todo('empty');
+
+			test.todo('single');
+
+			test.todo('selected');
 		});
 
-		// select second col instead (like how touch does it for convenience)
-		test('invalid move', () => {
-			const game = FreeCell.parse(gamePrint);
-			expect(game.$selectCard('3H').touchByPosition('6').previousAction).toEqual({
-				text: 'select 6 3D',
-				type: 'select',
-			});
-			expect(
-				game.$selectCard('3H').touchByPosition('6', { stopWithInvalid: true }).previousAction
-			).toEqual({
-				text: 'invalid move 36 3H→3D',
-				type: 'invalid',
-			});
-		});
-
-		// prove that shorthand isn't perfect (find the other test that does this too)
-		test('col / shrink selection / move', () => {
-			let game = FreeCell.parse(gamePrint).touchByPosition('4');
-			expect(game.previousAction).toEqual({
-				text: 'select 4 KC-QD-JS-TD-9C-8D-7C',
-				type: 'select',
+		describe('cascade', () => {
+			test('valid move', () => {
+				const game = FreeCell.parse(gamePrint);
+				expect(game.$selectCard('7D').touchByPosition('1').previousAction).toEqual({
+					text: 'move 71 7D-6S→8C',
+					type: 'move',
+				});
+				expect(game.$selectCard('4H').touchByPosition('5').previousAction).toEqual({
+					text: 'move c5 4H→cascade',
+					type: 'move',
+				});
 			});
 
-			game = game.moveCursor('down').moveCursor('down').touch();
-			expect(game.previousAction).toEqual({
-				text: 'select 4 JS-TD-9C-8D-7C',
-				type: 'select',
+			test('adjust move', () => {
+				const game = FreeCell.parse(gamePrint);
+				expect(game.$selectCard('QD').touchByPosition('5').previousAction).toEqual({
+					text: 'move 45 9C-8D-7C→cascade',
+					type: 'move',
+				});
+				// this is because…
+				expect(game.touchByPosition('4').previousAction).toEqual({
+					text: 'select 4 KC-QD-JS-TD-9C-8D-7C',
+					type: 'select',
+				});
+				expect(game.touchByPosition('4').touchByPosition('5').previousAction).toEqual({
+					text: 'move 45 9C-8D-7C→cascade',
+					type: 'move',
+				});
 			});
 
-			game = game.touchByPosition('5');
-			expect(game.previousAction).toEqual({
-				text: 'move 45 9C-8D-7C→cascade',
-				type: 'move',
+			// select second col instead (like how touch does it for convenience)
+			test('invalid move', () => {
+				const game = FreeCell.parse(gamePrint);
+				expect(game.$selectCard('3H').touchByPosition('6').previousAction).toEqual({
+					text: 'select 6 3D',
+					type: 'select',
+				});
+				expect(
+					game.$selectCard('3H').touchByPosition('6', { stopWithInvalid: true }).previousAction
+				).toEqual({
+					text: 'invalid move 36 3H→3D',
+					type: 'invalid',
+				});
 			});
+
+			// prove that shorthand isn't perfect (find the other test that does this too)
+			test('col / shrink selection / move', () => {
+				let game = FreeCell.parse(gamePrint).touchByPosition('4');
+				expect(game.previousAction).toEqual({
+					text: 'select 4 KC-QD-JS-TD-9C-8D-7C',
+					type: 'select',
+				});
+
+				game = game.moveCursor('down').moveCursor('down').touch();
+				expect(game.previousAction).toEqual({
+					text: 'select 4 JS-TD-9C-8D-7C',
+					type: 'select',
+				});
+
+				game = game.touchByPosition('5');
+				expect(game.previousAction).toEqual({
+					text: 'move 45 9C-8D-7C→cascade',
+					type: 'move',
+				});
+			});
+
+			// FIXME test.todo
+			test.todo('deselect');
+
+			test.todo('deselect peekOnly');
 		});
 
 		describe('by position', () => {

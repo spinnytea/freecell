@@ -166,7 +166,7 @@ export function useDragAndDropControls(
 	  - and like, the only real utility of click-to-select is to be paired with this
 */
 function calcNextState(game: FreeCell, location: CardLocation) {
-	return game.clearSelection().setCursor(location).touch();
+	return game.setCursor(location).touch({ selectionOnly: true });
 }
 
 function overlappingAvailableMove(

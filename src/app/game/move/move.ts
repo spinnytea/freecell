@@ -660,10 +660,13 @@ export function parseShorthandPositionForSelect(
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
 			break;
 		case 'cell':
+			// REVIEW (techdebt) (controls) text: "invalid board size", this isn't just a key press
+			//  - we shouldn't just ignore it, we should provide feedback
 			if (from_location.data[0] >= game.cells.length) return null;
 			break;
 		case 'foundation':
-			if (from_location.data[0] >= game.foundations.length) return null;
+			// there is only one 'h' for foundation
+			// d0 === 0
 			break;
 
 		case 'cascade': {

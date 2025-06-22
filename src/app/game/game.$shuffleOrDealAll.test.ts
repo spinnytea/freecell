@@ -1,3 +1,3 @@
 describe('game.$shuffleOrDealAll', () => {
-	test.todo('it');
+	test.todo('everything');
 });

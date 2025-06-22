@@ -45,7 +45,7 @@ export enum ControlSchemes {
 	/*
 		set cursor + touch (click on columns (d0), not cards (d0, d1); shorthandPosition directly)
 
-		FIXME implementé
+		@deprecated TODO (controls) not yet implemented
 		 - touchByPosition but with the mouse
 		 - this could be "clicking on the background" rather than "clicking on a card"
 		 - is "clicking on a placeholder" identical (touch vs touchByPosition)? (probably‽ test it! :D :D)

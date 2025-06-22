@@ -76,7 +76,7 @@ describe('game.$moveCardToPosition', () => {
 		game = game.$moveCardToPosition('AH', 'a');
 		expect(game.print()).toBe(
 			'' + //
-				'            >KS KH KD KC \n' +
+				'             KS>KH KD KC \n' +
 				'                         \n' +
 				':    Y O U   W I N !    :\n' +
 				'                         \n' +
