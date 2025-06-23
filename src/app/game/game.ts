@@ -41,6 +41,8 @@ import {
 	foundationCanAcceptCards,
 	moveCards,
 	parseShorthandMove,
+	parseShorthandPositionForMove,
+	parseShorthandPositionForSelect,
 } from '@/app/game/move/move';
 
 const DEFAULT_NUMBER_OF_CELLS = 4;
@@ -52,15 +54,17 @@ const MAX_CELL_COUNT = 6;
 const INIT_CURSOR_LOCATION: CardLocation = { fixture: 'deck', data: [0] };
 const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 
-interface OptionsAutoFoundation {
+interface OptionsNonstandardGameplay {
 	/**
-	 	@deprecated
+		@deprecated
 		XXX (techdebt) this is just to get unit tests passing, we should have examples that do not need this
 	*/
 	autoFoundation?: boolean;
 
 	/**
 		@deprecated this is just for… for testing, yeah that's it
+		 - or maybe to rearrange foundations
+		 - shorthand doesn't have the fidelity to rearrange foundations (just `h` for all)
 	*/
 	allowSelectFoundation?: boolean;
 
@@ -77,6 +81,8 @@ interface OptionsAutoFoundation {
 		we'll still need this to test the animations, until we find another real-world example to circumvent
 
 		@deprecated this is just for unit testing - can we avoid using it even there with actual examples?
+		 - {@link moveByShorthand} has a valid usecase for this
+		 - {@link $moveCardToPosition} has a valid usecase for this
 	*/
 	stopWithInvalid?: boolean;
 
@@ -85,6 +91,13 @@ interface OptionsAutoFoundation {
 		XXX (techdebt) this is just to get unit tests passing, and maintain this flow until we have settings
 	*/
 	autoMove?: boolean;
+}
+
+interface OptionsTouch extends OptionsNonstandardGameplay {
+	/**
+		sometimes we only want {@link touch} to select a card (not move or whatever)
+	*/
+	selectionOnly?: boolean;
 }
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
@@ -320,29 +333,21 @@ export class FreeCell {
 		e.g. select cursor, deselect cursor, move selection to location
 
 		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
-		- REVIEW (techdebt) (controls) (3-priority) `touch()` is a bit generic, wrt having both "select" and "deselect"
-		  - it's nice and simple when there aren't many ways to interact
-		  - with more control schemes sometimes overlapping, it's hard to debug exactly
-		  - some controls schemes have explicity `clearSelection().touch()` to get around it
-		  - even {@link moveByShorthand} has to do this
-		  - it seems there are a lot of places that call "touch" with the express intent of selecting, review _all_ callers
-		 ---
-		  - drag-and-drop just wants a lookahead "what if this card were selected"
-		  - it doesn't need to change state per se
 	*/
 	touch({
 		autoFoundation = true,
 		stopWithInvalid = false,
 		allowSelectFoundation = false,
-	}: OptionsAutoFoundation = {}): FreeCell {
+		selectionOnly = false,
+	}: OptionsTouch = {}): FreeCell {
 		// clear the selction, if re-touching the same spot
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
 			return this.clearSelection();
 		}
 
 		// set selection, or move selection if applicable
-		if (!this.selection || this.selection.peekOnly) {
-			if (this.win && this.cursor.fixture === 'foundation') {
+		if (!this.selection || this.selection.peekOnly || selectionOnly) {
+			if (this.win && this.cursor.fixture === 'foundation' && !allowSelectFoundation) {
 				// REVIEW (techdebt) (joker) (settings) settings for new game?
 				return new FreeCell({ cellCount: this.cells.length, cascadeCount: this.tableau.length });
 			}
@@ -363,12 +368,14 @@ export class FreeCell {
 			}
 		}
 
-		if (!this.availableMoves || !this.selection?.cards.length) {
+		if (!this.availableMoves || !this.selection?.cards.length || selectionOnly) {
 			// TODO (animation) (2-priority) animate touch stop
 			//  - this isn't "invalid" so much as it is "nothing to do"
 			//  - we touched this location, and there isn't an actual action
 			//  - we can add a bit of whimmsy here, behind a conditional animation
 			//  - just like a small card bump (up,left,rot, and back)
+
+			// do not clear selection
 			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
 		}
 
@@ -410,7 +417,13 @@ export class FreeCell {
 			// then this will infinte loop (clearSelection is a noop without a selection)
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (this.selection) {
-				const game = this.clearSelection().touch();
+				// TODO (techdebt) we need to unit test this?
+				//  - we don't need any of the arguments to touch
+				//    autoFoundation: we don't have a selection / are only selecting
+				//    stopWithInvalid: only for moves, doesn't really apply to selections
+				//    allowSelectFoundation: …
+				//    selectionOnly: is a given
+				const game = this.clearSelection().touch({ allowSelectFoundation });
 				if (game.previousAction.type !== 'invalid') {
 					return game;
 				}
@@ -609,7 +622,7 @@ export class FreeCell {
 		@example
 			game.setCursor(loc).touch().autoMove();
 	*/
-	autoMove({ autoFoundation }: OptionsAutoFoundation = {}): FreeCell | this {
+	autoMove({ autoFoundation }: OptionsNonstandardGameplay = {}): FreeCell | this {
 		if (!this.selection) return this;
 		if (!this.availableMoves?.length) return this;
 		// REVIEW (techdebt) is there a reason for this?
@@ -629,13 +642,59 @@ export class FreeCell {
 		The standard notation is used to print the game history.
 		This make it easy to replay a known game.
 	*/
-	moveByShorthand(shorthandMove: string, { autoFoundation }: OptionsAutoFoundation = {}): FreeCell {
+	moveByShorthand(
+		shorthandMove: string,
+		{ autoFoundation }: OptionsNonstandardGameplay = {}
+	): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
-		// REVIEW (techdebt) break touch up unto:
-		//  - "selcet this card"
-		//  - "moveCards here"
-		//  -  current impl works, but feels… wrong
-		return this.clearSelection().setCursor(from).touch().setCursor(to).touch({ autoFoundation });
+		const game = this.clearSelection().setCursor(from).touch({ selectionOnly: true });
+		// REVIEW (techdebt) dedicated error message? "invalid select (cursor) / invalid"
+		//  - would be for deck or foundation
+		if (game.previousAction.type !== 'select') return game;
+		return game.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
+	}
+
+	/**
+		meant to turn keypress into game moves.
+		OG FreeCell only let you move in this manner.
+
+		similar to {@link moveByShorthand},
+		but meant for gameplay (not replay history)
+	*/
+	touchByPosition(
+		position: Position,
+		{ autoFoundation, stopWithInvalid = false }: OptionsNonstandardGameplay = {}
+	): FreeCell | this {
+		if (!this.selection) {
+			const from_location = parseShorthandPositionForSelect(this, position);
+			if (!from_location) return this;
+			return this.setCursor(from_location).touch({ autoFoundation });
+		}
+
+		// clear selection if touching the same position
+		if (position === shorthandPosition(this.selection.location)) {
+			return this.clearSelection();
+		}
+
+		// try this move as selected
+		const to_location = parseShorthandPositionForMove(this, position);
+		if (!to_location) return this;
+		const game = this.setCursor(to_location).touch({ autoFoundation, stopWithInvalid: true });
+		if (game.previousAction.type !== 'invalid') return game;
+
+		// try to move by shorthand
+		let g = this.moveByShorthand(`${shorthandPosition(this.selection.location)}${position}`, {
+			autoFoundation,
+		});
+		if (g.previousAction.type !== 'invalid') return g;
+
+		if (stopWithInvalid) return game;
+
+		// clear selection and touchByPosition (like touch)
+		g = this.clearSelection().touchByPosition(position, { autoFoundation, stopWithInvalid });
+		if (g.previousAction.type !== 'invalid') return g;
+
+		return game;
 	}
 
 	restart(): FreeCell {
@@ -811,14 +870,14 @@ export class FreeCell {
 	*/
 	$touchAndMove(
 		location: CardLocation | string = this.cursor,
-		{ autoFoundation, autoMove = true, stopWithInvalid }: OptionsAutoFoundation = {}
+		{ stopWithInvalid, autoMove = true }: OptionsNonstandardGameplay = {}
 	): FreeCell | this {
 		if (typeof location === 'string') {
 			location = findCard(this.cards, parseShorthandCard(location)).location;
 		}
 
 		if (autoMove) {
-			return this.setCursor(location).touch({ stopWithInvalid }).autoMove({ autoFoundation });
+			return this.setCursor(location).touch({ stopWithInvalid }).autoMove();
 		} else {
 			return this.setCursor(location).touch({ stopWithInvalid });
 		}
@@ -829,11 +888,15 @@ export class FreeCell {
 
 		sugar/helper controls
 	*/
-	$selectCard(shorthand: string): FreeCell {
+	$selectCard(
+		shorthand: string,
+		{ allowSelectFoundation }: OptionsNonstandardGameplay = {}
+	): FreeCell {
 		const location = findCard(this.cards, parseShorthandCard(shorthand)).location;
-		const game = this.clearSelection().setCursor(location).touch();
+		const game = this.setCursor(location).touch({ allowSelectFoundation, selectionOnly: true });
 		if (game.previousAction.type !== 'select') {
-			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
+			// do not clear selection
+			return this.__clone({ action: { text: 'touch stop', type: 'invalid' }, cursor: location });
 		}
 		return game;
 	}
@@ -847,14 +910,14 @@ export class FreeCell {
 	$moveCardToPosition(
 		shorthand: string,
 		position: Position,
-		{ autoFoundation }: OptionsAutoFoundation = {}
+		{ autoFoundation }: OptionsNonstandardGameplay = {}
 	): FreeCell {
 		const g = this.$selectCard(shorthand);
-		if (g.selection?.peekOnly) return this;
-		if (!g.availableMoves?.length) return this;
+		if (!g.selection || !g.availableMoves) return g;
+		if (g.selection.peekOnly) return this; // XXX (techdebt) (controls) should we move the cursor?
 		// HACK (techdebt) (controls) using parseShorthandMove just to come up with `to` is a bit overkill
 		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${position}`, g.cursor);
-		return g.setCursor(to).touch({ autoFoundation });
+		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
 	}
 
 	printFoundation(): string {

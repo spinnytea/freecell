@@ -1,3 +1,5 @@
+import { FreeCell } from '@/app/game/game';
+
 /*
 	XXX (techdebt) more unit testing
 	 - try to move the tests elsewhere:
@@ -18,6 +20,8 @@ describe('game.moveByShorthand', () => {
 			test.todo('empty vs not');
 		});
 
+		// it doesn't particularly matter what this looks like,
+		// because we cannot select the foundation / move off the foundation
 		describe('foundation', () => {
 			test.todo('empty first');
 
@@ -105,7 +109,20 @@ describe('game.moveByShorthand', () => {
 	describe('invalid move', () => {
 		test.todo('no card at from');
 
-		test.todo('cannot stack that');
+		test('cannot stack that', () => {
+			const game = new FreeCell().shuffle32(0).dealAll();
+			// expect(game.print()).toBe('');
+			expect(game.$selectCard('2S').availableMoves).toEqual([
+				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: 4 },
+				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: 3 },
+				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: 2 },
+				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: 1 },
+			]);
+			expect(game.moveByShorthand('12').previousAction).toEqual({
+				text: 'invalid move 12 2S→4C',
+				type: 'invalid',
+			});
+		});
 	});
 
 	// TODO (techdebt) (4-priority) shorthandMove is idealized, but we can move anything

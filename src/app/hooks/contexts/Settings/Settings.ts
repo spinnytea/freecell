@@ -22,6 +22,7 @@ export function calcDefaultSettings(): Settings {
 		cardFace: 'auto',
 		enabledControlSchemes: new Set([
 			ControlSchemes.Keyboard,
+			ControlSchemes.Hotkeys,
 			ControlSchemes.ClickToSelect,
 			ControlSchemes.ClickToMove,
 			// ControlSchemes.DragAndDrop, // TODO (drag-and-drop) impl

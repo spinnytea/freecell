@@ -72,18 +72,16 @@ describe('game.$moveCardToPosition', () => {
 				' move 5h AS→foundation (flourish 167823412345678123456781234567812345678123456781234 2S,AH,AD,AC,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)'
 		);
 
-		// REVIEW (techdebt) this move isn't allowed
-		// this move is correctly blocked
-		expect(game.$moveCardToPosition('AH', 'a')).toBe(game);
-		// game = game.moveCardToPosition('AH', 'a');
-		// expect(game.print()).toBe(
-		// 	'' + //
-		// 		'>            KS KH KD KC \n' +
-		// 		'                         \n' +
-		// 		':    Y O U   W I N !    :\n' +
-		// 		'                         \n' +
-		// 		' touch stop'
-		// );
+		// we can't select this card, so note it
+		game = game.$moveCardToPosition('AH', 'a');
+		expect(game.print()).toBe(
+			'' + //
+				'             KS>KH KD KC \n' +
+				'                         \n' +
+				':    Y O U   W I N !    :\n' +
+				'                         \n' +
+				' touch stop'
+		);
 
 		// TODO (techdebt) (2-priority) should we allow selecting the foundation; we allow that with the deck?
 		//  - the only time the deck is on screen, touching it will deal cards
@@ -191,6 +189,95 @@ describe('game.$moveCardToPosition', () => {
 
 	test.todo('something else selected');
 
-	// REVIEW (techdebt) this is kind of a "big one"
-	test.todo('invalid move');
+	describe('invalid move', () => {
+		test('cannot select', () => {
+			const game = FreeCell.parse(
+				'' + //
+					'    TH 4H    2S 2H AC    \n' +
+					' 9H 5H TC 9D    2D 8S 5S \n' +
+					' QH KS 8H AD    3D 5C 6H \n' +
+					' KH 6D 3S QS       4S 4C \n' +
+					' 8C JC 7S 2C       JD KD \n' +
+					'    7H 3H 6C       7D 9S \n' +
+					'    4D    5D       6S QC \n' +
+					'    3C    KC          JH \n' +
+					'          QD          TS \n' +
+					'          JS             \n' +
+					'          TD             \n' +
+					'          9C             \n' +
+					'          8D             \n' +
+					'          7C             \n' +
+					' move a8 TS→JH'
+			).$moveCardToPosition('2H', '5');
+			expect(game.previousAction).toEqual({
+				text: 'touch stop',
+				type: 'invalid',
+			});
+		});
+
+		test('peekOnly', () => {
+			const game = FreeCell.parse(
+				'' + //
+					'    TH 4H    2S 2H AC    \n' +
+					' 9H 5H TC 9D    2D 8S 5S \n' +
+					' QH KS 8H AD    3D 5C 6H \n' +
+					' KH 6D 3S QS       4S 4C \n' +
+					' 8C JC 7S 2C       JD KD \n' +
+					'    7H 3H 6C       7D 9S \n' +
+					'    4D    5D       6S QC \n' +
+					'    3C    KC          JH \n' +
+					'          QD          TS \n' +
+					'          JS             \n' +
+					'          TD             \n' +
+					'          9C             \n' +
+					'          8D             \n' +
+					'          7C             \n' +
+					' move a8 TS→JH'
+			).$moveCardToPosition('KS', 'd');
+			expect(game.previousAction).toEqual({
+				text: 'move a8 TS→JH',
+				type: 'move',
+			});
+		});
+
+		test('only as much as is allowed to move', () => {
+			let game = FreeCell.parse(
+				'' + //
+					'    TH 4H    2S 2H AC    \n' +
+					' 9H 5H TC 9D    2D 8S 5S \n' +
+					' QH KS 8H AD    3D 5C 6H \n' +
+					' KH 6D 3S QS       4S 4C \n' +
+					' 8C JC 7S 2C       JD KD \n' +
+					'    7H 3H 6C       7D 9S \n' +
+					'    4D    5D       6S QC \n' +
+					'    3C    KC          JH \n' +
+					'          QD          TS \n' +
+					'          JS             \n' +
+					'          TD             \n' +
+					'          9C             \n' +
+					'          8D             \n' +
+					'          7C             \n' +
+					' move a8 TS→JH'
+			);
+			expect(game.previousAction).toEqual({
+				text: 'move a8 TS→JH',
+				type: 'move',
+			});
+			game = game.$moveCardToPosition('KC', '5');
+			expect(game.previousAction).toEqual({
+				text: 'invalid move 45 KC-QD-JS-TD-9C-8D-7C→cascade',
+				type: 'invalid',
+			});
+			game = game.$moveCardToPosition('TD', '5');
+			expect(game.previousAction).toEqual({
+				text: 'invalid move 45 TD-9C-8D-7C→cascade',
+				type: 'invalid',
+			});
+			game = game.$moveCardToPosition('9C', '5');
+			expect(game.previousAction).toEqual({
+				text: 'move 45 9C-8D-7C→cascade',
+				type: 'move',
+			});
+		});
+	});
 });

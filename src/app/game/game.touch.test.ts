@@ -274,6 +274,58 @@ describe('game.touch', () => {
 			expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(game.print());
 		});
 
+		test('edge case: foundation selectionOnly', () => {
+			// need to already have a section
+			// the new place cannot be selected
+			// the new place needs to be an availableMoves
+			game = new FreeCell()
+				.dealAll()
+				.$selectCard('AS')
+				.touchByPosition('h', { autoFoundation: false });
+			// AS cannot be selected
+			expect(game.selection).toBe(null);
+			expect(game.$selectCard('AS').selection).toBe(null);
+			game = game.$selectCard('2S');
+			expect(game.print()).toBe(
+				'' + //
+					'             AS          \n' +
+					' KS KH KD KC QS QH QD QC \n' +
+					' JS JH JD JC TS TH TD TC \n' +
+					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C>2S|2H 2D 2C \n' +
+					'    AH AD AC             \n' +
+					' select 5 2S'
+			);
+
+			// we have a selection
+			expect(game.selection).toEqual({
+				location: { fixture: 'cascade', data: [4, 5] },
+				cards: [{ rank: '2', suit: 'spades', location: { fixture: 'cascade', data: [4, 5] } }],
+				peekOnly: false,
+			});
+			// AS is a valid target
+			expect(game.availableMoves).toEqual([
+				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+				{
+					location: { fixture: 'foundation', data: [0] },
+					moveDestinationType: 'foundation',
+					priority: 4,
+				},
+			]);
+
+			// now touch AS
+			game = game.setCursor({ fixture: 'foundation', data: [0] }).touch({ selectionOnly: true });
+			expect(game.previousAction).toEqual({
+				text: 'touch stop',
+				type: 'invalid',
+			});
+		});
+
 		describe('cascade', () => {
 			test('single cannot move', () => {
 				game = game
