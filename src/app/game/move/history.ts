@@ -164,6 +164,7 @@ export function parseCursorFromPreviousActionText(
 		case 'shuffle':
 			return { fixture: 'deck', data: [0] };
 		case 'deal':
+			if (actionText === 'deal most cards') return { fixture: 'deck', data: [0] };
 			return { fixture: 'cell', data: [0] };
 		case 'move-foundation':
 		case 'move': {

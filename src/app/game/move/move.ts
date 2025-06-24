@@ -535,6 +535,7 @@ export function calcMoveActionText(from: CardSequence, to: CardSequence): string
 	const to_card: Card | undefined = to.cards.at(to.cards.length - 1);
 	const to_location = to_card?.location ?? to.location;
 	const shorthandMove = `${shorthandPosition(from_location)}${shorthandPosition(to_location)}`;
+	// TODO (techdebt) (history) (shorthandMove) should the summary use `to_location.fixture` or `shorthandPosition(to_location)`
 	return `move ${shorthandMove} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`;
 }
 

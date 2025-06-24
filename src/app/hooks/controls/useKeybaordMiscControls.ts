@@ -66,7 +66,9 @@ export function useKeybaordMiscControls() {
 				//    # "the cursor before the move"
 				//  - when you click with the cursor, it's just "hover over col 7 and click a bunch / unload the cells"
 				//  - with the keyboard, it's quite a few arrow keys to reset the cursor
-				//  - maybe this is rendered entirely obsolete with hotkeys
+				//  - ~~maybe this is rendered entirely obsolete with hotkeys~~
+				//    undo is not rendered useless by move collapse
+				//    hotkeys you need to hunt and peck (and mentally map the board to a hotkey)
 				//  - move 23 KC-QD-JS→cascade
 				//    after: `KS` is in 3, but just findCard().location
 				//    before: `KS` was in 2, either:

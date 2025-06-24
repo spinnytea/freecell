@@ -28,6 +28,10 @@ export const CARD_FACE_CUTOFF = 60;
 	all of the various control schemes we support
 
 	`click-to-select` and `click-to-move` don't really make sense together; if both present, click-to-move takes precidence
+
+	TODO (controls) (hud) put current controls/cheetsheet on screen
+		- when using arrows, show arrows/space/enter/esc
+		- when using hotkeys, show abcdefh1234567890
 */
 export enum ControlSchemes {
 	/**
@@ -41,6 +45,25 @@ export enum ControlSchemes {
 		hotkeys for columns, shorthandPosition / Position directly
 	*/
 	Hotkeys = 'keyboard hotkeys',
+
+	/*
+		IDEA (animation) (flash-rank) (hud) can we do like "peek all"
+
+		The biggest problem is HHHoowwoowwwWWa
+		 - touch = wheel select?
+		 - keyboard = ??
+		 - mouse = ??
+		 - does the GUI just put it in the settings dialog?
+		 - unit tests can just call the function
+		 - but, imaging keyboard console game, how do we even get to it?
+		 - flash suit is out of the question
+		   - suit shorthand (CDHS) has overlap with Hotkeys (ab CD ef H)
+		   - suit shorthand (CDHS) has overlap with Arrows (wa S d)
+		 - flash rank isn't as tricky, i guess
+		   - (123456789TJQK)
+		   - it's a complete† overlap with Hotkeys, so it's one or the other
+	*/
+	// FlashRank = 'keyboard flash rank',
 
 	/*
 		set cursor + touch (click on columns (d0), not cards (d0, d1); shorthandPosition directly)

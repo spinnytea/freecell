@@ -39,7 +39,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'init partial'}                             | ${[]}          | ${{ fixture: 'deck', data: [0] }}
 			${'shuffle deck (0)'}                         | ${[]}          | ${{ fixture: 'deck', data: [0] }}
 			${'deal all cards'}                           | ${[]}          | ${{ fixture: 'cell', data: [0] }}
-			${'deal most cards'}                          | ${[]}          | ${{ fixture: 'cell', data: [0] }}
+			${'deal most cards'}                          | ${[]}          | ${{ fixture: 'deck', data: [0] }}
 			${'cursor set'}                               | ${[]}          | ${undefined}
 			${'cursor up'}                                | ${[]}          | ${undefined}
 			${'cursor left'}                              | ${[]}          | ${undefined}

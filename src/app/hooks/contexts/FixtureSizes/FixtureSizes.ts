@@ -241,13 +241,17 @@ export function calcTopLeftZ(
 ): { top: number; left: number; zIndex: number; rotation: number } {
 	switch (fixture) {
 		case 'deck':
-			// TODO (animation) animate cursor (selection?) within deck
-			// TODO (animation) (flash-rank) (hud) (4-priority) peek
+			// it's really hard to get to peek this
+			//  - you need to buck with useKeybaordMiscControls, instead of `$shuffleOrDealAll`, you need to `touch`
+			//  - but it is neato to see selecting the top card vs any other card
 			return {
 				top: fixtureSizes.deck.top,
 				left: fixtureSizes.deck.left,
 				zIndex: data[0],
-				rotation: 0,
+				rotation:
+					selection?.location.fixture === 'deck' && selection.location.data[0] === data[0]
+						? SELECT_ROTATION_ANGLE
+						: 0,
 			};
 		case 'cell':
 			return {
@@ -260,7 +264,6 @@ export function calcTopLeftZ(
 						: 0,
 			};
 		case 'foundation':
-			// TODO (animation) (flash-rank) (hud) (4-priority) peek
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.foundationLeft[data[0]],

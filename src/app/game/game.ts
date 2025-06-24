@@ -123,8 +123,8 @@ export class FreeCell {
 	cursor: CardLocation;
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
-	// flashRank: Rank | null; // TODO (animation) (flash-rank) (hud) (4-priority) can we do like "peek all"
-	// IDEA (flash-rank) flashRank: touch = wheel select; keyboard = ??; mouse = ?? -- or just menu in settings dialog
+	// IDEA (animation) (flash-rank) (hud) can we do like "peek all"
+	// flashRank: Rank | null;
 
 	// history
 	history: string[];
@@ -826,6 +826,7 @@ export class FreeCell {
 
 		if (game.deck.length) {
 			game.previousAction.text = 'deal most cards';
+			game.history[game.history.length - 1] = 'deal most cards';
 		}
 
 		return game;
@@ -947,6 +948,38 @@ export class FreeCell {
 		} else {
 			return '';
 		}
+	}
+
+	/**
+		BUG (history) (shorthandMove) standard move notation can only be used when `limit = 'opp+1'` for all moves
+			- e.g. if (movesSeed && isStandardRuleset)
+		REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
+			- e.g. if (movesSeed && isStandardGameplay)
+	*/
+	printHistory(skipLastHist = false): string {
+		let str = '';
+		const movesSeed = parseMovesFromHistory(this.history);
+		if (movesSeed) {
+			// print the last valid action, _not_ previousAction.text
+			// the previous action could be a cursor movement, or a canceled touch action (touch stop)
+			// REVIEW (history) (print) should we even print the last action?
+			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+			if (!skipLastHist) str += '\n ' + this.history.at(-1);
+			str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
+			while (movesSeed.moves.length) {
+				str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
+			}
+		} else {
+			// if we don't know where we started or shorthand is otherwise invalid,
+			// we can still print out all the actions we do know about
+			this.history
+				.slice(0)
+				.reverse()
+				.forEach((actionText) => {
+					str += '\n ' + actionText;
+				});
+		}
+		return str;
 	}
 
 	/**
@@ -1075,31 +1108,7 @@ export class FreeCell {
 		}
 
 		if (includeHistory) {
-			// BUG (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
-			//  - e.g. if (movesSeed && isStandardRuleset)
-			// REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
-			//  - e.g. if (movesSeed && isStandardGameplay)
-			const movesSeed = parseMovesFromHistory(this.history);
-			if (movesSeed) {
-				// print the last valid action, _not_ previousAction.text
-				// the previous action could be a cursor movement, or a canceled touch action (touch stop)
-				// REVIEW (history) (print) should we even print the last action?
-				// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-				str += '\n ' + this.history.at(-1);
-				str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
-				while (movesSeed.moves.length) {
-					str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
-				}
-			} else {
-				// if we don't know where we started or shorthand is otherwise invalid,
-				// we can still print out all the actions we do know about
-				this.history
-					.slice(0)
-					.reverse()
-					.forEach((actionText) => {
-						str += '\n ' + actionText;
-					});
-			}
+			str += this.printHistory();
 		} else {
 			str += '\n ' + this.previousAction.text;
 		}
@@ -1263,11 +1272,18 @@ export class FreeCell {
 		const history: string[] = [];
 		const popped = lines.pop();
 		if (!popped) {
-			if (parsePreviousActionType(actionText).type === 'init') {
+			const previousActionType = parsePreviousActionType(actionText).type;
+			if (previousActionType === 'init') {
 				// XXX (techdebt) (parse-history) does 'init' belong in the history?
 				//  - so far, it's been omitted, but like, sometimes we have 'init with invalid history'
 				if (actionText && actionText !== 'init') {
 					history.push(actionText);
+				}
+			} else if (previousActionType === 'deal') {
+				if (deckLength === 0) {
+					history.push('deal all cards');
+				} else {
+					history.push('deal most cards');
 				}
 			}
 		} else if (popped.startsWith(':h')) {
@@ -1281,6 +1297,8 @@ export class FreeCell {
 			if (deckLength === 0) {
 				replayGameForHistroy = replayGameForHistroy.dealAll();
 			}
+			// TODO (techdebt) (parse-history) 'deal all cards'
+			// TODO (techdebt) (parse-history) 'deal most cards'
 
 			// split will return [''] instead of []
 			const moves = lines.length ? lines.reverse().join('').trim().split(/\s+/) : [];
@@ -1342,6 +1360,8 @@ export class FreeCell {
 			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
 			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
 			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
+			// TODO (techdebt) (parse-history) 'deal all cards'
+			// TODO (techdebt) (parse-history) 'deal most cards'
 		}
 
 		// sus out the cursor/selection locations
