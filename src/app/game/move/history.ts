@@ -216,10 +216,12 @@ export function parseCursorFromPreviousActionText(
 			return cursor;
 		}
 		case 'auto-foundation':
-		case 'cursor':
 		case 'select':
 		case 'deselect':
+			return undefined;
 		case 'invalid':
+			return parseCursorFromPreviousActionText(actionText.substring(8), cards);
+		case 'cursor':
 		case 'auto-foundation-tween':
 			return undefined;
 	}
@@ -229,17 +231,15 @@ export function parseCursorFromPreviousActionText(
 	Where should the cursor be _before_ a move?
 */
 export function parseAltCursorFromPreviousActionText(
-	actionText: string | undefined,
-	cards?: Card[]
+	actionText: string | undefined
 ): CardLocation | undefined {
 	// FIXME do it
-	void cards;
 	if (!actionText) return undefined;
 	switch (parsePreviousActionType(actionText).type) {
 		case 'init':
 		case 'shuffle':
-			return { fixture: 'deck', data: [0] };
 		case 'deal':
+			return { fixture: 'deck', data: [0] };
 		case 'move-foundation':
 		case 'move':
 		case 'auto-foundation':
