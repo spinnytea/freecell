@@ -154,6 +154,9 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 	}
 }
 
+/**
+	Where should the cursor be _after_ a move?
+*/
 export function parseCursorFromPreviousActionText(
 	actionText: string | undefined,
 	cards?: Card[]
@@ -212,6 +215,33 @@ export function parseCursorFromPreviousActionText(
 			}
 			return cursor;
 		}
+		case 'auto-foundation':
+		case 'cursor':
+		case 'select':
+		case 'deselect':
+		case 'invalid':
+		case 'auto-foundation-tween':
+			return undefined;
+	}
+}
+
+/**
+	Where should the cursor be _before_ a move?
+*/
+export function parseAltCursorFromPreviousActionText(
+	actionText: string | undefined,
+	cards?: Card[]
+): CardLocation | undefined {
+	// FIXME do it
+	void cards;
+	if (!actionText) return undefined;
+	switch (parsePreviousActionType(actionText).type) {
+		case 'init':
+		case 'shuffle':
+			return { fixture: 'deck', data: [0] };
+		case 'deal':
+		case 'move-foundation':
+		case 'move':
 		case 'auto-foundation':
 		case 'cursor':
 		case 'select':

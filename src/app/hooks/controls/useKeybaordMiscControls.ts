@@ -47,7 +47,7 @@ export function useKeybaordMiscControls() {
 						if (key === 'Enter') {
 							return g.touch();
 						}
-						// IDEA (controls) (toggle-cursor) - move should be in the "after" position
+						// FIXME move should be in the "after" position
 						return g.$touchAndMove(g.cursor);
 					});
 					break;
@@ -55,7 +55,7 @@ export function useKeybaordMiscControls() {
 					consumed = true;
 					setGame((g) => g.clearSelection());
 					break;
-				// IDEA (controls) (toggle-cursor) I want a hotkey that move the cursor to the previous spot
+				// FIXME I want a hotkey that move the cursor to the previous spot
 				//  - e.g. :h shuffle32 7852
 				//          74 7a 7b a7 b7
 				//  - e.g. :h shuffle32 7852
@@ -78,7 +78,7 @@ export function useKeybaordMiscControls() {
 				//             can't be deck, but just use { fixture, data: [deck.length] }, because lolwhynot
 				case 'z':
 				case 'Z':
-					// IDEA (controls) (toggle-cursor) - undo should be in the "before" position
+					// FIXME should undo be in the "before" position?
 					//  - we want the "play forwards" + "play backwards" to match
 					//  - so maybe we just "toggle position" here?
 					//  - add this to sugar "undoThenShuffle", rather than undo itself

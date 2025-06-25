@@ -5,6 +5,7 @@ import {
 	pullActionTextExamples,
 } from '@/app/game/catalog/actionText-examples';
 import {
+	parseAltCursorFromPreviousActionText,
 	parseCursorFromPreviousActionText,
 	parsePreviousActionType,
 	PREVIOUS_ACTION_TYPE_IN_HISTORY,
@@ -33,7 +34,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 
 		// XXX (techdebt) (cursor) we could detect the location of select/deselect
 		test.each`
-			actionText                                    | cards          | cursor
+			actionText                                    | cards          | after
 			${'init'}                                     | ${[]}          | ${{ fixture: 'deck', data: [0] }}
 			${'init with invalid history'}                | ${[]}          | ${{ fixture: 'deck', data: [0] }}
 			${'init partial'}                             | ${[]}          | ${{ fixture: 'deck', data: [0] }}
@@ -78,21 +79,23 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			({
 				actionText,
 				cards,
-				cursor,
+				after,
 			}: {
 				actionText: string;
 				cards: Card[];
-				cursor: CardLocation | undefined;
+				after: CardLocation | undefined;
 			}) => {
 				pullActionTextExamples(actionTextExamples, actionText);
-				expect(parseCursorFromPreviousActionText(actionText, cards)).toEqual(cursor);
+				expect(parseCursorFromPreviousActionText(actionText, cards)).toEqual(after);
+				void parseAltCursorFromPreviousActionText(actionText, cards); // FIXME check this
+				// FIXME we shouldn't have any "undefined"?
 
 				// make sure all the ones that should have a cursor do have a cursor
 				const previousAction = parsePreviousActionType(actionText);
 				const EXCEPTIONS: PreviousActionType[] = ['auto-foundation'];
 				const canBeInHistory = PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type);
 				const isException = EXCEPTIONS.includes(previousAction.type);
-				const canFindCursor = !!cursor;
+				const canFindCursor = !!after;
 				expect(canFindCursor || !canBeInHistory || isException).toBeTruthy();
 			}
 		);

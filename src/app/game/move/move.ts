@@ -30,10 +30,10 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 //  - (when the root of it is at the top of a column)
 //  - (unless we are breaking a sequence??)
 /*
-TODO (controls) (3-priority) More control over where next card moves (i.e. cannot move to foundation if multiple valid moves)
+TODO (controls) More control over where next card moves (i.e. cannot move to foundation if multiple valid moves)
  - which is really because click-to-move is the only available control scheme on mobile
  - this is solved with click-to-select, any keyboard, and drag-and-drop
-TODO (controls) (3-priority) Can't put the three in the foundation
+ - Can't put 3D in the foundation, it just waffles between 4S and 4C
  9C KC 8S 4D AC 2H 2D
  AS KD 2C 7C 6S 7D 9H JC
  3H QC 7H 6H 5D TC TH 3C
