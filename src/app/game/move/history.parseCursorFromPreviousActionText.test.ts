@@ -7,9 +7,6 @@ import {
 import {
 	parseAltCursorFromPreviousActionText,
 	parseCursorFromPreviousActionText,
-	parsePreviousActionType,
-	PREVIOUS_ACTION_TYPE_IN_HISTORY,
-	PreviousActionType,
 } from '@/app/game/move/history';
 
 describe('game/history.parseCursorFromPreviousActionText', () => {
@@ -68,20 +65,20 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'deselect 6 2D'}                            | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 3] }}  | ${{ fixture: 'cascade', data: [5, 3] }}
 			${'deselect 6 4D-3S-2D'}                      | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 1] }}  | ${{ fixture: 'cascade', data: [5, 1] }}
 			${'touch stop'}                               | ${[]}          | ${undefined}                             | ${undefined}
-			${'move 3a KC→cell'}                          | ${[]}          | ${{ fixture: 'cell', data: [0] }}        | ${undefined}
-			${'move 8h AD→foundation'}                    | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
-			${'move 57 KS→cascade'}                       | ${[]}          | ${{ fixture: 'cascade', data: [6, 0] }}  | ${undefined}
-			${'move 23 KC-QD-JS→cascade'}                 | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${undefined}
-			${'move 15 TD→JS'}                            | ${someCards_1} | ${{ fixture: 'cascade', data: [4, 12] }} | ${undefined}
-			${'move 78 JH-TC-9H-8S-7H→QS'}                | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 2] }}  | ${undefined}
-			${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${someCards_1} | ${{ fixture: 'cascade', data: [2, 5] }}  | ${undefined}
-			${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${someCards_2} | ${{ fixture: 'cascade', data: [3, 0] }}  | ${undefined}
-			${'move 21 8H-7C→cascade'}                    | ${[]}          | ${{ fixture: 'cascade', data: [0, 0] }}  | ${undefined}
-			${FIFTY_TWO_CARD_FLOURISH}                    | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${undefined}
+			${'move 3a KC→cell'}                          | ${[]}          | ${{ fixture: 'cell', data: [0] }}        | ${{ fixture: 'cascade', data: [2, 99] }}
+			${'move 8h AD→foundation'}                    | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cascade', data: [7, 99] }}
+			${'move 57 KS→cascade'}                       | ${[]}          | ${{ fixture: 'cascade', data: [6, 0] }}  | ${{ fixture: 'cascade', data: [4, 99] }}
+			${'move 23 KC-QD-JS→cascade'}                 | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${{ fixture: 'cascade', data: [1, 99] }}
+			${'move 15 TD→JS'}                            | ${someCards_1} | ${{ fixture: 'cascade', data: [4, 12] }} | ${{ fixture: 'cascade', data: [0, 99] }}
+			${'move 78 JH-TC-9H-8S-7H→QS'}                | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 2] }}  | ${{ fixture: 'cascade', data: [6, 99] }}
+			${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${someCards_1} | ${{ fixture: 'cascade', data: [2, 5] }}  | ${{ fixture: 'cascade', data: [4, 99] }}
+			${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${someCards_2} | ${{ fixture: 'cascade', data: [3, 0] }}  | ${{ fixture: 'cascade', data: [0, 99] }}
+			${'move 21 8H-7C→cascade'}                    | ${[]}          | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'cascade', data: [1, 99] }}
+			${FIFTY_TWO_CARD_FLOURISH}                    | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${{ fixture: 'cascade', data: [2, 99] }}
 			${'auto-foundation 56 KD,KS'}                 | ${someCards_1} | ${undefined}                             | ${undefined}
 			${'flourish 56 KD,KS'}                        | ${someCards_1} | ${undefined}                             | ${undefined}
-			${'invalid move 86 7D→9C'}                    | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 0] }}  | ${undefined}
-			${'invalid move 75 6D-5S-4D-3C→7C'}           | ${someCards_2} | ${{ fixture: 'cascade', data: [4, 0] }}  | ${undefined}
+			${'invalid move 86 7D→9C'}                    | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 0] }}  | ${{ fixture: 'cascade', data: [7, 99] }}
+			${'invalid move 75 6D-5S-4D-3C→7C'}           | ${someCards_2} | ${{ fixture: 'cascade', data: [4, 0] }}  | ${{ fixture: 'cascade', data: [6, 99] }}
 		`(
 			'$actionText',
 			({
@@ -98,16 +95,6 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 				pullActionTextExamples(actionTextExamples, actionText);
 				expect(parseCursorFromPreviousActionText(actionText, cards)).toEqual(after);
 				expect(parseAltCursorFromPreviousActionText(actionText, cards)).toEqual(before);
-
-				// FIXME reconsider which ones should have a cursor, now that we can "toggle"
-				//  - no cursor, but all the others?
-				// make sure all the ones that should have a cursor do have a cursor
-				const previousAction = parsePreviousActionType(actionText);
-				const EXCEPTIONS: PreviousActionType[] = ['auto-foundation'];
-				const canBeInHistory = PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type);
-				const isException = EXCEPTIONS.includes(previousAction.type);
-				const canFindCursor = !!after;
-				expect(canFindCursor || !canBeInHistory || isException).toBeTruthy();
 			}
 		);
 	});

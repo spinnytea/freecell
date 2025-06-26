@@ -215,9 +215,6 @@ export function parseCursorFromPreviousActionText(
 			}
 			return cursor;
 		}
-		case 'auto-foundation':
-			// FIXME review
-			return undefined;
 		case 'select':
 		case 'deselect': {
 			const { from, fromShorthand } = parseActionTextSelect(actionText);
@@ -240,6 +237,7 @@ export function parseCursorFromPreviousActionText(
 			}
 			return undefined;
 		case 'cursor':
+		case 'auto-foundation':
 		case 'auto-foundation-tween':
 			return undefined;
 	}
@@ -252,7 +250,6 @@ export function parseAltCursorFromPreviousActionText(
 	actionText: string | undefined,
 	cards: Card[]
 ): CardLocation | undefined {
-	// FIXME do it
 	if (!actionText) return undefined;
 	switch (parsePreviousActionType(actionText).type) {
 		case 'init':
@@ -260,9 +257,15 @@ export function parseAltCursorFromPreviousActionText(
 		case 'deal':
 			return { fixture: 'deck', data: [0] };
 		case 'move-foundation':
-		case 'move':
-		case 'auto-foundation':
-			return undefined;
+		case 'move': {
+			const { from } = parseActionTextMove(actionText);
+			const cursor = parseShorthandPosition_INCOMPLETE(from);
+			// deck doesn't have a shorthand (so 0 is fine, if we see it)
+			// cell is already accurate
+			// foundation can't be `from` in an move (so 0 is fine, if we see it)
+			// cascade needs to be "the last card" (since we can only move from the bottom)
+			return cursor;
+		}
 		case 'select':
 		case 'deselect': {
 			const { from, fromShorthand } = parseActionTextSelect(actionText);
@@ -285,6 +288,7 @@ export function parseAltCursorFromPreviousActionText(
 			}
 			return undefined;
 		case 'cursor':
+		case 'auto-foundation':
 		case 'auto-foundation-tween':
 			return undefined;
 	}
@@ -487,7 +491,7 @@ function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 export function parsePreviousActionType(actionText: string): PreviousAction {
 	const firstWord = actionText.split(' ')[0];
 	if (firstWord === 'hand-jammed') return { text: actionText, type: 'init' };
-	if (firstWord === 'touch') return { text: actionText, type: 'invalid' }; // FIXME 'cursor stop' is cursor, not invalid; should 'touch stop' be the same?
+	if (firstWord === 'touch') return { text: actionText, type: 'invalid' };
 	if (firstWord === 'flourish') return { text: actionText, type: 'auto-foundation' };
 	if (firstWord === 'move' && actionText.endsWith(')')) {
 		if (actionText.includes('auto-foundation'))
