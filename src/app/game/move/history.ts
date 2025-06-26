@@ -107,6 +107,7 @@ const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
 	/^move (\w)(\w) ([\w-]+)→(\S+) \((auto-foundation|flourish) (\w+) (\S+)\)$/;
+const SELECT_REGEX = /^(de)?select( (\w))? ([\w-]+)$/;
 
 /**
 	read {@link PreviousAction.text} which has the full context of what was moved
@@ -159,7 +160,7 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 */
 export function parseCursorFromPreviousActionText(
 	actionText: string | undefined,
-	cards?: Card[]
+	cards: Card[]
 ): CardLocation | undefined {
 	if (!actionText) return undefined;
 	switch (parsePreviousActionType(actionText).type) {
@@ -180,22 +181,21 @@ export function parseCursorFromPreviousActionText(
 				case 'cell':
 					// each cell identifies it's own d0
 					break;
-				case 'foundation':
-					if (cards) {
-						const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
-						const card = findCard(cards, shorthand);
-						if (cursor.fixture !== card.location.fixture) {
-							throw new Error(
-								`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
-							);
-						}
-						cursor.data[0] = card.location.data[0];
+				case 'foundation': {
+					const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+					const card = findCard(cards, shorthand);
+					if (cursor.fixture !== card.location.fixture) {
+						throw new Error(
+							`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
+						);
 					}
+					cursor.data[0] = card.location.data[0];
 					break;
+				}
 				case 'cascade':
 					if (toShorthand === 'cascade') {
 						cursor.data[1] = 0;
-					} else if (cards) {
+					} else {
 						const shorthand = parseShorthandCard(toShorthand[0], toShorthand[1]);
 						const card = findCard(cards, shorthand);
 						if (card.location.fixture !== 'foundation') {
@@ -216,11 +216,29 @@ export function parseCursorFromPreviousActionText(
 			return cursor;
 		}
 		case 'auto-foundation':
-		case 'select':
-		case 'deselect':
+			// FIXME review
 			return undefined;
+		case 'select':
+		case 'deselect': {
+			const { from, fromShorthand } = parseActionTextSelect(actionText);
+			const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+			const card = findCard(cards, shorthand);
+			if (from) {
+				const cursor = parseShorthandPosition_INCOMPLETE(from);
+				if (cursor.fixture !== card.location.fixture) {
+					// XXX (techdebt) do we really even need to get the cursor and check against the card?
+					throw new Error(
+						`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
+					);
+				}
+			}
+			return card.location;
+		}
 		case 'invalid':
-			return parseCursorFromPreviousActionText(actionText.substring(8), cards);
+			if (actionText.startsWith('invalid')) {
+				return parseCursorFromPreviousActionText(actionText.substring(8), cards);
+			}
+			return undefined;
 		case 'cursor':
 		case 'auto-foundation-tween':
 			return undefined;
@@ -231,7 +249,8 @@ export function parseCursorFromPreviousActionText(
 	Where should the cursor be _before_ a move?
 */
 export function parseAltCursorFromPreviousActionText(
-	actionText: string | undefined
+	actionText: string | undefined,
+	cards: Card[]
 ): CardLocation | undefined {
 	// FIXME do it
 	if (!actionText) return undefined;
@@ -243,10 +262,29 @@ export function parseAltCursorFromPreviousActionText(
 		case 'move-foundation':
 		case 'move':
 		case 'auto-foundation':
-		case 'cursor':
+			return undefined;
 		case 'select':
-		case 'deselect':
+		case 'deselect': {
+			const { from, fromShorthand } = parseActionTextSelect(actionText);
+			const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+			const card = findCard(cards, shorthand);
+			if (from) {
+				const cursor = parseShorthandPosition_INCOMPLETE(from);
+				if (cursor.fixture !== card.location.fixture) {
+					// XXX (techdebt) do we really even need to get the cursor and check against the card?
+					throw new Error(
+						`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
+					);
+				}
+			}
+			return card.location;
+		}
 		case 'invalid':
+			if (actionText.startsWith('invalid')) {
+				return parseAltCursorFromPreviousActionText(actionText.substring(8), cards);
+			}
+			return undefined;
+		case 'cursor':
 		case 'auto-foundation-tween':
 			return undefined;
 	}
@@ -275,6 +313,15 @@ function _parseActionTextMoveFoundation(actionText: string) {
 		return { from, to, fromShorthand, toShorthand };
 	}
 	return undefined;
+}
+
+function parseActionTextSelect(actionText: string) {
+	const match = SELECT_REGEX.exec(actionText);
+	if (match) {
+		const [, , , from, fromShorthand] = match;
+		return { from, fromShorthand };
+	}
+	throw new Error('not "deselect" or "select" actionText: ' + actionText);
 }
 
 function parseActionTextInvalidMove(actionText: string) {
@@ -440,7 +487,7 @@ function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 export function parsePreviousActionType(actionText: string): PreviousAction {
 	const firstWord = actionText.split(' ')[0];
 	if (firstWord === 'hand-jammed') return { text: actionText, type: 'init' };
-	if (firstWord === 'touch') return { text: actionText, type: 'invalid' };
+	if (firstWord === 'touch') return { text: actionText, type: 'invalid' }; // FIXME 'cursor stop' is cursor, not invalid; should 'touch stop' be the same?
 	if (firstWord === 'flourish') return { text: actionText, type: 'auto-foundation' };
 	if (firstWord === 'move' && actionText.endsWith(')')) {
 		if (actionText.includes('auto-foundation'))

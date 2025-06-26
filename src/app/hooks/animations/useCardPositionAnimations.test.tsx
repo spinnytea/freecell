@@ -1276,44 +1276,44 @@ describe('useCardPositionAnimations', () => {
 
 		/** singular animation */
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 6D');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select QS');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 4D-3S-2D');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 8 7D');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 8 7C');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 8 4D-3S-2D');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect KS');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect AS');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 4D-3S-2D');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 6 2C');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 6 2D');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 6 4D-3S-2D');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'invalid move 86 7D→9C');
 		describe('animate', () => {
 			// peekOnly
-			test.todo('· select 6D');
+			test.todo('· select QS');
 
 			// peekOnly
 			test.todo('· select 4D-3S-2D');
 
 			// (canMove), !peekOnly
-			test.todo('· select 8 7D');
+			test.todo('· select 8 7C');
 
 			// (canMove), !peekOnly
 			test.todo('· select 8 4D-3S-2D');
 
 			// peekOnly
-			test.todo('· deselect KS');
+			test.todo('· deselect AS');
 
 			// peekOnly
 			test.todo('· deselect 4D-3S-2D');
 
 			// (canMove), !peekOnly
-			test.todo('· deselect 6 2C');
+			test.todo('· deselect 6 2D');
 
 			// (canMove), !peekOnly
 			test.todo('· deselect 6 4D-3S-2D');

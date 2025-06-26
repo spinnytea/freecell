@@ -31,13 +31,13 @@ describe('game/history.parsePreviousActionType', () => {
 			${'cursor down w'}                            | ${{ text: 'cursor down w', type: 'cursor' }}
 			${'cursor right w'}                           | ${{ text: 'cursor right w', type: 'cursor' }}
 			${'cursor stop'}                              | ${{ text: 'cursor stop', type: 'cursor' }}
-			${'select 6D'}                                | ${{ text: 'select 6D', type: 'select' }}
+			${'select QS'}                                | ${{ text: 'select QS', type: 'select' }}
 			${'select 4D-3S-2D'}                          | ${{ text: 'select 4D-3S-2D', type: 'select' }}
-			${'select 8 7D'}                              | ${{ text: 'select 8 7D', type: 'select' }}
+			${'select 8 7C'}                              | ${{ text: 'select 8 7C', type: 'select' }}
 			${'select 8 4D-3S-2D'}                        | ${{ text: 'select 8 4D-3S-2D', type: 'select' }}
-			${'deselect KS'}                              | ${{ text: 'deselect KS', type: 'deselect' }}
+			${'deselect AS'}                              | ${{ text: 'deselect AS', type: 'deselect' }}
 			${'deselect 4D-3S-2D'}                        | ${{ text: 'deselect 4D-3S-2D', type: 'deselect' }}
-			${'deselect 6 2C'}                            | ${{ text: 'deselect 6 2C', type: 'deselect' }}
+			${'deselect 6 2D'}                            | ${{ text: 'deselect 6 2D', type: 'deselect' }}
 			${'deselect 6 4D-3S-2D'}                      | ${{ text: 'deselect 6 4D-3S-2D', type: 'deselect' }}
 			${'touch stop'}                               | ${{ text: 'touch stop', type: 'invalid' }}
 			${'move 3a KC→cell'}                          | ${{ text: 'move 3a KC→cell', type: 'move' }}

@@ -18,6 +18,9 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 		{ rank: '7', suit: 'clubs', location: { fixture: 'cascade', data: [2, 5] } },
 		{ rank: 'jack', suit: 'spades', location: { fixture: 'cascade', data: [4, 12] } },
 		{ rank: 'queen', suit: 'spades', location: { fixture: 'cascade', data: [7, 2] } },
+		{ rank: '4', suit: 'diamonds', location: { fixture: 'cascade', data: [7, 3] } },
+		{ rank: '3', suit: 'spades', location: { fixture: 'cascade', data: [7, 4] } },
+		{ rank: '2', suit: 'diamonds', location: { fixture: 'cascade', data: [7, 5] } },
 	];
 	const someCards_2: Card[] = [
 		{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 0] } },
@@ -25,6 +28,9 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 		{ rank: '3', suit: 'diamonds', location: { fixture: 'cascade', data: [3, 0] } },
 		{ rank: '9', suit: 'clubs', location: { fixture: 'cascade', data: [5, 0] } },
 		{ rank: '7', suit: 'clubs', location: { fixture: 'cascade', data: [4, 0] } },
+		{ rank: '4', suit: 'diamonds', location: { fixture: 'cascade', data: [5, 1] } },
+		{ rank: '3', suit: 'spades', location: { fixture: 'cascade', data: [5, 2] } },
+		{ rank: '2', suit: 'diamonds', location: { fixture: 'cascade', data: [5, 3] } },
 	];
 
 	describe('specific cases', () => {
@@ -53,14 +59,14 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'cursor down w'}                            | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor right w'}                           | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor stop'}                              | ${[]}          | ${undefined}                             | ${undefined}
-			${'select 6D'}                                | ${[]}          | ${undefined}                             | ${undefined}
-			${'select 4D-3S-2D'}                          | ${[]}          | ${undefined}                             | ${undefined}
-			${'select 8 7D'}                              | ${[]}          | ${undefined}                             | ${undefined}
-			${'select 8 4D-3S-2D'}                        | ${[]}          | ${undefined}                             | ${undefined}
-			${'deselect KS'}                              | ${[]}          | ${undefined}                             | ${undefined}
-			${'deselect 4D-3S-2D'}                        | ${[]}          | ${undefined}                             | ${undefined}
-			${'deselect 6 2C'}                            | ${[]}          | ${undefined}                             | ${undefined}
-			${'deselect 6 4D-3S-2D'}                      | ${[]}          | ${undefined}                             | ${undefined}
+			${'select QS'}                                | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 2] }}  | ${{ fixture: 'cascade', data: [7, 2] }}
+			${'select 4D-3S-2D'}                          | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 3] }}  | ${{ fixture: 'cascade', data: [7, 3] }}
+			${'select 8 7C'}                              | ${someCards_1} | ${{ fixture: 'cascade', data: [2, 5] }}  | ${{ fixture: 'cascade', data: [2, 5] }}
+			${'select 8 4D-3S-2D'}                        | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 3] }}  | ${{ fixture: 'cascade', data: [7, 3] }}
+			${'deselect AS'}                              | ${someCards_2} | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'cascade', data: [0, 0] }}
+			${'deselect 4D-3S-2D'}                        | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 1] }}  | ${{ fixture: 'cascade', data: [5, 1] }}
+			${'deselect 6 2D'}                            | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 3] }}  | ${{ fixture: 'cascade', data: [5, 3] }}
+			${'deselect 6 4D-3S-2D'}                      | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 1] }}  | ${{ fixture: 'cascade', data: [5, 1] }}
 			${'touch stop'}                               | ${[]}          | ${undefined}                             | ${undefined}
 			${'move 3a KC→cell'}                          | ${[]}          | ${{ fixture: 'cell', data: [0] }}        | ${undefined}
 			${'move 8h AD→foundation'}                    | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
@@ -91,7 +97,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			}) => {
 				pullActionTextExamples(actionTextExamples, actionText);
 				expect(parseCursorFromPreviousActionText(actionText, cards)).toEqual(after);
-				expect(parseAltCursorFromPreviousActionText(actionText)).toEqual(before);
+				expect(parseAltCursorFromPreviousActionText(actionText, cards)).toEqual(before);
 
 				// FIXME reconsider which ones should have a cursor, now that we can "toggle"
 				//  - no cursor, but all the others?
