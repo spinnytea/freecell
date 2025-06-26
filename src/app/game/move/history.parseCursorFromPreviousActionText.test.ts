@@ -7,6 +7,9 @@ import {
 import {
 	parseAltCursorFromPreviousActionText,
 	parseCursorFromPreviousActionText,
+	parsePreviousActionType,
+	PREVIOUS_ACTION_TYPE_IN_HISTORY,
+	PreviousActionType,
 } from '@/app/game/move/history';
 
 describe('game/history.parseCursorFromPreviousActionText', () => {
@@ -95,6 +98,14 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 				pullActionTextExamples(actionTextExamples, actionText);
 				expect(parseCursorFromPreviousActionText(actionText, cards)).toEqual(after);
 				expect(parseAltCursorFromPreviousActionText(actionText, cards)).toEqual(before);
+
+				// make sure all the ones that should have a cursor do have a cursor
+				const previousAction = parsePreviousActionType(actionText);
+				const EXCEPTIONS: PreviousActionType[] = ['auto-foundation'];
+				const canBeInHistory = PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type);
+				const isException = EXCEPTIONS.includes(previousAction.type);
+				const canFindCursor = !!after && !!before;
+				expect(canFindCursor || !canBeInHistory || isException).toBeTruthy();
 			}
 		);
 	});

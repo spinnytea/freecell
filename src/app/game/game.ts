@@ -841,11 +841,19 @@ export class FreeCell {
 		sugar/helper controls
 	*/
 	$undoThenShuffle(): FreeCell | this {
+		// REVIEW (controls) $toggleCursor still feels wrong here
+		//  - without it, the cursor is _totally_ unrelated to what just happened
+		//  - with it, it's like, closer. but. it's like we want, the cursor (of the previous action)
+		// const cursor = this.$toggleCursor().cursor;
+		//  - which card was moved (before the undo), move that thing
+		// const { fromShorthand } = parseActionTextMove(this.previousAction.text);
+		// const cursor = findCard(fromShorthand).location;
+
 		const game = this.undo();
 		if (game !== this && game.previousAction.type === 'init') {
 			return game.shuffle32();
 		}
-		return game;
+		return game.$toggleCursor();
 	}
 
 	/**
@@ -863,7 +871,18 @@ export class FreeCell {
 		return this.shuffle32();
 	}
 
-	// FIXME docs, use, test, optimize
+	/**
+		Flip-flop the cursor across the previous move.
+		This makes it easier to play with the arrow keys.
+
+		For Example: `move 23 KC-QD-JS→cascade`
+		 - after: `KS` is in `3`
+		 - before: `KS` was in `2`
+
+		This might work well becase of my particular gameplay.
+		I tend to pick apart a single cascade for a bit before moving on to the next.
+		So going back to the same cascade helps a LOT. For me.
+	*/
 	$toggleCursor(): FreeCell | this {
 		const actionText = this.history.at(-1);
 		const after = parseCursorFromPreviousActionText(actionText, this.cards);

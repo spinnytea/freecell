@@ -157,6 +157,10 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 
 /**
 	Where should the cursor be _after_ a move?
+
+	We pass in `cards` instead of `game` because
+	in the cases we need this,
+	we are building a new game state and want the cursor before we `game.__clone`
 */
 export function parseCursorFromPreviousActionText(
 	actionText: string | undefined,
