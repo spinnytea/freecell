@@ -21,6 +21,7 @@ import {
 	appendActionToHistory,
 	getCardsThatMoved,
 	parseActionTextMove,
+	parseAltCursorFromPreviousActionText,
 	parseAndUndoPreviousActionText,
 	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
@@ -860,6 +861,17 @@ export class FreeCell {
 			return this.dealAll();
 		}
 		return this.shuffle32();
+	}
+
+	// FIXME docs, use, test, optimize
+	$toggleCursor(): FreeCell | this {
+		const actionText = this.history.at(-1);
+		const after = parseCursorFromPreviousActionText(actionText, this.cards);
+		if (!after) return this;
+		if (!isLocationEqual(after, this.cursor)) return this.setCursor(after);
+		const before = parseAltCursorFromPreviousActionText(actionText, this.cards);
+		if (!before) return this;
+		return this.setCursor(before);
 	}
 
 	/**

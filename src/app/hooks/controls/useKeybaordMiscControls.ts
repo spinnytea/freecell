@@ -55,27 +55,32 @@ export function useKeybaordMiscControls() {
 					consumed = true;
 					setGame((g) => g.clearSelection());
 					break;
-				// FIXME I want a hotkey that move the cursor to the previous spot
-				//  - e.g. :h shuffle32 7852
-				//          74 7a 7b a7 b7
-				//  - e.g. :h shuffle32 7852
-				//          74 7a 7b 7c 78 c7 a7 b7
-				//          87
-				//  - maybe it's a key that toggles between:
-				//    # "the cursor after the move"
-				//    # "the cursor before the move"
-				//  - when you click with the cursor, it's just "hover over col 7 and click a bunch / unload the cells"
-				//  - with the keyboard, it's quite a few arrow keys to reset the cursor
-				//  - ~~maybe this is rendered entirely obsolete with hotkeys~~
-				//    undo is not rendered useless by move collapse
-				//    hotkeys you need to hunt and peck (and mentally map the board to a hotkey)
-				//  - move 23 KC-QD-JS→cascade
-				//    after: `KS` is in 3, but just findCard().location
-				//    before: `KS` was in 2, either:
-				//             cell (well numbered)
-				//             bottom of the cascade (tableau[position].length)
-				//             shouldn't be h (foundation), just default to { fixture, data: [0] }, no need to search for it
-				//             can't be deck, but just use { fixture, data: [deck.length] }, because lolwhynot
+				case 'x':
+				case 'X':
+					// FIXME actually play the game and see how it feels
+					//  - e.g. :h shuffle32 7852
+					//          74 7a 7b a7 b7
+					//  - e.g. :h shuffle32 7852
+					//          74 7a 7b 7c 78 c7 a7 b7
+					//          87
+					//  - maybe it's a key that toggles between:
+					//    # "the cursor after the move"
+					//    # "the cursor before the move"
+					//  - when you click with the cursor, it's just "hover over col 7 and click a bunch / unload the cells"
+					//  - with the keyboard, it's quite a few arrow keys to reset the cursor
+					//  - ~~maybe this is rendered entirely obsolete with hotkeys~~
+					//    undo is not rendered useless by move collapse
+					//    hotkeys you need to hunt and peck (and mentally map the board to a hotkey)
+					//  - move 23 KC-QD-JS→cascade
+					//    after: `KS` is in 3, but just findCard().location
+					//    before: `KS` was in 2, either:
+					//             cell (well numbered)
+					//             bottom of the cascade (tableau[position].length)
+					//             shouldn't be h (foundation), just default to { fixture, data: [0] }, no need to search for it
+					//             can't be deck, but just use { fixture, data: [deck.length] }, because lolwhynot
+					consumed = true;
+					setGame((g) => g.$toggleCursor());
+					break;
 				case 'z':
 				case 'Z':
 					// FIXME should undo be in the "before" position?
