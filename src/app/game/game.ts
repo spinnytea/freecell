@@ -350,6 +350,10 @@ export class FreeCell {
 		if (!this.selection || this.selection.peekOnly || selectionOnly) {
 			if (this.win && this.cursor.fixture === 'foundation' && !allowSelectFoundation) {
 				// REVIEW (techdebt) (joker) (settings) settings for new game?
+				//  - we could pass in `cards: null` or `cards: []` to reset a a game
+				//  - `game.__clone({ cards: null })`
+				//  - the whole point is to "reinitialize the deck"
+				//  - maybe we make a flag for that specifically?
 				return new FreeCell({ cellCount: this.cells.length, cascadeCount: this.tableau.length });
 			}
 
@@ -439,7 +443,10 @@ export class FreeCell {
 	/**
 		go back one move
 	*/
-	undo({ skipActionPrev = false }: { skipActionPrev?: boolean } = {}): FreeCell | this {
+	undo({
+		skipActionPrev = false,
+		toggleCursor = false,
+	}: { skipActionPrev?: boolean; toggleCursor?: boolean } = {}): FreeCell | this {
 		const history = this.history.slice(0);
 		const moveToUndo = history.pop();
 		if (!moveToUndo) return this;
@@ -455,7 +462,9 @@ export class FreeCell {
 		const cursor =
 			action.text === 'hand-jammed'
 				? undefined
-				: parseCursorFromPreviousActionText(action.text, cards);
+				: toggleCursor
+					? parseAltCursorFromPreviousActionText(action.text, cards)
+					: parseCursorFromPreviousActionText(action.text, cards);
 
 		// we _need_ an action in __clone
 		// __clone will add it back to the history
@@ -735,6 +744,9 @@ export class FreeCell {
 			seed = Math.floor(Math.random() * 32000) + 1;
 		}
 
+		// BUG (techdebt) (history) this actionText seed is wrong
+		//  - it's correct if `new FreeCell().shuffle32()`
+		//  - it's wrong if `new FreeCell().shuffle32().shuffle32()`
 		const actionText = `shuffle deck (${seed.toString(10)})`;
 		const cards = cloneCards(this.cards);
 		const deck: Card[] = [];
@@ -749,6 +761,8 @@ export class FreeCell {
 					break;
 			}
 		});
+
+		if (deck.length === 0) return this;
 
 		let temp: Card;
 		for (let i = deck.length; i > 0; i--) {
@@ -840,20 +854,24 @@ export class FreeCell {
 
 		sugar/helper controls
 	*/
-	$undoThenShuffle(): FreeCell | this {
+	$undoThenShuffle(seed?: number): FreeCell | this {
 		// REVIEW (controls) $toggleCursor still feels wrong here
 		//  - without it, the cursor is _totally_ unrelated to what just happened
-		//  - with it, it's like, closer. but. it's like we want, the cursor (of the previous action)
+		//  - with it, it's like, closer. but instead we want, the cursor of this previous action
 		// const cursor = this.$toggleCursor().cursor;
 		//  - which card was moved (before the undo), move that thing
 		// const { fromShorthand } = parseActionTextMove(this.previousAction.text);
 		// const cursor = findCard(fromShorthand).location;
 
-		const game = this.undo();
+		const game = this.undo({ toggleCursor: true });
 		if (game !== this && game.previousAction.type === 'init') {
-			return game.shuffle32();
+			// REVIEW (techdebt) (joker) (settings) settings for new game?
+			return new FreeCell({
+				cellCount: this.cells.length,
+				cascadeCount: this.tableau.length,
+			}).shuffle32(seed);
 		}
-		return game.$toggleCursor();
+		return game;
 	}
 
 	/**

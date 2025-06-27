@@ -652,6 +652,7 @@ describe('game', () => {
 			expect(game.tableau.length).toBe(8);
 		});
 
+		// FIXME move this to game.parse.test
 		describe('start of game', () => {
 			test('values', () => {
 				// if this fails, add another test
