@@ -161,6 +161,9 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 	We pass in `cards` instead of `game` because
 	in the cases we need this,
 	we are building a new game state and want the cursor before we `game.__clone`
+
+	this is only ever used as `parseCursorFromHistoryActionText`,
+	even though we can support all† actions
 */
 export function parseCursorFromPreviousActionText(
 	actionText: string | undefined,
@@ -240,6 +243,9 @@ export function parseCursorFromPreviousActionText(
 				return parseCursorFromPreviousActionText(actionText.substring(8), cards);
 			}
 			return undefined;
+		// XXX (history) (4-priority) can we put something in the cursor to note the position?
+		//  - position, braille d1, like we will do for shorthandMove
+		//  - maybe it's just for 'cursor set' or something
 		case 'cursor':
 		case 'auto-foundation':
 		case 'auto-foundation-tween':
@@ -249,6 +255,9 @@ export function parseCursorFromPreviousActionText(
 
 /**
 	Where should the cursor be _before_ a move?
+
+	this is only ever used as `parseAltCursorFromHistoryActionText`,
+	even though we can support all† actions
 */
 export function parseAltCursorFromPreviousActionText(
 	actionText: string | undefined,
@@ -295,6 +304,7 @@ export function parseAltCursorFromPreviousActionText(
 				return parseAltCursorFromPreviousActionText(actionText.substring(8), cards, allowEmptyDeck);
 			}
 			return undefined;
+		// XXX (history) (4-priority) can we put something in the cursor to note the position?
 		case 'cursor':
 		case 'auto-foundation':
 		case 'auto-foundation-tween':

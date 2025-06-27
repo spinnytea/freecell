@@ -30,10 +30,10 @@ describe('game.$undoThenShuffle', () => {
 		});
 
 		test('shuffle', () => {
-			const game = new FreeCell().shuffle32(0);
-			expect(game.history).toEqual(['shuffle deck (0)']);
+			const game = new FreeCell().shuffle32(1);
+			expect(game.history).toEqual(['shuffle deck (1)']);
 			expect(game.previousAction).toEqual({
-				text: 'shuffle deck (0)',
+				text: 'shuffle deck (1)',
 				type: 'shuffle',
 			});
 			expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
@@ -48,8 +48,8 @@ describe('game.$undoThenShuffle', () => {
 		});
 
 		test('shuffle + deal', () => {
-			const game = new FreeCell().shuffle32(0).dealAll();
-			expect(game.history).toEqual(['shuffle deck (0)', 'deal all cards']);
+			const game = new FreeCell().shuffle32(1).dealAll();
+			expect(game.history).toEqual(['shuffle deck (1)', 'deal all cards']);
 			expect(game.previousAction).toEqual({
 				text: 'deal all cards',
 				type: 'deal',
@@ -57,9 +57,9 @@ describe('game.$undoThenShuffle', () => {
 			expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 
 			const undids = game.$undoThenShuffle(2);
-			expect(undids.history).toEqual(['shuffle deck (0)']);
+			expect(undids.history).toEqual(['shuffle deck (1)']);
 			expect(undids.previousAction).toEqual({
-				text: 'shuffle deck (0)',
+				text: 'shuffle deck (1)',
 				type: 'shuffle',
 				gameFunction: 'undo',
 			});
@@ -103,21 +103,21 @@ describe('game.$undoThenShuffle', () => {
 		});
 
 		test('first move', () => {
-			const game = new FreeCell().shuffle32(0).dealAll().moveByShorthand('1a');
+			const game = new FreeCell().shuffle32(3).dealAll().moveByShorthand('2a');
 			expect(game.history).toEqual([
-				'shuffle deck (0)',
+				'shuffle deck (3)',
 				'deal all cards',
-				'move 1a 2S→cell (auto-foundation 1 AD)',
+				'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 			]);
 			expect(game.previousAction).toEqual({
-				text: 'move 1a 2S→cell (auto-foundation 1 AD)',
+				text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 				type: 'move-foundation',
-				tweenCards: [{ rank: '2', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
+				tweenCards: [{ rank: '4', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
 			});
 			expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 
 			let undids = game.$undoThenShuffle(2);
-			expect(undids.history).toEqual(['shuffle deck (0)', 'deal all cards']);
+			expect(undids.history).toEqual(['shuffle deck (3)', 'deal all cards']);
 			expect(undids.previousAction).toEqual({
 				text: 'deal all cards',
 				type: 'deal',
@@ -126,10 +126,10 @@ describe('game.$undoThenShuffle', () => {
 			expect(undids.cursor).toEqual({ fixture: 'cell', data: [0] });
 
 			// do not shuffle just because we did a shuffle
-			undids = undids.$undoThenShuffle(0);
-			expect(undids.history).toEqual(['shuffle deck (0)']);
+			undids = undids.$undoThenShuffle(1);
+			expect(undids.history).toEqual(['shuffle deck (3)']);
 			expect(undids.previousAction).toEqual({
-				text: 'shuffle deck (0)',
+				text: 'shuffle deck (3)',
 				type: 'shuffle',
 				gameFunction: 'undo',
 			});

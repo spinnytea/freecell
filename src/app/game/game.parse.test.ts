@@ -90,18 +90,18 @@ describe('game.parse', () => {
 			});
 
 			test('shuffle', () => {
-				const game = new FreeCell().shuffle32(0);
-				expect(game.history).toEqual(['shuffle deck (0)']);
+				const game = new FreeCell().shuffle32(1);
+				expect(game.history).toEqual(['shuffle deck (1)']);
 				expect(game.previousAction).toEqual({
-					text: 'shuffle deck (0)',
+					text: 'shuffle deck (1)',
 					type: 'shuffle',
 				});
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
 
 				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
-				expect(gameWithHist.history).toEqual(['shuffle deck (0)']);
+				expect(gameWithHist.history).toEqual(['shuffle deck (1)']);
 				expect(gameWithHist.previousAction).toEqual({
-					text: 'shuffle deck (0)',
+					text: 'shuffle deck (1)',
 					type: 'shuffle',
 				});
 				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [0] });
@@ -110,7 +110,7 @@ describe('game.parse', () => {
 				const gameNoHist = FreeCell.parse(game.print());
 				expect(gameNoHist.history).toEqual([]);
 				expect(gameNoHist.previousAction).toEqual({
-					text: 'shuffle deck (0)',
+					text: 'shuffle deck (1)',
 					type: 'shuffle',
 				});
 				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [0] });
@@ -119,8 +119,8 @@ describe('game.parse', () => {
 			});
 
 			test('shuffle + deal', () => {
-				const game = new FreeCell().shuffle32(0).dealAll();
-				expect(game.history).toEqual(['shuffle deck (0)', 'deal all cards']);
+				const game = new FreeCell().shuffle32(1).dealAll();
+				expect(game.history).toEqual(['shuffle deck (1)', 'deal all cards']);
 				expect(game.previousAction).toEqual({
 					text: 'deal all cards',
 					type: 'deal',
@@ -128,7 +128,7 @@ describe('game.parse', () => {
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 
 				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
-				expect(gameWithHist.history).toEqual(['shuffle deck (0)', 'deal all cards']);
+				expect(gameWithHist.history).toEqual(['shuffle deck (1)', 'deal all cards']);
 				expect(gameWithHist.previousAction).toEqual({
 					text: 'deal all cards',
 					type: 'deal',
@@ -204,29 +204,29 @@ describe('game.parse', () => {
 			});
 
 			test('first move', () => {
-				const game = new FreeCell().shuffle32(0).dealAll().moveByShorthand('1a');
+				const game = new FreeCell().shuffle32(3).dealAll().moveByShorthand('2a');
 				expect(game.history).toEqual([
-					'shuffle deck (0)',
+					'shuffle deck (3)',
 					'deal all cards',
-					'move 1a 2S→cell (auto-foundation 1 AD)',
+					'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 				]);
 				expect(game.previousAction).toEqual({
-					text: 'move 1a 2S→cell (auto-foundation 1 AD)',
+					text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 					type: 'move-foundation',
-					tweenCards: [{ rank: '2', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
+					tweenCards: [{ rank: '4', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
 				});
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 
 				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
 				expect(gameWithHist.history).toEqual([
-					'shuffle deck (0)',
+					'shuffle deck (3)',
 					'deal all cards',
-					'move 1a 2S→cell (auto-foundation 1 AD)',
+					'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 				]);
 				expect(gameWithHist.previousAction).toEqual({
-					text: 'move 1a 2S→cell (auto-foundation 1 AD)',
+					text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 					type: 'move-foundation',
-					tweenCards: [{ rank: '2', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
+					tweenCards: [{ rank: '4', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
 				});
 				expect(gameWithHist.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(gameWithHist).toEqual(game);
@@ -234,10 +234,10 @@ describe('game.parse', () => {
 				const gameNoHist = FreeCell.parse(game.print());
 				expect(gameNoHist.history).toEqual([]);
 				expect(gameNoHist.previousAction).toEqual({
-					text: 'move 1a 2S→cell (auto-foundation 1 AD)',
+					text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 					type: 'move-foundation',
 					// TODO (techdebt) (parse-history) tweenCards is present but doesn't have a value? that's weird
-					//  - ['init without history', 'move 1a 2S→cell (auto-foundation 1 AD)']
+					//  - ['init without history', 'move 2a 4S→cell (auto-foundation 56 AH,2H)']
 					tweenCards: [],
 				});
 				expect(gameNoHist.cursor).toEqual({ fixture: 'cell', data: [0] });

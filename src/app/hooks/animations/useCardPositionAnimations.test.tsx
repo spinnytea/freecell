@@ -999,10 +999,10 @@ describe('useCardPositionAnimations', () => {
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal most cards');
 		describe('game setup', () => {
-			test('· shuffle deck (0)', () => {
-				const actionText = 'shuffle deck (0)';
+			test('· shuffle deck (1)', () => {
+				const actionText = 'shuffle deck (1)';
 				const gameStateOne = FreeCell.parse(ACTION_TEXT_EXAMPLES[actionText]);
-				const gameStateTwo = gameStateOne.shuffle32(0);
+				const gameStateTwo = gameStateOne.shuffle32(1);
 				const gameStateThree = gameStateTwo.undo();
 
 				// spot check

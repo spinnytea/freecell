@@ -739,8 +739,8 @@ export class FreeCell {
 
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/
-	shuffle32(seed?: number): FreeCell {
-		if (seed === undefined || seed === 11982) {
+	shuffle32(seed?: number): FreeCell | this {
+		while (seed === undefined || seed === 11982 || seed < 1 || seed > 32000) {
 			seed = Math.floor(Math.random() * 32000) + 1;
 		}
 
@@ -762,6 +762,7 @@ export class FreeCell {
 			}
 		});
 
+		// if there are no cards to shuffle, noop
 		if (deck.length === 0) return this;
 
 		let temp: Card;

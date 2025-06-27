@@ -9635,7 +9635,7 @@ exports[`GameBoard enable debug mode 1`] = `
         4
       </div>
       <div
-        class="pile"
+        class="pile cursorPile"
         id="pilemarker-5-5-1"
         style="top: 21px; left: 51px; width: 8px; height: 18px;"
       >
@@ -9649,7 +9649,7 @@ exports[`GameBoard enable debug mode 1`] = `
         6
       </div>
       <div
-        class="pile cursorPile"
+        class="pile"
         id="pilemarker-7-7-1"
         style="top: 21px; left: 71px; width: 8px; height: 18px;"
       >
@@ -9669,8 +9669,8 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="60"
-        data-top="20"
-        data-zindex="0"
+        data-top="23"
+        data-zindex="3"
         id="cAC-1"
       >
         <img
@@ -9687,9 +9687,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="25"
-        data-zindex="5"
+        data-left="50"
+        data-top="21"
+        data-zindex="1"
         id="cAD-1"
       >
         <img
@@ -9706,9 +9706,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="23"
-        data-zindex="3"
+        data-left="70"
+        data-top="22"
+        data-zindex="2"
         id="cAH-1"
       >
         <img
@@ -9725,9 +9725,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
-        data-top="25"
-        data-zindex="5"
+        data-left="60"
+        data-top="22"
+        data-zindex="2"
         id="cAS-1"
       >
         <img
@@ -9744,9 +9744,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="70"
-        data-top="23"
-        data-zindex="3"
+        data-left="60"
+        data-top="24"
+        data-zindex="4"
         id="c2C-1"
       >
         <img
@@ -9763,9 +9763,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="30"
-        data-top="22"
-        data-zindex="2"
+        data-left="20"
+        data-top="20"
+        data-zindex="0"
         id="c2D-1"
       >
         <img
@@ -9802,8 +9802,8 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="10"
-        data-top="26"
-        data-zindex="6"
+        data-top="22"
+        data-zindex="2"
         id="c2S-1"
       >
         <img
@@ -9820,9 +9820,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="60"
-        data-top="21"
-        data-zindex="1"
+        data-left="80"
+        data-top="22"
+        data-zindex="2"
         id="c3C-1"
       >
         <img
@@ -9839,9 +9839,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="22"
-        data-zindex="2"
+        data-left="60"
+        data-top="25"
+        data-zindex="5"
         id="c3D-1"
       >
         <img
@@ -9858,9 +9858,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="70"
-        data-top="24"
-        data-zindex="4"
+        data-left="80"
+        data-top="21"
+        data-zindex="1"
         id="c3H-1"
       >
         <img
@@ -9877,9 +9877,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="21"
-        data-zindex="1"
+        data-left="10"
+        data-top="24"
+        data-zindex="4"
         id="c3S-1"
       >
         <img
@@ -9896,9 +9896,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
-        data-top="26"
-        data-zindex="6"
+        data-left="10"
+        data-top="23"
+        data-zindex="3"
         id="c4C-1"
       >
         <img
@@ -9915,9 +9915,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="30"
-        data-top="25"
-        data-zindex="5"
+        data-left="70"
+        data-top="23"
+        data-zindex="3"
         id="c4D-1"
       >
         <img
@@ -9934,9 +9934,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="70"
-        data-top="25.5"
-        data-zindex="5"
+        data-left="50"
+        data-top="22.75"
+        data-zindex="3"
         id="c4H-1"
       >
         <img
@@ -9954,8 +9954,8 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="30"
-        data-top="21"
-        data-zindex="1"
+        data-top="24"
+        data-zindex="4"
         id="c4S-1"
       >
         <img
@@ -9972,9 +9972,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="50"
-        data-top="22"
-        data-zindex="2"
+        data-left="20"
+        data-top="23"
+        data-zindex="3"
         id="c5C-1"
       >
         <img
@@ -9991,9 +9991,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="70"
-        data-top="21"
-        data-zindex="1"
+        data-left="50"
+        data-top="20"
+        data-zindex="0"
         id="c5D-1"
       >
         <img
@@ -10010,7 +10010,7 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
+        data-left="80"
         data-top="20"
         data-zindex="0"
         id="c5H-1"
@@ -10030,8 +10030,8 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="40"
-        data-top="26"
-        data-zindex="6"
+        data-top="21"
+        data-zindex="1"
         id="c5S-1"
       >
         <img
@@ -10048,9 +10048,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="20"
-        data-zindex="0"
+        data-left="50"
+        data-top="25.5"
+        data-zindex="5"
         id="c6C-1"
       >
         <img
@@ -10067,9 +10067,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="30"
-        data-top="23"
-        data-zindex="3"
+        data-left="10"
+        data-top="25"
+        data-zindex="5"
         id="c6D-1"
       >
         <img
@@ -10086,9 +10086,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="21"
-        data-zindex="1"
+        data-left="40"
+        data-top="26"
+        data-zindex="6"
         id="c6H-1"
       >
         <img
@@ -10105,9 +10105,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="50"
-        data-top="20"
-        data-zindex="0"
+        data-left="10"
+        data-top="26"
+        data-zindex="6"
         id="c6S-1"
       >
         <img
@@ -10124,9 +10124,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="25"
-        data-zindex="5"
+        data-left="70"
+        data-top="20"
+        data-zindex="0"
         id="c7C-1"
       >
         <img
@@ -10143,9 +10143,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="70"
-        data-top="22"
-        data-zindex="2"
+        data-left="80"
+        data-top="24"
+        data-zindex="4"
         id="c7D-1"
       >
         <img
@@ -10162,9 +10162,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="24"
-        data-zindex="4"
+        data-left="60"
+        data-top="20"
+        data-zindex="0"
         id="c7H-1"
       >
         <img
@@ -10181,7 +10181,7 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="50"
+        data-left="80"
         data-top="23"
         data-zindex="3"
         id="c7S-1"
@@ -10200,9 +10200,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="40"
-        data-top="22"
-        data-zindex="2"
+        data-left="70"
+        data-top="25"
+        data-zindex="5"
         id="c8C-1"
       >
         <img
@@ -10219,9 +10219,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="40"
-        data-top="24"
-        data-zindex="4"
+        data-left="30"
+        data-top="25"
+        data-zindex="5"
         id="c8D-1"
       >
         <img
@@ -10238,8 +10238,8 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
-        data-top="24"
+        data-left="50"
+        data-top="24.5"
         data-zindex="4"
         id="c8H-1"
       >
@@ -10257,7 +10257,7 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="40"
+        data-left="20"
         data-top="25"
         data-zindex="5"
         id="c8S-1"
@@ -10276,9 +10276,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="60"
-        data-top="23"
-        data-zindex="3"
+        data-left="20"
+        data-top="26"
+        data-zindex="6"
         id="c9C-1"
       >
         <img
@@ -10295,9 +10295,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="23"
-        data-zindex="3"
+        data-left="30"
+        data-top="22"
+        data-zindex="2"
         id="c9D-1"
       >
         <img
@@ -10314,9 +10314,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
-        data-top="23"
-        data-zindex="3"
+        data-left="30"
+        data-top="20"
+        data-zindex="0"
         id="c9H-1"
       >
         <img
@@ -10333,9 +10333,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="50"
-        data-top="25"
-        data-zindex="5"
+        data-left="30"
+        data-top="21"
+        data-zindex="1"
         id="c9S-1"
       >
         <img
@@ -10352,9 +10352,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="40"
-        data-top="20"
-        data-zindex="0"
+        data-left="80"
+        data-top="25"
+        data-zindex="5"
         id="cTC-1"
       >
         <img
@@ -10371,9 +10371,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="22"
-        data-zindex="2"
+        data-left="20"
+        data-top="24"
+        data-zindex="4"
         id="cTD-1"
       >
         <img
@@ -10390,9 +10390,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="20"
-        data-zindex="0"
+        data-left="40"
+        data-top="24"
+        data-zindex="4"
         id="cTH-1"
       >
         <img
@@ -10409,9 +10409,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="70"
-        data-top="20"
-        data-zindex="0"
+        data-left="30"
+        data-top="23"
+        data-zindex="3"
         id="cTS-1"
       >
         <img
@@ -10429,8 +10429,8 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="40"
-        data-top="23"
-        data-zindex="3"
+        data-top="20"
+        data-zindex="0"
         id="cJC-1"
       >
         <img
@@ -10447,9 +10447,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="40"
-        data-top="21"
-        data-zindex="1"
+        data-left="10"
+        data-top="20"
+        data-zindex="0"
         id="cJD-1"
       >
         <img
@@ -10466,7 +10466,7 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="80"
+        data-left="70"
         data-top="24"
         data-zindex="4"
         id="cJH-1"
@@ -10486,8 +10486,8 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="50"
-        data-top="21"
-        data-zindex="1"
+        data-top="22"
+        data-zindex="2"
         id="cJS-1"
       >
         <img
@@ -10505,8 +10505,8 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="60"
-        data-top="24"
-        data-zindex="4"
+        data-top="21"
+        data-zindex="1"
         id="cQC-1"
       >
         <img
@@ -10523,9 +10523,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
-        data-top="21"
-        data-zindex="1"
+        data-left="40"
+        data-top="22"
+        data-zindex="2"
         id="cQD-1"
       >
         <img
@@ -10542,9 +10542,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
-        data-top="22"
-        data-zindex="2"
+        data-left="40"
+        data-top="23"
+        data-zindex="3"
         id="cQH-1"
       >
         <img
@@ -10561,9 +10561,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="60"
-        data-top="22"
-        data-zindex="2"
+        data-left="40"
+        data-top="25"
+        data-zindex="5"
         id="cQS-1"
       >
         <img
@@ -10580,9 +10580,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="50"
-        data-top="24"
-        data-zindex="4"
+        data-left="20"
+        data-top="21"
+        data-zindex="1"
         id="cKC-1"
       >
         <img
@@ -10599,9 +10599,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="60"
-        data-top="25"
-        data-zindex="5"
+        data-left="10"
+        data-top="21"
+        data-zindex="1"
         id="cKD-1"
       >
         <img
@@ -10618,9 +10618,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="30"
-        data-top="24"
-        data-zindex="4"
+        data-left="70"
+        data-top="21"
+        data-zindex="1"
         id="cKH-1"
       >
         <img
@@ -10637,9 +10637,9 @@ exports[`GameBoard enable debug mode 1`] = `
       </div>
       <div
         class="card"
-        data-left="30"
-        data-top="20"
-        data-zindex="0"
+        data-left="20"
+        data-top="22"
+        data-zindex="2"
         id="cKS-1"
       >
         <img
@@ -10699,7 +10699,7 @@ exports[`GameBoard enable debug mode 1`] = `
         class="hiddenActionText"
         role="status"
       >
-        select 7 4H
+        select 4H
       </output>
       <span
         class="statusspacer"
@@ -10717,52 +10717,32 @@ exports[`GameBoard enable debug mode 1`] = `
       class="texthistory"
     >
                                
- TH 5H KS TC 6S AC TS 6C 
- 6H QD 4S JD JS 3C 5D 3S 
- TD QH 2D 8C 5C QS 7D 3D 
- 9D 9H 6D JC 7S 9C 2C AH 
- 7H 8H KH 8D KC QC 3H JH 
- AD AS 4D 8S 9S KD 4H 7C 
- 2S 4C 2H 5S             
+ JD 2D 9H JC 5D 7H 7C 5H 
+ KD KC 9S 5S AD QC KH 3H 
+ 2S KS 9D QD JS AS AH 3C 
+ 4C 5C TS QH 4H AC 4D 7S 
+ 3S TD 4S TH 8H 2C JH 7D 
+ 6D 8S 8D QS 6C 3D 8C TC 
+ 6S 9C 2H 6H             
  deal all cards
-:h shuffle32 0
+:h shuffle32 1
     </pre>
     <pre
       class="textboard"
     >
                                
- TH 5H KS TC 6S AC TS 6C 
- 6H QD 4S JD JS 3C 5D 3S 
- TD QH 2D 8C 5C QS 7D 3D 
- 9D 9H 6D JC 7S 9C 2C AH 
- 7H 8H KH 8D KC QC 3H JH 
- AD AS 4D 8S 9S KD&gt;4H|7C 
- 2S 4C 2H 5S             
- select 7 4H
+ JD 2D 9H JC 5D 7H 7C 5H 
+ KD KC 9S 5S AD QC KH 3H 
+ 2S KS 9D QD JS AS AH 3C 
+ 4C 5C TS QH&gt;4H|AC 4D 7S 
+ 3S TD 4S TH 8H 2C JH 7D 
+ 6D 8S 8D QS 6C 3D 8C TC 
+ 6S 9C 2H 6H             
+ select 4H
     </pre>
     <div
       id="cursors"
     >
-      <div
-        class="available-low cursorBox"
-        style="width: 18px;"
-      />
-      <div
-        class="available-low cursorBox"
-        style="width: 18px;"
-      />
-      <div
-        class="available-low cursorBox"
-        style="width: 18px;"
-      />
-      <div
-        class="available-low cursorBox"
-        style="width: 18px;"
-      />
-      <div
-        class="available-high cursorBox"
-        style="width: 18px;"
-      />
       <div
         class="selection cursorBox"
         style="width: 18px;"
@@ -10919,8 +10899,8 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="60"
-        data-top="20"
-        data-zindex="0"
+        data-top="23"
+        data-zindex="3"
         id="cAC-0"
       >
         <img
@@ -10937,9 +10917,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="25"
-        data-zindex="5"
+        data-left="50"
+        data-top="21"
+        data-zindex="1"
         id="cAD-0"
       >
         <img
@@ -10956,9 +10936,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="23"
-        data-zindex="3"
+        data-left="70"
+        data-top="22"
+        data-zindex="2"
         id="cAH-0"
       >
         <img
@@ -10975,9 +10955,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
-        data-top="25"
-        data-zindex="5"
+        data-left="60"
+        data-top="22"
+        data-zindex="2"
         id="cAS-0"
       >
         <img
@@ -10994,9 +10974,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="70"
-        data-top="23"
-        data-zindex="3"
+        data-left="60"
+        data-top="24"
+        data-zindex="4"
         id="c2C-0"
       >
         <img
@@ -11013,9 +10993,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="30"
-        data-top="22"
-        data-zindex="2"
+        data-left="20"
+        data-top="20"
+        data-zindex="0"
         id="c2D-0"
       >
         <img
@@ -11052,8 +11032,8 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="10"
-        data-top="26"
-        data-zindex="6"
+        data-top="22"
+        data-zindex="2"
         id="c2S-0"
       >
         <img
@@ -11070,9 +11050,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="60"
-        data-top="21"
-        data-zindex="1"
+        data-left="80"
+        data-top="22"
+        data-zindex="2"
         id="c3C-0"
       >
         <img
@@ -11089,9 +11069,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="22"
-        data-zindex="2"
+        data-left="60"
+        data-top="25"
+        data-zindex="5"
         id="c3D-0"
       >
         <img
@@ -11108,9 +11088,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="70"
-        data-top="24"
-        data-zindex="4"
+        data-left="80"
+        data-top="21"
+        data-zindex="1"
         id="c3H-0"
       >
         <img
@@ -11127,9 +11107,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="21"
-        data-zindex="1"
+        data-left="10"
+        data-top="24"
+        data-zindex="4"
         id="c3S-0"
       >
         <img
@@ -11146,9 +11126,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
-        data-top="26"
-        data-zindex="6"
+        data-left="10"
+        data-top="23"
+        data-zindex="3"
         id="c4C-0"
       >
         <img
@@ -11165,9 +11145,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="30"
-        data-top="25"
-        data-zindex="5"
+        data-left="70"
+        data-top="23"
+        data-zindex="3"
         id="c4D-0"
       >
         <img
@@ -11184,9 +11164,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="70"
-        data-top="25"
-        data-zindex="5"
+        data-left="50"
+        data-top="23"
+        data-zindex="3"
         id="c4H-0"
       >
         <img
@@ -11204,8 +11184,8 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="30"
-        data-top="21"
-        data-zindex="1"
+        data-top="24"
+        data-zindex="4"
         id="c4S-0"
       >
         <img
@@ -11222,9 +11202,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="50"
-        data-top="22"
-        data-zindex="2"
+        data-left="20"
+        data-top="23"
+        data-zindex="3"
         id="c5C-0"
       >
         <img
@@ -11241,9 +11221,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="70"
-        data-top="21"
-        data-zindex="1"
+        data-left="50"
+        data-top="20"
+        data-zindex="0"
         id="c5D-0"
       >
         <img
@@ -11260,7 +11240,7 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
+        data-left="80"
         data-top="20"
         data-zindex="0"
         id="c5H-0"
@@ -11280,8 +11260,8 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="40"
-        data-top="26"
-        data-zindex="6"
+        data-top="21"
+        data-zindex="1"
         id="c5S-0"
       >
         <img
@@ -11298,9 +11278,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="20"
-        data-zindex="0"
+        data-left="50"
+        data-top="25"
+        data-zindex="5"
         id="c6C-0"
       >
         <img
@@ -11317,9 +11297,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="30"
-        data-top="23"
-        data-zindex="3"
+        data-left="10"
+        data-top="25"
+        data-zindex="5"
         id="c6D-0"
       >
         <img
@@ -11336,9 +11316,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="21"
-        data-zindex="1"
+        data-left="40"
+        data-top="26"
+        data-zindex="6"
         id="c6H-0"
       >
         <img
@@ -11355,9 +11335,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="50"
-        data-top="20"
-        data-zindex="0"
+        data-left="10"
+        data-top="26"
+        data-zindex="6"
         id="c6S-0"
       >
         <img
@@ -11374,9 +11354,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="80"
-        data-top="25"
-        data-zindex="5"
+        data-left="70"
+        data-top="20"
+        data-zindex="0"
         id="c7C-0"
       >
         <img
@@ -11393,9 +11373,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="70"
-        data-top="22"
-        data-zindex="2"
+        data-left="80"
+        data-top="24"
+        data-zindex="4"
         id="c7D-0"
       >
         <img
@@ -11412,9 +11392,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="24"
-        data-zindex="4"
+        data-left="60"
+        data-top="20"
+        data-zindex="0"
         id="c7H-0"
       >
         <img
@@ -11431,7 +11411,7 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="50"
+        data-left="80"
         data-top="23"
         data-zindex="3"
         id="c7S-0"
@@ -11450,9 +11430,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="40"
-        data-top="22"
-        data-zindex="2"
+        data-left="70"
+        data-top="25"
+        data-zindex="5"
         id="c8C-0"
       >
         <img
@@ -11469,9 +11449,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="40"
-        data-top="24"
-        data-zindex="4"
+        data-left="30"
+        data-top="25"
+        data-zindex="5"
         id="c8D-0"
       >
         <img
@@ -11488,7 +11468,7 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
+        data-left="50"
         data-top="24"
         data-zindex="4"
         id="c8H-0"
@@ -11507,7 +11487,7 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="40"
+        data-left="20"
         data-top="25"
         data-zindex="5"
         id="c8S-0"
@@ -11526,9 +11506,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="60"
-        data-top="23"
-        data-zindex="3"
+        data-left="20"
+        data-top="26"
+        data-zindex="6"
         id="c9C-0"
       >
         <img
@@ -11545,9 +11525,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="23"
-        data-zindex="3"
+        data-left="30"
+        data-top="22"
+        data-zindex="2"
         id="c9D-0"
       >
         <img
@@ -11564,9 +11544,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
-        data-top="23"
-        data-zindex="3"
+        data-left="30"
+        data-top="20"
+        data-zindex="0"
         id="c9H-0"
       >
         <img
@@ -11583,9 +11563,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="50"
-        data-top="25"
-        data-zindex="5"
+        data-left="30"
+        data-top="21"
+        data-zindex="1"
         id="c9S-0"
       >
         <img
@@ -11602,9 +11582,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="40"
-        data-top="20"
-        data-zindex="0"
+        data-left="80"
+        data-top="25"
+        data-zindex="5"
         id="cTC-0"
       >
         <img
@@ -11621,9 +11601,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="22"
-        data-zindex="2"
+        data-left="20"
+        data-top="24"
+        data-zindex="4"
         id="cTD-0"
       >
         <img
@@ -11640,9 +11620,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="10"
-        data-top="20"
-        data-zindex="0"
+        data-left="40"
+        data-top="24"
+        data-zindex="4"
         id="cTH-0"
       >
         <img
@@ -11659,9 +11639,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="70"
-        data-top="20"
-        data-zindex="0"
+        data-left="30"
+        data-top="23"
+        data-zindex="3"
         id="cTS-0"
       >
         <img
@@ -11679,8 +11659,8 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="40"
-        data-top="23"
-        data-zindex="3"
+        data-top="20"
+        data-zindex="0"
         id="cJC-0"
       >
         <img
@@ -11697,9 +11677,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="40"
-        data-top="21"
-        data-zindex="1"
+        data-left="10"
+        data-top="20"
+        data-zindex="0"
         id="cJD-0"
       >
         <img
@@ -11716,7 +11696,7 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="80"
+        data-left="70"
         data-top="24"
         data-zindex="4"
         id="cJH-0"
@@ -11736,8 +11716,8 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="50"
-        data-top="21"
-        data-zindex="1"
+        data-top="22"
+        data-zindex="2"
         id="cJS-0"
       >
         <img
@@ -11755,8 +11735,8 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="60"
-        data-top="24"
-        data-zindex="4"
+        data-top="21"
+        data-zindex="1"
         id="cQC-0"
       >
         <img
@@ -11773,9 +11753,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
-        data-top="21"
-        data-zindex="1"
+        data-left="40"
+        data-top="22"
+        data-zindex="2"
         id="cQD-0"
       >
         <img
@@ -11792,9 +11772,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="20"
-        data-top="22"
-        data-zindex="2"
+        data-left="40"
+        data-top="23"
+        data-zindex="3"
         id="cQH-0"
       >
         <img
@@ -11811,9 +11791,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="60"
-        data-top="22"
-        data-zindex="2"
+        data-left="40"
+        data-top="25"
+        data-zindex="5"
         id="cQS-0"
       >
         <img
@@ -11830,9 +11810,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="50"
-        data-top="24"
-        data-zindex="4"
+        data-left="20"
+        data-top="21"
+        data-zindex="1"
         id="cKC-0"
       >
         <img
@@ -11849,9 +11829,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="60"
-        data-top="25"
-        data-zindex="5"
+        data-left="10"
+        data-top="21"
+        data-zindex="1"
         id="cKD-0"
       >
         <img
@@ -11868,9 +11848,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="30"
-        data-top="24"
-        data-zindex="4"
+        data-left="70"
+        data-top="21"
+        data-zindex="1"
         id="cKH-0"
       >
         <img
@@ -11887,9 +11867,9 @@ exports[`GameBoard renders a game 1`] = `
       </div>
       <div
         class="card"
-        data-left="30"
-        data-top="20"
-        data-zindex="0"
+        data-left="20"
+        data-top="22"
+        data-zindex="2"
         id="cKS-0"
       >
         <img

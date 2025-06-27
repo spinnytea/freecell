@@ -94,7 +94,7 @@ describe('GameBoard', () => {
 
 	/** https://www.solitairelaboratory.com/tutorial.html */
 	test('renders a game', () => {
-		const { container } = render(<MockGamePage game={new FreeCell().shuffle32(0)} />);
+		const { container } = render(<MockGamePage game={new FreeCell().shuffle32(1)} />);
 
 		// initial state
 		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
@@ -133,7 +133,7 @@ describe('GameBoard', () => {
 	});
 
 	test('enable debug mode', () => {
-		const { container } = render(<MockGamePage game={new FreeCell().shuffle32(0).dealAll()} />);
+		const { container } = render(<MockGamePage game={new FreeCell().shuffle32(1).dealAll()} />);
 		fireEvent.click(screen.getByRole('checkbox', { name: 'Show Debug Info' }));
 		fireEvent.click(screen.getByAltText('4 of hearts'));
 		expect(container).toMatchSnapshot();

@@ -47,7 +47,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'init'}                                     | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
 			${'init with invalid history'}                | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cell', data: [0] }}
 			${'init partial'}                             | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'shuffle deck (0)'}                         | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'shuffle deck (1)'}                         | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
 			${'deal all cards'}                           | ${someCards_1} | ${{ fixture: 'cell', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
 			${'deal most cards'}                          | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
 			${'cursor set'}                               | ${[]}          | ${undefined}                             | ${undefined}

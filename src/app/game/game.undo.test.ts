@@ -112,7 +112,7 @@ describe('game.undo (+ history)', () => {
 			});
 
 			test('shuffled', () => {
-				const game = new FreeCell().shuffle32(0);
+				const game = new FreeCell().shuffle32(1);
 				const dealt = game.dealAll();
 				expect(dealt.previousAction).toEqual({
 					text: 'deal all cards',
@@ -121,13 +121,13 @@ describe('game.undo (+ history)', () => {
 				expect(dealt.print()).toBe(
 					'' + //
 						'>                        \n' +
-						' TH 5H KS TC 6S AC TS 6C \n' +
-						' 6H QD 4S JD JS 3C 5D 3S \n' +
-						' TD QH 2D 8C 5C QS 7D 3D \n' +
-						' 9D 9H 6D JC 7S 9C 2C AH \n' +
-						' 7H 8H KH 8D KC QC 3H JH \n' +
-						' AD AS 4D 8S 9S KD 4H 7C \n' +
-						' 2S 4C 2H 5S             \n' +
+						' JD 2D 9H JC 5D 7H 7C 5H \n' +
+						' KD KC 9S 5S AD QC KH 3H \n' +
+						' 2S KS 9D QD JS AS AH 3C \n' +
+						' 4C 5C TS QH 4H AC 4D 7S \n' +
+						' 3S TD 4S TH 8H 2C JH 7D \n' +
+						' 6D 8S 8D QS 6C 3D 8C TC \n' +
+						' 6S 9C 2H 6H             \n' +
 						' deal all cards'
 				);
 				const undid = dealt.undo();

@@ -58,7 +58,7 @@ export interface CardLocation {
 	cells: a - d
 	cascades: 1 - 9, t (1-8, but we allow 9 and 10 columns)
 
-	XXX (motivation) (2-priority) I really super want to have a shorthand for the deck
+	XXX (motivation) I really super want to have a shorthand for the deck
 	 - maybe (jokers) can go to the deck because lolwhynot
 	 - not that it's a valid move, not that it will be part of gameplay
 	 - it just keeps feeling like a gap
