@@ -58,6 +58,22 @@ export interface CardLocation {
 	cells: a - d
 	cascades: 1 - 9, t (1-8, but we allow 9 and 10 columns)
 
+	XXX (motivation) (2-priority) I really super want to have a shorthand for the deck
+	 - maybe (jokers) can go to the deck because lolwhynot
+	 - not that it's a valid move, not that it will be part of gameplay
+	 - it just keeps feeling like a gap
+	 - maybe i'm thinking a bit to much like manually moving cards, where, in meatspace,
+	   - you reset the game from 'h' to 'deck', and
+		- you deal from 'deck' to '1234567890'
+	 - which isn't standard gameplay, and which is all one action, so it's not like `$moveCardToPosition` makes sense there
+	---
+	 - it's just, every time I use `shorthandMove`, i have to remember two cavates:
+	   - there is no 'deck' Position
+		- 'h' cannot cannot be a `from`, it can only be a `to`
+	 - and while that's true for gameplay, i want to enable that from behind a flag
+	 - maybe that helps document "look, this is wrong, it's nonstandard gameplay to do this, look at my debug flag"
+	 - but maybe it's just me trying to be way to super feature complete
+
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */
 export type Position =

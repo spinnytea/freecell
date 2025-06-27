@@ -67,6 +67,10 @@ export function useKeybaordMiscControls() {
 						//  - it does prevent them from being repeatedly shuffled
 						//  - but we skip straight over deal and go straight re-shuffling
 						// console.log(event.repeat, g.previousAction.type);
+						// BUG (controls) OR MAYBE when we undo, and it undoes the deal
+						//  - it's getting messed up
+						//  - `cursor set` is the last action, not shuffle
+						//  - FIXME it's because of $toggleMove aadadfa
 						if (event.repeat && PREVIOUS_ACTION_TYPE_IS_START_OF_GAME.has(g.previousAction.type)) {
 							return g;
 						}

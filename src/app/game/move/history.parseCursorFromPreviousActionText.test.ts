@@ -14,6 +14,7 @@ import {
 
 describe('game/history.parseCursorFromPreviousActionText', () => {
 	const someCards_1: Card[] = [
+		{ rank: 'king', suit: 'hearts', location: { fixture: 'deck', data: [0] } },
 		{ rank: 'ace', suit: 'diamonds', location: { fixture: 'foundation', data: [2] } },
 		{ rank: '7', suit: 'clubs', location: { fixture: 'cascade', data: [2, 5] } },
 		{ rank: 'jack', suit: 'spades', location: { fixture: 'cascade', data: [4, 12] } },
@@ -43,12 +44,12 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 		// XXX (techdebt) (cursor) we could detect the location of select/deselect
 		test.each`
 			actionText                                    | cards          | after                                    | before
-			${'init'}                                     | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'init with invalid history'}                | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'init partial'}                             | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'shuffle deck (0)'}                         | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'deal all cards'}                           | ${[]}          | ${{ fixture: 'cell', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'deal most cards'}                          | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'init'}                                     | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'init with invalid history'}                | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cell', data: [0] }}
+			${'init partial'}                             | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'shuffle deck (0)'}                         | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'deal all cards'}                           | ${someCards_1} | ${{ fixture: 'cell', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'deal most cards'}                          | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
 			${'cursor set'}                               | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor up'}                                | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor left'}                              | ${[]}          | ${undefined}                             | ${undefined}

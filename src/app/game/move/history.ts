@@ -252,13 +252,17 @@ export function parseCursorFromPreviousActionText(
 */
 export function parseAltCursorFromPreviousActionText(
 	actionText: string | undefined,
-	cards: Card[]
+	cards: Card[],
+	allowEmptyDeck = false
 ): CardLocation | undefined {
 	if (!actionText) return undefined;
 	switch (parsePreviousActionType(actionText).type) {
 		case 'init':
 		case 'shuffle':
 		case 'deal':
+			if (!allowEmptyDeck && !cards.some(({ location }) => location.fixture === 'deck')) {
+				return { fixture: 'cell', data: [0] };
+			}
 			return { fixture: 'deck', data: [0] };
 		case 'move-foundation':
 		case 'move': {
@@ -288,7 +292,7 @@ export function parseAltCursorFromPreviousActionText(
 		}
 		case 'invalid':
 			if (actionText.startsWith('invalid')) {
-				return parseAltCursorFromPreviousActionText(actionText.substring(8), cards);
+				return parseAltCursorFromPreviousActionText(actionText.substring(8), cards, allowEmptyDeck);
 			}
 			return undefined;
 		case 'cursor':

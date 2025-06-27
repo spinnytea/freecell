@@ -140,4 +140,25 @@ describe('game.$toggleCursor', () => {
 			);
 		});
 	});
+
+	test('deck / allowEmptyDeck', () => {
+		// deal most cards keeps the cursor in the deck (after)
+		const gameDealMost = new FreeCell().dealAll({ demo: true, keepDeck: true });
+		expect(gameDealMost.deck.length).toBe(8);
+		expect(gameDealMost.cursor.fixture).toEqual('deck');
+		expect(gameDealMost.$toggleCursor().cursor.fixture).toEqual('deck');
+		expect(gameDealMost.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('deck');
+
+		// dealing all cards moves the cursor to a cell
+		const gameAllCards = new FreeCell().dealAll();
+		expect(gameAllCards.deck.length).toBe(0);
+		expect(gameAllCards.cursor.fixture).toEqual('cell');
+		expect(gameAllCards.$toggleCursor().cursor.fixture).toEqual('cell');
+		expect(gameAllCards.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('cell');
+		expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).cursor.fixture).toEqual('deck');
+		expect(
+			gameAllCards.$toggleCursor({ allowEmptyDeck: true }).$toggleCursor({ allowEmptyDeck: true })
+				.cursor.fixture
+		).toEqual('cell');
+	});
 });

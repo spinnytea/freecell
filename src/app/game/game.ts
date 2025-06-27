@@ -883,12 +883,12 @@ export class FreeCell {
 		I tend to pick apart a single cascade for a bit before moving on to the next.
 		So going back to the same cascade helps a LOT. For me.
 	*/
-	$toggleCursor(): FreeCell | this {
+	$toggleCursor({ allowEmptyDeck = false }: { allowEmptyDeck?: boolean } = {}): FreeCell | this {
 		const actionText = this.history.at(-1);
 		const after = parseCursorFromPreviousActionText(actionText, this.cards);
 		if (!after) return this;
 		if (!isLocationEqual(after, this.cursor)) return this.setCursor(after);
-		const before = parseAltCursorFromPreviousActionText(actionText, this.cards);
+		const before = parseAltCursorFromPreviousActionText(actionText, this.cards, allowEmptyDeck);
 		if (!before) return this;
 		return this.setCursor(before);
 	}
