@@ -21,6 +21,7 @@ import {
 	appendActionToHistory,
 	getCardsThatMoved,
 	parseActionTextMove,
+	parseAltCursorFromPreviousActionText,
 	parseAndUndoPreviousActionText,
 	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
@@ -349,6 +350,10 @@ export class FreeCell {
 		if (!this.selection || this.selection.peekOnly || selectionOnly) {
 			if (this.win && this.cursor.fixture === 'foundation' && !allowSelectFoundation) {
 				// REVIEW (techdebt) (joker) (settings) settings for new game?
+				//  - we could pass in `cards: null` or `cards: []` to reset a a game
+				//  - `game.__clone({ cards: null })`
+				//  - the whole point is to "reinitialize the deck"
+				//  - maybe we make a flag for that specifically?
 				return new FreeCell({ cellCount: this.cells.length, cascadeCount: this.tableau.length });
 			}
 
@@ -438,7 +443,10 @@ export class FreeCell {
 	/**
 		go back one move
 	*/
-	undo({ skipActionPrev = false }: { skipActionPrev?: boolean } = {}): FreeCell | this {
+	undo({
+		skipActionPrev = false,
+		toggleCursor = false,
+	}: { skipActionPrev?: boolean; toggleCursor?: boolean } = {}): FreeCell | this {
 		const history = this.history.slice(0);
 		const moveToUndo = history.pop();
 		if (!moveToUndo) return this;
@@ -451,10 +459,14 @@ export class FreeCell {
 		action.gameFunction = 'undo';
 
 		// TODO (techdebt) remove 'hand-jammed' special case from here?
+		//  - why not "any" init?
+		//  - why at all?
 		const cursor =
 			action.text === 'hand-jammed'
 				? undefined
-				: parseCursorFromPreviousActionText(action.text, cards);
+				: toggleCursor
+					? parseAltCursorFromPreviousActionText(action.text, cards)
+					: parseCursorFromPreviousActionText(action.text, cards);
 
 		// we _need_ an action in __clone
 		// __clone will add it back to the history
@@ -729,11 +741,14 @@ export class FreeCell {
 
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/
-	shuffle32(seed?: number): FreeCell {
-		if (seed === undefined || seed === 11982) {
+	shuffle32(seed?: number): FreeCell | this {
+		while (seed === undefined || seed === 11982 || seed < 1 || seed > 32000) {
 			seed = Math.floor(Math.random() * 32000) + 1;
 		}
 
+		// BUG (techdebt) (history) this actionText seed is wrong
+		//  - it's correct if `new FreeCell().shuffle32()`
+		//  - it's wrong if `new FreeCell().shuffle32().shuffle32()`
 		const actionText = `shuffle deck (${seed.toString(10)})`;
 		const cards = cloneCards(this.cards);
 		const deck: Card[] = [];
@@ -748,6 +763,9 @@ export class FreeCell {
 					break;
 			}
 		});
+
+		// if there are no cards to shuffle, noop
+		if (deck.length === 0) return this;
 
 		let temp: Card;
 		for (let i = deck.length; i > 0; i--) {
@@ -839,10 +857,22 @@ export class FreeCell {
 
 		sugar/helper controls
 	*/
-	$undoThenShuffle(): FreeCell | this {
-		const game = this.undo();
+	$undoThenShuffle(seed?: number): FreeCell | this {
+		// REVIEW (controls) $toggleCursor still feels wrong here
+		//  - without it, the cursor is _totally_ unrelated to what just happened
+		//  - with it, it's like, closer. but instead we want, the cursor of this previous action
+		// const cursor = this.$toggleCursor().cursor;
+		//  - which card was moved (before the undo), move that thing
+		// const { fromShorthand } = parseActionTextMove(this.previousAction.text);
+		// const cursor = findCard(fromShorthand).location;
+
+		const game = this.undo({ toggleCursor: true });
 		if (game !== this && game.previousAction.type === 'init') {
-			return game.shuffle32();
+			// REVIEW (techdebt) (joker) (settings) settings for new game?
+			return new FreeCell({
+				cellCount: this.cells.length,
+				cascadeCount: this.tableau.length,
+			}).shuffle32(seed);
 		}
 		return game;
 	}
@@ -860,6 +890,28 @@ export class FreeCell {
 			return this.dealAll();
 		}
 		return this.shuffle32();
+	}
+
+	/**
+		Flip-flop the cursor across the previous move.
+		This makes it easier to play with the arrow keys.
+
+		For Example: `move 23 KC-QD-JS→cascade`
+		 - after: `KS` is in `3`
+		 - before: `KS` was in `2`
+
+		This might work well becase of my particular gameplay.
+		I tend to pick apart a single cascade for a bit before moving on to the next.
+		So going back to the same cascade helps a LOT. For me.
+	*/
+	$toggleCursor({ allowEmptyDeck = false }: { allowEmptyDeck?: boolean } = {}): FreeCell | this {
+		const actionText = this.history.at(-1);
+		const after = parseCursorFromPreviousActionText(actionText, this.cards);
+		if (!after) return this;
+		if (!isLocationEqual(after, this.cursor)) return this.setCursor(after);
+		const before = parseAltCursorFromPreviousActionText(actionText, this.cards, allowEmptyDeck);
+		if (!before) return this;
+		return this.setCursor(before);
 	}
 
 	/**

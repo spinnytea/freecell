@@ -110,16 +110,16 @@ describe('game.moveByShorthand', () => {
 		test.todo('no card at from');
 
 		test('cannot stack that', () => {
-			const game = new FreeCell().shuffle32(0).dealAll();
+			const game = new FreeCell().shuffle32(1).dealAll();
 			// expect(game.print()).toBe('');
-			expect(game.$selectCard('2S').availableMoves).toEqual([
+			expect(game.$selectCard('2H').availableMoves).toEqual([
 				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: 4 },
 				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: 3 },
 				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: 2 },
 				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: 1 },
 			]);
-			expect(game.moveByShorthand('12').previousAction).toEqual({
-				text: 'invalid move 12 2S→4C',
+			expect(game.moveByShorthand('34').previousAction).toEqual({
+				text: 'invalid move 34 2H→6H',
 				type: 'invalid',
 			});
 		});

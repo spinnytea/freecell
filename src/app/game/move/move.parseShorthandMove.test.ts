@@ -4,7 +4,7 @@ import { parseShorthandMove } from '@/app/game/move/move';
 
 describe('move.parseShorthandMove', () => {
 	test('valid move', () => {
-		const game = new FreeCell().shuffle32(0).dealAll();
+		const game = new FreeCell().shuffle32(1).dealAll();
 		expect(parseShorthandMove(game, '1a')).toEqual([
 			{ fixture: 'cascade', data: [0, 6] },
 			{ fixture: 'cell', data: [0] },
@@ -12,7 +12,7 @@ describe('move.parseShorthandMove', () => {
 	});
 
 	test('invalid move', () => {
-		const game = new FreeCell().shuffle32(0).dealAll();
+		const game = new FreeCell().shuffle32(1).dealAll();
 		expect(parseShorthandMove(game, '12')).toEqual([
 			{ fixture: 'cascade', data: [0, 6] },
 			{ fixture: 'cascade', data: [1, 6] },

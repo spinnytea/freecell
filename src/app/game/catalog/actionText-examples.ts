@@ -11,7 +11,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'init with invalid history': '', // we cannot "take an action" to make an init with invalid history
 	'init partial': '',
 	// 'hand-jammed': '', // XXX (techdebt) as much as this isn't _supposed_ to be supported, it kind of is part of the tests now
-	'shuffle deck (0)':
+	'shuffle deck (1)':
 		'                         \n' +
 		'                         \n' +
 		':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC ',
@@ -27,13 +27,13 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'cursor down w': '',
 	'cursor right w': '',
 	'cursor stop': '',
-	'select 6D': '',
+	'select QS': '',
 	'select 4D-3S-2D': '',
-	'select 8 7D': '',
+	'select 8 7C': '',
 	'select 8 4D-3S-2D': '',
-	'deselect KS': '',
+	'deselect AS': '',
 	'deselect 4D-3S-2D': '',
-	'deselect 6 2C': '',
+	'deselect 6 2D': '',
 	'deselect 6 4D-3S-2D': '',
 	'touch stop': '',
 	'move 3a KC→cell':

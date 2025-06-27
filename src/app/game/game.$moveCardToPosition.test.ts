@@ -120,13 +120,25 @@ describe('game.$moveCardToPosition', () => {
 		});
 
 		describe('deck', () => {
-			test.todo('empty');
+			// ('empty'); // we need a card to be in the deck
 
-			test.todo('first');
+			test('present', () => {
+				let game = new FreeCell().dealAll({ demo: true, keepDeck: true });
+				expect(game.deck.length).toBe(8);
 
-			test.todo('middle');
+				game = game.$selectCard('AS');
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [3] });
+				expect(game.$moveCardToPosition('AS', 'h')).toBe(game);
 
-			test.todo('last');
+				game = game.$selectCard('2D');
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [5] });
+				expect(game.$moveCardToPosition('2D', 'a')).toBe(game);
+			});
+
+			// if this is the only card in the deck,
+			// we move it out,
+			// and then the deck is empty
+			test.todo('last card remaining');
 		});
 	});
 

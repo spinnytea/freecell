@@ -57,6 +57,9 @@ TODO (motivation) main development tasks:
   - based on the image svg so we can do it with any card (king, ace, whatever)
   - maybe use it for the whole animation for a win when a flourish
 - TODO (settings) undo limit - all, until deal, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
+- TODO (settings) new game is always shuffled
+  - GameContextProvider
+  - every place we call new FreeCell (not tests)
 - TODO (gameplay) hard vs medium vs easy
   - [FreeCell lists of difficult (and extra easy) deals](https://www.solitairelaboratory.com/fclists.html)
   - Some games require no free cells :D - so make a 0 cells version restricted to these games
@@ -69,9 +72,6 @@ TODO (motivation) main development tasks:
 - IDEA (motivation) implement War? just so it's flexible?
   - what is "it", the UI? the controls?
 - IDEA (motivation) implement Spider Solitaire, that could be fun
-- TODO (controls) (3-priority) keyboard hotkeys (1-8 (1234567890), abcd, h, ¿qwerty?, ¿uiop?)
-  - if cursor can stack with target: select, moveCard
-  - if cursor cannot stack with target: setCursor
 - TODO (controls) mouse column mode (like keyboard hotkeys)
 - TODO (deployment) UI render for all options, hidden options, controls (keyboard, keyboard+selection, keyboard hotkeys, mouse click, mouse drag) w/ (settings) to enable/disable
 - TODO (settings) disable "select-to-peek card" i.e. selecting cards that cannot move
@@ -88,9 +88,12 @@ TODO (motivation) main development tasks:
   - spitball impl: attempts positive and negative, display Math.abs(attempts), set neg when undo, set pos and increase when move
 - IDEA (theme) sounds - normally i don't like to, but some folio for moving cards should be okay
 - TODO (theme) more themes - card themes / decks / colors, background colors, etc
-- IDEA (deployment) (offline) (3-priority) download on android: "play offline"
+- IDEA (deployment) (offline) download on android: "play offline"
   - single html file? try testing that first (javascript + svg)
   - airplane mode?
+  - https://dev.to/stephengade/pwa-build-installable-nextjs-app-that-works-offline-3fff
+  - Progressive Web App, using service workers
+  - What I already have should work, android is just dumb
 - XXX (techdebt) optimize
   - i've never benchmarked memory/speed before in any meaningful way
   - is the game impl even a problem? prove that there are no memory leeks (maybe print/parse proves it)
@@ -103,6 +106,14 @@ TODO (motivation) main development tasks:
   - macbook chrome
   - ipad safari
   - android chrome
+- TODO (techdebt) (4-priority) write a tool to analyze coverage report and list "most executed lines"
+  - file/line/count/source
+  - ignore count of 1 (boilerplate, unimportant)
+  - ignore count of 0 (that's in the standard report, anything less that 100% lines covered)
+  - (yes keep twice because sometimes you really do only ever want exectured once)
+  - maybe only keep top X and bump the ones lower
+  - groupBy count, orderBy count
+  - all lines with top X counts
 
 ## Technicals
 

@@ -107,6 +107,7 @@ const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
 	/^move (\w)(\w) ([\w-]+)→(\S+) \((auto-foundation|flourish) (\w+) (\S+)\)$/;
+const SELECT_REGEX = /^(de)?select( (\w))? ([\w-]+)$/;
 
 /**
 	read {@link PreviousAction.text} which has the full context of what was moved
@@ -154,9 +155,19 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 	}
 }
 
+/**
+	Where should the cursor be _after_ a move?
+
+	We pass in `cards` instead of `game` because
+	in the cases we need this,
+	we are building a new game state and want the cursor before we `game.__clone`
+
+	this is only ever used as `parseCursorFromHistoryActionText`,
+	even though we can support all† actions
+*/
 export function parseCursorFromPreviousActionText(
 	actionText: string | undefined,
-	cards?: Card[]
+	cards: Card[]
 ): CardLocation | undefined {
 	if (!actionText) return undefined;
 	switch (parsePreviousActionType(actionText).type) {
@@ -177,22 +188,21 @@ export function parseCursorFromPreviousActionText(
 				case 'cell':
 					// each cell identifies it's own d0
 					break;
-				case 'foundation':
-					if (cards) {
-						const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
-						const card = findCard(cards, shorthand);
-						if (cursor.fixture !== card.location.fixture) {
-							throw new Error(
-								`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
-							);
-						}
-						cursor.data[0] = card.location.data[0];
+				case 'foundation': {
+					const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+					const card = findCard(cards, shorthand);
+					if (cursor.fixture !== card.location.fixture) {
+						throw new Error(
+							`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
+						);
 					}
+					cursor.data[0] = card.location.data[0];
 					break;
+				}
 				case 'cascade':
 					if (toShorthand === 'cascade') {
 						cursor.data[1] = 0;
-					} else if (cards) {
+					} else {
 						const shorthand = parseShorthandCard(toShorthand[0], toShorthand[1]);
 						const card = findCard(cards, shorthand);
 						if (card.location.fixture !== 'foundation') {
@@ -212,11 +222,91 @@ export function parseCursorFromPreviousActionText(
 			}
 			return cursor;
 		}
-		case 'auto-foundation':
-		case 'cursor':
 		case 'select':
-		case 'deselect':
+		case 'deselect': {
+			const { from, fromShorthand } = parseActionTextSelect(actionText);
+			const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+			const card = findCard(cards, shorthand);
+			if (from) {
+				const cursor = parseShorthandPosition_INCOMPLETE(from);
+				if (cursor.fixture !== card.location.fixture) {
+					// XXX (techdebt) do we really even need to get the cursor and check against the card?
+					throw new Error(
+						`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
+					);
+				}
+			}
+			return card.location;
+		}
 		case 'invalid':
+			if (actionText.startsWith('invalid')) {
+				return parseCursorFromPreviousActionText(actionText.substring(8), cards);
+			}
+			return undefined;
+		// XXX (history) (4-priority) can we put something in the cursor to note the position?
+		//  - position, braille d1, like we will do for shorthandMove
+		//  - maybe it's just for 'cursor set' or something
+		case 'cursor':
+		case 'auto-foundation':
+		case 'auto-foundation-tween':
+			return undefined;
+	}
+}
+
+/**
+	Where should the cursor be _before_ a move?
+
+	this is only ever used as `parseAltCursorFromHistoryActionText`,
+	even though we can support all† actions
+*/
+export function parseAltCursorFromPreviousActionText(
+	actionText: string | undefined,
+	cards: Card[],
+	allowEmptyDeck = false
+): CardLocation | undefined {
+	if (!actionText) return undefined;
+	switch (parsePreviousActionType(actionText).type) {
+		case 'init':
+		case 'shuffle':
+		case 'deal':
+			if (!allowEmptyDeck && !cards.some(({ location }) => location.fixture === 'deck')) {
+				return { fixture: 'cell', data: [0] };
+			}
+			return { fixture: 'deck', data: [0] };
+		case 'move-foundation':
+		case 'move': {
+			const { from } = parseActionTextMove(actionText);
+			const cursor = parseShorthandPosition_INCOMPLETE(from);
+			// deck doesn't have a shorthand (so 0 is fine, if we see it)
+			// cell is already accurate
+			// foundation can't be `from` in an move (so 0 is fine, if we see it)
+			// cascade needs to be "the last card" (since we can only move from the bottom)
+			return cursor;
+		}
+		case 'select':
+		case 'deselect': {
+			const { from, fromShorthand } = parseActionTextSelect(actionText);
+			const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+			const card = findCard(cards, shorthand);
+			if (from) {
+				const cursor = parseShorthandPosition_INCOMPLETE(from);
+				if (cursor.fixture !== card.location.fixture) {
+					// XXX (techdebt) do we really even need to get the cursor and check against the card?
+					throw new Error(
+						`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
+					);
+				}
+			}
+			return card.location;
+		}
+		case 'invalid':
+			if (actionText.startsWith('invalid')) {
+				return parseAltCursorFromPreviousActionText(actionText.substring(8), cards, allowEmptyDeck);
+			}
+			return undefined;
+		// XXX (history) (4-priority) can we put something in the cursor to note the position?
+		case 'cursor':
+		case 'auto-foundation':
 		case 'auto-foundation-tween':
 			return undefined;
 	}
@@ -245,6 +335,15 @@ function _parseActionTextMoveFoundation(actionText: string) {
 		return { from, to, fromShorthand, toShorthand };
 	}
 	return undefined;
+}
+
+function parseActionTextSelect(actionText: string) {
+	const match = SELECT_REGEX.exec(actionText);
+	if (match) {
+		const [, , , from, fromShorthand] = match;
+		return { from, fromShorthand };
+	}
+	throw new Error('not "deselect" or "select" actionText: ' + actionText);
 }
 
 function parseActionTextInvalidMove(actionText: string) {

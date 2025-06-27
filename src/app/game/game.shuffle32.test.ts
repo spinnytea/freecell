@@ -98,6 +98,12 @@ describe('game.shuffle32', () => {
 		expect(matchSeed?.[1]).not.toBe('11982');
 	});
 
+	test('noop', () => {
+		const game = new FreeCell().shuffle32(1).dealAll();
+		expect(game.deck.length).toBe(0);
+		expect(game.shuffle32(2)).toBe(game);
+	});
+
 	test('partial deck', () => {
 		const game = FreeCell.parse(
 			'' + //
@@ -106,6 +112,8 @@ describe('game.shuffle32', () => {
 				' hand-jammed'
 		);
 
+		// XXX (techdebt) `shuffle deck (1)` is wrong/weird, we cannot "recover" the game with that seed
+		//  - so don't use that seed, write something else
 		expect(game.print()).toBe(
 			'' + //
 				'>JC          9C 9D 9H 9S \n' +
@@ -113,19 +121,19 @@ describe('game.shuffle32', () => {
 				':d KS KH KD KC QS QH QD QC JS JH JD TS TH TD TC \n' +
 				' hand-jammed'
 		);
-		expect(game.shuffle32(0).print()).toBe(
+		expect(game.shuffle32(1).print()).toBe(
 			'' + //
 				'>JC          9C 9D 9H 9S \n' +
 				'                         \n' +
-				':d QD JH QH TD TC QC JD KH JS QS TS KD TH KC KS \n' +
-				' shuffle deck (0)'
+				':d KC TD TS JD QC KS KD JS JH TH TC KH QD QS QH \n' +
+				' shuffle deck (1)'
 		);
-		expect(game.shuffle32(0).shuffle32(0).print()).toBe(
+		expect(game.shuffle32(1).shuffle32(1).print()).toBe(
 			'' + //
 				'>JC          9C 9D 9H 9S \n' +
 				'                         \n' +
-				':d JD QS QC KC KS KH TS JH JS TC KD QH TH TD QD \n' +
-				' shuffle deck (0)'
+				':d JD QS KH TC JS KC TS JH TH QD QH TD KD QC KS \n' +
+				' shuffle deck (1)'
 		);
 	});
 });
