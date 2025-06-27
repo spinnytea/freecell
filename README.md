@@ -106,6 +106,14 @@ TODO (motivation) main development tasks:
   - macbook chrome
   - ipad safari
   - android chrome
+- TODO (techdebt) (4-priority) write a tool to analyze coverage report and list "most executed lines"
+  - file/line/count/source
+  - ignore count of 1 (boilerplate, unimportant)
+  - ignore count of 0 (that's in the standard report, anything less that 100% lines covered)
+  - (yes keep twice because sometimes you really do only ever want exectured once)
+  - maybe only keep top X and bump the ones lower
+  - groupBy count, orderBy count
+  - all lines with top X counts
 
 ## Technicals
 

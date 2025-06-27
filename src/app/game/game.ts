@@ -459,6 +459,8 @@ export class FreeCell {
 		action.gameFunction = 'undo';
 
 		// TODO (techdebt) remove 'hand-jammed' special case from here?
+		//  - why not "any" init?
+		//  - why at all?
 		const cursor =
 			action.text === 'hand-jammed'
 				? undefined
