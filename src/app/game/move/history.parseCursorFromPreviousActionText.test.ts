@@ -51,6 +51,12 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'deal all cards'}                           | ${someCards_1} | ${{ fixture: 'cell', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
 			${'deal most cards'}                          | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
 			${'cursor set'}                               | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor set KH'}                            | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor set b'}                             | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor set h⡂'}                            | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor set h AD'}                          | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor set 6 2D'}                          | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor set 3'}                             | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor up'}                                | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor left'}                              | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor down'}                              | ${[]}          | ${undefined}                             | ${undefined}

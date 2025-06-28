@@ -1362,6 +1362,18 @@ describe('useCardPositionAnimations', () => {
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set KH');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set b');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set h⡂');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set h AD');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set 6 2D');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set 3');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor up');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor left');
@@ -1383,6 +1395,12 @@ describe('useCardPositionAnimations', () => {
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'touch stop');
 		describe('do not animate', () => {
 			test.todo('· cursor set');
+			test.todo('· cursor set KH');
+			test.todo('· cursor set b');
+			test.todo('· cursor set h⡂');
+			test.todo('· cursor set h AD');
+			test.todo('· cursor set 6 2D');
+			test.todo('· cursor set 3');
 
 			test.todo('· cursor up');
 

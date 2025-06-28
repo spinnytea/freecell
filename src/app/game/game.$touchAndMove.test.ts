@@ -68,7 +68,7 @@ describe('game.$touchAndMove', () => {
 	});
 
 	test('allow "growing/shrinking sequence of current selection"', () => {
-		// REVIEW (history) `select 3` isn't clear on it's own, see how it's the same for all of these?
+		// REVIEW (history) (shorthandMove) `select 3` isn't clear on it's own, see how it's the same for all of these?
 		game = game.$touchAndMove({ fixture: 'cascade', data: [2, 6] });
 		expect(game.print()).toBe(
 			'' + //

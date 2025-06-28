@@ -243,9 +243,7 @@ export function parseCursorFromPreviousActionText(
 				return parseCursorFromPreviousActionText(actionText.substring(8), cards);
 			}
 			return undefined;
-		// XXX (history) (4-priority) can we put something in the cursor to note the position?
-		//  - position, braille d1, like we will do for shorthandMove
-		//  - maybe it's just for 'cursor set' or something
+		// FIXME parse position
 		case 'cursor':
 		case 'auto-foundation':
 		case 'auto-foundation-tween':
@@ -304,7 +302,7 @@ export function parseAltCursorFromPreviousActionText(
 				return parseAltCursorFromPreviousActionText(actionText.substring(8), cards, allowEmptyDeck);
 			}
 			return undefined;
-		// XXX (history) (4-priority) can we put something in the cursor to note the position?
+		// FIXME parse position
 		case 'cursor':
 		case 'auto-foundation':
 		case 'auto-foundation-tween':

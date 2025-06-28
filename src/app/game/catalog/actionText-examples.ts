@@ -17,7 +17,13 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC ',
 	'deal all cards': '',
 	'deal most cards': '',
-	'cursor set': '',
+	'cursor set': '', // deck
+	'cursor set KH': '', // deck
+	'cursor set b': '',
+	'cursor set h⡂': '', // home needs braille
+	'cursor set h AD': '', // unless we have a card
+	'cursor set 6 2D': '',
+	'cursor set 3': '', // a cascade without braille means it's 0 (no card, empty cascade)
 	'cursor up': '',
 	'cursor left': '',
 	'cursor down': '',

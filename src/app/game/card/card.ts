@@ -190,6 +190,27 @@ export function isLocationEqual(a: CardLocation, b: CardLocation) {
 	return a.fixture === b.fixture && a.data[0] === b.data[0] && a.data[1] === b.data[1];
 }
 
+export function getCardAt(game: FreeCell, location: CardLocation): Card | null {
+	const [d0] = location.data;
+
+	switch (location.fixture) {
+		case 'deck':
+			return game.deck[d0] || null;
+		case 'foundation':
+			return game.foundations[d0];
+		case 'cell':
+			return game.cells[d0];
+		case 'cascade': {
+			const d1 = location.data[1];
+			const cascade = game.tableau.at(d0);
+			return cascade?.at(d1) ?? null;
+		}
+	}
+
+	// no card at location
+	return null;
+}
+
 export function getSequenceAt(game: FreeCell, location: CardLocation): CardSequence {
 	const [d0] = location.data;
 
@@ -342,15 +363,18 @@ export function shorthandSequence(sequence: CardSequence) {
 	return sequence.cards.map((card) => shorthandCard(card)).join('-');
 }
 
-export function shorthandPosition(location: CardLocation): Position {
+// FIXME option to include d1 as braille
+export function shorthandPosition(location: CardLocation, includeD0 = false): Position {
 	const d0 = location.data[0];
 	if (location.fixture === 'foundation') {
-		return 'h';
+		const braille = includeD0 ? countToBraille(d0) : '';
+		return ('h' + braille) as Position;
 	} else if (location.fixture === 'cascade') {
+		const braille = includeD0 ? countToBraille(location.data[1]) : '';
 		if (d0 === 9) {
-			return '0';
+			return ('0' + braille) as Position;
 		} else if (d0 >= 0 && d0 < 9) {
-			return (d0 + 1).toString(10) as Position;
+			return ((d0 + 1).toString(10) + braille) as Position;
 		}
 	} else if (location.fixture === 'cell') {
 		if (d0 >= 0 && d0 < 6) {

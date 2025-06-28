@@ -518,7 +518,7 @@ describe('game', () => {
 					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
 					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
 					' 3S 3H 3D 3C             \n' +
-					' cursor set'
+					' cursor set b 2H'
 			);
 			expect(FreeCell.parse(game.print()).print()).toBe(
 				'' + //
@@ -529,7 +529,7 @@ describe('game', () => {
 					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
 					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
 					' 3S 3H 3D 3C             \n' +
-					' cursor set'
+					' cursor set b 2H'
 			);
 		});
 

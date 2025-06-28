@@ -4,6 +4,7 @@ import {
 	CardSequence,
 	cloneCards,
 	findCard,
+	getCardAt,
 	getRankForCompare,
 	getSequenceAt,
 	isAdjacent,
@@ -544,6 +545,26 @@ export function calcAutoFoundationActionText(moved: Card[], isFlourish: boolean)
 	const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
 	const firstWord = isFlourish ? 'flourish' : 'auto-foundation';
 	return `${firstWord} ${movedPositionsStr} ${movedCardsStr}`;
+}
+
+export function calcCursorActionText(
+	game: FreeCell,
+	suffix: string,
+	location: CardLocation
+): string {
+	const card = getCardAt(game, location);
+	const cardSuffix = card ? ` ${shorthandCard(card)}` : '';
+	switch (location.fixture) {
+		case 'deck':
+			return `cursor ${suffix}${cardSuffix}`;
+		case 'cell':
+			return `cursor ${suffix} ${shorthandPosition(location)}${cardSuffix}`;
+		case 'cascade':
+			return `cursor ${suffix} ${shorthandPosition(location)}${cardSuffix}`;
+		case 'foundation':
+			return `cursor ${suffix} ${shorthandPosition(location, !card)}${cardSuffix}`;
+	}
+	return `cursor ${suffix}`;
 }
 
 /**
