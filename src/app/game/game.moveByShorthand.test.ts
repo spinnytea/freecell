@@ -1,3 +1,4 @@
+import { countToBraille } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 
 /*
@@ -164,29 +165,9 @@ describe('game.moveByShorthand', () => {
 		expect(game.moveByShorthand('4d').previousAction.text).toBe('move 4d 7C→cell');
 
 		// TODO (techdebt) (history) (shorthandMove) we can use brail dots :D
-		//  - really, we can use _anything_, it doesn't need to be 1 character
-		//  - 6 dots are traditional literary text, and 8 dots are so computers can abuse them
-		//  - https://en.wikipedia.org/wiki/Braille_Patterns
-		//  - we can use them to get the selection length (the number of cards that moved)
-		const START_OF_8_DOT_BRAILLE = 0x2840;
-		expect(String.fromCodePoint(START_OF_8_DOT_BRAILLE + 0)).toBe('⡀');
-		expect(String.fromCodePoint(START_OF_8_DOT_BRAILLE + 1)).toBe('⡁');
-		expect(String.fromCodePoint(START_OF_8_DOT_BRAILLE + 2)).toBe('⡂');
-		expect(String.fromCodePoint(START_OF_8_DOT_BRAILLE + 3)).toBe('⡃');
-		expect(String.fromCodePoint(START_OF_8_DOT_BRAILLE + 15)).toBe('⡏');
-		expect(String.fromCodePoint(START_OF_8_DOT_BRAILLE + 191)).toBe('⣿');
-		expect('⡀'.charCodeAt(0) - START_OF_8_DOT_BRAILLE).toBe(0);
-		expect('⡁'.charCodeAt(0) - START_OF_8_DOT_BRAILLE).toBe(1);
-		expect('⡂'.charCodeAt(0) - START_OF_8_DOT_BRAILLE).toBe(2);
-		expect('⡃'.charCodeAt(0) - START_OF_8_DOT_BRAILLE).toBe(3);
-		expect('⡏'.charCodeAt(0) - START_OF_8_DOT_BRAILLE).toBe(15);
-		expect('⣿'.charCodeAt(0) - START_OF_8_DOT_BRAILLE).toBe(191);
-
-		const lengthToShorthandCount = (length = 0) =>
-			String.fromCodePoint(START_OF_8_DOT_BRAILLE + length);
-		expect(lengthToShorthandCount(game.$selectCard('9C').selection?.cards.length)).toBe('⡃');
-		expect(lengthToShorthandCount(game.$selectCard('8D').selection?.cards.length)).toBe('⡂');
-		expect(lengthToShorthandCount(game.$selectCard('7C').selection?.cards.length)).toBe('⡁');
+		expect(countToBraille(game.$selectCard('9C').selection?.cards.length)).toBe('⡃');
+		expect(countToBraille(game.$selectCard('8D').selection?.cards.length)).toBe('⡂');
+		expect(countToBraille(game.$selectCard('7C').selection?.cards.length)).toBe('⡁');
 	});
 
 	// TODO (techdebt) (history) (shorthandMove) here's anothr tangible example

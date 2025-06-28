@@ -1,5 +1,7 @@
 import {
+	brailleToCount,
 	Card,
+	countToBraille,
 	isAdjacent,
 	parseShorthandCard,
 	Rank,
@@ -151,6 +153,45 @@ describe('game/card', () => {
 					expect(shorthandPosition({ fixture: 'cascade', data: [d0, d1] })).toBe(shorthand);
 				});
 			});
+		});
+	});
+
+	describe('braille counter', () => {
+		test('valid range', () => {
+			expect(countToBraille()).toBe('⡀');
+			expect(countToBraille(0)).toBe('⡀');
+			expect(countToBraille(1)).toBe('⡁');
+			expect(countToBraille(2)).toBe('⡂');
+			expect(countToBraille(3)).toBe('⡃');
+			expect(countToBraille(15)).toBe('⡏');
+			expect(countToBraille(191)).toBe('⣿');
+			expect(brailleToCount()).toBe(0);
+			expect(brailleToCount('⡀')).toBe(0);
+			expect(brailleToCount('⡁')).toBe(1);
+			expect(brailleToCount('⡂')).toBe(2);
+			expect(brailleToCount('⡃')).toBe(3);
+			expect(brailleToCount('⡏')).toBe(15);
+			expect(brailleToCount('⣿')).toBe(191);
+		});
+
+		test('outside desired range', () => {
+			// XXX (techdebt) this isn't desireable, it's just that it should never be used this way
+			expect(countToBraille(-1)).toBe('⠿');
+			expect(countToBraille(-2)).toBe('⠾');
+			expect(countToBraille(-63)).toBe('⠁');
+			expect(countToBraille(-64)).toBe('⠀');
+			expect(brailleToCount('⠿')).toBe(-1);
+			expect(brailleToCount('⠾')).toBe(-2);
+			expect(brailleToCount('⠁')).toBe(-63);
+			expect(brailleToCount('⠀')).toBe(-64);
+		});
+
+		test('outside valid range', () => {
+			// XXX (techdebt) this isn't desireable, it's just that it will never be used this way
+			expect(countToBraille(-65)).toBe('⟿');
+			expect(countToBraille(192)).toBe('⤀');
+			expect(brailleToCount('⟿')).toBe(-65);
+			expect(brailleToCount('⤀')).toBe(192);
 		});
 	});
 });
