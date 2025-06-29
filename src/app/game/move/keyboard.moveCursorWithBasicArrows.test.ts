@@ -1249,7 +1249,6 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 		describe('6 4 | 4 (cell > tableau)', () => {
 			describe('not dealt', () => {
 				const game = new FreeCell({ cellCount: 6, cascadeCount: 4 });
-
 				describe('left', () => {
 					test.each`
 						start                                   | end                                     | actionText

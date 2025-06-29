@@ -24,7 +24,6 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'cursor set h AD': '', // unless we have a card
 	'cursor set 6 2D': '',
 	'cursor set 3': '', // a cascade without braille means it's 0 (no card, empty cascade)
-	// REVIEW (techdebt) should we add position info to up/left/down/right/stop
 	'cursor up': '',
 	'cursor left': '',
 	'cursor down': '',
