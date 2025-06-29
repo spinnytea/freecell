@@ -107,7 +107,7 @@ export interface AvailableMove {
 	priority: number;
 }
 
-// TODO (settings) (2-priority) these _exist_, but we need to be able to pick them
+// TODO (settings) these _exist_, but we need to be able to pick them
 export type AutoFoundationLimit =
 	// move all cards that can go up
 	// i.e. 3KKK

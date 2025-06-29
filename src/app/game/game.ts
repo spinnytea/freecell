@@ -64,6 +64,12 @@ interface OptionsNonstandardGameplay {
 	autoFoundation?: boolean;
 
 	/**
+		You can't do anything with the foundation, selecting it is a wasted action.
+		So the normal gameplay rule prohibit it.
+
+		But as this whole implementation excercise goes, "why not?"
+		For now it's locked behind a hidden feature flag (debug/testing flag).
+
 		@deprecated this is just for… for testing, yeah that's it
 		 - or maybe to rearrange foundations
 		 - shorthand doesn't have the fidelity to rearrange foundations (just `h` for all)
@@ -351,6 +357,7 @@ export class FreeCell {
 
 		// set selection, or move selection if applicable
 		if (!this.selection || this.selection.peekOnly || selectionOnly) {
+			// TODO (techdebt) (controls) we do not have a allowSelectDeck flag, because you can't reasonably select it through the UI
 			if (this.win && this.cursor.fixture === 'foundation' && !allowSelectFoundation) {
 				// REVIEW (techdebt) (joker) (settings) settings for new game?
 				//  - we could pass in `cards: null` or `cards: []` to reset a a game
@@ -377,12 +384,6 @@ export class FreeCell {
 		}
 
 		if (!this.availableMoves || !this.selection?.cards.length || selectionOnly) {
-			// TODO (animation) (2-priority) animate touch stop
-			//  - this isn't "invalid" so much as it is "nothing to do"
-			//  - we touched this location, and there isn't an actual action
-			//  - we can add a bit of whimmsy here, behind a conditional animation
-			//  - just like a small card bump (up,left,rot, and back)
-
 			// do not clear selection
 			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
 		}

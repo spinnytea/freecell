@@ -7,9 +7,8 @@ import { calcCursorActionText } from '@/app/game/move/move';
 export type KeyboardArrowDirection = 'up' | 'right' | 'left' | 'down';
 
 // TODO (controls) (3-priority) actually play the game and see what's not quite right
-//  - ~~left right wraps between home/tableau~~ → maybe, it's fine how it is (available moves should do this tho)
-//  - entering a cascade (l/r, u/d) cascade always moves to the "last sequence"
-//  - when there is no selection, skip over blank spots?
+//  - "up w" and "down w" to cascade should move to the "first card of the last sequence"
+//  - move to the bottom card, then "cast upwards" while the cards can stack
 export function moveCursorWithBasicArrows(
 	game: FreeCell,
 	dir: KeyboardArrowDirection

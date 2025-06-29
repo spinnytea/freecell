@@ -16,7 +16,6 @@ import { FreeCell } from '@/app/game/game';
 describe('game.$moveCardToPosition', () => {
 	test('spot some concerns', () => {
 		let game = new FreeCell().dealAll({ demo: true, keepDeck: true });
-		// TODO (techdebt) (2-priority) should we allow selecting the deck if we can't do anything with it?
 		game = game.$selectCard('AH');
 		expect(game.print()).toBe(
 			'' + //
@@ -83,8 +82,6 @@ describe('game.$moveCardToPosition', () => {
 				' touch stop'
 		);
 
-		// TODO (techdebt) (2-priority) should we allow selecting the foundation; we allow that with the deck?
-		//  - the only time the deck is on screen, touching it will deal cards
 		game = game.$selectCard('JS');
 		expect(game.print()).toBe(
 			'' + //

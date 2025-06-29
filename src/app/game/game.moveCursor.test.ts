@@ -79,96 +79,20 @@ describe('game.moveCursor', () => {
 		});
 	});
 
+	// TODO (controls) only cycle between places that have a card
+	//  - up/left/down/right only work when that spot has a card
+	//  - or relly, jump over the empty spaces
+	//  - impl isn't trivial
+	describe('no selection only moves to cards', () => {
+		test.todo('what do these tests need / look like?');
+	});
+
+	// TODO (controls) only cycle between places that the selection can move
+	//  - we pick a move by priority
+	//  - we need to have the default ordering (or something) for picking the next cursor
+	//  - left and right are easy
+	//  - up and down are "interesting"
 	describe('has selection only moves to valid locations', () => {
-		// TODO (controls) (2-priority) only cycle between places that the selection can move
-		describe('cell', () => {
-			test.todo('within left and right');
-
-			describe('going off-right', () => {
-				test.todo('wraps to foundation');
-
-				test.todo('wraps to cascade when no foundation');
-
-				test.todo('wraps to cell when no foundation or cascade');
-			});
-
-			describe('going off-left', () => {
-				test.todo('wraps to cascade');
-
-				test.todo('wraps to foundation when no cascade');
-
-				test.todo('wraps to cell when no foundation or cascade');
-			});
-
-			test.todo('going off-top stops');
-
-			describe('going off-bottom', () => {
-				test.todo('wraps to cascade');
-
-				test.todo('stops when no cascade');
-			});
-		});
-
-		describe('foundation', () => {
-			test.todo('within left and right');
-
-			describe('going off-right', () => {
-				test.todo('wraps to cascade');
-
-				test.todo('wraps to cell when no founcation');
-
-				test.todo('wraps to foundation when no cell or cascade');
-			});
-
-			describe('going off-left', () => {
-				test.todo('wraps to cell');
-
-				test.todo('wraps to cascade when no cell');
-
-				test.todo('wraps to foundation when no cell or cascade');
-			});
-
-			test.todo('going off-top stops');
-
-			describe('going off-bottom', () => {
-				test.todo('wraps to cascade');
-
-				test.todo('stops when no cascade');
-			});
-		});
-
-		describe('cascade', () => {
-			test.todo('within left and right');
-
-			describe('going off-right', () => {
-				test.todo('wraps to cell');
-
-				test.todo('wraps to foundation when no cell');
-
-				test.todo('wraps to cascade when no cell or foundation');
-			});
-
-			describe('going off-left', () => {
-				test.todo('wraps to foundation');
-
-				test.todo('wraps to cell when no foundation');
-
-				test.todo('wraps to cascade when no cell or foundation');
-			});
-
-			describe('going off-top', () => {
-				test.todo('wraps to cell');
-
-				test.todo('wraps to foundation when no cell');
-
-				test.todo('wraps to foundation');
-
-				test.todo('wraps to cell when no founcation');
-
-				test.todo('stop when no cell or foundation');
-			});
-
-			test.todo('going off-bottom stops');
-		});
+		test.todo('what do these tests need / look like?');
 	});
 });
