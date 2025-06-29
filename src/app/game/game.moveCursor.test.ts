@@ -49,7 +49,7 @@ describe('game.moveCursor', () => {
 				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 6] }} | ${'left'}  | ${{ fixture: 'cascade', data: [7, 5] }} | ${'cursor left w'}
 				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 6] }} | ${'right'} | ${{ fixture: 'cascade', data: [1, 6] }} | ${'cursor right'}
 				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 6] }} | ${'up'}    | ${{ fixture: 'cascade', data: [0, 5] }} | ${'cursor up'}
-				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 6] }} | ${'down'}  | ${{ fixture: 'cascade', data: [0, 6] }} | ${'cursor stop'}
+				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 6] }} | ${'down'}  | ${{ fixture: 'cascade', data: [0, 6] }} | ${'cursor stop 1 AS'}
 				${{ fixture: 'cascade', data: [3, 3] }}   | ${{ fixture: 'cascade', data: [3, 3] }} | ${'left'}  | ${{ fixture: 'cascade', data: [2, 3] }} | ${'cursor left'}
 				${{ fixture: 'cascade', data: [3, 3] }}   | ${{ fixture: 'cascade', data: [3, 3] }} | ${'right'} | ${{ fixture: 'cascade', data: [4, 3] }} | ${'cursor right'}
 				${{ fixture: 'cascade', data: [3, 3] }}   | ${{ fixture: 'cascade', data: [3, 3] }} | ${'up'}    | ${{ fixture: 'cascade', data: [3, 2] }} | ${'cursor up'}

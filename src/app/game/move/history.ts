@@ -107,7 +107,7 @@ const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
 	/^move (\w)(\w) ([\w-]+)→(\S+) \((auto-foundation|flourish) (\w+) (\S+)\)$/;
-const CURSOR_REGEX = /^cursor (set|left|right|up|down|stop)( w)?( [a-z0-9].?)?( [A-Z0-9][A-Z])?$/;
+const CURSOR_REGEX = /^cursor (set|up|left|down|right|stop)( w)?( [a-z0-9].?)?( [A-Z0-9][A-Z])?$/;
 const SELECT_REGEX = /^(de)?select( (\w))? ([\w-]+)$/;
 
 /**

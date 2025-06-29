@@ -24,6 +24,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'cursor set h AD': '', // unless we have a card
 	'cursor set 6 2D': '',
 	'cursor set 3': '', // a cascade without braille means it's 0 (no card, empty cascade)
+	// REVIEW (techdebt) should we add position info to up/left/down/right/stop
 	'cursor up': '',
 	'cursor left': '',
 	'cursor down': '',
@@ -33,6 +34,12 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'cursor down w': '',
 	'cursor right w': '',
 	'cursor stop': '',
+	'cursor stop KH': '',
+	'cursor stop b': '',
+	'cursor stop h⡂': '',
+	'cursor stop h AD': '',
+	'cursor stop 6 2D': '',
+	'cursor stop 3': '',
 	'select QS': '',
 	'select 4D-3S-2D': '',
 	'select 8 7C': '',
