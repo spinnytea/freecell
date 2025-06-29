@@ -107,6 +107,7 @@ const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
 	/^move (\w)(\w) ([\w-]+)→(\S+) \((auto-foundation|flourish) (\w+) (\S+)\)$/;
+const CURSOR_REGEX = /^cursor (set|left|right|up|down|stop)( w)?( [a-z0-9].?)?( [A-Z0-9][A-Z])?$/;
 const SELECT_REGEX = /^(de)?select( (\w))? ([\w-]+)$/;
 
 /**
@@ -243,8 +244,19 @@ export function parseCursorFromPreviousActionText(
 				return parseCursorFromPreviousActionText(actionText.substring(8), cards);
 			}
 			return undefined;
-		// FIXME parse position
-		case 'cursor':
+		case 'cursor': {
+			const { p, shorthand } = parseActionTextCursor(actionText);
+			if (shorthand) {
+				const card = findCard(cards, parseShorthandCard(shorthand));
+				return card.location;
+			}
+			if (p) {
+				const cursor = parseShorthandPosition_INCOMPLETE(p);
+				if (cursor.fixture === 'cascade') cursor.data[1] = 0;
+				return cursor;
+			}
+			return undefined;
+		}
 		case 'auto-foundation':
 		case 'auto-foundation-tween':
 			return undefined;
@@ -302,7 +314,6 @@ export function parseAltCursorFromPreviousActionText(
 				return parseAltCursorFromPreviousActionText(actionText.substring(8), cards, allowEmptyDeck);
 			}
 			return undefined;
-		// FIXME parse position
 		case 'cursor':
 		case 'auto-foundation':
 		case 'auto-foundation-tween':
@@ -335,13 +346,22 @@ function _parseActionTextMoveFoundation(actionText: string) {
 	return undefined;
 }
 
+function parseActionTextCursor(actionText: string) {
+	const match = CURSOR_REGEX.exec(actionText);
+	if (match) {
+		const [, text, wrap, shMove, shCard] = match as (string | undefined)[];
+		return { text, wrap: !!wrap, p: shMove?.slice(1), shorthand: shCard?.slice(1) };
+	}
+	throw new Error('invalid cursor actionText: ' + actionText);
+}
+
 function parseActionTextSelect(actionText: string) {
 	const match = SELECT_REGEX.exec(actionText);
 	if (match) {
 		const [, , , from, fromShorthand] = match;
 		return { from, fromShorthand };
 	}
-	throw new Error('not "deselect" or "select" actionText: ' + actionText);
+	throw new Error('invalid de/select actionText: ' + actionText);
 }
 
 function parseActionTextInvalidMove(actionText: string) {

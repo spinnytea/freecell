@@ -363,18 +363,17 @@ export function shorthandSequence(sequence: CardSequence) {
 	return sequence.cards.map((card) => shorthandCard(card)).join('-');
 }
 
-// FIXME option to include d1 as braille
 export function shorthandPosition(location: CardLocation, includeD0 = false): Position {
 	const d0 = location.data[0];
 	if (location.fixture === 'foundation') {
 		const braille = includeD0 ? countToBraille(d0) : '';
 		return ('h' + braille) as Position;
 	} else if (location.fixture === 'cascade') {
-		const braille = includeD0 ? countToBraille(location.data[1]) : '';
+		// const braille = includeD0 ? countToBraille(location.data[1]) : '';
 		if (d0 === 9) {
-			return ('0' + braille) as Position;
+			return '0';
 		} else if (d0 >= 0 && d0 < 9) {
-			return ((d0 + 1).toString(10) + braille) as Position;
+			return (d0 + 1).toString(10) as Position;
 		}
 	} else if (location.fixture === 'cell') {
 		if (d0 >= 0 && d0 < 6) {
@@ -400,7 +399,8 @@ export function shorthandSequenceWithPosition(sequence: CardSequence) {
 	so which d1 do we use for a cascade? this will return an invalid value (too high), which will be clamped if used directly
 */
 export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLocation {
-	switch (p) {
+	if (!p) throw new Error(`invalid position shorthand: "undefined"`);
+	switch (p[0]) {
 		case '1':
 		case '2':
 		case '3':
@@ -418,7 +418,7 @@ export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLo
 			return { fixture: 'cascade', data: [9, BOTTOM_OF_CASCADE] };
 		case 'h':
 			// h could refer to _any_ of the foundations; this needs to be verified
-			return { fixture: 'foundation', data: [0] };
+			return { fixture: 'foundation', data: [p.length === 2 ? brailleToCount(p[1]) : 0] };
 		case 'a':
 		case 'b':
 		case 'c':
@@ -427,7 +427,7 @@ export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLo
 		case 'f':
 			return { fixture: 'cell', data: [parseInt(p, 16) - 10] };
 		default:
-			throw new Error(`invalid position shorthand: "${p ?? 'undefined'}"`);
+			throw new Error(`invalid position shorthand: "${p}"`);
 	}
 }
 
