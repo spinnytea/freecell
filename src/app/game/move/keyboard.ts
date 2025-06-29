@@ -2,6 +2,7 @@ import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import { CardLocation } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import { PreviousAction } from '@/app/game/move/history';
+import { calcCursorActionText } from '@/app/game/move/move';
 
 export type KeyboardArrowDirection = 'up' | 'right' | 'left' | 'down';
 
@@ -121,8 +122,8 @@ export function moveCursorWithBasicArrows(
 							};
 						}
 						return {
-							action: { text: 'cursor stop', type: 'cursor' },
-							cursor: { fixture, data: [d0, d1] },
+							action: { text: calcCursorActionText(game, 'stop', game.cursor), type: 'cursor' },
+							cursor: game.cursor,
 						};
 					}
 					return {
@@ -219,5 +220,6 @@ export function moveCursorWithBasicArrows(
 	}
 
 	// noop
-	return { action: { text: 'cursor stop', type: 'cursor' }, cursor: game.cursor };
+	const actionText = calcCursorActionText(game, 'stop', game.cursor);
+	return { action: { text: actionText, type: 'cursor' }, cursor: game.cursor };
 }

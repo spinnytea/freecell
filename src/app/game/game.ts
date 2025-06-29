@@ -35,6 +35,7 @@ import {
 	AutoFoundationLimit,
 	AvailableMove,
 	calcAutoFoundationActionText,
+	calcCursorActionText,
 	calcMoveActionText,
 	canStackFoundation,
 	countEmptyFoundations,
@@ -307,7 +308,9 @@ export class FreeCell {
 	}
 
 	setCursor(cursor: CardLocation): FreeCell {
-		return this.__clone({ action: { text: 'cursor set', type: 'cursor' }, cursor });
+		cursor = this.__clampCursor(cursor);
+		const actionText = calcCursorActionText(this, 'set', cursor);
+		return this.__clone({ action: { text: actionText, type: 'cursor' }, cursor });
 	}
 
 	moveCursor(dir: KeyboardArrowDirection): FreeCell {

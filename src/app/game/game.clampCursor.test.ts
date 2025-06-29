@@ -72,7 +72,7 @@ describe('game.clampCursor', () => {
 			game = game.setCursor({ fixture: 'cascade', data: [2, 2] });
 			expect(game.print()).toMatchSnapshot();
 			expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 2] });
-			expect(game.previousAction.text).toBe('cursor set');
+			expect(game.previousAction.text).toBe('cursor set 3 9D');
 		});
 
 		test('col too small', () => {

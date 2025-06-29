@@ -4,6 +4,7 @@ import {
 	CardSequence,
 	cloneCards,
 	findCard,
+	getCardAt,
 	getRankForCompare,
 	getSequenceAt,
 	isAdjacent,
@@ -544,6 +545,33 @@ export function calcAutoFoundationActionText(moved: Card[], isFlourish: boolean)
 	const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
 	const firstWord = isFlourish ? 'flourish' : 'auto-foundation';
 	return `${firstWord} ${movedPositionsStr} ${movedCardsStr}`;
+}
+
+/*
+	position info is entirely superfluous, no need to add it to up/left/down/right
+
+	we don't need it in set/stop either,
+	but it does make a few things nicer to validate for having it there
+	(e.g. $toggleCursor)
+*/
+export function calcCursorActionText(
+	game: FreeCell,
+	suffix: string,
+	location: CardLocation
+): string {
+	const card = getCardAt(game, location);
+	const cardSuffix = card ? ` ${shorthandCard(card)}` : '';
+	switch (location.fixture) {
+		case 'deck':
+			return `cursor ${suffix}${cardSuffix}`;
+		case 'cell':
+			return `cursor ${suffix} ${shorthandPosition(location)}${cardSuffix}`;
+		case 'cascade':
+			return `cursor ${suffix} ${shorthandPosition(location)}${cardSuffix}`;
+		case 'foundation':
+			return `cursor ${suffix} ${shorthandPosition(location, !card)}${cardSuffix}`;
+	}
+	return `cursor ${suffix}`;
 }
 
 /**

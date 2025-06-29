@@ -24,11 +24,14 @@ describe('game.$toggleCursor', () => {
 					' move 74 4D→5S'
 			);
 
-			// REVIEW (techdebt) (history) i feel like cursor should have more details
-			//  - like, it _reallly_ doesn't matter
-			//  - but toggleCursor makes it quite clear that it would be to at least 'cursor set 7' vs 'cursor set 4'
-			expect(game.$toggleCursor().previousAction.text).toBe('cursor set');
-			expect(game.$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set');
+			expect(game.$toggleCursor().previousAction.text).toBe('cursor set 7 6C');
+			expect(game.$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set 4 5S');
+			expect(game.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toBe(
+				'cursor set 7 6C'
+			);
+			expect(
+				game.$toggleCursor().$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text
+			).toBe('cursor set 4 5S');
 
 			// okay, moving on
 			// see how much easier this iw with toggleCursor

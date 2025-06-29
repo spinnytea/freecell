@@ -8,7 +8,7 @@ exports[`game.clampCursor cascade col too large 1`] = `
  7S 7H 7D 7C 6S 6H 6D 6C 
  5S 5H 5D 5C 4S 4H 4D 4C 
  3S 3H 3D 3C             
- cursor set"
+ cursor set 8 8C"
 `;
 
 exports[`game.clampCursor cascade col too small 1`] = `
@@ -19,7 +19,7 @@ exports[`game.clampCursor cascade col too small 1`] = `
  7S 7H 7D 7C 6S 6H 6D 6C 
  5S 5H 5D 5C 4S 4H 4D 4C 
  3S 3H 3D 3C             
- cursor set"
+ cursor set 1 9S"
 `;
 
 exports[`game.clampCursor cascade empty 1`] = `
@@ -37,7 +37,7 @@ exports[`game.clampCursor cascade invalid col and row 1`] = `
  7S 7H 7D 7C 6S 6H 6D 6C 
  5S 5H 5D 5C 4S 4H 4D>4C 
  3S 3H 3D 3C             
- cursor set"
+ cursor set 8 4C"
 `;
 
 exports[`game.clampCursor cascade okay 1`] = `
@@ -48,7 +48,7 @@ exports[`game.clampCursor cascade okay 1`] = `
  7S 7H 7D 7C 6S 6H 6D 6C 
  5S 5H 5D 5C 4S 4H 4D 4C 
  3S 3H 3D 3C             
- cursor set"
+ cursor set 3 9D"
 `;
 
 exports[`game.clampCursor cascade row too large 1`] = `
@@ -59,7 +59,7 @@ exports[`game.clampCursor cascade row too large 1`] = `
  7S 7H 7D 7C 6S 6H 6D 6C 
  5S 5H 5D 5C 4S 4H 4D 4C 
  3S 3H>3D 3C             
- cursor set"
+ cursor set 3 3D"
 `;
 
 exports[`game.clampCursor cascade row too small 1`] = `
@@ -70,7 +70,7 @@ exports[`game.clampCursor cascade row too small 1`] = `
  7S 7H 7D 7C 6S 6H 6D 6C 
  5S 5H 5D 5C 4S 4H 4D 4C 
  3S 3H 3D 3C             
- cursor set"
+ cursor set 3 KD"
 `;
 
 exports[`game.clampCursor cell okay 1`] = `
