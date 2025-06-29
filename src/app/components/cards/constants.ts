@@ -37,7 +37,7 @@ export enum ControlSchemes {
 	/**
 		move cursor (w/w/o selection), touch, deselect
 	*/
-	Keyboard = 'keyboard',
+	Keyboard = 'keyboard arrows',
 
 	/**
 		set cursor + move

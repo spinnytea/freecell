@@ -4,7 +4,7 @@ import { CardLocation } from '@/app/game/card/card';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
-/** REVIEW (controls) if a card is selected, move it to the empty pile */
+/** REVIEW (controls) click-to-select */
 export function useClickTouchControls(location: CardLocation) {
 	const [, setGame] = useContext(GameContext);
 	const [{ enabledControlSchemes }, setSettings] = useContext(SettingsContext);

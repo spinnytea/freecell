@@ -24,7 +24,7 @@ describe('page', () => {
 		({ mockCallTimes, mockReset } = spyOnGsap(gsap));
 	});
 
-	it('should render without crashing', () => {
+	test('should render without crashing', () => {
 		render(
 			<ErrorBoundary>
 				<Page />

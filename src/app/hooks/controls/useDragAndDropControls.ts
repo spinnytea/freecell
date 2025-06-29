@@ -52,12 +52,9 @@ export function useDragAndDropControls(
 
 	useGSAP(
 		(context, contextSafe) => {
-			const enableDragAndDrop = gameStateRef.current.settings.enabledControlSchemes.has(
-				ControlSchemes.DragAndDrop
-			);
-			if (!enableDragAndDrop) {
-				return;
-			}
+			const enabledControlSchemes = gameStateRef.current.settings.enabledControlSchemes;
+			const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
+			if (!enableDragAndDrop) return;
 
 			if (cardRef.current && contextSafe) {
 				const checkIfValid = contextSafe((draggable: Draggable, event: PointerEvent) => {

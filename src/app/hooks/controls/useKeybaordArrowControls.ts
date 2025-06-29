@@ -3,7 +3,6 @@ import { ControlSchemes } from '@/app/components/cards/constants';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
-/** TODO (controls) keyboard */
 export function useKeybaordArrowControls() {
 	const [, setGame] = useContext(GameContext);
 	const [{ showSettingsDialog, enabledControlSchemes }, setSettings] = useContext(SettingsContext);

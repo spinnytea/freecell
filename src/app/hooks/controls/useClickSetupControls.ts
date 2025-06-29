@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { ControlSchemes } from '@/app/components/cards/constants';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
@@ -12,8 +13,15 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 	REVIEW (controls) mouse
 */
 export function useClickSetupControls() {
-	const [, setSettings] = useContext(SettingsContext);
 	const [game, setGame, newGame] = useContext(GameContext);
+	const [{ enabledControlSchemes }, setSettings] = useContext(SettingsContext);
+	const enableClickToMove = enabledControlSchemes.has(ControlSchemes.ClickToMove);
+	const enableClickToSelect = enabledControlSchemes.has(ControlSchemes.ClickToSelect);
+	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
+
+	if (!(enableClickToMove || enableClickToSelect || enableDragAndDrop)) {
+		return undefined;
+	}
 
 	function handleClickSetup() {
 		if (game.win) {

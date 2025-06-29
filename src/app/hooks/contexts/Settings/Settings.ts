@@ -21,11 +21,16 @@ export function calcDefaultSettings(): Settings {
 		showKeyboardCursor: false,
 		cardFace: 'auto',
 		enabledControlSchemes: new Set([
-			ControlSchemes.Keyboard,
-			ControlSchemes.Hotkeys,
-			ControlSchemes.ClickToSelect,
-			ControlSchemes.ClickToMove,
-			// ControlSchemes.DragAndDrop, // TODO (drag-and-drop) impl
+			// FIXME revert
+			// ControlSchemes.Keyboard,
+			// ControlSchemes.Hotkeys,
+
+			// FIXME test ClickToMove and DragAndDrop together
+			// FIXME test ClickToMove without ClickToSelect
+			// FIXME rather, try to get all three of these mouse activities to play nicely
+			// ControlSchemes.ClickToSelect,
+			// ControlSchemes.ClickToMove,
+			ControlSchemes.DragAndDrop, // FIXME impl
 		]),
 	};
 }
