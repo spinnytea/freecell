@@ -25,9 +25,20 @@ export function calcDefaultSettings(): Settings {
 			// ControlSchemes.Keyboard,
 			// ControlSchemes.Hotkeys,
 
-			// FIXME test ClickToMove and DragAndDrop together
-			// FIXME test ClickToMove without ClickToSelect
-			// FIXME rather, try to get all three of these mouse activities to play nicely
+			// FIXME test a bunch o combinations
+			//  - if they are all mutually exclusive, it should be easy
+			// | - | ------ | ---- | ------------- |
+			// |   | select | move | drag-and-drop |
+			// | - | ------ | ---- | ------------- |
+			// | 0 |        |      |               |
+			// | 1 |  x     |      |               |
+			// | 2 |        |  x   |               |
+			// | 3 |  x     |  x   |               |
+			// | 4 |        |      |  x            |
+			// | 5 |  x     |      |  x            |
+			// | 6 |        |  x   |  x            |
+			// | 7 |  x     |  x   |  x            |
+			// | - | ------ | ---- | ------------- |
 			// ControlSchemes.ClickToSelect,
 			// ControlSchemes.ClickToMove,
 			ControlSchemes.DragAndDrop, // FIXME impl
