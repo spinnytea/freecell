@@ -190,18 +190,43 @@ export function useDragAndDropControls(
 	);
 }
 
-// FIXME a strict box is simple, but restricting is a "nearest within threshold" (e.g. radius of height)
 function overlappingAvailableMove(
 	{ x, y }: { x: number; y: number },
 	dropTargets: DropTarget[]
-): AvailableMove | undefined {
-	return dropTargets.find(({ cardCoords }) => {
-		if (x < cardCoords.left) return false;
-		if (x > cardCoords.left + cardCoords.width) return false;
-		if (y < cardCoords.top) return false;
-		if (y > cardCoords.top + cardCoords.height) return false;
-		return true;
-	})?.availableMove;
+): AvailableMove | null {
+	let closestMove: AvailableMove | null = null;
+	let closestDist2: number | null = null;
+	let maxHeight = 0;
+
+	for (const dropTarget of dropTargets) {
+		const { top, left, width, height } = dropTarget.cardCoords;
+
+		maxHeight = Math.max(height, maxHeight);
+		const dx = x - left - width / 2;
+		const dy = y - top - height / 2;
+		const dist2 = dx * dx + dy * dy;
+		if (closestDist2 === null || dist2 < closestDist2) {
+			closestMove = dropTarget.availableMove;
+			closestDist2 = dist2;
+		}
+	}
+
+	const maxHeight2 = maxHeight * maxHeight;
+
+	if (closestDist2 !== null && closestDist2 < maxHeight2) {
+		return closestMove;
+	}
+
+	return null;
+
+	// box overlap - is the cursor within the card
+	// return dropTargets.find(({ cardCoords }) => {
+	// 	if (x < cardCoords.left) return false;
+	// 	if (x > cardCoords.left + cardCoords.width) return false;
+	// 	if (y < cardCoords.top) return false;
+	// 	if (y > cardCoords.top + cardCoords.height) return false;
+	// 	return true;
+	// })?.availableMove;
 }
 
 /**
@@ -229,7 +254,8 @@ function checkIfValid(
 	const dropTargets = game.availableMoves.map((availableMove) => ({
 		availableMove,
 		// TODO (controls) (settings) (drag-and-drop) option to drop on card vs column
-		cardCoords: calcCardCoords(fixtureSizes, availableMove.location, 'drag-and-drop'),
+		// BUG CursorType 'cascade' doesn't work with dist2 based overlappingAvailableMove - remove it?
+		cardCoords: calcCardCoords(fixtureSizes, availableMove.location, 'selection'),
 	}));
 
 	return { game, selection, shorthands, dropTargets };

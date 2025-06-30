@@ -16,12 +16,7 @@ import { useGame } from '@/app/hooks/contexts/Game/useGame';
 
 const OVERLAY_MARGINS = 4;
 
-export type CursorType =
-	| 'available-high'
-	| 'available-low'
-	| 'cursor'
-	| 'selection'
-	| 'drag-and-drop';
+export type CursorType = 'available-high' | 'available-low' | 'cursor' | 'selection' | 'cascade';
 
 export function DebugCursors() {
 	const fixtureSizes = useFixtureSizes();
