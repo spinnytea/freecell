@@ -1,12 +1,15 @@
 import { MutableRefObject, useContext, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, Draggable } from 'gsap/all';
-import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
+import { Draggable } from 'gsap/all';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { CardLocation, CardSequence, shorthandCard, shorthandPosition } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import { AvailableMove } from '@/app/game/move/move';
-import { animDragSequence } from '@/app/hooks/animations/animDragSequence';
+import {
+	animDragSequence,
+	animDragSequenceClear,
+	animDragSequencePivot,
+} from '@/app/hooks/animations/animDragSequence';
 import {
 	calcCardCoords,
 	calcTopLeftZ,
@@ -81,27 +84,29 @@ export function useDragAndDropControls(
 				});
 
 				const resetAfterDrag = contextSafe(() => {
-					// FIXME review exactly when this event fires
 					if (gameStateRef.current.settings.showDebugInfo) {
 						console.log('resetAfterDrag');
 					}
-					setGame((g) => {
-						const { top, left, zIndex } = calcTopLeftZ(
-							gameStateRef.current.fixtureSizes,
-							gameStateRef.current.location,
-							null
-						);
-						gsap.to(cardRef.current, {
-							top,
-							left,
-							zIndex,
-							transform: 'translate3d(0px, 0px, 0px)',
-							duration: DEFAULT_TRANSLATE_DURATION,
-							ease: 'power1.out',
+					if (dragStateRef.current) {
+						const shorthands = dragStateRef.current.shorthands;
+						// clean up drag state (mischief managed)
+						dragStateRef.current = undefined;
+
+						setGame((g) => {
+							const { top, left, zIndex } = calcTopLeftZ(
+								gameStateRef.current.fixtureSizes,
+								gameStateRef.current.location,
+								null
+							);
+							contextSafe(animDragSequenceClear)({
+								list: shorthands,
+								pointerCoords: { x: left, y: top, z: zIndex },
+								gameBoardIdRef,
+							});
+							// drag-cancel is "no selection"
+							return g.clearSelection();
 						});
-						// drag-cancel is "no selection"
-						return g.clearSelection();
-					});
+					}
 				}) as React.MouseEventHandler;
 
 				Draggable.create(cardRef.current, {
@@ -114,8 +119,6 @@ export function useDragAndDropControls(
 							const pointerCoords = pointerCoordsToFixtureSizes(event);
 							contextSafe(animDragSequence)({
 								list: dragStateRef.current.shorthands,
-								pointerCoords,
-								offsetTop: gameStateRef.current.fixtureSizes.tableau.offsetTop,
 								gameBoardIdRef,
 							});
 							// TODO (animation) (drag-and-drop) drop target animation? like, rotation??
@@ -134,17 +137,35 @@ export function useDragAndDropControls(
 						}
 					},
 					onRelease: function (event: PointerEvent) {
-						// FIXME review exactly when this event fires
 						if (gameStateRef.current.settings.showDebugInfo) {
 							console.log('onRelease');
 						}
 						if (dragStateRef.current) {
 							const game = dragStateRef.current.game;
+							const shorthands = dragStateRef.current.shorthands;
+							const dropTargets = dragStateRef.current.dropTargets;
+
 							const overlapping = overlappingAvailableMove(
 								pointerCoordsToFixtureSizes(event),
-								dragStateRef.current.dropTargets
+								dropTargets
 							);
 							if (overlapping) {
+								// clean up drag state (mischief managed)
+								dragStateRef.current = undefined;
+
+								const { top, left, zIndex } = calcTopLeftZ(
+									gameStateRef.current.fixtureSizes,
+									gameStateRef.current.location,
+									null
+								);
+
+								contextSafe(animDragSequencePivot)({
+									list: shorthands,
+									pointerCoords: { x: left, y: top, z: zIndex },
+									offsetTop: gameStateRef.current.fixtureSizes.tableau.offsetTop,
+									gameBoardIdRef,
+								});
+
 								// FIXME (drag-and-drop) (techdebt) the following useCardPositionAnimations needs to play nicer with this
 								//  - the cards are not in their original positions
 								//  - there's a lot of jitter
