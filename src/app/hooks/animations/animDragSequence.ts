@@ -5,9 +5,6 @@ import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import { calcCardId } from '@/app/game/card/card';
 
-// TODO (animation) (drag-and-drop) timingfollow the card this is stacked on top of
-//  - follow-the-leader style drag animation, each card lags behind the previous
-//  - needs to be on a timer, onDrag is basically onmousemove, so we only get updates as the cursor moves
 export function animDragSequence({
 	list,
 	gameBoardIdRef,
@@ -24,6 +21,9 @@ export function animDragSequence({
 		if (index === 0) {
 			transform = gsap.getProperty(cardId, 'transform');
 		} else {
+			// FIXME review animation (with auto-foundation)
+			// FIXME index>0 nopes off to the middle of nowhere during animDragSequencePivot
+			//  - killTweensOf?
 			const duration = index * MAX_ANIMATION_OVERLAP * 2;
 			gsap.to(cardId, { transform, duration, ease: 'power1.out' });
 		}
@@ -43,6 +43,8 @@ export function animDragSequenceClear({
 	list.forEach((shorthand, index) => {
 		const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 		gsap.set(cardId, { zIndex: z + index });
+		// FIXME review animation (with auto-foundation)
+		//  - needs to scale based on count?
 		const duration = DEFAULT_TRANSLATE_DURATION + index * MAX_ANIMATION_OVERLAP;
 		gsap.to(cardId, { transform: 'translate3d(0px, 0px, 0px)', duration, ease: 'power1.out' });
 	});
@@ -70,12 +72,14 @@ export function animDragSequencePivot({
 			left: x,
 			zIndex: z,
 		};
-		tlz.zIndex = z + index;
+		// FIXME the zIndex is all wonky (added BOTTOM_OF_CASCADE, but it still gets jumbled sometimes)
+		tlz.zIndex = z + index + BOTTOM_OF_CASCADE;
 		tlz.top += transform.y;
 		tlz.left += transform.x;
 
 		// update the "prevTLZ"
 		domUtils.setDomAttributes(cardId, tlz);
+		gsap.killTweensOf(cardIdp);
 		gsap.set(cardIdp, {
 			top: tlz.top,
 			left: tlz.left,
@@ -85,6 +89,7 @@ export function animDragSequencePivot({
 	});
 }
 
+// FIXME review
 function parseTranslate3d(transformString: string) {
 	const regex =
 		/translate3d\(\s*(-?\d+(\.\d+)?)(px|em|rem|vw|vh)?\s*,\s*(-?\d+(\.\d+)?)(px|em|rem|vw|vh)?\s*,\s*(-?\d+(\.\d+)?)(px|em|rem|vw|vh)?\s*\)/;
@@ -96,5 +101,6 @@ function parseTranslate3d(transformString: string) {
 		const z = parseFloat(match[7]);
 		return { x, y, z };
 	}
+	// FIXME better defaults? i guess this is the best default here
 	return { x: 0, y: 0, z: 0 };
 }

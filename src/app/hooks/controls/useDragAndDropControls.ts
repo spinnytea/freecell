@@ -43,6 +43,9 @@ interface DragState {
 	 - drag-cancel
 	 - drag-drop to move
 	FIXME we should be normalizing to "no selection" or "noop" for `setGame` and "with selection" for dragState.game
+	FIXME playtest
+	FIXME playtest
+	FIXME playtest
 */
 export function useDragAndDropControls(
 	cardRef: MutableRefObject<HTMLDivElement | null>,
@@ -66,7 +69,9 @@ export function useDragAndDropControls(
 
 			if (cardRef.current && contextSafe) {
 				const checkIfValidWrapper = contextSafe((draggable: Draggable, event: PointerEvent) => {
-					// FIXME review exactly when this event fires
+					// try to prevent page nav (maybe not working?)
+					event.preventDefault();
+
 					if (gameStateRef.current.settings.showDebugInfo) {
 						console.log('checkIfValid');
 					}
@@ -116,6 +121,9 @@ export function useDragAndDropControls(
 					},
 					onDrag: function (event: PointerEvent) {
 						if (dragStateRef.current) {
+							// try to prevent page nav (maybe not working?)
+							event.preventDefault();
+
 							const pointerCoords = pointerCoordsToFixtureSizes(event);
 							contextSafe(animDragSequence)({
 								list: dragStateRef.current.shorthands,
