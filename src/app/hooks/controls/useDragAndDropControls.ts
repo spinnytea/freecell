@@ -159,6 +159,10 @@ export function useDragAndDropControls(
 									null
 								);
 
+								// FIXME (drag-and-drop) (techdebt) the following useCardPositionAnimations needs to play nicer with this
+								//  - the cards are not in their original positions
+								//  - there's A LOT of jitter
+								// drag-drop using the tween selection state
 								contextSafe(animDragSequencePivot)({
 									list: shorthands,
 									pointerCoords: { x: left, y: top, z: zIndex },
@@ -166,11 +170,6 @@ export function useDragAndDropControls(
 									gameBoardIdRef,
 								});
 
-								// FIXME (drag-and-drop) (techdebt) the following useCardPositionAnimations needs to play nicer with this
-								//  - the cards are not in their original positions
-								//  - there's a lot of jitter
-								//  - is this fighting with resetAfterDrag?
-								// drag-drop using the tween selection state
 								setGame(() => game.touchByPosition(shorthandPosition(overlapping.location)));
 							}
 						}

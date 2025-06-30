@@ -1,6 +1,6 @@
 import { MutableRefObject } from 'react';
 import { gsap } from 'gsap/all';
-import { MAX_ANIMATION_OVERLAP } from '@/app/animation_constants';
+import { DEFAULT_TRANSLATE_DURATION, MAX_ANIMATION_OVERLAP } from '@/app/animation_constants';
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import { calcCardId } from '@/app/game/card/card';
@@ -24,8 +24,7 @@ export function animDragSequence({
 		if (index === 0) {
 			transform = gsap.getProperty(cardId, 'transform');
 		} else {
-			// FIXME review animation
-			const duration = MAX_ANIMATION_OVERLAP * index * 0.1;
+			const duration = index * MAX_ANIMATION_OVERLAP * 2;
 			gsap.to(cardId, { transform, duration, ease: 'power1.out' });
 		}
 	});
@@ -43,8 +42,7 @@ export function animDragSequenceClear({
 	list.forEach((shorthand, index) => {
 		const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 		gsap.set(cardId, { zIndex: z + index });
-		// FIXME review animation
-		const duration = MAX_ANIMATION_OVERLAP + index * 0.1;
+		const duration = DEFAULT_TRANSLATE_DURATION + index * MAX_ANIMATION_OVERLAP;
 		gsap.to(cardId, { transform: 'translate3d(0px, 0px, 0px)', duration, ease: 'power1.out' });
 	});
 }
@@ -68,7 +66,7 @@ export function animDragSequencePivot({
 			top: y + index * offsetTop,
 			left: x,
 		};
-		// FIXME still has some jitter (is it fromTo?)
+		// update the "prevTLZ"
 		domUtils.setDomAttributes(cardId, { top, left, zIndex });
 		gsap.set(cardId, { top, left, zIndex, transform: 'translate3d(0px, 0px, 0px)' });
 	});

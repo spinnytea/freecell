@@ -37,15 +37,15 @@ export function animUpdatedCardPositions({
 	}
 	list.forEach(({ shorthand, top, left, zIndex }, index) => {
 		const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
-		const prevTL = nextTLZ.get(shorthand);
+		const prevTLZ = nextTLZ.get(shorthand);
 		nextTLZ.set(shorthand, { top, left, zIndex });
-		if (prevTL) {
+		if (prevTLZ) {
 			if (!pause) {
 				// bugfix: timeline.to should be enough, but mobile sometimes remakes cards at 0,0
 				//  - timeline.fromTo ensures we start the animation from the actual previous place
 				timeline.fromTo(
 					cardId,
-					{ top: prevTL.top, left: prevTL.left },
+					{ top: prevTLZ.top, left: prevTLZ.left },
 					{ top, left, duration: DEFAULT_TRANSLATE_DURATION, ease: 'power1.out' },
 					index === 0 ? `>0` : `<${overlap.toFixed(3)}`
 				);
