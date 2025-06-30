@@ -18,6 +18,7 @@ TODO (motivation) main development tasks:
    - ~~basics are established~~
    - `(controls) (drag-and-drop)` be more precise with state management, fix conflicts with other schemes
    - `(animation) (drag-and-drop)` better trailing animation, add some polish
+   - FIXME review all of (drag-and-drop)
 
 ```
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b
