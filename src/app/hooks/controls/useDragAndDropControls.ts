@@ -1,6 +1,6 @@
 import { MutableRefObject, useContext, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import { Draggable } from 'gsap/all';
+import { gsap, Draggable } from 'gsap/all';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { CardLocation, shorthandCard, shorthandPosition } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
@@ -53,25 +53,34 @@ export function useDragAndDropControls(
 ) {
 	const [_game, setGame] = useContext(GameContext);
 	const dragStateRef = useRef<DragState | undefined>(undefined);
+	const { enabledControlSchemes, showDebugInfo } = useSettings();
+	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
 
 	const gameStateRef = useRefCurrent({
 		_game, // just used for inspection without making changes
 		location: _location,
 		fixtureSizes: useFixtureSizes(),
-		settings: useSettings(),
+		showDebugInfo,
 	});
 
 	useGSAP(
 		(context, contextSafe) => {
-			const enabledControlSchemes = gameStateRef.current.settings.enabledControlSchemes;
-			const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
-			if (!enableDragAndDrop) return;
+			// TODO (drag-and-drop) (5-priority) deconflict with useDragAndDropControls
+			if (!enableDragAndDrop) {
+				const { top, left, zIndex, rotation } = calcTopLeftZ(
+					gameStateRef.current.fixtureSizes,
+					gameStateRef.current.location,
+					gameStateRef.current._game.selection
+				);
+				gsap.set(cardRef.current, { top, left, zIndex, rotation });
+				return;
+			}
 
 			if (cardRef.current && contextSafe) {
 				Draggable.create(cardRef.current, {
 					zIndexBoost: false, // this only works if you drag it twice in a row
 					onPress: function (event: PointerEvent) {
-						if (gameStateRef.current.settings.showDebugInfo) {
+						if (gameStateRef.current.showDebugInfo) {
 							console.log('onPress');
 						}
 
@@ -98,7 +107,7 @@ export function useDragAndDropControls(
 								list: dragStateRef.current.shorthands,
 								gameBoardIdRef,
 							});
-							if (gameStateRef.current.settings.showDebugInfo) {
+							if (gameStateRef.current.showDebugInfo) {
 								const overlapping = overlappingAvailableMove(
 									this as Draggable,
 									pointerCoords,
@@ -127,7 +136,7 @@ export function useDragAndDropControls(
 								dropTargets
 							);
 							if (overlapping) {
-								if (gameStateRef.current.settings.showDebugInfo) {
+								if (gameStateRef.current.showDebugInfo) {
 									console.log('onRelease');
 								}
 
@@ -155,7 +164,7 @@ export function useDragAndDropControls(
 					},
 					onDragEnd: function (event: PointerEvent) {
 						if (dragStateRef.current) {
-							if (gameStateRef.current.settings.showDebugInfo) {
+							if (gameStateRef.current.showDebugInfo) {
 								console.log('onDragEnd');
 							}
 							consumePointerEvent(event);
@@ -183,7 +192,7 @@ export function useDragAndDropControls(
 				});
 			}
 		},
-		{ dependencies: [cardRef] }
+		{ dependencies: [cardRef, enableDragAndDrop], revertOnUpdate: true }
 	);
 }
 

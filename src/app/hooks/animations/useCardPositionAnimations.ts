@@ -1,4 +1,4 @@
-import { MutableRefObject, useContext, useRef } from 'react';
+import { MutableRefObject, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
 import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
@@ -11,14 +11,14 @@ import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCard
 import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCardPositions';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
-import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
+import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 
 // IDEA (settings) setting for "reduced motion" - disable most animations
 // IDEA (animation) faster "select-to-peek" animation - when the cards are shifting to peek the selected card
 export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<string>) {
 	const { cards, selection, previousAction } = useGame();
 	const fixtureSizes = useFixtureSizes();
-	const [{ enabledControlSchemes }] = useContext(SettingsContext);
+	const { enabledControlSchemes } = useSettings();
 	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
 
 	/**
