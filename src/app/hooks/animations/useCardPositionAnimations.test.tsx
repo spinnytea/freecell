@@ -10,6 +10,7 @@ import { FreeCell } from '@/app/game/game';
 import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositionAnimations';
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
 import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
+import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import { spyOnGsap } from '@/app/testUtils';
 
 jest.mock('gsap/all', () => ({
@@ -43,7 +44,9 @@ function MockGamePage({ games }: { games: (FreeCell | string)[] }) {
 	return (
 		<StaticGameContextProvider games={games}>
 			<FixtureSizesContextProvider gameBoardRef={{ current: null }} fixtureLayout="portrait">
-				<MockGameBoard />
+				<ManualTestingSettingsContextProvider>
+					<MockGameBoard />
+				</ManualTestingSettingsContextProvider>
 			</FixtureSizesContextProvider>
 		</StaticGameContextProvider>
 	);

@@ -24,8 +24,8 @@ export function calcDefaultSettings(): Settings {
 			ControlSchemes.Keyboard,
 			ControlSchemes.Hotkeys,
 
-			ControlSchemes.ClickToSelect,
-			// ControlSchemes.ClickToMove,
+			// ControlSchemes.ClickToSelect,
+			ControlSchemes.ClickToMove,
 			ControlSchemes.DragAndDrop,
 		]),
 	};

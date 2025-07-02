@@ -15,6 +15,9 @@ jest.mock('gsap/all', () => ({
 			random: () => undefined,
 		},
 	},
+	Draggable: {
+		create: () => undefined,
+	},
 }));
 
 describe('page', () => {

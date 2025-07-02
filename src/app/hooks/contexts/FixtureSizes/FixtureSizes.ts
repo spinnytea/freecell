@@ -66,7 +66,6 @@ export interface CardCoords {
 	left: number;
 	width: number;
 	height: number;
-	cursorType: CursorType;
 }
 
 function times<T>(count: number, cb: (i: number) => T): T[] {
@@ -349,6 +348,5 @@ export function calcCardCoords(
 		left,
 		width,
 		height,
-		cursorType,
 	};
 }
