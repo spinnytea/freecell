@@ -74,7 +74,7 @@ describe('useCardPositionAnimations', () => {
 	});
 
 	function getCardIdsFromSpy(spy: jest.SpyInstance) {
-		return spy.mock.calls.map(([cardId]: [string]) => cardId);
+		return spy.mock.calls.map(([cardIdSelector]: [string]) => cardIdSelector);
 	}
 
 	test.todo('change fixtureSizes');
@@ -93,7 +93,7 @@ describe('useCardPositionAnimations', () => {
 				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 				expect(setSpy.mock.calls).toMatchSnapshot();
-				// expect(setSpy.mock.calls.map(([cardId]) => cardId as string)).toEqual(['#cAC', '#cAD', ..., '#cKH', '#cKS']);
+				// expect(setSpy.mock.calls.map(([cardIdSelector]) => cardIdSelector as string)).toEqual(['#cAC', '#cAD', ..., '#cKH', '#cKS']);
 				expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 				expect(mockCallTimes()).toEqual({
 					toGsapSpy: 0,

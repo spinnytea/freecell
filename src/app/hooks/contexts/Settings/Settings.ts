@@ -23,9 +23,10 @@ export function calcDefaultSettings(): Settings {
 		enabledControlSchemes: new Set([
 			ControlSchemes.Keyboard,
 			ControlSchemes.Hotkeys,
+
 			ControlSchemes.ClickToSelect,
-			ControlSchemes.ClickToMove,
-			// ControlSchemes.DragAndDrop, // TODO (drag-and-drop) impl
+			// ControlSchemes.ClickToMove,
+			ControlSchemes.DragAndDrop,
 		]),
 	};
 }

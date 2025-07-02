@@ -5,7 +5,7 @@ import { calcPilemarkerId, CardLocation, shorthandPosition } from '@/app/game/ca
 import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
-import { useClickTouchControls } from '@/app/hooks/controls/useClickTouchControls';
+import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
 
 export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObject<string> }) {
 	const { cursor } = useGame();
@@ -68,7 +68,7 @@ function Pile({
 	location: CardLocation;
 	gameBoardIdRef?: MutableRefObject<string>;
 }) {
-	const handleClickTouch = useClickTouchControls(location);
+	const handleClickToMove = useClickToMoveControls(location);
 
 	const style = {
 		top: top + 1,
@@ -86,7 +86,7 @@ function Pile({
 				[styles_pilemarkers.cursorPile]: cursorPile,
 			})}
 			style={style}
-			onClick={handleClickTouch}
+			onClick={handleClickToMove}
 		>
 			{shorthandPosition(location)}
 		</div>

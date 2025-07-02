@@ -27,19 +27,19 @@ export function animShuffleCards({
 	}
 
 	if (shLeft) {
-		const cardId = '#' + calcCardId(shLeft, gameBoardIdRef?.current);
+		const cardIdSelector = '#' + calcCardId(shLeft, gameBoardIdRef?.current);
 		const tl = gsap.timeline();
 
-		tl.set(cardId, { zIndex: -BOTTOM_OF_CASCADE - 1 });
+		tl.set(cardIdSelector, { zIndex: -BOTTOM_OF_CASCADE - 1 });
 
-		tl.to(cardId, {
+		tl.to(cardIdSelector, {
 			x: `-=${SHUFFLE_X.toFixed(0)}`,
 			y: `-=${SHUFFLE_Y.toFixed(0)}`,
 			rotation: `-=${SHUFFLE_R.toFixed(0)}`,
 			duration: SHUFFLE_DURATION / 2,
 			ease: 'sine.out',
 		});
-		tl.to(cardId, {
+		tl.to(cardIdSelector, {
 			x: '0',
 			y: '0',
 			rotation: 0,
@@ -51,19 +51,19 @@ export function animShuffleCards({
 	}
 
 	if (shRight) {
-		const cardId = '#' + calcCardId(shRight, gameBoardIdRef?.current);
+		const cardIdSelector = '#' + calcCardId(shRight, gameBoardIdRef?.current);
 		const tl = gsap.timeline();
 
-		tl.set(cardId, { zIndex: -BOTTOM_OF_CASCADE });
+		tl.set(cardIdSelector, { zIndex: -BOTTOM_OF_CASCADE });
 
-		tl.to(cardId, {
+		tl.to(cardIdSelector, {
 			x: `+=${SHUFFLE_X.toFixed(0)}`,
 			y: `-=${SHUFFLE_Y.toFixed(0)}`,
 			rotation: `+=${SHUFFLE_R.toFixed(0)}`,
 			duration: SHUFFLE_DURATION / 2,
 			ease: 'sine.in',
 		});
-		tl.to(cardId, {
+		tl.to(cardIdSelector, {
 			x: '0',
 			y: '0',
 			rotation: 0,
