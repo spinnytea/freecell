@@ -1644,6 +1644,13 @@ describe('game.undo (+ history)', () => {
 			move card b back
 			move card a back
 			(no moves anymore, just shuffle and deal)
+
+			TODO (collapse) (history) verify that game state is identical no matter how you get there
+			 - verify popping history is the same as original
+
+			TODO (animation) (collapse) (history) verify animations
+			 - it's fine now, animations are simple. But just in case...
+			 - like, just unit test this wild example
 		*/
 		test('a wild example', () => {
 			let game = FreeCell.parse(

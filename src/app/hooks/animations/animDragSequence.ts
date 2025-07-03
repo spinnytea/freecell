@@ -9,6 +9,11 @@ import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import { domUtils, TLZ } from '@/app/components/element/domUtils';
 import { calcCardId } from '@/app/game/card/card';
 
+/**
+	- TODO (animation) (drag-and-drop) (5-priority) Speed up animations
+	- TODO (animation) (drag-and-drop) if the cascade is too long, the last cards should overshoot and reverse
+	  - add a little whimsy
+*/
 export function animDragSequence({
 	list,
 	gameBoardIdRef,

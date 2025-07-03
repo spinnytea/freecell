@@ -49,7 +49,18 @@ TODO (controls) More control over where next card moves (i.e. cannot move to fou
  move 53 3D→4C
 */
 
-/** higher priorities take precidence */
+/**
+	higher priorities take precidence
+
+	TODO (controls) (settings) (2-priority) multiple MoveDestinationTypePriorities
+	 - grow cascades vs empty cascades
+	 - these priorities favor "growing cascades", my preference
+	 - another play enjoys "getting the cards off the board"
+	 - make another set of MoveDestinationTypePriorities with a different goal in mind
+	 - e.g. "empty cascades" would favor
+	   - cell → foundation
+		- cascade:single → foundation
+*/
 export const MoveDestinationTypePriorities: {
 	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
 } = {

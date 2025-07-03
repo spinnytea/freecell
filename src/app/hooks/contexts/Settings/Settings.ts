@@ -20,6 +20,9 @@ export function calcDefaultSettings(): Settings {
 		showDebugInfo: false,
 		showKeyboardCursor: false,
 		cardFace: 'auto',
+		// as much as i want mobile and desktop to have different initial settings
+		// the audiance (excluding myself) really wants the default to be drag-and-drop
+		// TODO (settings) persist playstyle choices to localStorage
 		enabledControlSchemes: new Set([
 			ControlSchemes.Keyboard,
 			ControlSchemes.Hotkeys,

@@ -42,9 +42,20 @@ interface DragState {
 	 - drag-cancel, when we no longer want our selection/drag
 	 - drag-drop, move the selection to the card we dropped it
 
-	BUG (drag-and-drop) (5-priority) playtest, a _lot_
-	REVIEW (drag-and-drop) comment out console longs once finished
-	- even though they are locked behind the debug flag
+	some todos
+	- BUG (drag-and-drop) (5-priority) playtest, a _lot_
+	- REVIEW (drag-and-drop) comment out console longs once finished
+	  - even though they are locked behind the debug flag
+	- TODO (drag-and-drop) Mobile drop targets are sometimes too small? ESP near the edge's (1,8)
+	  - or maybe it just breaks down and you can't drop anything
+	  - is that the same bug or a different bug?
+	  - mobile _definitely_ behaves different from desktop
+	- TODO (animation) (drag-and-drop) (5-priority) invalid card shake
+	  - I think we need to change `dropTargets` from `availableMoves` to "any position"
+	  - abcdefh1234567890
+	  - and then IFF that is an `availableMoves`, we can move there
+	  - and then IFF we drop and that is _not_ an available move, well do the thing anyway and get an `invalid move` step
+	  - we can still `onRelease` in the hinterlands to cancel the move
 */
 export function useDragAndDropControls(
 	cardRef: MutableRefObject<HTMLDivElement | null>,
@@ -211,6 +222,8 @@ function overlappingAvailableMove(
 ): AvailableMove | null {
 	let closestMove: AvailableMove | null = null;
 	let closestDist2: number | null = null;
+
+	// TODO (drag-and-drop) (5-priority) use fixtureSizes - you don't need to loop through the dropTargets
 	let maxHeight = 0;
 	let maxWidth = 0;
 

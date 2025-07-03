@@ -70,6 +70,10 @@ interface OptionsNonstandardGameplay {
 		But as this whole implementation excercise goes, "why not?"
 		For now it's locked behind a hidden feature flag (debug/testing flag).
 
+		TODO (controls) (gameplay) (2-priority) select ACES in foundation to move to empty ones
+		 - so like, we can select an ACE in the foundation, but no other card
+		 - if we do select one, then the only availableMoves are other empty foundations
+
 		@deprecated this is just for… for testing, yeah that's it
 		 - or maybe to rearrange foundations
 		 - shorthand doesn't have the fidelity to rearrange foundations (just `h` for all)
