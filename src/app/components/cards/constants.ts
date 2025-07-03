@@ -37,7 +37,7 @@ export enum ControlSchemes {
 	/**
 		move cursor (w/w/o selection), touch, deselect
 	*/
-	Keyboard = 'keyboard',
+	Keyboard = 'keyboard arrows',
 
 	/**
 		set cursor + move
@@ -79,21 +79,25 @@ export enum ControlSchemes {
 	/**
 		set cursor + touch (w/ selection, no autoMove)
 
-		doesn't really make sense to enable with {@link ClickToMove}, as that will take precidence
-		only really makes sense to enable with {@link DragAndDrop}, allowing taps along with drags
+		easy gameplay. tapping a card will move it to the "next best location".
+		It gets it wrong sometimes, but the history is kept clean by collapsing successive moves.
 
-		TODO (controls) (drag-and-drop) what's the difference between "click to touch" vs "click to select"
+		superseds {@link ClickToMove} (this will take predicence)
 	*/
 	ClickToSelect = 'click-to-select',
 
 	/**
 		set cursor + touch + autoMove (w/w/o selection)
+
+		flexible gameplay. tap a card to select it, then tap where you would like it to move.
+
+		superseded by {@link ClickToSelect}
 	*/
 	ClickToMove = 'click-to-move',
 
 	/**
-		set cursor + drag start (w/w/o selection)
-		@deprecated TODO (controls) not yet implemented
+		drag-start + drag-cancel
+		drag-start + drag-drop + clearSelection
 	*/
 	DragAndDrop = 'drag-and-drop',
 }
@@ -113,7 +117,7 @@ export enum ControlSchemes {
 	   e.g. w/o a selection, only move the cursor to other cards
 	   e.g. w/ a selection, only move the cursor to valid moves
 
-	TODO (animations) (controls) use or remove - not sure what the point of this is
+	TODO (animation) (controls) use or remove - not sure what the point of this is
 	 - when I glace at this: waste of time, extra work
 	 - when I read the options: much potential for animations, validation, eeggs
 	 - we can make a list for each {@link ControlSchemes} for meta/validation

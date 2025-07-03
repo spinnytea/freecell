@@ -17,14 +17,15 @@ function ignoreTarget(target: EventTarget | null): boolean {
 	return false;
 }
 
-/** TODO (controls) keyboard */
 export function useKeybaordMiscControls() {
 	const [, setGame, newGame] = useContext(GameContext);
 	const [{ showSettingsDialog, enabledControlSchemes }, setSettings] = useContext(SettingsContext);
 	const enableKeyboard = enabledControlSchemes.has(ControlSchemes.Keyboard);
+	const enableHotkeys = enabledControlSchemes.has(ControlSchemes.Hotkeys);
 
 	useEffect(() => {
 		if (showSettingsDialog) return;
+		if (!(enableKeyboard || enableHotkeys)) return;
 		function handleKey(event: KeyboardEvent) {
 			const { key, target } = event;
 			let consumed = false;
@@ -32,7 +33,6 @@ export function useKeybaordMiscControls() {
 				case ' ':
 				case 'Spacebar':
 				case 'Enter':
-					if (!enableKeyboard) break;
 					if (ignoreTarget(target)) break;
 
 					consumed = true;
@@ -43,6 +43,8 @@ export function useKeybaordMiscControls() {
 						if (g.cursor.fixture === 'foundation' && g.win) {
 							return newGame();
 						}
+
+						if (!enableKeyboard) return g;
 
 						if (key === 'Enter') {
 							return g.touch();
@@ -56,6 +58,7 @@ export function useKeybaordMiscControls() {
 					break;
 				case 'x':
 				case 'X':
+					if (!enableKeyboard) break;
 					consumed = true;
 					setGame((g) => g.$toggleCursor());
 					break;
@@ -84,5 +87,5 @@ export function useKeybaordMiscControls() {
 		return () => {
 			window.removeEventListener('keydown', handleKey);
 		};
-	}, [showSettingsDialog, enableKeyboard, setGame, newGame, setSettings]);
+	}, [showSettingsDialog, enableKeyboard, enableHotkeys, setGame, newGame, setSettings]);
 }

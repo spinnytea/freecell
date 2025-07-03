@@ -1,18 +1,15 @@
 import { MutableRefObject, useContext, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, Draggable } from 'gsap/all';
-import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
 import { ControlSchemes } from '@/app/components/cards/constants';
-import {
-	CardLocation,
-	CardSequence,
-	shorthandCard,
-	shorthandPosition,
-	shorthandSequence,
-} from '@/app/game/card/card';
+import { CardLocation, shorthandCard, shorthandPosition } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import { AvailableMove } from '@/app/game/move/move';
-import { animDragSequence } from '@/app/hooks/animations/animDragSequence';
+import {
+	animDragSequence,
+	animDragSequenceClear,
+	animDragSequencePivot,
+} from '@/app/hooks/animations/animDragSequence';
 import {
 	calcCardCoords,
 	calcTopLeftZ,
@@ -30,193 +27,259 @@ interface DropTarget {
 }
 
 interface DragState {
-	selection: CardSequence;
+	/** the intermediate game with the selection for dragging */
+	game: FreeCell;
+	/** game.selection; shorthands of cards being dragged, so we can animate the drag */
 	shorthands: string[];
+	/** game.availableMoves; includes screen coords */
 	dropTargets: DropTarget[];
 }
 
-/** REVIEW (controls) drag-and-drop */
+/**
+	drag-and-drop
+	 - can-drag
+	 - drag-start, when selected or no (noop the game state, just store an internal "the selected things is being dragged")
+	 - drag-cancel, when we no longer want our selection/drag
+	 - drag-drop, move the selection to the card we dropped it
+
+	BUG (drag-and-drop) (5-priority) playtest, a _lot_
+	REVIEW (drag-and-drop) comment out console longs once finished
+	- even though they are locked behind the debug flag
+*/
 export function useDragAndDropControls(
 	cardRef: MutableRefObject<HTMLDivElement | null>,
 	_location: CardLocation,
 	gameBoardIdRef?: MutableRefObject<string>
 ) {
-	const [, setGame] = useContext(GameContext);
+	const [_game, setGame] = useContext(GameContext);
 	const dragStateRef = useRef<DragState | undefined>(undefined);
+	const { enabledControlSchemes, showDebugInfo } = useSettings();
+	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
 
 	const gameStateRef = useRefCurrent({
+		_game, // just used for inspection without making changes
 		location: _location,
 		fixtureSizes: useFixtureSizes(),
-		settings: useSettings(),
+		showDebugInfo,
 	});
 
 	useGSAP(
 		(context, contextSafe) => {
-			const enableDragAndDrop = gameStateRef.current.settings.enabledControlSchemes.has(
-				ControlSchemes.DragAndDrop
-			);
+			// TODO (drag-and-drop) (5-priority) deconflict with useDragAndDropControls
 			if (!enableDragAndDrop) {
+				const { top, left, zIndex, rotation } = calcTopLeftZ(
+					gameStateRef.current.fixtureSizes,
+					gameStateRef.current.location,
+					gameStateRef.current._game.selection
+				);
+				gsap.set(cardRef.current, { top, left, zIndex, rotation });
 				return;
 			}
 
 			if (cardRef.current && contextSafe) {
-				const checkIfValid = contextSafe((draggable: Draggable, event: PointerEvent) => {
-					setGame((g) => {
-						const { ng, selection, dropTargets } = checkIfValidHelper(
-							draggable,
-							event,
-							gameStateRef.current.fixtureSizes,
-							g,
-							gameStateRef.current.location
-						);
-						if (selection && dropTargets) {
-							const shorthands = selection.cards.map(shorthandCard);
-							dragStateRef.current = { selection, shorthands, dropTargets };
-						} else {
-							dragStateRef.current = undefined;
-						}
-						return ng;
-					});
-				});
-
-				const resetAfterDrag = contextSafe(() => {
-					setGame((g) => {
-						g = calcNextState(g, gameStateRef.current.location);
-						const { top, left, zIndex } = calcTopLeftZ(
-							gameStateRef.current.fixtureSizes,
-							gameStateRef.current.location,
-							g.selection
-						);
-						gsap.to(cardRef.current, {
-							top,
-							left,
-							zIndex,
-							transform: 'translate3d(0px, 0px, 0px)',
-							duration: DEFAULT_TRANSLATE_DURATION,
-							ease: 'power1.out',
-						});
-						return g;
-					});
-				}) as React.MouseEventHandler;
-
 				Draggable.create(cardRef.current, {
 					zIndexBoost: false, // this only works if you drag it twice in a row
 					onPress: function (event: PointerEvent) {
-						checkIfValid(this as Draggable, event);
+						if (gameStateRef.current.showDebugInfo) {
+							console.log('onPress');
+						}
+
+						dragStateRef.current = checkIfValid(
+							gameStateRef.current.fixtureSizes,
+							gameStateRef.current._game,
+							gameStateRef.current.location
+						);
+
+						if (!dragStateRef.current) {
+							// cancel the drag if this is not a valid thing to drag
+							(this as Draggable).endDrag(event);
+						}
+
+						// drag-start is "noop"
+						// setGame((g) => g);
 					},
 					onDrag: function (event: PointerEvent) {
 						if (dragStateRef.current) {
+							consumePointerEvent(event);
+
 							const pointerCoords = pointerCoordsToFixtureSizes(event);
 							contextSafe(animDragSequence)({
 								list: dragStateRef.current.shorthands,
-								pointerCoords,
-								offsetTop: gameStateRef.current.fixtureSizes.tableau.offsetTop,
 								gameBoardIdRef,
 							});
-							// TODO (animation) (drag-and-drop) drop target animation? like, rotation??
-							if (gameStateRef.current.settings.showDebugInfo) {
+							if (gameStateRef.current.showDebugInfo) {
 								const overlapping = overlappingAvailableMove(
+									this as Draggable,
 									pointerCoords,
 									dragStateRef.current.dropTargets
 								);
 								if (overlapping) {
-									// TODO (animation) (drag-and-drop) there has to be a better way to visualize this
+									// TODO (animation) (drag-and-drop) drop target animation? like, rotation??
 									//  - e.g. available-low -> available-high
 									//  - maybe we need a whole "DragDropStateContext" that useCardPositionAnimations can import
-									console.log(shorthandPosition(overlapping.location));
+									console.log('onDrag overlapping', shorthandPosition(overlapping.location));
 								}
 							}
 						}
 					},
 					onRelease: function (event: PointerEvent) {
 						if (dragStateRef.current) {
+							consumePointerEvent(event);
+
+							const game = dragStateRef.current.game;
+							const shorthands = dragStateRef.current.shorthands;
+							const dropTargets = dragStateRef.current.dropTargets;
+
 							const overlapping = overlappingAvailableMove(
+								this as Draggable,
 								pointerCoordsToFixtureSizes(event),
-								dragStateRef.current.dropTargets
+								dropTargets
 							);
 							if (overlapping) {
-								const shorthandMove = `${shorthandPosition(gameStateRef.current.location)}${shorthandPosition(overlapping.location)}`;
-								// BUG (animation) (drag-and-drop) (techdebt) the following useCardPositionAnimations needs to play nicer with this
-								//  - the cards are not in their original positions
-								setGame((g) => g.moveByShorthand(shorthandMove));
+								if (gameStateRef.current.showDebugInfo) {
+									console.log('onRelease');
+								}
+
+								// clean up drag state (mischief managed)
+								dragStateRef.current = undefined;
+
+								const { top, left, zIndex } = calcTopLeftZ(
+									gameStateRef.current.fixtureSizes,
+									gameStateRef.current.location,
+									null
+								);
+
+								// drag-drop using the tween selection state
+								contextSafe(animDragSequencePivot)({
+									list: shorthands,
+									firstCardTLZ: { top, left, zIndex },
+									offsetTop: gameStateRef.current.fixtureSizes.tableau.offsetTop,
+									gameBoardIdRef,
+								});
+
+								// setGame(() => game.touchByPosition(shorthandPosition(overlapping.location)));
+								setGame(() => game.setCursor(overlapping.location).touch());
 							}
 						}
 					},
-					onDragEnd: resetAfterDrag,
+					onDragEnd: function (event: PointerEvent) {
+						if (dragStateRef.current) {
+							if (gameStateRef.current.showDebugInfo) {
+								console.log('onDragEnd');
+							}
+							consumePointerEvent(event);
+
+							const shorthands = dragStateRef.current.shorthands;
+							// clean up drag state (mischief managed)
+							dragStateRef.current = undefined;
+
+							setGame((g) => {
+								const { top, left, zIndex } = calcTopLeftZ(
+									gameStateRef.current.fixtureSizes,
+									gameStateRef.current.location,
+									null
+								);
+								contextSafe(animDragSequenceClear)({
+									list: shorthands,
+									firstCardTLZ: { top, left, zIndex },
+									gameBoardIdRef,
+								});
+								// drag-cancel is "no selection"
+								return g.clearSelection();
+							});
+						}
+					},
 				});
 			}
 		},
-		{ dependencies: [cardRef] }
+		{ dependencies: [cardRef, enableDragAndDrop], revertOnUpdate: true }
 	);
 }
 
-/**
-	calc the new game state at drag start and drag end \
-	this helps avoid animations simply by pressing on a card (it's weird to have it move out from under you)
+function consumePointerEvent(event: PointerEvent) {
+	event.preventDefault();
 
-	this lets us have a lookahead to available moves without updating the state until the drag finishes
-
-	this probably won't change, but it is used twice and we _need_ it to be identical
-
-	- TODO (controls) (drag-and-drop) how do we deselect?
-	  - only by clicking on a movable card
-	- TODO (controls) (drag-and-drop) can select non-movable cards, but not _moveable_ cards
-	- TODO (controls) (drag-and-drop) conflicts with click-to-select
-	  - we can select "moveable" but not "peek"
-	  - and like, the only real utility of click-to-select is to be paired with this
-*/
-function calcNextState(game: FreeCell, location: CardLocation) {
-	return game.setCursor(location).touch({ selectionOnly: true });
+	// we actually want to fire onClick if it is a click
+	// event.stopPropagation();
+	// event.stopImmediatePropagation();
 }
 
 function overlappingAvailableMove(
-	{ x, y }: { x: number; y: number },
+	{ x: draggedX, y: draggedY }: Draggable,
+	{ x: pointerX, y: pointerY }: { x: number; y: number },
 	dropTargets: DropTarget[]
-): AvailableMove | undefined {
-	return dropTargets.find(({ cardCoords }) => {
-		if (x < cardCoords.left) return false;
-		if (x > cardCoords.left + cardCoords.width) return false;
-		if (y < cardCoords.top) return false;
-		if (y > cardCoords.top + cardCoords.height) return false;
-		return true;
-	})?.availableMove;
+): AvailableMove | null {
+	let closestMove: AvailableMove | null = null;
+	let closestDist2: number | null = null;
+	let maxHeight = 0;
+	let maxWidth = 0;
+
+	for (const dropTarget of dropTargets) {
+		const { top, left, width, height } = dropTarget.cardCoords;
+
+		maxHeight = Math.max(height, maxHeight);
+		maxWidth = Math.max(width, maxWidth);
+		const dx = pointerX - left - width / 2;
+		const dy = pointerY - top - height / 2;
+		const dist2 = dx * dx + dy * dy;
+		if (closestDist2 === null || dist2 < closestDist2) {
+			closestMove = dropTarget.availableMove;
+			closestDist2 = dist2;
+		}
+	}
+
+	if (Math.abs(draggedX || 0) + Math.abs(draggedY || 0) < maxWidth / 3) {
+		// must move at least a third of a card to count
+		return null;
+	}
+
+	const maxHeight2 = maxHeight * maxHeight;
+
+	if (closestDist2 !== null && closestDist2 < maxHeight2) {
+		// only consider the closest drop target valid if we are withing a card radius away
+		return closestMove;
+	}
+
+	return null;
+
+	// box overlap - is the cursor within the card
+	// return dropTargets.find(({ cardCoords }) => {
+	// 	if (x < cardCoords.left) return false;
+	// 	if (x > cardCoords.left + cardCoords.width) return false;
+	// 	if (y < cardCoords.top) return false;
+	// 	if (y > cardCoords.top + cardCoords.height) return false;
+	// 	return true;
+	// })?.availableMove;
 }
 
 /**
 	We've interacted with the cards, so calculate the next state.
+	Try to start dragging these card.
 	If we are dragging, then store the available moves, but clear the selection (for various reasons?)
-
-	REVIEW (controls) (drag-and-drop) if we need to clear the selection, once the dust has settled
 */
-function checkIfValidHelper(
-	draggable: Draggable,
-	event: PointerEvent,
+function checkIfValid(
 	fixtureSizes: FixtureSizes,
 	g: FreeCell,
 	location: CardLocation
-): { ng: FreeCell; selection?: CardSequence; dropTargets?: DropTarget[] } {
-	const ng = calcNextState(g, location);
-	if (!ng.selection || ng.selection.peekOnly) {
-		draggable.endDrag(event);
-		return { ng };
+): DragState | undefined {
+	const game = g.clearSelection().setCursor(location).touch({ selectionOnly: true });
+	if (!game.selection || game.selection.peekOnly || !game.availableMoves) {
+		return undefined;
 	}
 
-	const selection = ng.selection;
-	const dropTargets = ng.availableMoves?.map((availableMove) => ({
+	const shorthands = game.selection.cards.map(shorthandCard);
+	const dropTargets = game.availableMoves.map((availableMove) => ({
 		availableMove,
-		// TODO (controls) (settings) (drag-and-drop) option to drop on card vs column
-		cardCoords: calcCardCoords(fixtureSizes, availableMove.location, 'drag-and-drop'),
+		// XXX (controls) (settings) (drag-and-drop) option to drop on card vs column
+		// BUG CursorType 'cascade' doesn't work with dist2 based overlappingAvailableMove - remove it?
+		cardCoords: calcCardCoords(fixtureSizes, availableMove.location, 'selection'),
 	}));
 
-	if (g.selection && shorthandSequence(g.selection) === shorthandSequence(ng.selection)) {
-		return { ng: g, selection, dropTargets };
-	}
-
-	return { ng: g.clearSelection(), selection, dropTargets };
+	return { game, shorthands, dropTargets };
 }
 
 function pointerCoordsToFixtureSizes(event: PointerEvent): { x: number; y: number } {
-	// TODO (controls) (drag-and-drop) convert X,Y into fixutreSizes coords
+	// XXX (controls) (drag-and-drop) convert X,Y into fixutreSizes coords
 	//  - pageX/pageY probably fine for the full screen app
 	//  - it is _not_ fine for the manual testing one
 	const x = event.pageX;

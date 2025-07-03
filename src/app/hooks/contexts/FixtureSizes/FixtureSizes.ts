@@ -303,7 +303,7 @@ export function calcTopLeftZ(
 export function calcCardCoords(
 	fixtureSizes: FixtureSizes,
 	location: CardLocation,
-	type: CursorType
+	cursorType: CursorType
 ): CardCoords {
 	const {
 		fixture,
@@ -314,7 +314,7 @@ export function calcCardCoords(
 	const width = fixtureSizes.cardWidth;
 	let height = fixtureSizes.cardHeight;
 
-	if (type === 'cursor') {
+	if (cursorType === 'cursor') {
 		height = fixtureSizes.tableau.offsetTop;
 	}
 
@@ -335,7 +335,7 @@ export function calcCardCoords(
 			// XXX (hud) height of card if tail
 			top = fixtureSizes.tableau.top;
 			left = fixtureSizes.tableau.cascadeLeft[d0];
-			if (type === 'drag-and-drop') {
+			if (cursorType === 'cascade') {
 				height += BOTTOM_OF_CASCADE * fixtureSizes.tableau.offsetTop;
 			} else {
 				top += d1 * fixtureSizes.tableau.offsetTop;

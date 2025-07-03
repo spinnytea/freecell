@@ -4,7 +4,6 @@ import { Position } from '@/app/game/card/card';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
-/** TODO (controls) keyboard */
 export function useKeyboardHotkeysControls() {
 	const [, setGame] = useContext(GameContext);
 	const [{ showSettingsDialog, enabledControlSchemes }, setSettings] = useContext(SettingsContext);

@@ -6,11 +6,13 @@ export function Checkbox({
 	value,
 	text,
 	onChange,
+	className = '',
 }: Readonly<{
 	name: string;
 	value: boolean;
 	text: string;
 	onChange: (newChecked: boolean) => void;
+	className?: string;
 }>) {
 	function handleChange(event: ChangeEvent<HTMLInputElement>) {
 		event.stopPropagation();
@@ -18,7 +20,10 @@ export function Checkbox({
 	}
 
 	return (
-		<label className={styles_element.checkbox} htmlFor={name}>
+		<label
+			className={[styles_element.checkbox, className].filter((i) => i).join(' ')}
+			htmlFor={name}
+		>
 			<input type="checkbox" id={name} name={name} defaultChecked={value} onChange={handleChange} />
 			<span>{text}</span>
 		</label>

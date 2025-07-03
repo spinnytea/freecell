@@ -15,6 +15,9 @@ jest.mock('gsap/all', () => ({
 			random: () => undefined,
 		},
 	},
+	Draggable: {
+		create: () => undefined,
+	},
 }));
 
 describe('page', () => {
@@ -24,7 +27,7 @@ describe('page', () => {
 		({ mockCallTimes, mockReset } = spyOnGsap(gsap));
 	});
 
-	it('should render without crashing', () => {
+	test('should render without crashing', () => {
 		render(
 			<ErrorBoundary>
 				<Page />

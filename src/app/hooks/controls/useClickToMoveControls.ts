@@ -11,6 +11,13 @@ export function useClickToMoveControls(location: CardLocation) {
 	const enableClickToMove = enabledControlSchemes.has(ControlSchemes.ClickToMove);
 	const enableClickToSelect = enabledControlSchemes.has(ControlSchemes.ClickToSelect);
 
+	// TODO (drag-and-drop) (5-priority) deconflict with useDragAndDropControls
+	//  - it's super busted when drag is enable, so just don't
+	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
+
+	// disable these here, let DragAndDrop take care of it
+	if (enableDragAndDrop) return undefined;
+
 	if (!(enableClickToMove || enableClickToSelect)) {
 		return undefined;
 	}

@@ -19,16 +19,16 @@ export function animShakeCard({
 	const signYoyo = start ? '+' : '-';
 
 	list.forEach((shorthand, index) => {
-		const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
+		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 		const tl = gsap.timeline();
 		// offset left
-		tl.to(cardId, {
+		tl.to(cardIdSelector, {
 			x: `${signStart}=${INVALID_SHAKE_MAGNITUDE.toFixed(3)}`,
 			duration: 0.1,
 			ease: 'sine.in',
 		});
 		// yoyo
-		tl.to(cardId, {
+		tl.to(cardIdSelector, {
 			x: `${signYoyo}=${(INVALID_SHAKE_MAGNITUDE * 2).toFixed(3)}`,
 			duration: INVALID_SHAKE_PORTION,
 			ease: 'sine.inOut',
@@ -36,7 +36,7 @@ export function animShakeCard({
 			repeat: 2,
 		});
 		// back to center
-		tl.to(cardId, { x: '0', duration: INVALID_SHAKE_PORTION / 2, ease: 'sine.out' });
+		tl.to(cardIdSelector, { x: '0', duration: INVALID_SHAKE_PORTION / 2, ease: 'sine.out' });
 
 		timeline.add(
 			tl,

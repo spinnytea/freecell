@@ -39,3 +39,11 @@
 .undoButton {
 	right: 2ch;
 }
+
+.checkbox {
+	font-size: 1rem;
+	line-height: 1em;
+	margin: 0.2em 0;
+	padding: 0.5em 0.8ch;
+	user-select: none;
+}

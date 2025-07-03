@@ -100,7 +100,7 @@ describe('GameBoard', () => {
 		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 		expect(mockCallTimes()).toEqual({
 			toGsapSpy: 52,
-			setGsapSpy: 52,
+			setGsapSpy: 104, // XXX useDragAndDropControls init
 			fromGsapSpy: 0,
 			fromToSpy: 0,
 			toSpy: 0,

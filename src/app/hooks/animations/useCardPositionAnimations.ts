@@ -2,6 +2,7 @@ import { MutableRefObject, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
 import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
+import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils, TLZ } from '@/app/components/element/domUtils';
 import { calcCardId, shorthandCard } from '@/app/game/card/card';
 import { animShuffleCards } from '@/app/hooks/animations/animeShuffleCards';
@@ -10,12 +11,15 @@ import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCard
 import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCardPositions';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
+import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 
 // IDEA (settings) setting for "reduced motion" - disable most animations
 // IDEA (animation) faster "select-to-peek" animation - when the cards are shifting to peek the selected card
 export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<string>) {
 	const { cards, selection, previousAction } = useGame();
 	const fixtureSizes = useFixtureSizes();
+	const { enabledControlSchemes } = useSettings();
+	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
 
 	/**
 		if we change the size of the screen, then everything will animate
@@ -82,8 +86,8 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				const nextTLZ = new Map(previousTLZ);
 				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
 					// XXX (animation) should this be in animUpdatedCardPositions somehow?
-					const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
-					timeline.set(cardId, { top, left, zIndex });
+					const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
+					timeline.set(cardIdSelector, { top, left, zIndex });
 				});
 				if (updateCardPositionsPrev) {
 					// XXX (techdebt) (motivation) this needs to be refactored this is the first non-trivial animation, so it's a bit of a 1-off
@@ -98,7 +102,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 						gameBoardIdRef,
 					});
 				}
-				// TODO (animations) "de-select AND THEN move card" is currently two game states
+				// TODO (animation) "de-select AND THEN move card" is currently two game states
 				//  - the animations are also "de-select AND THEN move card"
 				//  - can we put in a label or whatever to "de-select AND ALSO move card" at the same time?
 				timeline.addLabel('updateCardPositions');
@@ -116,25 +120,17 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
 					domUtils.setDomAttributes(cardId, tlz);
 				});
-			} else {
-				// repeated deal and undo can leave the positions stranded - reset them now
-				// it's something to do with the animation overlap
-				// like, dealing takes longer than undealing
-				// so we end up with a "dealt" location, even when all the cards are in the deck
-				// swapping timeScale for totalProgress doesn't fix it
+			} else if (enableDragAndDrop) {
+				// between "repeated deal and undo"
+				// and "drag-and-drop controls"
+				// cards can sometimes get stranded
 				// ---
-				// this is really more of an "abuse of the animation" and "fixing when something breaks"
-				// while it would be good to prevent this in the first place, it's not particularly important?
-				// and if/when we do prevent it, we still want this "just in case"
-				// ---
-				// adding a new animation seems to overwrite the previous (usually a good thing)
-				// e.g. move `x: here` will cancel overwrite the previous x animation
-				// but then we
-				// unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
-				// 	// XXX (animation) should this be in animUpdatedCardPositions somehow?
-				// 	const cardId = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
-				// 	timeline.to(cardId, { top, left, zIndex, duration: 0.1 }, '<0');
-				// });
+				// this is a stabilizing force to get cards back into their correct positions
+				// kind of an "in case of emergency, break glass"
+				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
+					const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
+					timeline.to(cardIdSelector, { top, left, zIndex, duration: 0.1 }, '<0');
+				});
 			}
 
 			if (!updateCardPositions.length && previousAction.type === 'shuffle') {
@@ -174,6 +170,6 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				}
 			}
 		},
-		{ dependencies: [cards, selection, previousAction, fixtureSizes] }
+		{ dependencies: [cards, selection, previousAction, fixtureSizes, enableDragAndDrop] }
 	);
 }
