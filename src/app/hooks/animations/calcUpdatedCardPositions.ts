@@ -103,7 +103,7 @@ export function calcUpdatedCardPositions({
 	// IFF all of the cards moving are the same as the ones in action text (all of a in b, all of b in a);
 	//  - then move a to old spot, then move ALL to new spot
 	// IFF we aren't doing weird game functions like undo
-	//  - this probably isn't effected by most game functions (like restart and newGame)
+	//  - this probably isn't affected by most game functions (like restart and newGame)
 	//  - maybe it really is only undo, maybe we in the future we can skip around in time
 	//  - but basically, only want to do the in-between animation if we are in normal gameplay
 	//    (we can always come back later and add specific exceptions)

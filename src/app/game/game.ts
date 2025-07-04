@@ -110,6 +110,8 @@ interface OptionsTouch extends OptionsNonstandardGameplay {
 		sometimes we only want {@link touch} to select a card (not move or whatever)
 	*/
 	selectionOnly?: boolean;
+
+	gameFunction?: 'drag-drop';
 }
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
@@ -353,6 +355,7 @@ export class FreeCell {
 		stopWithInvalid = false,
 		allowSelectFoundation = false,
 		selectionOnly = false,
+		gameFunction = undefined,
 	}: OptionsTouch = {}): FreeCell {
 		// clear the selction, if re-touching the same spot
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
@@ -398,8 +401,10 @@ export class FreeCell {
 			isLocationEqual(this.cursor, location)
 		);
 		if (valid) {
+			const nextAction: PreviousAction = { text: actionText, type: 'move' };
+			if (gameFunction) nextAction.gameFunction = gameFunction;
 			const movedGame = this.__clone({
-				action: { text: actionText, type: 'move' },
+				action: nextAction,
 				cards: moveCards(this, this.selection, this.cursor),
 				selection: null,
 				availableMoves: null,

@@ -169,7 +169,9 @@ export function useDragAndDropControls(
 								});
 
 								// setGame(() => game.touchByPosition(shorthandPosition(overlapping.location)));
-								setGame(() => game.setCursor(overlapping.location).touch());
+								setGame(() =>
+									game.setCursor(overlapping.location).touch({ gameFunction: 'drag-drop' })
+								);
 							}
 						}
 					},
