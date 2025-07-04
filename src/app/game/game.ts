@@ -111,6 +111,11 @@ interface OptionsTouch extends OptionsNonstandardGameplay {
 	*/
 	selectionOnly?: boolean;
 
+	/**
+		sometimes we only want {@link touch} to attemp a move (not select anything)
+	*/
+	selectionNever?: boolean;
+
 	gameFunction?: 'drag-drop';
 }
 
@@ -355,8 +360,10 @@ export class FreeCell {
 		stopWithInvalid = false,
 		allowSelectFoundation = false,
 		selectionOnly = false,
+		selectionNever = false,
 		gameFunction = undefined,
 	}: OptionsTouch = {}): FreeCell {
+		if (selectionNever) stopWithInvalid = true;
 		// clear the selction, if re-touching the same spot
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
 			return this.clearSelection();
@@ -380,7 +387,8 @@ export class FreeCell {
 			// - you'd have to deselect it before you can continue with gameplay
 			if (
 				selection.cards.length &&
-				(allowSelectFoundation || this.cursor.fixture !== 'foundation')
+				(allowSelectFoundation || this.cursor.fixture !== 'foundation') &&
+				!selectionNever
 			) {
 				return this.__clone({
 					action: { text: 'select ' + shorthandSequenceWithPosition(selection), type: 'select' },
@@ -450,7 +458,12 @@ export class FreeCell {
 			}
 		}
 
-		return this.__clone({ action: { text: 'invalid ' + actionText, type: 'invalid' } });
+		const nextAction: PreviousAction = { text: 'invalid ' + actionText, type: 'invalid' };
+		if (selectionNever) {
+			return this.__clone({ action: nextAction, selection: null, availableMoves: null });
+		} else {
+			return this.__clone({ action: nextAction });
+		}
 	}
 
 	/**

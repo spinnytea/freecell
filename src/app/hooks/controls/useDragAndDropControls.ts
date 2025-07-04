@@ -4,7 +4,6 @@ import { gsap, Draggable } from 'gsap/all';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { CardLocation, shorthandCard, shorthandPosition } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
-import { AvailableMove } from '@/app/game/move/move';
 import {
 	animDragSequence,
 	animDragSequenceClear,
@@ -22,7 +21,7 @@ import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 import { useRefCurrent } from '@/app/hooks/useRefCurrent';
 
 interface DropTarget {
-	availableMove: AvailableMove;
+	location: CardLocation;
 	cardCoords: CardCoords;
 }
 
@@ -31,7 +30,7 @@ interface DragState {
 	game: FreeCell;
 	/** game.selection; shorthands of cards being dragged, so we can animate the drag */
 	shorthands: string[];
-	/** game.availableMoves; includes screen coords */
+	/** all available card locations drop (each Position, all foundations) */
 	dropTargets: DropTarget[];
 }
 
@@ -122,13 +121,14 @@ export function useDragAndDropControls(
 								const overlapping = overlappingAvailableMove(
 									this as Draggable,
 									pointerCoords,
-									dragStateRef.current.dropTargets
+									dragStateRef.current.dropTargets,
+									gameStateRef.current.fixtureSizes
 								);
 								if (overlapping) {
 									// TODO (animation) (drag-and-drop) drop target animation? like, rotation??
 									//  - e.g. available-low -> available-high
 									//  - maybe we need a whole "DragDropStateContext" that useCardPositionAnimations can import
-									console.debug('onDrag overlapping', shorthandPosition(overlapping.location));
+									console.debug('onDrag overlapping', shorthandPosition(overlapping));
 								}
 							}
 						}
@@ -144,7 +144,8 @@ export function useDragAndDropControls(
 							const overlapping = overlappingAvailableMove(
 								this as Draggable,
 								pointerCoordsToFixtureSizes(event),
-								dropTargets
+								dropTargets,
+								gameStateRef.current.fixtureSizes
 							);
 							if (overlapping) {
 								if (gameStateRef.current.showDebugInfo) {
@@ -168,9 +169,10 @@ export function useDragAndDropControls(
 									gameBoardIdRef,
 								});
 
-								// setGame(() => game.touchByPosition(shorthandPosition(overlapping.location)));
 								setGame(() =>
-									game.setCursor(overlapping.location).touch({ gameFunction: 'drag-drop' })
+									game
+										.setCursor(overlapping)
+										.touch({ selectionNever: true, gameFunction: 'drag-drop' })
 								);
 							}
 						}
@@ -220,39 +222,33 @@ function consumePointerEvent(event: PointerEvent) {
 function overlappingAvailableMove(
 	{ x: draggedX, y: draggedY }: Draggable,
 	{ x: pointerX, y: pointerY }: { x: number; y: number },
-	dropTargets: DropTarget[]
-): AvailableMove | null {
-	let closestMove: AvailableMove | null = null;
-	let closestDist2: number | null = null;
-
-	// TODO (drag-and-drop) (5-priority) use fixtureSizes - you don't need to loop through the dropTargets
-	let maxHeight = 0;
-	let maxWidth = 0;
-
-	for (const dropTarget of dropTargets) {
-		const { top, left, width, height } = dropTarget.cardCoords;
-
-		maxHeight = Math.max(height, maxHeight);
-		maxWidth = Math.max(width, maxWidth);
-		const dx = pointerX - left - width / 2;
-		const dy = pointerY - top - height / 2;
-		const dist2 = dx * dx + dy * dy;
-		if (closestDist2 === null || dist2 < closestDist2) {
-			closestMove = dropTarget.availableMove;
-			closestDist2 = dist2;
-		}
-	}
-
-	if (Math.abs(draggedX || 0) + Math.abs(draggedY || 0) < maxWidth / 3) {
+	dropTargets: DropTarget[],
+	{ cardHeight, cardWidth }: FixtureSizes
+): CardLocation | null {
+	if (Math.abs(draggedX || 0) + Math.abs(draggedY || 0) < cardWidth / 3) {
 		// must move at least a third of a card to count
 		return null;
 	}
 
-	const maxHeight2 = maxHeight * maxHeight;
+	let closestLocation: CardLocation | null = null;
+	let closestDist2: number | null = null;
+	const maxHeight2 = cardHeight * cardHeight;
+
+	for (const dropTarget of dropTargets) {
+		const { top, left, width, height } = dropTarget.cardCoords;
+
+		const dx = pointerX - left - width / 2;
+		const dy = pointerY - top - height / 2;
+		const dist2 = dx * dx + dy * dy;
+		if (closestDist2 === null || dist2 < closestDist2) {
+			closestLocation = dropTarget.location;
+			closestDist2 = dist2;
+		}
+	}
 
 	if (closestDist2 !== null && closestDist2 < maxHeight2) {
 		// only consider the closest drop target valid if we are withing a card radius away
-		return closestMove;
+		return closestLocation;
 	}
 
 	return null;
@@ -283,13 +279,23 @@ function checkIfValid(
 	}
 
 	const shorthands = game.selection.cards.map(shorthandCard);
-	const dropTargets = game.availableMoves.map((availableMove) => ({
-		availableMove,
+
+	// XXX (techdebt) move to helper method?
+	const allAvailableLocations: CardLocation[] = [
+		...game.cells.map((_, d0) => ({ fixture: 'cell', data: [d0] }) as CardLocation),
+		...game.foundations.map((_, d0) => ({ fixture: 'foundation', data: [d0] }) as CardLocation),
+		...game.tableau.map(
+			(cascade, d0) =>
+				({ fixture: 'cascade', data: [d0, Math.max(0, cascade.length - 1)] }) as CardLocation
+		),
+	];
+
+	const dropTargets: DropTarget[] = allAvailableLocations.map((location) => ({
+		location,
 		// XXX (controls) (settings) (drag-and-drop) option to drop on card vs column
 		// BUG CursorType 'cascade' doesn't work with dist2 based overlappingAvailableMove - remove it?
-		cardCoords: calcCardCoords(fixtureSizes, availableMove.location, 'selection'),
+		cardCoords: calcCardCoords(fixtureSizes, location, 'selection'),
 	}));
-
 	return { game, shorthands, dropTargets };
 }
 
