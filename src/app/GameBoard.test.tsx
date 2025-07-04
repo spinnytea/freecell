@@ -26,9 +26,13 @@ jest.mock('gsap/all', () => ({
 		set: () => ({}),
 		from: () => ({}),
 		timeline: () => ({}),
+		registerPlugin: () => ({}),
 		utils: {
 			random: () => undefined,
 		},
+	},
+	Draggable: {
+		create: () => undefined,
 	},
 }));
 

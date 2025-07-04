@@ -92,7 +92,7 @@ export function useDragAndDropControls(
 					zIndexBoost: false, // this only works if you drag it twice in a row
 					onPress: function (event: PointerEvent) {
 						if (gameStateRef.current.showDebugInfo) {
-							console.log('onPress');
+							console.debug('onPress');
 						}
 
 						dragStateRef.current = checkIfValid(
@@ -128,7 +128,7 @@ export function useDragAndDropControls(
 									// TODO (animation) (drag-and-drop) drop target animation? like, rotation??
 									//  - e.g. available-low -> available-high
 									//  - maybe we need a whole "DragDropStateContext" that useCardPositionAnimations can import
-									console.log('onDrag overlapping', shorthandPosition(overlapping.location));
+									console.debug('onDrag overlapping', shorthandPosition(overlapping.location));
 								}
 							}
 						}
@@ -148,7 +148,7 @@ export function useDragAndDropControls(
 							);
 							if (overlapping) {
 								if (gameStateRef.current.showDebugInfo) {
-									console.log('onRelease');
+									console.debug('onRelease');
 								}
 
 								// clean up drag state (mischief managed)
@@ -176,7 +176,7 @@ export function useDragAndDropControls(
 					onDragEnd: function (event: PointerEvent) {
 						if (dragStateRef.current) {
 							if (gameStateRef.current.showDebugInfo) {
-								console.log('onDragEnd');
+								console.debug('onDragEnd');
 							}
 							consumePointerEvent(event);
 
