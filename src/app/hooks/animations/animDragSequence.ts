@@ -1,6 +1,11 @@
 import { MutableRefObject } from 'react';
 import { gsap } from 'gsap/all';
-import { DEFAULT_TRANSLATE_DURATION, MAX_ANIMATION_OVERLAP } from '@/app/animation_constants';
+import {
+	DEFAULT_TRANSLATE_DURATION,
+	DRAG_RELEASE_CLEAR_SPEEDUP,
+	MAX_ANIMATION_OVERLAP,
+	TOTAL_DEFAULT_MOVEMENT_DURATION,
+} from '@/app/animation_constants';
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import { domUtils, TLZ } from '@/app/components/element/domUtils';
 import { calcCardId } from '@/app/game/card/card';
@@ -63,12 +68,20 @@ export function animDragSequenceClear({
 	firstCardTLZ: TLZ;
 	gameBoardIdRef?: MutableRefObject<string>;
 }) {
-	// REVIEW (animation) (drag-and-drop) (3-priority) better animations when resetting card position, compare with auto-foundation
-	const durationScale =
-		Math.min(DEFAULT_TRANSLATE_DURATION, list.length * MAX_ANIMATION_OVERLAP) / list.length;
+	// REVIEW (animation) (drag-and-drop) same overlap as animUpdatedCardPositions
+	const overlap = Math.min(
+		(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) / list.length,
+		MAX_ANIMATION_OVERLAP
+	);
+
 	list.forEach((shorthand, index) => {
 		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
-		const duration = DEFAULT_TRANSLATE_DURATION + index * durationScale;
+
+		const duration = DEFAULT_TRANSLATE_DURATION * DRAG_RELEASE_CLEAR_SPEEDUP + index * overlap;
+		// speeding up the initial offset ^^ allows the trailing cards to breath a little
+		// REVIEW (animation) (drag-and-drop) not sure which is better both are good
+		// speeding up the overall time vv snaps the cards in quicker
+		// const duration = (DEFAULT_TRANSLATE_DURATION + index * overlap) * DRAG_RELEASE_CLEAR_SPEEDUP;
 
 		gsap.killTweensOf(cardIdSelector);
 		// do not animate zIndex, it causes bugs
