@@ -56,7 +56,7 @@ export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
 	 - then it'll just be, like, a new game
 	 - should we have a special animation for this?
 */
-type GameFunction = 'undo' | 'restart' | 'newGame';
+type GameFunction = 'undo' | 'restart' | 'newGame' | 'drag-drop';
 
 export interface PreviousAction {
 	/**
@@ -405,8 +405,10 @@ function collapseHistory(action: PreviousAction, history: string[]): PaH | undef
 					// move 34 KH→cascade
 					// move 43 KH→cascade
 					if (pf === at) {
+						const nextAction = parsePreviousActionType(history.at(-2) ?? 'init');
+						if (action.gameFunction) nextAction.gameFunction = action.gameFunction; // preserve drag-drop
 						return {
-							action: parsePreviousActionType(history.at(-2) ?? 'init'),
+							action: nextAction,
 							history: history.slice(0, -1),
 						};
 					}
@@ -414,8 +416,10 @@ function collapseHistory(action: PreviousAction, history: string[]): PaH | undef
 					// move 34 KH→cascade
 					// move 35 KH→cascade
 					const actionText = `move ${pf}${at} ${pfs}→${ats}`;
+					const nextAction: PreviousAction = { text: actionText, type: 'move' };
+					if (action.gameFunction) nextAction.gameFunction = action.gameFunction; // preserve drag-drop
 					return {
-						action: { text: actionText, type: 'move' },
+						action: nextAction,
 						history: history.slice(0, -1).concat(actionText),
 					};
 				}

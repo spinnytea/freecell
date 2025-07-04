@@ -18,6 +18,14 @@ export const MULTI_ANIMATION_TIMESCALE = 2;
 /** when we select a card, and it needs to rotate to show it's selected, this is how long that takes */
 export const SELECT_ROTATION_DURATION = 0.1;
 
+/**
+	we want the same† reset animation for animDragSequenceClear and animUpdatedCardPositions
+	REVIEW (drag-and-drop) but they need to be separate implementations
+
+	we want the drag action to be a bit snappier, so we want to reduce the overall time
+*/
+export const DRAG_RELEASE_CLEAR_SPEEDUP = 0.6;
+
 /** one part of the yoyo */
 export const INVALID_SHAKE_PORTION = 0.05;
 /** how far to offset in either direction */

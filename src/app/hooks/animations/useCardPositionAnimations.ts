@@ -114,6 +114,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					prevFixtureSizes,
 					gameBoardIdRef,
 					pause: secondMustComeAfter,
+					cardsNearTarget: previousAction.gameFunction === 'drag-drop',
 				});
 
 				nextTLZ.forEach((tlz, shorthand) => {

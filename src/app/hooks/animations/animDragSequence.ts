@@ -2,6 +2,7 @@ import { MutableRefObject } from 'react';
 import { gsap } from 'gsap/all';
 import {
 	DEFAULT_TRANSLATE_DURATION,
+	DRAG_RELEASE_CLEAR_SPEEDUP,
 	MAX_ANIMATION_OVERLAP,
 	TOTAL_DEFAULT_MOVEMENT_DURATION,
 } from '@/app/animation_constants';
@@ -10,9 +11,12 @@ import { domUtils, TLZ } from '@/app/components/element/domUtils';
 import { calcCardId } from '@/app/game/card/card';
 
 /**
-	- TODO (animation) (drag-and-drop) (5-priority) Speed up animations
 	- TODO (animation) (drag-and-drop) if the cascade is too long, the last cards should overshoot and reverse
 	  - add a little whimsy
+
+	@example
+	// a game with a long drag sequence
+	localStorage.setItem('freecell.game', '       3D TC 2H 2C AS AD \n 5S KC    7D 8C 6D 7C 9D \n KS QH    9C 3H 5H 4C 2S \n 2D JC    6S 4D    JH JD \n 6C TD    9H 3C    TS QS \n 5D       KH       8S 8D \n 4S       7H       KD    \n          QD       QC    \n          JS             \n          TH             \n          9S             \n          8H             \n          7S             \n          6H             \n          5C             \n          4H             \n          3S             \n move 62 JC-TD→QH\n:h shuffle32 7749\n 34 24 3a 34 3b 35 84 1c \n 14 a5 63 64 3a 2d 27 a6 \n 54 b1 21 62 ')
 */
 export function animDragSequence({
 	list,
@@ -21,11 +25,6 @@ export function animDragSequence({
 	list: string[];
 	gameBoardIdRef?: MutableRefObject<string>;
 }) {
-	// REVIEW (animation) (drag-and-drop) (3-priority) better animations while dragging cards, compare with auto-foundation
-	const durationScale =
-		Math.min(TOTAL_DEFAULT_MOVEMENT_DURATION, list.length * MAX_ANIMATION_OVERLAP * 1.2) /
-		list.length;
-
 	// draggable uses translate3d
 	let transform: string | number = 0;
 	list.forEach((shorthand, index) => {
@@ -36,12 +35,28 @@ export function animDragSequence({
 		if (index === 0) {
 			transform = gsap.getProperty(cardIdSelector, 'transform');
 		} else {
-			const duration = index * durationScale;
+			const duration = animDragSequence.calcDuration(index);
 			gsap.killTweensOf(cardIdSelector);
 			gsap.to(cardIdSelector, { transform, duration, ease: 'power1.out' });
 		}
 	});
 }
+
+/**
+	this animation is following the cursor (or your finger)
+	we want it to be relatively "immediate"
+
+	Magic numbers (`a * (i+b)^y - c`)
+	- `b` move down the curve a bit
+	  - log2(0) = -Infinity
+	  - log2(1) = 0
+	  - log2(2) = 1
+	  - log2(3) = is a good place to start
+	  - log2(4) = is where I think it maybe should be, but 3 makes c to simple?
+	- `a` after selecting the curve, just feels right
+	- `minusC` is computed in a unit test
+*/
+animDragSequence.calcDuration = (index: number) => 0.06 * Math.log2(index + 2) - 0.06;
 
 /** cancel the drag; reset transform; leave top/left alone */
 export function animDragSequenceClear({
@@ -53,15 +68,20 @@ export function animDragSequenceClear({
 	firstCardTLZ: TLZ;
 	gameBoardIdRef?: MutableRefObject<string>;
 }) {
-	// REVIEW (animation) (drag-and-drop) (3-priority) better animations when resetting card position, compare with auto-foundation
-	const durationScale =
-		Math.min(
-			TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION,
-			list.length * MAX_ANIMATION_OVERLAP
-		) / list.length;
+	// REVIEW (animation) (drag-and-drop) same overlap as animUpdatedCardPositions
+	const overlap = Math.min(
+		(TOTAL_DEFAULT_MOVEMENT_DURATION - DEFAULT_TRANSLATE_DURATION) / list.length,
+		MAX_ANIMATION_OVERLAP
+	);
+
 	list.forEach((shorthand, index) => {
 		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
-		const duration = DEFAULT_TRANSLATE_DURATION + index * durationScale;
+
+		const duration = DEFAULT_TRANSLATE_DURATION * DRAG_RELEASE_CLEAR_SPEEDUP + index * overlap;
+		// speeding up the initial offset ^^ allows the trailing cards to breath a little
+		// REVIEW (animation) (drag-and-drop) not sure which is better both are good
+		// speeding up the overall time vv snaps the cards in quicker
+		// const duration = (DEFAULT_TRANSLATE_DURATION + index * overlap) * DRAG_RELEASE_CLEAR_SPEEDUP;
 
 		gsap.killTweensOf(cardIdSelector);
 		// do not animate zIndex, it causes bugs
