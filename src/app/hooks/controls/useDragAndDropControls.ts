@@ -1,6 +1,6 @@
 import { MutableRefObject, useContext, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, Draggable } from 'gsap/all';
+import { Draggable } from 'gsap/all';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { CardLocation, shorthandCard, shorthandPosition } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
@@ -8,6 +8,7 @@ import {
 	animDragSequence,
 	animDragSequenceClear,
 	animDragSequencePivot,
+	killAnimDrag,
 } from '@/app/hooks/animations/animDragSequence';
 import {
 	calcCardCoords,
@@ -69,19 +70,13 @@ export function useDragAndDropControls(
 
 	useGSAP(
 		(context, contextSafe) => {
-			// TODO (drag-and-drop) (5-priority) deconflict with useDragAndDropControls
-			if (!enableDragAndDrop) {
-				const { top, left, zIndex, rotation } = calcTopLeftZ(
-					gameStateRef.current.fixtureSizes,
-					gameStateRef.current.location,
-					gameStateRef.current._game.selection
-				);
-				gsap.set(cardRef.current, { top, left, zIndex, rotation });
-				return;
-			}
+			if (!enableDragAndDrop)
+				return () => {
+					killAnimDrag(cardRef);
+				};
 
 			if (cardRef.current && contextSafe) {
-				Draggable.create(cardRef.current, {
+				const DraggableInstances = Draggable.create(cardRef.current, {
 					zIndexBoost: false, // this only works if you drag it twice in a row
 					onPress: function (event: PointerEvent) {
 						if (gameStateRef.current.showDebugInfo) {
@@ -199,8 +194,20 @@ export function useDragAndDropControls(
 						}
 					},
 				});
+				return () => {
+					DraggableInstances.forEach((instance) => {
+						instance.kill();
+					});
+
+					killAnimDrag(cardRef);
+				};
 			}
+			return () => {
+				killAnimDrag(cardRef);
+			};
 		},
+		// FIXME revert on update "cleans up draggable 👍"
+		// FIXME revert on update "¿puts the cards back to where they were when it started 👎 ?"
 		{ dependencies: [cardRef, enableDragAndDrop], revertOnUpdate: true }
 	);
 }

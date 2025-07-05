@@ -137,3 +137,10 @@ export function animDragSequencePivot({
 		});
 	});
 }
+
+export function killAnimDrag(cardRef: MutableRefObject<HTMLDivElement | null>) {
+	gsap.killTweensOf(cardRef.current);
+	gsap.set(cardRef.current, {
+		transform: '',
+	});
+}
