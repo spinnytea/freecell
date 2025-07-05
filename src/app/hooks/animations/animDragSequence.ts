@@ -87,7 +87,7 @@ export function animDragSequenceClear({
 		// do not animate zIndex, it causes bugs
 		gsap.set(cardIdSelector, { zIndex: zIndex + BOTTOM_OF_CASCADE + index });
 		gsap.to(cardIdSelector, {
-			transform: 'translate3d(0px, 0px, 0px)',
+			transform: '', // 'translate3d(0px, 0px, 0px)',
 			duration,
 			ease: 'power1.out',
 		});
@@ -133,7 +133,7 @@ export function animDragSequencePivot({
 			top: tlz.top,
 			left: tlz.left,
 			zIndex: tlz.zIndex,
-			transform: 'translate3d(0px, 0px, 0px)',
+			transform: '', // 'translate3d(0px, 0px, 0px)',
 		});
 	});
 }

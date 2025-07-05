@@ -40,10 +40,9 @@ export default function SettingsDialog() {
 	// TODO (settings) this is the first user settings we want to persist
 	//  - there will be _more_
 	// TODO (drag-and-drop) (5-priority) cards break dance?
-	//  - on mobile, toggle off drag-and-drop, sometimes the cards just… freak out and float
-	//  - just generally switching between theses options
-	//  - i haven't figured out when this happens (maybe after finishing a game?)
-	//  - refresh the page fixes it (because you haven't finished a game?)
+	//  - if you drag-and-drop anything, then toggle, all the cards on bad positions
+	//  - `transform` is being set? wwhhyy?
+	//  - it's screwing up the history too?
 	function handleDragAndDropChange() {
 		const updates = new Set(enabledControlSchemes);
 		if (enableDragAndDrop) {

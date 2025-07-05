@@ -87,7 +87,8 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
 					// XXX (animation) should this be in animUpdatedCardPositions somehow?
 					const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
-					timeline.set(cardIdSelector, { top, left, zIndex });
+					// REVIEW (techdebt) setting nextTLZ breaks things?
+					timeline.set(cardIdSelector, { top, left, zIndex, transform: '' });
 				});
 				if (updateCardPositionsPrev) {
 					// XXX (techdebt) (motivation) this needs to be refactored this is the first non-trivial animation, so it's a bit of a 1-off
@@ -130,7 +131,8 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				// kind of an "in case of emergency, break glass"
 				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
 					const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
-					timeline.to(cardIdSelector, { top, left, zIndex, duration: 0.1 }, '<0');
+					timeline.to(cardIdSelector, { top, left, duration: 0.1 }, '<0');
+					timeline.set(cardIdSelector, { zIndex, transform: '' });
 				});
 			}
 
