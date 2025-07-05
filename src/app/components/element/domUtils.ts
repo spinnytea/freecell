@@ -1,3 +1,5 @@
+import { MouseEvent, TouchEvent } from 'react';
+
 export interface TLZ {
 	top: number;
 	left: number;
@@ -43,5 +45,13 @@ export const domUtils = {
 			};
 		}
 		return undefined;
+	},
+
+	consumePointerEvent(event: MouseEvent | TouchEvent | PointerEvent) {
+		event.preventDefault();
+		event.stopPropagation();
+		if ('stopImmediatePropagation' in event) {
+			event.stopImmediatePropagation();
+		}
 	},
 };

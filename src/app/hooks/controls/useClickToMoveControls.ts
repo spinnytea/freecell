@@ -1,5 +1,6 @@
-import { useContext } from 'react';
+import { MouseEvent, TouchEvent, useContext } from 'react';
 import { ControlSchemes } from '@/app/components/cards/constants';
+import { domUtils } from '@/app/components/element/domUtils';
 import { CardLocation } from '@/app/game/card/card';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
@@ -26,7 +27,8 @@ export function useClickToMoveControls(location: CardLocation) {
 	//  - shuffle/deal is conflicting with useClickSetupControls
 	if (location.fixture === 'deck') return;
 
-	function handleClickToMove() {
+	function handleClickToMove(event: MouseEvent | TouchEvent) {
+		domUtils.consumePointerEvent(event);
 		setGame((g) => g.$touchAndMove(location, { autoMove: enableClickToMove }));
 		setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 	}

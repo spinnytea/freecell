@@ -72,9 +72,19 @@ function CardOnBoard({
 		{ dependencies: [rotation] }
 	);
 
+	// FIXME some cards still jump around
+	// FIXME sometimes the touch event doesn't work on mobile??
+	//  - did a card jump around, was that it?
+	//  - i mean, i couldn't select that cascade either...
 	const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardIdRef?.current);
 	return (
-		<div id={cardId} className={styles_cardsonboard.card} ref={cardRef} onClick={handleClickToMove}>
+		<div
+			id={cardId}
+			className={styles_cardsonboard.card}
+			ref={cardRef}
+			onClick={handleClickToMove}
+			onTouchStart={handleClickToMove}
+		>
 			<CardImage
 				rank={rank}
 				suit={suit}
