@@ -49,12 +49,6 @@ interface DragState {
 	  - or maybe it just breaks down and you can't drop anything
 	  - is that the same bug or a different bug?
 	  - mobile _definitely_ behaves different from desktop
-	- TODO (animation) (drag-and-drop) (5-priority) invalid card shake
-	  - I think we need to change `dropTargets` from `availableMoves` to "any position"
-	  - abcdefh1234567890
-	  - and then IFF that is an `availableMoves`, we can move there
-	  - and then IFF we drop and that is _not_ an available move, well do the thing anyway and get an `invalid move` step
-	  - we can still `onRelease` in the hinterlands to cancel the move
 */
 export function useDragAndDropControls(
 	cardRef: MutableRefObject<HTMLDivElement | null>,
@@ -281,6 +275,10 @@ function checkIfValid(
 	const shorthands = game.selection.cards.map(shorthandCard);
 
 	// XXX (techdebt) move to helper method?
+	// TODO (drag-and-drop) omit the current location
+	//  - e.g. invalid move 22 7H-6C-5D-4S→4S
+	//  - e.g. if you do drag a card and the same position is the target, it's just every kind of wrong
+	//  - i.e. it's not worth having this position
 	const allAvailableLocations: CardLocation[] = [
 		...game.cells.map((_, d0) => ({ fixture: 'cell', data: [d0] }) as CardLocation),
 		...game.foundations.map((_, d0) => ({ fixture: 'foundation', data: [d0] }) as CardLocation),

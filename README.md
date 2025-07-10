@@ -19,6 +19,7 @@ TODO (motivation) main development tasks:
    - `(controls) (drag-and-drop)` be more precise with state management, fix conflicts with other schemes
    - `(animation) (drag-and-drop)` better trailing animation, add some polish
    - review all of (drag-and-drop)
+   - unit test `useDragAndDropControls`
 
 ```
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b
@@ -42,7 +43,7 @@ TODO (motivation) main development tasks:
   - card drag animation (drag waggles the sequence)
   - auto-foundation each card
   - win -> init
-- IDEA (motivation) (hud) (controls) so I have a robust text i/o, make a termainal version
+- IDEA (motivation) (controls) (hud) (terminal) (3-priority) so I have a robust text i/o, make a termainal version
   - console.clear, console.log; `npm install chalk`
   - light and dark mode?
   - basically just, same keyboard controls as the web ui, just, a terminal ui

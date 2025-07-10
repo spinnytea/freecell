@@ -1077,6 +1077,14 @@ export class FreeCell {
 		 - we only swap out whitespace, we know the location of everything
 		TODO (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
 		XXX (techdebt) remove skipDeck
+		TODO (terminal) (print) dis/enable each "layer" individually; !/!! includeHistory is just defaults
+		 - home row (cells/foundation)
+		 - tableau?
+		 - deck (skipDeck, includeEmptyDeck)
+		 - history
+		 - cursor/selection/availableMove
+		 - colors
+		 - … okay, not all of those make sense
 	*/
 	print({
 		skipDeck = false,
@@ -1203,7 +1211,7 @@ export class FreeCell {
 		must be a valid output of game.print(), there isn't much error correction/detection
 		i.e. must `game.print() === FreeCell.parse(game.print()).print()`
 
-		TODO (techdebt) remove invalidFoundations and deal demo
+		XXX (techdebt) remove invalidFoundations and deal demo
 	*/
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		if (!print) throw new Error('No game string provided.');
