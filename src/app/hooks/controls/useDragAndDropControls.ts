@@ -18,7 +18,7 @@ import {
 } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
-import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
+import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 import { useRefCurrent } from '@/app/hooks/useRefCurrent';
 
 interface DropTarget {
@@ -58,7 +58,7 @@ export function useDragAndDropControls(
 ) {
 	const [_game, setGame] = useContext(GameContext);
 	const dragStateRef = useRef<DragState | undefined>(undefined);
-	const { enabledControlSchemes, showDebugInfo } = useSettings();
+	const [{ enabledControlSchemes, showDebugInfo }, setSettings] = useContext(SettingsContext);
 	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
 
 	const gameStateRef = useRefCurrent({
@@ -84,6 +84,11 @@ export function useDragAndDropControls(
 			if (cardRef.current && contextSafe) {
 				Draggable.create(cardRef.current, {
 					zIndexBoost: false, // this only works if you drag it twice in a row
+					// The behavior of react-draggable's onClick firing once on desktop and twice on mobile devices is a known issue,
+					// primarily related to how touch events are handled and how they interact with synthetic React events.
+					// onClick: function (event: PointerEvent) {
+					// 	gameStateRef.current.handleClickToMove?.(event);
+					// },
 					onPress: function (event: PointerEvent) {
 						if (gameStateRef.current.showDebugInfo) {
 							console.debug('onPress', enableDragAndDrop);
@@ -99,6 +104,7 @@ export function useDragAndDropControls(
 
 						if (dragStateRef.current) {
 							domUtils.consumeDomEvent(event);
+							setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 
 							// drag-start is "noop"
 							// setGame((g) => g);
