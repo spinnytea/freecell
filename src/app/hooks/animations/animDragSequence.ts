@@ -17,6 +17,7 @@ import { calcCardId } from '@/app/game/card/card';
 	@example
 	// a game with a long drag sequence
 	localStorage.setItem('freecell.game', '       3D TC 2H 2C AS AD \n 5S KC    7D 8C 6D 7C 9D \n KS QH    9C 3H 5H 4C 2S \n 2D JC    6S 4D    JH JD \n 6C TD    9H 3C    TS QS \n 5D       KH       8S 8D \n 4S       7H       KD    \n          QD       QC    \n          JS             \n          TH             \n          9S             \n          8H             \n          7S             \n          6H             \n          5C             \n          4H             \n          3S             \n move 62 JC-TD→QH\n:h shuffle32 7749\n 34 24 3a 34 3b 35 84 1c \n 14 a5 63 64 3a 2d 27 a6 \n 54 b1 21 62 ')
+	localStorage.setItem('freecell.game', '             KD KS KH KC \n                         \n:    Y O U   W I N !    :\n                         \n move 16 6H→7C (auto-foundation 138833388b6638a38631184385345883453854 2H,3C,3H,4C,4H,5C,6D,5H,6C,7D,6H,7C,7S,7H,8C,8D,8S,8H,9C,9D,9S,9H,TC,TD,TS,TH,JC,JD,JS,JH,QC,QD,QS,QH,KC,KD,KS,KH)\n:h shuffle32 31\n 42 67 31 3a 31 3b 3c 37 \n b7 58 51 81 53 5b a5 25 \n 2a 24 23 8d 85 8h bh 68 \n 6b 67 c7 32 45 48 b8 d8 \n 4b 43 53 a5 4a 45 76 74 \n 7c 78 7d 74 c7 b7 65 6h \n 7h 6h 7h 56 25 28 63 18 \n 14 d4 1b 16 ')
 */
 export function animDragSequence({
 	list,

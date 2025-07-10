@@ -1,5 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { ControlSchemes } from '@/app/components/cards/constants';
+import { domUtils } from '@/app/components/element/domUtils';
 import { PREVIOUS_ACTION_TYPE_IS_START_OF_GAME } from '@/app/game/move/history';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
@@ -77,8 +78,7 @@ export function useKeybaordMiscControls() {
 				// 	break;
 			}
 			if (consumed) {
-				event.stopPropagation();
-				event.preventDefault();
+				domUtils.consumeDomEvent(event);
 				setSettings((s) => ({ ...s, showKeyboardCursor: true }));
 			}
 		}

@@ -2,6 +2,7 @@ import { MutableRefObject, useContext, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, Draggable } from 'gsap/all';
 import { ControlSchemes } from '@/app/components/cards/constants';
+import { domUtils } from '@/app/components/element/domUtils';
 import { CardLocation, shorthandCard, shorthandPosition } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import {
@@ -85,8 +86,10 @@ export function useDragAndDropControls(
 					zIndexBoost: false, // this only works if you drag it twice in a row
 					onPress: function (event: PointerEvent) {
 						if (gameStateRef.current.showDebugInfo) {
-							console.debug('onPress');
+							console.debug('onPress', enableDragAndDrop);
 						}
+
+						const draggable = this as Draggable;
 
 						dragStateRef.current = checkIfValid(
 							gameStateRef.current.fixtureSizes,
@@ -94,17 +97,19 @@ export function useDragAndDropControls(
 							gameStateRef.current.location
 						);
 
-						if (!dragStateRef.current) {
-							// cancel the drag if this is not a valid thing to drag
-							(this as Draggable).endDrag(event);
-						}
+						if (dragStateRef.current) {
+							domUtils.consumeDomEvent(event);
 
-						// drag-start is "noop"
-						// setGame((g) => g);
+							// drag-start is "noop"
+							// setGame((g) => g);
+						} else {
+							// cancel the drag if this is not a valid thing to drag
+							draggable.endDrag(event);
+						}
 					},
 					onDrag: function (event: PointerEvent) {
 						if (dragStateRef.current) {
-							consumePointerEvent(event);
+							domUtils.consumeDomEvent(event);
 
 							const pointerCoords = pointerCoordsToFixtureSizes(event);
 							contextSafe(animDragSequence)({
@@ -129,7 +134,7 @@ export function useDragAndDropControls(
 					},
 					onRelease: function (event: PointerEvent) {
 						if (dragStateRef.current) {
-							consumePointerEvent(event);
+							domUtils.consumeDomEvent(event);
 
 							const game = dragStateRef.current.game;
 							const shorthands = dragStateRef.current.shorthands;
@@ -173,10 +178,11 @@ export function useDragAndDropControls(
 					},
 					onDragEnd: function (event: PointerEvent) {
 						if (dragStateRef.current) {
+							domUtils.consumeDomEvent(event);
+
 							if (gameStateRef.current.showDebugInfo) {
 								console.debug('onDragEnd');
 							}
-							consumePointerEvent(event);
 
 							const shorthands = dragStateRef.current.shorthands;
 							// clean up drag state (mischief managed)
@@ -203,14 +209,6 @@ export function useDragAndDropControls(
 		},
 		{ dependencies: [cardRef, enableDragAndDrop], revertOnUpdate: true }
 	);
-}
-
-function consumePointerEvent(event: PointerEvent) {
-	event.preventDefault();
-
-	// we actually want to fire onClick if it is a click
-	// event.stopPropagation();
-	// event.stopImmediatePropagation();
 }
 
 function overlappingAvailableMove(

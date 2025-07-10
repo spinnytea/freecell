@@ -1,12 +1,13 @@
-import { useContext } from 'react';
+import { MouseEvent, TouchEvent, useContext } from 'react';
 import { ControlSchemes } from '@/app/components/cards/constants';
+import { domUtils } from '@/app/components/element/domUtils';
 import { CardLocation } from '@/app/game/card/card';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
 /** REVIEW (controls) click-to-move */
 export function useClickToMoveControls(location: CardLocation) {
-	const [, setGame] = useContext(GameContext);
+	const [game, setGame] = useContext(GameContext);
 	const [{ enabledControlSchemes }, setSettings] = useContext(SettingsContext);
 	const enableClickToMove = enabledControlSchemes.has(ControlSchemes.ClickToMove);
 	const enableClickToSelect = enabledControlSchemes.has(ControlSchemes.ClickToSelect);
@@ -26,7 +27,13 @@ export function useClickToMoveControls(location: CardLocation) {
 	//  - shuffle/deal is conflicting with useClickSetupControls
 	if (location.fixture === 'deck') return;
 
-	function handleClickToMove() {
+	function handleClickToMove(event: MouseEvent | PointerEvent | TouchEvent) {
+		// handleClickSetup / useClickSetupControls
+		if (game.win) return; // if the game is over (reset)
+		if (game.deck.length) return; // game init (shuffle / deal)
+		// if (location.fixture === 'deck') return; // not valid move (from or to)
+
+		domUtils.consumeDomEvent(event);
 		setGame((g) => g.$touchAndMove(location, { autoMove: enableClickToMove }));
 		setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 	}

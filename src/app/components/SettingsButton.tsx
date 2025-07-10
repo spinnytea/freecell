@@ -1,6 +1,7 @@
 import { MouseEvent, useContext } from 'react';
 import classNames from 'classnames';
 import styles_buttons from '@/app/components/buttons.module.css';
+import { domUtils } from '@/app/components/element/domUtils';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
 /** https://www.unicode.org/reports/tr51/#def_text_presentation_selector */
@@ -16,7 +17,7 @@ export function SettingsButton() {
 	const [, setSettings] = useContext(SettingsContext);
 
 	function handleClick(event: MouseEvent) {
-		event.stopPropagation();
+		domUtils.consumeDomEvent(event);
 		setSettings((s) => ({ ...s, showSettingsDialog: true }));
 	}
 

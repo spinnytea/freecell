@@ -1,10 +1,11 @@
-import { useContext } from 'react';
+import { MouseEvent, useContext } from 'react';
 import classNames from 'classnames';
 import styles_buttons from '@/app/components/buttons.module.css';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import Dialog from '@/app/components/dialog/Dialog';
 import styles_dialog from '@/app/components/dialog/dialog.module.css';
 import { Checkbox } from '@/app/components/element/Checkbox';
+import { domUtils } from '@/app/components/element/domUtils';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
@@ -22,14 +23,16 @@ export default function SettingsDialog() {
 	//  - Warning: Prop `disabled` did not match. Server: "" Client: "false"
 	//  - this error appears on refresh when not at the start of the game
 
-	function handleRestart() {
+	function handleRestart(event: MouseEvent) {
 		// TODO (settings) (animation) two options for restart:
 		//  - as is: jump to init and do a single animation
 		//  - animate every undo step until back to the beginning
+		domUtils.consumeDomEvent(event);
 		setGame((game) => game.restart());
 	}
 
-	function handleNewGame() {
+	function handleNewGame(event: MouseEvent) {
+		domUtils.consumeDomEvent(event);
 		setGame(() => {
 			const g = newGame();
 			g.previousAction.gameFunction = 'newGame';

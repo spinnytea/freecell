@@ -8,6 +8,7 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 const version = `v${process.env.VERSION ?? 'Unknown'}`;
 
 function stopPropagation(event: MouseEvent) {
+	// if we preventDefault, the checkbox won't get change
 	event.stopPropagation();
 }
 
