@@ -46,6 +46,7 @@ export default function SettingsDialog() {
 	//  - if you drag-and-drop anything, then toggle, all the cards on bad positions
 	//  - `transform` is being set? wwhhyy?
 	//  - it's screwing up the history too?
+	// FIXME toggling off drag-and-drop will cause the foundation zIndex to animate
 	function handleDragAndDropChange() {
 		const updates = new Set(enabledControlSchemes);
 		if (enableDragAndDrop) {

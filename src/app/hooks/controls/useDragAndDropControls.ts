@@ -213,6 +213,8 @@ export function useDragAndDropControls(
 				});
 			}
 		},
+		// FIXME revert on update "cleans up draggable 👍"
+		// FIXME revert on update "¿puts the cards back to where they were when it started 👎 ?"
 		{ dependencies: [cardRef, enableDragAndDrop], revertOnUpdate: true }
 	);
 }
