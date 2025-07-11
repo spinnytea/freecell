@@ -72,6 +72,7 @@ function CardOnBoard({
 		{ dependencies: [rotation] }
 	);
 
+	// FIXME what if we move onClick off the thing that has this id
 	// FIXME sometimes the touch event doesn't work on mobile?? (Draggable eats onClick on mobile)
 	//  - `onTouchStart={handleClickToMove}`
 	//  - did a card jump around, was that it?

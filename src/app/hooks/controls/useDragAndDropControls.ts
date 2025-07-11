@@ -19,6 +19,7 @@ import {
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
+import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
 import { useRefCurrent } from '@/app/hooks/useRefCurrent';
 
 interface DropTarget {
@@ -65,6 +66,8 @@ export function useDragAndDropControls(
 		location: _location,
 		fixtureSizes: useFixtureSizes(),
 		settings: _settings,
+		/** @deprecated FIXME I don't want to do this, i'm just trying it out */
+		handleClickToMove: useClickToMoveControls(_location, false),
 	});
 
 	useGSAP(
@@ -105,8 +108,12 @@ export function useDragAndDropControls(
 								draggable.endDrag(event);
 							}
 						} else {
-							// cancel the drag if this is not a valid thing to drag
+							// FIXME trying to get mobile to work
+							//  - this is still double firing on mobile
 							draggable.endDrag(event);
+							if (gameStateRef.current.handleClickToMove) {
+								gameStateRef.current.handleClickToMove(event);
+							}
 						}
 					},
 					onDrag: function (event: PointerEvent) {
@@ -209,9 +216,10 @@ export function useDragAndDropControls(
 				});
 			}
 		},
+		// FIXME removing revertOnUpdate probably fixed the breakdance
 		// FIXME revert on update "cleans up draggable 👍"
 		// FIXME revert on update "¿puts the cards back to where they were when it started 👎 ?"
-		{ dependencies: [cardRef], revertOnUpdate: true }
+		{ dependencies: [cardRef] }
 	);
 }
 

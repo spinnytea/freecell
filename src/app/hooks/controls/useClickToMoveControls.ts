@@ -5,8 +5,15 @@ import { CardLocation } from '@/app/game/card/card';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
+/** HACK (techdebt) unit tests want to use the standard click event (we mock out all of Draggable) */
+const isTestEnv = process.env.NODE_ENV === 'test';
+
 /** REVIEW (controls) click-to-move */
-export function useClickToMoveControls(location: CardLocation) {
+export function useClickToMoveControls(
+	location: CardLocation,
+	/** @deprecated FIXME just for testing onClick in useDragAndDropControls */
+	disabledInProd = true
+) {
 	const [game, setGame] = useContext(GameContext);
 	const [{ enabledControlSchemes }, setSettings] = useContext(SettingsContext);
 	const enableClickToMove = enabledControlSchemes.has(ControlSchemes.ClickToMove);
@@ -32,6 +39,9 @@ export function useClickToMoveControls(location: CardLocation) {
 		if (game.win) return; // if the game is over (reset)
 		if (game.deck.length) return; // game init (shuffle / deal)
 		// if (location.fixture === 'deck') return; // not valid move (from or to)
+
+		// FIXME just for testing onClick in useDragAndDropControls
+		if (disabledInProd === !isTestEnv) return;
 
 		domUtils.consumeDomEvent(event);
 		setGame((g) => g.$touchAndMove(location, { autoMove: enableClickToMove }));
