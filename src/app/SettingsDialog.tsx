@@ -1,10 +1,8 @@
 import { MouseEvent, useContext } from 'react';
 import classNames from 'classnames';
 import styles_buttons from '@/app/components/buttons.module.css';
-import { ControlSchemes } from '@/app/components/cards/constants';
 import Dialog from '@/app/components/dialog/Dialog';
 import styles_dialog from '@/app/components/dialog/dialog.module.css';
-import { Checkbox } from '@/app/components/element/Checkbox';
 import { domUtils } from '@/app/components/element/domUtils';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
@@ -12,8 +10,7 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 /** TODO (hud) (deployment) iPad dialog buttons are wweeeiiirddd */
 export default function SettingsDialog() {
 	const [, setGame, newGame] = useContext(GameContext);
-	const [{ enabledControlSchemes, showSettingsDialog }, setSettings] = useContext(SettingsContext);
-	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
+	const [{ showSettingsDialog }, setSettings] = useContext(SettingsContext);
 
 	function onClose() {
 		setSettings((s) => ({ ...s, showSettingsDialog: false }));
@@ -40,23 +37,6 @@ export default function SettingsDialog() {
 		});
 	}
 
-	// TODO (settings) this is the first user settings we want to persist
-	//  - there will be _more_
-	// TODO (drag-and-drop) (5-priority) cards break dance?
-	//  - if you drag-and-drop anything, then toggle, all the cards on bad positions
-	//  - `transform` is being set? wwhhyy?
-	//  - it's screwing up the history too?
-	// FIXME toggling off drag-and-drop will cause the foundation zIndex to animate
-	function handleDragAndDropChange() {
-		const updates = new Set(enabledControlSchemes);
-		if (enableDragAndDrop) {
-			updates.delete(ControlSchemes.DragAndDrop);
-		} else {
-			updates.add(ControlSchemes.DragAndDrop);
-		}
-		setSettings((s) => ({ ...s, enabledControlSchemes: updates }));
-	}
-
 	return (
 		<Dialog open={showSettingsDialog} onClose={onClose} ariaLabel="Settings dialog">
 			<button className={classNames(styles_buttons.btn)} autoFocus>
@@ -75,13 +55,6 @@ export default function SettingsDialog() {
 			>
 				<span className={styles_buttons.btnText}>⏭️ New Game</span>
 			</button>
-			<Checkbox
-				name="enableDragAndDrop"
-				value={enableDragAndDrop}
-				text={enableDragAndDrop ? 'Playstyle: Drag and Drop' : 'Playstyle: Touch to Move'}
-				onChange={handleDragAndDropChange}
-				className={styles_buttons.checkbox}
-			/>
 		</Dialog>
 	);
 }
