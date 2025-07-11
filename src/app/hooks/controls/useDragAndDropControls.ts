@@ -77,25 +77,38 @@ export function useDragAndDropControls(
 					zIndexBoost: false, // this only works if you drag it twice in a row
 					// The behavior of react-draggable's onClick firing once on desktop and twice on mobile devices is a known issue,
 					// primarily related to how touch events are handled and how they interact with synthetic React events.
-					// onClick: function (event: PointerEvent) {
-					// 	gameStateRef.current.handleClickToMove?.(event);
-					// },
+					onClick: function (event: PointerEvent) {
+						if (gameStateRef.current.settings.showDebugInfo) {
+							console.debug('onClick');
+						}
+
+						if (gameStateRef.current.handleClickToMove) {
+							// BUG (click-to-move) (controls) (drag-and-drop) does not allow "peekOnly"?
+							//  - we can select any "tailing sequence"
+							//  - trying to select above jitters
+							//  - sometimes it fires on press->click and click
+							//  - usually when not draggable (!dragStateRef.current)
+							//  - but like, always on mobile, sometimes on desktop
+							gameStateRef.current.handleClickToMove(event);
+						}
+					},
 					onPress: function (event: PointerEvent) {
 						const { enabledControlSchemes } = gameStateRef.current.settings;
 						const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
 
-						if (gameStateRef.current.settings.showDebugInfo) {
-							console.debug('onPress', enableDragAndDrop);
-						}
-
 						const draggable = this as Draggable;
 
+						// FIXME test with not enabled
 						if (enableDragAndDrop) {
 							dragStateRef.current = checkIfValid(
 								gameStateRef.current.fixtureSizes,
 								gameStateRef.current._game,
 								gameStateRef.current.location
 							);
+
+							if (gameStateRef.current.settings.showDebugInfo) {
+								console.debug('onPress', !!dragStateRef.current);
+							}
 
 							if (dragStateRef.current) {
 								domUtils.consumeDomEvent(event);
@@ -108,12 +121,12 @@ export function useDragAndDropControls(
 								draggable.endDrag(event);
 							}
 						} else {
-							// FIXME trying to get mobile to work
-							//  - this is still double firing on mobile
-							draggable.endDrag(event);
-							if (gameStateRef.current.handleClickToMove) {
-								gameStateRef.current.handleClickToMove(event);
+							if (gameStateRef.current.settings.showDebugInfo) {
+								console.debug('onPress');
 							}
+
+							// cancel the drag if not enabled
+							draggable.endDrag(event);
 						}
 					},
 					onDrag: function (event: PointerEvent) {
@@ -139,6 +152,9 @@ export function useDragAndDropControls(
 									console.debug('onDrag overlapping', shorthandPosition(overlapping));
 								}
 							}
+						} else {
+							// shouldn't really get here
+							(this as Draggable).endDrag(event);
 						}
 					},
 					onRelease: function (event: PointerEvent) {
@@ -177,12 +193,16 @@ export function useDragAndDropControls(
 									gameBoardIdRef,
 								});
 
+								// attempt the move (even when invalid)
 								setGame(() =>
 									game
 										.setCursor(overlapping)
 										.touch({ selectionNever: true, gameFunction: 'drag-drop' })
 								);
 							}
+						} else {
+							// shouldn't really get here
+							(this as Draggable).endDrag(event);
 						}
 					},
 					onDragEnd: function (event: PointerEvent) {

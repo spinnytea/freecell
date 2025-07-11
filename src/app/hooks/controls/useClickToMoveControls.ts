@@ -19,13 +19,6 @@ export function useClickToMoveControls(
 	const enableClickToMove = enabledControlSchemes.has(ControlSchemes.ClickToMove);
 	const enableClickToSelect = enabledControlSchemes.has(ControlSchemes.ClickToSelect);
 
-	// TODO (drag-and-drop) (5-priority) deconflict with useDragAndDropControls
-	//  - it's super busted when drag is enable, so just don't
-	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
-
-	// disable these here, let DragAndDrop take care of it
-	if (enableDragAndDrop) return undefined;
-
 	if (!(enableClickToMove || enableClickToSelect)) {
 		return undefined;
 	}
@@ -43,8 +36,14 @@ export function useClickToMoveControls(
 		// FIXME just for testing onClick in useDragAndDropControls
 		if (disabledInProd === !isTestEnv) return;
 
+		// FIXME remove allowPeekOnly is a draggable only problem
+		//  - this is actually making it worse
+		//  - now it's a problem on desktop too
+		//  - it was a minor problem, not it's more obvious
 		domUtils.consumeDomEvent(event);
-		setGame((g) => g.$touchAndMove(location, { autoMove: enableClickToMove }));
+		setGame((g) =>
+			g.$touchAndMove(location, { autoMove: enableClickToMove, allowPeekOnly: false })
+		);
 		setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 	}
 

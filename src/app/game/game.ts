@@ -81,6 +81,14 @@ interface OptionsNonstandardGameplay {
 	allowSelectFoundation?: boolean;
 
 	/**
+		this isn't something I ever wanted to enable (peeking at cards is fun),
+		but drag-and-drop is a nightmare and is making bugs.
+
+		FIXME this is part of the core, unit test
+	*/
+	allowPeekOnly?: boolean;
+
+	/**
 		for good game feel, the ultimate goal is to minimize any invalid moves
 		invalid moves stop gameplay
 		instead, we want to figure out what the user intended to do next, without making them do extra steps
@@ -357,8 +365,9 @@ export class FreeCell {
 	*/
 	touch({
 		autoFoundation = true,
-		stopWithInvalid = false,
 		allowSelectFoundation = false,
+		allowPeekOnly = true,
+		stopWithInvalid = false,
 		selectionOnly = false,
 		selectionNever = false,
 		gameFunction = undefined,
@@ -366,6 +375,9 @@ export class FreeCell {
 		if (selectionNever) stopWithInvalid = true;
 		// clear the selction, if re-touching the same spot
 		if (this.selection && isLocationEqual(this.selection.location, this.cursor)) {
+			return this.clearSelection();
+		}
+		if (!allowPeekOnly && this.selection?.peekOnly) {
 			return this.clearSelection();
 		}
 
@@ -388,6 +400,7 @@ export class FreeCell {
 			if (
 				selection.cards.length &&
 				(allowSelectFoundation || this.cursor.fixture !== 'foundation') &&
+				(allowPeekOnly || !selection.peekOnly) &&
 				!selectionNever
 			) {
 				return this.__clone({
@@ -949,16 +962,16 @@ export class FreeCell {
 	*/
 	$touchAndMove(
 		location: CardLocation | string = this.cursor,
-		{ stopWithInvalid, autoMove = true }: OptionsNonstandardGameplay = {}
+		{ allowPeekOnly, stopWithInvalid, autoMove = true }: OptionsNonstandardGameplay = {}
 	): FreeCell | this {
 		if (typeof location === 'string') {
 			location = findCard(this.cards, parseShorthandCard(location)).location;
 		}
 
 		if (autoMove) {
-			return this.setCursor(location).touch({ stopWithInvalid }).autoMove();
+			return this.setCursor(location).touch({ allowPeekOnly, stopWithInvalid }).autoMove();
 		} else {
-			return this.setCursor(location).touch({ stopWithInvalid });
+			return this.setCursor(location).touch({ allowPeekOnly, stopWithInvalid });
 		}
 	}
 
