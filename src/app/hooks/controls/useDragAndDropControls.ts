@@ -1,6 +1,6 @@
 import { MutableRefObject, useContext, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, Draggable } from 'gsap/all';
+import { Draggable } from 'gsap/all';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import { CardLocation, shorthandCard, shorthandPosition } from '@/app/game/card/card';
@@ -58,29 +58,17 @@ export function useDragAndDropControls(
 ) {
 	const [_game, setGame] = useContext(GameContext);
 	const dragStateRef = useRef<DragState | undefined>(undefined);
-	const [{ enabledControlSchemes, showDebugInfo }, setSettings] = useContext(SettingsContext);
-	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
+	const [_settings, setSettings] = useContext(SettingsContext);
 
 	const gameStateRef = useRefCurrent({
 		_game, // just used for inspection without making changes
 		location: _location,
 		fixtureSizes: useFixtureSizes(),
-		showDebugInfo,
+		settings: _settings,
 	});
 
 	useGSAP(
 		(context, contextSafe) => {
-			// TODO (drag-and-drop) (5-priority) deconflict with useDragAndDropControls
-			if (!enableDragAndDrop) {
-				const { top, left, zIndex, rotation } = calcTopLeftZ(
-					gameStateRef.current.fixtureSizes,
-					gameStateRef.current.location,
-					gameStateRef.current._game.selection
-				);
-				gsap.set(cardRef.current, { top, left, zIndex, rotation });
-				return;
-			}
-
 			if (cardRef.current && contextSafe) {
 				Draggable.create(cardRef.current, {
 					zIndexBoost: false, // this only works if you drag it twice in a row
@@ -90,24 +78,32 @@ export function useDragAndDropControls(
 					// 	gameStateRef.current.handleClickToMove?.(event);
 					// },
 					onPress: function (event: PointerEvent) {
-						if (gameStateRef.current.showDebugInfo) {
+						const { enabledControlSchemes } = gameStateRef.current.settings;
+						const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
+
+						if (gameStateRef.current.settings.showDebugInfo) {
 							console.debug('onPress', enableDragAndDrop);
 						}
 
 						const draggable = this as Draggable;
 
-						dragStateRef.current = checkIfValid(
-							gameStateRef.current.fixtureSizes,
-							gameStateRef.current._game,
-							gameStateRef.current.location
-						);
+						if (enableDragAndDrop) {
+							dragStateRef.current = checkIfValid(
+								gameStateRef.current.fixtureSizes,
+								gameStateRef.current._game,
+								gameStateRef.current.location
+							);
 
-						if (dragStateRef.current) {
-							domUtils.consumeDomEvent(event);
-							setSettings((s) => ({ ...s, showKeyboardCursor: false }));
+							if (dragStateRef.current) {
+								domUtils.consumeDomEvent(event);
+								setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 
-							// drag-start is "noop"
-							// setGame((g) => g);
+								// drag-start is "noop"
+								// setGame((g) => g);
+							} else {
+								// cancel the drag if this is not a valid thing to drag
+								draggable.endDrag(event);
+							}
 						} else {
 							// cancel the drag if this is not a valid thing to drag
 							draggable.endDrag(event);
@@ -122,7 +118,7 @@ export function useDragAndDropControls(
 								list: dragStateRef.current.shorthands,
 								gameBoardIdRef,
 							});
-							if (gameStateRef.current.showDebugInfo) {
+							if (gameStateRef.current.settings.showDebugInfo) {
 								const overlapping = overlappingAvailableMove(
 									this as Draggable,
 									pointerCoords,
@@ -153,7 +149,7 @@ export function useDragAndDropControls(
 								gameStateRef.current.fixtureSizes
 							);
 							if (overlapping) {
-								if (gameStateRef.current.showDebugInfo) {
+								if (gameStateRef.current.settings.showDebugInfo) {
 									console.debug('onRelease');
 								}
 
@@ -186,7 +182,7 @@ export function useDragAndDropControls(
 						if (dragStateRef.current) {
 							domUtils.consumeDomEvent(event);
 
-							if (gameStateRef.current.showDebugInfo) {
+							if (gameStateRef.current.settings.showDebugInfo) {
 								console.debug('onDragEnd');
 							}
 
@@ -215,7 +211,7 @@ export function useDragAndDropControls(
 		},
 		// FIXME revert on update "cleans up draggable 👍"
 		// FIXME revert on update "¿puts the cards back to where they were when it started 👎 ?"
-		{ dependencies: [cardRef, enableDragAndDrop], revertOnUpdate: true }
+		{ dependencies: [cardRef], revertOnUpdate: true }
 	);
 }
 

@@ -61,7 +61,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					zIndex: gsap.getProperty(cardIdSelector, 'zIndex'),
 				};
 				void gtlz;
-				console.log(shorthand, tlz, gtlz); // FIXME remove
+				// console.log(shorthand, tlz, gtlz); // FIXME remove
 				if (tlz) {
 					previousTLZ.set(shorthand, tlz);
 				}

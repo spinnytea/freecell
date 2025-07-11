@@ -26,6 +26,7 @@ jest.mock('gsap/all', () => ({
 		set: () => ({}),
 		from: () => ({}),
 		timeline: () => ({}),
+		getProperty: () => ({}),
 		registerPlugin: () => ({}),
 		utils: {
 			random: () => undefined,
@@ -104,7 +105,7 @@ describe('GameBoard', () => {
 		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 		expect(mockCallTimes()).toEqual({
 			toGsapSpy: 52,
-			setGsapSpy: 104, // XXX useDragAndDropControls init
+			setGsapSpy: 52,
 			fromGsapSpy: 0,
 			fromToSpy: 0,
 			toSpy: 0,
