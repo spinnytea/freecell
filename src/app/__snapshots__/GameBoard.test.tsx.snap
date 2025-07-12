@@ -9935,7 +9935,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="50"
-        data-top="22.75"
+        data-top="23"
         data-zindex="3"
         id="c4H-1"
       >
@@ -10239,7 +10239,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="50"
-        data-top="24.5"
+        data-top="24"
         data-zindex="4"
         id="c8H-1"
       >
@@ -10699,7 +10699,7 @@ exports[`GameBoard enable debug mode 1`] = `
         class="hiddenActionText"
         role="status"
       >
-        select 4H
+        select 5 6C
       </output>
       <span
         class="statusspacer"
@@ -10734,15 +10734,31 @@ exports[`GameBoard enable debug mode 1`] = `
  JD 2D 9H JC 5D 7H 7C 5H 
  KD KC 9S 5S AD QC KH 3H 
  2S KS 9D QD JS AS AH 3C 
- 4C 5C TS QH&gt;4H|AC 4D 7S 
+ 4C 5C TS QH 4H AC 4D 7S 
  3S TD 4S TH 8H 2C JH 7D 
- 6D 8S 8D QS 6C 3D 8C TC 
+ 6D 8S 8D QS&gt;6C|3D 8C TC 
  6S 9C 2H 6H             
- select 4H
+ select 5 6C
     </pre>
     <div
       id="cursors"
     >
+      <div
+        class="available-high cursorBox"
+        style="width: 18px;"
+      />
+      <div
+        class="available-high cursorBox"
+        style="width: 18px;"
+      />
+      <div
+        class="available-high cursorBox"
+        style="width: 18px;"
+      />
+      <div
+        class="available-high cursorBox"
+        style="width: 18px;"
+      />
       <div
         class="selection cursorBox"
         style="width: 18px;"

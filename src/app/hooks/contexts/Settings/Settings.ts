@@ -29,6 +29,7 @@ export function calcDefaultSettings(): Settings {
 
 			// ControlSchemes.ClickToSelect,
 			ControlSchemes.ClickToMove,
+			// XXX (techdebt) (click-to-move) click-to-move is now fully dependent on drag-and-drop being enabled
 			ControlSchemes.DragAndDrop,
 		]),
 	};

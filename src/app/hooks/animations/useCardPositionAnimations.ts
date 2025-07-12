@@ -52,24 +52,11 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 			cards.forEach((card) => {
 				const shorthand = shorthandCard(card);
 				const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
-				const cardIdSelector = '#' + cardId;
 				const tlz = domUtils.getDomAttributes(cardId);
-				// FIXME remove
-				const gtlz = {
-					top: gsap.getProperty(cardIdSelector, 'top'),
-					left: gsap.getProperty(cardIdSelector, 'left'),
-					zIndex: gsap.getProperty(cardIdSelector, 'zIndex'),
-				};
-				void gtlz;
-				// console.log(shorthand, tlz, gtlz); // FIXME remove
 				if (tlz) {
 					previousTLZ.set(shorthand, tlz);
 				}
 			});
-
-			// FIXME revertOnUpdate: true
-			// FIXME these are out of date when we switch
-			// FIXME transform: translate(77.9026px, -68.2386px);
 
 			const {
 				updateCardPositions,

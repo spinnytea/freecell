@@ -140,7 +140,7 @@ describe('GameBoard', () => {
 	test('enable debug mode', () => {
 		const { container } = render(<MockGamePage game={new FreeCell().shuffle32(1).dealAll()} />);
 		fireEvent.click(screen.getByRole('checkbox', { name: 'Show Debug Info' }));
-		fireEvent.click(screen.getByAltText('4 of hearts'));
+		fireEvent.click(screen.getByAltText('6 of clubs'));
 		expect(container).toMatchSnapshot();
 	});
 

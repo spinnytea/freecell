@@ -11,8 +11,8 @@ const isTestEnv = process.env.NODE_ENV === 'test';
 /** REVIEW (controls) click-to-move */
 export function useClickToMoveControls(
 	location: CardLocation,
-	/** @deprecated FIXME just for testing onClick in useDragAndDropControls */
-	disabledInProd = true
+	/** @deprecated XXX (techdebt) (drag-and-drop) this is so ugly */
+	disabledInProd: boolean
 ) {
 	const [game, setGame] = useContext(GameContext);
 	const [{ enabledControlSchemes }, setSettings] = useContext(SettingsContext);
@@ -33,13 +33,11 @@ export function useClickToMoveControls(
 		if (game.deck.length) return; // game init (shuffle / deal)
 		// if (location.fixture === 'deck') return; // not valid move (from or to)
 
-		// FIXME just for testing onClick in useDragAndDropControls
+		// XXX (techdebt) disabledInProd buz unit tests, unless I can figure something else out
 		if (disabledInProd === !isTestEnv) return;
 
-		// FIXME remove allowPeekOnly is a draggable only problem
-		//  - this is actually making it worse
-		//  - now it's a problem on desktop too
-		//  - it was a minor problem, not it's more obvious
+		// TODO (techdebt) (gameplay) (drag-and-drop) remove allowPeekOnly: false
+		//  - I have _no_ idea why this allows click-to-move to work on mobile
 		domUtils.consumeDomEvent(event);
 		setGame((g) =>
 			g.$touchAndMove(location, { autoMove: enableClickToMove, allowPeekOnly: false })

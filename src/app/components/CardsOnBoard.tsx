@@ -45,7 +45,7 @@ function CardOnBoard({
 }) {
 	const cardRef = useRef<HTMLDivElement | null>(null);
 	const game = useGame();
-	const handleClickToMove = useClickToMoveControls(location);
+	const handleClickToMove = useClickToMoveControls(location, true);
 	const fixtureSizes = useFixtureSizes();
 	const { top, left, zIndex, rotation } = calcTopLeftZ(
 		fixtureSizes,
@@ -54,6 +54,7 @@ function CardOnBoard({
 		rank
 	);
 
+	// XXX (techdebt) (drag-and-drop) this is so ugly
 	useDragAndDropControls(cardRef, location, gameBoardIdRef);
 
 	useGSAP(() => {
@@ -72,11 +73,8 @@ function CardOnBoard({
 		{ dependencies: [rotation] }
 	);
 
-	// FIXME what if we move onClick off the thing that has this id
-	// FIXME sometimes the touch event doesn't work on mobile?? (Draggable eats onClick on mobile)
-	//  - `onTouchStart={handleClickToMove}`
-	//  - did a card jump around, was that it?
-	//  - i mean, i couldn't select that cascade either...
+	// XXX (techdebt) (drag-and-drop) even if we move onClick to it's own dedicated div, Draggable _still_ eats the event
+	//  - I'm starting to think we can't use Dragable in conjunction with another mouse event
 	const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardIdRef?.current);
 	return (
 		<div id={cardId} className={styles_cardsonboard.card} ref={cardRef} onClick={handleClickToMove}>

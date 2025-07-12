@@ -45,12 +45,13 @@ interface DragState {
 
 	some todos
 	- BUG (drag-and-drop) (5-priority) playtest, a _lot_
-	- REVIEW (drag-and-drop) comment out console longs once finished
-	  - even though they are locked behind the debug flag
 	- TODO (drag-and-drop) Mobile drop targets are sometimes too small? ESP near the edge's (1,8)
 	  - or maybe it just breaks down and you can't drop anything
 	  - is that the same bug or a different bug?
 	  - mobile _definitely_ behaves different from desktop
+
+	I want to staight up rip this out, but the elders need it.
+	At least I've gotten everything  to work (not allowPeekOnly), even if the code is fugly.
 */
 export function useDragAndDropControls(
 	cardRef: MutableRefObject<HTMLDivElement | null>,
@@ -66,7 +67,7 @@ export function useDragAndDropControls(
 		location: _location,
 		fixtureSizes: useFixtureSizes(),
 		settings: _settings,
-		/** @deprecated FIXME I don't want to do this, i'm just trying it out */
+		/** @deprecated XXX (techdebt) (drag-and-drop) this is so ugly */
 		handleClickToMove: useClickToMoveControls(_location, false),
 	});
 
@@ -98,7 +99,6 @@ export function useDragAndDropControls(
 
 						const draggable = this as Draggable;
 
-						// FIXME test with not enabled
 						if (enableDragAndDrop) {
 							dragStateRef.current = checkIfValid(
 								gameStateRef.current.fixtureSizes,
@@ -236,9 +236,9 @@ export function useDragAndDropControls(
 				});
 			}
 		},
-		// FIXME removing revertOnUpdate probably fixed the breakdance
-		// FIXME revert on update "cleans up draggable 👍"
-		// FIXME revert on update "¿puts the cards back to where they were when it started 👎 ?"
+		// XXX (techdebt) revertOnUpdate needs lots of review if you plan to use it
+		//  - it would be nice to completely deconflict drag-and-drop & click-to-move
+		//  - I'm noting this because its something I don't understand about gsap
 		{ dependencies: [cardRef] }
 	);
 }
