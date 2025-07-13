@@ -156,3 +156,19 @@ export function animDragOverlap({
 		}
 	});
 }
+
+export function animDragOverlapClear({
+	dropTargets,
+	gameBoardIdRef,
+}: {
+	dropTargets: DropTarget[];
+	gameBoardIdRef?: MutableRefObject<string>;
+}) {
+	dropTargets.forEach((dropTarget) => {
+		if (dropTarget.shorthand) {
+			const cardId = calcCardId(dropTarget.shorthand, gameBoardIdRef?.current);
+			const cardIdSelector = '#' + cardId;
+			gsap.set(cardIdSelector, { rotation: 0 });
+		}
+	});
+}

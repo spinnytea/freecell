@@ -13,6 +13,7 @@ import {
 import { FreeCell } from '@/app/game/game';
 import {
 	animDragOverlap,
+	animDragOverlapClear,
 	animDragSequence,
 	animDragSequenceClear,
 	animDragSequencePivot,
@@ -53,12 +54,11 @@ interface DragState {
 	 - drag-cancel, when we no longer want our selection/drag
 	 - drag-drop, move the selection to the card we dropped it
 
-	BUG this file is one giant bug
-	 - both react and gsap are so very very upset by this file
-
-	some todos
+	 some todos
+	 - BUG this file is one giant react/gsap bug
+	   - both react and gsap are so very very upset by this file
 	- BUG (drag-and-drop) (5-priority) playtest, a _lot_
-	- FIXME stop using console.debug, but a div on screen and put the text there
+	- TODO (techdebt) stop using console.debug, but a div on screen and put the text there
 
 	I want to staight up rip this out, but the elders need it.
 	At least I've gotten everything  to work (not allowPeekOnly), even if the code is fugly.
@@ -179,6 +179,10 @@ export function useDragAndDropControls(
 
 						if (dragStateRef.current) {
 							domUtils.consumeDomEvent(event);
+							contextSafe(animDragOverlapClear)({
+								dropTargets: dragStateRef.current.dropTargets,
+								gameBoardIdRef,
+							});
 
 							const game = dragStateRef.current.game;
 							const shorthands = dragStateRef.current.shorthands;
@@ -227,6 +231,10 @@ export function useDragAndDropControls(
 					onDragEnd: function (event: PointerEvent) {
 						if (dragStateRef.current) {
 							domUtils.consumeDomEvent(event);
+							contextSafe(animDragOverlapClear)({
+								dropTargets: dragStateRef.current.dropTargets,
+								gameBoardIdRef,
+							});
 
 							if (gameStateRef.current.settings.showDebugInfo) {
 								console.debug('onDragEnd');
@@ -268,8 +276,11 @@ function overlappingAvailableMove(
 	dropTargets: DropTarget[],
 	{ cardHeight, cardWidth }: FixtureSizes
 ): CardLocation | null {
+	// must move at least a third of a card to count
 	if (Math.abs(draggedX || 0) + Math.abs(draggedY || 0) < cardWidth / 3) {
-		// must move at least a third of a card to count
+		dropTargets.forEach((dropTarget) => {
+			dropTarget.isOverlapping = false;
+		});
 		return null;
 	}
 

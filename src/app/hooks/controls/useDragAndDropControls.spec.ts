@@ -14,7 +14,6 @@ describe('useDragAndDropControls', () => {
 	});
 
 	describe('helpers', () => {
-		// FIXME unit test
 		describe('overlappingAvailableMove', () => {
 			// x/y distance (l/r and t/b) cutoffs
 			test.todo('check dist threshold');
