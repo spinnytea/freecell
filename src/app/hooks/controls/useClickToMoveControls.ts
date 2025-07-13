@@ -12,7 +12,7 @@ const isTestEnv = process.env.NODE_ENV === 'test';
 export function useClickToMoveControls(
 	location: CardLocation,
 	/** @deprecated XXX (techdebt) (drag-and-drop) this is so ugly */
-	disabledInProd: boolean
+	disabledInProd?: boolean
 ) {
 	const [game, setGame] = useContext(GameContext);
 	const [{ enabledControlSchemes }, setSettings] = useContext(SettingsContext);
@@ -34,7 +34,7 @@ export function useClickToMoveControls(
 		// if (location.fixture === 'deck') return; // not valid move (from or to)
 
 		// XXX (techdebt) disabledInProd buz unit tests, unless I can figure something else out
-		if (disabledInProd === !isTestEnv) return;
+		if (disabledInProd !== undefined && disabledInProd === !isTestEnv) return;
 
 		// TODO (techdebt) (gameplay) (drag-and-drop) remove allowPeekOnly: false
 		//  - I have _no_ idea why this allows click-to-move to work on mobile

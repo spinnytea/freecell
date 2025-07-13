@@ -84,7 +84,10 @@ interface OptionsNonstandardGameplay {
 		this isn't something I ever wanted to enable (peeking at cards is fun),
 		but drag-and-drop is a nightmare and is making bugs.
 
-		FIXME this is part of the core, unit test
+		XXX (settings) I really like the idea of this, but it was disabled in standard implementations ¿for a reason?
+		 - it's disabled in my game because of (drag-and-drop)
+		 - so if we can figure out how to get this to work, then we can make a setting for it
+		 - I don't know why I'm asking for so much trouble (bugs and features and complexity oh my)
 	*/
 	allowPeekOnly?: boolean;
 

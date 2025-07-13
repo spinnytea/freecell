@@ -487,6 +487,10 @@ describe('game.touch', () => {
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(
 					game.print()
 				);
+
+				// side note: allowPeekOnly
+				expect(game.touch().previousAction.text).toBe('select 4D-3S-2D');
+				expect(game.touch({ allowPeekOnly: false }).previousAction.text).toBe('touch stop');
 			});
 
 			test('sequence can move', () => {
@@ -539,6 +543,10 @@ describe('game.touch', () => {
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(
 					game.print()
 				);
+
+				// side note: allowPeekOnly
+				expect(game.touch().previousAction.text).toBe('select 1 QH-JC');
+				expect(game.touch({ allowPeekOnly: false }).previousAction.text).toBe('select 1 QH-JC');
 			});
 
 			test('sequence too tall', () => {
