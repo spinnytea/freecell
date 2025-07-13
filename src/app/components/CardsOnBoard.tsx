@@ -64,6 +64,11 @@ function CardOnBoard({
 
 	useGSAP(
 		() => {
+			// FIXME this is getting reset somehow
+			//  - it rotates when you select it, and then it sets back to zero
+			//  - not selection top, just selection rotation
+			//  - it's not related to useDragAndDrop (comment it out)
+			//  - which release did it break?
 			gsap.to(cardRef.current, {
 				rotation,
 				duration: SELECT_ROTATION_DURATION,

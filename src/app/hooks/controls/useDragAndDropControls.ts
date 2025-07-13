@@ -3,9 +3,10 @@ import { useGSAP } from '@gsap/react';
 import { Draggable } from 'gsap/all';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
-import { CardLocation, shorthandCard, shorthandPosition } from '@/app/game/card/card';
+import { CardLocation, getCardAt, shorthandCard, shorthandPosition } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import {
+	animDragOverlap,
 	animDragSequence,
 	animDragSequenceClear,
 	animDragSequencePivot,
@@ -22,9 +23,12 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
 import { useRefCurrent } from '@/app/hooks/useRefCurrent';
 
-interface DropTarget {
+export interface DropTarget {
+	shorthand: string | null;
 	location: CardLocation;
 	cardCoords: CardCoords;
+	isAvailableMove: boolean;
+	isOverlapping: boolean;
 }
 
 interface DragState {
@@ -45,7 +49,7 @@ interface DragState {
 
 	some todos
 	- BUG (drag-and-drop) (5-priority) playtest, a _lot_
-	- TODO (drag-and-drop) (5-priority) Mobile drop targets are sometimes too small? ESP near the edge's (1,8)
+	- FIXME Mobile drop targets are sometimes too small? ESP near the edge's (1,8)
 	  - or maybe it just breaks down and you can't drop anything
 	  - is that the same bug or a different bug?
 	  - mobile _definitely_ behaves different from desktop
@@ -140,17 +144,18 @@ export function useDragAndDropControls(
 								list: dragStateRef.current.shorthands,
 								gameBoardIdRef,
 							});
+							const overlapping = overlappingAvailableMove(
+								draggable,
+								pointerCoords,
+								dragStateRef.current.dropTargets,
+								gameStateRef.current.fixtureSizes
+							);
+							contextSafe(animDragOverlap)({
+								dropTargets: dragStateRef.current.dropTargets,
+								gameBoardIdRef,
+							});
 							if (gameStateRef.current.settings.showDebugInfo) {
-								const overlapping = overlappingAvailableMove(
-									draggable,
-									pointerCoords,
-									dragStateRef.current.dropTargets,
-									gameStateRef.current.fixtureSizes
-								);
 								if (overlapping) {
-									// TODO (animation) (drag-and-drop) drop target animation? like, rotation??
-									//  - e.g. available-low -> available-high
-									//  - maybe we need a whole "DragDropStateContext" that useCardPositionAnimations can import
 									console.debug('onDrag overlapping', shorthandPosition(overlapping));
 								}
 							}
@@ -258,37 +263,34 @@ function overlappingAvailableMove(
 		return null;
 	}
 
-	let closestLocation: CardLocation | null = null;
+	let closestDropTarget: DropTarget | null = null;
 	let closestDist2: number | null = null;
 	const maxHeight2 = cardHeight * cardHeight;
 
 	for (const dropTarget of dropTargets) {
+		dropTarget.isOverlapping = false;
 		const { top, left, width, height } = dropTarget.cardCoords;
 
 		const dx = pointerX - left - width / 2;
 		const dy = pointerY - top - height / 2;
 		const dist2 = dx * dx + dy * dy;
 		if (closestDist2 === null || dist2 < closestDist2) {
-			closestLocation = dropTarget.location;
+			closestDropTarget = dropTarget;
 			closestDist2 = dist2;
 		}
 	}
 
+	if (!closestDropTarget) {
+		return null;
+	}
+
+	// only consider the closest drop target valid if we are withing a card radius away
 	if (closestDist2 !== null && closestDist2 < maxHeight2) {
-		// only consider the closest drop target valid if we are withing a card radius away
-		return closestLocation;
+		closestDropTarget.isOverlapping = true;
+		return closestDropTarget.location;
 	}
 
 	return null;
-
-	// box overlap - is the cursor within the card
-	// return dropTargets.find(({ cardCoords }) => {
-	// 	if (x < cardCoords.left) return false;
-	// 	if (x > cardCoords.left + cardCoords.width) return false;
-	// 	if (y < cardCoords.top) return false;
-	// 	if (y > cardCoords.top + cardCoords.height) return false;
-	// 	return true;
-	// })?.availableMove;
 }
 
 /**
@@ -309,10 +311,6 @@ function checkIfValid(
 	const shorthands = game.selection.cards.map(shorthandCard);
 
 	// XXX (techdebt) move to helper method?
-	// TODO (drag-and-drop) omit the current location
-	//  - e.g. invalid move 22 7H-6C-5D-4S→4S
-	//  - e.g. if you do drag a card and the same position is the target, it's just every kind of wrong
-	//  - i.e. it's not worth having this position
 	const allAvailableLocations: CardLocation[] = [
 		...game.cells.map((_, d0) => ({ fixture: 'cell', data: [d0] }) as CardLocation),
 		...game.foundations.map((_, d0) => ({ fixture: 'foundation', data: [d0] }) as CardLocation),
@@ -320,13 +318,23 @@ function checkIfValid(
 			(cascade, d0) =>
 				({ fixture: 'cascade', data: [d0, Math.max(0, cascade.length - 1)] }) as CardLocation
 		),
-	];
+	].filter(
+		// omit the current location
+		//  - e.g. invalid move 22 7H-6C-5D-4S→4S
+		//  - e.g. if you do drag a card and the same position is the target, it's just every kind of wrong
+		//  - i.e. it's not worth having this position
+		(avLocation) =>
+			avLocation.fixture !== location.fixture || avLocation.data[0] !== location.data[0]
+	);
 
-	const dropTargets: DropTarget[] = allAvailableLocations.map((location) => ({
-		location,
+	const dropTargets: DropTarget[] = allAvailableLocations.map((avLocation) => ({
+		location: avLocation,
+		shorthand: shorthandCard(getCardAt(game, avLocation)).trim() || null,
 		// XXX (controls) (settings) (drag-and-drop) option to drop on card vs column
 		// BUG CursorType 'cascade' doesn't work with dist2 based overlappingAvailableMove - remove it?
-		cardCoords: calcCardCoords(fixtureSizes, location, 'selection'),
+		cardCoords: calcCardCoords(fixtureSizes, avLocation, 'selection'),
+		isAvailableMove: false, // FIXME check
+		isOverlapping: false,
 	}));
 	return { game, shorthands, dropTargets };
 }
