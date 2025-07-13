@@ -91,7 +91,8 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 					// REVIEW (techdebt) setting nextTLZ breaks things?
 					// nextTLZ.set(shorthand, { top, left, zIndex });
-					timeline.set(cardIdSelector, { top, left, zIndex, transform: '' });
+					// NOTE if we `transform: '',` that also clear the rotation
+					timeline.set(cardIdSelector, { top, left, zIndex });
 				});
 				if (updateCardPositionsPrev) {
 					// XXX (techdebt) (motivation) this needs to be refactored this is the first non-trivial animation, so it's a bit of a 1-off
@@ -136,7 +137,8 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
 					const cardIdSelector = '#' + cardId;
 					domUtils.setDomAttributes(cardId, { top, left, zIndex });
-					timeline.set(cardIdSelector, { top, left, zIndex, transform: '', duration: 0.1 }, '<0');
+					// NOTE if we `transform: '',` that also clear the rotation
+					timeline.set(cardIdSelector, { top, left, zIndex, duration: 0.1 }, '<0');
 
 					// REVIEW (techdebt) (animation) if we split this out into two, then "refresh -> deal" and "refresh -> undo deal" are _busted_
 					//  - which like, we don't need to, just `set` is fine

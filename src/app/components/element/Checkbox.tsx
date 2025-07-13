@@ -16,6 +16,7 @@ export function Checkbox({
 }>) {
 	function handleChange(event: ChangeEvent<HTMLInputElement>) {
 		// if we preventDefault, the checkbox won't get change
+		event.stopPropagation();
 		onChange(event.target.checked);
 	}
 

@@ -9,6 +9,7 @@ import {
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import { domUtils, TLZ } from '@/app/components/element/domUtils';
 import { calcCardId } from '@/app/game/card/card';
+import { DropTarget } from '@/app/hooks/controls/useDragAndDropControls';
 
 /**
 	- TODO (animation) (drag-and-drop) if the cascade is too long, the last cards should overshoot and reverse
@@ -136,5 +137,38 @@ export function animDragSequencePivot({
 			zIndex: tlz.zIndex,
 			transform: '', // 'translate3d(0px, 0px, 0px)',
 		});
+	});
+}
+
+export function animDragOverlap({
+	dropTargets,
+	gameBoardIdRef,
+}: {
+	dropTargets: DropTarget[];
+	gameBoardIdRef?: MutableRefObject<string>;
+}) {
+	dropTargets.forEach((dropTarget) => {
+		if (dropTarget.shorthand) {
+			const cardId = calcCardId(dropTarget.shorthand, gameBoardIdRef?.current);
+			const cardIdSelector = '#' + cardId;
+			const rotation = dropTarget.isOverlapping ? -5 : 0;
+			gsap.set(cardIdSelector, { rotation });
+		}
+	});
+}
+
+export function animDragOverlapClear({
+	dropTargets,
+	gameBoardIdRef,
+}: {
+	dropTargets: DropTarget[];
+	gameBoardIdRef?: MutableRefObject<string>;
+}) {
+	dropTargets.forEach((dropTarget) => {
+		if (dropTarget.shorthand) {
+			const cardId = calcCardId(dropTarget.shorthand, gameBoardIdRef?.current);
+			const cardIdSelector = '#' + cardId;
+			gsap.set(cardIdSelector, { rotation: 0 });
+		}
 	});
 }

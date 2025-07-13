@@ -1,11 +1,32 @@
 describe('useDragAndDropControls', () => {
 	test.todo('general');
 
-	test.todo('calcNextState');
+	describe('each drag event', () => {
+		test.todo('onClick');
 
-	test.todo('overlappingAvailableMove');
+		test.todo('onPress');
 
-	test.todo('checkIfValidHelper');
+		test.todo('onDrag');
 
-	test.todo('pointerCoordsToFixtureSizes');
+		test.todo('onRelease');
+
+		test.todo('onDragEnd');
+	});
+
+	describe('helpers', () => {
+		describe('overlappingAvailableMove', () => {
+			// x/y distance (l/r and t/b) cutoffs
+			test.todo('check dist threshold');
+
+			// empty | not | av | av | not | empty
+			//      ^^^   ^^^  ^^^  ^^^   ^^^
+			test.todo('boost for availableMove');
+
+			test.todo('skip if not dragged');
+		});
+
+		test.todo('checkIfValid');
+
+		test.todo('pointerCoordsToFixtureSizes');
+	});
 });
