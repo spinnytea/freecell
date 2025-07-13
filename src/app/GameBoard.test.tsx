@@ -26,6 +26,7 @@ jest.mock('gsap/all', () => ({
 		set: () => ({}),
 		from: () => ({}),
 		timeline: () => ({}),
+		getProperty: () => ({}),
 		registerPlugin: () => ({}),
 		utils: {
 			random: () => undefined,
@@ -104,7 +105,7 @@ describe('GameBoard', () => {
 		expect(addLabelSpy.mock.calls).toEqual([['updateCardPositions']]);
 		expect(mockCallTimes()).toEqual({
 			toGsapSpy: 52,
-			setGsapSpy: 104, // XXX useDragAndDropControls init
+			setGsapSpy: 52,
 			fromGsapSpy: 0,
 			fromToSpy: 0,
 			toSpy: 0,
@@ -139,7 +140,7 @@ describe('GameBoard', () => {
 	test('enable debug mode', () => {
 		const { container } = render(<MockGamePage game={new FreeCell().shuffle32(1).dealAll()} />);
 		fireEvent.click(screen.getByRole('checkbox', { name: 'Show Debug Info' }));
-		fireEvent.click(screen.getByAltText('4 of hearts'));
+		fireEvent.click(screen.getByAltText('6 of clubs'));
 		expect(container).toMatchSnapshot();
 	});
 

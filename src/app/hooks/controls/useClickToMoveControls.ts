@@ -5,27 +5,23 @@ import { CardLocation } from '@/app/game/card/card';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
+/** HACK (techdebt) (dragndrop-bugs) unit tests want to use the standard click event (we mock out all of Draggable) */
+const isTestEnv = process.env.NODE_ENV === 'test';
+
 /** REVIEW (controls) click-to-move */
-export function useClickToMoveControls(location: CardLocation) {
+export function useClickToMoveControls(
+	location: CardLocation,
+	/** @deprecated XXX (techdebt) (dragndrop-bugs) this is so ugly */
+	disabledInProd?: boolean
+) {
 	const [game, setGame] = useContext(GameContext);
 	const [{ enabledControlSchemes }, setSettings] = useContext(SettingsContext);
 	const enableClickToMove = enabledControlSchemes.has(ControlSchemes.ClickToMove);
 	const enableClickToSelect = enabledControlSchemes.has(ControlSchemes.ClickToSelect);
 
-	// TODO (drag-and-drop) (5-priority) deconflict with useDragAndDropControls
-	//  - it's super busted when drag is enable, so just don't
-	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
-
-	// disable these here, let DragAndDrop take care of it
-	if (enableDragAndDrop) return undefined;
-
 	if (!(enableClickToMove || enableClickToSelect)) {
 		return undefined;
 	}
-
-	// TODO (controls) what if we click on the deck?
-	//  - shuffle/deal is conflicting with useClickSetupControls
-	if (location.fixture === 'deck') return;
 
 	function handleClickToMove(event: MouseEvent | PointerEvent | TouchEvent) {
 		// handleClickSetup / useClickSetupControls
@@ -33,8 +29,15 @@ export function useClickToMoveControls(location: CardLocation) {
 		if (game.deck.length) return; // game init (shuffle / deal)
 		// if (location.fixture === 'deck') return; // not valid move (from or to)
 
+		// XXX (techdebt) (dragndrop-bugs) disabledInProd buz unit tests, unless I can figure something else out
+		if (disabledInProd !== undefined && disabledInProd === !isTestEnv) return;
+
+		// TODO (techdebt) (gameplay) (dragndrop-bugs) remove allowPeekOnly: false
+		//  - I have _no_ idea why this allows click-to-move to work on mobile
 		domUtils.consumeDomEvent(event);
-		setGame((g) => g.$touchAndMove(location, { autoMove: enableClickToMove }));
+		setGame((g) =>
+			g.$touchAndMove(location, { autoMove: enableClickToMove, allowPeekOnly: false })
+		);
 		setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 	}
 

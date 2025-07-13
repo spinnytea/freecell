@@ -1,6 +1,6 @@
 import { MutableRefObject, useContext, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, Draggable } from 'gsap/all';
+import { Draggable } from 'gsap/all';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import { CardLocation, shorthandCard, shorthandPosition } from '@/app/game/card/card';
@@ -19,6 +19,7 @@ import {
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
+import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
 import { useRefCurrent } from '@/app/hooks/useRefCurrent';
 
 interface DropTarget {
@@ -44,12 +45,13 @@ interface DragState {
 
 	some todos
 	- BUG (drag-and-drop) (5-priority) playtest, a _lot_
-	- REVIEW (drag-and-drop) comment out console longs once finished
-	  - even though they are locked behind the debug flag
-	- TODO (drag-and-drop) Mobile drop targets are sometimes too small? ESP near the edge's (1,8)
+	- TODO (drag-and-drop) (5-priority) Mobile drop targets are sometimes too small? ESP near the edge's (1,8)
 	  - or maybe it just breaks down and you can't drop anything
 	  - is that the same bug or a different bug?
 	  - mobile _definitely_ behaves different from desktop
+
+	I want to staight up rip this out, but the elders need it.
+	At least I've gotten everything  to work (not allowPeekOnly), even if the code is fugly.
 */
 export function useDragAndDropControls(
 	cardRef: MutableRefObject<HTMLDivElement | null>,
@@ -58,62 +60,78 @@ export function useDragAndDropControls(
 ) {
 	const [_game, setGame] = useContext(GameContext);
 	const dragStateRef = useRef<DragState | undefined>(undefined);
-	const [{ enabledControlSchemes, showDebugInfo }, setSettings] = useContext(SettingsContext);
-	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
+	const [_settings, setSettings] = useContext(SettingsContext);
 
 	const gameStateRef = useRefCurrent({
 		_game, // just used for inspection without making changes
 		location: _location,
 		fixtureSizes: useFixtureSizes(),
-		showDebugInfo,
+		settings: _settings,
+		/** @deprecated XXX (techdebt) (dragndrop-bugs) this is so ugly */
+		handleClickToMove: useClickToMoveControls(_location, false),
 	});
 
 	useGSAP(
 		(context, contextSafe) => {
-			// TODO (drag-and-drop) (5-priority) deconflict with useDragAndDropControls
-			if (!enableDragAndDrop) {
-				const { top, left, zIndex, rotation } = calcTopLeftZ(
-					gameStateRef.current.fixtureSizes,
-					gameStateRef.current.location,
-					gameStateRef.current._game.selection
-				);
-				gsap.set(cardRef.current, { top, left, zIndex, rotation });
-				return;
-			}
-
 			if (cardRef.current && contextSafe) {
 				Draggable.create(cardRef.current, {
 					zIndexBoost: false, // this only works if you drag it twice in a row
 					// The behavior of react-draggable's onClick firing once on desktop and twice on mobile devices is a known issue,
 					// primarily related to how touch events are handled and how they interact with synthetic React events.
-					// onClick: function (event: PointerEvent) {
-					// 	gameStateRef.current.handleClickToMove?.(event);
-					// },
-					onPress: function (event: PointerEvent) {
-						if (gameStateRef.current.showDebugInfo) {
-							console.debug('onPress', enableDragAndDrop);
+					onClick: function (event: PointerEvent) {
+						if (gameStateRef.current.settings.showDebugInfo) {
+							console.debug('onClick');
 						}
+
+						if (gameStateRef.current.handleClickToMove) {
+							// BUG (click-to-move) (controls) (drag-and-drop) (dragndrop-bugs) does not allow "peekOnly"?
+							//  - we can select any "tailing sequence"
+							//  - trying to select above jitters
+							//  - sometimes it fires on press->click and click
+							//  - usually when not draggable (!dragStateRef.current)
+							//  - but like, always on mobile, sometimes on desktop
+							gameStateRef.current.handleClickToMove(event);
+						}
+					},
+					onPress: function (event: PointerEvent) {
+						const { enabledControlSchemes } = gameStateRef.current.settings;
+						const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
 
 						const draggable = this as Draggable;
 
-						dragStateRef.current = checkIfValid(
-							gameStateRef.current.fixtureSizes,
-							gameStateRef.current._game,
-							gameStateRef.current.location
-						);
+						if (enableDragAndDrop) {
+							dragStateRef.current = checkIfValid(
+								gameStateRef.current.fixtureSizes,
+								gameStateRef.current._game,
+								gameStateRef.current.location
+							);
 
-						if (dragStateRef.current) {
-							domUtils.consumeDomEvent(event);
-							setSettings((s) => ({ ...s, showKeyboardCursor: false }));
+							if (gameStateRef.current.settings.showDebugInfo) {
+								console.debug('onPress', !!dragStateRef.current);
+							}
 
-							// drag-start is "noop"
-							// setGame((g) => g);
+							if (dragStateRef.current) {
+								domUtils.consumeDomEvent(event);
+								setSettings((s) => ({ ...s, showKeyboardCursor: false }));
+
+								// drag-start is "noop"
+								// setGame((g) => g);
+							} else {
+								// cancel the drag if this is not a valid thing to drag
+								draggable.endDrag(event);
+							}
 						} else {
-							// cancel the drag if this is not a valid thing to drag
+							if (gameStateRef.current.settings.showDebugInfo) {
+								console.debug('onPress');
+							}
+
+							// cancel the drag if not enabled
 							draggable.endDrag(event);
 						}
 					},
 					onDrag: function (event: PointerEvent) {
+						const draggable = this as Draggable;
+
 						if (dragStateRef.current) {
 							domUtils.consumeDomEvent(event);
 
@@ -122,9 +140,9 @@ export function useDragAndDropControls(
 								list: dragStateRef.current.shorthands,
 								gameBoardIdRef,
 							});
-							if (gameStateRef.current.showDebugInfo) {
+							if (gameStateRef.current.settings.showDebugInfo) {
 								const overlapping = overlappingAvailableMove(
-									this as Draggable,
+									draggable,
 									pointerCoords,
 									dragStateRef.current.dropTargets,
 									gameStateRef.current.fixtureSizes
@@ -136,9 +154,14 @@ export function useDragAndDropControls(
 									console.debug('onDrag overlapping', shorthandPosition(overlapping));
 								}
 							}
+						} else {
+							// shouldn't really get here
+							draggable.endDrag(event);
 						}
 					},
 					onRelease: function (event: PointerEvent) {
+						const draggable = this as Draggable;
+
 						if (dragStateRef.current) {
 							domUtils.consumeDomEvent(event);
 
@@ -147,13 +170,13 @@ export function useDragAndDropControls(
 							const dropTargets = dragStateRef.current.dropTargets;
 
 							const overlapping = overlappingAvailableMove(
-								this as Draggable,
+								draggable,
 								pointerCoordsToFixtureSizes(event),
 								dropTargets,
 								gameStateRef.current.fixtureSizes
 							);
 							if (overlapping) {
-								if (gameStateRef.current.showDebugInfo) {
+								if (gameStateRef.current.settings.showDebugInfo) {
 									console.debug('onRelease');
 								}
 
@@ -174,19 +197,23 @@ export function useDragAndDropControls(
 									gameBoardIdRef,
 								});
 
+								// attempt the move (even when invalid)
 								setGame(() =>
 									game
 										.setCursor(overlapping)
 										.touch({ selectionNever: true, gameFunction: 'drag-drop' })
 								);
 							}
+						} else {
+							// shouldn't really get here
+							draggable.endDrag(event);
 						}
 					},
 					onDragEnd: function (event: PointerEvent) {
 						if (dragStateRef.current) {
 							domUtils.consumeDomEvent(event);
 
-							if (gameStateRef.current.showDebugInfo) {
+							if (gameStateRef.current.settings.showDebugInfo) {
 								console.debug('onDragEnd');
 							}
 
@@ -213,7 +240,10 @@ export function useDragAndDropControls(
 				});
 			}
 		},
-		{ dependencies: [cardRef, enableDragAndDrop], revertOnUpdate: true }
+		// XXX (techdebt) revertOnUpdate needs lots of review if you plan to use it
+		//  - it would be nice to completely deconflict drag-and-drop & click-to-move
+		//  - I'm noting this because its something I don't understand about gsap
+		{ dependencies: [cardRef] }
 	);
 }
 

@@ -47,6 +47,8 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				},
 			});
 
+			// REVIEW (techdebt) if we are going to use this as storage, we need to update it _every time we move the cards_
+			//  - which I believe we do now, but like, this might be a constant task now?
 			const previousTLZ = new Map<string, TLZ>();
 			cards.forEach((card) => {
 				const shorthand = shorthandCard(card);
@@ -88,6 +90,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					// XXX (animation) should this be in animUpdatedCardPositions somehow?
 					const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 					// REVIEW (techdebt) setting nextTLZ breaks things?
+					// nextTLZ.set(shorthand, { top, left, zIndex });
 					timeline.set(cardIdSelector, { top, left, zIndex, transform: '' });
 				});
 				if (updateCardPositionsPrev) {
@@ -130,8 +133,11 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				// this is a stabilizing force to get cards back into their correct positions
 				// kind of an "in case of emergency, break glass"
 				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
-					const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
+					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
+					const cardIdSelector = '#' + cardId;
+					domUtils.setDomAttributes(cardId, { top, left, zIndex });
 					timeline.set(cardIdSelector, { top, left, zIndex, transform: '', duration: 0.1 }, '<0');
+
 					// REVIEW (techdebt) (animation) if we split this out into two, then "refresh -> deal" and "refresh -> undo deal" are _busted_
 					//  - which like, we don't need to, just `set` is fine
 					//  - but like, it would be nice-if

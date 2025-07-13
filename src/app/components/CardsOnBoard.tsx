@@ -45,7 +45,7 @@ function CardOnBoard({
 }) {
 	const cardRef = useRef<HTMLDivElement | null>(null);
 	const game = useGame();
-	const handleClickToMove = useClickToMoveControls(location);
+	const handleClickToMove = useClickToMoveControls(location, true);
 	const fixtureSizes = useFixtureSizes();
 	const { top, left, zIndex, rotation } = calcTopLeftZ(
 		fixtureSizes,
@@ -54,6 +54,7 @@ function CardOnBoard({
 		rank
 	);
 
+	// XXX (techdebt) (dragndrop-bugs) this is so ugly
 	useDragAndDropControls(cardRef, location, gameBoardIdRef);
 
 	useGSAP(() => {
@@ -72,6 +73,8 @@ function CardOnBoard({
 		{ dependencies: [rotation] }
 	);
 
+	// XXX (techdebt) (dragndrop-bugs) even if we move onClick to it's own dedicated div, Draggable _still_ eats the event
+	//  - I'm starting to think we can't use Dragable in conjunction with another mouse event
 	const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardIdRef?.current);
 	return (
 		<div id={cardId} className={styles_cardsonboard.card} ref={cardRef} onClick={handleClickToMove}>
