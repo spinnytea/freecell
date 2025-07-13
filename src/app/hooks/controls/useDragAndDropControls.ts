@@ -45,7 +45,7 @@ interface DragState {
 
 	some todos
 	- BUG (drag-and-drop) (5-priority) playtest, a _lot_
-	- TODO (drag-and-drop) Mobile drop targets are sometimes too small? ESP near the edge's (1,8)
+	- TODO (drag-and-drop) (5-priority) Mobile drop targets are sometimes too small? ESP near the edge's (1,8)
 	  - or maybe it just breaks down and you can't drop anything
 	  - is that the same bug or a different bug?
 	  - mobile _definitely_ behaves different from desktop
@@ -67,7 +67,7 @@ export function useDragAndDropControls(
 		location: _location,
 		fixtureSizes: useFixtureSizes(),
 		settings: _settings,
-		/** @deprecated XXX (techdebt) (drag-and-drop) this is so ugly */
+		/** @deprecated XXX (techdebt) (dragndrop-bugs) this is so ugly */
 		handleClickToMove: useClickToMoveControls(_location, false),
 	});
 
@@ -84,7 +84,7 @@ export function useDragAndDropControls(
 						}
 
 						if (gameStateRef.current.handleClickToMove) {
-							// BUG (click-to-move) (controls) (drag-and-drop) does not allow "peekOnly"?
+							// BUG (click-to-move) (controls) (drag-and-drop) (dragndrop-bugs) does not allow "peekOnly"?
 							//  - we can select any "tailing sequence"
 							//  - trying to select above jitters
 							//  - sometimes it fires on press->click and click
@@ -130,6 +130,8 @@ export function useDragAndDropControls(
 						}
 					},
 					onDrag: function (event: PointerEvent) {
+						const draggable = this as Draggable;
+
 						if (dragStateRef.current) {
 							domUtils.consumeDomEvent(event);
 
@@ -140,7 +142,7 @@ export function useDragAndDropControls(
 							});
 							if (gameStateRef.current.settings.showDebugInfo) {
 								const overlapping = overlappingAvailableMove(
-									this as Draggable,
+									draggable,
 									pointerCoords,
 									dragStateRef.current.dropTargets,
 									gameStateRef.current.fixtureSizes
@@ -154,10 +156,12 @@ export function useDragAndDropControls(
 							}
 						} else {
 							// shouldn't really get here
-							(this as Draggable).endDrag(event);
+							draggable.endDrag(event);
 						}
 					},
 					onRelease: function (event: PointerEvent) {
+						const draggable = this as Draggable;
+
 						if (dragStateRef.current) {
 							domUtils.consumeDomEvent(event);
 
@@ -166,7 +170,7 @@ export function useDragAndDropControls(
 							const dropTargets = dragStateRef.current.dropTargets;
 
 							const overlapping = overlappingAvailableMove(
-								this as Draggable,
+								draggable,
 								pointerCoordsToFixtureSizes(event),
 								dropTargets,
 								gameStateRef.current.fixtureSizes
@@ -202,7 +206,7 @@ export function useDragAndDropControls(
 							}
 						} else {
 							// shouldn't really get here
-							(this as Draggable).endDrag(event);
+							draggable.endDrag(event);
 						}
 					},
 					onDragEnd: function (event: PointerEvent) {
