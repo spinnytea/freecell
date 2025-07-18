@@ -92,6 +92,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					// REVIEW (techdebt) setting nextTLZ breaks things?
 					// nextTLZ.set(shorthand, { top, left, zIndex });
 					// NOTE if we `transform: '',` that also clear the rotation
+					// REVIEW (techdebt) (animations) "integration" test this rotation bug - can we? is it possible? tlz-r-xy
 					timeline.set(cardIdSelector, { top, left, zIndex });
 				});
 				if (updateCardPositionsPrev) {

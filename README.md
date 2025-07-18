@@ -24,13 +24,19 @@ TODO (motivation) main development tasks:
 ```
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
-\b(BUG|TODO|XXX|REVIEW|IDEA)\b[^\s][^(]
+\b(BUG|TODO|XXX|REVIEW|IDEA)\b(\S|\s[^(])
 \((\d+)-priority\)
 ```
 
 ## Top-Level TODOs
 
-- TODO (techdebt) (3-priority) switch from nextjs to vite
+- TODO (techdebt) switch from nextjs to vite
+  - https://vite.dev/guide/build.html#multi-page-app
+  - `defineConfig({ base: '/my-app/' })`
+  - `import.*next`
+    - `next/image`
+    - `next/link`
+    - `Metadata`
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
 - TODO (deployment) IPad performance is kind of awful?
 - TODO (motivation) (animation) movement needs to be fun, animations are important, every time a card moves, it must not jump
@@ -44,7 +50,7 @@ TODO (motivation) main development tasks:
   - card drag animation (drag waggles the sequence)
   - auto-foundation each card
   - win -> init
-- IDEA (motivation) (controls) (hud) (terminal) (3-priority) so I have a robust text i/o, make a termainal version
+- IDEA (motivation) (controls) (hud) (terminal) so I have a robust text i/o, make a termainal version
   - console.clear, console.log; `npm install chalk`
   - light and dark mode?
   - basically just, same keyboard controls as the web ui, just, a terminal ui

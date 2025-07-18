@@ -15,6 +15,7 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 	because we want this to happen when you click anywhere on the game board (not just a card)
 
 	REVIEW (controls) mouse
+	REVIEW (techdebt) (controls) "integration" test (esp edge cases)
 */
 export function useClickSetupControls() {
 	const [game, setGame, newGame] = useContext(GameContext);

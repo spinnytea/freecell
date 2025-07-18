@@ -6,7 +6,7 @@ import { calcCursorActionText } from '@/app/game/move/move';
 
 export type KeyboardArrowDirection = 'up' | 'right' | 'left' | 'down';
 
-// TODO (controls) (3-priority) actually play the game and see what's not quite right
+// TODO (controls) actually play the game and see what's not quite right
 //  - "up w" and "down w" to cascade should move to the "first card of the last sequence"
 //  - move to the bottom card, then "cast upwards" while the cards can stack
 export function moveCursorWithBasicArrows(

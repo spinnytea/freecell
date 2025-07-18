@@ -1,3 +1,4 @@
+// TODO (techdebt) (controls) (drag-and-drop) (2-priority) "integration" test
 describe('useDragAndDropControls', () => {
 	test.todo('general');
 
@@ -18,9 +19,19 @@ describe('useDragAndDropControls', () => {
 			// x/y distance (l/r and t/b) cutoffs
 			test.todo('check dist threshold');
 
-			// empty | not | av | av | not | empty
-			//      ^^^   ^^^  ^^^  ^^^   ^^^
-			test.todo('boost for availableMove');
+			describe('boost for availableMove', () => {
+				// empty | not | av | av | not | empty
+				//      ^^^   ^^^  ^^^  ^^^   ^^^
+				test.todo('naan');
+
+				// empty | av | not | av | empty
+				//           ^^^ ^ ^^^
+				test.todo('ana');
+
+				// empty | av | not | not | not | av | empty
+				//           ^^^   ^^^ ^ ^^^   ^^^
+				test.todo('annna');
+			});
 
 			test.todo('skip if not dragged');
 		});

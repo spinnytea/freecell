@@ -52,7 +52,7 @@ TODO (controls) More control over where next card moves (i.e. cannot move to fou
 /**
 	higher priorities take precidence
 
-	TODO (controls) (settings) (2-priority) multiple MoveDestinationTypePriorities
+	TODO (controls) (settings) multiple MoveDestinationTypePriorities
 	 - grow cascades vs empty cascades
 	 - these priorities favor "growing cascades", my preference
 	 - another play enjoys "getting the cards off the board"
@@ -273,7 +273,7 @@ export function findAvailableMoves(
 	const head_card = selection.cards[0];
 
 	if (selection.cards.length === 1) {
-		// REVIEW: if multiple, move last card?
+		// REVIEW (controls) if multiple, move last card?
 		//  - do not allow autoMove to move a sequence to a cell
 		game.cells.forEach((card, idx) => {
 			if (!card) {
@@ -285,7 +285,7 @@ export function findAvailableMoves(
 			}
 		});
 
-		// REVIEW: if multiple, move last card?
+		// REVIEW (controls) if multiple, move last card?
 		//  - do not allow autoMove to move a single card when a sequence is selected
 		game.foundations.forEach((card, idx) => {
 			if (canStackFoundation(card, head_card)) {

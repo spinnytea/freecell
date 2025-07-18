@@ -55,9 +55,8 @@ interface DragState {
 	 - drag-drop, move the selection to the card we dropped it
 
 	 some todos
-	 - BUG this file is one giant react/gsap bug
+	 - BUG (drag-and-drop) this file is one giant react/gsap bug
 	   - both react and gsap are so very very upset by this file
-	- BUG (drag-and-drop) (5-priority) playtest, a _lot_
 	- TODO (techdebt) stop using console.debug, but a div on screen and put the text there
 
 	I want to staight up rip this out, but the elders need it.
@@ -160,7 +159,7 @@ export function useDragAndDropControls(
 								dropTargets: dragStateRef.current.dropTargets,
 								gameBoardIdRef,
 							});
-							// BUG overlapping / dropTarget.isOverlapping does not fire/update on mobile
+							// BUG (drag-and-drop) overlapping / dropTarget.isOverlapping does not fire/update on mobile
 							//  - it works for onRelease
 							//  - it does not work in indicate hover state
 							//  - it it's just gsap/animDragOverlap, it seems the state isn't updated
@@ -366,7 +365,9 @@ function checkIfValid(
 		location: avLocation,
 		shorthand: shorthandCard(getCardAt(game, avLocation)).trim() || null,
 		// XXX (controls) (settings) (drag-and-drop) option to drop on card vs column
-		// BUG CursorType 'cascade' doesn't work with dist2 based overlappingAvailableMove - remove it?
+		// BUG (drag-and-drop) CursorType 'cascade' doesn't work with dist2 based overlappingAvailableMove - remove it?
+		//  - we could use "distance to bounding box"
+		//  - not sure how to "boost" in that case, maybe it's okay to "overlook" av | not | av
 		cardCoords: calcCardCoords(fixtureSizes, avLocation, 'selection'),
 		isAvailableMove: availableMoves.some((availableMove) =>
 			isLocationEqual(availableMove.location, avLocation)

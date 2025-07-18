@@ -148,6 +148,7 @@ export function animDragOverlap({
 	gameBoardIdRef?: MutableRefObject<string>;
 }) {
 	dropTargets.forEach((dropTarget) => {
+		// TODO (animations) (controls) (3-priority) hover style when pile is drop target
 		if (dropTarget.shorthand) {
 			const cardId = calcCardId(dropTarget.shorthand, gameBoardIdRef?.current);
 			const cardIdSelector = '#' + cardId;

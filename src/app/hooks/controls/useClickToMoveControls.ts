@@ -8,7 +8,10 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 /** HACK (techdebt) (dragndrop-bugs) unit tests want to use the standard click event (we mock out all of Draggable) */
 const isTestEnv = process.env.NODE_ENV === 'test';
 
-/** REVIEW (controls) click-to-move */
+/**
+	REVIEW (controls) click-to-move
+	REVIEW (techdebt) (controls) "integration" test
+*/
 export function useClickToMoveControls(
 	location: CardLocation,
 	/** @deprecated XXX (techdebt) (dragndrop-bugs) this is so ugly */
