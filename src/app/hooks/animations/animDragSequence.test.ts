@@ -1,22 +1,5 @@
 import { animDragSequence } from '@/app/hooks/animations/animDragSequence';
 
-jest.mock('gsap/all', () => ({
-	gsap: {
-		to: () => ({}),
-		set: () => ({}),
-		from: () => ({}),
-		timeline: () => ({}),
-		getProperty: () => ({}),
-		registerPlugin: () => ({}),
-		utils: {
-			random: () => undefined,
-		},
-	},
-	Draggable: {
-		create: () => [],
-	},
-}));
-
 describe('animDragSequence', () => {
 	// the "second card" is lagging way behind the dragged card
 	// but the rest of them follow nicely

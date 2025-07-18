@@ -109,7 +109,7 @@ export function useDragAndDropControls(
 						const draggable = this as Draggable;
 
 						if (enableDragAndDrop) {
-							dragStateRef.current = checkIfValid(
+							dragStateRef.current = _checkIfValid(
 								gameStateRef.current.fixtureSizes,
 								gameStateRef.current._game,
 								gameStateRef.current.location
@@ -149,7 +149,7 @@ export function useDragAndDropControls(
 								list: dragStateRef.current.shorthands,
 								gameBoardIdRef,
 							});
-							const overlapping = overlappingAvailableMove(
+							const overlapping = _overlappingAvailableMove(
 								draggable,
 								pointerCoords,
 								dragStateRef.current.dropTargets,
@@ -187,7 +187,7 @@ export function useDragAndDropControls(
 							const shorthands = dragStateRef.current.shorthands;
 							const dropTargets = dragStateRef.current.dropTargets;
 
-							const overlapping = overlappingAvailableMove(
+							const overlapping = _overlappingAvailableMove(
 								draggable,
 								pointerCoordsToFixtureSizes(event),
 								dropTargets,
@@ -269,7 +269,8 @@ export function useDragAndDropControls(
 	);
 }
 
-function overlappingAvailableMove(
+/** @modifies `dropTargets.isOverlapping` */
+export function _overlappingAvailableMove(
 	{ x: draggedX, y: draggedY }: Draggable,
 	{ x: pointerX, y: pointerY }: { x: number; y: number },
 	dropTargets: DropTarget[],
@@ -331,7 +332,7 @@ function overlappingAvailableMove(
 	Try to start dragging these card.
 	If we are dragging, then store the available moves, but clear the selection (for various reasons?)
 */
-function checkIfValid(
+export function _checkIfValid(
 	fixtureSizes: FixtureSizes,
 	g: FreeCell,
 	location: CardLocation
@@ -345,7 +346,7 @@ function checkIfValid(
 	const availableMoves = game.availableMoves;
 
 	// XXX (techdebt) move to helper method?
-	const allAvailableLocations: CardLocation[] = [
+	const allMoveLocations: CardLocation[] = [
 		...game.cells.map((_, d0) => ({ fixture: 'cell', data: [d0] }) as CardLocation),
 		...game.foundations.map((_, d0) => ({ fixture: 'foundation', data: [d0] }) as CardLocation),
 		...game.tableau.map(
@@ -361,7 +362,7 @@ function checkIfValid(
 			avLocation.fixture !== location.fixture || avLocation.data[0] !== location.data[0]
 	);
 
-	const dropTargets: DropTarget[] = allAvailableLocations.map((avLocation) => ({
+	const dropTargets: DropTarget[] = allMoveLocations.map((avLocation) => ({
 		location: avLocation,
 		shorthand: shorthandCard(getCardAt(game, avLocation)).trim() || null,
 		// XXX (controls) (settings) (drag-and-drop) option to drop on card vs column

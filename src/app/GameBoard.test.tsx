@@ -20,23 +20,6 @@ import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Setti
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
 import { spyOnGsap } from '@/app/testUtils';
 
-jest.mock('gsap/all', () => ({
-	gsap: {
-		to: () => ({}),
-		set: () => ({}),
-		from: () => ({}),
-		timeline: () => ({}),
-		getProperty: () => ({}),
-		registerPlugin: () => ({}),
-		utils: {
-			random: () => undefined,
-		},
-	},
-	Draggable: {
-		create: () => [],
-	},
-}));
-
 /** HACK (techdebt) we need the game state to know which card we are moving */
 let moveByShorthand: (shorthandMove: string) => void;
 function CribTheGame() {

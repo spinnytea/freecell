@@ -13,23 +13,6 @@ import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameConte
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import { spyOnGsap } from '@/app/testUtils';
 
-jest.mock('gsap/all', () => ({
-	gsap: {
-		to: () => ({}),
-		set: () => ({}),
-		from: () => ({}),
-		timeline: () => ({}),
-		getProperty: () => ({}),
-		registerPlugin: () => ({}),
-		utils: {
-			random: () => undefined,
-		},
-	},
-	Draggable: {
-		create: () => [],
-	},
-}));
-
 jest.mock('@/app/components/element/domUtils.ts', () => {
 	const domTLZ = new Map<string, { top: number; left: number; zIndex: number }>();
 	return {

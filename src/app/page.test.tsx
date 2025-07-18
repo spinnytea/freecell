@@ -4,23 +4,6 @@ import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
 import Page from '@/app/page';
 import { spyOnGsap } from '@/app/testUtils';
 
-jest.mock('gsap/all', () => ({
-	gsap: {
-		to: () => ({}),
-		set: () => ({}),
-		from: () => ({}),
-		timeline: () => ({}),
-		getProperty: () => ({}),
-		registerPlugin: () => ({}),
-		utils: {
-			random: () => undefined,
-		},
-	},
-	Draggable: {
-		create: () => [],
-	},
-}));
-
 describe('page', () => {
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
