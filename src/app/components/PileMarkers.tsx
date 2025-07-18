@@ -5,10 +5,12 @@ import { calcPilemarkerId, CardLocation, shorthandPosition } from '@/app/game/ca
 import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
+import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
 
 export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObject<string> }) {
 	const { cursor } = useGame();
+	const { showKeyboardCursor } = useSettings();
 	const fixtureSizes = useFixtureSizes();
 	const homeTop = fixtureSizes.home.top;
 	const tableauTop = fixtureSizes.tableau.top;
@@ -22,7 +24,7 @@ export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObj
 					top={homeTop}
 					left={left}
 					fixtureSizes={fixtureSizes}
-					cursorPile={cursor.fixture === 'cell' && cursor.data[0] === idx}
+					cursorPile={showKeyboardCursor && cursor.fixture === 'cell' && cursor.data[0] === idx}
 					location={{ fixture: 'cell', data: [idx] }}
 					gameBoardIdRef={gameBoardIdRef}
 				/>
@@ -33,7 +35,9 @@ export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObj
 					top={homeTop}
 					left={left}
 					fixtureSizes={fixtureSizes}
-					cursorPile={cursor.fixture === 'foundation' && cursor.data[0] === idx}
+					cursorPile={
+						showKeyboardCursor && cursor.fixture === 'foundation' && cursor.data[0] === idx
+					}
 					location={{ fixture: 'foundation', data: [idx] }}
 					gameBoardIdRef={gameBoardIdRef}
 				/>
@@ -44,7 +48,7 @@ export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObj
 					top={tableauTop}
 					left={left}
 					fixtureSizes={fixtureSizes}
-					cursorPile={cursor.fixture === 'cascade' && cursor.data[0] === idx}
+					cursorPile={showKeyboardCursor && cursor.fixture === 'cascade' && cursor.data[0] === idx}
 					location={{ fixture: 'cascade', data: [idx, 0] }}
 					gameBoardIdRef={gameBoardIdRef}
 				/>
@@ -77,7 +81,6 @@ function Pile({
 		height: fixtureSizes.cardHeight - 2,
 	};
 
-	// XXX (techdebt) use or remove
 	const pileId = calcPilemarkerId(location, gameBoardIdRef?.current);
 	return (
 		<div

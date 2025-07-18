@@ -1215,7 +1215,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       id="piles"
     >
       <div
-        class="pile cursorPile"
+        class="pile"
         id="pilemarker-a-1-GameBoard.test-#5"
         style="top: 6px; left: 11px; width: 8px; height: 18px;"
       >
@@ -2503,7 +2503,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
         6
       </div>
       <div
-        class="pile cursorPile"
+        class="pile"
         id="pilemarker-7-7-GameBoard.test-#5"
         style="top: 21px; left: 71px; width: 8px; height: 18px;"
       >
@@ -3686,7 +3686,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
         5
       </div>
       <div
-        class="pile cursorPile"
+        class="pile"
         id="pilemarker-6-6-GameBoard.test-#5"
         style="top: 21px; left: 61px; width: 8px; height: 18px;"
       >
@@ -4890,7 +4890,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
         7
       </div>
       <div
-        class="pile cursorPile"
+        class="pile"
         id="pilemarker-8-8-GameBoard.test-#5"
         style="top: 21px; left: 81px; width: 8px; height: 18px;"
       >
@@ -6080,7 +6080,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
         7
       </div>
       <div
-        class="pile cursorPile"
+        class="pile"
         id="pilemarker-8-8-GameBoard.test-#5"
         style="top: 21px; left: 81px; width: 8px; height: 18px;"
       >
@@ -7193,7 +7193,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
         d
       </div>
       <div
-        class="pile cursorPile"
+        class="pile"
         id="pilemarker-h-1-GameBoard.test-#5"
         style="top: 6px; left: 51px; width: 8px; height: 18px;"
       >
@@ -9635,7 +9635,7 @@ exports[`GameBoard enable debug mode 1`] = `
         4
       </div>
       <div
-        class="pile cursorPile"
+        class="pile"
         id="pilemarker-5-5-1"
         style="top: 21px; left: 51px; width: 8px; height: 18px;"
       >
@@ -10797,7 +10797,7 @@ exports[`GameBoard renders a game 1`] = `
       id="piles"
     >
       <div
-        class="pile cursorPile"
+        class="pile"
         id="pilemarker-a-1-0"
         style="top: 6px; left: 11px; width: 8px; height: 18px;"
       >

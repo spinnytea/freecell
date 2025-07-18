@@ -8,7 +8,8 @@ import {
 } from '@/app/animation_constants';
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import { domUtils, TLZ } from '@/app/components/element/domUtils';
-import { calcCardId } from '@/app/game/card/card';
+import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
+import { calcCardId, calcPilemarkerId } from '@/app/game/card/card';
 import { DropTarget } from '@/app/hooks/controls/useDragAndDropControls';
 
 /**
@@ -148,12 +149,18 @@ export function animDragOverlap({
 	gameBoardIdRef?: MutableRefObject<string>;
 }) {
 	dropTargets.forEach((dropTarget) => {
-		// TODO (animations) (controls) (3-priority) hover style when pile is drop target
 		if (dropTarget.shorthand) {
 			const cardId = calcCardId(dropTarget.shorthand, gameBoardIdRef?.current);
 			const cardIdSelector = '#' + cardId;
 			const rotation = dropTarget.isOverlapping ? -5 : 0;
 			gsap.set(cardIdSelector, { rotation });
+		} else {
+			const pileId = calcPilemarkerId(dropTarget.location, gameBoardIdRef?.current);
+			if (dropTarget.isOverlapping) {
+				domUtils.addClass(pileId, styles_pilemarkers.cursorPile);
+			} else {
+				domUtils.removeClass(pileId, styles_pilemarkers.cursorPile);
+			}
 		}
 	});
 }
@@ -170,6 +177,9 @@ export function animDragOverlapClear({
 			const cardId = calcCardId(dropTarget.shorthand, gameBoardIdRef?.current);
 			const cardIdSelector = '#' + cardId;
 			gsap.set(cardIdSelector, { rotation: 0 });
+		} else {
+			const pileId = calcPilemarkerId(dropTarget.location, gameBoardIdRef?.current);
+			domUtils.removeClass(pileId, styles_pilemarkers.cursorPile);
 		}
 	});
 }

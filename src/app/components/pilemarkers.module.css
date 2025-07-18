@@ -18,11 +18,10 @@
 	color: transparent;
 }
 
-/* TODO (hud) (2-priority) piles don't need the focus style for mouse, only for keyboard */
-/* TODO (optimize) two sets of styles, one for mouse one for keyboard? */
 .pile:hover,
 .pile:focus,
-.cursorPile {
+.cursorPile,
+.overlapPile {
 	background: rgba(var(--pile-rgb), 0.3);
 	border-color: rgba(var(--pile-border-rgb), 0.5);
 }

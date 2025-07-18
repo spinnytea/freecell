@@ -31,8 +31,8 @@ import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveContr
 import { useRefCurrent } from '@/app/hooks/useRefCurrent';
 
 export interface DropTarget {
-	shorthand: string | null;
 	location: CardLocation;
+	shorthand: string | null;
 	cardCoords: CardCoords;
 	isAvailableMove: boolean;
 	isOverlapping: boolean;

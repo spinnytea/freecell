@@ -35,6 +35,22 @@ export const domUtils = {
 		}
 	},
 
+	addClass(elId: string, className: string) {
+		const el = document.getElementById(elId);
+		if (el) {
+			console.log('addClass', elId, className);
+			el.classList.add(className);
+		}
+	},
+
+	removeClass(elId: string, className: string) {
+		const el = document.getElementById(elId);
+		if (el) {
+			console.log('removeClass', elId, className);
+			el.classList.remove(className);
+		}
+	},
+
 	getBoundingClientRect(cardId: string): { top: number; left: number } | undefined {
 		const cardEl = document.getElementById(cardId);
 		if (cardEl) {
