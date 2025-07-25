@@ -4,13 +4,13 @@ import { gsap } from 'gsap/all';
 import { SELECT_ROTATION_DURATION } from '@/app/animation_constants';
 import { CardImage } from '@/app/components/cards/CardImage';
 import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
-import { calcCardId, CardLocation, Rank, shorthandCard, Suit } from '@/app/game/card/card';
 import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositionAnimations';
 import { calcTopLeftZ } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
 import { useDragAndDropControls } from '@/app/hooks/controls/useDragAndDropControls';
+import { calcCardId, CardLocation, Rank, shorthandCard, Suit } from '@/game/card/card';
 
 export function CardsOnBoard({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObject<string> }) {
 	const { cards } = useGame();

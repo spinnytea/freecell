@@ -1,7 +1,7 @@
-import { CardLocation } from '@/app/game/card/card';
 import { calcCardCoords } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { calcStaticFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/StaticFixtureSizesContextProvider';
 import { _overlappingAvailableMove, DropTarget } from '@/app/hooks/controls/useDragAndDropControls';
+import { CardLocation } from '@/game/card/card';
 
 describe('useDragAndDropControls', () => {
 	test.todo('general');

@@ -1,9 +1,9 @@
 import { MouseEvent, TouchEvent, useContext } from 'react';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
-import { CardLocation } from '@/app/game/card/card';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
+import { CardLocation } from '@/game/card/card';
 
 /** HACK (techdebt) (dragndrop-bugs) unit tests want to use the standard click event (we mock out all of Draggable) */
 const isTestEnv = process.env.NODE_ENV === 'test';

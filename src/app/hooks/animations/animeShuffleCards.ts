@@ -2,7 +2,7 @@ import { MutableRefObject } from 'react';
 import { gsap } from 'gsap/all';
 import { SHUFFLE_DURATION, SHUFFLE_R, SHUFFLE_X, SHUFFLE_Y } from '@/app/animation_constants';
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
-import { calcCardId, Card, shorthandCard } from '@/app/game/card/card';
+import { calcCardId, Card, shorthandCard } from '@/game/card/card';
 
 // TODO (techdebt) (animation) review shuffle animation
 export function animShuffleCards({

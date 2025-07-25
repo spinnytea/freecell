@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { ASSET_FOLDER } from '@/app/components/cards/constants';
 import { SmolCards } from '@/app/components/cards/SmolCards';
-import { isRed, Rank, Suit } from '@/app/game/card/card';
+import { isRed, Rank, Suit } from '@/game/card/card';
 
 export function SVGCards13({
 	width,

@@ -1,9 +1,9 @@
 import { useContext, useEffect } from 'react';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
-import { Position } from '@/app/game/card/card';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
+import { Position } from '@/game/card/card';
 
 /**
 	REVIEW (techdebt) (controls) "integration" test

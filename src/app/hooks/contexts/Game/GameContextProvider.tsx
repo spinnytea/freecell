@@ -1,7 +1,7 @@
 import { ReactNode, SetStateAction, useCallback, useRef, useState } from 'react';
-import { FreeCell } from '@/app/game/game';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
+import { FreeCell } from '@/game/game';
 
 const LOCAL_STORAGE_KEY_CURR = 'freecell.game';
 const LOCAL_STORAGE_KEY_PREV = 'freecell.game.archive';

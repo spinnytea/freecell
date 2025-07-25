@@ -4,14 +4,6 @@ import { Draggable } from 'gsap/all';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import {
-	CardLocation,
-	getCardAt,
-	isLocationEqual,
-	shorthandCard,
-	shorthandPosition,
-} from '@/app/game/card/card';
-import { FreeCell } from '@/app/game/game';
-import {
 	animDragOverlap,
 	animDragOverlapClear,
 	animDragSequence,
@@ -29,6 +21,14 @@ import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
 import { useRefCurrent } from '@/app/hooks/useRefCurrent';
+import {
+	CardLocation,
+	getCardAt,
+	isLocationEqual,
+	shorthandCard,
+	shorthandPosition,
+} from '@/game/card/card';
+import { FreeCell } from '@/game/game';
 
 export interface DropTarget {
 	location: CardLocation;

@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import { gsap } from 'gsap/all';
 import { DEFAULT_TRANSLATE_DURATION } from '@/app/animation_constants';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { CardLocation, CardSequence, shorthandPosition } from '@/app/game/card/card';
 import {
 	calcCardCoords,
 	FixtureSizes,
@@ -13,6 +12,7 @@ import {
 } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
+import { CardLocation, CardSequence, shorthandPosition } from '@/game/card/card';
 
 const OVERLAY_MARGINS = 4;
 

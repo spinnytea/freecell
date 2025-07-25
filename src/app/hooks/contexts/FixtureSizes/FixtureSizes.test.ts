@@ -1,6 +1,6 @@
-import { CardLocation } from '@/app/game/card/card';
 import { calcCardCoords, calcFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { calcStaticFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/StaticFixtureSizesContextProvider';
+import { CardLocation } from '@/game/card/card';
 
 describe('FixtureSizes', () => {
 	describe('calcFixtureSizes', () => {

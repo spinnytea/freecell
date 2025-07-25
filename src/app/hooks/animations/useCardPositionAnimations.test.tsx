@@ -1,17 +1,17 @@
 import { render } from '@testing-library/react';
 import { gsap } from 'gsap/all';
 import { domUtils } from '@/app/components/element/domUtils';
-import {
-	ACTION_TEXT_EXAMPLES,
-	FIFTY_TWO_CARD_FLOURISH,
-	pullActionTextExamples,
-} from '@/app/game/catalog/actionText-examples';
-import { FreeCell } from '@/app/game/game';
 import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositionAnimations';
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
 import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import { spyOnGsap } from '@/app/testUtils';
+import {
+	ACTION_TEXT_EXAMPLES,
+	FIFTY_TWO_CARD_FLOURISH,
+	pullActionTextExamples,
+} from '@/game/catalog/actionText-examples';
+import { FreeCell } from '@/game/game';
 
 jest.mock('@/app/components/element/domUtils.ts', () => {
 	const domTLZ = new Map<string, { top: number; left: number; zIndex: number }>();
