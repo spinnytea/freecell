@@ -1,3 +1,4 @@
+import { Position } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import readline from 'readline';
 
@@ -5,7 +6,7 @@ import readline from 'readline';
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
-let game = new FreeCell();
+let game = new FreeCell().shuffle32();
 console.clear();
 console.log(game.print());
 console.log('Press any key (Ctrl+C to exit)');
@@ -23,7 +24,33 @@ type KeypressListener = (
 		| undefined
 ) => void;
 
-// FIXME copy useKeyboardHotkeysControls
+const Hotkeys = [
+	'a',
+	'A',
+	'b',
+	'B',
+	'c',
+	'C',
+	'd',
+	'D',
+	'e',
+	'E',
+	'f',
+	'F',
+	'h',
+	'H',
+	'1',
+	'2',
+	'3',
+	'4',
+	'5',
+	'6',
+	'7',
+	'8',
+	'9',
+	'0',
+];
+
 const listener: KeypressListener = (str = '<none>', key) => {
 	if (!key) return;
 	const before = game;
@@ -51,9 +78,11 @@ const listener: KeypressListener = (str = '<none>', key) => {
 		key.name === 'down'
 	) {
 		game = game.moveCursor(key.name);
+	} else if (Hotkeys.includes(key.name)) {
+		game = game.touchByPosition(key.name.toLowerCase() as Position);
 	} else {
-		// FIXME disable once has keys
-		console.log(`You pressed: '${str}' (Key name: ${key.name})`);
+		void str;
+		// console.log(`You pressed: '${str}' (Key name: ${key.name})`);
 	}
 
 	if (before !== game) {
