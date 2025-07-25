@@ -1,7 +1,8 @@
-import { Position } from '@/app/game/card/card';
-import { FreeCell } from '@/app/game/game';
+import { Position } from '@/game/card/card';
+import { FreeCell } from '@/game/game';
 import readline from 'readline';
 
+// FIXME move the "refactor app/game" into main _first_
 // TODO (terminal) (controls) play the game, update controls
 // HACK (terminal) need to lazy load chalk? how to wait until ready before starting?
 type ChalkColors = 'red' | 'yellow' | 'bold' | 'blueBright' | 'underline' | 'bgYellowBright';
