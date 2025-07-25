@@ -1203,13 +1203,14 @@ export class FreeCell {
 
 		by default, we do not print the history (complete set of previous actions); we only print the previous move to help confirm your actions
 
-		XXX (techdebt) print is super messy, can we clean this up?
-		 - what if we just draw the board, and then precision-replace the HUD elements?
-		 - we only swap out whitespace, we know the location of everything
-		IDEA (print) consider: `game.print({ debug: true });` includes available moves (¿and what else?)
-		TODO (print) `includeHistory` should include the cursor/selection, and `parse` should have an option to ignore it
-		 - includeHistory should be able to recover the _entire_ game state
-		 - if we want to ignore cursor/selection for a cleaner "pick-up" state, then it should be handled later
+		- XXX (techdebt) print is super messy, can we clean this up?
+		   - what if we just draw the board, and then precision-replace the HUD elements?
+		   - we only swap out whitespace, we know the location of everything
+		- IDEA (print) consider: `game.print({ debug: true });` includes available moves (¿and what else?)
+		    - render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
+		- TODO (print) `includeHistory` should include the cursor/selection, and `parse` should have an option to ignore it
+		   - includeHistory should be able to recover the _entire_ game state
+		   - if we want to ignore cursor/selection for a cleaner "pick-up" state, then it should be handled later
 
 		@example game.print(); // for gameplay
 		@example game.print({ includeHistory: true }); // for saving game, to reload entire state later
