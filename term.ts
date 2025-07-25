@@ -2,8 +2,9 @@ import { Position } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import readline from 'readline';
 
+// TODO (terminal) (controls) play the game, update controls
 // HACK (terminal) need to lazy load chalk? how to wait until ready before starting?
-type ChalkColors = 'red' | 'yellow' | 'bold';
+type ChalkColors = 'red' | 'yellow' | 'bold' | 'blueBright' | 'underline' | 'bgYellowBright';
 type ColorizeCb = (str: string, ...colors: ChalkColors[]) => string;
 let colorize: ColorizeCb = (str) => str;
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -18,7 +19,7 @@ let colorize: ColorizeCb = (str) => str;
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
-let game = new FreeCell().shuffle32();
+let game = new FreeCell().shuffle32().dealAll();
 printGame();
 console.log('Press any key (Ctrl+C to exit)');
 
@@ -62,18 +63,31 @@ const Hotkeys = [
 	'0',
 ];
 
+// TODO (terminal) (hut) play the game, what needs clarity?
 // HACK (terminal) just replace stufff to get colors
 function printGame() {
 	console.clear();
 	console.log(
 		game
 			.print()
+			// TODO (terminal) last line (previous action text)
+			//  - we can't just do this replace forever :/
+			//  - "move 21 6S→7D (auto-foundation 5 AC)"
+			// .replace(/\n.*$/, (match) => colorize(match, 'blueBright'))
 			// underline home row
 			// .replace(/^.*\n/, (match) => colorize(match, 'underline'))
 			// extra lines
 			// .replace(/:.*\n/g, (match) => colorize(match, 'bgYellowBright'))
 			// red suits
-			.replace(/.(D|H)/g, (match) => colorize(match, 'red'))
+			.replace(/([123456789TJZK])([DH])/g, (match) => colorize(match, 'red'))
+			// TODO (terminal) suit icons: ♣️♧♣ | ♦️♢♦ | ♥️♡♥ | ♠️♤♠
+			// .replace(/([123456789TJZK])([CDHS])/g, (match, ...groups) => {
+			// 	if (groups[1] === 'C') return `${String(groups[0])}♣`;
+			// 	if (groups[1] === 'D') return `${String(groups[0])}♦`;
+			// 	if (groups[1] === 'H') return `${String(groups[0])}♥`;
+			// 	if (groups[1] === 'S') return `${String(groups[0])}♠`;
+			// 	return `${String(groups[0])}${String(groups[1])}`;
+			// })
 			// cursor/selection
 			.replace(/[>|]/g, (match) => colorize(match, 'yellow', 'bold'))
 	);

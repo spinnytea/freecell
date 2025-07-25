@@ -1093,12 +1093,12 @@ export class FreeCell {
 		 - we only swap out whitespace, we know the location of everything
 		TODO (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
 		XXX (techdebt) remove skipDeck
-		TODO (terminal) (print) dis/enable each "layer" individually; !/!! includeHistory is just defaults
+		TODO (terminal) (print) split out each layer into it's own print function
 		 - home row (cells/foundation)
-		 - tableau?
+		 - tableau
 		 - deck (skipDeck, includeEmptyDeck)
 		 - history
-		 - cursor/selection/availableMove
+		 - cursor/selection/availableMove (defined list of values?)
 	*/
 	print({
 		skipDeck = false,
