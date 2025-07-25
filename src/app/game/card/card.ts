@@ -289,6 +289,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 /* PRINT / PARSE */
 /* ************* */
 
+// TODO (terminal) suits: ♣️♧♣ | ♦️♢♦ | ♥️♡♥ | ♠️♤♠
 export function shorthandCard(card: CardSH | null | undefined) {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
