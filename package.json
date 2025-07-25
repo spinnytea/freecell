@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
+    "chalk": "^5.4.1",
     "http-server": "^14.1.1",
     "next": "^15.4.4",
     "react": "^18",
@@ -28,6 +29,7 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.0",
+    "@types/chalk": "^0.4.31",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.17.13",
     "@types/node": "^20",

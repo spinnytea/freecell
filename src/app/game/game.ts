@@ -1099,8 +1099,6 @@ export class FreeCell {
 		 - deck (skipDeck, includeEmptyDeck)
 		 - history
 		 - cursor/selection/availableMove
-		 - colors
-		 - … okay, not all of those make sense
 	*/
 	print({
 		skipDeck = false,

@@ -2,13 +2,24 @@ import { Position } from '@/app/game/card/card';
 import { FreeCell } from '@/app/game/game';
 import readline from 'readline';
 
+// HACK (terminal) need to lazy load chalk? how to wait until ready before starting?
+type ChalkColors = 'red' | 'yellow' | 'bold';
+type ColorizeCb = (str: string, ...colors: ChalkColors[]) => string;
+let colorize: ColorizeCb = (str) => str;
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
+(async () => {
+	const chalk = (await import('chalk')).default;
+	colorize = (str, ...colors) => colors.reduce((ret, c) => ret[c], chalk)(str);
+	printGame();
+	console.log('Press any key (Ctrl+C to exit)');
+})();
+
 // TODO (terminal) review gameplay loop and design
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
 let game = new FreeCell().shuffle32();
-console.clear();
-console.log(game.print());
+printGame();
 console.log('Press any key (Ctrl+C to exit)');
 
 type KeypressListener = (
@@ -51,6 +62,23 @@ const Hotkeys = [
 	'0',
 ];
 
+// HACK (terminal) just replace stufff to get colors
+function printGame() {
+	console.clear();
+	console.log(
+		game
+			.print()
+			// underline home row
+			// .replace(/^.*\n/, (match) => colorize(match, 'underline'))
+			// extra lines
+			// .replace(/:.*\n/g, (match) => colorize(match, 'bgYellowBright'))
+			// red suits
+			.replace(/.(D|H)/g, (match) => colorize(match, 'red'))
+			// cursor/selection
+			.replace(/[>|]/g, (match) => colorize(match, 'yellow', 'bold'))
+	);
+}
+
 const listener: KeypressListener = (str = '<none>', key) => {
 	if (!key) return;
 	const before = game;
@@ -86,8 +114,7 @@ const listener: KeypressListener = (str = '<none>', key) => {
 	}
 
 	if (before !== game) {
-		console.clear();
-		console.log(game.print());
+		printGame();
 	}
 };
 
