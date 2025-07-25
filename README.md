@@ -51,8 +51,6 @@ TODO (motivation) main development tasks:
   - auto-foundation each card
   - win -> init
 - IDEA (motivation) (controls) (hud) (terminal) so I have a robust text i/o, make a termainal version
-  - blocker: nextjs builds web UIs
-  - blocker: `game.ts` (node doesn't ts)
   - console.clear, console.log; `npm install chalk`
   - light and dark mode?
   - basically just, same keyboard controls as the web ui, just, a terminal ui
