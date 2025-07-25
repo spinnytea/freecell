@@ -12,7 +12,7 @@
     "format": "prettier --write --list-different .",
     "test": "jest --watch",
     "test:cov": "jest --coverage",
-    "term": "ts-node index.ts",
+    "term": "ts-node term.ts",
     "clean": "npx rimraf out && npx rimraf coverage && npm prune && git prune"
   },
   "dependencies": {
