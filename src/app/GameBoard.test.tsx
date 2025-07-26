@@ -2,16 +2,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { gsap } from 'gsap/all';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
-import {
-	calcCardId,
-	CardLocation,
-	RankList,
-	shorthandCard,
-	shorthandPosition,
-	SuitList,
-} from '@/app/game/card/card';
-import { FreeCell } from '@/app/game/game';
-import { parseShorthandMove } from '@/app/game/move/move';
 import GameBoard from '@/app/GameBoard';
 import { StaticFixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/StaticFixtureSizesContextProvider';
 import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
@@ -19,6 +9,16 @@ import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
 import { spyOnGsap } from '@/app/testUtils';
+import {
+	calcCardId,
+	CardLocation,
+	RankList,
+	shorthandCard,
+	shorthandPosition,
+	SuitList,
+} from '@/game/card/card';
+import { FreeCell } from '@/game/game';
+import { parseShorthandMove } from '@/game/move/move';
 
 /** HACK (techdebt) we need the game state to know which card we are moving */
 let moveByShorthand: (shorthandMove: string) => void;

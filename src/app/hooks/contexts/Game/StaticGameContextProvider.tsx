@@ -1,6 +1,6 @@
 import { ReactNode, useCallback, useRef, useState } from 'react';
-import { FreeCell } from '@/app/game/game';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
+import { FreeCell } from '@/game/game';
 
 function castGame(game: FreeCell | string) {
 	if (typeof game === 'string') return FreeCell.parse(game);

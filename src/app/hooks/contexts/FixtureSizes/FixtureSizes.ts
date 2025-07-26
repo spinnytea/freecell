@@ -4,7 +4,7 @@ import {
 	scale_height,
 } from '@/app/components/cards/constants';
 import { CursorType } from '@/app/components/DebugCursors';
-import { CardLocation, CardSequence, getRankForCompare, Rank } from '@/app/game/card/card';
+import { CardLocation, CardSequence, getRankForCompare, Rank } from '@/game/card/card';
 
 // IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)
 //  - so tableau can start at the top of the screen?

@@ -1,4 +1,5 @@
 import { TLZ } from '@/app/components/element/domUtils';
+import { calcTopLeftZ, FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import {
 	Card,
 	CardSequence,
@@ -6,13 +7,12 @@ import {
 	getRankForCompare,
 	shorthandCard,
 	Suit,
-} from '@/app/game/card/card';
+} from '@/game/card/card';
 import {
 	getCardsFromInvalid,
 	parsePreviousActionMoveShorthands,
 	PreviousAction,
-} from '@/app/game/move/history';
-import { calcTopLeftZ, FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+} from '@/game/move/history';
 
 export interface UpdateCardPositionsType {
 	shorthand: string;

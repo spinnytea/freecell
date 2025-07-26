@@ -4,7 +4,6 @@ import { gsap } from 'gsap/all';
 import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils, TLZ } from '@/app/components/element/domUtils';
-import { calcCardId, shorthandCard } from '@/app/game/card/card';
 import { animShuffleCards } from '@/app/hooks/animations/animeShuffleCards';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
@@ -12,6 +11,7 @@ import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCard
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
+import { calcCardId, shorthandCard } from '@/game/card/card';
 
 // IDEA (settings) setting for "reduced motion" - disable most animations
 // IDEA (animation) faster "select-to-peek" animation - when the cards are shifting to peek the selected card

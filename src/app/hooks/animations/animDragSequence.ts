@@ -9,8 +9,8 @@ import {
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import { domUtils, TLZ } from '@/app/components/element/domUtils';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { calcCardId, calcPilemarkerId } from '@/app/game/card/card';
 import { DropTarget } from '@/app/hooks/controls/useDragAndDropControls';
+import { calcCardId, calcPilemarkerId } from '@/game/card/card';
 
 /**
 	- TODO (animation) (drag-and-drop) if the cascade is too long, the last cards should overshoot and reverse

@@ -1,5 +1,5 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
-import { FreeCell } from '@/app/game/game';
+import { FreeCell } from '@/game/game';
 
 type setGameType = Dispatch<SetStateAction<FreeCell>>;
 type newGameType = () => FreeCell;

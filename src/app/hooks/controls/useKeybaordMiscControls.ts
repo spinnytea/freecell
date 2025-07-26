@@ -1,9 +1,9 @@
 import { useContext, useEffect } from 'react';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
-import { PREVIOUS_ACTION_TYPE_IS_START_OF_GAME } from '@/app/game/move/history';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
+import { PREVIOUS_ACTION_TYPE_IS_START_OF_GAME } from '@/game/move/history';
 
 /**
 	there are on-screen controls (e.g. button for undo, checkbox for debug)

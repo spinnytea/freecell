@@ -1,12 +1,12 @@
 import { MutableRefObject } from 'react';
 import classNames from 'classnames';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
-import { calcPilemarkerId, CardLocation, shorthandPosition } from '@/app/game/card/card';
 import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
+import { calcPilemarkerId, CardLocation, shorthandPosition } from '@/game/card/card';
 
 export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObject<string> }) {
 	const { cursor } = useGame();

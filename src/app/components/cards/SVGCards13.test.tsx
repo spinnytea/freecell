@@ -1,5 +1,5 @@
 import { units } from '@/app/components/cards/SVGCards13';
-import { RankList, SuitList } from '@/app/game/card/card';
+import { RankList, SuitList } from '@/game/card/card';
 
 describe('SVGCards13', () => {
 	test('getFilename', () => {

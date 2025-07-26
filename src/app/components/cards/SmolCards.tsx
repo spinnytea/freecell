@@ -9,7 +9,7 @@ import { clubs } from '@/app/components/cards/smol/clubs';
 import { diamonds } from '@/app/components/cards/smol/diamonds';
 import { hearts } from '@/app/components/cards/smol/hearts';
 import { spades } from '@/app/components/cards/smol/spades';
-import { isRed, Rank, Suit } from '@/app/game/card/card';
+import { isRed, Rank, Suit } from '@/game/card/card';
 
 const SYMBOLS: { [suit in Suit]: ReactElement } = {
 	clubs,

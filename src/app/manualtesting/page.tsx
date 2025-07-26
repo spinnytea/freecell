@@ -8,12 +8,12 @@ import Link from 'next/link';
 import styles_common from '@/app/common.module.css';
 import { CardImage } from '@/app/components/cards/CardImage';
 import { ControlSchemes } from '@/app/components/cards/constants';
-import { RankList, SuitList } from '@/app/game/card/card';
 import GameBoard, { GameBoardDisplayOptions } from '@/app/GameBoard';
 import styles_gameboard from '@/app/gameboard.module.css';
 import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
+import { RankList, SuitList } from '@/game/card/card';
 
 gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(Draggable);

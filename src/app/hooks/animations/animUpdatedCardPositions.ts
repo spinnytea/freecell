@@ -7,9 +7,9 @@ import {
 	TOTAL_DEFAULT_MOVEMENT_DURATION,
 } from '@/app/animation_constants';
 import { TLZ } from '@/app/components/element/domUtils';
-import { calcCardId } from '@/app/game/card/card';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';
 import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import { calcCardId } from '@/game/card/card';
 
 export function animUpdatedCardPositions({
 	timeline,
