@@ -1056,7 +1056,7 @@ export class FreeCell {
 		if (movesSeed) {
 			// print the last valid action, _not_ previousAction.text
 			// the previous action could be a cursor movement, or a canceled touch action (touch stop)
-			// REVIEW (history) (print) should we even print the last action?
+			// TODO (history) (print) remove the last action - not needed for save/reload
 			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 			if (!skipLastHist) str += '\n ' + this.history.at(-1);
 			str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
@@ -1086,21 +1086,23 @@ export class FreeCell {
 
 		by default, we do not print the history (complete set of previous actions); we only print the previous move to help confirm your actions
 
-		by default, we do not print the "available moves", that's important for good gameplay
-
 		XXX (techdebt) print is super messy, can we clean this up?
 		 - what if we just draw the board, and then precision-replace the HUD elements?
 		 - we only swap out whitespace, we know the location of everything
-		TODO (print) render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
-		XXX (techdebt) remove skipDeck
-		TODO (terminal) (print) dis/enable each "layer" individually; !/!! includeHistory is just defaults
+		IDEA (print) consider: `game.print({ debug: true });` includes available moves (¿and what else?)
+		TODO (print) `includeHistory` should include the cursor/selection, and `parse` should have an option to ignore it
+		 - includeHistory should be able to recover the _entire_ game state
+		 - if we want to ignore cursor/selection for a cleaner "pick-up" state, then it should be handled later
+		TODO (techdebt) (print) remove skipDeck
+		TODO (terminal) (print) split out each layer into it's own print function
 		 - home row (cells/foundation)
-		 - tableau?
+		 - tableau
 		 - deck (skipDeck, includeEmptyDeck)
 		 - history
-		 - cursor/selection/availableMove
-		 - colors
-		 - … okay, not all of those make sense
+		 - cursor/selection/availableMove (defined list of values?)
+
+		@example game.print(); // for gameplay
+		@example game.print({ includeHistory: true }); // for saving game, to reload entire state later
 	*/
 	print({
 		skipDeck = false,

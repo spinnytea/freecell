@@ -16,6 +16,7 @@ import { Rank, Suit } from '@/game/card/card';
 // TODO (theme) alternate card backs?
 // TODO (theme) deck w/ kings are lions?
 // TODO (theme) dark theme cards
+// TODO (theme) pottering cat playing cards / cattitude deck
 export function CardImage({
 	hidden = false,
 	rank,

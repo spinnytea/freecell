@@ -216,6 +216,11 @@ export function useDragAndDropControls(
 								});
 
 								// attempt the move (even when invalid)
+								// TODO (drag-and-drop) (gameplay) if move is invalid, attempt moveByShorthand
+								//  - not like "here", put it in a place we can test it
+								//  - maybe like "game.$dragDrop(overlapping)" or something
+								//    be sure to add "drag-start is noop / drag-cancel is clearSelection"
+								//    unless you write them specificalllllyyyyyyy
 								setGame(() =>
 									game
 										.setCursor(overlapping)
@@ -243,20 +248,19 @@ export function useDragAndDropControls(
 							// clean up drag state (mischief managed)
 							dragStateRef.current = undefined;
 
-							setGame((g) => {
-								const { top, left, zIndex } = calcTopLeftZ(
-									gameStateRef.current.fixtureSizes,
-									gameStateRef.current.location,
-									null
-								);
-								contextSafe(animDragSequenceClear)({
-									list: shorthands,
-									firstCardTLZ: { top, left, zIndex },
-									gameBoardIdRef,
-								});
-								// drag-cancel is "no selection"
-								return g.clearSelection();
+							const { top, left, zIndex } = calcTopLeftZ(
+								gameStateRef.current.fixtureSizes,
+								gameStateRef.current.location,
+								null
+							);
+							contextSafe(animDragSequenceClear)({
+								list: shorthands,
+								firstCardTLZ: { top, left, zIndex },
+								gameBoardIdRef,
 							});
+
+							// drag-cancel is "no selection"
+							setGame((g) => g.clearSelection());
 						}
 					},
 				});
