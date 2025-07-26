@@ -1069,11 +1069,11 @@ describe('game.parse', () => {
 				expect(g2.cursor).toEqual(cursor_location);
 				expect(g2.selection?.location).toEqual(selection_location);
 
-				const print = g2.print();
-				expect(print).toBe(FreeCell.parse(g2.print()).print());
+				const g2Print = g2.print();
+				expect(g2Print).toBe(FreeCell.parse(g2.print()).print());
 
 				// there is always 1 cursor
-				expect((print.match(/>/g) ?? []).length).toBe(1);
+				expect((g2Print.match(/>/g) ?? []).length).toBe(1);
 
 				// there is always 2 selection bars (in these cases, no squences), unless...
 				let selCount = 2;
@@ -1093,7 +1093,7 @@ describe('game.parse', () => {
 					s === '{ "fixture": "cell", "data": [3] }'
 				)
 					selCount = 1;
-				expect((print.match(/\|/g) ?? []).length).toBe(selCount);
+				expect((g2Print.match(/\|/g) ?? []).length).toBe(selCount);
 			});
 		});
 	});

@@ -11,7 +11,7 @@ describe('game.autoFoundation', () => {
 			${'rank+1'} | ${'>            3H 5S 5D 5C '}
 			${'rank'}   | ${'>            3H 4S 4D 4C '}
 		`('$limit', ({ limit, homeStr }: { limit: AutoFoundationLimit; homeStr: string }) => {
-			const print = FreeCell.parse(
+			const gamePrint = FreeCell.parse(
 				'' + //
 					'>            AH AS    AC \n' +
 					' KC KD 4H KS    AD       \n' +
@@ -30,7 +30,7 @@ describe('game.autoFoundation', () => {
 			)
 				.autoFoundationAll({ limit, anytime: true })
 				.print();
-			expect(print.split('\n')[0]).toBe(homeStr);
+			expect(gamePrint.split('\n')[0]).toBe(homeStr);
 		});
 	});
 
@@ -43,7 +43,7 @@ describe('game.autoFoundation', () => {
 			${'rank+1'} | ${'>         5S 2H    2D 2C '}
 			${'rank'}   | ${'>         5S AH    AD AC '}
 		`('$limit', ({ limit, homeStr }: { limit: AutoFoundationLimit; homeStr: string }) => {
-			const print = FreeCell.parse(
+			const gamePrint = FreeCell.parse(
 				'' + //
 					'>         5S       AD AC \n' +
 					' KC KD 4H 4S    AH       \n' +
@@ -62,7 +62,7 @@ describe('game.autoFoundation', () => {
 			)
 				.autoFoundationAll({ limit, anytime: true })
 				.print();
-			expect(print.split('\n')[0]).toBe(homeStr);
+			expect(gamePrint.split('\n')[0]).toBe(homeStr);
 		});
 
 		test('opp+1 4320, opp+2 4420', () => {

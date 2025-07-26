@@ -8,9 +8,9 @@ const LOCAL_STORAGE_KEY_PREV = 'freecell.game.archive';
 
 function loadFromLocalStorage(): FreeCell | null {
 	try {
-		const print = window.localStorage.getItem(LOCAL_STORAGE_KEY_CURR);
-		if (!print) return null;
-		return FreeCell.parse(print);
+		const gamePrintHist = window.localStorage.getItem(LOCAL_STORAGE_KEY_CURR);
+		if (!gamePrintHist) return null;
+		return FreeCell.parse(gamePrintHist);
 	} catch (e) {
 		return null;
 	}
@@ -18,8 +18,8 @@ function loadFromLocalStorage(): FreeCell | null {
 
 function saveToLocalStorage(game: FreeCell): void {
 	try {
-		const print = game.print({ includeHistory: true });
-		window.localStorage.setItem(LOCAL_STORAGE_KEY_CURR, print);
+		const gamePrintHist = game.print({ includeHistory: true });
+		window.localStorage.setItem(LOCAL_STORAGE_KEY_CURR, gamePrintHist);
 		if (game.win) {
 			// if we won the game, then save this completed game to another key
 			// this way we can recover the last one after we finish,
@@ -28,7 +28,7 @@ function saveToLocalStorage(game: FreeCell): void {
 			// REVIEW (settings) (techdebt) we can get this from a browser/laptop, how do we get it from, say, mobile?
 			//  - may need to make another endpoint or something
 			//  - /freecell/manualtesting -> /freecell/data
-			window.localStorage.setItem(LOCAL_STORAGE_KEY_PREV, print);
+			window.localStorage.setItem(LOCAL_STORAGE_KEY_PREV, gamePrintHist);
 		}
 	} catch (e) {
 		void e;
