@@ -235,7 +235,9 @@ export class FreeCell {
 			this.win = this.cards.every((card) => card.location.fixture === 'foundation');
 		} else {
 			if (cellCount < MIN_CELL_COUNT || cellCount > MAX_CELL_COUNT)
-				throw new Error(`Must have between 1 and 6 cells; requested "${cellCount.toString(10)}".`);
+				throw new Error(
+					`Must have between ${MIN_CELL_COUNT.toString(10)} and ${MAX_CELL_COUNT.toString(10)} cells; requested "${cellCount.toString(10)}".`
+				);
 			if (cascadeCount < NUMBER_OF_FOUNDATIONS)
 				throw new Error(
 					`Must have at least as many cascades as foundations (${NUMBER_OF_FOUNDATIONS.toString(10)}); requested "${cascadeCount.toString(10)}".`
@@ -1254,16 +1256,19 @@ export class FreeCell {
 
 		const getCard = ({ rank, suit }: CardSH) => {
 			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
-			// XXX (print) (joker) test with a joker, duplicate card
-			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`);
+			// XXX (print) (joker) test with a jokers available in game
+			if (!card) {
+				if (!cards.some((card) => card.rank === rank && card.suit === suit)) {
+					throw new Error(`cannot find card in game: ${rank} of ${suit}`);
+				}
+				throw new Error(`cannot find card in remaining: ${rank} of ${suit}`);
+			}
 			remaining.splice(remaining.indexOf(card), 1);
 			return card;
 		};
 
 		const nextLine = () => lines.pop()?.split('').reverse() ?? [];
 		const nextCard = (spaces: (string | undefined)[]) => {
-			// TODO (print) test invalid card rank
-			// TODO (print) test invalid card suit
 			if (line.length < 3) throw new Error('not enough tokens');
 			spaces.push(line.pop());
 			const r = line.pop();
@@ -1273,13 +1278,20 @@ export class FreeCell {
 			return getCard(rs);
 		};
 
-		// TODO (print) (techdebt) test if first line isn't present
 		line = nextLine();
 
 		// parse cells
-		const cellCount = (line.length - 1 - 3 * NUMBER_OF_FOUNDATIONS) / 3;
+		const cellCountPre = line.length - 1 - 3 * NUMBER_OF_FOUNDATIONS;
+		if (cellCountPre % 3 !== 0) {
+			throw new Error(
+				`Invalid cell line length (${line.length.toString(10)}); expected "1 + count ⨉ 3" -- "${line.reverse().join('')}"`
+			);
+		}
+		const cellCount = cellCountPre / 3;
 		if (cellCount < MIN_CELL_COUNT || cellCount > MAX_CELL_COUNT) {
-			throw new Error(`Must have between 1 and 4 cells; requested "${cellCount.toString(10)}".`);
+			throw new Error(
+				`Must have between ${MIN_CELL_COUNT.toString(10)} and ${MAX_CELL_COUNT.toString(10)} cells; requested "${cellCount.toString(10)}".`
+			);
 		}
 		for (let i = 0; i < cellCount; i++) {
 			const card = nextCard(home_spaces);
@@ -1308,16 +1320,24 @@ export class FreeCell {
 
 		// parse cascades
 		let row = 0;
-		// TODO (print) (techdebt) test if first line isn't present
 		line = nextLine();
-		const cascadeLineLength = line.length;
-		const cascadeCount = (cascadeLineLength - 1) / 3;
+		if (!line.length) {
+			throw new Error('no cascade in game string');
+		}
+		const cascadeCountPre = line.length - 1;
+		if (cascadeCountPre % 3 !== 0) {
+			throw new Error(
+				`Invalid cascade line length (${line.length.toString(10)}); expected "1 + count ⨉ 3" -- "${line.reverse().join('')}"`
+			);
+		}
+		const cascadeCount = cascadeCountPre / 3;
 		if (cascadeCount < NUMBER_OF_FOUNDATIONS) {
 			throw new Error(
 				`Must have at least as many cascades as foundations (${NUMBER_OF_FOUNDATIONS.toString(10)}); requested "${cascadeCount.toString(10)}".`
 			);
 		}
 
+		const cascadeLineLength = line.length;
 		while (line.length === cascadeLineLength && line[0] !== ':') {
 			for (let i = 0; i < cascadeCount; i++) {
 				const card = nextCard(tableau_spaces);
