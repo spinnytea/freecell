@@ -249,7 +249,7 @@ describe('game.moveByShorthand', () => {
 				' 38 '
 		);
 
-		expect(worldOne.printHistory(true)).toBe(
+		expect(worldOne.__printHistory(true)).toBe(
 			'\n' + //
 				':h shuffle32 28881\n' +
 				' 67 8a 78 13 76 7b 7c 71 \n' +
@@ -258,8 +258,8 @@ describe('game.moveByShorthand', () => {
 				' 84 1c 71 16 1d 14 d1 37 \n' +
 				' 38 '
 		);
-		expect(worldOne.printHistory(true)).toBe(worldTwo.printHistory(true));
-		expect(worldOne.printHistory(true)).toBe(worldThree.printHistory(true));
+		expect(worldOne.__printHistory(true)).toBe(worldTwo.__printHistory(true));
+		expect(worldOne.__printHistory(true)).toBe(worldThree.__printHistory(true));
 		expect(worldOne.print()).toBe(worldTwo.print());
 		expect(worldOne.print()).not.toBe(worldThree.print());
 	});

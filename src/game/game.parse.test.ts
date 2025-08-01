@@ -1120,4 +1120,12 @@ describe('game.parse', () => {
 			);
 		});
 	});
+
+	describe('ignore availableMoves', () => {
+		test.todo('valid moves');
+
+		test.todo('invalid moves');
+
+		test.todo('just some random asterisks');
+	});
 });

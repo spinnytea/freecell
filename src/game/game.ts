@@ -1017,11 +1017,121 @@ export class FreeCell {
 		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
 	}
 
+	/** shorthand to spot check what's in the foundation */
 	printFoundation(): string {
 		return this.foundations.map((card) => shorthandCard(card)).join(' ');
 	}
 
-	printDeck(cursor = this.cursor, selection = this.selection): string {
+	/**
+		print the home row of the game board
+
+		split out logic from {@link FreeCell.print}
+
+		XXX (techdebt) optimize
+	*/
+	__printHome(cursor = this.cursor, selection = this.selection): string {
+		let str = '';
+		if (
+			cursor.fixture === 'cell' ||
+			selection?.location.fixture === 'cell' ||
+			cursor.fixture === 'foundation' ||
+			selection?.location.fixture === 'foundation'
+		) {
+			// cells
+			// prettier-ignore
+			str += this.cells
+				.map((card, idx) => `${getPrintSeparator({ fixture: 'cell', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
+				.join('');
+
+			// collapsed col between
+			if (isLocationEqual(cursor, { fixture: 'foundation', data: [0] })) {
+				str += '>';
+			} else if (
+				selection &&
+				isLocationEqual(selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
+			) {
+				str += '|';
+			} else if (
+				selection &&
+				isLocationEqual(selection.location, { fixture: 'foundation', data: [0] })
+			) {
+				str += '|';
+			} else {
+				str += ' ';
+			}
+
+			// foundation (minus first col)
+			// prettier-ignore
+			str += this.foundations
+				.map((card, idx) => `${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
+				.join('');
+
+			// last col
+			if (
+				selection &&
+				isLocationEqual(selection.location, {
+					fixture: 'foundation',
+					data: [this.foundations.length - 1],
+				})
+			) {
+				str += '|';
+			} else {
+				str += ' ';
+			}
+		} else {
+			// if no cursor/selection in home row
+			str += ' ' + this.cells.map((card) => shorthandCard(card)).join(' ');
+			str += ' ' + this.foundations.map((card) => shorthandCard(card)).join(' ');
+			str += ' ';
+		}
+		return str;
+	}
+
+	/**
+		print the tableau of the game board
+
+		split out logic from {@link FreeCell.print}
+
+		XXX (techdebt) optimize
+	*/
+	__printTableau(cursor = this.cursor, selection = this.selection): string {
+		let str = '';
+		const max = Math.max(...this.tableau.map((cascade) => cascade.length));
+		for (let i = 0; i === 0 || i < max; i++) {
+			if (cursor.fixture === 'cascade' || selection?.location.fixture === 'cascade') {
+				str +=
+					'\n' +
+					this.tableau
+						.map((cascade, idx) => {
+							const c = getPrintSeparator(
+								{ fixture: 'cascade', data: [idx, i] },
+								cursor,
+								selection
+							);
+							return c + shorthandCard(cascade[i]);
+						})
+						.join('') +
+					getPrintSeparator(
+						{ fixture: 'cascade', data: [this.tableau.length, i] },
+						null,
+						selection
+					);
+			} else {
+				// if no cursor/selection in this row
+				str += '\n ' + this.tableau.map((cascade) => shorthandCard(cascade[i])).join(' ') + ' ';
+			}
+		}
+		return str;
+	}
+
+	/**
+		print the deck (row) of the game
+
+		split out logic from {@link FreeCell.print}
+
+		XXX (techdebt) optimize
+	*/
+	__printDeck(cursor = this.cursor, selection = this.selection): string {
 		if (this.deck.length) {
 			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
 				// prettier-ignore
@@ -1047,12 +1157,17 @@ export class FreeCell {
 	}
 
 	/**
-		BUG (history) (shorthandMove) standard move notation can only be used when `limit = 'opp+1'` for all moves
+		print the history (block) of the game
+
+		split out logic from {@link FreeCell.print}
+
+		- BUG (history) (shorthandMove) standard move notation can only be used when `limit = 'opp+1'` for all moves
 			- e.g. if (movesSeed && isStandardRuleset)
-		REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
+		- REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
 			- e.g. if (movesSeed && isStandardGameplay)
+		- XXX (techdebt) optimize
 	*/
-	printHistory(skipLastHist = false): string {
+	__printHistory(skipLastHist = false): string {
 		let str = '';
 		const movesSeed = parseMovesFromHistory(this.history);
 		if (movesSeed) {
@@ -1109,102 +1224,26 @@ export class FreeCell {
 	print({
 		skipDeck = false,
 		includeHistory = false,
-	}: { skipDeck?: boolean; includeHistory?: boolean } = {}): string {
+		verbose = false,
+	}: { skipDeck?: boolean; includeHistory?: boolean; verbose?: boolean } = {}): string {
 		const cursor: CardLocation = !includeHistory
 			? this.cursor
 			: { fixture: 'cascade', data: [-1, -1] };
 		const selection = !includeHistory ? this.selection : null;
 
-		let str = '';
-		if (
-			cursor.fixture === 'cell' ||
-			selection?.location.fixture === 'cell' ||
-			cursor.fixture === 'foundation' ||
-			selection?.location.fixture === 'foundation'
-		) {
-			// cells
-			// prettier-ignore
-			str += this.cells
-				.map((card, idx) => `${getPrintSeparator({ fixture: 'cell', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-				.join('');
+		let str =
+			this.__printHome(cursor, selection) + //
+			this.__printTableau(cursor, selection);
 
-			// collapsed col between
-			if (isLocationEqual(cursor, { fixture: 'foundation', data: [0] })) {
-				str += '>';
-			} else if (
-				selection &&
-				isLocationEqual(selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
-			) {
-				str += '|';
-			} else if (
-				selection &&
-				isLocationEqual(selection.location, { fixture: 'foundation', data: [0] })
-			) {
-				str += '|';
-			} else {
-				str += ' ';
-			}
-
-			// foundation (minus first col)
-			// prettier-ignore
-			str += this.foundations
-				.map((card, idx) => `${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-				.join('');
-
-			// last col
-			if (
-				selection &&
-				isLocationEqual(selection.location, {
-					fixture: 'foundation',
-					data: [this.foundations.length - 1],
-				})
-			) {
-				str += '|';
-			} else {
-				str += ' ';
-			}
-		} else {
-			// if no cursor/selection in home row
-			str += ' ' + this.cells.map((card) => shorthandCard(card)).join(' ');
-			str += ' ' + this.foundations.map((card) => shorthandCard(card)).join(' ');
-			str += ' ';
+		if ((this.deck.length || cursor.fixture === 'deck' || verbose) && !skipDeck) {
+			const printDeck = this.__printDeck(cursor, selection);
+			str += `\n:d${printDeck}`;
 		}
 
-		const max = Math.max(...this.tableau.map((cascade) => cascade.length));
-		for (let i = 0; i === 0 || i < max; i++) {
-			if (cursor.fixture === 'cascade' || selection?.location.fixture === 'cascade') {
-				str +=
-					'\n' +
-					this.tableau
-						.map((cascade, idx) => {
-							const c = getPrintSeparator(
-								{ fixture: 'cascade', data: [idx, i] },
-								cursor,
-								selection
-							);
-							return c + shorthandCard(cascade[i]);
-						})
-						.join('') +
-					getPrintSeparator(
-						{ fixture: 'cascade', data: [this.tableau.length, i] },
-						null,
-						selection
-					);
-			} else {
-				// if no cursor/selection in this row
-				str += '\n ' + this.tableau.map((cascade) => shorthandCard(cascade[i])).join(' ') + ' ';
-			}
-		}
-
-		if ((this.deck.length || cursor.fixture === 'deck') && !skipDeck) {
-			const printDeck = this.printDeck(cursor, selection);
-			if (printDeck) {
-				str += `\n:d${printDeck}`;
-			}
-		}
-
+		// REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
+		// XXX (print) test narrow game win message
 		if (this.win) {
-			const msg = this.tableau.length > 5 ? 'Y O U   W I N !' : 'YOU WIN !';
+			const msg = this.tableau.length > 6 ? 'Y O U   W I N !' : 'YOU WIN !';
 			const lineLength = this.tableau.length * 3 + 1;
 			const paddingLength = (lineLength - msg.length - 2) / 2;
 			const spaces = '                               '; // enough spaces for 10 cascadeCount
@@ -1214,7 +1253,7 @@ export class FreeCell {
 		}
 
 		if (includeHistory) {
-			str += this.printHistory();
+			str += this.__printHistory();
 		} else {
 			str += '\n ' + this.previousAction.text;
 		}
