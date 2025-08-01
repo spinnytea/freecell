@@ -1058,7 +1058,7 @@ export class FreeCell {
 		if (movesSeed) {
 			// print the last valid action, _not_ previousAction.text
 			// the previous action could be a cursor movement, or a canceled touch action (touch stop)
-			// TODO (history) (print) remove the last action - not needed for save/reload
+			// FIXME (history) (print) remove the last action - not needed for save/reload
 			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 			if (!skipLastHist) str += '\n ' + this.history.at(-1);
 			str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
@@ -1095,8 +1095,8 @@ export class FreeCell {
 		TODO (print) `includeHistory` should include the cursor/selection, and `parse` should have an option to ignore it
 		 - includeHistory should be able to recover the _entire_ game state
 		 - if we want to ignore cursor/selection for a cleaner "pick-up" state, then it should be handled later
-		TODO (techdebt) (print) remove skipDeck
-		TODO (terminal) (print) split out each layer into it's own print function
+		FIXME (techdebt) (print) remove skipDeck
+		FIXME (terminal) (print) split out each layer into it's own print function
 		 - home row (cells/foundation)
 		 - tableau
 		 - deck (skipDeck, includeEmptyDeck)
@@ -1346,7 +1346,7 @@ export class FreeCell {
 				}
 			}
 			row++;
-			// TODO (print) (techdebt) test if line isn't present
+			// FIXME (print) (techdebt) test if line isn't present
 			tableau_spaces.push(line.pop());
 			line = nextLine();
 		}

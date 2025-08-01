@@ -1,4 +1,4 @@
-// TODO (techdebt) (print) confirm features
+// FIXME (techdebt) (print) confirm features
 describe('game.print', () => {
 	describe('compare game state', () => {
 		describe('empty deck', () => {
