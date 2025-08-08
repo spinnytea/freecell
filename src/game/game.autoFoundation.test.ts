@@ -190,7 +190,8 @@ describe('game.autoFoundation', () => {
 			expect(
 				FreeCell.parse(before)
 					.autoFoundationAll({ limit: 'none', anytime: true })
-					.print({ skipDeck: true })
+					.print()
+					.replace(/\n:d[^\n]+\n/, '\n') // clip the deck
 			).toBe(after);
 		});
 

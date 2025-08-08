@@ -1173,7 +1173,7 @@ export class FreeCell {
 		if (movesSeed) {
 			// print the last valid action, _not_ previousAction.text
 			// the previous action could be a cursor movement, or a canceled touch action (touch stop)
-			// FIXME (history) (print) remove the last action - not needed for save/reload
+			// TODO (history) (print) remove the last action - not needed for save/reload
 			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 			if (!skipLastHist) str += '\n ' + this.history.at(-1);
 			str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
@@ -1210,22 +1210,14 @@ export class FreeCell {
 		TODO (print) `includeHistory` should include the cursor/selection, and `parse` should have an option to ignore it
 		 - includeHistory should be able to recover the _entire_ game state
 		 - if we want to ignore cursor/selection for a cleaner "pick-up" state, then it should be handled later
-		FIXME (techdebt) (print) remove skipDeck
-		FIXME (terminal) (print) split out each layer into it's own print function
-		 - home row (cells/foundation)
-		 - tableau
-		 - deck (skipDeck, includeEmptyDeck)
-		 - history
-		 - cursor/selection/availableMove (defined list of values?)
 
 		@example game.print(); // for gameplay
 		@example game.print({ includeHistory: true }); // for saving game, to reload entire state later
 	*/
 	print({
-		skipDeck = false,
 		includeHistory = false,
 		verbose = false,
-	}: { skipDeck?: boolean; includeHistory?: boolean; verbose?: boolean } = {}): string {
+	}: { includeHistory?: boolean; verbose?: boolean } = {}): string {
 		const cursor: CardLocation = !includeHistory
 			? this.cursor
 			: { fixture: 'cascade', data: [-1, -1] };
@@ -1235,13 +1227,12 @@ export class FreeCell {
 			this.__printHome(cursor, selection) + //
 			this.__printTableau(cursor, selection);
 
-		if ((this.deck.length || cursor.fixture === 'deck' || verbose) && !skipDeck) {
+		if (this.deck.length || cursor.fixture === 'deck' || verbose) {
 			const printDeck = this.__printDeck(cursor, selection);
 			str += `\n:d${printDeck}`;
 		}
 
 		// REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
-		// XXX (print) test narrow game win message
 		if (this.win) {
 			const msg = this.tableau.length > 6 ? 'Y O U   W I N !' : 'YOU WIN !';
 			const lineLength = this.tableau.length * 3 + 1;
@@ -1287,7 +1278,9 @@ export class FreeCell {
 			throw new Error('must have no more than 1 cursor');
 		}
 
+		/** all of the lines in print to process */
 		const lines = print.split('\n').reverse();
+		/** the line we are currently processing */
 		let line: string[];
 		const home_spaces: (string | undefined)[] = [];
 		const tableau_spaces: (string | undefined)[] = [];
@@ -1323,7 +1316,7 @@ export class FreeCell {
 		const cellCountPre = line.length - 1 - 3 * NUMBER_OF_FOUNDATIONS;
 		if (cellCountPre % 3 !== 0) {
 			throw new Error(
-				`Invalid cell line length (${line.length.toString(10)}); expected "1 + count ⨉ 3" -- "${line.reverse().join('')}"`
+				`Invalid cell line length (${line.length.toString(10)}); expected "1 + count ⨉ 3" -- "${line.slice(0).reverse().join('')}"`
 			);
 		}
 		const cellCount = cellCountPre / 3;
@@ -1366,7 +1359,7 @@ export class FreeCell {
 		const cascadeCountPre = line.length - 1;
 		if (cascadeCountPre % 3 !== 0) {
 			throw new Error(
-				`Invalid cascade line length (${line.length.toString(10)}); expected "1 + count ⨉ 3" -- "${line.reverse().join('')}"`
+				`Invalid cascade line length (${line.length.toString(10)}); expected "1 + count ⨉ 3" -- "${line.slice(0).reverse().join('')}"`
 			);
 		}
 		const cascadeCount = cascadeCountPre / 3;
@@ -1385,7 +1378,6 @@ export class FreeCell {
 				}
 			}
 			row++;
-			// FIXME (print) (techdebt) test if line isn't present
 			tableau_spaces.push(line.pop());
 			line = nextLine();
 		}
@@ -1429,7 +1421,7 @@ export class FreeCell {
 		});
 
 		line.pop();
-		const actionText = line.reverse().join('') || 'init';
+		const actionText = line.slice(0).reverse().join('') || 'init';
 
 		// attempt to parse the history
 		const history: string[] = [];
@@ -1514,7 +1506,7 @@ export class FreeCell {
 		} else {
 			Array.prototype.push.apply(
 				history,
-				lines.map((line) => line.trim())
+				lines.map((l) => l.trim())
 			);
 			history.push(popped.trim());
 			history.push(actionText);
@@ -1630,10 +1622,29 @@ export class FreeCell {
 			);
 		}
 
+		/*
 		// XXX (techdebt) re-print the our game, confirm it matches the input
-		//  - seems to be mostly `skipDeck` (print) and clipped "you win" messages (hand-jammed)
-		// const reprint = game.print({ includeHistory: parseHistory });
-		// if (reprint !== print) throw new Error(`whoops!\n${print}\n${reprint}`);
+		if (process.env.NODE_ENV === 'test') {
+			// XXX (techdebt) includeHistory could also be the "invalid history so just print what we have"
+			//  - this does _not_ start with :h, but is the history, just a bunch of lines of it
+			const reprint = game.print({ includeHistory: print.includes(':h') });
+			if (reprint !== print) {
+				// XXX (techdebt) sometimes unit tests don't include the "you win" message in the setup
+				if (!reprint.includes('Y O U   W I N !') && !reprint.includes('YOU WIN !')) {
+					// print with non-empty deck doesn't match (weird game setup for testing)
+					// some games have invalid history (on purpose or otherwise)
+					if (!reprint.includes(':d') && !reprint.includes('init with invalid history')) {
+						// cursor is in the wrong place sometimes
+						const rpc = reprint.replace('>', ' ');
+						const pc = print.replace('>', ' ');
+						if (rpc !== pc) {
+							throw new Error(`whoops!\n${print}\n${reprint}`);
+						}
+					}
+				}
+			}
+		}
+		// */
 		return game;
 	}
 }

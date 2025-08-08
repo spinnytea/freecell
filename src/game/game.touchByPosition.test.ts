@@ -439,7 +439,8 @@ describe('game.touchByPosition', () => {
 							' 4S 9D KH 7S KD JD 4H 8S \n' +
 							' 3S 5H 5D 4D 8C 3D TD 2D \n' +
 							' 4C 7H AS 6S 7D 9S KC 6D \n' +
-							' 9C 6C JH                '
+							' 9C 6C JH                \n' +
+							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [0] });
 					game = game.touchByPosition('h');
@@ -459,7 +460,8 @@ describe('game.touchByPosition', () => {
 							' 4S 9D KH 7S KD JD 4H 8S \n' +
 							' 3S 5H 5D 4D 8C 3D TD 2D \n' +
 							' 4C 7H AS 6S 7D 9S KC 6D \n' +
-							' 9C 6C JH                '
+							' 9C 6C JH                \n' +
+							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [1] });
 					game = game.touchByPosition('h');
@@ -479,7 +481,8 @@ describe('game.touchByPosition', () => {
 							' 4S 9D KH 7S KD JD 4H 8S \n' +
 							' 3S 5H 5D 4D 8C 3D TD 2D \n' +
 							' 4C 7H AS 6S 7D 9S KC 6D \n' +
-							' 9C 6C JH                '
+							' 9C 6C JH                \n' +
+							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [2] });
 					game = game.touchByPosition('h');
@@ -499,7 +502,8 @@ describe('game.touchByPosition', () => {
 							' 4S 9D KH 7S KD JD 4H 8S \n' +
 							' 3S 5H 5D 4D 8C 3D TD 2D \n' +
 							' 4C 7H AS 6S 7D 9S KC 6D \n' +
-							' 9C 6C JH                '
+							' 9C 6C JH                \n' +
+							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [3] });
 					game = game.touchByPosition('h');
@@ -520,7 +524,8 @@ describe('game.touchByPosition', () => {
 							' 4S TS QD KS 8D 8H TC 8S \n' +
 							' 3S 9D KH 7S KD JD 4H 2D \n' +
 							' 4C 5H 5D 4D 8C 3D TD 6D \n' +
-							' 9C 7H JH 6S 7D 9S KC 6C '
+							' 9C 7H JH 6S 7D 9S KC 6C \n' +
+							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [0] });
 					game = game.touchByPosition('h');
@@ -539,7 +544,8 @@ describe('game.touchByPosition', () => {
 							' 4S TS QD KS 8D 8H TC 8S \n' +
 							' 3S 9D KH 7S KD JD 4H 2D \n' +
 							' 4C 5H 5D 4D 8C 3D TD 6D \n' +
-							' 9C 7H JH 6S 7D 9S KC 6C '
+							' 9C 7H JH 6S 7D 9S KC 6C \n' +
+							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [1] });
 					game = game.touchByPosition('h');
@@ -558,7 +564,8 @@ describe('game.touchByPosition', () => {
 							' 4S TS QD KS 8D 8H TC 8S \n' +
 							' 3S 9D KH 7S KD JD 4H 2D \n' +
 							' 4C 5H 5D 4D 8C 3D TD 6D \n' +
-							' 9C 7H JH 6S 7D 9S KC 6C '
+							' 9C 7H JH 6S 7D 9S KC 6C \n' +
+							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [2] });
 					game = game.touchByPosition('h');
@@ -577,7 +584,8 @@ describe('game.touchByPosition', () => {
 							' 4S TS QD KS 8D 8H TC 8S \n' +
 							' 3S 9D KH 7S KD JD 4H 2D \n' +
 							' 4C 5H 5D 4D 8C 3D TD 6D \n' +
-							' 9C 7H JH 6S 7D 9S KC 6C '
+							' 9C 7H JH 6S 7D 9S KC 6C \n' +
+							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [3] });
 					game = game.touchByPosition('h');
