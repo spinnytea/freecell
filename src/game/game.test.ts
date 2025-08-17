@@ -496,7 +496,7 @@ describe('game', () => {
 						game = game.dealAll({ demo: true, keepDeck: true });
 						expect(game.cursor).toEqual({ fixture: 'deck', data: [endD0] });
 						expect(game.deck.length).toBe(8);
-						expect(game.printDeck()).toBe(printDeck);
+						expect(game.__printDeck()).toBe(printDeck);
 					}
 				);
 			});
@@ -531,7 +531,7 @@ describe('game', () => {
 		});
 
 		test('second (hand-crafted)', () => {
-			const print =
+			const gamePrint =
 				'>            KD AC       \n' +
 				' 2C 3C 4C 5C 6C 7C 8C    \n' +
 				' KH                      \n' +
@@ -540,8 +540,8 @@ describe('game', () => {
 				' 5S                      \n' +
 				' 4H                      \n' +
 				' 2S                      \n';
-			expect(FreeCell.parse(print + ' hand-jammed').print()).toBe(
-				print +
+			expect(FreeCell.parse(gamePrint + ' hand-jammed').print()).toBe(
+				gamePrint +
 					':d KS KC QH QC JS JC TS TH TC 9S 9H 9C 8S 8H 7S 7H 6S 6H 5H 4S 3S 3H 2H AS AH \n' +
 					' hand-jammed'
 			);
@@ -586,22 +586,31 @@ describe('game', () => {
 			});
 
 			test.each`
-				cascadeCount | emptyLine
-				${4}         | ${'             '}
-				${5}         | ${'                '}
-				${6}         | ${'                   '}
-				${7}         | ${'                      '}
-				${8}         | ${'                         '}
-				${9}         | ${'                            '}
-				${10}        | ${'                               '}
+				cascadeCount | emptyLine                            | winLine
+				${4}         | ${'             '}                   | ${': YOU WIN ! :'}
+				${5}         | ${'                '}                | ${':  YOU WIN !   :'}
+				${6}         | ${'                   '}             | ${':    YOU WIN !    :'}
+				${7}         | ${'                      '}          | ${':  Y O U   W I N !   :'}
+				${8}         | ${'                         '}       | ${':    Y O U   W I N !    :'}
+				${9}         | ${'                            '}    | ${':     Y O U   W I N !      :'}
+				${10}        | ${'                               '} | ${':       Y O U   W I N !       :'}
 			`(
 				'$cascadeCount cascades',
-				({ cascadeCount, emptyLine }: { cascadeCount: number; emptyLine: string }) => {
+				({
+					cascadeCount,
+					emptyLine,
+					winLine,
+				}: {
+					cascadeCount: number;
+					emptyLine: string;
+					winLine: string;
+				}) => {
 					expect(emptyLine.length).toBe(cascadeCount * 3 + 1);
 					const game = FreeCell.parse(`>            KC KD KH KS \n${emptyLine}\n hand-jammed`);
 					expect(game.tableau.length).toBe(cascadeCount);
 					expect(game.print().replaceAll(' ', '·')).toMatchSnapshot();
 					expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+					expect(game.print().split('\n')[2]).toBe(winLine);
 				}
 			);
 		});

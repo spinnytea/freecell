@@ -1774,7 +1774,7 @@ exports[`game parse win state 5 cascades 1`] = `
 exports[`game parse win state 6 cascades 1`] = `
 ">············KC·KD·KH·KS·
 ···················
-:·Y·O·U···W·I·N·!·:
+:····YOU·WIN·!····:
 ···················
 ·hand-jammed"
 `;

@@ -4,10 +4,6 @@ import { FreeCell } from '@/game/game';
 import { PREVIOUS_ACTION_TYPE_IS_START_OF_GAME } from '@/game/move/history';
 
 describe('game.parse', () => {
-	test('empty string', () => {
-		expect(() => FreeCell.parse('')).toThrow('No game string provided.');
-	});
-
 	test('init', () => {
 		const g = new FreeCell();
 		const gamePrint = g.print();
@@ -52,6 +48,125 @@ describe('game.parse', () => {
 		expect(game.print({ includeHistory: true })).toEqual(gamePrintHist);
 		expect(gameHist.print()).toEqual(gamePrint);
 		expect(gameHist.print({ includeHistory: true })).toEqual(gamePrintHist);
+	});
+
+	describe('edging', () => {
+		test('empty string', () => {
+			expect(() => FreeCell.parse('')).toThrow('No game string provided.');
+		});
+
+		describe('home', () => {
+			test('cell length', () => {
+				expect(() => FreeCell.parse('ab')).toThrow(
+					'Invalid cell line length (2); expected "1 + count ⨉ 3" -- "ab"'
+				);
+			});
+
+			test('too few cells', () => {
+				// takes foundations first
+				expect(() => FreeCell.parse(' ')).toThrow(
+					'Must have between 1 and 6 cells; requested "-4".'
+				);
+				// 4 foundations, 0 cells
+				expect(() => FreeCell.parse('             ')).toThrow(
+					'Must have between 1 and 6 cells; requested "0".'
+				);
+			});
+
+			test('too many cells', () => {
+				expect(() => FreeCell.parse('                                  \n')).toThrow(
+					'Must have between 1 and 6 cells; requested "7".'
+				);
+			});
+		});
+
+		describe('cascade', () => {
+			test('missing', () => {
+				expect(() => FreeCell.parse('                \n')).toThrow('no cascade in game string');
+			});
+
+			test('length', () => {
+				expect(() => FreeCell.parse('                \n abc ')).toThrow(
+					'Invalid cascade line length (5); expected "1 + count ⨉ 3" -- " abc "'
+				);
+			});
+
+			test('count', () => {
+				expect(() => FreeCell.parse('                \n 1_ 2_ ')).toThrow(
+					'Must have at least as many cascades as foundations (4); requested "2".'
+				);
+			});
+		});
+
+		describe('bad cards', () => {
+			test('invalid rank', () => {
+				expect(() =>
+					FreeCell.parse(
+						'' + //
+							'         >   bC KS KH KD \n' +
+							'                         \n' +
+							':    Y O U   W I N !    :\n' +
+							'                         \n' +
+							' cursro right'
+					)
+				).toThrow('invalid rank shorthand: "b"');
+			});
+
+			test('invalid suit', () => {
+				expect(() =>
+					FreeCell.parse(
+						'' + //
+							'         >   Kz KS KH KD \n' +
+							'                         \n' +
+							':    Y O U   W I N !    :\n' +
+							'                         \n' +
+							' cursro right'
+					)
+				).toThrow('invalid suit shorthand: "z"');
+			});
+
+			test('no remaining', () => {
+				expect(() =>
+					FreeCell.parse(
+						'' + //
+							'         >KC KC KS KH KD \n' +
+							'                         \n' +
+							':    Y O U   W I N !    :\n' +
+							'                         \n' +
+							' cursro right'
+					)
+				).toThrow('cannot find card in remaining: king of clubs');
+			});
+
+			test('card not present', () => {
+				expect(() =>
+					FreeCell.parse(
+						'' + //
+							'         >WC KC KS KH KD \n' +
+							'                         \n' +
+							':    Y O U   W I N !    :\n' +
+							'                         \n' +
+							' cursro right'
+					)
+				).toThrow('cannot find card in game: joker of clubs');
+			});
+		});
+
+		describe('history', () => {
+			test('unsupported shuffle', () => {
+				expect(() =>
+					FreeCell.parse(
+						'' + //
+							'         >   KC KS KH KD \n' +
+							'                         \n' +
+							':    Y O U   W I N !    :\n' +
+							'                         \n' +
+							' cursro right\n' +
+							':h banana'
+					)
+				).toThrow('unsupported shuffle');
+			});
+		});
 	});
 
 	describe('history shorthand', () => {
@@ -954,11 +1069,11 @@ describe('game.parse', () => {
 				expect(g2.cursor).toEqual(cursor_location);
 				expect(g2.selection?.location).toEqual(selection_location);
 
-				const print = g2.print();
-				expect(print).toBe(FreeCell.parse(g2.print()).print());
+				const g2Print = g2.print();
+				expect(g2Print).toBe(FreeCell.parse(g2.print()).print());
 
 				// there is always 1 cursor
-				expect((print.match(/>/g) ?? []).length).toBe(1);
+				expect((g2Print.match(/>/g) ?? []).length).toBe(1);
 
 				// there is always 2 selection bars (in these cases, no squences), unless...
 				let selCount = 2;
@@ -978,7 +1093,7 @@ describe('game.parse', () => {
 					s === '{ "fixture": "cell", "data": [3] }'
 				)
 					selCount = 1;
-				expect((print.match(/\|/g) ?? []).length).toBe(selCount);
+				expect((g2Print.match(/\|/g) ?? []).length).toBe(selCount);
 			});
 		});
 	});
@@ -1004,5 +1119,13 @@ describe('game.parse', () => {
 					' move 42 JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)'
 			);
 		});
+	});
+
+	describe('ignore availableMoves', () => {
+		test.todo('valid moves');
+
+		test.todo('invalid moves');
+
+		test.todo('just some random asterisks');
 	});
 });

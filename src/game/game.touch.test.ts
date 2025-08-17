@@ -745,7 +745,7 @@ describe('game.touch', () => {
 				game = FreeCell.parse(
 					'' + //
 						'>KS          JC JD JH QS \n' +
-						' KC KD KH    QC QD QH   \n' +
+						' KC KD KH    QC QD QH    \n' +
 						' hand-jammed'
 				)
 					.touch()

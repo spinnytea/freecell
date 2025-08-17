@@ -235,7 +235,9 @@ export class FreeCell {
 			this.win = this.cards.every((card) => card.location.fixture === 'foundation');
 		} else {
 			if (cellCount < MIN_CELL_COUNT || cellCount > MAX_CELL_COUNT)
-				throw new Error(`Must have between 1 and 6 cells; requested "${cellCount.toString(10)}".`);
+				throw new Error(
+					`Must have between ${MIN_CELL_COUNT.toString(10)} and ${MAX_CELL_COUNT.toString(10)} cells; requested "${cellCount.toString(10)}".`
+				);
 			if (cascadeCount < NUMBER_OF_FOUNDATIONS)
 				throw new Error(
 					`Must have at least as many cascades as foundations (${NUMBER_OF_FOUNDATIONS.toString(10)}); requested "${cascadeCount.toString(10)}".`
@@ -1015,104 +1017,19 @@ export class FreeCell {
 		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
 	}
 
+	/** shorthand to spot check what's in the foundation */
 	printFoundation(): string {
 		return this.foundations.map((card) => shorthandCard(card)).join(' ');
 	}
 
-	printDeck(cursor = this.cursor, selection = this.selection): string {
-		if (this.deck.length) {
-			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
-				// prettier-ignore
-				const deckStr = this.deck
-					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-					.reverse()
-					.join('');
-				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
-				return `${deckStr}${lastCol}`;
-			} else {
-				// if no cursor/selection in deck
-				const deckStr = this.deck
-					.map((card) => shorthandCard(card))
-					.reverse()
-					.join(' ');
-				return ` ${deckStr} `;
-			}
-		} else if (cursor.fixture === 'deck') {
-			return `>   `;
-		} else {
-			return '';
-		}
-	}
-
 	/**
-		BUG (history) (shorthandMove) standard move notation can only be used when `limit = 'opp+1'` for all moves
-			- e.g. if (movesSeed && isStandardRuleset)
-		REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
-			- e.g. if (movesSeed && isStandardGameplay)
+		print the home row of the game board
+
+		split out logic from {@link FreeCell.print}
+
+		XXX (techdebt) optimize
 	*/
-	printHistory(skipLastHist = false): string {
-		let str = '';
-		const movesSeed = parseMovesFromHistory(this.history);
-		if (movesSeed) {
-			// print the last valid action, _not_ previousAction.text
-			// the previous action could be a cursor movement, or a canceled touch action (touch stop)
-			// TODO (history) (print) remove the last action - not needed for save/reload
-			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-			if (!skipLastHist) str += '\n ' + this.history.at(-1);
-			str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
-			while (movesSeed.moves.length) {
-				str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
-			}
-		} else {
-			// if we don't know where we started or shorthand is otherwise invalid,
-			// we can still print out all the actions we do know about
-			this.history
-				.slice(0)
-				.reverse()
-				.forEach((actionText) => {
-					str += '\n ' + actionText;
-				});
-		}
-		return str;
-	}
-
-	/**
-		print the game board
-		- all card locations
-		- current cursor (keyboard)
-		- current selection
-
-		you can use this to play the game from a text-only interface (e.g. console) if you like
-
-		by default, we do not print the history (complete set of previous actions); we only print the previous move to help confirm your actions
-
-		XXX (techdebt) print is super messy, can we clean this up?
-		 - what if we just draw the board, and then precision-replace the HUD elements?
-		 - we only swap out whitespace, we know the location of everything
-		IDEA (print) consider: `game.print({ debug: true });` includes available moves (¿and what else?)
-		TODO (print) `includeHistory` should include the cursor/selection, and `parse` should have an option to ignore it
-		 - includeHistory should be able to recover the _entire_ game state
-		 - if we want to ignore cursor/selection for a cleaner "pick-up" state, then it should be handled later
-		TODO (techdebt) (print) remove skipDeck
-		TODO (terminal) (print) split out each layer into it's own print function
-		 - home row (cells/foundation)
-		 - tableau
-		 - deck (skipDeck, includeEmptyDeck)
-		 - history
-		 - cursor/selection/availableMove (defined list of values?)
-
-		@example game.print(); // for gameplay
-		@example game.print({ includeHistory: true }); // for saving game, to reload entire state later
-	*/
-	print({
-		skipDeck = false,
-		includeHistory = false,
-	}: { skipDeck?: boolean; includeHistory?: boolean } = {}): string {
-		const cursor: CardLocation = !includeHistory
-			? this.cursor
-			: { fixture: 'cascade', data: [-1, -1] };
-		const selection = !includeHistory ? this.selection : null;
-
+	__printHome(cursor = this.cursor, selection = this.selection): string {
 		let str = '';
 		if (
 			cursor.fixture === 'cell' ||
@@ -1167,7 +1084,18 @@ export class FreeCell {
 			str += ' ' + this.foundations.map((card) => shorthandCard(card)).join(' ');
 			str += ' ';
 		}
+		return str;
+	}
 
+	/**
+		print the tableau of the game board
+
+		split out logic from {@link FreeCell.print}
+
+		XXX (techdebt) optimize
+	*/
+	__printTableau(cursor = this.cursor, selection = this.selection): string {
+		let str = '';
 		const max = Math.max(...this.tableau.map((cascade) => cascade.length));
 		for (let i = 0; i === 0 || i < max; i++) {
 			if (cursor.fixture === 'cascade' || selection?.location.fixture === 'cascade') {
@@ -1193,16 +1121,120 @@ export class FreeCell {
 				str += '\n ' + this.tableau.map((cascade) => shorthandCard(cascade[i])).join(' ') + ' ';
 			}
 		}
+		return str;
+	}
 
-		if ((this.deck.length || cursor.fixture === 'deck') && !skipDeck) {
-			const printDeck = this.printDeck(cursor, selection);
-			if (printDeck) {
-				str += `\n:d${printDeck}`;
+	/**
+		print the deck (row) of the game
+
+		split out logic from {@link FreeCell.print}
+
+		XXX (techdebt) optimize
+	*/
+	__printDeck(cursor = this.cursor, selection = this.selection): string {
+		if (this.deck.length) {
+			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
+				// prettier-ignore
+				const deckStr = this.deck
+					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
+					.reverse()
+					.join('');
+				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
+				return `${deckStr}${lastCol}`;
+			} else {
+				// if no cursor/selection in deck
+				const deckStr = this.deck
+					.map((card) => shorthandCard(card))
+					.reverse()
+					.join(' ');
+				return ` ${deckStr} `;
 			}
+		} else if (cursor.fixture === 'deck') {
+			return `>   `;
+		} else {
+			return '';
+		}
+	}
+
+	/**
+		print the history (block) of the game
+
+		split out logic from {@link FreeCell.print}
+
+		- BUG (history) (shorthandMove) standard move notation can only be used when `limit = 'opp+1'` for all moves
+			- e.g. if (movesSeed && isStandardRuleset)
+		- REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
+			- e.g. if (movesSeed && isStandardGameplay)
+		- XXX (techdebt) optimize
+	*/
+	__printHistory(skipLastHist = false): string {
+		let str = '';
+		const movesSeed = parseMovesFromHistory(this.history);
+		if (movesSeed) {
+			// print the last valid action, _not_ previousAction.text
+			// the previous action could be a cursor movement, or a canceled touch action (touch stop)
+			// TODO (history) (print) remove the last action - not needed for save/reload
+			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+			if (!skipLastHist) str += '\n ' + this.history.at(-1);
+			str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
+			while (movesSeed.moves.length) {
+				str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
+			}
+		} else {
+			// if we don't know where we started or shorthand is otherwise invalid,
+			// we can still print out all the actions we do know about
+			this.history
+				.slice(0)
+				.reverse()
+				.forEach((actionText) => {
+					str += '\n ' + actionText;
+				});
+		}
+		return str;
+	}
+
+	/**
+		print the game board
+		- all card locations
+		- current cursor (keyboard)
+		- current selection
+
+		you can use this to play the game from a text-only interface (e.g. console) if you like
+
+		by default, we do not print the history (complete set of previous actions); we only print the previous move to help confirm your actions
+
+		XXX (techdebt) print is super messy, can we clean this up?
+		 - what if we just draw the board, and then precision-replace the HUD elements?
+		 - we only swap out whitespace, we know the location of everything
+		IDEA (print) consider: `game.print({ debug: true });` includes available moves (¿and what else?)
+		TODO (print) `includeHistory` should include the cursor/selection, and `parse` should have an option to ignore it
+		 - includeHistory should be able to recover the _entire_ game state
+		 - if we want to ignore cursor/selection for a cleaner "pick-up" state, then it should be handled later
+
+		@example game.print(); // for gameplay
+		@example game.print({ includeHistory: true }); // for saving game, to reload entire state later
+	*/
+	print({
+		includeHistory = false,
+		verbose = false,
+	}: { includeHistory?: boolean; verbose?: boolean } = {}): string {
+		const cursor: CardLocation = !includeHistory
+			? this.cursor
+			: { fixture: 'cascade', data: [-1, -1] };
+		const selection = !includeHistory ? this.selection : null;
+
+		let str =
+			this.__printHome(cursor, selection) + //
+			this.__printTableau(cursor, selection);
+
+		if (this.deck.length || cursor.fixture === 'deck' || verbose) {
+			const printDeck = this.__printDeck(cursor, selection);
+			str += `\n:d${printDeck}`;
 		}
 
+		// REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
 		if (this.win) {
-			const msg = this.tableau.length > 5 ? 'Y O U   W I N !' : 'YOU WIN !';
+			const msg = this.tableau.length > 6 ? 'Y O U   W I N !' : 'YOU WIN !';
 			const lineLength = this.tableau.length * 3 + 1;
 			const paddingLength = (lineLength - msg.length - 2) / 2;
 			const spaces = '                               '; // enough spaces for 10 cascadeCount
@@ -1212,7 +1244,7 @@ export class FreeCell {
 		}
 
 		if (includeHistory) {
-			str += this.printHistory();
+			str += this.__printHistory();
 		} else {
 			str += '\n ' + this.previousAction.text;
 		}
@@ -1246,7 +1278,9 @@ export class FreeCell {
 			throw new Error('must have no more than 1 cursor');
 		}
 
+		/** all of the lines in print to process */
 		const lines = print.split('\n').reverse();
+		/** the line we are currently processing */
 		let line: string[];
 		const home_spaces: (string | undefined)[] = [];
 		const tableau_spaces: (string | undefined)[] = [];
@@ -1254,16 +1288,19 @@ export class FreeCell {
 
 		const getCard = ({ rank, suit }: CardSH) => {
 			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
-			// XXX (print) (joker) test with a joker, duplicate card
-			if (!card) throw new Error(`cannot find card: ${rank} of ${suit}`);
+			// XXX (print) (joker) test with a jokers available in game
+			if (!card) {
+				if (!cards.some((card) => card.rank === rank && card.suit === suit)) {
+					throw new Error(`cannot find card in game: ${rank} of ${suit}`);
+				}
+				throw new Error(`cannot find card in remaining: ${rank} of ${suit}`);
+			}
 			remaining.splice(remaining.indexOf(card), 1);
 			return card;
 		};
 
 		const nextLine = () => lines.pop()?.split('').reverse() ?? [];
 		const nextCard = (spaces: (string | undefined)[]) => {
-			// TODO (print) test invalid card rank
-			// TODO (print) test invalid card suit
 			if (line.length < 3) throw new Error('not enough tokens');
 			spaces.push(line.pop());
 			const r = line.pop();
@@ -1273,13 +1310,20 @@ export class FreeCell {
 			return getCard(rs);
 		};
 
-		// TODO (print) (techdebt) test if first line isn't present
 		line = nextLine();
 
 		// parse cells
-		const cellCount = (line.length - 1 - 3 * NUMBER_OF_FOUNDATIONS) / 3;
+		const cellCountPre = line.length - 1 - 3 * NUMBER_OF_FOUNDATIONS;
+		if (cellCountPre % 3 !== 0) {
+			throw new Error(
+				`Invalid cell line length (${line.length.toString(10)}); expected "1 + count ⨉ 3" -- "${line.slice(0).reverse().join('')}"`
+			);
+		}
+		const cellCount = cellCountPre / 3;
 		if (cellCount < MIN_CELL_COUNT || cellCount > MAX_CELL_COUNT) {
-			throw new Error(`Must have between 1 and 4 cells; requested "${cellCount.toString(10)}".`);
+			throw new Error(
+				`Must have between ${MIN_CELL_COUNT.toString(10)} and ${MAX_CELL_COUNT.toString(10)} cells; requested "${cellCount.toString(10)}".`
+			);
 		}
 		for (let i = 0; i < cellCount; i++) {
 			const card = nextCard(home_spaces);
@@ -1308,16 +1352,24 @@ export class FreeCell {
 
 		// parse cascades
 		let row = 0;
-		// TODO (print) (techdebt) test if first line isn't present
 		line = nextLine();
-		const cascadeLineLength = line.length;
-		const cascadeCount = (cascadeLineLength - 1) / 3;
+		if (!line.length) {
+			throw new Error('no cascade in game string');
+		}
+		const cascadeCountPre = line.length - 1;
+		if (cascadeCountPre % 3 !== 0) {
+			throw new Error(
+				`Invalid cascade line length (${line.length.toString(10)}); expected "1 + count ⨉ 3" -- "${line.slice(0).reverse().join('')}"`
+			);
+		}
+		const cascadeCount = cascadeCountPre / 3;
 		if (cascadeCount < NUMBER_OF_FOUNDATIONS) {
 			throw new Error(
 				`Must have at least as many cascades as foundations (${NUMBER_OF_FOUNDATIONS.toString(10)}); requested "${cascadeCount.toString(10)}".`
 			);
 		}
 
+		const cascadeLineLength = line.length;
 		while (line.length === cascadeLineLength && line[0] !== ':') {
 			for (let i = 0; i < cascadeCount; i++) {
 				const card = nextCard(tableau_spaces);
@@ -1326,7 +1378,6 @@ export class FreeCell {
 				}
 			}
 			row++;
-			// TODO (print) (techdebt) test if line isn't present
 			tableau_spaces.push(line.pop());
 			line = nextLine();
 		}
@@ -1370,7 +1421,7 @@ export class FreeCell {
 		});
 
 		line.pop();
-		const actionText = line.reverse().join('') || 'init';
+		const actionText = line.slice(0).reverse().join('') || 'init';
 
 		// attempt to parse the history
 		const history: string[] = [];
@@ -1455,7 +1506,7 @@ export class FreeCell {
 		} else {
 			Array.prototype.push.apply(
 				history,
-				lines.map((line) => line.trim())
+				lines.map((l) => l.trim())
 			);
 			history.push(popped.trim());
 			history.push(actionText);
@@ -1571,10 +1622,29 @@ export class FreeCell {
 			);
 		}
 
+		/*
 		// XXX (techdebt) re-print the our game, confirm it matches the input
-		//  - seems to be mostly `skipDeck` (print) and clipped "you win" messages (hand-jammed)
-		// const reprint = game.print({ includeHistory: parseHistory });
-		// if (reprint !== print) throw new Error(`whoops!\n${print}\n${reprint}`);
+		if (process.env.NODE_ENV === 'test') {
+			// XXX (techdebt) includeHistory could also be the "invalid history so just print what we have"
+			//  - this does _not_ start with :h, but is the history, just a bunch of lines of it
+			const reprint = game.print({ includeHistory: print.includes(':h') });
+			if (reprint !== print) {
+				// XXX (techdebt) sometimes unit tests don't include the "you win" message in the setup
+				if (!reprint.includes('Y O U   W I N !') && !reprint.includes('YOU WIN !')) {
+					// print with non-empty deck doesn't match (weird game setup for testing)
+					// some games have invalid history (on purpose or otherwise)
+					if (!reprint.includes(':d') && !reprint.includes('init with invalid history')) {
+						// cursor is in the wrong place sometimes
+						const rpc = reprint.replace('>', ' ');
+						const pc = print.replace('>', ' ');
+						if (rpc !== pc) {
+							throw new Error(`whoops!\n${print}\n${reprint}`);
+						}
+					}
+				}
+			}
+		}
+		// */
 		return game;
 	}
 }

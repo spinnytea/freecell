@@ -44,7 +44,7 @@ describe('game.$toggleCursor', () => {
 			game = game.$toggleCursor().moveCursor('right').$touchAndMove();
 			expect(game.previousAction.text).toBe('move b7 5D→6C');
 
-			expect(game.printHistory(true)).toBe(
+			expect(game.__printHistory(true)).toBe(
 				'\n' + //
 					':h shuffle32 7852\n' +
 					' 74 7a 7b a7 b7 '
