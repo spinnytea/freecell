@@ -6,21 +6,6 @@ card game
 
 ## Code TODOs
 
-TODO (motivation) main development tasks:
-
-1. ~~legible `(cards)` for mobile~~
-1. ~~move `(history)` & undo~~
-1. ~~`(animation)` https://gsap.com/resources/React/ - just basic animations, like, "stagger" the card movements~~
-1. ~~`(techdebt) (animation)` refactor to help unit test animations~~
-1. ~~`(newgame)` local storage, new button~~
-1. ~~`(controls)` better ease of use for click-to-move and touch~~
-1. `(drag-and-drop)` mouse drag to move - mouse drag-drop target is entire cascade
-   - ~~basics are established~~
-   - `(controls) (drag-and-drop)` be more precise with state management, fix conflicts with other schemes
-   - `(animation) (drag-and-drop)` better trailing animation, add some polish
-   - review all of (drag-and-drop)
-   - unit test `useDragAndDropControls`
-
 ```
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
