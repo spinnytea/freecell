@@ -790,9 +790,6 @@ export class FreeCell {
 			seed = Math.floor(Math.random() * 32000) + 1;
 		}
 
-		// BUG (techdebt) (history) this actionText seed is wrong
-		//  - it's correct if `new FreeCell().shuffle32()`
-		//  - it's wrong if `new FreeCell().shuffle32().shuffle32()`
 		const actionText = `shuffle deck (${seed.toString(10)})`;
 		const cards = cloneCards(this.cards);
 		const deck: Card[] = [];
@@ -887,6 +884,7 @@ export class FreeCell {
 		}
 
 		if (game.deck.length) {
+			// FIXME change "most" to the number of cards dealt
 			game.previousAction.text = 'deal most cards';
 			game.history[game.history.length - 1] = 'deal most cards';
 		}

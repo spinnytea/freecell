@@ -2,21 +2,21 @@ import { Position } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import readline from 'readline';
 
-// FIXME move the "refactor app/game" into main _first_
-// TODO (terminal) (controls) play the game, update controls
-// HACK (terminal) need to lazy load chalk? how to wait until ready before starting?
+// TODO (terminal) (controls) play the game, update keyboard arrow controls
+// HACK (terminal) need to lazy load chalk?
 type ChalkColors = 'red' | 'yellow' | 'bold' | 'blueBright' | 'underline' | 'bgYellowBright';
 type ColorizeCb = (str: string, ...colors: ChalkColors[]) => string;
 let colorize: ColorizeCb = (str) => str;
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
 	const chalk = (await import('chalk')).default;
 	colorize = (str, ...colors) => colors.reduce((ret, c) => ret[c], chalk)(str);
 	printGame();
 	console.log('Press any key (Ctrl+C to exit)');
-})();
+})().catch((error: unknown) => {
+	console.error('Failed to initialize chalk (colorize)', error);
+});
 
-// TODO (terminal) review gameplay loop and design
+// REVIEW (terminal) review gameplay loop and design
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 

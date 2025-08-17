@@ -136,4 +136,112 @@ describe('game.shuffle32', () => {
 				' shuffle deck (1)'
 		);
 	});
+
+	// BUG (techdebt) (history) this actionText seed is wrong
+	//  - it's correct if `new FreeCell().shuffle32()`
+	//  - it's wrong if `new FreeCell().shuffle32().shuffle32()`
+	//  - (we need to print multiple shuffles, not just throw out the old one)
+	//  - e.g. :h shuffle32 5
+	//  - e.g. :h shuffle32 5,5
+	//  - e.g. :h shuffle32 1
+	//  - e.g. :h shuffle32 5,1
+	test('shuffle32 twice', () => {
+		// if we use the same seed, shouldn' the order of the cards be the same?
+		let a = new FreeCell().shuffle32(5);
+		let b = new FreeCell().shuffle32(5).shuffle32(5);
+		expect(a.deck).not.toEqual(b.deck);
+		expect(a.history).toEqual(['shuffle deck (5)']);
+		expect(b.history).toEqual(['shuffle deck (5)', 'shuffle deck (5)']);
+		expect(a.dealAll().__printHistory(true)).toBe('\n:h shuffle32 5');
+		expect(b.dealAll().__printHistory(true)).toBe(
+			'\n deal all cards\n shuffle deck (5)\n shuffle deck (5)'
+		);
+		expect(FreeCell.parse(a.print({ includeHistory: true })).history).toEqual(['shuffle deck (5)']);
+		expect(FreeCell.parse(b.print({ includeHistory: true })).history).toEqual([
+			'shuffle deck (5)',
+			'shuffle deck (5)',
+		]);
+
+		a = new FreeCell().shuffle32(1);
+		b = new FreeCell().shuffle32(5).shuffle32(1);
+		expect(a.deck).not.toEqual(b.deck);
+		expect(a.history).toEqual(['shuffle deck (1)']);
+		expect(b.history).toEqual(['shuffle deck (5)', 'shuffle deck (1)']);
+		expect(a.dealAll().__printHistory(true)).toBe('\n:h shuffle32 1');
+		expect(b.dealAll().__printHistory(true)).toBe(
+			'\n deal all cards\n shuffle deck (1)\n shuffle deck (5)'
+		);
+		expect(FreeCell.parse(a.print({ includeHistory: true })).history).toEqual(['shuffle deck (1)']);
+		expect(FreeCell.parse(b.print({ includeHistory: true })).history).toEqual([
+			'shuffle deck (5)',
+			'shuffle deck (1)',
+		]);
+	});
+
+	// BUG (techdebt) (history) this actionText seed, parse is wrong
+	// TODO (techdebt) (history) update parse so this isn't invalid history
+	test('deal demo', () => {
+		let game = new FreeCell().shuffle32(5).dealAll({ demo: true, keepDeck: true });
+		expect(game.print()).toBe(
+			'' +
+				'                         \n' +
+				' AH 8S 2D QS 4C 9H 2S 3D \n' +
+				' 5C AS 9C KH 4D 2C 3C 4S \n' +
+				' 3S 5D KC 3H KD 5H 6S 8D \n' +
+				' TD 7S JD 7H 8H JH JC 7D \n' +
+				' 5S QH 8C 9D KS QD 4H AC \n' +
+				' 2H TC TH 6D             \n' +
+				':d 6H 6C QC JS 9S AD 7C>TS \n' +
+				' deal most cards'
+		);
+		expect(game.history).toEqual(['shuffle deck (5)', 'deal most cards']);
+		expect(game.__printDeck()).toEqual(' 6H 6C QC JS 9S AD 7C>TS ');
+		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual([
+			'init with invalid history',
+			'deal most cards',
+		]);
+		game = game.shuffle32(6);
+		expect(game.history).toEqual(['shuffle deck (5)', 'deal most cards', 'shuffle deck (6)']);
+		expect(game.__printDeck()).toEqual(' AD 6H QC TS 6C JS 9S>7C ');
+		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual([
+			'init with invalid history',
+			'shuffle deck (6)',
+		]);
+		game = game.dealAll();
+		expect(game.history).toEqual([
+			'shuffle deck (5)',
+			'deal most cards',
+			'shuffle deck (6)',
+			'deal all cards',
+		]);
+		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual([
+			'init with invalid history',
+			'deal all cards',
+		]);
+		expect(game.print()).toBe(
+			'' +
+				'>                        \n' +
+				' AH 8S 2D QS 4C 9H 2S 3D \n' +
+				' 5C AS 9C KH 4D 2C 3C 4S \n' +
+				' 3S 5D KC 3H KD 5H 6S 8D \n' +
+				' TD 7S JD 7H 8H JH JC 7D \n' +
+				' 5S QH 8C 9D KS QD 4H AC \n' +
+				' 2H TC TH 6D 6C JS 9S 7C \n' +
+				' AD 6H QC TS             \n' +
+				' deal all cards'
+		);
+		expect(game.print({ includeHistory: true })).toBe(
+			'' +
+				'                         \n' +
+				' AH 8S 2D QS 4C 9H 2S 3D \n' +
+				' 5C AS 9C KH 4D 2C 3C 4S \n' +
+				' 3S 5D KC 3H KD 5H 6S 8D \n' +
+				' TD 7S JD 7H 8H JH JC 7D \n' +
+				' 5S QH 8C 9D KS QD 4H AC \n' +
+				' 2H TC TH 6D 6C JS 9S 7C \n' +
+				' AD 6H QC TS             \n' +
+				' deal all cards\n' +
+				':h shuffle32 5'
+		);
+	});
 });
