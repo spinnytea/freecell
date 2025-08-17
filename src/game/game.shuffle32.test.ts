@@ -192,16 +192,16 @@ describe('game.shuffle32', () => {
 				' 5S QH 8C 9D KS QD 4H AC \n' +
 				' 2H TC TH 6D             \n' +
 				':d 6H 6C QC JS 9S AD 7C>TS \n' +
-				' deal most cards'
+				' deal 44 cards'
 		);
-		expect(game.history).toEqual(['shuffle deck (5)', 'deal most cards']);
+		expect(game.history).toEqual(['shuffle deck (5)', 'deal 44 cards']);
 		expect(game.__printDeck()).toEqual(' 6H 6C QC JS 9S AD 7C>TS ');
 		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual([
 			'init with invalid history',
-			'deal most cards',
+			'deal 44 cards',
 		]);
 		game = game.shuffle32(6);
-		expect(game.history).toEqual(['shuffle deck (5)', 'deal most cards', 'shuffle deck (6)']);
+		expect(game.history).toEqual(['shuffle deck (5)', 'deal 44 cards', 'shuffle deck (6)']);
 		expect(game.__printDeck()).toEqual(' AD 6H QC TS 6C JS 9S>7C ');
 		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual([
 			'init with invalid history',
@@ -210,7 +210,7 @@ describe('game.shuffle32', () => {
 		game = game.dealAll();
 		expect(game.history).toEqual([
 			'shuffle deck (5)',
-			'deal most cards',
+			'deal 44 cards',
 			'shuffle deck (6)',
 			'deal all cards',
 		]);
@@ -244,4 +244,12 @@ describe('game.shuffle32', () => {
 				':h shuffle32 5'
 		);
 	});
+
+	// `.shuffle(1).dealAll(1).shuffle(2).dealAll(2)...`
+	test.todo('shuffle deal 1, shuffle deal 2, etc');
+
+	// (deal the last card is still just "deal all cards")
+	test.todo('shuffle deal 51, shuffle deal 1');
+
+	test.todo('dealAll(0) noop');
 });

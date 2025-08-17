@@ -19,8 +19,10 @@ describe('game/history.parsePreviousActionType', () => {
 			${'init with invalid history'}                | ${{ text: 'init with invalid history', type: 'init' }}
 			${'init partial'}                             | ${{ text: 'init partial', type: 'init' }}
 			${'shuffle deck (1)'}                         | ${{ text: 'shuffle deck (1)', type: 'shuffle' }}
+			${'deal 1 card'}                              | ${{ text: 'deal 1 card', type: 'deal' }}
+			${'deal 2 cards'}                             | ${{ text: 'deal 2 cards', type: 'deal' }}
+			${'deal 44 cards'}                            | ${{ text: 'deal 44 cards', type: 'deal' }}
 			${'deal all cards'}                           | ${{ text: 'deal all cards', type: 'deal' }}
-			${'deal most cards'}                          | ${{ text: 'deal most cards', type: 'deal' }}
 			${'cursor set'}                               | ${{ text: 'cursor set', type: 'cursor' }}
 			${'cursor set KH'}                            | ${{ text: 'cursor set KH', type: 'cursor' }}
 			${'cursor set b'}                             | ${{ text: 'cursor set b', type: 'cursor' }}

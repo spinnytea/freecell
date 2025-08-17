@@ -841,6 +841,7 @@ export class FreeCell {
 		const game = this.__clone({ action: { text: 'deal all cards', type: 'deal' } });
 
 		const remaining = demo ? game.cells.length + game.foundations.length : 0;
+		const startDeckLength = game.deck.length;
 
 		// deal across tableau columns, until the deck is empty
 		let c = -1;
@@ -883,10 +884,16 @@ export class FreeCell {
 			}
 		}
 
-		if (game.deck.length) {
-			// FIXME change "most" to the number of cards dealt
-			game.previousAction.text = 'deal most cards';
-			game.history[game.history.length - 1] = 'deal most cards';
+		const endDeckLength = game.deck.length;
+		const dealtCount = startDeckLength - endDeckLength;
+		if (dealtCount === 0) return this;
+		if (endDeckLength) {
+			let actionText = 'deal 1 card';
+			if (dealtCount > 1) {
+				actionText = `deal ${dealtCount.toString(10)} cards`;
+			}
+			game.previousAction.text = actionText;
+			game.history[game.history.length - 1] = actionText;
 		}
 
 		return game;
@@ -1437,7 +1444,7 @@ export class FreeCell {
 				if (deckLength === 0) {
 					history.push('deal all cards');
 				} else {
-					history.push('deal most cards');
+					history.push('deal 44 cards');
 				}
 			}
 		} else if (popped.startsWith(':h')) {
@@ -1452,7 +1459,7 @@ export class FreeCell {
 				replayGameForHistroy = replayGameForHistroy.dealAll();
 			}
 			// TODO (techdebt) (parse-history) 'deal all cards'
-			// TODO (techdebt) (parse-history) 'deal most cards'
+			// TODO (techdebt) (parse-history) 'deal 44 cards'
 
 			// split will return [''] instead of []
 			const moves = lines.length ? lines.reverse().join('').trim().split(/\s+/) : [];
@@ -1514,8 +1521,10 @@ export class FreeCell {
 			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
 			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
 			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
+			// TODO (techdebt) (parse-history) 'deal 1 cards'
+			// TODO (techdebt) (parse-history) 'deal 2 cards'
+			// TODO (techdebt) (parse-history) 'deal 44 cards'
 			// TODO (techdebt) (parse-history) 'deal all cards'
-			// TODO (techdebt) (parse-history) 'deal most cards'
 		}
 
 		// sus out the cursor/selection locations

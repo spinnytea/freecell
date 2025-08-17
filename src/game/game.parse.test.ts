@@ -290,28 +290,28 @@ describe('game.parse', () => {
 				expect(gameNoHist).toEqual(game);
 			});
 
-			test('deal most cards', () => {
+			test('deal 44 cards', () => {
 				const game = new FreeCell().dealAll({ demo: true, keepDeck: true });
-				expect(game.history).toEqual(['deal most cards']);
+				expect(game.history).toEqual(['deal 44 cards']);
 				expect(game.previousAction).toEqual({
-					text: 'deal most cards',
+					text: 'deal 44 cards',
 					type: 'deal',
 				});
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
 
 				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
-				expect(gameWithHist.history).toEqual(['deal most cards']);
+				expect(gameWithHist.history).toEqual(['deal 44 cards']);
 				expect(gameWithHist.previousAction).toEqual({
-					text: 'deal most cards',
+					text: 'deal 44 cards',
 					type: 'deal',
 				});
 				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [0] });
 				expect(gameWithHist).toEqual(game);
 
 				const gameNoHist = FreeCell.parse(game.print());
-				expect(gameNoHist.history).toEqual(['deal most cards']);
+				expect(gameNoHist.history).toEqual(['deal 44 cards']);
 				expect(gameNoHist.previousAction).toEqual({
-					text: 'deal most cards',
+					text: 'deal 44 cards',
 					type: 'deal',
 				});
 				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [0] });
