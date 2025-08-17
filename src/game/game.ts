@@ -1129,6 +1129,27 @@ export class FreeCell {
 		return str;
 	}
 
+	__printWin(): string {
+		if (this.win) {
+			const msg = this.tableau.length > 6 ? 'Y O U   W I N !' : 'YOU WIN !';
+			const lineLength = this.tableau.length * 3 + 1;
+			const paddingLength = (lineLength - msg.length - 2) / 2;
+			const spaces = '                               '; // enough spaces for 10 cascadeCount
+			const padding = '                            '.substring(0, paddingLength);
+			return (
+				'\n:' +
+				padding +
+				msg +
+				padding +
+				(paddingLength === padding.length ? '' : ' ') +
+				':' +
+				'\n' +
+				spaces.substring(0, lineLength)
+			);
+		}
+		return '';
+	}
+
 	/**
 		print the deck (row) of the game
 
@@ -1216,6 +1237,7 @@ export class FreeCell {
 		- TODO (print) `includeHistory` should include the cursor/selection, and `parse` should have an option to ignore it
 		   - includeHistory should be able to recover the _entire_ game state
 		   - if we want to ignore cursor/selection for a cleaner "pick-up" state, then it should be handled later
+		- IDEA (print) consider: print({ parts: true }) => { home, tableau, win, deck, history }
 
 		@example game.print(); // for gameplay
 		@example game.print({ includeHistory: true }); // for saving game, to reload entire state later
@@ -1233,20 +1255,14 @@ export class FreeCell {
 			this.__printHome(cursor, selection) + //
 			this.__printTableau(cursor, selection);
 
+		// REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
+		if (this.win) {
+			str += this.__printWin();
+		}
+
 		if (this.deck.length || cursor.fixture === 'deck' || verbose) {
 			const printDeck = this.__printDeck(cursor, selection);
 			str += `\n:d${printDeck}`;
-		}
-
-		// REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
-		if (this.win) {
-			const msg = this.tableau.length > 6 ? 'Y O U   W I N !' : 'YOU WIN !';
-			const lineLength = this.tableau.length * 3 + 1;
-			const paddingLength = (lineLength - msg.length - 2) / 2;
-			const spaces = '                               '; // enough spaces for 10 cascadeCount
-			const padding = '                            '.substring(0, paddingLength);
-			str += '\n:' + padding + msg + padding + (paddingLength === padding.length ? '' : ' ') + ':';
-			str += '\n' + spaces.substring(0, lineLength);
 		}
 
 		if (includeHistory) {

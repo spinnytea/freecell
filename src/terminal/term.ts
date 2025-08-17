@@ -16,7 +16,6 @@ let colorize: ColorizeCb = (str) => str;
 	console.error('Failed to initialize chalk (colorize)', error);
 });
 
-// REVIEW (terminal) review gameplay loop and design
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
@@ -64,33 +63,45 @@ const Hotkeys = [
 	'0',
 ];
 
-// TODO (terminal) (hut) play the game, what needs clarity?
-// HACK (terminal) just replace stufff to get colors
 function printGame() {
 	console.clear();
+
+	const home = game.__printHome();
+	const tableau = game.__printTableau();
+	const win = game.__printWin();
+	// XXX (print) all these caveats... in print and here
+	const deck = ((s) => (s ? '\n:d ' + s : ''))(game.__printDeck());
+	// XXX (print) all these caveats... in print and here
+	const history = '\n ' + game.previousAction.text; // game.__printHistory();
+
+	// XXX (print) how much do we care if game.print() and terminal do not match
+	//  - i mean, the point of game.print is _for_ the terminal
+	//  - it's just that to colorize with chalk… we need it in components?
+	// if (game.print() !== [home, tableau, win, deck, history].join('')) {
+	// 	console.error('print mismatch');
+	// }
+
+	// cursor/selection
+	const cs = (s: string) => s.replace(/[>|]/g, (match) => colorize(match, 'yellow', 'bold'));
+	// red suits
+	const rs = (s: string) =>
+		s.replace(/([123456789TJQK])([DH])/g, (match) => colorize(match, 'red'));
+
 	console.log(
-		game
-			.print()
-			// TODO (terminal) last line (previous action text)
-			//  - we can't just do this replace forever :/
-			//  - "move 21 6S→7D (auto-foundation 5 AC)"
-			// .replace(/\n.*$/, (match) => colorize(match, 'blueBright'))
-			// underline home row
-			// .replace(/^.*\n/, (match) => colorize(match, 'underline'))
-			// extra lines
-			// .replace(/:.*\n/g, (match) => colorize(match, 'bgYellowBright'))
-			// red suits
-			.replace(/([123456789TJZK])([DH])/g, (match) => colorize(match, 'red'))
-			// TODO (terminal) suit icons: ♣️♧♣ | ♦️♢♦ | ♥️♡♥ | ♠️♤♠
-			// .replace(/([123456789TJZK])([CDHS])/g, (match, ...groups) => {
-			// 	if (groups[1] === 'C') return `${String(groups[0])}♣`;
-			// 	if (groups[1] === 'D') return `${String(groups[0])}♦`;
-			// 	if (groups[1] === 'H') return `${String(groups[0])}♥`;
-			// 	if (groups[1] === 'S') return `${String(groups[0])}♠`;
-			// 	return `${String(groups[0])}${String(groups[1])}`;
-			// })
-			// cursor/selection
-			.replace(/[>|]/g, (match) => colorize(match, 'yellow', 'bold'))
+		rs(cs(home + tableau)) +
+			// REVIEW (terminal) underline home row
+			// .replace(/^.*\n/, (match) => colorize(match, 'underline')) +
+			colorize(win, 'blueBright') +
+			colorize(cs(deck), 'blueBright') +
+			colorize(history, 'yellow')
+		// REVIEW (terminal) suit icons: ♣️♧♣ | ♦️♢♦ | ♥️♡♥ | ♠️♤♠
+		// .replace(/([123456789TJZK])([CDHS])/g, (match, rank, suit) => {
+		// 	if (suit === 'C') return `${String(rank)}♣`;
+		// 	if (suit === 'D') return `${String(rank)}♦`;
+		// 	if (suit === 'H') return `${String(rank)}♥`;
+		// 	if (suit === 'S') return `${String(rank)}♠`;
+		// 	return `${String(rank)}${String(suit)}`;
+		// })
 	);
 }
 
