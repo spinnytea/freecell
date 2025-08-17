@@ -790,9 +790,6 @@ export class FreeCell {
 			seed = Math.floor(Math.random() * 32000) + 1;
 		}
 
-		// BUG (techdebt) (history) this actionText seed is wrong
-		//  - it's correct if `new FreeCell().shuffle32()`
-		//  - it's wrong if `new FreeCell().shuffle32().shuffle32()`
 		const actionText = `shuffle deck (${seed.toString(10)})`;
 		const cards = cloneCards(this.cards);
 		const deck: Card[] = [];
@@ -844,6 +841,7 @@ export class FreeCell {
 		const game = this.__clone({ action: { text: 'deal all cards', type: 'deal' } });
 
 		const remaining = demo ? game.cells.length + game.foundations.length : 0;
+		const startDeckLength = game.deck.length;
 
 		// deal across tableau columns, until the deck is empty
 		let c = -1;
@@ -886,9 +884,16 @@ export class FreeCell {
 			}
 		}
 
-		if (game.deck.length) {
-			game.previousAction.text = 'deal most cards';
-			game.history[game.history.length - 1] = 'deal most cards';
+		const endDeckLength = game.deck.length;
+		const dealtCount = startDeckLength - endDeckLength;
+		if (dealtCount === 0) return this;
+		if (endDeckLength) {
+			let actionText = 'deal 1 card';
+			if (dealtCount > 1) {
+				actionText = `deal ${dealtCount.toString(10)} cards`;
+			}
+			game.previousAction.text = actionText;
+			game.history[game.history.length - 1] = actionText;
 		}
 
 		return game;
@@ -1124,6 +1129,27 @@ export class FreeCell {
 		return str;
 	}
 
+	__printWin(): string {
+		if (this.win) {
+			const msg = this.tableau.length > 6 ? 'Y O U   W I N !' : 'YOU WIN !';
+			const lineLength = this.tableau.length * 3 + 1;
+			const paddingLength = (lineLength - msg.length - 2) / 2;
+			const spaces = '                               '; // enough spaces for 10 cascadeCount
+			const padding = '                            '.substring(0, paddingLength);
+			return (
+				'\n:' +
+				padding +
+				msg +
+				padding +
+				(paddingLength === padding.length ? '' : ' ') +
+				':' +
+				'\n' +
+				spaces.substring(0, lineLength)
+			);
+		}
+		return '';
+	}
+
 	/**
 		print the deck (row) of the game
 
@@ -1203,13 +1229,15 @@ export class FreeCell {
 
 		by default, we do not print the history (complete set of previous actions); we only print the previous move to help confirm your actions
 
-		XXX (techdebt) print is super messy, can we clean this up?
-		 - what if we just draw the board, and then precision-replace the HUD elements?
-		 - we only swap out whitespace, we know the location of everything
-		IDEA (print) consider: `game.print({ debug: true });` includes available moves (¿and what else?)
-		TODO (print) `includeHistory` should include the cursor/selection, and `parse` should have an option to ignore it
-		 - includeHistory should be able to recover the _entire_ game state
-		 - if we want to ignore cursor/selection for a cleaner "pick-up" state, then it should be handled later
+		- XXX (techdebt) print is super messy, can we clean this up?
+		   - what if we just draw the board, and then precision-replace the HUD elements?
+		   - we only swap out whitespace, we know the location of everything
+		- IDEA (print) consider: `game.print({ debug: true });` includes available moves (¿and what else?)
+		    - render available moves in print? does print also need debug mode (is print for gameplay or just for debugging or both)?
+		- TODO (print) `includeHistory` should include the cursor/selection, and `parse` should have an option to ignore it
+		   - includeHistory should be able to recover the _entire_ game state
+		   - if we want to ignore cursor/selection for a cleaner "pick-up" state, then it should be handled later
+		- IDEA (print) consider: print({ parts: true }) => { home, tableau, win, deck, history }
 
 		@example game.print(); // for gameplay
 		@example game.print({ includeHistory: true }); // for saving game, to reload entire state later
@@ -1227,20 +1255,14 @@ export class FreeCell {
 			this.__printHome(cursor, selection) + //
 			this.__printTableau(cursor, selection);
 
+		// REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
+		if (this.win) {
+			str += this.__printWin();
+		}
+
 		if (this.deck.length || cursor.fixture === 'deck' || verbose) {
 			const printDeck = this.__printDeck(cursor, selection);
 			str += `\n:d${printDeck}`;
-		}
-
-		// REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
-		if (this.win) {
-			const msg = this.tableau.length > 6 ? 'Y O U   W I N !' : 'YOU WIN !';
-			const lineLength = this.tableau.length * 3 + 1;
-			const paddingLength = (lineLength - msg.length - 2) / 2;
-			const spaces = '                               '; // enough spaces for 10 cascadeCount
-			const padding = '                            '.substring(0, paddingLength);
-			str += '\n:' + padding + msg + padding + (paddingLength === padding.length ? '' : ' ') + ':';
-			str += '\n' + spaces.substring(0, lineLength);
 		}
 
 		if (includeHistory) {
@@ -1438,7 +1460,7 @@ export class FreeCell {
 				if (deckLength === 0) {
 					history.push('deal all cards');
 				} else {
-					history.push('deal most cards');
+					history.push('deal 44 cards');
 				}
 			}
 		} else if (popped.startsWith(':h')) {
@@ -1453,7 +1475,7 @@ export class FreeCell {
 				replayGameForHistroy = replayGameForHistroy.dealAll();
 			}
 			// TODO (techdebt) (parse-history) 'deal all cards'
-			// TODO (techdebt) (parse-history) 'deal most cards'
+			// TODO (techdebt) (parse-history) 'deal 44 cards'
 
 			// split will return [''] instead of []
 			const moves = lines.length ? lines.reverse().join('').trim().split(/\s+/) : [];
@@ -1515,8 +1537,10 @@ export class FreeCell {
 			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
 			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
 			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
+			// TODO (techdebt) (parse-history) 'deal 1 cards'
+			// TODO (techdebt) (parse-history) 'deal 2 cards'
+			// TODO (techdebt) (parse-history) 'deal 44 cards'
 			// TODO (techdebt) (parse-history) 'deal all cards'
-			// TODO (techdebt) (parse-history) 'deal most cards'
 		}
 
 		// sus out the cursor/selection locations

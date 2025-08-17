@@ -145,7 +145,7 @@ describe('game.$toggleCursor', () => {
 	});
 
 	test('deck / allowEmptyDeck', () => {
-		// deal most cards keeps the cursor in the deck (after)
+		// deal 44 cards keeps the cursor in the deck (after)
 		const gameDealMost = new FreeCell().dealAll({ demo: true, keepDeck: true });
 		expect(gameDealMost.deck.length).toBe(8);
 		expect(gameDealMost.cursor.fixture).toEqual('deck');

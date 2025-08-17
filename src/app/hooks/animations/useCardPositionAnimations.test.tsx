@@ -986,9 +986,13 @@ describe('useCardPositionAnimations', () => {
 		});
 
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal all cards');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal 1 card');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal most cards');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal 2 cards');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal 44 cards');
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal all cards');
 		describe('game setup', () => {
 			test('· shuffle deck (1)', () => {
 				const actionText = 'shuffle deck (1)';
@@ -1049,7 +1053,7 @@ describe('useCardPositionAnimations', () => {
 
 			test.todo('· deal all cards');
 
-			test.todo('· deal most cards');
+			test.todo('· deal 44 cards');
 		});
 
 		// prettier-ignore

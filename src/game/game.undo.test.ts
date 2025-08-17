@@ -164,7 +164,7 @@ describe('game.undo (+ history)', () => {
 				const game = new FreeCell();
 				const dealt = game.dealAll({ demo: true, keepDeck: true });
 				expect(dealt.previousAction).toEqual({
-					text: 'deal most cards',
+					text: 'deal 44 cards',
 					type: 'deal',
 				});
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
@@ -179,7 +179,7 @@ describe('game.undo (+ history)', () => {
 						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
 						' 3S 3H 3D 3C             \n' +
 						':d 2S 2H 2D 2C AS AH AD>AC \n' +
-						' deal most cards'
+						' deal 44 cards'
 				);
 				const undid = dealt.undo();
 				expect(undid.previousAction.gameFunction).toBe('undo');

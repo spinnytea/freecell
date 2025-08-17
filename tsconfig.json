@@ -17,8 +17,9 @@
 				"name": "next"
 			}
 		],
+		"baseUrl": "./src",
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": ["./*"]
 		},
 		"forceConsistentCasingInFileNames": true,
 		"target": "ES2017"
@@ -30,5 +31,8 @@
 		".next/types/**/*.ts",
 		"out/freecell/types/**/*.ts"
 	],
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules"],
+	"ts-node": {
+		"require": ["tsconfig-paths/register"]
+	}
 }

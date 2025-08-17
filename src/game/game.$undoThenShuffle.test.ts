@@ -84,11 +84,11 @@ describe('game.$undoThenShuffle', () => {
 			expect(undids.cursor).toEqual({ fixture: 'deck', data: [0] });
 		});
 
-		test('deal most cards', () => {
+		test('deal 44 cards', () => {
 			const game = new FreeCell().dealAll({ demo: true, keepDeck: true });
-			expect(game.history).toEqual(['deal most cards']);
+			expect(game.history).toEqual(['deal 44 cards']);
 			expect(game.previousAction).toEqual({
-				text: 'deal most cards',
+				text: 'deal 44 cards',
 				type: 'deal',
 			});
 			expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
