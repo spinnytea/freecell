@@ -2,6 +2,7 @@ import { Position } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import readline from 'readline';
 
+// TODO (terminal) (gameplay) save/load game
 // TODO (terminal) (controls) play the game, update keyboard arrow controls
 // HACK (terminal) need to lazy load chalk?
 type ChalkColors = 'red' | 'yellow' | 'bold' | 'blueBright' | 'underline' | 'bgYellowBright';
