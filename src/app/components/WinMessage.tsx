@@ -27,7 +27,7 @@ export function WinMessage() {
 				});
 
 				if (winIsFloursh) {
-					// IDEA (animation) 52-card flourish cycles color forever
+					// FIXME (animation) 52-card flourish cycles color forever
 					//  - basically, disable s/l and repeat h
 					// animate color hue, to white
 					// TODO (animation) "you win" animation should start after the cards finish moving?

@@ -37,11 +37,13 @@ card game
   - win -> init
 - TODO (motivation) (animation) learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
 - REVIEW (hud) (mobile) icon for bookmarks / save link to home screen (Andriod, iOS)
-- TODO (motivation) animate card flash for use in flourishes and end of game
+- FIXME (motivation) animate card flash for use in flourishes and end of game
   - blue, red, pink, etc
   - snazzy explosion when you place the last card
   - based on the image svg so we can do it with any card (king, ace, whatever)
   - maybe use it for the whole animation for a win when a flourish
+  - verify/test animation replaces after deal + undo/deal
+- FIXME (motivation) extra pizzazz when it's a 52 card flourish
 - TODO (settings) undo limit - all, until deal, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
 - TODO (settings) new game is always shuffled
   - GameContextProvider

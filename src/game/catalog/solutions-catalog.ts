@@ -43,7 +43,7 @@ export const SEED_SOLUTIONS_4x8 = new Map<number, string>([
 	],
 	[
 		23190,
-		'' + //
+		'' + // 52-card flourish
 			'6d 76 75 d5 7d 75 72 7a 37 57 ' +
 			'27 31 37 17 d3 5d 57 5c 57 5b ' +
 			'52 a2 c5 b5 1c 12 15 17 16 15 ' +

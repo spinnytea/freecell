@@ -1839,7 +1839,7 @@ describe('game.undo (+ history)', () => {
 		...
 		This sounds quite a lot like FreeCell.parse with history, just do that?
 	*/
-	describe('play a game backward and forewards using move history', () => {
+	describe('play a game backward and forwards using move history', () => {
 		test.todo('4 cells, 4 cascades');
 
 		test.todo('1 cells, 10 cascades');
