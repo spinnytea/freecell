@@ -95,6 +95,7 @@ describe('game.moveByShorthand', () => {
 			test.todo('sequence');
 		});
 
+		// FIXME test.todo move to deck by shorthand
 		describe('deck', () => {
 			test.todo('empty');
 

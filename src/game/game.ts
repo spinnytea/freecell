@@ -1238,6 +1238,7 @@ export class FreeCell {
 		   - includeHistory should be able to recover the _entire_ game state
 		   - if we want to ignore cursor/selection for a cleaner "pick-up" state, then it should be handled later
 		- IDEA (print) consider: print({ parts: true }) => { home, tableau, win, deck, history }
+		- IDEA (print) Unicode Block “Playing Cards”
 
 		@example game.print(); // for gameplay
 		@example game.print({ includeHistory: true }); // for saving game, to reload entire state later

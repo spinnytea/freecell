@@ -56,7 +56,7 @@ export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
 	 - then it'll just be, like, a new game
 	 - should we have a special animation for this?
 */
-type GameFunction = 'undo' | 'restart' | 'newGame' | 'drag-drop';
+type GameFunction = 'undo' | 'restart' | 'newGame' | 'drag-drop' | 'recall-or-bury';
 
 export interface PreviousAction {
 	/**

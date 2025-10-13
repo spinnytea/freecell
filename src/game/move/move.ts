@@ -499,15 +499,9 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 	if (from.cards.length === 0) {
 		return game.cards;
 	}
-	if (to.fixture === 'deck') {
-		// XXX (gameplay) can we, in theory, move a card to the deck? what does that look like
-		//  - we should be able to move them to the bottom of the deck
-		//  - or move them to the top of the deck
-		//  - do we shuffle the deck every time we do this?
-		return game.cards;
-	}
-	if (from.cards.length > 1 && to.fixture !== 'cascade') {
+	if (from.cards.length > 1 && !(to.fixture === 'cascade' || to.fixture === 'deck')) {
 		// you can only move multiple cards to a cascade
+		// (you can move multiple cards to the deck, too, bcuz why not)
 		return game.cards;
 	}
 
@@ -515,6 +509,19 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 	const from_cards = from.cards.map((fc) => findCard(cards, fc));
 
 	switch (to.fixture) {
+		case 'deck': {
+			// we can, in theory, move cards to the deck
+			// this isn't standard gameplay
+			// const d0 = to.data[0]; // FIXME (gameplay) (techdebt) allow placing the cards anywhere
+			const d0 = game.deck.length;
+			from_cards.forEach((card, idx) => {
+				card.location = {
+					fixture: 'deck',
+					data: [d0 + idx],
+				};
+			});
+			break;
+		}
 		case 'cell':
 			from_cards[0].location = to;
 			break;
