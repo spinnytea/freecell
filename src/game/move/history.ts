@@ -7,9 +7,9 @@ import {
 	initializeDeck,
 	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
-	shorthandCard,
 	shorthandPosition,
 	shorthandSequence,
+	sortCards,
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { moveCards } from '@/game/move/move';
@@ -651,21 +651,7 @@ export function unDealAll(game: FreeCell): Card[] {
 		}
 	}
 
-	const order = new Map<string, number>();
-	game.cards.forEach((card, idx) => {
-		order.set(shorthandCard(card), idx);
-	});
-	deck.sort((a, b) => {
-		const oa = order.get(shorthandCard(a));
-		const ob = order.get(shorthandCard(b));
-
-		if (oa == undefined)
-			throw new Error(`undeal deck has ${shorthandCard(a)}, but game cards do not?`);
-		if (ob == undefined)
-			throw new Error(`undeal deck has ${shorthandCard(b)}, but game cards do not?`);
-
-		return oa - ob;
-	});
+	sortCards(game.cards, deck);
 
 	if (deck.length !== game.cards.length) {
 		throw new Error(

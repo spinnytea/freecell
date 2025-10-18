@@ -60,6 +60,34 @@ describe('game.undo (+ history)', () => {
 				expect(game.undo()).toBe(game);
 			});
 
+			// TODO (techdebt) this would be super cool to pull off
+			// eslint-disable-next-line jest/no-disabled-tests
+			test.skip('init without history, but last move is legible', () => {
+				const gamePrint =
+					'            >KS KD KC KH \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' move 3b 8S→cell (flourish 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)';
+				expect(FreeCell.parse(gamePrint).undo().print()).toBe(
+					'' + //
+						'>7H       2C             \n' +
+						' KS 6C AC 5H KD 6D KC KH \n' +
+						' QD AH AD 4S QC 5S QH QS \n' +
+						' JC 3D AS    JH 4H JS JD \n' +
+						' TD    8S    TS 3C TH TC \n' +
+						' 9C          9D 2H 9S 9H \n' +
+						' 8D          8C    8H    \n' +
+						' 7S          7D    7C    \n' +
+						'             6S    6H    \n' +
+						'             5D    5C    \n' +
+						'             4C    4D    \n' +
+						'             3H    3S    \n' +
+						'             2S    2D    \n' +
+						' move 3a 7H→cell'
+				);
+			});
+
 			test('hand-jammed', () => {
 				const game = FreeCell.parse(
 					'' + //

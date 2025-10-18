@@ -151,6 +151,56 @@ export function initializeDeck(): Card[] {
 	return deck;
 }
 
+/**
+	naïve sort of the cards
+	@param cards OG order of the cards (i.e. game.cards)
+	@param list sort this list in-place
+*/
+export function sortCards(
+	cards: Card[],
+	list: Card[],
+	{
+		reassignD0 = false,
+		sortBySuit = false,
+	}: {
+		/** @deprecated it feels weird to do this */
+		reassignD0?: boolean;
+		/** @deprecated FIXME remove this param */
+		sortBySuit?: boolean;
+	} = {}
+): void {
+	const order = new Map<string, number>();
+	cards.forEach((card, idx) => {
+		order.set(shorthandCard(card), idx);
+	});
+	list.sort((a, b) => {
+		if (sortBySuit) {
+			// also sort by suit
+			const sa = SuitList.indexOf(a.suit);
+			const sb = SuitList.indexOf(b.suit);
+			if (sa !== sb) {
+				return sa - sb;
+			}
+		}
+
+		const oa = order.get(shorthandCard(a));
+		const ob = order.get(shorthandCard(b));
+
+		if (oa == undefined)
+			throw new Error(`undeal deck has ${shorthandCard(a)}, but game cards do not?`);
+		if (ob == undefined)
+			throw new Error(`undeal deck has ${shorthandCard(b)}, but game cards do not?`);
+
+		return oa - ob;
+	});
+
+	if (reassignD0) {
+		list.reverse().forEach((card, idx) => {
+			card.location.data[0] = idx;
+		});
+	}
+}
+
 export function calcCardId(shorthand: string, gameBoardId?: string) {
 	let cardId = 'c' + shorthand;
 	if (gameBoardId) {
