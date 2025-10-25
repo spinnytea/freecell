@@ -8,13 +8,13 @@ import {
 	Card,
 	CardLocation,
 	CardSequence,
+	getSequenceAt,
 	shorthandPosition,
-	shorthandSequence,
-	sortCards,
+	sortCardsBySuitAndRank,
 	SuitList,
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
-import { moveCards } from '@/game/move/move';
+import { calcMoveActionText, moveCards } from '@/game/move/move';
 
 /**
 	checks if it's even possible to flourish
@@ -22,6 +22,7 @@ import { moveCards } from '@/game/move/move';
 	meant for the start of the game
 
 	FIXME test on a game that's one move away from a flourish (not a 52 flourish, cards in foundation + cell)
+	FIXME make sure every `game.previousAction.gameFunction = 'recall-or-bury' or 'juice'`
 */
 export function canFlourish(game: FreeCell): Card[] {
 	if (game.deck.length) return [];
@@ -54,6 +55,7 @@ export function canFlourish(game: FreeCell): Card[] {
 	const aces: Card[] = [];
 	selectionsToTry.forEach((selectionToTry) => {
 		let g = game;
+
 		// move all but the 1 to deck
 		selectionsToTry.forEach((stt) => {
 			if (stt !== selectionToTry) {
@@ -62,22 +64,10 @@ export function canFlourish(game: FreeCell): Card[] {
 		});
 
 		// unshuffle deck
-		sortCards(g.cards, g.deck, { reassignD0: true, sortBySuit: true });
+		sortCardsBySuitAndRank(g.deck);
 
 		// put deck on board, split by suit
-		// FIXME make a unit test
-		emptyPositions.forEach((emptyPosition) => {
-			const last_card = g.deck.at(g.deck.length - 1);
-			if (last_card) {
-				const cards = g.deck.filter((card) => card.suit === last_card.suit);
-				const selection: CardSequence = {
-					location: last_card.location,
-					cards: cards,
-					peekOnly: true,
-				};
-				g = moveDeckToBoard(g, selection, emptyPosition);
-			}
-		});
+		g = spreadDeckToEmptyPositions(g, emptyPositions);
 
 		// try the move
 		g = g.$touchAndMove(selectionToTry.location);
@@ -94,14 +84,14 @@ export function canFlourish(game: FreeCell): Card[] {
 
 	meant for the start of the game
 
-	FIXME loop through all games and see if there are any (we know of 5) than can 52 flourish
+	FIXME (flourish-anim) loop through all games and see if there are any (we know of 5) than can 52 flourish
 */
 export function canFlourish52(game: FreeCell): Card[] {
 	if (game.deck.length) return [];
 	// cells don't matter for this
 	if (game.foundations.some((card) => !!card)) return [];
 
-	// TODO (motivation) (techdebt) if any aces exposed at start, is there a single move we can make to win the game?
+	// TODO (techdebt) (flourish-anim) (motivation) if any aces exposed at start, is there a single move we can make to win the game?
 	//  - i.e. select each col and try up to 3 available moves
 	if (game.tableau.some((cascade) => cascade[cascade.length - 1]?.rank === 'ace')) return [];
 
@@ -123,27 +113,15 @@ export function canFlourish52(game: FreeCell): Card[] {
 	if (selectionsToTry.length === 0) return [];
 	if (emptyPositions.length < SuitList.length) return [];
 
-	// unshuffle deck
-	sortCards(game.cards, game.deck, { reassignD0: true, sortBySuit: true });
+	// XXX (optimize) we could unshuffle deck once, but it's built into `spreadDeckToEmptyPositions`
+	// sortCardsBySuitAndRank(game.deck);
 
 	const aces: Card[] = [];
 	selectionsToTry.forEach((selectionToTry) => {
 		let g = game;
 
 		// put deck on board, split by suit
-		// FIXME make a unit test
-		emptyPositions.forEach((emptyPosition) => {
-			const last_card = g.deck.at(g.deck.length - 1);
-			if (last_card) {
-				const cards = g.deck.filter((card) => card.suit === last_card.suit);
-				const selection: CardSequence = {
-					location: last_card.location,
-					cards: cards,
-					peekOnly: true,
-				};
-				g = moveDeckToBoard(g, selection, emptyPosition);
-			}
-		});
+		g = spreadDeckToEmptyPositions(g, emptyPositions);
 
 		// try the move
 		g = g.$touchAndMove(selectionToTry.location);
@@ -205,26 +183,49 @@ export function collectCardsTillAceToDeck(game: FreeCell, exposeAce: boolean): F
 	return game;
 }
 
-// FIXME review/consolidate action?
-function moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCell {
-	// TODO (motivation) (gameplay) `move 6🂠 6C→deck`
+export function spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLocation[]): FreeCell {
+	// unshuffle deck
+	sortCardsBySuitAndRank(g.deck);
+
+	// put deck on board, split by suit
+	emptyPositions.forEach((emptyPosition) => {
+		// BUG (techdebt) (deck) (gameplay) why can't we deal from the middle?
+		// const last_card = g.deck.at(0);
+		const last_card = g.deck.at(g.deck.length - 1);
+		if (last_card) {
+			const cards = g.deck.filter((card) => card.suit === last_card.suit);
+			const selection: CardSequence = {
+				location: last_card.location,
+				cards: cards,
+				peekOnly: true,
+			};
+			g = moveDeckToBoard(g, selection, emptyPosition);
+		}
+	});
+
+	return g;
+}
+
+/** @deprecated FIXME (techdebt) (deck) (gameplay) review/consolidate action? - game.__clone outside of game is bad */
+export function moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCell {
+	const to: CardLocation = { fixture: 'deck', data: [game.deck.length] };
 	return game.__clone({
 		action: {
-			text: `invalid move ${shorthandSequence(selection)}→deck`,
+			text: 'invalid ' + calcMoveActionText(selection, getSequenceAt(game, to)),
 			type: 'move',
 			gameFunction: 'recall-or-bury',
 		},
-		cards: moveCards(game, selection, { fixture: 'deck', data: [0] }),
+		cards: moveCards(game, selection, to),
 		selection: null,
 		availableMoves: null,
 	});
 }
 
+/** @deprecated FIXME (techdebt) (deck) (gameplay) review/consolidate action? - game.__clone outside of game is bad */
 function moveDeckToBoard(game: FreeCell, selection: CardSequence, to: CardLocation): FreeCell {
-	// const actionText = calcMoveActionText(selection, getSequenceAt(game, to));
 	return game.__clone({
 		action: {
-			text: `invalid move ${shorthandSequence(selection)}→cascade`,
+			text: 'invalid ' + calcMoveActionText(selection, getSequenceAt(game, to)),
 			type: 'move',
 			gameFunction: 'recall-or-bury',
 		},

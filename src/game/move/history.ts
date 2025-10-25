@@ -9,7 +9,7 @@ import {
 	parseShorthandPosition_INCOMPLETE,
 	shorthandPosition,
 	shorthandSequence,
-	sortCards,
+	sortCardsOG,
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { moveCards } from '@/game/move/move';
@@ -618,46 +618,50 @@ export function getCardsFromInvalid(
 	symmetric pair to {@link FreeCell.dealAll}
 */
 export function unDealAll(game: FreeCell): Card[] {
-	const deck: Card[] = [];
+	// compiling everything into the deck, and then to be sorted like game.cards
+	const deckOfCards: Card[] = [];
 
+	// there shouldn't be any leftover cards in the deck (this is "invalid gameplay" to undeal now)
 	game.deck.forEach((card) => {
-		deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+		deckOfCards.push({ ...card, location: { fixture: 'deck', data: [deckOfCards.length] } });
 	});
 
+	// there shouldn't be any cards in the foundation (this is "invalid gameplay" to undeal now)
 	for (let idx = game.foundations.length - 1; idx >= 0; idx--) {
-		const card = game.foundations[idx];
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		const card = game.foundations.at(idx);
 		if (card) {
-			deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+			deckOfCards.push({ ...card, location: { fixture: 'deck', data: [deckOfCards.length] } });
 		}
 	}
 
+	// there shouldn't be any cards in the foundation (this is "invalid gameplay" to undeal now)
 	for (let idx = game.cells.length - 1; idx >= 0; idx--) {
-		const card = game.cells[idx];
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		const card = game.cells.at(idx);
 		if (card) {
-			deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+			deckOfCards.push({ ...card, location: { fixture: 'deck', data: [deckOfCards.length] } });
 		}
 	}
 
 	const maxCascadeLength = game.tableau.reduce((ret, cascade) => Math.max(cascade.length, ret), 0);
 	for (let d1 = maxCascadeLength; d1 >= 0; d1--) {
 		for (let c = game.tableau.length - 1; c >= 0; c--) {
-			const card = game.tableau[c][d1];
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			const card = game.tableau[c].at(d1);
 			if (card) {
-				deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+				deckOfCards.push({ ...card, location: { fixture: 'deck', data: [deckOfCards.length] } });
 			}
 		}
 	}
 
-	sortCards(game.cards, deck);
+	// deck is going to be used _as_ "cards" to construct the next FreeCell state
+	// we must arrange the list in the order of the OG cards (game.cards),
+	// this is _not_ the position with the deck (game.deck)
+	sortCardsOG(game, deckOfCards);
 
-	if (deck.length !== game.cards.length) {
+	if (deckOfCards.length !== game.cards.length) {
 		throw new Error(
-			`incomplete implementation -- missing some cards (${deck.length.toString(10)} / ${game.cards.length.toString(10)})`
+			`incomplete implementation -- missing some cards (${deckOfCards.length.toString(10)} / ${game.cards.length.toString(10)})`
 		);
 	}
 
-	return deck;
+	return deckOfCards;
 }

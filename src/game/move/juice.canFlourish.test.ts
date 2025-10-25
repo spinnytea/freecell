@@ -1,6 +1,12 @@
-import { sortCards } from '@/game/card/card';
+import { CardLocation, sortCardsBySuitAndRank } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
-import { canFlourish, canFlourish52, collectCardsTillAceToDeck } from '@/game/move/juice';
+import {
+	canFlourish,
+	canFlourish52,
+	collectCardsTillAceToDeck,
+	moveCardsToDeck,
+	spreadDeckToEmptyPositions,
+} from '@/game/move/juice';
 
 // FIXME test.todo
 describe('move.juice', () => {
@@ -167,7 +173,7 @@ describe('move.juice', () => {
 					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 6] } },
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 6] } },
 				]);
-				// BUG (motivation) (techdebt) if any aces exposed at start, is there a single move we can make to win the game?
+				// BUG (techdebt) (motivation) if any aces exposed at start, is there a single move we can make to win the game?
 				expect(canFlourish52(game)).toEqual([
 					// { rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 6] } },
 					// { rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 6] } },
@@ -181,7 +187,7 @@ describe('move.juice', () => {
 		test.todo('can regular (not 52)');
 
 		describe('can regular any ace (not 52)', () => {
-			test('staged 1', () => {
+			test('example 1', () => {
 				const game = FreeCell.parse(
 					'' + //
 						'>                        \n' +
@@ -209,7 +215,7 @@ describe('move.juice', () => {
 				expect(canFlourish52(game)).toEqual([]);
 			});
 
-			test('staged 2', () => {
+			test('example 2', () => {
 				const game = FreeCell.parse(
 					'' + //
 						'>                        \n' +
@@ -231,7 +237,7 @@ describe('move.juice', () => {
 				expect(canFlourish52(game)).toEqual([]);
 			});
 
-			test('staged 3', () => {
+			test('example 3', () => {
 				const game = FreeCell.parse(
 					'' + // cannot autoFoundation; suits are too jumbled
 						'>                        \n' +
@@ -250,12 +256,39 @@ describe('move.juice', () => {
 						' KS KH KD KC             \n' +
 						' hand-jammed'
 				);
-				// BUG FIXME why can't AC flourish?
 				expect(canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 11] } },
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 11] } },
 					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 11] } },
-					// { rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 11] } },
+					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 11] } },
+				]);
+				expect(canFlourish52(game)).toEqual([]);
+			});
+
+			test('example 4', () => {
+				const game = FreeCell.parse(
+					'' + // cannot autoFoundation; suits are too jumbled
+						'>                        \n' +
+						' QS QH QD QC AC          \n' +
+						' JS JH JD JC KC          \n' +
+						' TS TH TD TC             \n' +
+						' 9S 9H 9D 9C             \n' +
+						' 8S 8H 8D 8C             \n' +
+						' 7S 7H 7D 7C             \n' +
+						' 6S 6H 6D 6C             \n' +
+						' 5S 5H 5D 5C             \n' +
+						' 4S 4H 4D 4C             \n' +
+						' 3S 3H 3D 3C             \n' +
+						' 2S 2H 2D 2C             \n' +
+						' AS AH AD                \n' +
+						' KS KH KD                \n' +
+						' hand-jammed'
+				);
+				expect(canFlourish(game)).toEqual([
+					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 11] } },
+					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 11] } },
+					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 11] } },
+					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [4, 0] } },
 				]);
 				expect(canFlourish52(game)).toEqual([]);
 			});
@@ -297,7 +330,7 @@ describe('move.juice', () => {
 					' AS AH AD AC             \n' +
 					' KS KH KD KC             \n' +
 					' hand-jammed',
-			])('staged %#', (gamePrint) => {
+			])('example %#', (gamePrint) => {
 				const game = FreeCell.parse(gamePrint);
 				expect(canFlourish(game)).toEqual([]);
 				expect(canFlourish52(game)).toEqual([]);
@@ -336,7 +369,7 @@ describe('move.juice', () => {
 					'    TC                   \n' +
 					'    AD                   \n' +
 					':d JS 2S 3C 6S JC 4H QC 9H 2C 5H JH QD 6C 4C 4D KD 8H KS 6H QS KH 3H 7H 9D 6D TS 2D 9C KC JD 8C TH 7C 5C 3S TD 5S 2H 9S \n' +
-					' invalid move JS→deck'
+					' invalid move 8k JS→deck'
 			);
 			expect(collectCardsTillAceToDeck(game, false).print()).toBe(
 				'' +
@@ -349,18 +382,7 @@ describe('move.juice', () => {
 					'    TC                JS \n' +
 					'    AD                   \n' +
 					':d 2S 3C 6S JC 4H QC 9H 2C 5H JH QD 6C 4C 4D KD 8H KS 6H QS KH 3H 7H 9D 6D TS 2D 9C KC JD 8C TH 7C 3S TD 5S 2H 9S \n' +
-					' invalid move QC-4H-JC-6S-3C-2S→deck'
-			);
-
-			// FIXME move this to it's own test - or at least as part of `moveDeckToBoard`
-			const g = collectCardsTillAceToDeck(game, true);
-			sortCards(g.cards, g.deck, { reassignD0: true, sortBySuit: true });
-			expect(g.__printDeck()).toBe(
-				' ' +
-					'2C 3C 4C 5C 6C 7C 8C 9C JC QC KC ' +
-					'2D 4D 6D 9D TD JD QD KD ' +
-					'2H 3H 4H 5H 6H 7H 8H 9H TH JH KH ' +
-					'2S 3S 5S 6S 9S TS JS QS KS '
+					' invalid move 7k QC-4H-JC-6S-3C-2S→deck'
 			);
 		});
 
@@ -386,7 +408,7 @@ describe('move.juice', () => {
 					'                   AH    \n' +
 					'                   AC    \n' +
 					':d 4S KC TS KD 7C 9D JH QH JS 2D TD 7H 3D KS KH 6S 7D 6D TH QD 5S 2C 9S 8S 3C TC JD 8D JC 8H 9C 9H 3H 5C 2S QS 6C 6H 2H 5H 4C 5D 8C 4D 3S 4H \n' +
-					' invalid move 9D-7C-KD-TS-KC-4S→deck'
+					' invalid move 8k 9D-7C-KD-TS-KC-4S→deck'
 			);
 			expect(collectCardsTillAceToDeck(game, false).print()).toBe(
 				'' +
@@ -397,7 +419,7 @@ describe('move.juice', () => {
 					'                   AC    \n' +
 					'                   JH    \n' +
 					':d 4S KC TS KD 7C 9D QH JS 2D TD 7H 3D KS KH 6S 7D 6D TH QD 5S 2C 9S 8S 3C TC JD 8D JC 8H 9C 9H 3H 5C QS 6C 6H 2H 5H 4C 5D 8C 4D 3S 4H \n' +
-					' invalid move 9D-7C-KD-TS-KC-4S→deck'
+					' invalid move 8k 9D-7C-KD-TS-KC-4S→deck'
 			);
 		});
 
@@ -423,7 +445,7 @@ describe('move.juice', () => {
 					'          AC    2S       \n' +
 					'                AH       \n' +
 					':d JS JH 9C 4D QD KD 5H 5S 5D QC 3S QS 2C QH 7D TH 2H 8C 4S 3D TS 3C KC 5C 8H KH 2D 7S 3H 8D 6S 6C TD JD 7C JC 9D 8S 4H 6H 9S KS 7H 9H TC \n' +
-					' invalid move KD-QD-4D-9C-JH-JS→deck'
+					' invalid move 8k KD-QD-4D-9C-JH-JS→deck'
 			);
 			expect(collectCardsTillAceToDeck(game, false).print()).toBe(
 				'' +
@@ -434,7 +456,7 @@ describe('move.juice', () => {
 					'          TS    AH       \n' +
 					'                2C       \n' +
 					':d JS JH 9C 4D QD KD 5H 5S 5D QC 3S QS QH 7D TH 2H 8C 4S 3D 3C KC 5C 8H KH 2D 7S 3H 8D 6S 6C TD JD 7C JC 9D 8S 4H 6H 9S KS 7H 9H TC \n' +
-					' invalid move KD-QD-4D-9C-JH-JS→deck'
+					' invalid move 8k KD-QD-4D-9C-JH-JS→deck'
 			);
 		});
 
@@ -445,14 +467,122 @@ describe('move.juice', () => {
 					'>            AS AH AD AC \n' +
 					'                         \n' +
 					':d QC TC 8C 6C 4C QD TD 8D 6D 4D QH TH 8H 6H 4H QS TS 8S 6S 4S KC JC 9C 7C 5C 3C KD JD 9D 7D 5D 3D KH JH 9H 7H 5H 3H KS JS 9S 7S 5S 3S 2C 2D 2H 2S \n' +
-					' invalid move 4C-6C-8C-TC-QC→deck'
+					' invalid move 8k 4C-6C-8C-TC-QC→deck'
 			);
 			expect(collectCardsTillAceToDeck(game, false).print()).toBe(
 				'' + //
 					'>            AS AH AD AC \n' +
 					'                         \n' +
 					':d QC TC 8C 6C 4C QD TD 8D 6D 4D QH TH 8H 6H 4H QS TS 8S 6S 4S KC JC 9C 7C 5C 3C KD JD 9D 7D 5D 3D KH JH 9H 7H 5H 3H KS JS 9S 7S 5S 3S 2C 2D 2H 2S \n' +
-					' invalid move 4C-6C-8C-TC-QC→deck'
+					' invalid move 8k 4C-6C-8C-TC-QC→deck'
+			);
+		});
+	});
+
+	describe('spreadDeckToEmptyPositions', () => {
+		test('Game #5', () => {
+			let game = new FreeCell().shuffle32(5).dealAll();
+			game = collectCardsTillAceToDeck(game, true);
+
+			sortCardsBySuitAndRank(game.deck);
+			expect(game.print()).toBe(
+				'' +
+					'>                        \n' +
+					' AH 8S                3D \n' +
+					'    AS                4S \n' +
+					'    5D                8D \n' +
+					'    7S                7D \n' +
+					'    QH                AC \n' +
+					'    TC                   \n' +
+					'    AD                   \n' +
+					':d 2C 3C 4C 5C 6C 7C 8C 9C JC QC KC 2D 4D 6D 9D TD JD QD KD 2H 3H 4H 5H 6H 7H 8H 9H TH JH KH 2S 3S 5S 6S 9S TS JS QS KS \n' +
+					' invalid move 8k JS→deck'
+			);
+			expect(game.__printDeck()).toBe(
+				' ' +
+					'2C 3C 4C 5C 6C 7C 8C 9C JC QC KC ' +
+					'2D 4D 6D 9D TD JD QD KD ' +
+					'2H 3H 4H 5H 6H 7H 8H 9H TH JH KH ' +
+					'2S 3S 5S 6S 9S TS JS QS KS '
+			);
+
+			const emptyPositions: CardLocation[] = [
+				{ fixture: 'cascade', data: [2, 0] },
+				{ fixture: 'cascade', data: [3, 0] },
+				{ fixture: 'cascade', data: [4, 0] },
+				{ fixture: 'cascade', data: [5, 0] },
+				{ fixture: 'cascade', data: [6, 0] },
+			];
+			game = spreadDeckToEmptyPositions(game, emptyPositions);
+			expect(game.print()).toBe(
+				'' +
+					'>                        \n' +
+					' AH 8S KC KD KH KS    3D \n' +
+					'    AS QC QD JH QS    4S \n' +
+					'    5D JC JD TH JS    8D \n' +
+					'    7S 9C TD 9H TS    7D \n' +
+					'    QH 8C 9D 8H 9S    AC \n' +
+					'    TC 7C 6D 7H 6S       \n' +
+					'    AD 6C 4D 6H 5S       \n' +
+					'       5C 2D 5H 3S       \n' +
+					'       4C    4H 2S       \n' +
+					'       3C    3H          \n' +
+					'       2C    2H          \n' +
+					' invalid move k6 KS-QS-JS-TS-9S-6S-5S-3S-2S→cascade'
+			);
+		});
+
+		test('Game #16508', () => {
+			let game = new FreeCell().shuffle32(16508).dealAll();
+			game = collectCardsTillAceToDeck(game, true);
+			expect(game.print()).toBe(
+				'' +
+					'>                        \n' +
+					'          AS    6D       \n' +
+					'          AD    4C       \n' +
+					'          AC    2S       \n' +
+					'                AH       \n' +
+					':d JS JH 9C 4D QD KD 5H 5S 5D QC 3S QS 2C QH 7D TH 2H 8C 4S 3D TS 3C KC 5C 8H KH 2D 7S 3H 8D 6S 6C TD JD 7C JC 9D 8S 4H 6H 9S KS 7H 9H TC \n' +
+					' invalid move 8k KD-QD-4D-9C-JH-JS→deck'
+			);
+			game = game.$selectCard('AC');
+			expect(game.selection).toBeTruthy();
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			game = moveCardsToDeck(game, game.selection!);
+			sortCardsBySuitAndRank(game.deck);
+			expect(game.__printDeck()).toBe(
+				' ' +
+					'AC 2C 3C 5C 6C 7C 8C 9C TC JC QC KC ' +
+					'2D 3D 4D 5D 7D 8D 9D TD JD QD KD ' +
+					'2H 3H 4H 5H 6H 7H 8H 9H TH JH QH KH ' +
+					'3S 4S 5S 6S 7S 8S 9S TS JS QS KS '
+			);
+
+			const emptyPositions: CardLocation[] = [
+				{ fixture: 'cascade', data: [0, 0] },
+				{ fixture: 'cascade', data: [1, 0] },
+				{ fixture: 'cascade', data: [2, 0] },
+				{ fixture: 'cascade', data: [4, 0] },
+				{ fixture: 'cascade', data: [6, 0] },
+				{ fixture: 'cascade', data: [7, 0] },
+			];
+			game = spreadDeckToEmptyPositions(game, emptyPositions);
+			expect(game.print()).toBe(
+				'' +
+					'                         \n' +
+					' KC KD KH AS KS 6D       \n' +
+					' QC QD QH>AD QS 4C       \n' +
+					' JC JD JH    JS 2S       \n' +
+					' TC TD TH    TS AH       \n' +
+					' 9C 9D 9H    9S          \n' +
+					' 8C 8D 8H    8S          \n' +
+					' 7C 7D 7H    7S          \n' +
+					' 6C 5D 6H    6S          \n' +
+					' 5C 4D 5H    5S          \n' +
+					' 3C 3D 4H    4S          \n' +
+					' 2C 2D 3H    3S          \n' +
+					' AC    2H                \n' +
+					' invalid move k5 KS-QS-JS-TS-9S-8S-7S-6S-5S-4S-3S→cascade'
 			);
 		});
 	});

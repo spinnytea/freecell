@@ -25,7 +25,7 @@ function saveToLocalStorage(game: FreeCell): void {
 			// this way we can recover the last one after we finish,
 			// i.e. if we accidentally start a new one before we can snapshot it / archive it
 			// we only need the one for this usecase; it's not a showcase of past games
-			// REVIEW (settings) (techdebt) we can get this from a browser/laptop, how do we get it from, say, mobile?
+			// REVIEW (techdebt) (settings) we can get this from a browser/laptop, how do we get it from, say, mobile?
 			//  - may need to make another endpoint or something
 			//  - /freecell/manualtesting -> /freecell/data
 			window.localStorage.setItem(LOCAL_STORAGE_KEY_PREV, gamePrintHist);

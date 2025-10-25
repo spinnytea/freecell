@@ -30,23 +30,24 @@ describe('game.$moveCardToPosition', () => {
 				' select AH'
 		);
 
-		// REVIEW (techdebt) this move isn't allowed
+		// REVIEW (techdebt) (deck) this move isn't allowed
 		// one part of the logic allows moving a card from the deck into play
 		// another but a bunch of code relies on shorthand moves that don't allow for the deck to be interacted with
 		// if we are going to rely on the deck so much, we shouldn't attempt this move
 		// we block it with moveCardToPosition, but it shouldn't explode if we don't
 		expect(() => game.$moveCardToPosition('AH', 'a')).not.toThrow();
-		// basically, we can't "move to or from" the deck, because it's there's no move shorthand for it
+		expect(game.$moveCardToPosition('AH', 'a')).toBe(game);
+
+		// REVIEW (techdebt) (deck) this whole block is wrong now
+		// basically, we can't "move to or from" the deck, ~~because it's there's no move shorthand for it~~
 		// ~~maybe we should treat it like "foundation", but it's a stack or a queue (not a set of spots)~~
 		// maybe we should give it a single letter, like foundation
 		// but then we also need to allow actually moving to and from it - or at least, ... how far do we take this
-		// maybe throwing _is_ fine if we can't get there
+		// ~~maybe throwing _is_ fine if we can't get there~~
 		expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
 		expect(game.$selectCard('AH').cursor).toEqual({ fixture: 'deck', data: [2] });
-		expect(() => shorthandPosition(game.cursor)).toThrow(
-			'invalid position: {"fixture":"deck","data":[2]}'
-		);
-		expect(game.$moveCardToPosition('AH', 'a')).toBe(game);
+		expect(shorthandPosition(game.cursor)).toBe('k'); // REVIEW (techdebt) (deck) we have a deck shorthand now
+		expect(game.$moveCardToPosition('AH', 'k')).toBe(game);
 
 		game = game.dealAll();
 		expect(game.print()).toBe(

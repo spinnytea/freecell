@@ -132,33 +132,48 @@ interface OptionsTouch extends OptionsNonstandardGameplay {
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
 export class FreeCell {
-	cards: Card[];
+	readonly cards: Card[];
 	readonly win: boolean;
 
 	// REVIEW (techdebt) is this the best way to check? do we need it for other things?
-	get winIsFloursh(): boolean {
+	get winIsFlourish(): boolean {
 		if (!this.win) return false;
 		// TODO (move-flourish) move-flourish or auto-flourish
 		return this.previousAction.text.includes('flourish');
 	}
+	// REVIEW (techdebt) this is _not_ the best way to check this
+	//  - like, _yes_ `move xx xx→xx (flourish xx xx,xx)`
+	//  - but like, also, _NnNoOoOo_
+	get winIsFlourish52(): boolean {
+		if (!this.win) return false;
+		const idx = this.previousAction.text.indexOf('(');
+		if (idx === -1) return false;
+		const autoActionTextLength = 219; // '(flourish  )'.length + (52*3) + 51;
+		return this.previousAction.text.length - idx === autoActionTextLength;
+	}
 
-	// structure to make the logic easier
 	// REVIEW (motivation) consider: preferred foundation suits? (HSDC) - render these?
-	deck: Card[];
-	cells: (Card | null)[];
-	foundations: (Card | null)[];
-	tableau: Card[][];
+	//  - i.e. instead of allowing any suit in any foundation spot, suits go in designated spots
+	//  - this kind of goes against the whole flexible design
+	// structure to make the logic easier
+	readonly deck: Card[];
+	readonly cells: (Card | null)[];
+	readonly foundations: (Card | null)[];
+	readonly tableau: Card[][];
 
+	// XXX (techdebt) these are also readonly, but some order operations are easier to do after we clone the game
 	// controls
 	cursor: CardLocation;
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
-	// IDEA (animation) (flash-rank) (hud) can we do like "peek all"
+	// IDEA (animation) (flash-rank) (hud) could be something like "peek all"
 	// flashRank: Rank | null;
+	// FIXME (animation) (flourish-anim) (hud) impl flashCards for flourish aces?
+	// flashCards: Cards[] | null;
 
 	// history
-	history: string[];
-	previousAction: PreviousAction;
+	readonly history: string[];
+	readonly previousAction: PreviousAction;
 
 	// custom rules
 	// readonly jokers: 'none' | 'low' | 'high' | 'wild' | 'unknown'; // XXX (techdebt) use or remove
@@ -880,7 +895,7 @@ export class FreeCell {
 				const reversePrevD0 = this.deck.length - this.cursor.data[0] - 1;
 				const clampD0 = Math.max(0, Math.min(reversePrevD0, game.deck.length));
 				const nextD0 = Math.max(0, game.deck.length - 1 - clampD0);
-				game.cursor.data[0] = nextD0;
+				game.cursor = { fixture: 'deck', data: [nextD0] };
 			}
 		}
 
@@ -1433,7 +1448,7 @@ export class FreeCell {
 			// now, reverse the deck
 			cards.forEach((card) => {
 				if (card.location.fixture === 'deck') {
-					card.location.data[0] = deckLength - card.location.data[0] - 1;
+					card.location = { fixture: 'deck', data: [deckLength - card.location.data[0] - 1] };
 				}
 			});
 		}

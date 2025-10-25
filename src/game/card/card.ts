@@ -49,8 +49,8 @@ export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 //  - cascade -> column
 export type Fixture = 'deck' | 'cell' | 'foundation' | 'cascade';
 export interface CardLocation {
-	fixture: Fixture;
-	data: number[];
+	readonly fixture: Fixture;
+	readonly data: number[];
 }
 
 /**
@@ -84,6 +84,7 @@ export type Position =
 	| 'e'
 	| 'f'
 	| 'h'
+	| 'k' // deck
 	| '1'
 	| '2'
 	| '3'
@@ -97,8 +98,8 @@ export type Position =
 
 // REVIEW (optimize) should CardSH include `sh/rs = shorthandCard(this)`?
 export interface CardSH {
-	rank: Rank;
-	suit: Suit;
+	readonly rank: Rank;
+	readonly suit: Suit;
 }
 export interface Card extends CardSH {
 	location: CardLocation;
@@ -152,37 +153,24 @@ export function initializeDeck(): Card[] {
 }
 
 /**
-	naïve sort of the cards
+	used when we collect all the cards from across tableau
+	(for some reason, like reversing a deal)
+	and we need to re-arrange the collected cards back into the OG order like whe the game was created
+
+	`game.cards` just always have a fixed order, regardless of the locations of those cards \
+	`game.deck`, `game.cell`, `game.foundation`, `game.tableau` have cards in a gameplay-meaningful order
+
+	(this could be a sortCardsByRankAndSuit or something, but "og order" is what's important here)
+
 	@param cards OG order of the cards (i.e. game.cards)
-	@param list sort this list in-place
+	@param cards sort this list in-place
 */
-export function sortCards(
-	cards: Card[],
-	list: Card[],
-	{
-		reassignD0 = false,
-		sortBySuit = false,
-	}: {
-		/** @deprecated it feels weird to do this */
-		reassignD0?: boolean;
-		/** @deprecated FIXME remove this param */
-		sortBySuit?: boolean;
-	} = {}
-): void {
+export function sortCardsOG(game: FreeCell, cards: Card[]): void {
 	const order = new Map<string, number>();
-	cards.forEach((card, idx) => {
+	game.cards.forEach((card, idx) => {
 		order.set(shorthandCard(card), idx);
 	});
-	list.sort((a, b) => {
-		if (sortBySuit) {
-			// also sort by suit
-			const sa = SuitList.indexOf(a.suit);
-			const sb = SuitList.indexOf(b.suit);
-			if (sa !== sb) {
-				return sa - sb;
-			}
-		}
-
+	cards.sort((a, b) => {
 		const oa = order.get(shorthandCard(a));
 		const ob = order.get(shorthandCard(b));
 
@@ -193,12 +181,31 @@ export function sortCards(
 
 		return oa - ob;
 	});
+}
 
-	if (reassignD0) {
-		list.reverse().forEach((card, idx) => {
-			card.location.data[0] = idx;
-		});
-	}
+/**
+	sort the cards by suit (primary) and rank (secondary),
+	and then assigns d0 to all of them
+	(this is meant to be used _as a_ game.deck)
+*/
+export function sortCardsBySuitAndRank(deck: Card[]): void {
+	deck.sort((a, b) => {
+		// sort by suit
+		const sa = SuitList.indexOf(a.suit);
+		const sb = SuitList.indexOf(b.suit);
+		if (sa !== sb) return sb - sa;
+
+		// sort by rank
+		const ra = RankList.indexOf(a.rank);
+		const rb = RankList.indexOf(b.rank);
+		return rb - ra;
+	});
+
+	// this is "unshuffle" the cards
+	// so if we game.undo to undeal (but no unshuffle), we will lose that
+	deck.forEach((card, idx) => {
+		card.location = { fixture: 'deck', data: [idx] };
+	});
 }
 
 export function calcCardId(shorthand: string, gameBoardId?: string) {
@@ -267,8 +274,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 	switch (location.fixture) {
 		case 'deck':
 			{
-				const card = game.deck[d0];
-				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+				const card = game.deck.at(d0);
 				if (card) {
 					return {
 						location,
@@ -415,19 +421,30 @@ export function shorthandSequence(sequence: CardSequence) {
 
 export function shorthandPosition(location: CardLocation, includeD0 = false): Position {
 	const d0 = location.data[0];
-	if (location.fixture === 'foundation') {
-		const braille = includeD0 ? countToBraille(d0) : '';
-		return ('h' + braille) as Position;
-	} else if (location.fixture === 'cascade') {
-		// const braille = includeD0 ? countToBraille(location.data[1]) : '';
-		if (d0 === 9) {
-			return '0';
-		} else if (d0 >= 0 && d0 < 9) {
-			return (d0 + 1).toString(10) as Position;
+	switch (location.fixture) {
+		case 'deck': {
+			const braille = includeD0 && d0 >= 0 ? countToBraille(d0) : '';
+			return ('k' + braille) as Position;
 		}
-	} else if (location.fixture === 'cell') {
-		if (d0 >= 0 && d0 < 6) {
-			return (d0 + 10).toString(16) as Position;
+		case 'cell': {
+			if (d0 >= 0 && d0 < 6) {
+				return (d0 + 10).toString(16) as Position;
+			}
+			break;
+		}
+		case 'foundation': {
+			const braille = includeD0 && d0 >= 0 ? countToBraille(d0) : '';
+			return ('h' + braille) as Position;
+		}
+		case 'cascade': {
+			const d1 = location.data[1];
+			const braille = includeD0 && d1 >= 0 ? countToBraille(d1) : '';
+			if (d0 === 9) {
+				return ('0' + braille) as Position;
+			} else if (d0 >= 0 && d0 < 9) {
+				return ((d0 + 1).toString(10) + braille) as Position;
+			}
+			break;
 		}
 	}
 	throw new Error(`invalid position: ${JSON.stringify(location)}`);

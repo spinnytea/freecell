@@ -512,7 +512,7 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 		case 'deck': {
 			// we can, in theory, move cards to the deck
 			// this isn't standard gameplay
-			// const d0 = to.data[0]; // FIXME (gameplay) (techdebt) allow placing the cards anywhere
+			// const d0 = to.data[0]; // FIXME (techdebt) (deck) (gameplay) allow placing the cards anywhere
 			const d0 = game.deck.length;
 			from_cards.forEach((card, idx) => {
 				card.location = {
@@ -644,9 +644,8 @@ export function parseShorthandMove(
 
 		if (to_location.fixture === 'cascade') {
 			// adjust selection until stackable on target
-			const tail_card = game.tableau[to_location.data[0]][to_location.data[1]];
+			const tail_card = game.tableau[to_location.data[0]].at(to_location.data[1]);
 			let d1 = from_location.data[1];
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (tail_card) {
 				// moving to cascade:sequence, pick rank we can stack
 				while (

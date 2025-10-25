@@ -141,6 +141,9 @@ describe('game.undo (+ history)', () => {
 
 			test('shuffled', () => {
 				const game = new FreeCell().shuffle32(1);
+				expect(game.__printDeck()).toBe(
+					' JD 2D 9H JC 5D 7H 7C 5H KD KC 9S 5S AD QC KH 3H 2S KS 9D QD JS AS AH 3C 4C 5C TS QH 4H AC 4D 7S 3S TD 4S TH 8H 2C JH 7D 6D 8S 8D QS 6C 3D 8C TC 6S 9C 2H>6H '
+				);
 				const dealt = game.dealAll();
 				expect(dealt.previousAction).toEqual({
 					text: 'deal all cards',
@@ -158,7 +161,16 @@ describe('game.undo (+ history)', () => {
 						' 6S 9C 2H 6H             \n' +
 						' deal all cards'
 				);
+				expect(dealt.__printDeck()).toBe('');
 				const undid = dealt.undo();
+				expect(undid.__printDeck()).toBe(
+					' JD 2D 9H JC 5D 7H 7C 5H KD KC 9S 5S AD QC KH 3H 2S KS 9D QD JS AS AH 3C 4C 5C TS QH 4H AC 4D 7S 3S TD 4S TH 8H 2C JH 7D 6D 8S 8D QS 6C 3D 8C TC 6S 9C 2H>6H '
+				);
+				expect(game.deck[0].location.data[0]).toBe(0);
+				expect(game.deck[9].location.data[0]).toBe(9);
+				expect(dealt.deck).toEqual([]);
+				expect(undid.deck[0].location.data[0]).toBe(0);
+				expect(undid.deck[9].location.data[0]).toBe(9);
 				expect(undid.previousAction.gameFunction).toBe('undo');
 				delete undid.previousAction.gameFunction;
 				expect(undid).toEqual(game);
