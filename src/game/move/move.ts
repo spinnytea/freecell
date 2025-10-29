@@ -512,12 +512,25 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 		case 'deck': {
 			// we can, in theory, move cards to the deck
 			// this isn't standard gameplay
-			// const d0 = to.data[0]; // FIXME (techdebt) (deck) (gameplay) allow placing the cards anywhere
-			const d0 = game.deck.length;
+			const d0 = to.data[0];
+
+			// make space for the from_cards
+			cards.forEach((card) => {
+				if (card.location.fixture === 'deck') {
+					if (card.location.data[0] >= d0) {
+						card.location = {
+							fixture: 'deck',
+							data: [card.location.data[0] + from_cards.length],
+						};
+					}
+				}
+			});
+
+			// put in the from cards
 			from_cards.forEach((card, idx) => {
 				card.location = {
 					fixture: 'deck',
-					data: [d0 + idx],
+					data: [d0 - idx + from_cards.length - 1],
 				};
 			});
 			break;
@@ -581,7 +594,7 @@ export function calcCursorActionText(
 	const cardSuffix = card ? ` ${shorthandCard(card)}` : '';
 	switch (location.fixture) {
 		case 'deck':
-			return `cursor ${suffix}${cardSuffix}`;
+			return `cursor ${suffix} ${shorthandPosition(location, true)}${cardSuffix || ' deck'}`;
 		case 'cell':
 			return `cursor ${suffix} ${shorthandPosition(location)}${cardSuffix}`;
 		case 'cascade':
@@ -628,6 +641,15 @@ export function parseShorthandMove(
 	if (to_location.fixture === 'cascade') {
 		// clamp
 		to_location.data[1] = Math.max(0, game.tableau[to_location.data[0]].length - 1);
+	}
+
+	if (from_location.fixture === 'deck') {
+		// top card in deck
+		from_location.data[0] = game.deck.length - 1;
+	}
+	if (to_location.fixture === 'deck') {
+		// top of the deck
+		to_location.data[0] = game.deck.length;
 	}
 
 	// clean up from_location based on MoveSourceType
@@ -716,8 +738,9 @@ export function parseShorthandPositionForSelect(
 	// verify position wrt game - e.g. cellCount,cascadeCount
 	switch (from_location.fixture) {
 		case 'deck':
-			// there is no shorthand for deck (it's not a location to move from/to), but even IFF there was, __clampCursor can handle it
+			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
+			from_location.data[0] = game.deck.length - 1;
 			break;
 		case 'cell':
 			// REVIEW (techdebt) (controls) text: "invalid board size", this isn't just a key press
@@ -779,8 +802,9 @@ export function parseShorthandPositionForMove(
 	// verify position wrt game - e.g. cellCount,cascadeCount
 	switch (to_location.fixture) {
 		case 'deck':
-			// there is no shorthand for deck (it's not a location to move from/to), but even IFF there was, __clampCursor can handle it
+			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
+			to_location.data[0] = game.deck.length;
 			break;
 		case 'cell':
 			if (to_location.data[0] >= game.cells.length) return null;

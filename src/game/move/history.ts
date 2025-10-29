@@ -56,7 +56,7 @@ export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
 	 - then it'll just be, like, a new game
 	 - should we have a special animation for this?
 */
-type GameFunction = 'undo' | 'restart' | 'newGame' | 'drag-drop' | 'recall-or-bury';
+export type GameFunction = 'undo' | 'restart' | 'newGame' | 'drag-drop' | 'recall-or-bury';
 
 export interface PreviousAction {
 	/**
@@ -184,7 +184,7 @@ export function parseCursorFromPreviousActionText(
 			const cursor = parseShorthandPosition_INCOMPLETE(to);
 			switch (cursor.fixture) {
 				case 'deck':
-					// XXX (gameplay) can we, in theory, move a card to the deck? but we don't
+					// XXX (deck) (gameplay) can we, in theory, move a card to the deck? but we don't
 					break;
 				case 'cell':
 					// each cell identifies it's own d0
@@ -287,7 +287,7 @@ export function parseAltCursorFromPreviousActionText(
 		case 'move': {
 			const { from } = parseActionTextMove(actionText);
 			const cursor = parseShorthandPosition_INCOMPLETE(from);
-			// deck doesn't have a shorthand (so 0 is fine, if we see it)
+			// XXX (deck) (gameplay) deck isn't standard gameplay (so 0 is fine, if we see it)
 			// cell is already accurate
 			// foundation can't be `from` in an move (so 0 is fine, if we see it)
 			// cascade needs to be "the last card" (since we can only move from the bottom)
@@ -570,8 +570,11 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 	const matchSeed = /shuffle deck \((\d+)\)/.exec(history[0]);
 	if (!matchSeed) return null;
 	const seed = parseInt(matchSeed[1], 10);
+	let hasInvalid = false;
 	const moves = history
 		.map((actionText) => {
+			if (actionText.startsWith('invalid ')) hasInvalid = true;
+			if (hasInvalid) return '';
 			let match = MOVE_REGEX.exec(actionText);
 			if (match) {
 				const [, from, to] = match;
@@ -585,6 +588,10 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 			return '';
 		})
 		.filter((m) => m);
+	// FIXME is there a cleaner way to return early?
+	//  - convert to a for(..) loop
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	if (hasInvalid) return null;
 	return { seed, moves };
 }
 

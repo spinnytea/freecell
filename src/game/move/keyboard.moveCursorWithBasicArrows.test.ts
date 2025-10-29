@@ -637,14 +637,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'cascade', data: [5, 0] }} | ${{ fixture: 'deck', data: [46] }}       | ${'cursor down w'}
 						${{ fixture: 'cascade', data: [6, 0] }} | ${{ fixture: 'deck', data: [45] }}       | ${'cursor down w'}
 						${{ fixture: 'cascade', data: [7, 0] }} | ${{ fixture: 'deck', data: [44] }}       | ${'cursor down w'}
-						${{ fixture: 'deck', data: [51] }}      | ${{ fixture: 'deck', data: [51] }}       | ${'cursor stop KS'}
-						${{ fixture: 'deck', data: [50] }}      | ${{ fixture: 'deck', data: [50] }}       | ${'cursor stop KH'}
-						${{ fixture: 'deck', data: [31] }}      | ${{ fixture: 'deck', data: [31] }}       | ${'cursor stop 8S'}
-						${{ fixture: 'deck', data: [30] }}      | ${{ fixture: 'deck', data: [30] }}       | ${'cursor stop 8H'}
-						${{ fixture: 'deck', data: [13] }}      | ${{ fixture: 'deck', data: [13] }}       | ${'cursor stop 4D'}
-						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [12] }}       | ${'cursor stop 4C'}
-						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [1] }}        | ${'cursor stop AD'}
-						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop AC'}
+						${{ fixture: 'deck', data: [51] }}      | ${{ fixture: 'deck', data: [51] }}       | ${'cursor stop k⡳ KS'}
+						${{ fixture: 'deck', data: [50] }}      | ${{ fixture: 'deck', data: [50] }}       | ${'cursor stop k⡲ KH'}
+						${{ fixture: 'deck', data: [31] }}      | ${{ fixture: 'deck', data: [31] }}       | ${'cursor stop k⡟ 8S'}
+						${{ fixture: 'deck', data: [30] }}      | ${{ fixture: 'deck', data: [30] }}       | ${'cursor stop k⡞ 8H'}
+						${{ fixture: 'deck', data: [13] }}      | ${{ fixture: 'deck', data: [13] }}       | ${'cursor stop k⡍ 4D'}
+						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [12] }}       | ${'cursor stop k⡌ 4C'}
+						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [1] }}        | ${'cursor stop k⡁ AD'}
+						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop k⡀ AC'}
 					`(
 						'$start.fixture $start.data',
 						({
@@ -843,7 +843,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'cascade', data: [5, 5] }} | ${{ fixture: 'cascade', data: [5, 5] }}  | ${'cursor stop 6 2H'}
 						${{ fixture: 'cascade', data: [6, 5] }} | ${{ fixture: 'cascade', data: [6, 5] }}  | ${'cursor stop 7 2D'}
 						${{ fixture: 'cascade', data: [7, 5] }} | ${{ fixture: 'cascade', data: [7, 5] }}  | ${'cursor stop 8 2C'}
-						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop'}
+						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop k⡀ deck'}
 					`(
 						'$start.fixture $start.data',
 						({
@@ -1029,14 +1029,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'cascade', data: [7, 0] }} | ${{ fixture: 'deck', data: [44] }}       | ${'cursor down w'}
 						${{ fixture: 'cascade', data: [8, 0] }} | ${{ fixture: 'deck', data: [43] }}       | ${'cursor down w'}
 						${{ fixture: 'cascade', data: [9, 0] }} | ${{ fixture: 'deck', data: [42] }}       | ${'cursor down w'}
-						${{ fixture: 'deck', data: [51] }}      | ${{ fixture: 'deck', data: [51] }}       | ${'cursor stop KS'}
-						${{ fixture: 'deck', data: [50] }}      | ${{ fixture: 'deck', data: [50] }}       | ${'cursor stop KH'}
-						${{ fixture: 'deck', data: [31] }}      | ${{ fixture: 'deck', data: [31] }}       | ${'cursor stop 8S'}
-						${{ fixture: 'deck', data: [30] }}      | ${{ fixture: 'deck', data: [30] }}       | ${'cursor stop 8H'}
-						${{ fixture: 'deck', data: [13] }}      | ${{ fixture: 'deck', data: [13] }}       | ${'cursor stop 4D'}
-						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [12] }}       | ${'cursor stop 4C'}
-						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [1] }}        | ${'cursor stop AD'}
-						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop AC'}
+						${{ fixture: 'deck', data: [51] }}      | ${{ fixture: 'deck', data: [51] }}       | ${'cursor stop k⡳ KS'}
+						${{ fixture: 'deck', data: [50] }}      | ${{ fixture: 'deck', data: [50] }}       | ${'cursor stop k⡲ KH'}
+						${{ fixture: 'deck', data: [31] }}      | ${{ fixture: 'deck', data: [31] }}       | ${'cursor stop k⡟ 8S'}
+						${{ fixture: 'deck', data: [30] }}      | ${{ fixture: 'deck', data: [30] }}       | ${'cursor stop k⡞ 8H'}
+						${{ fixture: 'deck', data: [13] }}      | ${{ fixture: 'deck', data: [13] }}       | ${'cursor stop k⡍ 4D'}
+						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [12] }}       | ${'cursor stop k⡌ 4C'}
+						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [1] }}        | ${'cursor stop k⡁ AD'}
+						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop k⡀ AC'}
 					`(
 						'$start.fixture $start.data',
 						({
@@ -1212,14 +1212,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'cascade', data: [2, 0] }} | ${{ fixture: 'deck', data: [49] }}       | ${'cursor down w'}
 						${{ fixture: 'cascade', data: [3, 0] }} | ${{ fixture: 'deck', data: [48] }}       | ${'cursor down w'}
 						${{ fixture: 'cascade', data: [4, 0] }} | ${{ fixture: 'deck', data: [47] }}       | ${'cursor down w'}
-						${{ fixture: 'deck', data: [51] }}      | ${{ fixture: 'deck', data: [51] }}       | ${'cursor stop KS'}
-						${{ fixture: 'deck', data: [50] }}      | ${{ fixture: 'deck', data: [50] }}       | ${'cursor stop KH'}
-						${{ fixture: 'deck', data: [31] }}      | ${{ fixture: 'deck', data: [31] }}       | ${'cursor stop 8S'}
-						${{ fixture: 'deck', data: [30] }}      | ${{ fixture: 'deck', data: [30] }}       | ${'cursor stop 8H'}
-						${{ fixture: 'deck', data: [13] }}      | ${{ fixture: 'deck', data: [13] }}       | ${'cursor stop 4D'}
-						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [12] }}       | ${'cursor stop 4C'}
-						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [1] }}        | ${'cursor stop AD'}
-						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop AC'}
+						${{ fixture: 'deck', data: [51] }}      | ${{ fixture: 'deck', data: [51] }}       | ${'cursor stop k⡳ KS'}
+						${{ fixture: 'deck', data: [50] }}      | ${{ fixture: 'deck', data: [50] }}       | ${'cursor stop k⡲ KH'}
+						${{ fixture: 'deck', data: [31] }}      | ${{ fixture: 'deck', data: [31] }}       | ${'cursor stop k⡟ 8S'}
+						${{ fixture: 'deck', data: [30] }}      | ${{ fixture: 'deck', data: [30] }}       | ${'cursor stop k⡞ 8H'}
+						${{ fixture: 'deck', data: [13] }}      | ${{ fixture: 'deck', data: [13] }}       | ${'cursor stop k⡍ 4D'}
+						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [12] }}       | ${'cursor stop k⡌ 4C'}
+						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [1] }}        | ${'cursor stop k⡁ AD'}
+						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop k⡀ AC'}
 					`(
 						'$start.fixture $start.data',
 						({
@@ -1404,14 +1404,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'cascade', data: [1, 0] }} | ${{ fixture: 'deck', data: [50] }}       | ${'cursor down w'}
 						${{ fixture: 'cascade', data: [2, 0] }} | ${{ fixture: 'deck', data: [49] }}       | ${'cursor down w'}
 						${{ fixture: 'cascade', data: [3, 0] }} | ${{ fixture: 'deck', data: [48] }}       | ${'cursor down w'}
-						${{ fixture: 'deck', data: [51] }}      | ${{ fixture: 'deck', data: [51] }}       | ${'cursor stop KS'}
-						${{ fixture: 'deck', data: [50] }}      | ${{ fixture: 'deck', data: [50] }}       | ${'cursor stop KH'}
-						${{ fixture: 'deck', data: [31] }}      | ${{ fixture: 'deck', data: [31] }}       | ${'cursor stop 8S'}
-						${{ fixture: 'deck', data: [30] }}      | ${{ fixture: 'deck', data: [30] }}       | ${'cursor stop 8H'}
-						${{ fixture: 'deck', data: [13] }}      | ${{ fixture: 'deck', data: [13] }}       | ${'cursor stop 4D'}
-						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [12] }}       | ${'cursor stop 4C'}
-						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [1] }}        | ${'cursor stop AD'}
-						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop AC'}
+						${{ fixture: 'deck', data: [51] }}      | ${{ fixture: 'deck', data: [51] }}       | ${'cursor stop k⡳ KS'}
+						${{ fixture: 'deck', data: [50] }}      | ${{ fixture: 'deck', data: [50] }}       | ${'cursor stop k⡲ KH'}
+						${{ fixture: 'deck', data: [31] }}      | ${{ fixture: 'deck', data: [31] }}       | ${'cursor stop k⡟ 8S'}
+						${{ fixture: 'deck', data: [30] }}      | ${{ fixture: 'deck', data: [30] }}       | ${'cursor stop k⡞ 8H'}
+						${{ fixture: 'deck', data: [13] }}      | ${{ fixture: 'deck', data: [13] }}       | ${'cursor stop k⡍ 4D'}
+						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [12] }}       | ${'cursor stop k⡌ 4C'}
+						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [1] }}        | ${'cursor stop k⡁ AD'}
+						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop k⡀ AC'}
 					`(
 						'$start.fixture $start.data',
 						({

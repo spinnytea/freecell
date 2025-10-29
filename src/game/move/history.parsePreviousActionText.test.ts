@@ -77,6 +77,19 @@ describe('game/history.parsePreviousActionType', () => {
 		);
 	});
 
+	describe('other cases', () => {
+		test.each`
+			actionText                   | previousAction
+			${'invalid move bk 6C→deck'} | ${{ text: 'invalid move bk 6C→deck', type: 'invalid' }}
+			${'invalid move 4k 6D→6H'}   | ${{ text: 'invalid move 4k 6D→6H', type: 'invalid' }}
+		`(
+			'$actionText',
+			({ actionText, previousAction }: { actionText: string; previousAction: PreviousAction }) => {
+				expect(parsePreviousActionType(actionText)).toEqual(previousAction);
+			}
+		);
+	});
+
 	// XXX (techdebt) i.e. FreeCell.parse
 	describe('examples', () => {
 		test.todo('init');

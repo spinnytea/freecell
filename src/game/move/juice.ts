@@ -8,21 +8,18 @@ import {
 	Card,
 	CardLocation,
 	CardSequence,
-	getSequenceAt,
 	shorthandPosition,
 	sortCardsBySuitAndRank,
 	SuitList,
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
-import { calcMoveActionText, moveCards } from '@/game/move/move';
 
 /**
 	checks if it's even possible to flourish
 
 	meant for the start of the game
 
-	FIXME test on a game that's one move away from a flourish (not a 52 flourish, cards in foundation + cell)
-	FIXME make sure every `game.previousAction.gameFunction = 'recall-or-bury' or 'juice'`
+	FIXME (techdebt) (flourish-anim) (motivation) test on a game that's one move away from a flourish (not a 52 flourish, cards in foundation + cell)
 */
 export function canFlourish(game: FreeCell): Card[] {
 	if (game.deck.length) return [];
@@ -142,7 +139,7 @@ export function canFlourish52(game: FreeCell): Card[] {
 
 // REVIEW (joker) rules with jokers are weird, so this may not work right
 export function collectCardsTillAceToDeck(game: FreeCell, exposeAce: boolean): FreeCell {
-	// FIXME make this function more legible. it works, but it's confusing
+	// FIXME (techdebt) make this function more legible. it works, but it's confusing
 	const cards: Card[] = [];
 	game.cells.forEach((cell) => {
 		if (cell) cards.push(cell);
@@ -151,7 +148,7 @@ export function collectCardsTillAceToDeck(game: FreeCell, exposeAce: boolean): F
 		game = moveCardsToDeck(game, {
 			location: { fixture: 'cell', data: [0] },
 			cards,
-			peekOnly: false,
+			peekOnly: true,
 		});
 	}
 	for (let d0 = 0; d0 < game.tableau.length; d0++) {
@@ -176,7 +173,7 @@ export function collectCardsTillAceToDeck(game: FreeCell, exposeAce: boolean): F
 		const selection: CardSequence = {
 			location: { fixture: 'cascade', data: [d0, d1] },
 			cards,
-			peekOnly: false,
+			peekOnly: true,
 		};
 		game = moveCardsToDeck(game, selection);
 	}
@@ -206,31 +203,25 @@ export function spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLoca
 	return g;
 }
 
-/** @deprecated FIXME (techdebt) (deck) (gameplay) review/consolidate action? - game.__clone outside of game is bad */
+/**
+	{@link FreeCell.$setSelection} is a generic helper, it makes sense to move into {@link FreeCell}.
+	`moveCardsToDeck` is too specific, we should keep this separate.
+*/
 export function moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCell {
 	const to: CardLocation = { fixture: 'deck', data: [game.deck.length] };
-	return game.__clone({
-		action: {
-			text: 'invalid ' + calcMoveActionText(selection, getSequenceAt(game, to)),
-			type: 'move',
-			gameFunction: 'recall-or-bury',
-		},
-		cards: moveCards(game, selection, to),
-		selection: null,
-		availableMoves: null,
-	});
+	return game
+		.setCursor(to, { gameFunction: 'recall-or-bury' })
+		.$setSelection(selection, { gameFunction: 'recall-or-bury' })
+		.touch({ gameFunction: 'recall-or-bury' });
 }
 
-/** @deprecated FIXME (techdebt) (deck) (gameplay) review/consolidate action? - game.__clone outside of game is bad */
+/**
+	{@link FreeCell.$setSelection} is a generic helper, it makes sense to move into {@link FreeCell}.
+	`moveDeckToBoard` is too specific, we should keep this separate.
+*/
 function moveDeckToBoard(game: FreeCell, selection: CardSequence, to: CardLocation): FreeCell {
-	return game.__clone({
-		action: {
-			text: 'invalid ' + calcMoveActionText(selection, getSequenceAt(game, to)),
-			type: 'move',
-			gameFunction: 'recall-or-bury',
-		},
-		cards: moveCards(game, selection, to),
-		selection: null,
-		availableMoves: null,
-	});
+	return game
+		.setCursor(to)
+		.$setSelection(selection, { gameFunction: 'recall-or-bury' })
+		.touch({ gameFunction: 'recall-or-bury' });
 }

@@ -19,6 +19,7 @@ import {
 } from '@/game/card/card';
 import {
 	appendActionToHistory,
+	GameFunction,
 	getCardsThatMoved,
 	parseActionTextMove,
 	parseAltCursorFromPreviousActionText,
@@ -114,6 +115,8 @@ interface OptionsNonstandardGameplay {
 		XXX (techdebt) this is just to get unit tests passing, and maintain this flow until we have settings
 	*/
 	autoMove?: boolean;
+
+	gameFunction?: GameFunction;
 }
 
 interface OptionsTouch extends OptionsNonstandardGameplay {
@@ -126,8 +129,6 @@ interface OptionsTouch extends OptionsNonstandardGameplay {
 		sometimes we only want {@link touch} to attemp a move (not select anything)
 	*/
 	selectionNever?: boolean;
-
-	gameFunction?: 'drag-drop';
 }
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
@@ -278,11 +279,15 @@ export class FreeCell {
 
 		// clamp cursor is a helper in case the game changes and the cursor is no longer valid
 		// it prevents us from having to manually specify it every time
-		this.cursor = this.__clampCursor(cursor ?? INIT_CURSOR_LOCATION);
+		this.cursor = this.__clampCursor(cursor ?? INIT_CURSOR_LOCATION, action.gameFunction);
 
 		// selection & available moves are _not_ checked for validity
 		// they should be reset any time we move a card
-		this.selection = !selection ? null : getSequenceAt(this, selection.location);
+		this.selection = !selection
+			? null
+			: action.gameFunction
+				? selection
+				: getSequenceAt(this, selection.location);
 		this.availableMoves = availableMoves ?? null;
 
 		this.previousAction = action;
@@ -325,7 +330,7 @@ export class FreeCell {
 		});
 	}
 
-	__clampCursor(location?: CardLocation): CardLocation {
+	__clampCursor(location?: CardLocation, gameFunction?: GameFunction): CardLocation {
 		if (!location) return DEFAULT_CURSOR_LOCATION;
 
 		const [d0, d1] = location.data;
@@ -346,16 +351,21 @@ export class FreeCell {
 			}
 			case 'deck':
 				if (d0 <= 0) return { fixture: 'deck', data: [0] };
+				else if (d0 === this.deck.length && gameFunction === 'recall-or-bury') return location;
 				else if (d0 >= this.deck.length)
 					return { fixture: 'deck', data: [Math.max(0, this.deck.length - 1)] };
 				else return location;
 		}
 	}
 
-	setCursor(cursor: CardLocation): FreeCell {
-		cursor = this.__clampCursor(cursor);
-		const actionText = calcCursorActionText(this, 'set', cursor);
-		return this.__clone({ action: { text: actionText, type: 'cursor' }, cursor });
+	setCursor(cursor: CardLocation, { gameFunction }: OptionsNonstandardGameplay = {}): FreeCell {
+		cursor = this.__clampCursor(cursor, gameFunction);
+		const action: PreviousAction = {
+			type: 'cursor',
+			text: calcCursorActionText(this, 'set', cursor),
+		};
+		if (gameFunction) action.gameFunction = gameFunction;
+		return this.__clone({ action, cursor });
 	}
 
 	moveCursor(dir: KeyboardArrowDirection): FreeCell {
@@ -436,12 +446,19 @@ export class FreeCell {
 			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
 		}
 
-		const actionText = calcMoveActionText(this.selection, getSequenceAt(this, this.cursor));
+		const fakeValid =
+			gameFunction === 'recall-or-bury' &&
+			(this.selection.location.fixture === 'deck') !== (this.cursor.fixture === 'deck');
+
+		const actionText =
+			(fakeValid ? 'invalid ' : '') +
+			calcMoveActionText(this.selection, getSequenceAt(this, this.cursor));
 
 		const valid = this.availableMoves.some(({ location }) =>
 			isLocationEqual(this.cursor, location)
 		);
-		if (valid) {
+
+		if (valid || fakeValid) {
 			const nextAction: PreviousAction = { text: actionText, type: 'move' };
 			if (gameFunction) nextAction.gameFunction = gameFunction;
 			const movedGame = this.__clone({
@@ -451,7 +468,7 @@ export class FreeCell {
 				availableMoves: null,
 			});
 
-			if (autoFoundation) {
+			if (autoFoundation && !fakeValid) {
 				const foundationGame = movedGame.autoFoundationAll();
 				if (foundationGame !== movedGame) {
 					return this.__clone({
@@ -715,14 +732,16 @@ export class FreeCell {
 	*/
 	moveByShorthand(
 		shorthandMove: string,
-		{ autoFoundation }: OptionsNonstandardGameplay = {}
+		{ autoFoundation, gameFunction }: OptionsNonstandardGameplay = {}
 	): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
 		const game = this.clearSelection().setCursor(from).touch({ selectionOnly: true });
 		// REVIEW (techdebt) dedicated error message? "invalid select (cursor) / invalid"
 		//  - would be for deck or foundation
 		if (game.previousAction.type !== 'select') return game;
-		return game.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
+		return game
+			.setCursor(to, { gameFunction })
+			.touch({ autoFoundation, stopWithInvalid: true, gameFunction });
 	}
 
 	/**
@@ -734,7 +753,7 @@ export class FreeCell {
 	*/
 	touchByPosition(
 		position: Position,
-		{ autoFoundation, stopWithInvalid = false }: OptionsNonstandardGameplay = {}
+		{ autoFoundation, stopWithInvalid = false, gameFunction }: OptionsNonstandardGameplay = {}
 	): FreeCell | this {
 		if (!this.selection) {
 			const from_location = parseShorthandPositionForSelect(this, position);
@@ -750,7 +769,11 @@ export class FreeCell {
 		// try this move as selected
 		const to_location = parseShorthandPositionForMove(this, position);
 		if (!to_location) return this;
-		const game = this.setCursor(to_location).touch({ autoFoundation, stopWithInvalid: true });
+		const game = this.setCursor(to_location, { gameFunction }).touch({
+			autoFoundation,
+			stopWithInvalid: true,
+			gameFunction,
+		});
 		if (game.previousAction.type !== 'invalid') return game;
 
 		// try to move by shorthand
@@ -1037,6 +1060,26 @@ export class FreeCell {
 		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
 	}
 
+	/** accessor for nonstandard gameplay */
+	$setSelection(
+		selection: CardSequence | null,
+		{ gameFunction }: OptionsNonstandardGameplay = {}
+	): FreeCell {
+		if (!selection) return this.clearSelection();
+		if (gameFunction !== 'recall-or-bury') return this;
+
+		selection.peekOnly = true;
+		return this.__clone({
+			action: {
+				text: 'select ' + shorthandSequenceWithPosition(selection),
+				type: 'select',
+				gameFunction,
+			},
+			selection,
+			availableMoves: [],
+		});
+	}
+
 	/** shorthand to spot check what's in the foundation */
 	printFoundation(): string {
 		return this.foundations.map((card) => shorthandCard(card)).join(' ');
@@ -1181,7 +1224,8 @@ export class FreeCell {
 					.reverse()
 					.join('');
 				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
-				return `${deckStr}${lastCol}`;
+				const offDeckPrefix = cursor.data[0] === this.deck.length ? '>  ' : '';
+				return `${offDeckPrefix}${deckStr}${lastCol}`;
 			} else {
 				// if no cursor/selection in deck
 				const deckStr = this.deck

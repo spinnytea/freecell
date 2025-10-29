@@ -187,6 +187,9 @@ export function sortCardsOG(game: FreeCell, cards: Card[]): void {
 	sort the cards by suit (primary) and rank (secondary),
 	and then assigns d0 to all of them
 	(this is meant to be used _as a_ game.deck)
+
+	// FIXME (techdebt) (flourish-anim) do not shuffle in place, produce a new state
+	//  - basically, we should another game.__clone
 */
 export function sortCardsBySuitAndRank(deck: Card[]): void {
 	deck.sort((a, b) => {
@@ -486,6 +489,8 @@ export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLo
 		case 'h':
 			// h could refer to _any_ of the foundations; this needs to be verified
 			return { fixture: 'foundation', data: [p.length === 2 ? brailleToCount(p[1]) : 0] };
+		case 'k':
+			return { fixture: 'deck', data: [0] };
 		case 'a':
 		case 'b':
 		case 'c':

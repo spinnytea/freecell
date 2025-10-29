@@ -7,6 +7,7 @@ import {
 	moveCardsToDeck,
 	spreadDeckToEmptyPositions,
 } from '@/game/move/juice';
+import assert from 'node:assert';
 
 // FIXME test.todo
 describe('move.juice', () => {
@@ -360,7 +361,7 @@ describe('move.juice', () => {
 			);
 			expect(collectCardsTillAceToDeck(game, true).print()).toBe(
 				'' +
-					'>                        \n' +
+					'                         \n' +
 					' AH 8S                3D \n' +
 					'    AS                4S \n' +
 					'    5D                8D \n' +
@@ -368,12 +369,12 @@ describe('move.juice', () => {
 					'    QH                AC \n' +
 					'    TC                   \n' +
 					'    AD                   \n' +
-					':d JS 2S 3C 6S JC 4H QC 9H 2C 5H JH QD 6C 4C 4D KD 8H KS 6H QS KH 3H 7H 9D 6D TS 2D 9C KC JD 8C TH 7C 5C 3S TD 5S 2H 9S \n' +
+					':d>JS QC 4H JC 6S 3C 2S 6C QD JH 5H 2C 9H 6H KS 8H KD 4D 4C TS 6D 9D 7H 3H KH QS 7C TH 8C JD KC 9C 2D 9S 2H 5S TD 3S 5C \n' +
 					' invalid move 8k JS→deck'
 			);
 			expect(collectCardsTillAceToDeck(game, false).print()).toBe(
 				'' +
-					'>                        \n' +
+					'                         \n' +
 					' AH 8S                3D \n' +
 					' 5C AS                4S \n' +
 					'    5D                8D \n' +
@@ -381,7 +382,7 @@ describe('move.juice', () => {
 					'    QH                AC \n' +
 					'    TC                JS \n' +
 					'    AD                   \n' +
-					':d 2S 3C 6S JC 4H QC 9H 2C 5H JH QD 6C 4C 4D KD 8H KS 6H QS KH 3H 7H 9D 6D TS 2D 9C KC JD 8C TH 7C 3S TD 5S 2H 9S \n' +
+					':d QC 4H JC 6S 3C>2S 6C QD JH 5H 2C 9H 6H KS 8H KD 4D 4C TS 6D 9D 7H 3H KH QS 7C TH 8C JD KC 9C 2D 9S 2H 5S TD 3S \n' +
 					' invalid move 7k QC-4H-JC-6S-3C-2S→deck'
 			);
 		});
@@ -402,23 +403,23 @@ describe('move.juice', () => {
 			);
 			expect(collectCardsTillAceToDeck(game, true).print()).toBe(
 				'' +
-					'>                        \n' +
+					'                         \n' +
 					'    7S             QC    \n' +
 					'    AD             AS    \n' +
 					'                   AH    \n' +
 					'                   AC    \n' +
-					':d 4S KC TS KD 7C 9D JH QH JS 2D TD 7H 3D KS KH 6S 7D 6D TH QD 5S 2C 9S 8S 3C TC JD 8D JC 8H 9C 9H 3H 5C 2S QS 6C 6H 2H 5H 4C 5D 8C 4D 3S 4H \n' +
+					':d 9D 7C KD TS KC>4S QH JH KS 3D 7H TD 2D JS QD TH 6D 7D 6S KH JD TC 3C 8S 9S 2C 5S 5C 3H 9H 9C 8H JC 8D 2H 6H 6C QS 2S 4H 3S 4D 8C 5D 4C 5H \n' +
 					' invalid move 8k 9D-7C-KD-TS-KC-4S→deck'
 			);
 			expect(collectCardsTillAceToDeck(game, false).print()).toBe(
 				'' +
-					'>                        \n' +
+					'                         \n' +
 					'    7S             QC    \n' +
 					'    AD             AS    \n' +
 					'    2S             AH    \n' +
 					'                   AC    \n' +
 					'                   JH    \n' +
-					':d 4S KC TS KD 7C 9D QH JS 2D TD 7H 3D KS KH 6S 7D 6D TH QD 5S 2C 9S 8S 3C TC JD 8D JC 8H 9C 9H 3H 5C QS 6C 6H 2H 5H 4C 5D 8C 4D 3S 4H \n' +
+					':d 9D 7C KD TS KC>4S QH KS 3D 7H TD 2D JS QD TH 6D 7D 6S KH JD TC 3C 8S 9S 2C 5S 5C 3H 9H 9C 8H JC 8D 2H 6H 6C QS 4H 3S 4D 8C 5D 4C 5H \n' +
 					' invalid move 8k 9D-7C-KD-TS-KC-4S→deck'
 			);
 		});
@@ -439,23 +440,23 @@ describe('move.juice', () => {
 			);
 			expect(collectCardsTillAceToDeck(game, true).print()).toBe(
 				'' +
-					'>                        \n' +
+					'                         \n' +
 					'          AS    6D       \n' +
 					'          AD    4C       \n' +
 					'          AC    2S       \n' +
 					'                AH       \n' +
-					':d JS JH 9C 4D QD KD 5H 5S 5D QC 3S QS 2C QH 7D TH 2H 8C 4S 3D TS 3C KC 5C 8H KH 2D 7S 3H 8D 6S 6C TD JD 7C JC 9D 8S 4H 6H 9S KS 7H 9H TC \n' +
+					':d KD QD 4D 9C JH>JS QS 3S QC 5D 5S 5H QH 2C 3D 4S 8C 2H TH 7D 5C KC 3C TS 6S 8D 3H 7S 2D KH 8H 8S 9D JC 7C JD TD 6C TC 9H 7H KS 9S 6H 4H \n' +
 					' invalid move 8k KD-QD-4D-9C-JH-JS→deck'
 			);
 			expect(collectCardsTillAceToDeck(game, false).print()).toBe(
 				'' +
-					'>                        \n' +
+					'                         \n' +
 					'          AS    6D       \n' +
 					'          AD    4C       \n' +
 					'          AC    2S       \n' +
 					'          TS    AH       \n' +
 					'                2C       \n' +
-					':d JS JH 9C 4D QD KD 5H 5S 5D QC 3S QS QH 7D TH 2H 8C 4S 3D 3C KC 5C 8H KH 2D 7S 3H 8D 6S 6C TD JD 7C JC 9D 8S 4H 6H 9S KS 7H 9H TC \n' +
+					':d KD QD 4D 9C JH>JS QS 3S QC 5D 5S 5H QH 3D 4S 8C 2H TH 7D 5C KC 3C 6S 8D 3H 7S 2D KH 8H 8S 9D JC 7C JD TD 6C TC 9H 7H KS 9S 6H 4H \n' +
 					' invalid move 8k KD-QD-4D-9C-JH-JS→deck'
 			);
 		});
@@ -464,16 +465,16 @@ describe('move.juice', () => {
 			const game = new FreeCell().dealAll({ demo: true });
 			expect(collectCardsTillAceToDeck(game, true).print()).toBe(
 				'' + //
-					'>            AS AH AD AC \n' +
+					'             AS AH AD AC \n' +
 					'                         \n' +
-					':d QC TC 8C 6C 4C QD TD 8D 6D 4D QH TH 8H 6H 4H QS TS 8S 6S 4S KC JC 9C 7C 5C 3C KD JD 9D 7D 5D 3D KH JH 9H 7H 5H 3H KS JS 9S 7S 5S 3S 2C 2D 2H 2S \n' +
+					':d 4C 6C 8C TC>QC 4D 6D 8D TD QD 4H 6H 8H TH QH 4S 6S 8S TS QS 3C 5C 7C 9C JC KC 3D 5D 7D 9D JD KD 3H 5H 7H 9H JH KH 3S 5S 7S 9S JS KS 2S 2H 2D 2C \n' +
 					' invalid move 8k 4C-6C-8C-TC-QC→deck'
 			);
 			expect(collectCardsTillAceToDeck(game, false).print()).toBe(
 				'' + //
-					'>            AS AH AD AC \n' +
+					'             AS AH AD AC \n' +
 					'                         \n' +
-					':d QC TC 8C 6C 4C QD TD 8D 6D 4D QH TH 8H 6H 4H QS TS 8S 6S 4S KC JC 9C 7C 5C 3C KD JD 9D 7D 5D 3D KH JH 9H 7H 5H 3H KS JS 9S 7S 5S 3S 2C 2D 2H 2S \n' +
+					':d 4C 6C 8C TC>QC 4D 6D 8D TD QD 4H 6H 8H TH QH 4S 6S 8S TS QS 3C 5C 7C 9C JC KC 3D 5D 7D 9D JD KD 3H 5H 7H 9H JH KH 3S 5S 7S 9S JS KS 2S 2H 2D 2C \n' +
 					' invalid move 8k 4C-6C-8C-TC-QC→deck'
 			);
 		});
@@ -487,7 +488,7 @@ describe('move.juice', () => {
 			sortCardsBySuitAndRank(game.deck);
 			expect(game.print()).toBe(
 				'' +
-					'>                        \n' +
+					'                         \n' +
 					' AH 8S                3D \n' +
 					'    AS                4S \n' +
 					'    5D                8D \n' +
@@ -495,11 +496,11 @@ describe('move.juice', () => {
 					'    QH                AC \n' +
 					'    TC                   \n' +
 					'    AD                   \n' +
-					':d 2C 3C 4C 5C 6C 7C 8C 9C JC QC KC 2D 4D 6D 9D TD JD QD KD 2H 3H 4H 5H 6H 7H 8H 9H TH JH KH 2S 3S 5S 6S 9S TS JS QS KS \n' +
+					':d>2C 3C 4C 5C 6C 7C 8C 9C JC QC KC 2D 4D 6D 9D TD JD QD KD 2H 3H 4H 5H 6H 7H 8H 9H TH JH KH 2S 3S 5S 6S 9S TS JS QS KS \n' +
 					' invalid move 8k JS→deck'
 			);
 			expect(game.__printDeck()).toBe(
-				' ' +
+				'>' +
 					'2C 3C 4C 5C 6C 7C 8C 9C JC QC KC ' +
 					'2D 4D 6D 9D TD JD QD KD ' +
 					'2H 3H 4H 5H 6H 7H 8H 9H TH JH KH ' +
@@ -516,8 +517,8 @@ describe('move.juice', () => {
 			game = spreadDeckToEmptyPositions(game, emptyPositions);
 			expect(game.print()).toBe(
 				'' +
-					'>                        \n' +
-					' AH 8S KC KD KH KS    3D \n' +
+					'                         \n' +
+					' AH 8S KC KD KH>KS    3D \n' +
 					'    AS QC QD JH QS    4S \n' +
 					'    5D JC JD TH JS    8D \n' +
 					'    7S 9C TD 9H TS    7D \n' +
@@ -537,21 +538,25 @@ describe('move.juice', () => {
 			game = collectCardsTillAceToDeck(game, true);
 			expect(game.print()).toBe(
 				'' +
-					'>                        \n' +
+					'                         \n' +
 					'          AS    6D       \n' +
 					'          AD    4C       \n' +
 					'          AC    2S       \n' +
 					'                AH       \n' +
-					':d JS JH 9C 4D QD KD 5H 5S 5D QC 3S QS 2C QH 7D TH 2H 8C 4S 3D TS 3C KC 5C 8H KH 2D 7S 3H 8D 6S 6C TD JD 7C JC 9D 8S 4H 6H 9S KS 7H 9H TC \n' +
+					':d KD QD 4D 9C JH>JS QS 3S QC 5D 5S 5H QH 2C 3D 4S 8C 2H TH 7D 5C KC 3C TS 6S 8D 3H 7S 2D KH 8H 8S 9D JC 7C JD TD 6C TC 9H 7H KS 9S 6H 4H \n' +
 					' invalid move 8k KD-QD-4D-9C-JH-JS→deck'
 			);
 			game = game.$selectCard('AC');
-			expect(game.selection).toBeTruthy();
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			game = moveCardsToDeck(game, game.selection!);
+			assert(game.selection);
+			game = moveCardsToDeck(game, game.selection);
+			expect(game.previousAction).toEqual({
+				text: 'invalid move 4k AC→deck',
+				type: 'move',
+				gameFunction: 'recall-or-bury',
+			});
 			sortCardsBySuitAndRank(game.deck);
 			expect(game.__printDeck()).toBe(
-				' ' +
+				'>' +
 					'AC 2C 3C 5C 6C 7C 8C 9C TC JC QC KC ' +
 					'2D 3D 4D 5D 7D 8D 9D TD JD QD KD ' +
 					'2H 3H 4H 5H 6H 7H 8H 9H TH JH QH KH ' +
@@ -570,8 +575,8 @@ describe('move.juice', () => {
 			expect(game.print()).toBe(
 				'' +
 					'                         \n' +
-					' KC KD KH AS KS 6D       \n' +
-					' QC QD QH>AD QS 4C       \n' +
+					' KC KD KH AS>KS 6D       \n' +
+					' QC QD QH AD QS 4C       \n' +
 					' JC JD JH    JS 2S       \n' +
 					' TC TD TH    TS AH       \n' +
 					' 9C 9D 9H    9S          \n' +

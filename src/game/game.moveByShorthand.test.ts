@@ -52,10 +52,53 @@ describe('game.moveByShorthand', () => {
 			test.todo('size sequence to allowable space');
 		});
 
-		describe('deck', () => {
-			test.todo('empty');
-
-			test.todo('single');
+		test('deck', () => {
+			const game = new FreeCell().shuffle32(5).dealAll({ demo: true, keepDeck: true });
+			expect(game.print()).toBe(
+				'' +
+					'                         \n' +
+					' AH 8S 2D QS 4C 9H 2S 3D \n' +
+					' 5C AS 9C KH 4D 2C 3C 4S \n' +
+					' 3S 5D KC 3H KD 5H 6S 8D \n' +
+					' TD 7S JD 7H 8H JH JC 7D \n' +
+					' 5S QH 8C 9D KS QD 4H AC \n' +
+					' 2H TC TH 6D             \n' +
+					':d 6H 6C QC JS 9S AD 7C>TS \n' +
+					' deal 44 cards'
+			);
+			const burried = game.moveByShorthand('kb', { gameFunction: 'recall-or-bury' });
+			expect(burried.print()).toBe(
+				'' +
+					'   >6H                   \n' +
+					' AH 8S 2D QS 4C 9H 2S 3D \n' +
+					' 5C AS 9C KH 4D 2C 3C 4S \n' +
+					' 3S 5D KC 3H KD 5H 6S 8D \n' +
+					' TD 7S JD 7H 8H JH JC 7D \n' +
+					' 5S QH 8C 9D KS QD 4H AC \n' +
+					' 2H TC TH 6D             \n' +
+					':d 6C QC JS 9S AD 7C TS \n' +
+					' invalid move kb 6H→cell'
+			);
+			expect(burried.deck).toMatchSnapshot();
+			expect(burried.print({ includeHistory: true })).toBe(
+				'' +
+					'    6H                   \n' +
+					' AH 8S 2D QS 4C 9H 2S 3D \n' +
+					' 5C AS 9C KH 4D 2C 3C 4S \n' +
+					' 3S 5D KC 3H KD 5H 6S 8D \n' +
+					' TD 7S JD 7H 8H JH JC 7D \n' +
+					' 5S QH 8C 9D KS QD 4H AC \n' +
+					' 2H TC TH 6D             \n' +
+					':d 6C QC JS 9S AD 7C TS \n' +
+					' invalid move kb 6H→cell\n' +
+					' deal 44 cards\n' +
+					' shuffle deck (5)'
+			);
+			expect(burried.previousAction).toEqual({
+				text: 'invalid move kb 6H→cell',
+				type: 'move',
+				gameFunction: 'recall-or-bury',
+			});
 		});
 	});
 
@@ -95,11 +138,103 @@ describe('game.moveByShorthand', () => {
 			test.todo('sequence');
 		});
 
-		// FIXME (deck) (flourish-anim) test.todo move to deck by shorthand
 		describe('deck', () => {
-			test.todo('empty');
+			test('empty', () => {
+				const game = new FreeCell().shuffle32(5).dealAll({ demo: true });
+				expect(game.print()).toBe(
+					'' +
+						'>6H 6C QC JS 9S AD 7C TS \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH 6D             \n' +
+						' deal all cards'
+				);
+				const burried = game.moveByShorthand('4k', { gameFunction: 'recall-or-bury' });
+				expect(burried.print()).toBe(
+					'' +
+						' 6H 6C QC JS 9S AD 7C TS \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH                \n' +
+						':d>6D \n' +
+						' invalid move 4k 6D→deck'
+				);
+				expect(burried.deck).toMatchSnapshot();
+				expect(burried.print({ includeHistory: true })).toBe(
+					'' +
+						' 6H 6C QC JS 9S AD 7C TS \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH                \n' +
+						':d 6D \n' +
+						' invalid move 4k 6D→deck\n' +
+						' deal all cards\n' +
+						' shuffle deck (5)'
+				);
+				expect(burried.previousAction).toEqual({
+					text: 'invalid move 4k 6D→deck',
+					type: 'move',
+					gameFunction: 'recall-or-bury',
+				});
+			});
 
-			test.todo('not empty');
+			test('not empty', () => {
+				const game = new FreeCell().shuffle32(5).dealAll({ demo: true, keepDeck: true });
+				expect(game.print()).toBe(
+					'' +
+						'                         \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH 6D             \n' +
+						':d 6H 6C QC JS 9S AD 7C>TS \n' +
+						' deal 44 cards'
+				);
+				const burried = game.moveByShorthand('4k', { gameFunction: 'recall-or-bury' });
+				expect(burried.print()).toBe(
+					'' +
+						'                         \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH                \n' +
+						':d>6D 6H 6C QC JS 9S AD 7C TS \n' +
+						' invalid move 4k 6D→deck'
+				);
+				expect(burried.deck).toMatchSnapshot();
+				expect(burried.print({ includeHistory: true })).toBe(
+					'' +
+						'                         \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH                \n' +
+						':d 6D 6H 6C QC JS 9S AD 7C TS \n' +
+						' invalid move 4k 6D→deck\n' +
+						' deal 44 cards\n' +
+						' shuffle deck (5)'
+				);
+				expect(burried.previousAction).toEqual({
+					text: 'invalid move 4k 6D→deck',
+					type: 'move',
+					gameFunction: 'recall-or-bury',
+				});
+			});
 		});
 	});
 
