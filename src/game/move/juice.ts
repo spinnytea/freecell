@@ -8,8 +8,11 @@ import {
 	Card,
 	CardLocation,
 	CardSequence,
+	findCard,
+	RankList,
 	shorthandPosition,
 	sortCardsBySuitAndRank,
+	Suit,
 	SuitList,
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
@@ -18,61 +21,50 @@ import { FreeCell } from '@/game/game';
 	checks if it's even possible to flourish
 
 	meant for the start of the game
-
-	FIXME (techdebt) (flourish-anim) (motivation) test on a game that's one move away from a flourish (not a 52 flourish, cards in foundation + cell)
 */
 export function canFlourish(game: FreeCell): Card[] {
 	if (game.deck.length) return [];
 	// cells don't matter for this
 	if (game.foundations.every((card) => !!card)) return [];
+	// the way we check requries this many cascades
+	if (game.tableau.length < SuitList.length + 1) return [];
 
-	// we want to "expose all the aces" anyway
-	// if (game.tableau.some((cascade) => cascade[cascade.length - 1]?.rank === 'ace')) return [];
-
-	game = collectCardsTillAceToDeck(game, true);
-
-	const selectionsToTry: CardSequence[] = [];
-	const emptyPositions: CardLocation[] = [];
-	for (let c_idx = 0; c_idx < game.tableau.length; c_idx++) {
-		// just select the last card (ace)
-		const s = game
-			.setCursor({ fixture: 'cascade', data: [c_idx, game.tableau[c_idx].length - 1] })
-			.touch().selection;
-		if (s) {
-			selectionsToTry.push(s);
-		} else {
-			emptyPositions.push({ fixture: 'cascade', data: [c_idx, 0] });
-		}
-	}
-
-	if (selectionsToTry.length === 0) return [];
-	if (emptyPositions.length < SuitList.length) return [];
-	if (selectionsToTry.some((stt) => stt.cards[0].rank !== 'ace')) return [];
-
-	const aces: Card[] = [];
-	selectionsToTry.forEach((selectionToTry) => {
-		let g = game;
-
-		// move all but the 1 to deck
-		selectionsToTry.forEach((stt) => {
-			if (stt !== selectionToTry) {
-				g = moveCardsToDeck(g, stt);
-			}
-		});
-
-		// unshuffle deck
-		sortCardsBySuitAndRank(g.deck);
-
-		// put deck on board, split by suit
-		g = spreadDeckToEmptyPositions(g, emptyPositions);
-
-		// try the move
-		g = g.$touchAndMove(selectionToTry.location);
-		if (g.win) {
-			aces.push(selectionToTry.cards[0]);
+	// TODO (techdebt) (flourish-anim) (motivation) if any aces exposed at start, is there a single move we can make to win the game?
+	//  - it needs to be able to flourish immediately
+	//  - really, just try _any_ available move?
+	//  - we can try the other aces normally
+	const immediateAces: Card[] = [];
+	game.tableau.forEach((cascade) => {
+		const last_card = cascade.at(-1);
+		if (last_card?.rank === 'ace') {
+			immediateAces.push(last_card);
 		}
 	});
 
+	let aces: Card[] = [];
+	game = collectCellsToDeck(game);
+	const acesToTry = game.cards.filter(
+		(card) => card.rank === 'ace' && card.location.fixture === 'cascade'
+	);
+	const exclude = new Set<Suit>(immediateAces.map((card) => card.suit));
+	acesToTry.forEach((card) => {
+		const g = organizeCardsExcept(game, card);
+		if (g.$selectCard(card).touchByPosition('h').win) {
+			aces.push(card);
+			g.tableau[card.location.data[0]].forEach((c) => {
+				if (c.rank === 'ace' && c.suit !== card.suit) {
+					exclude.add(c.suit);
+				}
+			});
+		}
+	});
+	aces = aces.filter((card) => !exclude.has(card.suit));
+	aces.sort((a, b) => {
+		// sort by rank
+		const ra = RankList.indexOf(a.rank);
+		const rb = RankList.indexOf(b.rank);
+		return rb - ra;
+	});
 	return aces;
 }
 
@@ -80,19 +72,38 @@ export function canFlourish(game: FreeCell): Card[] {
 	checks if it's possible to flourish _all_ fo the cards
 
 	meant for the start of the game
-
-	FIXME (flourish-anim) loop through all games and see if there are any (we know of 5) than can 52 flourish
 */
 export function canFlourish52(game: FreeCell): Card[] {
 	if (game.deck.length) return [];
 	// cells don't matter for this
 	if (game.foundations.some((card) => !!card)) return [];
+	if (
+		!SuitList.every(
+			(suit) => findCard(game.cards, { suit, rank: 'ace' }).location.fixture === 'cascade'
+		)
+	) {
+		return [];
+	}
 
-	// TODO (techdebt) (flourish-anim) (motivation) if any aces exposed at start, is there a single move we can make to win the game?
-	//  - i.e. select each col and try up to 3 available moves
-	if (game.tableau.some((cascade) => cascade[cascade.length - 1]?.rank === 'ace')) return [];
+	// if any aces exposed at start, is there a single move we can make to win the game?
+	//  - it needs to be able to flourish immediately
+	//  - really, just try _any_ available move?
+	const danglingAces = game.cards.filter(
+		(card) =>
+			card.rank === 'ace' &&
+			card.location.fixture === 'cascade' &&
+			game.tableau[card.location.data[0]].at(-1) === card
+	);
+	if (danglingAces.length) {
+		// if there are any, then this is the only way to 52 flourish
+		// (no need to sort, they are already in the right order, since they came from game.cards)
+		return danglingAces.filter(
+			(danglingAce) => game.$selectCard(danglingAce).touchByPosition('h').win
+		);
+	}
 
-	game = collectCardsTillAceToDeck(game, false);
+	game = collectCellsToDeck(game);
+	game = collectCardsTillAceToDeck(game);
 
 	const selectionsToTry: CardSequence[] = [];
 	const emptyPositions: CardLocation[] = [];
@@ -134,12 +145,16 @@ export function canFlourish52(game: FreeCell): Card[] {
 		}
 	});
 
+	aces.sort((a, b) => {
+		// sort by rank
+		const ra = RankList.indexOf(a.rank);
+		const rb = RankList.indexOf(b.rank);
+		return rb - ra;
+	});
 	return aces;
 }
 
-// REVIEW (joker) rules with jokers are weird, so this may not work right
-export function collectCardsTillAceToDeck(game: FreeCell, exposeAce: boolean): FreeCell {
-	// FIXME (techdebt) make this function more legible. it works, but it's confusing
+export function collectCellsToDeck(game: FreeCell): FreeCell {
 	const cards: Card[] = [];
 	game.cells.forEach((cell) => {
 		if (cell) cards.push(cell);
@@ -151,31 +166,85 @@ export function collectCardsTillAceToDeck(game: FreeCell, exposeAce: boolean): F
 			peekOnly: true,
 		});
 	}
+	return game;
+}
+
+/**
+	"If we dealt with every card, _except_ for this ace, could it flourish?"
+
+	Take everything off the board except for the one ace in question,
+	organize those cards so they can auto-foundation.
+	Now it's just a matter of moving that ace and see if we can win.
+
+	There is probably an easier way of, like, marching up the cascade with some kind of heuristic.
+	But that assumes game settings.
+	This kind of 'simulation" is probably more robust.
+
+	Contains all the magic for {@link canFlourish}.
+*/
+export function organizeCardsExcept(game: FreeCell, card: Card) {
+	const [cardD0, cardD1] = card.location.data;
+
+	// deal with each cascade, update game as we go
 	for (let d0 = 0; d0 < game.tableau.length; d0++) {
-		let d1 = game.tableau[d0].length - 1;
-		if (!game.tableau[d0][d1]) continue; // if the cascade is empty, skip this one
-		if (game.tableau[d0][d1].rank === 'ace') continue; // if the bottom card is an ace, skip this cascade
-		cards.splice(0);
+		const cascade = game.tableau[d0];
+		if (!cascade.at(-1)) {
+			// the cascade is empty
+			// skip it
+			continue;
+		} else if (cardD0 !== d0) {
+			// our card is not in this cascade
+			// move the entire column
+			game = moveCardsToDeck(game, {
+				location: { fixture: 'cascade', data: [d0, 0] },
+				cards: cascade,
+				peekOnly: true,
+			});
+		} else if (!cascade.at(cardD1 + 1)) {
+			// the ace is the last card
+			// there's nothing to move
+			continue;
+		} else {
+			// move everything after the ace
+			game = moveCardsToDeck(game, {
+				location: { fixture: 'cascade', data: [d0, cardD1 + 1] },
+				cards: cascade.slice(cardD1 + 1),
+				peekOnly: true,
+			});
+		}
+	}
 
-		cards.push(game.tableau[d0][d1]);
-		while (d1 > 0) {
+	const emptyPositions: CardLocation[] = [];
+	for (let d0 = game.tableau.length - 1; d0 >= 0; d0--) {
+		if (d0 !== cardD0) {
+			emptyPositions.push({ fixture: 'cascade', data: [d0, 0] });
+		}
+	}
+	game = spreadDeckToEmptyPositions(game, emptyPositions);
+
+	return game;
+}
+
+// REVIEW (joker) rules with jokers are weird, so this may not work right
+export function collectCardsTillAceToDeck(game: FreeCell): FreeCell {
+	for (let d0 = 0; d0 < game.tableau.length; d0++) {
+		const cascade = game.tableau[d0];
+		if (!cascade.at(-1)) continue; // if the cascade is empty, skip this one
+		// if (cascade.at(-1)?.rank === 'ace') continue; // if the bottom card is an ace, we shouldn't have gotten here anyway
+		if (cascade.at(-2)?.rank === 'ace') continue; // if the second to last cards is an ace, this cascade is finished
+		if (cascade.length < 3) continue; // only 2 cards and neither is an ace
+
+		// march down to find the a card that's 1 after the ace
+		let d1 = cascade.length - 1;
+		while (d1 > 0 && cascade[d1 - 2]?.rank !== 'ace') {
 			d1--;
-			if (game.tableau[d0][d1].rank === 'ace') break; // if the bottom card is an ace, abort
-			cards.push(game.tableau[d0][d1]);
 		}
-		if (game.tableau[d0][d1].rank === 'ace' && !exposeAce) {
-			d1++;
-			cards.pop();
-		}
-		d1++;
-		if (!cards.length) continue;
 
-		const selection: CardSequence = {
+		game = moveCardsToDeck(game, {
 			location: { fixture: 'cascade', data: [d0, d1] },
-			cards,
+			cards: cascade.slice(d1),
 			peekOnly: true,
-		};
-		game = moveCardsToDeck(game, selection);
+		});
 	}
 	return game;
 }
@@ -188,7 +257,7 @@ export function spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLoca
 	emptyPositions.forEach((emptyPosition) => {
 		// BUG (techdebt) (deck) (gameplay) why can't we deal from the middle?
 		// const last_card = g.deck.at(0);
-		const last_card = g.deck.at(g.deck.length - 1);
+		const last_card = g.deck.at(-1);
 		if (last_card) {
 			const cards = g.deck.filter((card) => card.suit === last_card.suit);
 			const selection: CardSequence = {
@@ -208,6 +277,7 @@ export function spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLoca
 	`moveCardsToDeck` is too specific, we should keep this separate.
 */
 export function moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCell {
+	if (!selection.cards.length) return game;
 	const to: CardLocation = { fixture: 'deck', data: [game.deck.length] };
 	return game
 		.setCursor(to, { gameFunction: 'recall-or-bury' })
@@ -220,6 +290,7 @@ export function moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCe
 	`moveDeckToBoard` is too specific, we should keep this separate.
 */
 function moveDeckToBoard(game: FreeCell, selection: CardSequence, to: CardLocation): FreeCell {
+	if (!selection.cards.length) return game;
 	return game
 		.setCursor(to)
 		.$setSelection(selection, { gameFunction: 'recall-or-bury' })

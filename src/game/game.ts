@@ -169,7 +169,7 @@ export class FreeCell {
 	availableMoves: AvailableMove[] | null;
 	// IDEA (animation) (flash-rank) (hud) could be something like "peek all"
 	// flashRank: Rank | null;
-	// FIXME (animation) (flourish-anim) (hud) impl flashCards for flourish aces?
+	// TODO (animation) (flourish-anim) (hud) impl flashCards for flourish aces?
 	// flashCards: Cards[] | null;
 
 	// history
@@ -1029,10 +1029,12 @@ export class FreeCell {
 		sugar/helper controls
 	*/
 	$selectCard(
-		shorthand: string,
+		shorthand: CardSH | string | null,
 		{ allowSelectFoundation }: OptionsNonstandardGameplay = {}
 	): FreeCell {
-		const location = findCard(this.cards, parseShorthandCard(shorthand)).location;
+		if (typeof shorthand === 'string') shorthand = parseShorthandCard(shorthand);
+		if (shorthand === null) return this;
+		const location = findCard(this.cards, shorthand).location;
 		const game = this.setCursor(location).touch({ allowSelectFoundation, selectionOnly: true });
 		if (game.previousAction.type !== 'select') {
 			// do not clear selection

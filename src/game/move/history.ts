@@ -570,28 +570,24 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 	const matchSeed = /shuffle deck \((\d+)\)/.exec(history[0]);
 	if (!matchSeed) return null;
 	const seed = parseInt(matchSeed[1], 10);
-	let hasInvalid = false;
-	const moves = history
-		.map((actionText) => {
-			if (actionText.startsWith('invalid ')) hasInvalid = true;
-			if (hasInvalid) return '';
-			let match = MOVE_REGEX.exec(actionText);
-			if (match) {
-				const [, from, to] = match;
-				return `${from}${to}`;
-			}
+	const moves: string[] = [];
+	// const moves = history.map((actionText) => { … }).filter((m) => m);
+	for (const actionText of history) {
+		if (actionText.startsWith('invalid ')) {
+			return null;
+		}
+		let match = MOVE_REGEX.exec(actionText);
+		if (match) {
+			const [, from, to] = match;
+			moves.push(`${from}${to}`);
+		} else {
 			match = MOVE_FOUNDATION_REGEX.exec(actionText);
 			if (match) {
 				const [, from, to] = match;
-				return `${from}${to}`;
+				moves.push(`${from}${to}`);
 			}
-			return '';
-		})
-		.filter((m) => m);
-	// FIXME is there a cleaner way to return early?
-	//  - convert to a for(..) loop
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-	if (hasInvalid) return null;
+		}
+	}
 	return { seed, moves };
 }
 

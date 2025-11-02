@@ -23,5 +23,12 @@ describe('game/difficulty-catalog', () => {
 		test('impossible', () => {
 			expect(getSeedsByTag('impossible')).toEqual([11982]);
 		});
+
+		test('canFlourish52', () => {
+			expect(getSeedsByTag('canFlourish52')).toEqual([
+				7239, 7321, 8536, 9993, 10331, 12387, 14150, 16371, 16508, 17502, 18088, 18492, 22574,
+				23190, 26852, 27251, 28692, 29268, 29640,
+			]);
+		});
 	});
 });
