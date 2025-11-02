@@ -28,7 +28,8 @@ export type PreviousActionType =
 	| 'auto-foundation'
 	// | 'auto-flourish' // TODO (move-flourish) auto-flourish
 	| 'invalid'
-	| 'auto-foundation-tween';
+	| 'auto-foundation-tween'
+	| 'juice';
 
 export const PREVIOUS_ACTION_TYPE_IN_HISTORY = new Set<PreviousActionType>([
 	'init',
@@ -56,7 +57,14 @@ export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
 	 - then it'll just be, like, a new game
 	 - should we have a special animation for this?
 */
-export type GameFunction = 'undo' | 'restart' | 'newGame' | 'drag-drop' | 'recall-or-bury';
+export type GameFunction =
+	| 'undo'
+	| 'restart'
+	| 'newGame'
+	| 'drag-drop'
+	| 'check-can-flourish'
+	| 'check-can-flourish-52'
+	| 'recall-or-bury';
 
 export interface PreviousAction {
 	/**
@@ -144,6 +152,7 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 		case 'cursor':
 		case 'select':
 		case 'deselect':
+		case 'juice':
 			// no change, just pop the history item
 			// …how did this end up in the history in the first place?
 			return game.cards;
@@ -260,6 +269,8 @@ export function parseCursorFromPreviousActionText(
 		case 'auto-foundation':
 		case 'auto-foundation-tween':
 			return undefined;
+		case 'juice':
+			return { fixture: 'cell', data: [0] };
 	}
 }
 
@@ -318,6 +329,8 @@ export function parseAltCursorFromPreviousActionText(
 		case 'auto-foundation':
 		case 'auto-foundation-tween':
 			return undefined;
+		case 'juice':
+			return { fixture: 'cell', data: [0] };
 	}
 }
 
@@ -530,18 +543,36 @@ function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 
 export function parsePreviousActionType(actionText: string): PreviousAction {
 	const firstWord = actionText.split(' ')[0];
+	// some abnormal cases where the firstWord does not match the type
 	if (firstWord === 'hand-jammed') return { text: actionText, type: 'init' };
 	if (firstWord === 'touch') return { text: actionText, type: 'invalid' };
 	if (firstWord === 'flourish') return { text: actionText, type: 'auto-foundation' };
 	if (firstWord === 'move' && actionText.endsWith(')')) {
-		if (actionText.includes('auto-foundation'))
+		if (actionText.includes('auto-foundation')) {
 			return { text: actionText, type: 'move-foundation' };
-		if (actionText.includes('flourish')) return { text: actionText, type: 'move-foundation' };
+		}
+		if (actionText.includes('flourish')) {
+			return { text: actionText, type: 'move-foundation' };
+		}
 	}
 
 	// if (firstWord === 'auto-foundation-setup') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	// if (firstWord === 'auto-foundation-middle') return { text, type: 'auto-foundation-tween' }; // should not appear in print
-	return { text: actionText, type: firstWord as PreviousActionType };
+	const action: PreviousAction = { text: actionText, type: firstWord as PreviousActionType };
+
+	if (firstWord === 'invalid') {
+		if (/^invalid move \w?k\w?\b/.test(actionText)) {
+			action.gameFunction = 'recall-or-bury';
+		}
+	} else if (firstWord === 'juice') {
+		if (actionText.endsWith('*')) {
+			action.gameFunction = 'check-can-flourish-52';
+		} else {
+			action.gameFunction = 'check-can-flourish';
+		}
+	}
+
+	return action;
 }
 
 /** XXX (techdebt) do we need to do any more type checking? I suppose we could just improve the regex */

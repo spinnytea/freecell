@@ -80,8 +80,10 @@ describe('game/history.parsePreviousActionType', () => {
 	describe('other cases', () => {
 		test.each`
 			actionText                   | previousAction
-			${'invalid move bk 6C→deck'} | ${{ text: 'invalid move bk 6C→deck', type: 'invalid' }}
-			${'invalid move 4k 6D→6H'}   | ${{ text: 'invalid move 4k 6D→6H', type: 'invalid' }}
+			${'invalid move bk 6C→deck'} | ${{ text: 'invalid move bk 6C→deck', type: 'invalid', gameFunction: 'recall-or-bury' }}
+			${'invalid move 4k 6D→6H'}   | ${{ text: 'invalid move 4k 6D→6H', type: 'invalid', gameFunction: 'recall-or-bury' }}
+			${'juice flash AH,AS'}       | ${{ text: 'juice flash AH,AS', type: 'juice', gameFunction: 'check-can-flourish' }}
+			${'juice flash *AS*'}        | ${{ text: 'juice flash *AS*', type: 'juice', gameFunction: 'check-can-flourish-52' }}
 		`(
 			'$actionText',
 			({ actionText, previousAction }: { actionText: string; previousAction: PreviousAction }) => {
@@ -92,22 +94,6 @@ describe('game/history.parsePreviousActionType', () => {
 
 	// XXX (techdebt) i.e. FreeCell.parse
 	describe('examples', () => {
-		test.todo('init');
-
-		test.todo('shuffle');
-
-		test.todo('deal');
-
-		test.todo('cursor');
-
-		test.todo('select');
-
-		test.todo('deselect');
-
-		test.todo('move');
-
-		test.todo('invalid');
-
 		test.todo('auto-foundation-tween');
 	});
 });

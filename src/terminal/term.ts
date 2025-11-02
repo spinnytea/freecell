@@ -20,7 +20,7 @@ let colorize: ColorizeCb = (str) => str;
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
-let game = new FreeCell().shuffle32().dealAll();
+let game = new FreeCell().shuffle32().dealAll().$checkCanFlourish();
 printGame();
 console.log('Press any key (Ctrl+C to exit)');
 
@@ -83,10 +83,10 @@ function printGame() {
 	// }
 
 	// cursor/selection
-	const cs = (s: string) => s.replace(/[>|]/g, (match) => colorize(match, 'yellow', 'bold'));
+	const cs = (s: string) => s.replace(/[>|*]/g, (match) => colorize(match, 'yellow', 'bold'));
 	// red suits
 	const rs = (s: string) =>
-		s.replace(/([123456789TJQK])([DH])/g, (match) => colorize(match, 'red'));
+		s.replace(/([123456789TJQKA])([DH])/g, (match) => colorize(match, 'red'));
 
 	console.log(
 		rs(cs(home + tableau)) +
@@ -114,7 +114,7 @@ const listener: KeypressListener = (str = '<none>', key) => {
 		process.exit();
 	} else if (key.name === 'return' || key.name === 'space') {
 		if (game.cursor.fixture === 'deck') {
-			game = game.$shuffleOrDealAll();
+			game = game.$shuffleOrDealAll().$checkCanFlourish();
 		} else if (key.name === 'return') {
 			game = game.touch();
 		} else {

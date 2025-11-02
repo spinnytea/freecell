@@ -130,6 +130,8 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			actionText                   | cards | after                             | before
 			${'invalid move bk 6C→deck'} | ${[]} | ${{ fixture: 'deck', data: [0] }} | ${{ fixture: 'cell', data: [1] }}
 			${'invalid move 4k 6D→6H'}   | ${[]} | ${{ fixture: 'deck', data: [0] }} | ${{ fixture: 'cascade', data: [3, 99] }}
+			${'juice flash AH,AS'}       | ${[]} | ${{ fixture: 'cell', data: [0] }} | ${{ fixture: 'cell', data: [0] }}
+			${'juice flash *AS*'}        | ${[]} | ${{ fixture: 'cell', data: [0] }} | ${{ fixture: 'cell', data: [0] }}
 		`(
 			'$actionText',
 			({
@@ -155,5 +157,10 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 				expect(canFindCursor || !canBeInHistory || isException).toBeTruthy();
 			}
 		);
+	});
+
+	// XXX (techdebt) i.e. FreeCell.parse
+	describe('examples', () => {
+		test.todo('auto-foundation-tween');
 	});
 });

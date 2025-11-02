@@ -538,6 +538,7 @@ FreeCell {
     "fixture": "foundation",
   },
   "deck": [],
+  "flashCards": null,
   "foundations": [
     {
       "location": {
@@ -1729,6 +1730,7 @@ FreeCell {
       "suit": "spades",
     },
   ],
+  "flashCards": null,
   "foundations": [
     null,
     null,
@@ -2349,6 +2351,7 @@ FreeCell {
     "fixture": "cell",
   },
   "deck": [],
+  "flashCards": null,
   "foundations": [
     {
       "location": {

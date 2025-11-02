@@ -1,6 +1,6 @@
 import { getSeedsByTag } from '@/game/catalog/difficulty-catalog';
 import { FreeCell } from '@/game/game';
-import { canFlourish, canFlourish52 } from '@/game/move/juice';
+import { juice } from '@/game/move/juice';
 
 /*
 	loop through all games and see if there are any that can 52 flourish
@@ -17,7 +17,7 @@ for (let seed = 1; seed <= 32000; seed++) {
 	// TODO (techdebt) (flourish-anim) (optimize) make canFlourish run faster
 	//  - this takes 1 minute when executed directly (here)
 	//  - how long will it takes as a unit test
-	if (canFlourish(game).length) {
+	if (juice.canFlourish(game).length) {
 		flourishCount++;
 	}
 
@@ -25,7 +25,7 @@ for (let seed = 1; seed <= 32000; seed++) {
 	//  - this takes 3 minutes when written as a unit test
 	//  - this takes 10 seconds when executed directly (here)
 	//  - ∴ when benchmarking, do this as a unit test
-	const aces = canFlourish52(game);
+	const aces = juice.canFlourish52(game);
 
 	if (aces.length) {
 		flourish52Seeds.push(seed);

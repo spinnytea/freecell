@@ -17,12 +17,14 @@ import {
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 
+export const juice = { canFlourish, canFlourish52 };
+
 /**
 	checks if it's even possible to flourish
 
 	meant for the start of the game
 */
-export function canFlourish(game: FreeCell): Card[] {
+function canFlourish(game: FreeCell): Card[] {
 	if (game.deck.length) return [];
 	// cells don't matter for this
 	if (game.foundations.every((card) => !!card)) return [];
@@ -42,13 +44,13 @@ export function canFlourish(game: FreeCell): Card[] {
 	});
 
 	let aces: Card[] = [];
-	game = collectCellsToDeck(game);
+	game = _collectCellsToDeck(game);
 	const acesToTry = game.cards.filter(
 		(card) => card.rank === 'ace' && card.location.fixture === 'cascade'
 	);
 	const exclude = new Set<Suit>(immediateAces.map((card) => card.suit));
 	acesToTry.forEach((card) => {
-		const g = organizeCardsExcept(game, card);
+		const g = _organizeCardsExcept(game, card);
 		if (g.$selectCard(card).touchByPosition('h').win) {
 			aces.push(card);
 			g.tableau[card.location.data[0]].forEach((c) => {
@@ -73,7 +75,7 @@ export function canFlourish(game: FreeCell): Card[] {
 
 	meant for the start of the game
 */
-export function canFlourish52(game: FreeCell): Card[] {
+function canFlourish52(game: FreeCell): Card[] {
 	if (game.deck.length) return [];
 	// cells don't matter for this
 	if (game.foundations.some((card) => !!card)) return [];
@@ -102,8 +104,8 @@ export function canFlourish52(game: FreeCell): Card[] {
 		);
 	}
 
-	game = collectCellsToDeck(game);
-	game = collectCardsTillAceToDeck(game);
+	game = _collectCellsToDeck(game);
+	game = _collectCardsTillAceToDeck(game);
 
 	const selectionsToTry: CardSequence[] = [];
 	const emptyPositions: CardLocation[] = [];
@@ -121,7 +123,7 @@ export function canFlourish52(game: FreeCell): Card[] {
 	if (selectionsToTry.length === 0) return [];
 	if (emptyPositions.length < SuitList.length) return [];
 
-	// XXX (optimize) we could unshuffle deck once, but it's built into `spreadDeckToEmptyPositions`
+	// XXX (optimize) we could unshuffle deck once, but it's built into `_spreadDeckToEmptyPositions`
 	// sortCardsBySuitAndRank(game.deck);
 
 	const aces: Card[] = [];
@@ -129,7 +131,7 @@ export function canFlourish52(game: FreeCell): Card[] {
 		let g = game;
 
 		// put deck on board, split by suit
-		g = spreadDeckToEmptyPositions(g, emptyPositions);
+		g = _spreadDeckToEmptyPositions(g, emptyPositions);
 
 		// try the move
 		g = g.$touchAndMove(selectionToTry.location);
@@ -154,13 +156,13 @@ export function canFlourish52(game: FreeCell): Card[] {
 	return aces;
 }
 
-export function collectCellsToDeck(game: FreeCell): FreeCell {
+export function _collectCellsToDeck(game: FreeCell): FreeCell {
 	const cards: Card[] = [];
 	game.cells.forEach((cell) => {
 		if (cell) cards.push(cell);
 	});
 	if (cards.length) {
-		game = moveCardsToDeck(game, {
+		game = _moveCardsToDeck(game, {
 			location: { fixture: 'cell', data: [0] },
 			cards,
 			peekOnly: true,
@@ -182,7 +184,7 @@ export function collectCellsToDeck(game: FreeCell): FreeCell {
 
 	Contains all the magic for {@link canFlourish}.
 */
-export function organizeCardsExcept(game: FreeCell, card: Card) {
+export function _organizeCardsExcept(game: FreeCell, card: Card) {
 	const [cardD0, cardD1] = card.location.data;
 
 	// deal with each cascade, update game as we go
@@ -195,7 +197,7 @@ export function organizeCardsExcept(game: FreeCell, card: Card) {
 		} else if (cardD0 !== d0) {
 			// our card is not in this cascade
 			// move the entire column
-			game = moveCardsToDeck(game, {
+			game = _moveCardsToDeck(game, {
 				location: { fixture: 'cascade', data: [d0, 0] },
 				cards: cascade,
 				peekOnly: true,
@@ -206,7 +208,7 @@ export function organizeCardsExcept(game: FreeCell, card: Card) {
 			continue;
 		} else {
 			// move everything after the ace
-			game = moveCardsToDeck(game, {
+			game = _moveCardsToDeck(game, {
 				location: { fixture: 'cascade', data: [d0, cardD1 + 1] },
 				cards: cascade.slice(cardD1 + 1),
 				peekOnly: true,
@@ -220,13 +222,13 @@ export function organizeCardsExcept(game: FreeCell, card: Card) {
 			emptyPositions.push({ fixture: 'cascade', data: [d0, 0] });
 		}
 	}
-	game = spreadDeckToEmptyPositions(game, emptyPositions);
+	game = _spreadDeckToEmptyPositions(game, emptyPositions);
 
 	return game;
 }
 
 // REVIEW (joker) rules with jokers are weird, so this may not work right
-export function collectCardsTillAceToDeck(game: FreeCell): FreeCell {
+export function _collectCardsTillAceToDeck(game: FreeCell): FreeCell {
 	for (let d0 = 0; d0 < game.tableau.length; d0++) {
 		const cascade = game.tableau[d0];
 		if (!cascade.at(-1)) continue; // if the cascade is empty, skip this one
@@ -240,7 +242,7 @@ export function collectCardsTillAceToDeck(game: FreeCell): FreeCell {
 			d1--;
 		}
 
-		game = moveCardsToDeck(game, {
+		game = _moveCardsToDeck(game, {
 			location: { fixture: 'cascade', data: [d0, d1] },
 			cards: cascade.slice(d1),
 			peekOnly: true,
@@ -249,7 +251,7 @@ export function collectCardsTillAceToDeck(game: FreeCell): FreeCell {
 	return game;
 }
 
-export function spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLocation[]): FreeCell {
+function _spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLocation[]): FreeCell {
 	// unshuffle deck
 	sortCardsBySuitAndRank(g.deck);
 
@@ -265,7 +267,7 @@ export function spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLoca
 				cards: cards,
 				peekOnly: true,
 			};
-			g = moveDeckToBoard(g, selection, emptyPosition);
+			g = _moveDeckToBoard(g, selection, emptyPosition);
 		}
 	});
 
@@ -274,9 +276,9 @@ export function spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLoca
 
 /**
 	{@link FreeCell.$setSelection} is a generic helper, it makes sense to move into {@link FreeCell}.
-	`moveCardsToDeck` is too specific, we should keep this separate.
+	`_moveCardsToDeck` is too specific, we should keep this separate.
 */
-export function moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCell {
+function _moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCell {
 	if (!selection.cards.length) return game;
 	const to: CardLocation = { fixture: 'deck', data: [game.deck.length] };
 	return game
@@ -287,9 +289,9 @@ export function moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCe
 
 /**
 	{@link FreeCell.$setSelection} is a generic helper, it makes sense to move into {@link FreeCell}.
-	`moveDeckToBoard` is too specific, we should keep this separate.
+	`_moveDeckToBoard` is too specific, we should keep this separate.
 */
-function moveDeckToBoard(game: FreeCell, selection: CardSequence, to: CardLocation): FreeCell {
+function _moveDeckToBoard(game: FreeCell, selection: CardSequence, to: CardLocation): FreeCell {
 	if (!selection.cards.length) return game;
 	return game
 		.setCursor(to)

@@ -31,6 +31,7 @@ import {
 	PREVIOUS_ACTION_TYPE_IS_START_OF_GAME,
 	PreviousAction,
 } from '@/game/move/history';
+import { juice } from '@/game/move/juice';
 import { KeyboardArrowDirection, moveCursorWithBasicArrows } from '@/game/move/keyboard';
 import {
 	AutoFoundationLimit,
@@ -167,10 +168,8 @@ export class FreeCell {
 	cursor: CardLocation;
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
-	// IDEA (animation) (flash-rank) (hud) could be something like "peek all"
-	// flashRank: Rank | null;
 	// TODO (animation) (flourish-anim) (hud) impl flashCards for flourish aces?
-	// flashCards: Cards[] | null;
+	flashCards: Card[] | null;
 
 	// history
 	readonly history: string[];
@@ -206,6 +205,7 @@ export class FreeCell {
 		cursor,
 		selection,
 		availableMoves,
+		flashCards,
 		action = { text: 'init', type: 'init' },
 		history,
 	}: {
@@ -215,6 +215,7 @@ export class FreeCell {
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
 		availableMoves?: AvailableMove[] | null;
+		flashCards?: Card[] | null;
 		action?: PreviousAction;
 		history?: string[];
 	} = {}) {
@@ -289,6 +290,7 @@ export class FreeCell {
 				? selection
 				: getSequenceAt(this, selection.location);
 		this.availableMoves = availableMoves ?? null;
+		this.flashCards = flashCards ?? null;
 
 		this.previousAction = action;
 		this.history = history ?? [];
@@ -307,6 +309,7 @@ export class FreeCell {
 		cursor = this.cursor,
 		selection = this.selection,
 		availableMoves = this.availableMoves,
+		flashCards = null, // always resets after next action
 		history = this.history,
 	}: {
 		action: PreviousAction;
@@ -314,6 +317,7 @@ export class FreeCell {
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
 		availableMoves?: AvailableMove[] | null;
+		flashCards?: Card[] | null;
 		history?: string[];
 	}): FreeCell {
 		({ action, history } = appendActionToHistory(action, history));
@@ -322,11 +326,21 @@ export class FreeCell {
 			cascadeCount: this.tableau.length,
 			cards,
 			cursor,
-			// XXX (techdebt) `selection && availableMoves && !cards` after removing auto-foundation-tween
 			selection: selection && availableMoves ? selection : null,
 			availableMoves: selection && availableMoves ? availableMoves : null,
+			flashCards,
 			action,
 			history,
+		});
+	}
+
+	__copy(): FreeCell {
+		return new FreeCell({
+			...this,
+			cellCount: this.cells.length,
+			cascadeCount: this.tableau.length,
+			action: { ...this.previousAction },
+			history: [...this.history],
 		});
 	}
 
@@ -1062,6 +1076,40 @@ export class FreeCell {
 		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
 	}
 
+	/**
+		juice:
+		check if we can flourish any of the aces,
+		or if we can to a 52 card flourish
+
+		TODO (flourish-anim) (motivation) hook this up to react UI
+		 - dealAll
+		 - restart
+		 - $shuffleOrDealAll
+	*/
+	$checkCanFlourish(): FreeCell {
+		let aces = juice.canFlourish52(this);
+		let gameFunction: GameFunction = 'check-can-flourish-52';
+		if (!aces.length) {
+			aces = juice.canFlourish(this);
+			gameFunction = 'check-can-flourish';
+		}
+		if (!aces.length) {
+			return this;
+		}
+		const sh = aces.map((card) => shorthandCard(card)).join(',');
+		const mod = gameFunction === 'check-can-flourish-52' ? '*' : '';
+		return this.__clone({
+			action: {
+				text: `juice flash ${mod}${sh}${mod}`,
+				type: 'juice',
+				gameFunction,
+			},
+			selection: null,
+			availableMoves: null,
+			flashCards: aces,
+		});
+	}
+
 	/** accessor for nonstandard gameplay */
 	$setSelection(
 		selection: CardSequence | null,
@@ -1159,11 +1207,19 @@ export class FreeCell {
 
 		XXX (techdebt) optimize
 	*/
-	__printTableau(cursor = this.cursor, selection = this.selection): string {
+	__printTableau(
+		cursor = this.cursor,
+		selection = this.selection,
+		flashCards = this.flashCards
+	): string {
 		let str = '';
 		const max = Math.max(...this.tableau.map((cascade) => cascade.length));
+		const hasSelection =
+			cursor.fixture === 'cascade' ||
+			selection?.location.fixture === 'cascade' ||
+			flashCards?.some((card) => card.location.fixture === 'cascade');
 		for (let i = 0; i === 0 || i < max; i++) {
-			if (cursor.fixture === 'cascade' || selection?.location.fixture === 'cascade') {
+			if (hasSelection) {
 				str +=
 					'\n' +
 					this.tableau
@@ -1171,7 +1227,8 @@ export class FreeCell {
 							const c = getPrintSeparator(
 								{ fixture: 'cascade', data: [idx, i] },
 								cursor,
-								selection
+								selection,
+								flashCards
 							);
 							return c + shorthandCard(cascade[i]);
 						})
@@ -1179,7 +1236,8 @@ export class FreeCell {
 					getPrintSeparator(
 						{ fixture: 'cascade', data: [this.tableau.length, i] },
 						null,
-						selection
+						selection,
+						flashCards
 					);
 			} else {
 				// if no cursor/selection in this row
@@ -1312,10 +1370,11 @@ export class FreeCell {
 			? this.cursor
 			: { fixture: 'cascade', data: [-1, -1] };
 		const selection = !includeHistory ? this.selection : null;
+		const flashCards = !includeHistory ? this.flashCards : null;
 
 		let str =
 			this.__printHome(cursor, selection) + //
-			this.__printTableau(cursor, selection);
+			this.__printTableau(cursor, selection, flashCards);
 
 		// REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
 		if (this.win) {
@@ -1738,7 +1797,8 @@ export class FreeCell {
 export function getPrintSeparator(
 	location: CardLocation,
 	cursor: CardLocation | null,
-	selection: CardSequence | null
+	selection: CardSequence | null,
+	flashCards: Card[] | null = null
 ) {
 	if (cursor && isLocationEqual(location, cursor)) {
 		return '>';
@@ -1769,6 +1829,18 @@ export function getPrintSeparator(
 					return '|';
 				}
 			}
+		}
+	}
+	if (flashCards?.length) {
+		if (flashCards.some((card) => isLocationEqual(location, card.location))) {
+			return '*';
+		}
+		const shifted: CardLocation = {
+			fixture: 'cascade',
+			data: [location.data[0] - 1, location.data[1]],
+		};
+		if (flashCards.some((card) => isLocationEqual(shifted, card.location))) {
+			return '*';
 		}
 	}
 	return ' ';

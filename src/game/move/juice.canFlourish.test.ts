@@ -1,14 +1,13 @@
 import { findCard, parseShorthandCard } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import {
-	canFlourish,
-	canFlourish52,
-	organizeCardsExcept,
-	collectCardsTillAceToDeck,
-	collectCellsToDeck,
+	_organizeCardsExcept,
+	_collectCardsTillAceToDeck,
+	_collectCellsToDeck,
+	juice,
 } from '@/game/move/juice';
 
-// FIXME update tests to include "mark canFlourish"
+// TODO (techdebt) (flourish-anim) test coverage
 describe('move.juice', () => {
 	describe('canFlourish', () => {
 		describe('can (both)', () => {
@@ -26,11 +25,11 @@ describe('move.juice', () => {
 						' 4H 2H 5C JD             \n' +
 						' deal all cards'
 				);
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [6, 3] } },
 					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 1] } },
 				]);
-				expect(canFlourish52(game)).toEqual([
+				expect(juice.canFlourish52(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [6, 3] } },
 				]);
 			});
@@ -49,11 +48,11 @@ describe('move.juice', () => {
 						' TC 8S 6S 5C             \n' +
 						' deal all cards'
 				);
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 2] } },
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [5, 3] } },
 				]);
-				expect(canFlourish52(game)).toEqual([
+				expect(juice.canFlourish52(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 2] } },
 				]);
 			});
@@ -72,10 +71,10 @@ describe('move.juice', () => {
 						' 3H 4H KD 6C             \n' +
 						' deal all cards'
 				);
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [5, 3] } },
 				]);
-				expect(canFlourish52(game)).toEqual([
+				expect(juice.canFlourish52(game)).toEqual([
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [5, 3] } },
 				]);
 			});
@@ -94,11 +93,11 @@ describe('move.juice', () => {
 						' KD 4C 9S TC             \n' +
 						' deal all cards'
 				);
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [3, 2] } },
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 0] } },
 				]);
-				expect(canFlourish52(game)).toEqual([
+				expect(juice.canFlourish52(game)).toEqual([
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [3, 2] } },
 				]);
 			});
@@ -117,11 +116,11 @@ describe('move.juice', () => {
 						' 6H 9S KC 7D             \n' +
 						' deal all cards'
 				);
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 1] } },
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } },
 				]);
-				expect(canFlourish52(game)).toEqual([
+				expect(juice.canFlourish52(game)).toEqual([
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } },
 				]);
 			});
@@ -144,11 +143,11 @@ describe('move.juice', () => {
 						'             2S    2D    \n' +
 						' move 3a 7H→cell'
 				);
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 1] } },
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } },
 				]);
-				expect(canFlourish52(game)).toEqual([
+				expect(juice.canFlourish52(game)).toEqual([
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } },
 				]);
 			});
@@ -168,14 +167,14 @@ describe('move.juice', () => {
 						' deal all cards'
 				);
 				// BUG (techdebt) (motivation) if any aces exposed at start, is there a single move we can make to win the game?
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					// { rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 6] } },
 					// { rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 6] } },
 					// { rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 6] } },
 					// { rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 6] } },
 				]);
 				// BUG (techdebt) (motivation) if any aces exposed at start, is there a single move we can make to win the game?
-				expect(canFlourish52(game)).toEqual([
+				expect(juice.canFlourish52(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 6] } },
 					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 6] } },
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 6] } },
@@ -199,11 +198,11 @@ describe('move.juice', () => {
 						' JS 4S 6D 9D             \n' +
 						' deal all cards'
 				);
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 0] } },
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [0, 0] } },
 				]);
-				expect(canFlourish52(game)).toEqual([]);
+				expect(juice.canFlourish52(game)).toEqual([]);
 			});
 
 			test('game in progress', () => {
@@ -240,11 +239,11 @@ describe('move.juice', () => {
 				// BUG (techdebt) parse history is wrong :/
 				// expect(game.history.length).toBe(78);
 
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 0] } },
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [0, 0] } },
 				]);
-				expect(canFlourish52(game)).toEqual([]);
+				expect(juice.canFlourish52(game)).toEqual([]);
 			});
 		});
 
@@ -268,13 +267,13 @@ describe('move.juice', () => {
 						' 2S 2H 2D 2C             \n' +
 						' hand-jammed'
 				);
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 0] } },
 					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 0] } },
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 0] } },
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 0] } },
 				]);
-				expect(canFlourish52(game)).toEqual([]);
+				expect(juice.canFlourish52(game)).toEqual([]);
 			});
 
 			test('example 2', () => {
@@ -290,13 +289,13 @@ describe('move.juice', () => {
 						'             2S 2H 2D 2C \n' +
 						' hand-jammed'
 				);
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [7, 0] } },
 					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [6, 0] } },
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [5, 0] } },
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [4, 0] } },
 				]);
-				expect(canFlourish52(game)).toEqual([]);
+				expect(juice.canFlourish52(game)).toEqual([]);
 			});
 
 			test('example 3', () => {
@@ -318,13 +317,13 @@ describe('move.juice', () => {
 						' KS KH KD KC             \n' +
 						' hand-jammed'
 				);
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 11] } },
 					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 11] } },
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 11] } },
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 11] } },
 				]);
-				expect(canFlourish52(game)).toEqual([]);
+				expect(juice.canFlourish52(game)).toEqual([]);
 			});
 
 			test('example 4', () => {
@@ -346,13 +345,13 @@ describe('move.juice', () => {
 						' KS KH KD                \n' +
 						' hand-jammed'
 				);
-				expect(canFlourish(game)).toEqual([
+				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [4, 0] } },
 					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 11] } },
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 11] } },
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 11] } },
 				]);
-				expect(canFlourish52(game)).toEqual([]);
+				expect(juice.canFlourish52(game)).toEqual([]);
 			});
 		});
 
@@ -371,8 +370,8 @@ describe('move.juice', () => {
 						' 8C 4S 5S 5C             \n' +
 						' deal all cards'
 				);
-				expect(canFlourish(game)).toEqual([]);
-				expect(canFlourish52(game)).toEqual([]);
+				expect(juice.canFlourish(game)).toEqual([]);
+				expect(juice.canFlourish52(game)).toEqual([]);
 			});
 
 			test.each([
@@ -404,8 +403,8 @@ describe('move.juice', () => {
 					' hand-jammed',
 			])('example %#', (gamePrint) => {
 				const game = FreeCell.parse(gamePrint);
-				expect(canFlourish(game)).toEqual([]);
-				expect(canFlourish52(game)).toEqual([]);
+				expect(juice.canFlourish(game)).toEqual([]);
+				expect(juice.canFlourish52(game)).toEqual([]);
 			});
 		});
 
@@ -415,8 +414,8 @@ describe('move.juice', () => {
 			test('demo', () => {
 				const game = new FreeCell().dealAll({ demo: true });
 				expect(game.printFoundation()).toBe('AS AH AD AC');
-				expect(canFlourish(game)).toEqual([]);
-				expect(canFlourish52(game)).toEqual([]);
+				expect(juice.canFlourish(game)).toEqual([]);
+				expect(juice.canFlourish52(game)).toEqual([]);
 				// TODO (techdebt) (gameplay) (hud) winning should pick the correct foundation index - we just moved 'move dh 2C→AC', so the cursor should be on KC
 				expect(game.moveByShorthand('dh').print()).toBe(
 					'' +
@@ -432,10 +431,10 @@ describe('move.juice', () => {
 		// XXX (techdebt) 'could flourish, but not all cards dealt' … what?
 	});
 
-	describe('organizeCardsExcept', () => {
+	describe('_organizeCardsExcept', () => {
 		test('Game #5 AC', () => {
 			let game = new FreeCell().shuffle32(5).dealAll();
-			game = organizeCardsExcept(game, findCard(game.cards, parseShorthandCard('AC')));
+			game = _organizeCardsExcept(game, findCard(game.cards, parseShorthandCard('AC')));
 			expect(game.print()).toBe(
 				'' +
 					'                         \n' +
@@ -458,7 +457,7 @@ describe('move.juice', () => {
 
 		test('Game #5 AD', () => {
 			let game = new FreeCell().shuffle32(5).dealAll();
-			game = organizeCardsExcept(game, findCard(game.cards, parseShorthandCard('AD')));
+			game = _organizeCardsExcept(game, findCard(game.cards, parseShorthandCard('AD')));
 			expect(game.print()).toBe(
 				'' +
 					'                         \n' +
@@ -480,7 +479,7 @@ describe('move.juice', () => {
 
 		test('Game #5 AH', () => {
 			let game = new FreeCell().shuffle32(5).dealAll();
-			game = organizeCardsExcept(game, findCard(game.cards, parseShorthandCard('AH')));
+			game = _organizeCardsExcept(game, findCard(game.cards, parseShorthandCard('AH')));
 			expect(game.print()).toBe(
 				'' +
 					'                         \n' +
@@ -503,7 +502,7 @@ describe('move.juice', () => {
 
 		test('Game #5 AS', () => {
 			let game = new FreeCell().shuffle32(5).dealAll();
-			game = organizeCardsExcept(game, findCard(game.cards, parseShorthandCard('AS')));
+			game = _organizeCardsExcept(game, findCard(game.cards, parseShorthandCard('AS')));
 			expect(game.print()).toBe(
 				'' +
 					'                         \n' +
@@ -525,7 +524,7 @@ describe('move.juice', () => {
 		});
 	});
 
-	describe('collectCardsTillAceToDeck', () => {
+	describe('_collectCardsTillAceToDeck', () => {
 		test('Game #7239', () => {
 			const game = new FreeCell().shuffle32(7239).dealAll();
 			expect(game.print()).toBe(
@@ -540,7 +539,7 @@ describe('move.juice', () => {
 					' 4H 2H 5C JD             \n' +
 					' deal all cards'
 			);
-			expect(collectCardsTillAceToDeck(game).print()).toBe(
+			expect(_collectCardsTillAceToDeck(game).print()).toBe(
 				'' +
 					'                         \n' +
 					'    7S             QC    \n' +
@@ -567,7 +566,7 @@ describe('move.juice', () => {
 					' TC 8S 6S 5C             \n' +
 					' deal all cards'
 			);
-			expect(collectCardsTillAceToDeck(game).print()).toBe(
+			expect(_collectCardsTillAceToDeck(game).print()).toBe(
 				'' +
 					'                         \n' +
 					'          AS    6D       \n' +
@@ -581,8 +580,8 @@ describe('move.juice', () => {
 		});
 
 		test('demo', () => {
-			const game = collectCellsToDeck(new FreeCell().dealAll({ demo: true }));
-			expect(collectCardsTillAceToDeck(game).print()).toBe(
+			const game = _collectCellsToDeck(new FreeCell().dealAll({ demo: true }));
+			expect(_collectCardsTillAceToDeck(game).print()).toBe(
 				'' + //
 					'             AS AH AD AC \n' +
 					'                         \n' +

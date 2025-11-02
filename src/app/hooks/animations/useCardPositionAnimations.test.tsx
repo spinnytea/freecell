@@ -954,6 +954,15 @@ describe('useCardPositionAnimations', () => {
 				});
 			});
 		});
+
+		// TODO (flourish-anim) test.todo
+		describe('juice', () => {
+			describe('flash', () => {
+				test.todo('check-can-flourish');
+
+				test.todo('check-can-flourish-52');
+			});
+		});
 	});
 
 	describe('actionText examples', () => {

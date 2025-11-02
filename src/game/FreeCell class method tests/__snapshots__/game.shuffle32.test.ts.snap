@@ -590,6 +590,7 @@ FreeCell {
     "fixture": "cell",
   },
   "deck": [],
+  "flashCards": null,
   "foundations": [
     null,
     null,
