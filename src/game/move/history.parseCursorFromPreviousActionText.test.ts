@@ -124,4 +124,43 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			}
 		);
 	});
+
+	describe('other cases', () => {
+		test.each`
+			actionText                   | cards | after                             | before
+			${'invalid move bk 6C→deck'} | ${[]} | ${{ fixture: 'deck', data: [0] }} | ${{ fixture: 'cell', data: [1] }}
+			${'invalid move 4k 6D→6H'}   | ${[]} | ${{ fixture: 'deck', data: [0] }} | ${{ fixture: 'cascade', data: [3, 99] }}
+			${'juice flash AH,AS'}       | ${[]} | ${{ fixture: 'cell', data: [0] }} | ${{ fixture: 'cell', data: [0] }}
+			${'juice flash *AS*'}        | ${[]} | ${{ fixture: 'cell', data: [0] }} | ${{ fixture: 'cell', data: [0] }}
+		`(
+			'$actionText',
+			({
+				actionText,
+				cards,
+				after,
+				before,
+			}: {
+				actionText: string;
+				cards: Card[];
+				after: CardLocation | undefined;
+				before: CardLocation | undefined;
+			}) => {
+				expect(parseCursorFromPreviousActionText(actionText, cards)).toEqual(after);
+				expect(parseAltCursorFromPreviousActionText(actionText, cards)).toEqual(before);
+
+				// make sure all the ones that should have a cursor do have a cursor
+				const previousAction = parsePreviousActionType(actionText);
+				const EXCEPTIONS: PreviousActionType[] = ['auto-foundation'];
+				const canBeInHistory = PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type);
+				const isException = EXCEPTIONS.includes(previousAction.type);
+				const canFindCursor = !!after && !!before;
+				expect(canFindCursor || !canBeInHistory || isException).toBeTruthy();
+			}
+		);
+	});
+
+	// XXX (techdebt) i.e. FreeCell.parse
+	describe('examples', () => {
+		test.todo('auto-foundation-tween');
+	});
 });

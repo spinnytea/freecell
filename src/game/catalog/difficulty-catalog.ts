@@ -117,6 +117,26 @@ const TAGGED_SEEDS = new Map<number, string[]>([
 	[30849, ['zero cell']],
 	[31185, ['zero cell']],
 	[31316, ['zero cell']],
+
+	[7239, ['canFlourish52']],
+	[7321, ['canFlourish52']],
+	[8536, ['canFlourish52']],
+	[9993, ['canFlourish52']],
+	[10331, ['canFlourish52']],
+	[12387, ['canFlourish52']],
+	[14150, ['canFlourish52']],
+	[16371, ['canFlourish52']],
+	[16508, ['canFlourish52']],
+	[17502, ['canFlourish52']],
+	[18088, ['canFlourish52']],
+	[18492, ['canFlourish52']],
+	[22574, ['canFlourish52']],
+	[23190, ['canFlourish52']],
+	[26852, ['canFlourish52']],
+	[27251, ['canFlourish52']],
+	[28692, ['canFlourish52']],
+	[29268, ['canFlourish52']],
+	[29640, ['canFlourish52']],
 ]);
 
 export function getSeedsByTag(tag: string): number[] {

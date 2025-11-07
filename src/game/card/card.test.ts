@@ -90,9 +90,44 @@ describe('game/card', () => {
 	});
 
 	describe('shorthandPosition', () => {
-		test('deck', () => {
-			const error = 'invalid position: {"fixture":"deck","data":[0]}';
-			expect(() => shorthandPosition({ fixture: 'deck', data: [0] })).toThrow(error);
+		describe('deck', () => {
+			test.each`
+				d0    | shorthand | shorthandD0
+				${-2} | ${'k'}    | ${'k'}
+				${-1} | ${'k'}    | ${'k'}
+				${0}  | ${'k'}    | ${'k⡀'}
+				${1}  | ${'k'}    | ${'k⡁'}
+				${2}  | ${'k'}    | ${'k⡂'}
+				${7}  | ${'k'}    | ${'k⡇'}
+				${8}  | ${'k'}    | ${'k⡈'}
+				${9}  | ${'k'}    | ${'k⡉'}
+				${10} | ${'k'}    | ${'k⡊'}
+				${11} | ${'k'}    | ${'k⡋'}
+				${43} | ${'k'}    | ${'k⡫'}
+				${44} | ${'k'}    | ${'k⡬'}
+				${45} | ${'k'}    | ${'k⡭'}
+				${46} | ${'k'}    | ${'k⡮'}
+				${47} | ${'k'}    | ${'k⡯'}
+				${48} | ${'k'}    | ${'k⡰'}
+				${49} | ${'k'}    | ${'k⡱'}
+				${50} | ${'k'}    | ${'k⡲'}
+				${51} | ${'k'}    | ${'k⡳'}
+				${55} | ${'k'}    | ${'k⡷'}
+			`(
+				'$d0',
+				({
+					d0,
+					shorthand,
+					shorthandD0,
+				}: {
+					d0: number;
+					shorthand: string;
+					shorthandD0: string;
+				}) => {
+					expect(shorthandPosition({ fixture: 'deck', data: [d0] })).toBe(shorthand);
+					expect(shorthandPosition({ fixture: 'deck', data: [d0] }, true)).toBe(shorthandD0);
+				}
+			);
 		});
 
 		describe('cell', () => {
@@ -116,13 +151,38 @@ describe('game/card', () => {
 				${5} | ${'f'}
 			`('$d0', ({ d0, shorthand }: { d0: number; shorthand: string }) => {
 				expect(shorthandPosition({ fixture: 'cell', data: [d0] })).toBe(shorthand);
+				expect(shorthandPosition({ fixture: 'cell', data: [d0] }, true)).toBe(shorthand);
 			});
 		});
 
 		describe('foundation', () => {
-			test.each([-2, -1, 0, 1, 2, 3, 4, 5, 6, 7])('%d', (d0) => {
-				expect(shorthandPosition({ fixture: 'foundation', data: [d0] })).toBe('h');
-			});
+			test.each`
+				d0    | shorthand | shorthandD0
+				${-2} | ${'h'}    | ${'h'}
+				${-1} | ${'h'}    | ${'h'}
+				${0}  | ${'h'}    | ${'h⡀'}
+				${1}  | ${'h'}    | ${'h⡁'}
+				${2}  | ${'h'}    | ${'h⡂'}
+				${3}  | ${'h'}    | ${'h⡃'}
+				${4}  | ${'h'}    | ${'h⡄'}
+				${5}  | ${'h'}    | ${'h⡅'}
+				${6}  | ${'h'}    | ${'h⡆'}
+				${7}  | ${'h'}    | ${'h⡇'}
+			`(
+				'$d0',
+				({
+					d0,
+					shorthand,
+					shorthandD0,
+				}: {
+					d0: number;
+					shorthand: string;
+					shorthandD0: string;
+				}) => {
+					expect(shorthandPosition({ fixture: 'foundation', data: [d0] })).toBe(shorthand);
+					expect(shorthandPosition({ fixture: 'foundation', data: [d0] }, true)).toBe(shorthandD0);
+				}
+			);
 		});
 
 		describe('cascade', () => {
@@ -136,7 +196,7 @@ describe('game/card', () => {
 				expect(() => shorthandPosition({ fixture: 'cascade', data: [d0, 1] })).toThrow(error);
 			});
 
-			test.each`
+			describe.each`
 				d0   | shorthand
 				${0} | ${'1'}
 				${1} | ${'2'}
@@ -149,8 +209,20 @@ describe('game/card', () => {
 				${8} | ${'9'}
 				${9} | ${'0'}
 			`('$d0', ({ d0, shorthand }: { d0: number; shorthand: string }) => {
-				[-1, 0, 1, 10, 13, 20, 55].forEach((d1) => {
+				test.each`
+					d1    | braille
+					${-1} | ${''}
+					${0}  | ${'⡀'}
+					${1}  | ${'⡁'}
+					${10} | ${'⡊'}
+					${13} | ${'⡍'}
+					${20} | ${'⡔'}
+					${55} | ${'⡷'}
+				`('$d1', ({ d1, braille }: { d1: number; braille: string }) => {
 					expect(shorthandPosition({ fixture: 'cascade', data: [d0, d1] })).toBe(shorthand);
+					expect(shorthandPosition({ fixture: 'cascade', data: [d0, d1] }, true)).toBe(
+						shorthand + braille
+					);
 				});
 			});
 		});

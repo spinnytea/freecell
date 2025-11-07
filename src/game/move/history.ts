@@ -7,9 +7,9 @@ import {
 	initializeDeck,
 	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
-	shorthandCard,
 	shorthandPosition,
 	shorthandSequence,
+	sortCardsOG,
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { moveCards } from '@/game/move/move';
@@ -28,7 +28,8 @@ export type PreviousActionType =
 	| 'auto-foundation'
 	// | 'auto-flourish' // TODO (move-flourish) auto-flourish
 	| 'invalid'
-	| 'auto-foundation-tween';
+	| 'auto-foundation-tween'
+	| 'juice';
 
 export const PREVIOUS_ACTION_TYPE_IN_HISTORY = new Set<PreviousActionType>([
 	'init',
@@ -56,7 +57,14 @@ export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
 	 - then it'll just be, like, a new game
 	 - should we have a special animation for this?
 */
-type GameFunction = 'undo' | 'restart' | 'newGame' | 'drag-drop';
+export type GameFunction =
+	| 'undo'
+	| 'restart'
+	| 'newGame'
+	| 'drag-drop'
+	| 'check-can-flourish'
+	| 'check-can-flourish-52'
+	| 'recall-or-bury';
 
 export interface PreviousAction {
 	/**
@@ -144,6 +152,7 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 		case 'cursor':
 		case 'select':
 		case 'deselect':
+		case 'juice':
 			// no change, just pop the history item
 			// …how did this end up in the history in the first place?
 			return game.cards;
@@ -184,7 +193,7 @@ export function parseCursorFromPreviousActionText(
 			const cursor = parseShorthandPosition_INCOMPLETE(to);
 			switch (cursor.fixture) {
 				case 'deck':
-					// XXX (gameplay) can we, in theory, move a card to the deck? but we don't
+					// XXX (deck) (gameplay) can we, in theory, move a card to the deck? but we don't
 					break;
 				case 'cell':
 					// each cell identifies it's own d0
@@ -260,6 +269,8 @@ export function parseCursorFromPreviousActionText(
 		case 'auto-foundation':
 		case 'auto-foundation-tween':
 			return undefined;
+		case 'juice':
+			return { fixture: 'cell', data: [0] };
 	}
 }
 
@@ -287,7 +298,7 @@ export function parseAltCursorFromPreviousActionText(
 		case 'move': {
 			const { from } = parseActionTextMove(actionText);
 			const cursor = parseShorthandPosition_INCOMPLETE(from);
-			// deck doesn't have a shorthand (so 0 is fine, if we see it)
+			// XXX (deck) (gameplay) deck isn't standard gameplay (so 0 is fine, if we see it)
 			// cell is already accurate
 			// foundation can't be `from` in an move (so 0 is fine, if we see it)
 			// cascade needs to be "the last card" (since we can only move from the bottom)
@@ -318,6 +329,8 @@ export function parseAltCursorFromPreviousActionText(
 		case 'auto-foundation':
 		case 'auto-foundation-tween':
 			return undefined;
+		case 'juice':
+			return { fixture: 'cell', data: [0] };
 	}
 }
 
@@ -530,18 +543,36 @@ function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 
 export function parsePreviousActionType(actionText: string): PreviousAction {
 	const firstWord = actionText.split(' ')[0];
+	// some abnormal cases where the firstWord does not match the type
 	if (firstWord === 'hand-jammed') return { text: actionText, type: 'init' };
 	if (firstWord === 'touch') return { text: actionText, type: 'invalid' };
 	if (firstWord === 'flourish') return { text: actionText, type: 'auto-foundation' };
 	if (firstWord === 'move' && actionText.endsWith(')')) {
-		if (actionText.includes('auto-foundation'))
+		if (actionText.includes('auto-foundation')) {
 			return { text: actionText, type: 'move-foundation' };
-		if (actionText.includes('flourish')) return { text: actionText, type: 'move-foundation' };
+		}
+		if (actionText.includes('flourish')) {
+			return { text: actionText, type: 'move-foundation' };
+		}
 	}
 
 	// if (firstWord === 'auto-foundation-setup') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	// if (firstWord === 'auto-foundation-middle') return { text, type: 'auto-foundation-tween' }; // should not appear in print
-	return { text: actionText, type: firstWord as PreviousActionType };
+	const action: PreviousAction = { text: actionText, type: firstWord as PreviousActionType };
+
+	if (firstWord === 'invalid') {
+		if (/^invalid move \w?k\w?\b/.test(actionText)) {
+			action.gameFunction = 'recall-or-bury';
+		}
+	} else if (firstWord === 'juice') {
+		if (actionText.endsWith('*')) {
+			action.gameFunction = 'check-can-flourish-52';
+		} else {
+			action.gameFunction = 'check-can-flourish';
+		}
+	}
+
+	return action;
 }
 
 /** XXX (techdebt) do we need to do any more type checking? I suppose we could just improve the regex */
@@ -570,21 +601,24 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 	const matchSeed = /shuffle deck \((\d+)\)/.exec(history[0]);
 	if (!matchSeed) return null;
 	const seed = parseInt(matchSeed[1], 10);
-	const moves = history
-		.map((actionText) => {
-			let match = MOVE_REGEX.exec(actionText);
-			if (match) {
-				const [, from, to] = match;
-				return `${from}${to}`;
-			}
+	const moves: string[] = [];
+	// const moves = history.map((actionText) => { … }).filter((m) => m);
+	for (const actionText of history) {
+		if (actionText.startsWith('invalid ')) {
+			return null;
+		}
+		let match = MOVE_REGEX.exec(actionText);
+		if (match) {
+			const [, from, to] = match;
+			moves.push(`${from}${to}`);
+		} else {
 			match = MOVE_FOUNDATION_REGEX.exec(actionText);
 			if (match) {
 				const [, from, to] = match;
-				return `${from}${to}`;
+				moves.push(`${from}${to}`);
 			}
-			return '';
-		})
-		.filter((m) => m);
+		}
+	}
 	return { seed, moves };
 }
 
@@ -618,60 +652,50 @@ export function getCardsFromInvalid(
 	symmetric pair to {@link FreeCell.dealAll}
 */
 export function unDealAll(game: FreeCell): Card[] {
-	const deck: Card[] = [];
+	// compiling everything into the deck, and then to be sorted like game.cards
+	const deckOfCards: Card[] = [];
 
+	// there shouldn't be any leftover cards in the deck (this is "invalid gameplay" to undeal now)
 	game.deck.forEach((card) => {
-		deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+		deckOfCards.push({ ...card, location: { fixture: 'deck', data: [deckOfCards.length] } });
 	});
 
+	// there shouldn't be any cards in the foundation (this is "invalid gameplay" to undeal now)
 	for (let idx = game.foundations.length - 1; idx >= 0; idx--) {
-		const card = game.foundations[idx];
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		const card = game.foundations.at(idx);
 		if (card) {
-			deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+			deckOfCards.push({ ...card, location: { fixture: 'deck', data: [deckOfCards.length] } });
 		}
 	}
 
+	// there shouldn't be any cards in the foundation (this is "invalid gameplay" to undeal now)
 	for (let idx = game.cells.length - 1; idx >= 0; idx--) {
-		const card = game.cells[idx];
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		const card = game.cells.at(idx);
 		if (card) {
-			deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+			deckOfCards.push({ ...card, location: { fixture: 'deck', data: [deckOfCards.length] } });
 		}
 	}
 
 	const maxCascadeLength = game.tableau.reduce((ret, cascade) => Math.max(cascade.length, ret), 0);
 	for (let d1 = maxCascadeLength; d1 >= 0; d1--) {
 		for (let c = game.tableau.length - 1; c >= 0; c--) {
-			const card = game.tableau[c][d1];
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			const card = game.tableau[c].at(d1);
 			if (card) {
-				deck.push({ ...card, location: { fixture: 'deck', data: [deck.length] } });
+				deckOfCards.push({ ...card, location: { fixture: 'deck', data: [deckOfCards.length] } });
 			}
 		}
 	}
 
-	const order = new Map<string, number>();
-	game.cards.forEach((card, idx) => {
-		order.set(shorthandCard(card), idx);
-	});
-	deck.sort((a, b) => {
-		const oa = order.get(shorthandCard(a));
-		const ob = order.get(shorthandCard(b));
+	// deck is going to be used _as_ "cards" to construct the next FreeCell state
+	// we must arrange the list in the order of the OG cards (game.cards),
+	// this is _not_ the position with the deck (game.deck)
+	sortCardsOG(game, deckOfCards);
 
-		if (oa == undefined)
-			throw new Error(`undeal deck has ${shorthandCard(a)}, but game cards do not?`);
-		if (ob == undefined)
-			throw new Error(`undeal deck has ${shorthandCard(b)}, but game cards do not?`);
-
-		return oa - ob;
-	});
-
-	if (deck.length !== game.cards.length) {
+	if (deckOfCards.length !== game.cards.length) {
 		throw new Error(
-			`incomplete implementation -- missing some cards (${deck.length.toString(10)} / ${game.cards.length.toString(10)})`
+			`incomplete implementation -- missing some cards (${deckOfCards.length.toString(10)} / ${game.cards.length.toString(10)})`
 		);
 	}
 
-	return deck;
+	return deckOfCards;
 }

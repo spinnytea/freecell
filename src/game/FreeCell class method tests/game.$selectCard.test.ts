@@ -3,6 +3,21 @@ import { FreeCell } from '@/game/game';
 describe('game.$selectCard', () => {
 	test.todo('everything');
 
+	test('null', () => {
+		expect(new FreeCell().dealAll().$selectCard(null).print()).toBe(
+			'' + //
+				'>                        \n' +
+				' KS KH KD KC QS QH QD QC \n' +
+				' JS JH JD JC TS TH TD TC \n' +
+				' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+				' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+				' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+				' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
+				' AS AH AD AC             \n' +
+				' deal all cards'
+		);
+	});
+
 	test('select and then again', () => {
 		let game = new FreeCell().dealAll().$selectCard('AS');
 		expect(game.print()).toBe(

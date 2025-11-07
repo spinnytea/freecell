@@ -12,7 +12,7 @@ const toGradient = (a: string, b: string) => `linear-gradient(to right, ${a}, ${
 
 export function WinMessage() {
 	const elementRef = useRef<HTMLDivElement | null>(null);
-	const { win, winIsFloursh } = useGame();
+	const { win, winIsFlourish } = useGame();
 	const fixtureSizes = useFixtureSizes();
 
 	useGSAP(
@@ -26,8 +26,8 @@ export function WinMessage() {
 					ease: 'power1.out',
 				});
 
-				if (winIsFloursh) {
-					// IDEA (animation) 52-card flourish cycles color forever
+				if (winIsFlourish) {
+					// TODO (animation) (flourish-anim) 52-card flourish cycles color forever
 					//  - basically, disable s/l and repeat h
 					// animate color hue, to white
 					// TODO (animation) "you win" animation should start after the cards finish moving?
@@ -62,7 +62,7 @@ export function WinMessage() {
 				}
 			}
 		},
-		{ dependencies: [win, winIsFloursh] }
+		{ dependencies: [win, winIsFlourish] }
 	);
 
 	if (!win) return null;

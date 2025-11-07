@@ -499,15 +499,9 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 	if (from.cards.length === 0) {
 		return game.cards;
 	}
-	if (to.fixture === 'deck') {
-		// XXX (gameplay) can we, in theory, move a card to the deck? what does that look like
-		//  - we should be able to move them to the bottom of the deck
-		//  - or move them to the top of the deck
-		//  - do we shuffle the deck every time we do this?
-		return game.cards;
-	}
-	if (from.cards.length > 1 && to.fixture !== 'cascade') {
+	if (from.cards.length > 1 && !(to.fixture === 'cascade' || to.fixture === 'deck')) {
 		// you can only move multiple cards to a cascade
+		// (you can move multiple cards to the deck, too, bcuz why not)
 		return game.cards;
 	}
 
@@ -515,6 +509,32 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 	const from_cards = from.cards.map((fc) => findCard(cards, fc));
 
 	switch (to.fixture) {
+		case 'deck': {
+			// we can, in theory, move cards to the deck
+			// this isn't standard gameplay
+			const d0 = to.data[0];
+
+			// make space for the from_cards
+			cards.forEach((card) => {
+				if (card.location.fixture === 'deck') {
+					if (card.location.data[0] >= d0) {
+						card.location = {
+							fixture: 'deck',
+							data: [card.location.data[0] + from_cards.length],
+						};
+					}
+				}
+			});
+
+			// put in the from cards
+			from_cards.forEach((card, idx) => {
+				card.location = {
+					fixture: 'deck',
+					data: [d0 - idx + from_cards.length - 1],
+				};
+			});
+			break;
+		}
 		case 'cell':
 			from_cards[0].location = to;
 			break;
@@ -574,7 +594,7 @@ export function calcCursorActionText(
 	const cardSuffix = card ? ` ${shorthandCard(card)}` : '';
 	switch (location.fixture) {
 		case 'deck':
-			return `cursor ${suffix}${cardSuffix}`;
+			return `cursor ${suffix} ${shorthandPosition(location, true)}${cardSuffix || ' deck'}`;
 		case 'cell':
 			return `cursor ${suffix} ${shorthandPosition(location)}${cardSuffix}`;
 		case 'cascade':
@@ -623,6 +643,15 @@ export function parseShorthandMove(
 		to_location.data[1] = Math.max(0, game.tableau[to_location.data[0]].length - 1);
 	}
 
+	if (from_location.fixture === 'deck') {
+		// top card in deck
+		from_location.data[0] = game.deck.length - 1;
+	}
+	if (to_location.fixture === 'deck') {
+		// top of the deck
+		to_location.data[0] = game.deck.length;
+	}
+
 	// clean up from_location based on MoveSourceType
 	// (pick the right starting sequence)
 	if (!from_shorthand_arg && from_location.fixture === 'cascade') {
@@ -637,9 +666,8 @@ export function parseShorthandMove(
 
 		if (to_location.fixture === 'cascade') {
 			// adjust selection until stackable on target
-			const tail_card = game.tableau[to_location.data[0]][to_location.data[1]];
+			const tail_card = game.tableau[to_location.data[0]].at(to_location.data[1]);
 			let d1 = from_location.data[1];
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (tail_card) {
 				// moving to cascade:sequence, pick rank we can stack
 				while (
@@ -710,8 +738,9 @@ export function parseShorthandPositionForSelect(
 	// verify position wrt game - e.g. cellCount,cascadeCount
 	switch (from_location.fixture) {
 		case 'deck':
-			// there is no shorthand for deck (it's not a location to move from/to), but even IFF there was, __clampCursor can handle it
+			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
+			from_location.data[0] = game.deck.length - 1;
 			break;
 		case 'cell':
 			// REVIEW (techdebt) (controls) text: "invalid board size", this isn't just a key press
@@ -773,8 +802,9 @@ export function parseShorthandPositionForMove(
 	// verify position wrt game - e.g. cellCount,cascadeCount
 	switch (to_location.fixture) {
 		case 'deck':
-			// there is no shorthand for deck (it's not a location to move from/to), but even IFF there was, __clampCursor can handle it
+			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
+			to_location.data[0] = game.deck.length;
 			break;
 		case 'cell':
 			if (to_location.data[0] >= game.cells.length) return null;

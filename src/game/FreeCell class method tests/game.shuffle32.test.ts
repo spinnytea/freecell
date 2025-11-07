@@ -21,10 +21,20 @@ describe('game.shuffle32', () => {
 			suit: 'diamonds',
 			location: { fixture: 'deck', data: [51] },
 		});
+		expect(game.deck[48]).toEqual({
+			rank: 'jack',
+			suit: 'clubs',
+			location: { fixture: 'deck', data: [48] },
+		});
 		expect(game.deck[0]).toEqual({
 			rank: '6',
 			suit: 'hearts',
 			location: { fixture: 'deck', data: [0] },
+		});
+		expect(game.deck[3]).toEqual({
+			rank: '6',
+			suit: 'spades',
+			location: { fixture: 'deck', data: [3] },
 		});
 		game = game.dealAll();
 		expect(game.previousAction).toEqual({ text: 'deal all cards', type: 'deal' });
@@ -150,6 +160,14 @@ describe('game.shuffle32', () => {
 		let a = new FreeCell().shuffle32(5);
 		let b = new FreeCell().shuffle32(5).shuffle32(5);
 		expect(a.deck).not.toEqual(b.deck);
+		expect(shorthandCard(a.deck[5])).toBe('QC');
+		expect(shorthandCard(b.deck[5])).toBe('3D');
+		expect(a.deck[5].location.data[0]).toBe(5);
+		expect(b.deck[5].location.data[0]).toBe(5);
+		expect(shorthandCard(a.deck[49])).toBe('2D');
+		expect(shorthandCard(b.deck[49])).toBe('QC');
+		expect(a.deck[49].location.data[0]).toBe(49);
+		expect(b.deck[49].location.data[0]).toBe(49);
 		expect(a.history).toEqual(['shuffle deck (5)']);
 		expect(b.history).toEqual(['shuffle deck (5)', 'shuffle deck (5)']);
 		expect(a.dealAll().__printHistory(true)).toBe('\n:h shuffle32 5');

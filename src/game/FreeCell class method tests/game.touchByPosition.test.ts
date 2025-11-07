@@ -26,7 +26,35 @@ describe('game.touchByPosition', () => {
 			' 2a 14 13 64 68 5b 54 34 \n' +
 			' 32 57 5c a8 ';
 
-		// ('deck'); there is no Position for deck
+		describe('deck', () => {
+			test('empty', () => {
+				const game = FreeCell.parse(gamePrint).touchByPosition('k');
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.previousAction).toEqual({
+					text: 'touch stop',
+					type: 'invalid',
+				});
+				expect(game.selection).toBe(null);
+				expect(game.availableMoves).toBe(null);
+			});
+
+			test('not empty', () => {
+				let game = new FreeCell().shuffle32(5).dealAll({ demo: true, keepDeck: true });
+				expect(game.__printDeck()).toBe(' 6H 6C QC JS 9S AD 7C>TS ');
+				game = game.touchByPosition('k');
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [7] });
+				expect(game.previousAction).toEqual({
+					text: 'select 6H',
+					type: 'select',
+				});
+				expect(game.selection).toEqual({
+					location: { fixture: 'deck', data: [7] },
+					cards: [{ rank: '6', suit: 'hearts', location: { fixture: 'deck', data: [7] } }],
+					peekOnly: true,
+				});
+				expect(game.availableMoves).toEqual([]);
+			});
+		});
 
 		describe('cell', () => {
 			test('empty', () => {
@@ -337,7 +365,59 @@ describe('game.touchByPosition', () => {
 			' 2a 14 13 64 68 5b 54 34 \n' +
 			' 32 57 5c a8 ';
 
-		// ('deck'); there is no Position for deck
+		describe('deck', () => {
+			describe('standard', () => {
+				test('empty', () => {
+					const game = FreeCell.parse(gamePrint).$selectCard('3H').touchByPosition('k');
+					expect(game.previousAction).toEqual({
+						text: 'invalid move 3k 3H→deck',
+						type: 'invalid',
+					});
+					expect(game.__printDeck()).toBe('>   ');
+				});
+
+				test('not empty', () => {
+					const game = new FreeCell()
+						.shuffle32(5)
+						.dealAll({ demo: true, keepDeck: true })
+						.$selectCard('2H')
+						.touchByPosition('k');
+					expect(game.previousAction).toEqual({
+						text: 'select 6H',
+						type: 'select',
+					});
+					expect(game.__printDeck()).toBe('>6H|6C QC JS 9S AD 7C TS ');
+				});
+			});
+
+			describe('gameFunction: recall-or-bury', () => {
+				test('empty', () => {
+					const game = FreeCell.parse(gamePrint)
+						.$selectCard('3H')
+						.touchByPosition('k', { gameFunction: 'recall-or-bury' });
+					expect(game.previousAction).toEqual({
+						text: 'invalid move 3k 3H→deck',
+						type: 'move',
+						gameFunction: 'recall-or-bury',
+					});
+					expect(game.__printDeck()).toBe('>3H ');
+				});
+
+				test('not empty', () => {
+					const game = new FreeCell()
+						.shuffle32(5)
+						.dealAll({ demo: true, keepDeck: true })
+						.$selectCard('2H')
+						.touchByPosition('k', { gameFunction: 'recall-or-bury' });
+					expect(game.previousAction).toEqual({
+						text: 'invalid move 1k 2H→deck',
+						type: 'move',
+						gameFunction: 'recall-or-bury',
+					});
+					expect(game.__printDeck()).toBe('>2H 6H 6C QC JS 9S AD 7C TS ');
+				});
+			});
+		});
 
 		describe('cell', () => {
 			test('empty', () => {

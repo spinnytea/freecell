@@ -60,6 +60,34 @@ describe('game.undo (+ history)', () => {
 				expect(game.undo()).toBe(game);
 			});
 
+			// TODO (techdebt) this would be super cool to pull off
+			// eslint-disable-next-line jest/no-disabled-tests
+			test.skip('init without history, but last move is legible', () => {
+				const gamePrint =
+					'            >KS KD KC KH \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' move 3b 8S→cell (flourish 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)';
+				expect(FreeCell.parse(gamePrint).undo().print()).toBe(
+					'' + //
+						'>7H       2C             \n' +
+						' KS 6C AC 5H KD 6D KC KH \n' +
+						' QD AH AD 4S QC 5S QH QS \n' +
+						' JC 3D AS    JH 4H JS JD \n' +
+						' TD    8S    TS 3C TH TC \n' +
+						' 9C          9D 2H 9S 9H \n' +
+						' 8D          8C    8H    \n' +
+						' 7S          7D    7C    \n' +
+						'             6S    6H    \n' +
+						'             5D    5C    \n' +
+						'             4C    4D    \n' +
+						'             3H    3S    \n' +
+						'             2S    2D    \n' +
+						' move 3a 7H→cell'
+				);
+			});
+
 			test('hand-jammed', () => {
 				const game = FreeCell.parse(
 					'' + //
@@ -113,6 +141,9 @@ describe('game.undo (+ history)', () => {
 
 			test('shuffled', () => {
 				const game = new FreeCell().shuffle32(1);
+				expect(game.__printDeck()).toBe(
+					' JD 2D 9H JC 5D 7H 7C 5H KD KC 9S 5S AD QC KH 3H 2S KS 9D QD JS AS AH 3C 4C 5C TS QH 4H AC 4D 7S 3S TD 4S TH 8H 2C JH 7D 6D 8S 8D QS 6C 3D 8C TC 6S 9C 2H>6H '
+				);
 				const dealt = game.dealAll();
 				expect(dealt.previousAction).toEqual({
 					text: 'deal all cards',
@@ -130,7 +161,16 @@ describe('game.undo (+ history)', () => {
 						' 6S 9C 2H 6H             \n' +
 						' deal all cards'
 				);
+				expect(dealt.__printDeck()).toBe('');
 				const undid = dealt.undo();
+				expect(undid.__printDeck()).toBe(
+					' JD 2D 9H JC 5D 7H 7C 5H KD KC 9S 5S AD QC KH 3H 2S KS 9D QD JS AS AH 3C 4C 5C TS QH 4H AC 4D 7S 3S TD 4S TH 8H 2C JH 7D 6D 8S 8D QS 6C 3D 8C TC 6S 9C 2H>6H '
+				);
+				expect(game.deck[0].location.data[0]).toBe(0);
+				expect(game.deck[9].location.data[0]).toBe(9);
+				expect(dealt.deck).toEqual([]);
+				expect(undid.deck[0].location.data[0]).toBe(0);
+				expect(undid.deck[9].location.data[0]).toBe(9);
 				expect(undid.previousAction.gameFunction).toBe('undo');
 				delete undid.previousAction.gameFunction;
 				expect(undid).toEqual(game);
@@ -1839,7 +1879,7 @@ describe('game.undo (+ history)', () => {
 		...
 		This sounds quite a lot like FreeCell.parse with history, just do that?
 	*/
-	describe('play a game backward and forewards using move history', () => {
+	describe('play a game backward and forwards using move history', () => {
 		test.todo('4 cells, 4 cascades');
 
 		test.todo('1 cells, 10 cascades');

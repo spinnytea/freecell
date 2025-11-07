@@ -50,7 +50,7 @@ describe('game.touch', () => {
 						'                         \n' +
 						'                         \n' +
 						':d|KS|4D 9C 5C 8H 7S 7H AD 5D>3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
-						' cursor set 3S'
+						' cursor set k⡪ 3S'
 				);
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 
@@ -104,12 +104,12 @@ describe('game.touch', () => {
 			describe('cursor x selection', () => {
 				test.each`
 					d0    | printSubstr                     | actionText
-					${44} | ${'7S 7H>AD 5D|3S|KD TC 3C TD'} | ${'cursor set AD'}
-					${43} | ${'7S 7H AD>5D|3S|KD TC 3C TD'} | ${'cursor set 5D'}
-					${42} | ${'7S 7H AD 5D>3S|KD TC 3C TD'} | ${'cursor set 3S'}
-					${41} | ${'7S 7H AD 5D|3S>KD TC 3C TD'} | ${'cursor set KD'}
-					${40} | ${'7S 7H AD 5D|3S|KD>TC 3C TD'} | ${'cursor set TC'}
-					${39} | ${'7S 7H AD 5D|3S|KD TC>3C TD'} | ${'cursor set 3C'}
+					${44} | ${'7S 7H>AD 5D|3S|KD TC 3C TD'} | ${'cursor set k⡬ AD'}
+					${43} | ${'7S 7H AD>5D|3S|KD TC 3C TD'} | ${'cursor set k⡫ 5D'}
+					${42} | ${'7S 7H AD 5D>3S|KD TC 3C TD'} | ${'cursor set k⡪ 3S'}
+					${41} | ${'7S 7H AD 5D|3S>KD TC 3C TD'} | ${'cursor set k⡩ KD'}
+					${40} | ${'7S 7H AD 5D|3S|KD>TC 3C TD'} | ${'cursor set k⡨ TC'}
+					${39} | ${'7S 7H AD 5D|3S|KD TC>3C TD'} | ${'cursor set k⡧ 3C'}
 				`(
 					'$d0',
 					({
@@ -666,7 +666,23 @@ describe('game.touch', () => {
 		let game: FreeCell;
 
 		describe('from: deck', () => {
-			test.todo('to: deck');
+			test('to: deck', () => {
+				const game = new FreeCell()
+					.shuffle32(5)
+					.dealAll({ demo: true, keepDeck: true })
+					.$selectCard('6H')
+					.moveCursor('left');
+				expect(game.__printDeck()).toBe('|6H|6C QC JS 9S AD 7C>TS ');
+				// we can't move from deck to deck
+				const blocked = game.touch();
+				expect(blocked.__printDeck()).toBe(' 6H 6C QC JS 9S AD 7C>TS|');
+				expect(blocked.previousAction).toEqual({
+					text: 'select TS',
+					type: 'select',
+				});
+				// 'recall-or-bury' does not apply here (this is neither recall nor bury)
+				expect(game.touch({ gameFunction: 'recall-or-bury' })).toEqual(blocked);
+			});
 
 			test.todo('to: cell');
 
@@ -688,7 +704,87 @@ describe('game.touch', () => {
 		});
 
 		describe('from: cell', () => {
-			test.todo('to: deck');
+			describe('to: deck', () => {
+				test('empty', () => {
+					game = new FreeCell()
+						.shuffle32(5)
+						.dealAll({ demo: true })
+						.$selectCard('6C')
+						.setCursor({ fixture: 'deck', data: [0] });
+					expect(game.print()).toBe(
+						'' +
+							' 6H|6C|QC JS 9S AD 7C TS \n' +
+							' AH 8S 2D QS 4C 9H 2S 3D \n' +
+							' 5C AS 9C KH 4D 2C 3C 4S \n' +
+							' 3S 5D KC 3H KD 5H 6S 8D \n' +
+							' TD 7S JD 7H 8H JH JC 7D \n' +
+							' 5S QH 8C 9D KS QD 4H AC \n' +
+							' 2H TC TH 6D             \n' +
+							':d>   \n' +
+							' cursor set k⡀ deck'
+					);
+					const blocked = game.touch();
+					expect(blocked.print()).toBe(
+						'' +
+							' 6H|6C|QC JS 9S AD 7C TS \n' +
+							' AH 8S 2D QS 4C 9H 2S 3D \n' +
+							' 5C AS 9C KH 4D 2C 3C 4S \n' +
+							' 3S 5D KC 3H KD 5H 6S 8D \n' +
+							' TD 7S JD 7H 8H JH JC 7D \n' +
+							' 5S QH 8C 9D KS QD 4H AC \n' +
+							' 2H TC TH 6D             \n' +
+							':d>   \n' +
+							' invalid move bk 6C→deck'
+					);
+					expect(blocked.history).toEqual(['shuffle deck (5)', 'deal all cards']);
+					expect(blocked.previousAction).toEqual({
+						type: 'invalid',
+						text: 'invalid move bk 6C→deck',
+					});
+					const burried = game.touch({ gameFunction: 'recall-or-bury' });
+					expect(burried.print()).toBe(
+						'' +
+							' 6H    QC JS 9S AD 7C TS \n' +
+							' AH 8S 2D QS 4C 9H 2S 3D \n' +
+							' 5C AS 9C KH 4D 2C 3C 4S \n' +
+							' 3S 5D KC 3H KD 5H 6S 8D \n' +
+							' TD 7S JD 7H 8H JH JC 7D \n' +
+							' 5S QH 8C 9D KS QD 4H AC \n' +
+							' 2H TC TH 6D             \n' +
+							':d>6C \n' +
+							' invalid move bk 6C→deck'
+					);
+					expect(burried.print({ includeHistory: true })).toBe(
+						'' +
+							' 6H    QC JS 9S AD 7C TS \n' +
+							' AH 8S 2D QS 4C 9H 2S 3D \n' +
+							' 5C AS 9C KH 4D 2C 3C 4S \n' +
+							' 3S 5D KC 3H KD 5H 6S 8D \n' +
+							' TD 7S JD 7H 8H JH JC 7D \n' +
+							' 5S QH 8C 9D KS QD 4H AC \n' +
+							' 2H TC TH 6D             \n' +
+							':d 6C \n' +
+							' invalid move bk 6C→deck\n' +
+							' deal all cards\n' +
+							' shuffle deck (5)'
+					);
+					expect(burried.previousAction).toEqual({
+						type: 'move',
+						text: 'invalid move bk 6C→deck',
+						gameFunction: 'recall-or-bury',
+					});
+				});
+
+				describe('not empty', () => {
+					test.todo('top');
+
+					test.todo('first');
+
+					test.todo('middle');
+
+					test.todo('last');
+				});
+			});
 
 			test('to: cell', () => {
 				game = FreeCell.parse(
@@ -1012,7 +1108,115 @@ describe('game.touch', () => {
 		});
 
 		describe('from: foundation', () => {
-			test.todo('to: deck');
+			describe('to: deck', () => {
+				test('empty', () => {
+					game = FreeCell.parse(
+						'' + //
+							'>QC QD QH QS TC|TD|TH TS \n' +
+							' KC KD KH KS JC JD JH JS \n' +
+							' hand-jammed'
+					).setCursor({ fixture: 'deck', data: [0] });
+					expect(game.print()).toBe(
+						'' + //
+							' QC QD QH QS TC|TD|TH TS \n' +
+							' KC KD KH KS JC JD JH JS \n' +
+							':d>   \n' +
+							' cursor set k⡀ deck'
+					);
+					const blocked = game.touch();
+					expect(blocked.print()).toBe(
+						'' + //
+							' QC QD QH QS TC|TD|TH TS \n' +
+							' KC KD KH KS JC JD JH JS \n' +
+							':d>   \n' +
+							' invalid move hk TD→deck'
+					);
+					expect(blocked.history).toEqual(['hand-jammed']);
+					expect(blocked.previousAction).toEqual({
+						type: 'invalid',
+						text: 'invalid move hk TD→deck',
+					});
+					const burried = game.touch({ gameFunction: 'recall-or-bury' });
+					expect(burried.print()).toBe(
+						'' + //
+							' QC QD QH QS TC 9D TH TS \n' +
+							' KC KD KH KS JC JD JH JS \n' +
+							':d>TD \n' +
+							' invalid move hk TD→deck'
+					);
+					expect(burried.print({ includeHistory: true })).toBe(
+						'' + //
+							' QC QD QH QS TC 9D TH TS \n' +
+							' KC KD KH KS JC JD JH JS \n' +
+							':d TD \n' +
+							' invalid move hk TD→deck\n' +
+							' hand-jammed'
+					);
+					expect(burried.previousAction).toEqual({
+						type: 'move',
+						text: 'invalid move hk TD→deck',
+						gameFunction: 'recall-or-bury',
+					});
+				});
+
+				describe('not empty', () => {
+					test('top', () => {
+						game = FreeCell.parse(
+							'' + //
+								'>QC QD QH QS TC|TD|TH TS \n' +
+								' KC       KS JC JD JH JS \n' +
+								' hand-jammed'
+						).setCursor({ fixture: 'deck', data: [2] }, { gameFunction: 'recall-or-bury' });
+						expect(game.print()).toBe(
+							'' + //
+								' QC QD QH QS TC|TD|TH TS \n' +
+								' KC       KS JC JD JH JS \n' +
+								':d>   KH KD \n' +
+								' cursor set k⡂ deck'
+						);
+						const blocked = game.touch();
+						expect(blocked.print()).toBe(
+							'' + //
+								' QC QD QH QS TC TD TH TS \n' +
+								' KC       KS JC JD JH JS \n' +
+								':d>KH|KD \n' +
+								' select KH'
+						);
+						expect(blocked.history).toEqual(['hand-jammed']);
+						expect(blocked.previousAction).toEqual({
+							type: 'select',
+							text: 'select KH',
+						});
+						const burried = game.touch({ gameFunction: 'recall-or-bury' });
+						expect(burried.print()).toBe(
+							'' + //
+								' QC QD QH QS TC 9D TH TS \n' +
+								' KC       KS JC JD JH JS \n' +
+								':d>TD KH KD \n' +
+								' invalid move hk TD→deck'
+						);
+						expect(burried.print({ includeHistory: true })).toBe(
+							'' + //
+								' QC QD QH QS TC 9D TH TS \n' +
+								' KC       KS JC JD JH JS \n' +
+								':d TD KH KD \n' +
+								' invalid move hk TD→deck\n' +
+								' hand-jammed'
+						);
+						expect(burried.previousAction).toEqual({
+							type: 'move',
+							text: 'invalid move hk TD→deck',
+							gameFunction: 'recall-or-bury',
+						});
+					});
+
+					test.todo('first');
+
+					test.todo('middle');
+
+					test.todo('last');
+				});
+			});
 
 			test.todo('to: cell');
 
@@ -1040,7 +1244,263 @@ describe('game.touch', () => {
 					game = new FreeCell().shuffle32(11863);
 				});
 
-				test.todo('to: deck');
+				describe('to: deck', () => {
+					test('empty', () => {
+						game = new FreeCell()
+							.shuffle32(5)
+							.dealAll({ demo: true })
+							.$selectCard('6D')
+							.setCursor({ fixture: 'deck', data: [0] });
+						expect(game.print()).toBe(
+							'' +
+								' 6H 6C QC JS 9S AD 7C TS \n' +
+								' AH 8S 2D QS 4C 9H 2S 3D \n' +
+								' 5C AS 9C KH 4D 2C 3C 4S \n' +
+								' 3S 5D KC 3H KD 5H 6S 8D \n' +
+								' TD 7S JD 7H 8H JH JC 7D \n' +
+								' 5S QH 8C 9D KS QD 4H AC \n' +
+								' 2H TC TH|6D|            \n' +
+								':d>   \n' +
+								' cursor set k⡀ deck'
+						);
+						const burried = game.touch({ gameFunction: 'recall-or-bury' });
+						expect(burried.print()).toBe(
+							'' +
+								' 6H 6C QC JS 9S AD 7C TS \n' +
+								' AH 8S 2D QS 4C 9H 2S 3D \n' +
+								' 5C AS 9C KH 4D 2C 3C 4S \n' +
+								' 3S 5D KC 3H KD 5H 6S 8D \n' +
+								' TD 7S JD 7H 8H JH JC 7D \n' +
+								' 5S QH 8C 9D KS QD 4H AC \n' +
+								' 2H TC TH                \n' +
+								':d>6D \n' +
+								' invalid move 4k 6D→deck'
+						);
+						expect(burried.print({ includeHistory: true })).toBe(
+							'' +
+								' 6H 6C QC JS 9S AD 7C TS \n' +
+								' AH 8S 2D QS 4C 9H 2S 3D \n' +
+								' 5C AS 9C KH 4D 2C 3C 4S \n' +
+								' 3S 5D KC 3H KD 5H 6S 8D \n' +
+								' TD 7S JD 7H 8H JH JC 7D \n' +
+								' 5S QH 8C 9D KS QD 4H AC \n' +
+								' 2H TC TH                \n' +
+								':d 6D \n' +
+								' invalid move 4k 6D→deck\n' +
+								' deal all cards\n' +
+								' shuffle deck (5)'
+						);
+						expect(burried.previousAction).toEqual({
+							type: 'move',
+							text: 'invalid move 4k 6D→deck',
+							gameFunction: 'recall-or-bury',
+						});
+					});
+
+					describe('not empty', () => {
+						beforeEach(() => {
+							game = new FreeCell()
+								.shuffle32(5)
+								.dealAll({ demo: true, keepDeck: true })
+								.$selectCard('6D');
+						});
+
+						test('top', () => {
+							game = game.setCursor(
+								{ fixture: 'deck', data: [8] },
+								{ gameFunction: 'recall-or-bury' }
+							);
+							expect(game.print()).toBe(
+								'' +
+									'                         \n' +
+									' AH 8S 2D QS 4C 9H 2S 3D \n' +
+									' 5C AS 9C KH 4D 2C 3C 4S \n' +
+									' 3S 5D KC 3H KD 5H 6S 8D \n' +
+									' TD 7S JD 7H 8H JH JC 7D \n' +
+									' 5S QH 8C 9D KS QD 4H AC \n' +
+									' 2H TC TH|6D|            \n' +
+									':d>   6H 6C QC JS 9S AD 7C TS \n' +
+									' cursor set k⡈ deck'
+							);
+							const burried = game.touch({ gameFunction: 'recall-or-bury' });
+							expect(burried.print()).toBe(
+								'' +
+									'                         \n' +
+									' AH 8S 2D QS 4C 9H 2S 3D \n' +
+									' 5C AS 9C KH 4D 2C 3C 4S \n' +
+									' 3S 5D KC 3H KD 5H 6S 8D \n' +
+									' TD 7S JD 7H 8H JH JC 7D \n' +
+									' 5S QH 8C 9D KS QD 4H AC \n' +
+									' 2H TC TH                \n' +
+									':d>6D 6H 6C QC JS 9S AD 7C TS \n' +
+									' invalid move 4k 6D→deck'
+							);
+							expect(burried.print({ includeHistory: true })).toBe(
+								'' +
+									'                         \n' +
+									' AH 8S 2D QS 4C 9H 2S 3D \n' +
+									' 5C AS 9C KH 4D 2C 3C 4S \n' +
+									' 3S 5D KC 3H KD 5H 6S 8D \n' +
+									' TD 7S JD 7H 8H JH JC 7D \n' +
+									' 5S QH 8C 9D KS QD 4H AC \n' +
+									' 2H TC TH                \n' +
+									':d 6D 6H 6C QC JS 9S AD 7C TS \n' +
+									' invalid move 4k 6D→deck\n' +
+									' deal 44 cards\n' +
+									' shuffle deck (5)'
+							);
+							expect(burried.previousAction).toEqual({
+								type: 'move',
+								text: 'invalid move 4k 6D→deck',
+								gameFunction: 'recall-or-bury',
+							});
+						});
+
+						test('first', () => {
+							game = game.setCursor({ fixture: 'deck', data: [7] });
+							expect(game.print()).toBe(
+								'' +
+									'                         \n' +
+									' AH 8S 2D QS 4C 9H 2S 3D \n' +
+									' 5C AS 9C KH 4D 2C 3C 4S \n' +
+									' 3S 5D KC 3H KD 5H 6S 8D \n' +
+									' TD 7S JD 7H 8H JH JC 7D \n' +
+									' 5S QH 8C 9D KS QD 4H AC \n' +
+									' 2H TC TH|6D|            \n' +
+									':d>6H 6C QC JS 9S AD 7C TS \n' +
+									' cursor set k⡇ 6H'
+							);
+							const burried = game.touch({ gameFunction: 'recall-or-bury' });
+							expect(burried.print()).toBe(
+								'' +
+									'                         \n' +
+									' AH 8S 2D QS 4C 9H 2S 3D \n' +
+									' 5C AS 9C KH 4D 2C 3C 4S \n' +
+									' 3S 5D KC 3H KD 5H 6S 8D \n' +
+									' TD 7S JD 7H 8H JH JC 7D \n' +
+									' 5S QH 8C 9D KS QD 4H AC \n' +
+									' 2H TC TH                \n' +
+									':d 6H>6D 6C QC JS 9S AD 7C TS \n' +
+									' invalid move 4k 6D→6H'
+							);
+							expect(burried.print({ includeHistory: true })).toBe(
+								'' +
+									'                         \n' +
+									' AH 8S 2D QS 4C 9H 2S 3D \n' +
+									' 5C AS 9C KH 4D 2C 3C 4S \n' +
+									' 3S 5D KC 3H KD 5H 6S 8D \n' +
+									' TD 7S JD 7H 8H JH JC 7D \n' +
+									' 5S QH 8C 9D KS QD 4H AC \n' +
+									' 2H TC TH                \n' +
+									':d 6H 6D 6C QC JS 9S AD 7C TS \n' +
+									' invalid move 4k 6D→6H\n' +
+									' deal 44 cards\n' +
+									' shuffle deck (5)'
+							);
+							expect(burried.previousAction).toEqual({
+								type: 'move',
+								text: 'invalid move 4k 6D→6H',
+								gameFunction: 'recall-or-bury',
+							});
+						});
+
+						test('middle', () => {
+							game = game.setCursor({ fixture: 'deck', data: [3] });
+							expect(game.print()).toBe(
+								'' +
+									'                         \n' +
+									' AH 8S 2D QS 4C 9H 2S 3D \n' +
+									' 5C AS 9C KH 4D 2C 3C 4S \n' +
+									' 3S 5D KC 3H KD 5H 6S 8D \n' +
+									' TD 7S JD 7H 8H JH JC 7D \n' +
+									' 5S QH 8C 9D KS QD 4H AC \n' +
+									' 2H TC TH|6D|            \n' +
+									':d 6H 6C QC JS>9S AD 7C TS \n' +
+									' cursor set k⡃ 9S'
+							);
+							const burried = game.touch({ gameFunction: 'recall-or-bury' });
+							expect(burried.print()).toBe(
+								'' +
+									'                         \n' +
+									' AH 8S 2D QS 4C 9H 2S 3D \n' +
+									' 5C AS 9C KH 4D 2C 3C 4S \n' +
+									' 3S 5D KC 3H KD 5H 6S 8D \n' +
+									' TD 7S JD 7H 8H JH JC 7D \n' +
+									' 5S QH 8C 9D KS QD 4H AC \n' +
+									' 2H TC TH                \n' +
+									':d 6H 6C QC JS 9S>6D AD 7C TS \n' +
+									' invalid move 4k 6D→9S'
+							);
+							expect(burried.print({ includeHistory: true })).toBe(
+								'' +
+									'                         \n' +
+									' AH 8S 2D QS 4C 9H 2S 3D \n' +
+									' 5C AS 9C KH 4D 2C 3C 4S \n' +
+									' 3S 5D KC 3H KD 5H 6S 8D \n' +
+									' TD 7S JD 7H 8H JH JC 7D \n' +
+									' 5S QH 8C 9D KS QD 4H AC \n' +
+									' 2H TC TH                \n' +
+									':d 6H 6C QC JS 9S 6D AD 7C TS \n' +
+									' invalid move 4k 6D→9S\n' +
+									' deal 44 cards\n' +
+									' shuffle deck (5)'
+							);
+							expect(burried.previousAction).toEqual({
+								type: 'move',
+								text: 'invalid move 4k 6D→9S',
+								gameFunction: 'recall-or-bury',
+							});
+						});
+
+						test('last', () => {
+							game = game.setCursor({ fixture: 'deck', data: [0] });
+							expect(game.print()).toBe(
+								'' +
+									'                         \n' +
+									' AH 8S 2D QS 4C 9H 2S 3D \n' +
+									' 5C AS 9C KH 4D 2C 3C 4S \n' +
+									' 3S 5D KC 3H KD 5H 6S 8D \n' +
+									' TD 7S JD 7H 8H JH JC 7D \n' +
+									' 5S QH 8C 9D KS QD 4H AC \n' +
+									' 2H TC TH|6D|            \n' +
+									':d 6H 6C QC JS 9S AD 7C>TS \n' +
+									' cursor set k⡀ TS'
+							);
+							const burried = game.touch({ gameFunction: 'recall-or-bury' });
+							expect(burried.print()).toBe(
+								'' +
+									'                         \n' +
+									' AH 8S 2D QS 4C 9H 2S 3D \n' +
+									' 5C AS 9C KH 4D 2C 3C 4S \n' +
+									' 3S 5D KC 3H KD 5H 6S 8D \n' +
+									' TD 7S JD 7H 8H JH JC 7D \n' +
+									' 5S QH 8C 9D KS QD 4H AC \n' +
+									' 2H TC TH                \n' +
+									':d 6H 6C QC JS 9S AD 7C TS>6D \n' +
+									' invalid move 4k 6D→TS'
+							);
+							expect(burried.print({ includeHistory: true })).toBe(
+								'' +
+									'                         \n' +
+									' AH 8S 2D QS 4C 9H 2S 3D \n' +
+									' 5C AS 9C KH 4D 2C 3C 4S \n' +
+									' 3S 5D KC 3H KD 5H 6S 8D \n' +
+									' TD 7S JD 7H 8H JH JC 7D \n' +
+									' 5S QH 8C 9D KS QD 4H AC \n' +
+									' 2H TC TH                \n' +
+									':d 6H 6C QC JS 9S AD 7C TS 6D \n' +
+									' invalid move 4k 6D→TS\n' +
+									' deal 44 cards\n' +
+									' shuffle deck (5)'
+							);
+							expect(burried.previousAction).toEqual({
+								type: 'move',
+								text: 'invalid move 4k 6D→TS',
+								gameFunction: 'recall-or-bury',
+							});
+						});
+					});
+				});
 
 				test('to: cell', () => {
 					game = game
@@ -1464,7 +1924,177 @@ describe('game.touch', () => {
 			});
 
 			describe('sequence', () => {
-				test.todo('to: deck');
+				describe('to: deck', () => {
+					test('empty', () => {
+						const game = FreeCell.parse(
+							'' + //
+								'>            7C 8D TH KS \n' +
+								'   |TC|   KD JH 9C QD KH \n' +
+								'   |9D|   QC       JC KC \n' +
+								'   |8C|   JD       TD QH \n' +
+								' hand-jammed'
+						)
+							.setCursor({ fixture: 'deck', data: [7] }, { gameFunction: 'recall-or-bury' })
+							.touch({ gameFunction: 'recall-or-bury' });
+						expect(game.__printDeck()).toBe(' TC 9D>8C ');
+						expect(game.print()).toBe(
+							'' + //
+								'             7C 8D TH KS \n' +
+								'          KD JH 9C QD KH \n' +
+								'          QC       JC KC \n' +
+								'          JD       TD QH \n' +
+								':d TC 9D>8C \n' +
+								' invalid move 2k TC-9D-8C→deck'
+						);
+						expect(game.print({ includeHistory: true })).toBe(
+							'' + //
+								'             7C 8D TH KS \n' +
+								'          KD JH 9C QD KH \n' +
+								'          QC       JC KC \n' +
+								'          JD       TD QH \n' +
+								':d TC 9D 8C \n' +
+								' invalid move 2k TC-9D-8C→deck\n' +
+								' hand-jammed'
+						);
+					});
+
+					describe('not empty', () => {
+						test('top', () => {
+							const game = FreeCell.parse(
+								'' + //
+									'>            7C 8D TH KS \n' +
+									'   |TC|   KD JH          \n' +
+									'   |9D|   QC             \n' +
+									'   |8C|   JD             \n' +
+									' hand-jammed'
+							)
+								.setCursor({ fixture: 'deck', data: [7] }, { gameFunction: 'recall-or-bury' })
+								.touch({ gameFunction: 'recall-or-bury' });
+							expect(game.__printDeck()).toBe(' TC 9D>8C KH KC QH QD JC TD 9C ');
+							expect(game.print()).toBe(
+								'' + //
+									'             7C 8D TH KS \n' +
+									'          KD JH          \n' +
+									'          QC             \n' +
+									'          JD             \n' +
+									':d TC 9D>8C KH KC QH QD JC TD 9C \n' +
+									' invalid move 2k TC-9D-8C→deck'
+							);
+							expect(game.print({ includeHistory: true })).toBe(
+								'' + //
+									'             7C 8D TH KS \n' +
+									'          KD JH          \n' +
+									'          QC             \n' +
+									'          JD             \n' +
+									':d TC 9D 8C KH KC QH QD JC TD 9C \n' +
+									' invalid move 2k TC-9D-8C→deck\n' +
+									' hand-jammed'
+							);
+						});
+
+						test('first', () => {
+							const game = FreeCell.parse(
+								'' + //
+									'>            7C 8D TH KS \n' +
+									'   |TC|   KD JH          \n' +
+									'   |9D|   QC             \n' +
+									'   |8C|   JD             \n' +
+									' hand-jammed'
+							)
+								.setCursor({ fixture: 'deck', data: [6] })
+								.touch({ gameFunction: 'recall-or-bury' });
+							// XXX (deck) move cursor, parseCursorFromPreviousActionText, etc
+							//  - cursor should be on TC still
+							//  - but this is non-standard gameplay so whatever
+							expect(game.__printDeck()).toBe(' KH TC 9D>8C KC QH QD JC TD 9C ');
+							expect(game.print()).toBe(
+								'' + //
+									'             7C 8D TH KS \n' +
+									'          KD JH          \n' +
+									'          QC             \n' +
+									'          JD             \n' +
+									':d KH TC 9D>8C KC QH QD JC TD 9C \n' +
+									' invalid move 2k TC-9D-8C→KH'
+							);
+							expect(game.print({ includeHistory: true })).toBe(
+								'' + //
+									'             7C 8D TH KS \n' +
+									'          KD JH          \n' +
+									'          QC             \n' +
+									'          JD             \n' +
+									':d KH TC 9D 8C KC QH QD JC TD 9C \n' +
+									' invalid move 2k TC-9D-8C→KH\n' +
+									' hand-jammed'
+							);
+						});
+
+						test('middle', () => {
+							const game = FreeCell.parse(
+								'' + //
+									'>            7C 8D TH KS \n' +
+									'   |TC|   KD JH          \n' +
+									'   |9D|   QC             \n' +
+									'   |8C|   JD             \n' +
+									' hand-jammed'
+							)
+								.setCursor({ fixture: 'deck', data: [2] })
+								.touch({ gameFunction: 'recall-or-bury' });
+							expect(game.__printDeck()).toBe(' KH KC QH QD JC TC 9D>8C TD 9C ');
+							expect(game.print()).toBe(
+								'' + //
+									'             7C 8D TH KS \n' +
+									'          KD JH          \n' +
+									'          QC             \n' +
+									'          JD             \n' +
+									':d KH KC QH QD JC TC 9D>8C TD 9C \n' +
+									' invalid move 2k TC-9D-8C→JC'
+							);
+							expect(game.print({ includeHistory: true })).toBe(
+								'' + //
+									'             7C 8D TH KS \n' +
+									'          KD JH          \n' +
+									'          QC             \n' +
+									'          JD             \n' +
+									':d KH KC QH QD JC TC 9D 8C TD 9C \n' +
+									' invalid move 2k TC-9D-8C→JC\n' +
+									' hand-jammed'
+							);
+						});
+
+						test('last', () => {
+							const game = FreeCell.parse(
+								'' + //
+									'>            7C 8D TH KS \n' +
+									'   |TC|   KD JH          \n' +
+									'   |9D|   QC             \n' +
+									'   |8C|   JD             \n' +
+									' hand-jammed'
+							)
+								.setCursor({ fixture: 'deck', data: [0] })
+								.touch({ gameFunction: 'recall-or-bury' });
+							expect(game.__printDeck()).toBe(' KH KC QH QD JC TD 9C TC 9D>8C ');
+							expect(game.print()).toBe(
+								'' + //
+									'             7C 8D TH KS \n' +
+									'          KD JH          \n' +
+									'          QC             \n' +
+									'          JD             \n' +
+									':d KH KC QH QD JC TD 9C TC 9D>8C \n' +
+									' invalid move 2k TC-9D-8C→9C'
+							);
+							expect(game.print({ includeHistory: true })).toBe(
+								'' + //
+									'             7C 8D TH KS \n' +
+									'          KD JH          \n' +
+									'          QC             \n' +
+									'          JD             \n' +
+									':d KH KC QH QD JC TD 9C TC 9D 8C \n' +
+									' invalid move 2k TC-9D-8C→9C\n' +
+									' hand-jammed'
+							);
+						});
+					});
+				});
 
 				test('to: cell', () => {
 					const game = FreeCell.parse(

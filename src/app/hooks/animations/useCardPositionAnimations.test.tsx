@@ -145,7 +145,7 @@ describe('useCardPositionAnimations', () => {
 					timeScaleSpy: 0,
 					consoleDebugSpy: 0,
 				});
-				// TODO (animation) (techdebt) isn't this backwards?
+				// TODO (techdebt) (animation) isn't this backwards?
 				//  - shouldn't kings be first?
 				expect(toSpy.mock.calls[0]).toEqual([
 					'#cAC',
@@ -952,6 +952,15 @@ describe('useCardPositionAnimations', () => {
 						});
 					});
 				});
+			});
+		});
+
+		// TODO (flourish-anim) test.todo
+		describe('juice', () => {
+			describe('flash', () => {
+				test.todo('check-can-flourish');
+
+				test.todo('check-can-flourish-52');
 			});
 		});
 	});

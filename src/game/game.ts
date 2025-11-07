@@ -19,6 +19,7 @@ import {
 } from '@/game/card/card';
 import {
 	appendActionToHistory,
+	GameFunction,
 	getCardsThatMoved,
 	parseActionTextMove,
 	parseAltCursorFromPreviousActionText,
@@ -30,6 +31,7 @@ import {
 	PREVIOUS_ACTION_TYPE_IS_START_OF_GAME,
 	PreviousAction,
 } from '@/game/move/history';
+import { juice } from '@/game/move/juice';
 import { KeyboardArrowDirection, moveCursorWithBasicArrows } from '@/game/move/keyboard';
 import {
 	AutoFoundationLimit,
@@ -114,6 +116,8 @@ interface OptionsNonstandardGameplay {
 		XXX (techdebt) this is just to get unit tests passing, and maintain this flow until we have settings
 	*/
 	autoMove?: boolean;
+
+	gameFunction?: GameFunction;
 }
 
 interface OptionsTouch extends OptionsNonstandardGameplay {
@@ -126,39 +130,50 @@ interface OptionsTouch extends OptionsNonstandardGameplay {
 		sometimes we only want {@link touch} to attemp a move (not select anything)
 	*/
 	selectionNever?: boolean;
-
-	gameFunction?: 'drag-drop';
 }
 
 // TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
 export class FreeCell {
-	cards: Card[];
+	readonly cards: Card[];
 	readonly win: boolean;
 
 	// REVIEW (techdebt) is this the best way to check? do we need it for other things?
-	get winIsFloursh(): boolean {
+	get winIsFlourish(): boolean {
 		if (!this.win) return false;
 		// TODO (move-flourish) move-flourish or auto-flourish
 		return this.previousAction.text.includes('flourish');
 	}
+	// REVIEW (techdebt) this is _not_ the best way to check this
+	//  - like, _yes_ `move xx xx→xx (flourish xx xx,xx)`
+	//  - but like, also, _NnNoOoOo_
+	get winIsFlourish52(): boolean {
+		if (!this.win) return false;
+		const idx = this.previousAction.text.indexOf('(');
+		if (idx === -1) return false;
+		const autoActionTextLength = 219; // '(flourish  )'.length + (52*3) + 51;
+		return this.previousAction.text.length - idx === autoActionTextLength;
+	}
 
-	// structure to make the logic easier
 	// REVIEW (motivation) consider: preferred foundation suits? (HSDC) - render these?
-	deck: Card[];
-	cells: (Card | null)[];
-	foundations: (Card | null)[];
-	tableau: Card[][];
+	//  - i.e. instead of allowing any suit in any foundation spot, suits go in designated spots
+	//  - this kind of goes against the whole flexible design
+	// structure to make the logic easier
+	readonly deck: Card[];
+	readonly cells: (Card | null)[];
+	readonly foundations: (Card | null)[];
+	readonly tableau: Card[][];
 
+	// XXX (techdebt) these are also readonly, but some order operations are easier to do after we clone the game
 	// controls
 	cursor: CardLocation;
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
-	// IDEA (animation) (flash-rank) (hud) can we do like "peek all"
-	// flashRank: Rank | null;
+	// TODO (animation) (flourish-anim) (hud) impl flashCards for flourish aces?
+	flashCards: Card[] | null;
 
 	// history
-	history: string[];
-	previousAction: PreviousAction;
+	readonly history: string[];
+	readonly previousAction: PreviousAction;
 
 	// custom rules
 	// readonly jokers: 'none' | 'low' | 'high' | 'wild' | 'unknown'; // XXX (techdebt) use or remove
@@ -190,6 +205,7 @@ export class FreeCell {
 		cursor,
 		selection,
 		availableMoves,
+		flashCards,
 		action = { text: 'init', type: 'init' },
 		history,
 	}: {
@@ -199,6 +215,7 @@ export class FreeCell {
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
 		availableMoves?: AvailableMove[] | null;
+		flashCards?: Card[] | null;
 		action?: PreviousAction;
 		history?: string[];
 	} = {}) {
@@ -263,12 +280,17 @@ export class FreeCell {
 
 		// clamp cursor is a helper in case the game changes and the cursor is no longer valid
 		// it prevents us from having to manually specify it every time
-		this.cursor = this.__clampCursor(cursor ?? INIT_CURSOR_LOCATION);
+		this.cursor = this.__clampCursor(cursor ?? INIT_CURSOR_LOCATION, action.gameFunction);
 
 		// selection & available moves are _not_ checked for validity
 		// they should be reset any time we move a card
-		this.selection = !selection ? null : getSequenceAt(this, selection.location);
+		this.selection = !selection
+			? null
+			: action.gameFunction
+				? selection
+				: getSequenceAt(this, selection.location);
 		this.availableMoves = availableMoves ?? null;
+		this.flashCards = flashCards ?? null;
 
 		this.previousAction = action;
 		this.history = history ?? [];
@@ -287,6 +309,7 @@ export class FreeCell {
 		cursor = this.cursor,
 		selection = this.selection,
 		availableMoves = this.availableMoves,
+		flashCards = null, // always resets after next action
 		history = this.history,
 	}: {
 		action: PreviousAction;
@@ -294,6 +317,7 @@ export class FreeCell {
 		cursor?: CardLocation;
 		selection?: CardSequence | null;
 		availableMoves?: AvailableMove[] | null;
+		flashCards?: Card[] | null;
 		history?: string[];
 	}): FreeCell {
 		({ action, history } = appendActionToHistory(action, history));
@@ -302,15 +326,25 @@ export class FreeCell {
 			cascadeCount: this.tableau.length,
 			cards,
 			cursor,
-			// XXX (techdebt) `selection && availableMoves && !cards` after removing auto-foundation-tween
 			selection: selection && availableMoves ? selection : null,
 			availableMoves: selection && availableMoves ? availableMoves : null,
+			flashCards,
 			action,
 			history,
 		});
 	}
 
-	__clampCursor(location?: CardLocation): CardLocation {
+	__copy(): FreeCell {
+		return new FreeCell({
+			...this,
+			cellCount: this.cells.length,
+			cascadeCount: this.tableau.length,
+			action: { ...this.previousAction },
+			history: [...this.history],
+		});
+	}
+
+	__clampCursor(location?: CardLocation, gameFunction?: GameFunction): CardLocation {
 		if (!location) return DEFAULT_CURSOR_LOCATION;
 
 		const [d0, d1] = location.data;
@@ -331,16 +365,21 @@ export class FreeCell {
 			}
 			case 'deck':
 				if (d0 <= 0) return { fixture: 'deck', data: [0] };
+				else if (d0 === this.deck.length && gameFunction === 'recall-or-bury') return location;
 				else if (d0 >= this.deck.length)
 					return { fixture: 'deck', data: [Math.max(0, this.deck.length - 1)] };
 				else return location;
 		}
 	}
 
-	setCursor(cursor: CardLocation): FreeCell {
-		cursor = this.__clampCursor(cursor);
-		const actionText = calcCursorActionText(this, 'set', cursor);
-		return this.__clone({ action: { text: actionText, type: 'cursor' }, cursor });
+	setCursor(cursor: CardLocation, { gameFunction }: OptionsNonstandardGameplay = {}): FreeCell {
+		cursor = this.__clampCursor(cursor, gameFunction);
+		const action: PreviousAction = {
+			type: 'cursor',
+			text: calcCursorActionText(this, 'set', cursor),
+		};
+		if (gameFunction) action.gameFunction = gameFunction;
+		return this.__clone({ action, cursor });
 	}
 
 	moveCursor(dir: KeyboardArrowDirection): FreeCell {
@@ -421,12 +460,19 @@ export class FreeCell {
 			return this.__clone({ action: { text: 'touch stop', type: 'invalid' } });
 		}
 
-		const actionText = calcMoveActionText(this.selection, getSequenceAt(this, this.cursor));
+		const fakeValid =
+			gameFunction === 'recall-or-bury' &&
+			(this.selection.location.fixture === 'deck') !== (this.cursor.fixture === 'deck');
+
+		const actionText =
+			(fakeValid ? 'invalid ' : '') +
+			calcMoveActionText(this.selection, getSequenceAt(this, this.cursor));
 
 		const valid = this.availableMoves.some(({ location }) =>
 			isLocationEqual(this.cursor, location)
 		);
-		if (valid) {
+
+		if (valid || fakeValid) {
 			const nextAction: PreviousAction = { text: actionText, type: 'move' };
 			if (gameFunction) nextAction.gameFunction = gameFunction;
 			const movedGame = this.__clone({
@@ -436,7 +482,7 @@ export class FreeCell {
 				availableMoves: null,
 			});
 
-			if (autoFoundation) {
+			if (autoFoundation && !fakeValid) {
 				const foundationGame = movedGame.autoFoundationAll();
 				if (foundationGame !== movedGame) {
 					return this.__clone({
@@ -700,14 +746,16 @@ export class FreeCell {
 	*/
 	moveByShorthand(
 		shorthandMove: string,
-		{ autoFoundation }: OptionsNonstandardGameplay = {}
+		{ autoFoundation, gameFunction }: OptionsNonstandardGameplay = {}
 	): FreeCell {
 		const [from, to] = parseShorthandMove(this, shorthandMove);
 		const game = this.clearSelection().setCursor(from).touch({ selectionOnly: true });
 		// REVIEW (techdebt) dedicated error message? "invalid select (cursor) / invalid"
 		//  - would be for deck or foundation
 		if (game.previousAction.type !== 'select') return game;
-		return game.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
+		return game
+			.setCursor(to, { gameFunction })
+			.touch({ autoFoundation, stopWithInvalid: true, gameFunction });
 	}
 
 	/**
@@ -719,7 +767,7 @@ export class FreeCell {
 	*/
 	touchByPosition(
 		position: Position,
-		{ autoFoundation, stopWithInvalid = false }: OptionsNonstandardGameplay = {}
+		{ autoFoundation, stopWithInvalid = false, gameFunction }: OptionsNonstandardGameplay = {}
 	): FreeCell | this {
 		if (!this.selection) {
 			const from_location = parseShorthandPositionForSelect(this, position);
@@ -735,7 +783,11 @@ export class FreeCell {
 		// try this move as selected
 		const to_location = parseShorthandPositionForMove(this, position);
 		if (!to_location) return this;
-		const game = this.setCursor(to_location).touch({ autoFoundation, stopWithInvalid: true });
+		const game = this.setCursor(to_location, { gameFunction }).touch({
+			autoFoundation,
+			stopWithInvalid: true,
+			gameFunction,
+		});
 		if (game.previousAction.type !== 'invalid') return game;
 
 		// try to move by shorthand
@@ -880,7 +932,7 @@ export class FreeCell {
 				const reversePrevD0 = this.deck.length - this.cursor.data[0] - 1;
 				const clampD0 = Math.max(0, Math.min(reversePrevD0, game.deck.length));
 				const nextD0 = Math.max(0, game.deck.length - 1 - clampD0);
-				game.cursor.data[0] = nextD0;
+				game.cursor = { fixture: 'deck', data: [nextD0] };
 			}
 		}
 
@@ -991,10 +1043,12 @@ export class FreeCell {
 		sugar/helper controls
 	*/
 	$selectCard(
-		shorthand: string,
+		shorthand: CardSH | string | null,
 		{ allowSelectFoundation }: OptionsNonstandardGameplay = {}
 	): FreeCell {
-		const location = findCard(this.cards, parseShorthandCard(shorthand)).location;
+		if (typeof shorthand === 'string') shorthand = parseShorthandCard(shorthand);
+		if (shorthand === null) return this;
+		const location = findCard(this.cards, shorthand).location;
 		const game = this.setCursor(location).touch({ allowSelectFoundation, selectionOnly: true });
 		if (game.previousAction.type !== 'select') {
 			// do not clear selection
@@ -1020,6 +1074,60 @@ export class FreeCell {
 		// HACK (techdebt) (controls) using parseShorthandMove just to come up with `to` is a bit overkill
 		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${position}`, g.cursor);
 		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
+	}
+
+	/**
+		juice:
+		check if we can flourish any of the aces,
+		or if we can to a 52 card flourish
+
+		TODO (flourish-anim) (motivation) hook this up to react UI
+		 - dealAll
+		 - restart
+		 - $shuffleOrDealAll
+	*/
+	$checkCanFlourish(): FreeCell {
+		let aces = juice.canFlourish52(this);
+		let gameFunction: GameFunction = 'check-can-flourish-52';
+		if (!aces.length) {
+			aces = juice.canFlourish(this);
+			gameFunction = 'check-can-flourish';
+		}
+		if (!aces.length) {
+			return this;
+		}
+		const sh = aces.map((card) => shorthandCard(card)).join(',');
+		const mod = gameFunction === 'check-can-flourish-52' ? '*' : '';
+		return this.__clone({
+			action: {
+				text: `juice flash ${mod}${sh}${mod}`,
+				type: 'juice',
+				gameFunction,
+			},
+			selection: null,
+			availableMoves: null,
+			flashCards: aces,
+		});
+	}
+
+	/** accessor for nonstandard gameplay */
+	$setSelection(
+		selection: CardSequence | null,
+		{ gameFunction }: OptionsNonstandardGameplay = {}
+	): FreeCell {
+		if (!selection) return this.clearSelection();
+		if (gameFunction !== 'recall-or-bury') return this;
+
+		selection.peekOnly = true;
+		return this.__clone({
+			action: {
+				text: 'select ' + shorthandSequenceWithPosition(selection),
+				type: 'select',
+				gameFunction,
+			},
+			selection,
+			availableMoves: [],
+		});
 	}
 
 	/** shorthand to spot check what's in the foundation */
@@ -1099,11 +1207,19 @@ export class FreeCell {
 
 		XXX (techdebt) optimize
 	*/
-	__printTableau(cursor = this.cursor, selection = this.selection): string {
+	__printTableau(
+		cursor = this.cursor,
+		selection = this.selection,
+		flashCards = this.flashCards
+	): string {
 		let str = '';
 		const max = Math.max(...this.tableau.map((cascade) => cascade.length));
+		const hasSelection =
+			cursor.fixture === 'cascade' ||
+			selection?.location.fixture === 'cascade' ||
+			flashCards?.some((card) => card.location.fixture === 'cascade');
 		for (let i = 0; i === 0 || i < max; i++) {
-			if (cursor.fixture === 'cascade' || selection?.location.fixture === 'cascade') {
+			if (hasSelection) {
 				str +=
 					'\n' +
 					this.tableau
@@ -1111,7 +1227,8 @@ export class FreeCell {
 							const c = getPrintSeparator(
 								{ fixture: 'cascade', data: [idx, i] },
 								cursor,
-								selection
+								selection,
+								flashCards
 							);
 							return c + shorthandCard(cascade[i]);
 						})
@@ -1119,7 +1236,8 @@ export class FreeCell {
 					getPrintSeparator(
 						{ fixture: 'cascade', data: [this.tableau.length, i] },
 						null,
-						selection
+						selection,
+						flashCards
 					);
 			} else {
 				// if no cursor/selection in this row
@@ -1166,7 +1284,8 @@ export class FreeCell {
 					.reverse()
 					.join('');
 				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
-				return `${deckStr}${lastCol}`;
+				const offDeckPrefix = cursor.data[0] === this.deck.length ? '>  ' : '';
+				return `${offDeckPrefix}${deckStr}${lastCol}`;
 			} else {
 				// if no cursor/selection in deck
 				const deckStr = this.deck
@@ -1238,6 +1357,7 @@ export class FreeCell {
 		   - includeHistory should be able to recover the _entire_ game state
 		   - if we want to ignore cursor/selection for a cleaner "pick-up" state, then it should be handled later
 		- IDEA (print) consider: print({ parts: true }) => { home, tableau, win, deck, history }
+		- IDEA (print) Unicode Block “Playing Cards”
 
 		@example game.print(); // for gameplay
 		@example game.print({ includeHistory: true }); // for saving game, to reload entire state later
@@ -1250,10 +1370,11 @@ export class FreeCell {
 			? this.cursor
 			: { fixture: 'cascade', data: [-1, -1] };
 		const selection = !includeHistory ? this.selection : null;
+		const flashCards = !includeHistory ? this.flashCards : null;
 
 		let str =
 			this.__printHome(cursor, selection) + //
-			this.__printTableau(cursor, selection);
+			this.__printTableau(cursor, selection, flashCards);
 
 		// REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
 		if (this.win) {
@@ -1432,7 +1553,7 @@ export class FreeCell {
 			// now, reverse the deck
 			cards.forEach((card) => {
 				if (card.location.fixture === 'deck') {
-					card.location.data[0] = deckLength - card.location.data[0] - 1;
+					card.location = { fixture: 'deck', data: [deckLength - card.location.data[0] - 1] };
 				}
 			});
 		}
@@ -1676,7 +1797,8 @@ export class FreeCell {
 export function getPrintSeparator(
 	location: CardLocation,
 	cursor: CardLocation | null,
-	selection: CardSequence | null
+	selection: CardSequence | null,
+	flashCards: Card[] | null = null
 ) {
 	if (cursor && isLocationEqual(location, cursor)) {
 		return '>';
@@ -1707,6 +1829,18 @@ export function getPrintSeparator(
 					return '|';
 				}
 			}
+		}
+	}
+	if (flashCards?.length) {
+		if (flashCards.some((card) => isLocationEqual(location, card.location))) {
+			return '*';
+		}
+		const shifted: CardLocation = {
+			fixture: 'cascade',
+			data: [location.data[0] - 1, location.data[1]],
+		};
+		if (flashCards.some((card) => isLocationEqual(shifted, card.location))) {
+			return '*';
 		}
 	}
 	return ' ';
