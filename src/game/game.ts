@@ -1319,8 +1319,7 @@ export class FreeCell {
 			// print the last valid action, _not_ previousAction.text
 			// the previous action could be a cursor movement, or a canceled touch action (touch stop)
 			// TODO (history) (print) remove the last action - not needed for save/reload
-			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-			if (!skipLastHist) str += '\n ' + this.history.at(-1);
+			if (!skipLastHist) str += `\n ${new String(this.history.at(-1)).toString()}`;
 			str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 			while (movesSeed.moves.length) {
 				str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';

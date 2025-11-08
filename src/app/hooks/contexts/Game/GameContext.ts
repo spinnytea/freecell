@@ -7,6 +7,6 @@ type newGameType = () => FreeCell;
 // initialize with dummy values
 export const GameContext = createContext<[FreeCell, setGameType, newGameType]>([
 	{} as FreeCell,
-	() => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+	() => undefined,
 	() => ({}) as FreeCell, // unused
 ]);

@@ -965,6 +965,7 @@ describe('useCardPositionAnimations', () => {
 		});
 	});
 
+	// TODO (techdebt) rewrite this: all the eslint markers are obnoxious
 	describe('actionText examples', () => {
 		const skipThrow = true; // TODO (techdebt) remove after we finish all tests
 		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES);
