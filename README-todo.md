@@ -39,14 +39,19 @@
   - auto-foundation each card
   - win -> init
 - TODO (motivation) (animation) learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
+- TODO (techdebt) (animation) The first animation after loading a page is still janky
+  - it does the whole thing at once
+  - which is normal for a "resize"
+  - maybe it just doesn't have any "previous positions" available
+  - still, there's got to be something we can do
 - REVIEW (hud) (mobile) icon for bookmarks / save link to home screen (Andriod, iOS)
-- TODO (flourish-anim) (motivation) animate card flash for use in flourishes and end of game
+- TODO (5-priority) (flourish-anim) (motivation) animate card flash for use in flourishes and end of game
   - blue, red, pink, etc
   - snazzy explosion when you place the last card
   - based on the image svg so we can do it with any card (king, ace, whatever)
   - maybe use it for the whole animation for a win when a flourish
   - verify/test animation replaces after deal + undo/deal
-- TODO (flourish-anim) (motivation) extra pizzazz when it's a 52 card flourish
+- TODO (4-priority) (flourish-anim) (motivation) extra pizzazz when it's a 52 card flourish
 - TODO (settings) undo limit - all, until deal, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
 - TODO (settings) new game is always shuffled
   - GameContextProvider
@@ -97,6 +102,7 @@
   - macbook chrome
   - ipad safari
   - android chrome
+- TODO (techdebt) [bug reports](./notes/bug_reports/template.md)
 
 ## Discarded TODOs
 

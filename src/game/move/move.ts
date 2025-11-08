@@ -114,11 +114,18 @@ export interface AvailableMove {
 
 		if we are going to visualize them debug mode, we need to have it precomputed
 		we really only need high|low for this
+
+		TODO (gameplay) (motivation) Reverse order of cell -> cascade
+		 - kings should prioritize the right side under the foundation
+		 - I guess all cards can? Kings in particular
 	*/
 	priority: number;
 }
 
 // TODO (settings) these _exist_, but we need to be able to pick them
+// XXX (gameplay) If Q is in foundation, then K can go too
+//  - esp if "click to move"
+//  - maybe I'm butthurt about auto foundation rules
 export type AutoFoundationLimit =
 	// move all cards that can go up
 	// i.e. 3KKK

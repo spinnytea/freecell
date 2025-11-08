@@ -31,7 +31,8 @@ function canFlourish(game: FreeCell): Card[] {
 	// the way we check requries this many cascades
 	if (game.tableau.length < SuitList.length + 1) return [];
 
-	// TODO (techdebt) (flourish-anim) (motivation) if any aces exposed at start, is there a single move we can make to win the game?
+	// TODO (5-priority) (techdebt) (flourish-anim) (motivation) if any aces exposed at start, is there a single move we can make to win the game?
+	//  - ⚠️ uhm, if there are any at the start, then it _must_ be a flourish52 or bust
 	//  - it needs to be able to flourish immediately
 	//  - really, just try _any_ available move?
 	//  - we can try the other aces normally
