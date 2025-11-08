@@ -16,7 +16,7 @@ import { calcCardId, shorthandCard } from '@/game/card/card';
 // IDEA (settings) setting for "reduced motion" - disable most animations
 // IDEA (animation) faster "select-to-peek" animation - when the cards are shifting to peek the selected card
 export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<string>) {
-	const { cards, selection, previousAction } = useGame();
+	const { cards, selection, flashCards, previousAction } = useGame();
 	const fixtureSizes = useFixtureSizes();
 	const { enabledControlSchemes } = useSettings();
 	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
@@ -70,6 +70,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				previousTLZ,
 				cards,
 				selection,
+				flashCards,
 				previousAction,
 			});
 

@@ -14,14 +14,14 @@ const flourish52Seeds: number[] = [];
 for (let seed = 1; seed <= 32000; seed++) {
 	const game = new FreeCell().shuffle32(seed).dealAll();
 
-	// TODO (3-priority) (techdebt) (flourish-anim) (optimize) make canFlourish run faster
+	// TODO (techdebt) (flourish-anim) (optimize) make canFlourish run faster
 	//  - this takes 1 minute when executed directly (here)
 	//  - how long will it takes as a unit test
 	if (juice.canFlourish(game).length) {
 		flourishCount++;
 	}
 
-	// TODO (3-priority) (techdebt) (flourish-anim) (optimize) make canFlourish52 run faster
+	// TODO (techdebt) (flourish-anim) (optimize) make canFlourish52 run faster
 	//  - this takes 3 minutes when written as a unit test
 	//  - this takes 10 seconds when executed directly (here)
 	//  - ∴ when benchmarking, do this as a unit test

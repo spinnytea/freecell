@@ -4,7 +4,7 @@
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b
 \b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
 \b(BUG|TODO|XXX|REVIEW|IDEA)\b(\S|\s[^(])
-\((\d+)-priority\)
+\([5432]-priority\)
 ```
 
 ## Top-Level TODOs
@@ -51,6 +51,8 @@
   - based on the image svg so we can do it with any card (king, ace, whatever)
   - maybe use it for the whole animation for a win when a flourish
   - verify/test animation replaces after deal + undo/deal
+  - ⋯
+  - currently, flashCards just does a "peek" effect, I want to add an actual animation effect
 - TODO (4-priority) (flourish-anim) (motivation) extra pizzazz when it's a 52 card flourish
 - TODO (settings) undo limit - all, until deal, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
 - TODO (settings) new game is always shuffled

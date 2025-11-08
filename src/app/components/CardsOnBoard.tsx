@@ -44,13 +44,14 @@ function CardOnBoard({
 	gameBoardIdRef?: MutableRefObject<string>;
 }) {
 	const cardRef = useRef<HTMLDivElement | null>(null);
-	const game = useGame();
+	const { selection, flashCards } = useGame();
 	const handleClickToMove = useClickToMoveControls(location, true);
 	const fixtureSizes = useFixtureSizes();
 	const { top, left, zIndex, rotation } = calcTopLeftZ(
 		fixtureSizes,
 		location,
-		game.selection,
+		selection,
+		flashCards,
 		rank
 	);
 

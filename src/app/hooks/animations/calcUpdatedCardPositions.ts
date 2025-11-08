@@ -46,12 +46,14 @@ export function calcUpdatedCardPositions({
 	previousTLZ,
 	cards,
 	selection,
+	flashCards,
 	previousAction,
 }: {
 	fixtureSizes: FixtureSizes;
 	previousTLZ: Map<string, TLZ>;
 	cards: Card[];
 	selection: CardSequence | null;
+	flashCards: Card[] | null;
 	previousAction?: PreviousAction;
 }): {
 	updateCardPositions: UpdateCardPositionsType[];
@@ -65,7 +67,13 @@ export function calcUpdatedCardPositions({
 	const fixtures = new Set<Fixture>();
 
 	cards.forEach((card) => {
-		const { top, left, zIndex } = calcTopLeftZ(fixtureSizes, card.location, selection, card.rank);
+		const { top, left, zIndex } = calcTopLeftZ(
+			fixtureSizes,
+			card.location,
+			selection,
+			flashCards,
+			card.rank
+		);
 		const shorthand = shorthandCard(card);
 
 		const prev = previousTLZ.get(shorthand);
@@ -125,6 +133,7 @@ export function calcUpdatedCardPositions({
 				previousTLZ,
 				cards: previousAction.tweenCards,
 				selection: null,
+				flashCards: null,
 			});
 
 			let anyMissing = false;

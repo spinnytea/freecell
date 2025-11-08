@@ -20,12 +20,12 @@ export type CursorType = 'available-high' | 'available-low' | 'cursor' | 'select
 
 export function DebugCursors() {
 	const fixtureSizes = useFixtureSizes();
-	const game = useGame();
+	const { cursor, selection, availableMoves } = useGame();
 
 	// wrapper to make the dom more legible
 	return (
 		<div id="cursors">
-			{game.availableMoves?.map(({ location, priority }) => (
+			{availableMoves?.map(({ location, priority }) => (
 				<LocationBox
 					key={`available-${shorthandPosition(location)}-${location.data[0].toString(10)}`}
 					type={`available-${priority < 0 ? 'low' : 'high'}`}
@@ -33,10 +33,10 @@ export function DebugCursors() {
 					location={location}
 				/>
 			))}
-			{game.selection && (
-				<SequenceBox type="selection" fixtureSizes={fixtureSizes} sequence={game.selection} />
+			{selection && (
+				<SequenceBox type="selection" fixtureSizes={fixtureSizes} sequence={selection} />
 			)}
-			<LocationBox type="cursor" fixtureSizes={fixtureSizes} location={game.cursor} />
+			<LocationBox type="cursor" fixtureSizes={fixtureSizes} location={cursor} />
 		</div>
 	);
 }

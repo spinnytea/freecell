@@ -10,7 +10,8 @@ function loadFromLocalStorage(): FreeCell | null {
 	try {
 		const gamePrintHist = window.localStorage.getItem(LOCAL_STORAGE_KEY_CURR);
 		if (!gamePrintHist) return null;
-		return FreeCell.parse(gamePrintHist);
+		// REVIEW (4-priority) always? or just near the start of the game?
+		return FreeCell.parse(gamePrintHist).$checkCanFlourish();
 	} catch (e) {
 		return null;
 	}

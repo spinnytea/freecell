@@ -1297,7 +1297,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
-        data-top="26"
+        data-top="26.5"
         data-zindex="6"
         id="cAD-GameBoard.test-#5"
       >
@@ -1333,7 +1333,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
-        data-top="21"
+        data-top="20.75"
         data-zindex="1"
         id="cAS-GameBoard.test-#5"
       >
@@ -1387,7 +1387,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
-        data-top="25"
+        data-top="25.5"
         data-zindex="5"
         id="c2H-GameBoard.test-#5"
       >
@@ -1477,7 +1477,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
-        data-top="22"
+        data-top="22.5"
         data-zindex="2"
         id="c3S-GameBoard.test-#5"
       >
@@ -1567,7 +1567,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
-        data-top="21"
+        data-top="21.5"
         data-zindex="1"
         id="c5C-GameBoard.test-#5"
       >
@@ -1585,7 +1585,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
-        data-top="22"
+        data-top="22.5"
         data-zindex="2"
         id="c5D-GameBoard.test-#5"
       >
@@ -1621,7 +1621,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
-        data-top="24"
+        data-top="24.5"
         data-zindex="4"
         id="c5S-GameBoard.test-#5"
       >
@@ -1765,7 +1765,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
-        data-top="23"
+        data-top="23.5"
         data-zindex="3"
         id="c7S-GameBoard.test-#5"
       >
@@ -1909,7 +1909,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
-        data-top="26"
+        data-top="26.5"
         data-zindex="6"
         id="c9S-GameBoard.test-#5"
       >
@@ -1927,7 +1927,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
-        data-top="25"
+        data-top="25.5"
         data-zindex="5"
         id="cTC-GameBoard.test-#5"
       >
@@ -1945,7 +1945,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
-        data-top="23"
+        data-top="23.5"
         data-zindex="3"
         id="cTD-GameBoard.test-#5"
       >
@@ -2107,7 +2107,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
-        data-top="24"
+        data-top="24.5"
         data-zindex="4"
         id="cQH-GameBoard.test-#5"
       >
@@ -2256,7 +2256,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
         class="hiddenActionText"
         role="status"
       >
-        deal all cards
+        juice flash AH,AS
       </output>
       <span
         class="statusspacer"
@@ -10455,7 +10455,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="50"
-        data-top="21"
+        data-top="20.75"
         data-zindex="1"
         id="cAD-0"
       >
@@ -10689,7 +10689,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="50"
-        data-top="23"
+        data-top="23.5"
         data-zindex="3"
         id="c4H-0"
       >
@@ -10797,7 +10797,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="50"
-        data-top="25"
+        data-top="25.5"
         data-zindex="5"
         id="c6C-0"
       >
@@ -10977,7 +10977,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="50"
-        data-top="24"
+        data-top="24.5"
         data-zindex="4"
         id="c8H-0"
       >
@@ -11211,7 +11211,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="50"
-        data-top="22"
+        data-top="22.5"
         data-zindex="2"
         id="cJS-0"
       >
@@ -11414,7 +11414,7 @@ exports[`GameBoard renders a game 1`] = `
         class="hiddenActionText"
         role="status"
       >
-        deal all cards
+        juice flash AD
       </output>
       <span
         class="statusspacer"

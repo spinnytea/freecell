@@ -14,9 +14,9 @@ import { useGame } from '@/app/hooks/contexts/Game/useGame';
 export function KeyboardCursor() {
 	const cursorRef = useRef<HTMLDivElement | null>(null);
 	const fixtureSizes = useFixtureSizes();
-	const { cursor, selection } = useGame();
+	const { cursor, selection, flashCards } = useGame();
 
-	const { top, left } = calcTopLeftZ(fixtureSizes, cursor, selection);
+	const { top, left } = calcTopLeftZ(fixtureSizes, cursor, selection, flashCards);
 
 	useGSAP(() => {
 		// set the initial position, once on load

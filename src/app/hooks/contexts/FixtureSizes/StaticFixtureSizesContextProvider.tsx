@@ -8,10 +8,10 @@ export function StaticFixtureSizesContextProvider({
 }: Readonly<{
 	children: ReactNode;
 }>) {
-	const game = useGame();
-	const cellCount = game.cells.length;
-	const foundationCount = game.foundations.length;
-	const cascadeCount = game.tableau.length;
+	const { cells, foundations, tableau } = useGame();
+	const cellCount = cells.length;
+	const foundationCount = foundations.length;
+	const cascadeCount = tableau.length;
 
 	const fixtureSizes = calcStaticFixtureSizes(cellCount, foundationCount, cascadeCount);
 

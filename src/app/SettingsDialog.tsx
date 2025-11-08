@@ -24,7 +24,7 @@ export default function SettingsDialog() {
 	//  - animate every undo step until back to the beginning
 	function handleRestart() {
 		// domUtils.consumeDomEvent(event);
-		setGame((game) => game.restart());
+		setGame((game) => game.restart().$checkCanFlourish());
 	}
 
 	function handleNewGame() {

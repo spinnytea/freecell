@@ -7,7 +7,7 @@ import {
 	juice,
 } from '@/game/move/juice';
 
-// TODO (3-priority) (techdebt) (flourish-anim) test coverage (exit early, sort, etc)
+// TODO (techdebt) (flourish-anim) test coverage (exit early, sort, etc)
 describe('move.juice', () => {
 	describe('canFlourish', () => {
 		describe('can (both)', () => {

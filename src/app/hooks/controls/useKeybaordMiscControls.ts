@@ -42,7 +42,7 @@ export function useKeybaordMiscControls() {
 					consumed = true;
 					setGame((g) => {
 						if (g.cursor.fixture === 'deck') {
-							return g.$shuffleOrDealAll();
+							return g.$shuffleOrDealAll().$checkCanFlourish();
 						}
 						if (g.cursor.fixture === 'foundation' && g.win) {
 							return newGame();

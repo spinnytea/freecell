@@ -204,6 +204,7 @@ export function useDragAndDropControls(
 								const { top, left, zIndex } = calcTopLeftZ(
 									gameStateRef.current.fixtureSizes,
 									gameStateRef.current.location,
+									null,
 									null
 								);
 
@@ -251,6 +252,7 @@ export function useDragAndDropControls(
 							const { top, left, zIndex } = calcTopLeftZ(
 								gameStateRef.current.fixtureSizes,
 								gameStateRef.current.location,
+								null,
 								null
 							);
 							contextSafe(animDragSequenceClear)({

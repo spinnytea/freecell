@@ -168,7 +168,6 @@ export class FreeCell {
 	cursor: CardLocation;
 	selection: CardSequence | null;
 	availableMoves: AvailableMove[] | null;
-	// TODO (5-priority) (animation) (flourish-anim) (hud) impl flashCards for flourish aces?
 	flashCards: Card[] | null;
 
 	// history
@@ -1080,11 +1079,6 @@ export class FreeCell {
 		juice:
 		check if we can flourish any of the aces,
 		or if we can to a 52 card flourish
-
-		TODO (5-priority) (flourish-anim) (motivation) hook this up to react UI
-		 - dealAll
-		 - restart
-		 - $shuffleOrDealAll
 	*/
 	$checkCanFlourish(): FreeCell {
 		let aces = juice.canFlourish52(this);

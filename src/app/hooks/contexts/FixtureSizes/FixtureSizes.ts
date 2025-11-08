@@ -4,7 +4,7 @@ import {
 	scale_height,
 } from '@/app/components/cards/constants';
 import { CursorType } from '@/app/components/DebugCursors';
-import { CardLocation, CardSequence, getRankForCompare, Rank } from '@/game/card/card';
+import { Card, CardLocation, CardSequence, getRankForCompare, Rank } from '@/game/card/card';
 
 // IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)
 //  - so tableau can start at the top of the screen?
@@ -237,6 +237,7 @@ export function calcTopLeftZ(
 	fixtureSizes: FixtureSizes,
 	{ fixture, data }: CardLocation,
 	selection: CardSequence | null,
+	flashCards: Card[] | null,
 	rank?: Rank
 ): { top: number; left: number; zIndex: number; rotation: number } {
 	switch (fixture) {
@@ -293,6 +294,23 @@ export function calcTopLeftZ(
 				} else if (data[1] === sd1) {
 					ret.top += fixtureSizes.tableau.offsetTop * PEEK_DOWN;
 				}
+			}
+			if (flashCards) {
+				let belowCount = 0;
+				let isEqual = false;
+				for (const card of flashCards) {
+					if (card.location.fixture === 'cascade' && card.location.data[0] === data[0]) {
+						if (data[1] === card.location.data[1]) {
+							isEqual = true;
+						} else if (data[1] > card.location.data[1]) {
+							belowCount++;
+						}
+					}
+				}
+				if (isEqual && data[1] > 0) {
+					ret.top -= fixtureSizes.tableau.offsetTop * PEEK_UP;
+				}
+				ret.top += belowCount * fixtureSizes.tableau.offsetTop * PEEK_DOWN;
 			}
 			ret.top = toFixed(ret.top);
 			return ret;

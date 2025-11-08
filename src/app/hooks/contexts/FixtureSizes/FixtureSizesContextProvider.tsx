@@ -18,9 +18,9 @@ export function FixtureSizesContextProvider({
 	fixtureLayout?: FixtureLayout;
 	children: ReactNode;
 }>) {
-	const game = useGame();
-	const cellCount = game.cells.length;
-	const cascadeCount = game.tableau.length;
+	const { cells, tableau } = useGame();
+	const cellCount = cells.length;
+	const cascadeCount = tableau.length;
 	const [fixtureSizes, setFixtureSizes] = useState<FixtureSizes | null>(null);
 
 	useEffect(() => {

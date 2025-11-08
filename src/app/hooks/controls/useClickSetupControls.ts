@@ -37,7 +37,7 @@ export function useClickSetupControls() {
 		} else if (game.deck.length) {
 			// click to deal
 			domUtils.consumeDomEvent(event);
-			setGame((g) => g.$shuffleOrDealAll());
+			setGame((g) => g.$shuffleOrDealAll().$checkCanFlourish());
 			setSettings((s) => ({ ...s, showKeyboardCursor: false }));
 		}
 	}
