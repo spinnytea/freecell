@@ -2,6 +2,10 @@
 
 Can't seem to drag-drop (KS h) - you have to go WAY near the top of the foundation card & confirm auto-foundation for this move
 
+## Labels
+
+TODO (drag-and-drop) (drop-target-size)
+
 ### Game State
 
 ```text

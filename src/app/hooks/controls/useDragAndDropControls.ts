@@ -275,7 +275,10 @@ export function useDragAndDropControls(
 	);
 }
 
-/** @modifies `dropTargets.isOverlapping` */
+/**
+	TODO (drop-target-size) sometimes it's really hard to drop on your intended target, piles?
+	@modifies `dropTargets.isOverlapping`
+*/
 export function _overlappingAvailableMove(
 	{ x: draggedX, y: draggedY }: Draggable,
 	{ x: pointerX, y: pointerY }: { x: number; y: number },

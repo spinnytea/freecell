@@ -9,6 +9,7 @@
 
 ## Top-Level TODOs
 
+- TODO (gsap) review how we use gsap, right now it feels like magic
 - TODO (techdebt) switch from nextjs to vite
   - https://vite.dev/guide/build.html#multi-page-app
   - `defineConfig({ base: '/my-app/' })`
@@ -26,7 +27,7 @@
   - ¿cascade should be column?
   - ¿cell should be freecell? in the same way it should be ¿homecell?; maybe the that row is ¿thecells?
   - deck is fine
-- TODO (deployment) IPad performance is kind of awful?
+- TODO (deployment) (gsap) IPad performance is kind of awful?
 - TODO (motivation) (animation) movement needs to be fun, animations are important, every time a card moves, it must not jump
   - foundation -> deck
   - shuffle
@@ -38,14 +39,14 @@
   - card drag animation (drag waggles the sequence)
   - auto-foundation each card
   - win -> init
-- TODO (motivation) (animation) learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
+- TODO (motivation) (animation) (gsap) learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
 - TODO (techdebt) (animation) The first animation after loading a page is still janky
   - it does the whole thing at once
   - which is normal for a "resize"
   - maybe it just doesn't have any "previous positions" available
   - still, there's got to be something we can do
 - REVIEW (hud) (mobile) icon for bookmarks / save link to home screen (Andriod, iOS)
-- TODO (5-priority) (flourish-anim) (motivation) animate card flash for use in flourishes and end of game
+- TODO (flourish-anim) (motivation) animate card flash for use in flourishes and end of game
   - blue, red, pink, etc
   - snazzy explosion when you place the last card
   - based on the image svg so we can do it with any card (king, ace, whatever)
@@ -53,7 +54,13 @@
   - verify/test animation replaces after deal + undo/deal
   - ⋯
   - currently, flashCards just does a "peek" effect, I want to add an actual animation effect
-- TODO (4-priority) (flourish-anim) (motivation) extra pizzazz when it's a 52 card flourish
+- IDEA (gameplay) Column surgery
+  - swap two columns with invalid moves
+  - swap cells (not too bad)
+  - swap foundations (actually, that's easy)
+  - need to replay game to ensure history is valid; swapping columns needs a note after the shuffle
+  - `:h shuffle32 5, swap 21435678`
+- TODO (flourish-anim) (motivation) extra pizzazz when it's a 52 card flourish
 - TODO (settings) undo limit - all, until deal, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
 - TODO (settings) new game is always shuffled
   - GameContextProvider
@@ -86,7 +93,8 @@
   - spitball impl: attempts positive and negative, display Math.abs(attempts), set neg when undo, set pos and increase when move
 - IDEA (theme) sounds - normally i don't like to, but some folio for moving cards should be okay
 - TODO (theme) more themes - card themes / decks / colors, background colors, etc
-- IDEA (deployment) (offline) download on android: "play offline"
+- IDEA (techdebt) (deployment) (offline) (refactor) re-package as an android app?
+- IDEA (2-priority) (deployment) (offline) download on android: "play offline"
   - single html file? try testing that first (javascript + svg)
   - airplane mode?
   - https://dev.to/stephengade/pwa-build-installable-nextjs-app-that-works-offline-3fff

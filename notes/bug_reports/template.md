@@ -2,6 +2,10 @@
 
 —
 
+## Labels
+
+(techdebt)
+
 ### Game State
 
 ```text

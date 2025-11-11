@@ -2,6 +2,10 @@
 
 That last move was animation was super weird (didn't exist, just skipped straight to a new game). Did I triple click on accident?
 
+## Labels
+
+TODO (animation) (gameplay)
+
 ### Game State
 
 ```text

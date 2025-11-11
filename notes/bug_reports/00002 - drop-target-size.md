@@ -2,6 +2,10 @@
 
 It's really hard to drag-and-drop the last move
 
+## Labels
+
+TODO (drag-and-drop) (drop-target-size)
+
 ### Game State
 
 ```text

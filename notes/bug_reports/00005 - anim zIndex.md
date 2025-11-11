@@ -2,6 +2,10 @@
 
 ZIndex shuffles weird, drag-and-drop, move 2h 4H→3H
 
+## Labels
+
+TODO (animation) (drag-and-drop)
+
 ### Game State
 
 ```text

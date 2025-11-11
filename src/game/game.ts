@@ -180,23 +180,6 @@ export class FreeCell {
 	// settings
 	// autoFoundationLimit: AutoFoundationLimit; // XXX (techdebt) use or remove
 
-	/*
-		IDEA (motivation) (gameplay) Automatically check "can you flourish this ace" (are the cards above it sorted?)
-		or I guess, assuming all the _other_ cards are sorted, and you auto foundation, is it a win/flourish?
-
-		TODO (motivation) (animation) Animation around aces that can flourish, immediately after dealing.
-
-		I suppose a 52 check would be "sort every except, aces, above, and the card on top the ace). Can you move 1 card to get a flourishing?
-
-		Try that on the known one.
-
-		Got it: return the cards to the deck, sort the deck, and deal it all to an empty column - and then you only have to check 4 moves
-
-		Settings to check if possible (undefined, false, true). I suppose you could make a set of all possible flourishes (4×3×2×1 checks)
-	*/
-	// canFlourish?: boolean;
-	// can52CardFlourish?: boolean;
-
 	constructor({
 		cellCount = DEFAULT_NUMBER_OF_CELLS,
 		cascadeCount = DEFAULT_NUMBER_OF_CASCADES,
@@ -702,12 +685,6 @@ export class FreeCell {
 		// silent noop
 		return this;
 	}
-
-	// REVIEW (gameplay) use or remove this for quicker, unskippable animation
-	// canFlourish(game: FreeCell): boolean {
-	// 	if (game.win) return false;
-	// 	return game.autoFoundationAll().win;
-	// }
 
 	/**
 		move the selected card(s) to the "best" allowable location
