@@ -55,7 +55,8 @@
   - maybe it just doesn't have any "previous positions" available
   - still, there's got to be something we can do
 - REVIEW (hud) (mobile) icon for bookmarks / save link to home screen (Andriod, iOS)
-- TODO (motivation) (flourish-anim) animate card flash for use in flourishes and end of game
+- FIXME css animations - no, because just use gsap, that's the whole point
+- FIXME (motivation) (flourish-anim) animate card flash for use in flourishes and end of game
   - blue, red, pink, etc
   - snazzy explosion when you place the last card
   - based on the image svg so we can do it with any card (king, ace, whatever)
@@ -69,7 +70,7 @@
   - swap foundations (actually, that's easy)
   - need to replay game to ensure history is valid; swapping columns needs a note after the shuffle
   - `:h shuffle32 5, swap 21435678`
-- TODO (motivation) (flourish-anim) extra pizzazz when it's a 52-card flourish
+- FIXME (4-priority) (flourish-anim) (motivation) extra pizzazz when it's a 52 card flourish
 - TODO (settings) (undo) undo limit - all, until deal, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
   - undo count starts at 0, increases with each move, clamps at 3, decreases with undo, can only undo if greater than 0
 - TODO (settings) ensure that new game is always shuffled
