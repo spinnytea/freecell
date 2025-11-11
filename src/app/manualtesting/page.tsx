@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { Draggable, gsap } from 'gsap/all';
 import Link from 'next/link';
 import styles_common from '@/app/common.module.css';
+import { AnimatedCardImage } from '@/app/components/cards/AnimatedCardImage';
 import { CardImage } from '@/app/components/cards/CardImage';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { SVGCards13Testing } from '@/app/components/cards/SVGCards13';
@@ -14,7 +15,7 @@ import styles_gameboard from '@/app/gameboard.module.css';
 import { StaticGameContextProvider } from '@/app/hooks/contexts/Game/StaticGameContextProvider';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import styles_manualtesting from '@/app/manualtesting/manualtesting.module.css';
-import { RankList, SuitList } from '@/game/card/card';
+import { calcCardId, RankList, SuitList } from '@/game/card/card';
 
 gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(Draggable);
@@ -339,6 +340,23 @@ export default function Page() {
 						{Object.values(ControlSchemes).map((v) => (
 							<li key={v}>{v}</li>
 						))}
+					</ol>
+				</li>
+
+				<li>
+					Animations
+					<ol>
+						<li>
+							Card Flair
+							<div>
+								<div id={calcCardId('2C', 'anim-card-flair')} style={{ float: 'left' }}>
+									<AnimatedCardImage rank="2" suit="clubs" width={60} enabled />
+								</div>
+								<div id={calcCardId('KH', 'anim-card-flair')} style={{ float: 'left' }}>
+									<AnimatedCardImage rank="king" suit="hearts" width={60} />
+								</div>
+							</div>
+						</li>
 					</ol>
 				</li>
 			</ol>
