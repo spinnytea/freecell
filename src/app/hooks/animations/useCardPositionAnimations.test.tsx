@@ -1387,13 +1387,13 @@ describe('useCardPositionAnimations', () => {
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor right');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor up w');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor up wrap');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor left w');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor left wrap');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor down w');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor down wrap');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor right w');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor right wrap');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -1427,13 +1427,13 @@ describe('useCardPositionAnimations', () => {
 
 			test.todo('· cursor right');
 
-			test.todo('· cursor up w');
+			test.todo('· cursor up wrap');
 
-			test.todo('· cursor left w');
+			test.todo('· cursor left wrap');
 
-			test.todo('· cursor down w');
+			test.todo('· cursor down wrap');
 
-			test.todo('· cursor right w');
+			test.todo('· cursor right wrap');
 
 			test.todo('· cursor stop');
 			test.todo('· cursor stop KH');

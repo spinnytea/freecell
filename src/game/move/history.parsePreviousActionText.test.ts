@@ -34,10 +34,10 @@ describe('game/history.parsePreviousActionType', () => {
 			${'cursor left'}                              | ${{ text: 'cursor left', type: 'cursor' }}
 			${'cursor down'}                              | ${{ text: 'cursor down', type: 'cursor' }}
 			${'cursor right'}                             | ${{ text: 'cursor right', type: 'cursor' }}
-			${'cursor up w'}                              | ${{ text: 'cursor up w', type: 'cursor' }}
-			${'cursor left w'}                            | ${{ text: 'cursor left w', type: 'cursor' }}
-			${'cursor down w'}                            | ${{ text: 'cursor down w', type: 'cursor' }}
-			${'cursor right w'}                           | ${{ text: 'cursor right w', type: 'cursor' }}
+			${'cursor up wrap'}                           | ${{ text: 'cursor up wrap', type: 'cursor' }}
+			${'cursor left wrap'}                         | ${{ text: 'cursor left wrap', type: 'cursor' }}
+			${'cursor down wrap'}                         | ${{ text: 'cursor down wrap', type: 'cursor' }}
+			${'cursor right wrap'}                        | ${{ text: 'cursor right wrap', type: 'cursor' }}
 			${'cursor stop'}                              | ${{ text: 'cursor stop', type: 'cursor' }}
 			${'cursor stop KH'}                           | ${{ text: 'cursor stop KH', type: 'cursor' }}
 			${'cursor stop b'}                            | ${{ text: 'cursor stop b', type: 'cursor' }}

@@ -8,13 +8,13 @@ describe('game.moveCursor', () => {
 			const game = new FreeCell();
 			test.each`
 				start                                     | actual                                  | dir        | end                                     | actionText
-				${{ fixture: 'deck', data: [49] }}        | ${{ fixture: 'deck', data: [49] }}      | ${'up'}    | ${{ fixture: 'cascade', data: [2, 0] }} | ${'cursor up w'}
+				${{ fixture: 'deck', data: [49] }}        | ${{ fixture: 'deck', data: [49] }}      | ${'up'}    | ${{ fixture: 'cascade', data: [2, 0] }} | ${'cursor up wrap'}
 				${{ fixture: 'deck', data: [0] }}         | ${{ fixture: 'deck', data: [0] }}       | ${'left'}  | ${{ fixture: 'deck', data: [1] }}       | ${'cursor left'}
-				${{ fixture: 'deck', data: [0] }}         | ${{ fixture: 'deck', data: [0] }}       | ${'right'} | ${{ fixture: 'deck', data: [51] }}      | ${'cursor right w'}
-				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 0] }} | ${'left'}  | ${{ fixture: 'cascade', data: [7, 0] }} | ${'cursor left w'}
+				${{ fixture: 'deck', data: [0] }}         | ${{ fixture: 'deck', data: [0] }}       | ${'right'} | ${{ fixture: 'deck', data: [51] }}      | ${'cursor right wrap'}
+				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 0] }} | ${'left'}  | ${{ fixture: 'cascade', data: [7, 0] }} | ${'cursor left wrap'}
 				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 0] }} | ${'right'} | ${{ fixture: 'cascade', data: [1, 0] }} | ${'cursor right'}
-				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 0] }} | ${'up'}    | ${{ fixture: 'cell', data: [0] }}       | ${'cursor up w'}
-				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 0] }} | ${'down'}  | ${{ fixture: 'deck', data: [51] }}      | ${'cursor down w'}
+				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 0] }} | ${'up'}    | ${{ fixture: 'cell', data: [0] }}       | ${'cursor up wrap'}
+				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 0] }} | ${'down'}  | ${{ fixture: 'deck', data: [51] }}      | ${'cursor down wrap'}
 			`(
 				'$start.fixture $start.data $dir',
 				({
@@ -43,10 +43,10 @@ describe('game.moveCursor', () => {
 			const game = new FreeCell().dealAll();
 			test.each`
 				start                                     | actual                                  | dir        | end                                     | actionText
-				${{ fixture: 'deck', data: [49] }}        | ${{ fixture: 'deck', data: [0] }}       | ${'up'}    | ${{ fixture: 'cascade', data: [0, 6] }} | ${'cursor up w'}
-				${{ fixture: 'deck', data: [0] }}         | ${{ fixture: 'deck', data: [0] }}       | ${'left'}  | ${{ fixture: 'deck', data: [0] }}       | ${'cursor left w'}
-				${{ fixture: 'deck', data: [0] }}         | ${{ fixture: 'deck', data: [0] }}       | ${'right'} | ${{ fixture: 'deck', data: [0] }}       | ${'cursor right w'}
-				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 6] }} | ${'left'}  | ${{ fixture: 'cascade', data: [7, 5] }} | ${'cursor left w'}
+				${{ fixture: 'deck', data: [49] }}        | ${{ fixture: 'deck', data: [0] }}       | ${'up'}    | ${{ fixture: 'cascade', data: [0, 6] }} | ${'cursor up wrap'}
+				${{ fixture: 'deck', data: [0] }}         | ${{ fixture: 'deck', data: [0] }}       | ${'left'}  | ${{ fixture: 'deck', data: [0] }}       | ${'cursor left wrap'}
+				${{ fixture: 'deck', data: [0] }}         | ${{ fixture: 'deck', data: [0] }}       | ${'right'} | ${{ fixture: 'deck', data: [0] }}       | ${'cursor right wrap'}
+				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 6] }} | ${'left'}  | ${{ fixture: 'cascade', data: [7, 5] }} | ${'cursor left wrap'}
 				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 6] }} | ${'right'} | ${{ fixture: 'cascade', data: [1, 6] }} | ${'cursor right'}
 				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 6] }} | ${'up'}    | ${{ fixture: 'cascade', data: [0, 5] }} | ${'cursor up'}
 				${{ fixture: 'cascade', data: [-1, 99] }} | ${{ fixture: 'cascade', data: [0, 6] }} | ${'down'}  | ${{ fixture: 'cascade', data: [0, 6] }} | ${'cursor stop 1 AS'}

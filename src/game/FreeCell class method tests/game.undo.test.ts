@@ -256,7 +256,7 @@ describe('game.undo (+ history)', () => {
 					'' + //
 						' KC QC       JC KD KH>KS \n' +
 						'                         \n' +
-						' cursor left w'
+						' cursor left wrap'
 				);
 				expect(game.print({ includeHistory: true })).toBe(
 					'' + //

@@ -63,10 +63,10 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'cursor left'}                              | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor down'}                              | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor right'}                             | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor up w'}                              | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor left w'}                            | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor down w'}                            | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor right w'}                           | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor up wrap'}                           | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor left wrap'}                         | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor down wrap'}                         | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor right wrap'}                        | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor stop'}                              | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor stop KH'}                           | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${undefined}
 			${'cursor stop b'}                            | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${undefined}
