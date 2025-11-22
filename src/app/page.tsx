@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import classNames from 'classnames';
 import { gsap, Draggable } from 'gsap/all';
@@ -13,8 +14,21 @@ import SettingsDialog from '@/app/SettingsDialog';
 gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(Draggable);
 
+const GLOBALS_CSS_COLOR_OPTIONS = [
+	'var(--felt--electric-blue)',
+	'var(--felt--championship-green)',
+	'var(--felt--wine)',
+];
+
 // TODO (techdebt) unit test that clicks all the way through winning
 export default function Page() {
+	useEffect(() => {
+		const month = new Date().getMonth();
+		const color = GLOBALS_CSS_COLOR_OPTIONS[month % GLOBALS_CSS_COLOR_OPTIONS.length];
+		const root = document.documentElement;
+		root.style.setProperty('--felt--selected', color);
+	}, []);
+
 	return (
 		<SettingsContextProvider>
 			<GameContextProvider>
