@@ -22,12 +22,11 @@ export type PreviousActionType =
 	| 'select'
 	| 'deselect'
 	| 'move'
-	| 'move-foundation'
+	| 'move-foundation' // move + auto-foundation
 	// | 'move-flourish' // TODO (move-flourish) move-flourish
-	| 'auto-foundation'
+	| 'auto-foundation' // auto-foundation as it's own history item
 	// | 'auto-flourish' // TODO (move-flourish) auto-flourish
 	| 'invalid'
-	| 'auto-foundation-tween' // FIXME change to a game-function (it's a move)
 	| 'juice';
 
 export const PREVIOUS_ACTION_TYPE_IN_HISTORY = new Set<PreviousActionType>([
@@ -57,10 +56,13 @@ export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
 	 - should we have a special animation for this?
 */
 export type GameFunction =
+	// user actions
 	| 'undo'
 	| 'restart'
 	| 'newGame'
 	| 'drag-drop'
+	// gameplay actions
+	| 'auto-foundation-tween'
 	| 'check-can-flourish'
 	| 'check-can-flourish-52'
 	| 'recall-or-bury';
@@ -157,7 +159,6 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 			// …how did this end up in the history in the first place?
 			return game.cards;
 		case 'invalid':
-		case 'auto-foundation-tween':
 			// silent failure
 			// these shouldn't be in the history in the first place
 			// canot undo past these (stuck with them in the history)
@@ -267,7 +268,6 @@ export function parseCursorFromPreviousActionText(
 			return undefined;
 		}
 		case 'auto-foundation':
-		case 'auto-foundation-tween':
 			return undefined;
 		case 'juice':
 			return { fixture: 'cell', data: [0] };
@@ -327,7 +327,6 @@ export function parseAltCursorFromPreviousActionText(
 			return undefined;
 		case 'cursor':
 		case 'auto-foundation':
-		case 'auto-foundation-tween':
 			return undefined;
 		case 'juice':
 			return { fixture: 'cell', data: [0] };
@@ -536,7 +535,11 @@ function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 
 	// XXX (techdebt) can we remove this __clone? probably not…
 	return game.__clone({
-		action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
+		action: {
+			text: 'invalid auto-foundation setup',
+			type: 'invalid',
+			gameFunction: 'auto-foundation-tween',
+		},
 		cards,
 	});
 }
@@ -556,13 +559,14 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 		}
 	}
 
-	// if (firstWord === 'auto-foundation-setup') return { text, type: 'auto-foundation-tween' }; // should not appear in print
-	// if (firstWord === 'auto-foundation-middle') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	const action: PreviousAction = { text: actionText, type: firstWord as PreviousActionType };
 
 	if (firstWord === 'invalid') {
-		if (/^invalid move \w?k\w?\b/.test(actionText)) {
+		if (/^invalid move (\wk|k\w) /.test(actionText)) {
 			action.gameFunction = 'recall-or-bury';
+		} else if (actionText.startsWith('invalid auto-foundation')) {
+			// should not appear in print
+			action.gameFunction = 'auto-foundation-tween';
 		}
 	} else if (firstWord === 'juice') {
 		if (actionText.endsWith('*')) {

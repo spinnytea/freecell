@@ -177,23 +177,27 @@ describe('game.autoFoundation', () => {
 
 	describe('scenarios', () => {
 		test.each`
-			name                                    | before                                                | after
-			${'nothing to move'}                    | ${'>2D                \n             \n hand-jammed'} | ${'>2D                \n             \n hand-jammed'}
-			${'move ace from cell'}                 | ${'>AS                \n             \n hand-jammed'} | ${'>      AS          \n             \n auto-foundation a AS'}
-			${'move ace from cascade'}              | ${'>                  \n    AS       \n hand-jammed'} | ${'>      AS          \n             \n auto-foundation 2 AS'}
-			${'move from cell'}                     | ${'>2D    AS AD       \n             \n hand-jammed'} | ${'>      AS 2D       \n             \n auto-foundation a 2D'}
-			${'move from cascade'}                  | ${'>      AS AD       \n    2D       \n hand-jammed'} | ${'>      AS 2D       \n             \n auto-foundation 2 2D'}
-			${'cannot move selected cell card'}     | ${'|2D|AD         >   \n             \n hand-jammed'} | ${'|2D|   AD      >   \n             \n auto-foundation b AD'}
-			${'cannot move selected cascade card'}  | ${'               >   \n|2D|AD       \n hand-jammed'} | ${'       AD      >   \n|2D|         \n auto-foundation 2 AD'}
-			${'cannot move to selected foundation'} | ${' 3H 3S AH|AS|AD>AC \n 2H 2S 2D 2C \n hand-jammed'} | ${'    3S 3H|AS|2D>2C \n    2S       \n auto-foundation 134a 2H,2D,2C,3H'}
-		`('$name', ({ before, after }: { before: string; after: string }) => {
-			expect(
-				FreeCell.parse(before)
-					.autoFoundationAll({ limit: 'none', anytime: true })
-					.print()
-					.replace(/\n:d[^\n]+\n/, '\n') // clip the deck
-			).toBe(after);
-		});
+			name                                    | before                                                | after                                      | actionText
+			${'nothing to move'}                    | ${'>2D                \n             \n hand-jammed'} | ${'>2D                \n             \n '} | ${'hand-jammed'}
+			${'move ace from cell'}                 | ${'>AS                \n             \n hand-jammed'} | ${'>      AS          \n             \n '} | ${'auto-foundation a AS'}
+			${'move ace from cascade'}              | ${'>                  \n    AS       \n hand-jammed'} | ${'>      AS          \n             \n '} | ${'auto-foundation 2 AS'}
+			${'move from cell'}                     | ${'>2D    AS AD       \n             \n hand-jammed'} | ${'>      AS 2D       \n             \n '} | ${'auto-foundation a 2D'}
+			${'move from cascade'}                  | ${'>      AS AD       \n    2D       \n hand-jammed'} | ${'>      AS 2D       \n             \n '} | ${'auto-foundation 2 2D'}
+			${'cannot move selected cell card'}     | ${'|2D|AD         >   \n             \n hand-jammed'} | ${'|2D|   AD      >   \n             \n '} | ${'auto-foundation b AD'}
+			${'cannot move selected cascade card'}  | ${'               >   \n|2D|AD       \n hand-jammed'} | ${'       AD      >   \n|2D|         \n '} | ${'auto-foundation 2 AD'}
+			${'cannot move to selected foundation'} | ${' 3H 3S AH|AS|AD>AC \n 2H 2S 2D 2C \n hand-jammed'} | ${'    3S 3H|AS|2D>2C \n    2S       \n '} | ${'auto-foundation 134a 2H,2D,2C,3H'}
+		`(
+			'$name',
+			({ before, after, actionText }: { before: string; after: string; actionText: string }) => {
+				const g = FreeCell.parse(before).autoFoundationAll({ limit: 'none', anytime: true });
+				expect(g.history).toEqual(
+					actionText === 'hand-jammed' ? ['hand-jammed'] : ['hand-jammed', actionText]
+				);
+				expect(
+					g.print().replace(/\n:d[^\n]+\n/, '\n') // clip the deck
+				).toBe(after + actionText);
+			}
+		);
 
 		describe('solves everything', () => {
 			test.each`

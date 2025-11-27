@@ -266,11 +266,7 @@ export class FreeCell {
 
 		// selection & available moves are _not_ checked for validity
 		// they should be reset any time we move a card
-		this.selection = !selection
-			? null
-			: action.gameFunction
-				? selection
-				: getSequenceAt(this, selection.location);
+		this.selection = !selection ? null : getSequenceAt(this, selection.location);
 		this.availableMoves = availableMoves ?? null;
 		this.flashCards = flashCards ?? null;
 
@@ -603,7 +599,11 @@ export class FreeCell {
 
 		// TODO (techdebt) replace `const game = this.__clone({})` with `return this.__clone({})`
 		let game = this.__clone({
-			action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
+			action: {
+				text: 'invalid auto-foundation setup',
+				type: 'invalid',
+				gameFunction: 'auto-foundation-tween',
+			},
 		});
 		const moved: Card[] = [];
 
@@ -638,7 +638,11 @@ export class FreeCell {
 									}
 								);
 								game = game.__clone({
-									action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
+									action: {
+										text: 'invalid auto-foundation middle',
+										type: 'invalid',
+										gameFunction: 'auto-foundation-tween',
+									},
 									cards,
 								});
 								moved.push(c_card);
@@ -668,7 +672,11 @@ export class FreeCell {
 									}
 								);
 								game = game.__clone({
-									action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
+									action: {
+										text: 'invalid auto-foundation middle',
+										type: 'invalid',
+										gameFunction: 'auto-foundation-tween',
+									},
 									cards,
 								});
 								moved.push(c_card);
