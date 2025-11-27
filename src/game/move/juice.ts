@@ -33,6 +33,7 @@ function canFlourish(game: FreeCell): Card[] {
 	// the way we check requries this many cascades
 	if (game.tableau.length < SuitList.length + 1) return [];
 
+	const exclude = new Set<Suit>();
 	const allCascadeAces = SuitList
 		// aces are first in the list, so findCard will return quickly
 		.map((suit) => findCard(game.cards, { suit, rank: 'ace' }))
@@ -48,22 +49,30 @@ function canFlourish(game: FreeCell): Card[] {
 	if (danglingAces.length) {
 		// if any aces exposed at start, then any of them will do
 		// (it doesn't matter which you move first, they _all_ auto-foundation immediately)
-		if (game.$selectCard(danglingAces[0]).touchByPosition('h').win) {
+		const g = game.$selectCard(danglingAces[0]).touchByPosition('h');
+		if (g.win) {
 			return danglingAces.sort(_sortAces);
 		}
+
+		// exclude every ace in the foundation
+		g.cards.forEach((card) => {
+			if (card.rank === 'ace' && card.location.fixture === 'foundation') {
+				exclude.add(card.suit);
+			}
+		});
 	}
 
-	const aces: Card[] = [];
 	game = _collectCellsToDeck(game);
-	// FIXME this changes the count, find an example
-	// game = _collectCardsTillAceToDeck(game); // optimization (less to move later)
-	const exclude = new Set<Suit>(danglingAces.map((card) => card.suit));
+	game = _collectCardsTillAceToDeck(game); // ¿minor optimization (less to move later)?
+
+	const aces: Card[] = [];
 	allCascadeAces.forEach((card) => {
-		// FIXME this changes the count, find an example
-		// if (exclude.has(card.suit)) return;
 		const g = _organizeCardsExcept(game, card);
 		if (g.$selectCard(card).touchByPosition('h').win) {
 			aces.push(card);
+
+			// exclude every other ace above it in the same column
+			// if something is going to flourish, it'd be the bottom one
 			g.tableau[card.location.data[0]].forEach((c) => {
 				if (c.rank === 'ace' && c.suit !== card.suit) {
 					exclude.add(c.suit);
@@ -239,7 +248,7 @@ export function _collectCardsTillAceToDeck(game: FreeCell): FreeCell {
 	const cardsToMove: Card[] = [];
 	for (const cascade of game.tableau) {
 		if (!cascade.at(-1)) continue; // if the cascade is empty, skip this one
-		// if (cascade.at(-1)?.rank === 'ace') continue; // if the bottom card is an ace, we shouldn't have gotten here anyway
+		if (cascade.at(-1)?.rank === 'ace') continue; // if the bottom card is an ace
 		if (cascade.at(-2)?.rank === 'ace') continue; // if the second to last cards is an ace, this cascade is finished
 		if (cascade.length < 3) continue; // only 2 cards and neither is an ace
 

@@ -1,0 +1,29 @@
+export function sortedDiff<T>(a: T[], b: T[]) {
+	const in_a: T[] = [];
+	const in_b: T[] = [];
+	const in_both: T[] = [];
+
+	let idx_a = 0;
+	let idx_b = 0;
+	while (idx_a < a.length && idx_b < b.length) {
+		const value_a = a[idx_a];
+		const value_b = b[idx_b];
+		if (value_a === value_b) {
+			in_both.push(value_a);
+			idx_a++;
+			idx_b++;
+		} else if (value_a < value_b) {
+			in_a.push(value_a);
+			idx_a++;
+		} else {
+			in_b.push(value_b);
+			idx_b++;
+		}
+	}
+
+	// if there is anything else, it's unique
+	Array.prototype.push.apply(in_a, a.slice(idx_a));
+	Array.prototype.push.apply(in_b, b.slice(idx_b));
+
+	return { in_a, in_b, in_both };
+}

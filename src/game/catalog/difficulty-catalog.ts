@@ -1,3 +1,5 @@
+import { CAN_FLOURISH_SEEDS, IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
+
 /**
 	of the original 32,000 deals
 
@@ -96,7 +98,7 @@ const TAGGED_SEEDS = new Map<number, string[]>([
 	[18150, ['zero cell']],
 	[18427, ['zero cell']],
 	[19951, ['zero cell']],
-	[11982, ['impossible']],
+	[IMPOSSIBLE_SEED, ['impossible']],
 	[20533, ['zero cell']],
 	[21657, ['zero cell']],
 	[21900, ['zero cell']],
@@ -140,6 +142,7 @@ const TAGGED_SEEDS = new Map<number, string[]>([
 ]);
 
 export function getSeedsByTag(tag: string): number[] {
+	if (tag === 'canFlourish') return CAN_FLOURISH_SEEDS;
 	return Array.from(TAGGED_SEEDS.entries())
 		.filter(([, tags]) => tags.includes(tag))
 		.map(([seed]) => seed);

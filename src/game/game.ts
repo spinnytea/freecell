@@ -17,6 +17,7 @@ import {
 	shorthandSequenceWithPosition,
 	SuitList,
 } from '@/game/card/card';
+import { IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
 import {
 	appendActionToHistory,
 	GameFunction,
@@ -746,7 +747,7 @@ export class FreeCell {
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/
 	shuffle32(seed?: number): FreeCell | this {
-		while (seed === undefined || seed === 11982 || seed < 1 || seed > 32000) {
+		while (seed === undefined || seed === IMPOSSIBLE_SEED || seed < 1 || seed > 32000) {
 			seed = Math.floor(Math.random() * 32000) + 1;
 		}
 
