@@ -595,8 +595,8 @@ export class FreeCell {
 		limit?: AutoFoundationLimit;
 		anytime?: boolean;
 	} = {}): FreeCell | this {
-		// can only do auto-foundation after a card moves
-		// e.g. we can't auto-foundation just because we select a card
+		// should only do auto-foundation after a card moves
+		// e.g. don't auto-foundation just because we select a card or move the cursor
 		if (!anytime && this.previousAction.type !== 'move') {
 			return this;
 		}
@@ -607,24 +607,28 @@ export class FreeCell {
 		});
 		const moved: Card[] = [];
 
-		// TODO (setting) autoFoundation "only after [any] move" vs "only after move to foundation"
+		// TODO (gameplay) (setting) autoFoundation "only after [any] move" vs "only after move to foundation"
 
-		let didAnyMove = false;
-		let keepGoing = true;
+		let keepGoing = true; // keep going as long as we move cards
 		while (keepGoing) {
 			keepGoing = false;
 
-			game.foundations.forEach((f, f_idx) => {
+			for (let f_idx = 0; f_idx < game.foundations.length; f_idx++) {
+				const f_card = game.foundations[f_idx];
 				let canAccept = foundationCanAcceptCards(game, f_idx, limit);
+
+				// try cells
 				if (canAccept) {
-					game.cells.forEach((c, c_idx) => {
+					for (let c_idx = 0; c_idx < game.cells.length; c_idx++) {
+						const c_card = game.cells[c_idx];
 						if (canAccept) {
 							const canMoveToFoundation =
-								c && canStackFoundation(f, c) && !game.selection?.cards.includes(c);
+								c_card &&
+								canStackFoundation(f_card, c_card) &&
+								!game.selection?.cards.includes(c_card);
 							if (canMoveToFoundation) {
 								canAccept = false;
 								keepGoing = true;
-								didAnyMove = true;
 								const cards = moveCards(
 									game,
 									getSequenceAt(game, { fixture: 'cell', data: [c_idx] }),
@@ -637,22 +641,24 @@ export class FreeCell {
 									action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
 									cards,
 								});
-								moved.push(c);
+								moved.push(c_card);
 							}
 						}
-					});
+					}
 				}
+
+				// try last card in each cascade
 				if (canAccept) {
-					game.tableau.forEach((cascade, c_idx) => {
+					for (let c_idx = 0; c_idx < game.tableau.length; c_idx++) {
+						const cascade = game.tableau[c_idx];
 						const last_idx = cascade.length - 1;
 						if (canAccept && cascade.length > 0) {
-							const c = cascade[last_idx];
+							const c_card = cascade[last_idx];
 							const canMoveToFoundation =
-								canStackFoundation(f, c) && !game.selection?.cards.includes(c);
+								canStackFoundation(f_card, c_card) && !game.selection?.cards.includes(c_card);
 							if (canMoveToFoundation) {
 								canAccept = false;
 								keepGoing = true;
-								didAnyMove = true;
 								const cards = moveCards(
 									game,
 									getSequenceAt(game, { fixture: 'cascade', data: [c_idx, last_idx] }),
@@ -665,17 +671,17 @@ export class FreeCell {
 									action: { text: 'auto-foundation-middle', type: 'auto-foundation-tween' },
 									cards,
 								});
-								moved.push(c);
+								moved.push(c_card);
 							}
 						}
-					});
+					}
 				}
-			});
+			}
 		}
 
 		// XXX (techdebt) can we write this function in a way that doesn't confuse typescript?
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (didAnyMove) {
+		if (moved.length) {
 			const isFlourish = game.win && countEmptyFoundations(this) > 0;
 			return game.__clone({
 				action: { text: calcAutoFoundationActionText(moved, isFlourish), type: 'auto-foundation' },
@@ -1078,26 +1084,6 @@ export class FreeCell {
 			selection: null,
 			availableMoves: null,
 			flashCards: aces,
-		});
-	}
-
-	/** accessor for nonstandard gameplay */
-	$setSelection(
-		selection: CardSequence | null,
-		{ gameFunction }: OptionsNonstandardGameplay = {}
-	): FreeCell {
-		if (!selection) return this.clearSelection();
-		if (gameFunction !== 'recall-or-bury') return this;
-
-		selection.peekOnly = true;
-		return this.__clone({
-			action: {
-				text: 'select ' + shorthandSequenceWithPosition(selection),
-				type: 'select',
-				gameFunction,
-			},
-			selection,
-			availableMoves: [],
 		});
 	}
 

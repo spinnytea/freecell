@@ -14,7 +14,6 @@ import {
 import { FreeCell } from '@/game/game';
 import { moveCards } from '@/game/move/move';
 
-/** TODO (techdebt) remove auto-foundation-tween */
 export type PreviousActionType =
 	| 'init'
 	| 'shuffle'
@@ -28,7 +27,7 @@ export type PreviousActionType =
 	| 'auto-foundation'
 	// | 'auto-flourish' // TODO (move-flourish) auto-flourish
 	| 'invalid'
-	| 'auto-foundation-tween'
+	| 'auto-foundation-tween' // FIXME change to a game-function (it's a move)
 	| 'juice';
 
 export const PREVIOUS_ACTION_TYPE_IN_HISTORY = new Set<PreviousActionType>([

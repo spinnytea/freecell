@@ -166,19 +166,39 @@ describe('move.juice', () => {
 						' AS AH AD AC             \n' +
 						' deal all cards'
 				);
-				// BUG (techdebt) (motivation) if any aces exposed at start, is there a single move we can make to win the game?
 				expect(juice.canFlourish(game)).toEqual([
-					// { rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 6] } },
-					// { rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 6] } },
-					// { rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 6] } },
-					// { rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 6] } },
+					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 6] } },
+					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 6] } },
+					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 6] } },
+					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 6] } },
 				]);
-				// BUG (techdebt) (motivation) if any aces exposed at start, is there a single move we can make to win the game?
 				expect(juice.canFlourish52(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 6] } },
 					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 6] } },
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 6] } },
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 6] } },
+				]);
+			});
+
+			test('example contrived', () => {
+				const game = FreeCell.parse(
+					'' +
+						'>                        \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+						' AS 3H 3D 3C 2S 2H 2D 2C \n' +
+						' 3S AH AD AC             \n' +
+						' deal all cards'
+				);
+				expect(juice.canFlourish(game)).toEqual([
+					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 5] } },
+				]);
+				// BUG (techdebt) (motivation) technically we can flourish 52 with one card
+				expect(juice.canFlourish52(game)).toEqual([
+					// { rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 5] } },
 				]);
 			});
 		});
@@ -201,6 +221,26 @@ describe('move.juice', () => {
 				expect(juice.canFlourish(game)).toEqual([
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 0] } },
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [0, 0] } },
+				]);
+				expect(juice.canFlourish52(game)).toEqual([]);
+			});
+
+			test('Game #19508', () => {
+				const game = new FreeCell().shuffle32(19508).dealAll();
+				expect(game.print()).toBe(
+					'' +
+						'>                        \n' +
+						' 9S KC 4S 8S 2D TS 3D JS \n' +
+						' QS 2C QD AH JD 9D 7C 2H \n' +
+						' 9H 8H 5D 6H 7D KH 5H 3C \n' +
+						' TD JH 9C 6D 2S 4D 8D 8C \n' +
+						' 3S KD QH 5C 4C 5S KS QC \n' +
+						' JC 7H TC 3H AS 6S AC 7S \n' +
+						' 4H TH AD 6C             \n' +
+						' deal all cards'
+				);
+				expect(juice.canFlourish(game)).toEqual([
+					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [3, 1] } },
 				]);
 				expect(juice.canFlourish52(game)).toEqual([]);
 			});
@@ -547,8 +587,8 @@ describe('move.juice', () => {
 					'    2S             AH    \n' +
 					'                   AC    \n' +
 					'                   JH    \n' +
-					':d 4S KC TS KD 7C>9D QH JS 2D TD 7H 3D KS KH 6S 7D 6D TH QD 5S 2C 9S 8S 3C TC JD 8D JC 8H 9C 9H 3H 5C QS 6C 6H 2H 5H 4C 5D 8C 4D 3S 4H \n' +
-					' invalid move 8k 4S-KC-TS-KD-7C-9D→deck'
+					':d 4S KC TS KD 7C 9D QH JS 2D TD 7H 3D KS KH 6S 7D 6D TH QD 5S 2C 9S 8S 3C TC JD 8D JC 8H 9C 9H 3H 5C QS 6C 6H 2H 5H 4C 5D 8C 4D 3S>4H \n' +
+					' invalid move tableau→deck'
 			);
 		});
 
@@ -574,8 +614,8 @@ describe('move.juice', () => {
 					'          AC    2S       \n' +
 					'          TS    AH       \n' +
 					'                2C       \n' +
-					':d JS JH 9C 4D QD>KD 5H 5S 5D QC 3S QS QH 7D TH 2H 8C 4S 3D 3C KC 5C 8H KH 2D 7S 3H 8D 6S 6C TD JD 7C JC 9D 8S 4H 6H 9S KS 7H 9H TC \n' +
-					' invalid move 8k JS-JH-9C-4D-QD-KD→deck'
+					':d JS JH 9C 4D QD KD 5H 5S 5D QC 3S QS QH 7D TH 2H 8C 4S 3D 3C KC 5C 8H KH 2D 7S 3H 8D 6S 6C TD JD 7C JC 9D 8S 4H 6H 9S KS 7H 9H>TC \n' +
+					' invalid move tableau→deck'
 			);
 		});
 
@@ -585,8 +625,8 @@ describe('move.juice', () => {
 				'' + //
 					'             AS AH AD AC \n' +
 					'                         \n' +
-					':d QC TC 8C 6C>4C QD TD 8D 6D 4D QH TH 8H 6H 4H QS TS 8S 6S 4S KC JC 9C 7C 5C 3C KD JD 9D 7D 5D 3D KH JH 9H 7H 5H 3H KS JS 9S 7S 5S 3S 2S 2H 2D 2C \n' +
-					' invalid move 8k QC-TC-8C-6C-4C→deck'
+					':d QC TC 8C 6C 4C QD TD 8D 6D 4D QH TH 8H 6H 4H QS TS 8S 6S 4S KC JC 9C 7C 5C 3C KD JD 9D 7D 5D 3D KH JH 9H 7H 5H 3H KS JS 9S 7S 5S>3S 2S 2H 2D 2C \n' +
+					' invalid move tableau→deck'
 			);
 		});
 	});

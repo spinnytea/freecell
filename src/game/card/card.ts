@@ -40,6 +40,7 @@ export const RankList: Rank[] = [
 	'king',
 ];
 export const getRankForCompare = (rank: Rank): number => RankList.indexOf(rank);
+export const getSuitForCompare = (suit: Suit): number => SuitList.indexOf(suit);
 export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	getRankForCompare(min) === getRankForCompare(max) - 1;
 
@@ -189,19 +190,19 @@ export function sortCardsOG(game: FreeCell, cards: Card[]): void {
 	(this is meant to be used _as a_ game.deck)
 
 	TODO (techdebt) (flourish-anim) (motivation) (optimize) do not shuffle in place, produce a new state
-	 - basically, we should another game.__clone
+	 - basically, we should do another game.__clone
 	 - or maybe, since this is only used by juice, we should move it there for now
 */
 export function sortCardsBySuitAndRank(deck: Card[]): void {
 	deck.sort((a, b) => {
-		// sort by suit
-		const sa = SuitList.indexOf(a.suit);
-		const sb = SuitList.indexOf(b.suit);
+		// sort by suit (high to low)
+		const sa = getSuitForCompare(a.suit);
+		const sb = getSuitForCompare(b.suit);
 		if (sa !== sb) return sb - sa;
 
-		// sort by rank
-		const ra = RankList.indexOf(a.rank);
-		const rb = RankList.indexOf(b.rank);
+		// sort by rank (high to low)
+		const ra = getRankForCompare(a.rank);
+		const rb = getRankForCompare(b.rank);
 		return rb - ra;
 	});
 

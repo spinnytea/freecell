@@ -61,8 +61,8 @@
   - need to replay game to ensure history is valid; swapping columns needs a note after the shuffle
   - `:h shuffle32 5, swap 21435678`
 - TODO (flourish-anim) (motivation) extra pizzazz when it's a 52 card flourish
-- TODO (settings) undo limit - all, until deal, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
-- TODO (settings) new game is always shuffled
+- TODO (settings) (undo) undo limit - all, until deal, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
+- TODO (settings) ensure that new game is always shuffled
   - GameContextProvider
   - every place we call new FreeCell (not tests)
 - TODO (gameplay) hard vs medium vs easy

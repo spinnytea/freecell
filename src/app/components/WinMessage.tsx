@@ -35,6 +35,15 @@ export function WinMessage() {
 					//  - we may need a useContext so we can use a single global timeline
 					//  - and then never use gsap directly, always add it to a timeline
 					//  - maybe we need a wrapper around gsap
+					// TODO (4-priority) (animation) (hud) different messages depending on how you win
+					//  - standard: you win!
+					//  - flourish: ??
+					//  - flourish-52: ??
+					//  - fewer than x moves: ?? (needs calibration)
+					//  - ---
+					//  - messages need to fit on a game board
+					//  - test various sizes
+					//  - each of these should also have an animation
 					const color = { h: 0, s: 100, l: 44 }; /* #df0000 */
 					const applyColor: gsap.Callback = () => {
 						if (elementRef.current) {

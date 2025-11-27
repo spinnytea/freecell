@@ -9,13 +9,15 @@ import {
 	CardLocation,
 	CardSequence,
 	findCard,
-	RankList,
+	getSequenceAt,
+	getSuitForCompare,
 	shorthandPosition,
 	sortCardsBySuitAndRank,
 	Suit,
 	SuitList,
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
+import { calcMoveActionText, moveCards } from '@/game/move/move';
 
 export const juice = { canFlourish, canFlourish52 };
 
@@ -31,25 +33,36 @@ function canFlourish(game: FreeCell): Card[] {
 	// the way we check requries this many cascades
 	if (game.tableau.length < SuitList.length + 1) return [];
 
-	// TODO (techdebt) (flourish-anim) (motivation) if any aces exposed at start, is there a single move we can make to win the game?
-	//  - ⚠️ uhm, if there are any at the start, then it _must_ be a flourish52 or bust
-	//  - it needs to be able to flourish immediately
-	//  - really, just try _any_ available move?
-	//  - we can try the other aces normally
-	const immediateAces: Card[] = [];
+	const danglingAces: Card[] = [];
 	game.tableau.forEach((cascade) => {
 		const last_card = cascade.at(-1);
 		if (last_card?.rank === 'ace') {
-			immediateAces.push(last_card);
+			danglingAces.push(last_card);
 		}
 	});
 
-	let aces: Card[] = [];
+	if (danglingAces.length) {
+		// if there are any at the start, then it _must_ be a flourish52 or bust
+		const aces = danglingAces.filter(
+			(danglingAce) => game.$selectCard(danglingAce).touchByPosition('h').win
+		);
+		if (aces.length) {
+			return aces.sort((a, b) => {
+				// sort by suit (low to high)
+				const sa = getSuitForCompare(a.suit);
+				const sb = getSuitForCompare(b.suit);
+				return sa - sb;
+			});
+		}
+	}
+
+	const aces: Card[] = [];
 	game = _collectCellsToDeck(game);
+	game = _collectCardsTillAceToDeck(game); // optimization (less to move later)
 	const acesToTry = game.cards.filter(
 		(card) => card.rank === 'ace' && card.location.fixture === 'cascade'
 	);
-	const exclude = new Set<Suit>(immediateAces.map((card) => card.suit));
+	const exclude = new Set<Suit>(danglingAces.map((card) => card.suit));
 	acesToTry.forEach((card) => {
 		const g = _organizeCardsExcept(game, card);
 		if (g.$selectCard(card).touchByPosition('h').win) {
@@ -61,14 +74,15 @@ function canFlourish(game: FreeCell): Card[] {
 			});
 		}
 	});
-	aces = aces.filter((card) => !exclude.has(card.suit));
-	aces.sort((a, b) => {
-		// sort by rank
-		const ra = RankList.indexOf(a.rank);
-		const rb = RankList.indexOf(b.rank);
-		return rb - ra;
-	});
-	return aces;
+
+	return aces
+		.filter((card) => !exclude.has(card.suit))
+		.sort((a, b) => {
+			// sort by suit (low to high)
+			const sa = getSuitForCompare(a.suit);
+			const sb = getSuitForCompare(b.suit);
+			return sa - sb;
+		});
 }
 
 /**
@@ -91,18 +105,23 @@ function canFlourish52(game: FreeCell): Card[] {
 	// if any aces exposed at start, is there a single move we can make to win the game?
 	//  - it needs to be able to flourish immediately
 	//  - really, just try _any_ available move?
-	const danglingAces = game.cards.filter(
-		(card) =>
-			card.rank === 'ace' &&
-			card.location.fixture === 'cascade' &&
-			game.tableau[card.location.data[0]].at(-1) === card
-	);
+	const danglingAces: Card[] = [];
+	game.tableau.forEach((cascade) => {
+		const last_card = cascade.at(-1);
+		if (last_card?.rank === 'ace') {
+			danglingAces.push(last_card);
+		}
+	});
 	if (danglingAces.length) {
 		// if there are any, then this is the only way to 52 flourish
-		// (no need to sort, they are already in the right order, since they came from game.cards)
-		return danglingAces.filter(
-			(danglingAce) => game.$selectCard(danglingAce).touchByPosition('h').win
-		);
+		return danglingAces
+			.filter((danglingAce) => game.$selectCard(danglingAce).touchByPosition('h').win)
+			.sort((a, b) => {
+				// sort by suit (low to high)
+				const sa = getSuitForCompare(a.suit);
+				const sb = getSuitForCompare(b.suit);
+				return sa - sb;
+			});
 	}
 
 	game = _collectCellsToDeck(game);
@@ -149,10 +168,10 @@ function canFlourish52(game: FreeCell): Card[] {
 	});
 
 	aces.sort((a, b) => {
-		// sort by rank
-		const ra = RankList.indexOf(a.rank);
-		const rb = RankList.indexOf(b.rank);
-		return rb - ra;
+		// sort by suit (low to high)
+		const sa = getSuitForCompare(a.suit);
+		const sb = getSuitForCompare(b.suit);
+		return sa - sb;
 	});
 	return aces;
 }
@@ -187,6 +206,7 @@ export function _collectCellsToDeck(game: FreeCell): FreeCell {
 */
 export function _organizeCardsExcept(game: FreeCell, card: Card) {
 	const [cardD0, cardD1] = card.location.data;
+	const cardsToMove: Card[] = [];
 
 	// deal with each cascade, update game as we go
 	for (let d0 = 0; d0 < game.tableau.length; d0++) {
@@ -198,24 +218,22 @@ export function _organizeCardsExcept(game: FreeCell, card: Card) {
 		} else if (cardD0 !== d0) {
 			// our card is not in this cascade
 			// move the entire column
-			game = _moveCardsToDeck(game, {
-				location: { fixture: 'cascade', data: [d0, 0] },
-				cards: cascade,
-				peekOnly: true,
-			});
+			Array.prototype.unshift.apply(cardsToMove, cascade);
 		} else if (!cascade.at(cardD1 + 1)) {
 			// the ace is the last card
 			// there's nothing to move
 			continue;
 		} else {
 			// move everything after the ace
-			game = _moveCardsToDeck(game, {
-				location: { fixture: 'cascade', data: [d0, cardD1 + 1] },
-				cards: cascade.slice(cardD1 + 1),
-				peekOnly: true,
-			});
+			Array.prototype.unshift.apply(cardsToMove, cascade.slice(cardD1 + 1));
 		}
 	}
+
+	game = _moveCardsToDeck(game, {
+		location: { fixture: 'foundation', data: [0] },
+		cards: cardsToMove,
+		peekOnly: true,
+	});
 
 	const emptyPositions: CardLocation[] = [];
 	for (let d0 = game.tableau.length - 1; d0 >= 0; d0--) {
@@ -230,8 +248,8 @@ export function _organizeCardsExcept(game: FreeCell, card: Card) {
 
 // REVIEW (joker) rules with jokers are weird, so this may not work right
 export function _collectCardsTillAceToDeck(game: FreeCell): FreeCell {
-	for (let d0 = 0; d0 < game.tableau.length; d0++) {
-		const cascade = game.tableau[d0];
+	const cardsToMove: Card[] = [];
+	for (const cascade of game.tableau) {
 		if (!cascade.at(-1)) continue; // if the cascade is empty, skip this one
 		// if (cascade.at(-1)?.rank === 'ace') continue; // if the bottom card is an ace, we shouldn't have gotten here anyway
 		if (cascade.at(-2)?.rank === 'ace') continue; // if the second to last cards is an ace, this cascade is finished
@@ -243,12 +261,15 @@ export function _collectCardsTillAceToDeck(game: FreeCell): FreeCell {
 			d1--;
 		}
 
-		game = _moveCardsToDeck(game, {
-			location: { fixture: 'cascade', data: [d0, d1] },
-			cards: cascade.slice(d1),
-			peekOnly: true,
-		});
+		Array.prototype.unshift.apply(cardsToMove, cascade.slice(d1));
 	}
+
+	game = _moveCardsToDeck(game, {
+		location: { fixture: 'foundation', data: [0] },
+		cards: cardsToMove,
+		peekOnly: true,
+	});
+
 	return game;
 }
 
@@ -282,10 +303,13 @@ function _spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLocation[]
 function _moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCell {
 	if (!selection.cards.length) return game;
 	const to: CardLocation = { fixture: 'deck', data: [game.deck.length] };
-	return game
-		.setCursor(to, { gameFunction: 'recall-or-bury' })
-		.$setSelection(selection, { gameFunction: 'recall-or-bury' })
-		.touch({ gameFunction: 'recall-or-bury' });
+	const cards = moveCards(game, selection, to);
+	const actionText = 'invalid move tableau→deck';
+	return game.__clone({
+		action: { text: actionText, type: 'move', gameFunction: 'recall-or-bury' },
+		cards,
+		cursor: to,
+	});
 }
 
 /**
@@ -294,8 +318,15 @@ function _moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCell {
 */
 function _moveDeckToBoard(game: FreeCell, selection: CardSequence, to: CardLocation): FreeCell {
 	if (!selection.cards.length) return game;
-	return game
-		.setCursor(to)
-		.$setSelection(selection, { gameFunction: 'recall-or-bury' })
-		.touch({ gameFunction: 'recall-or-bury' });
+	const cards = moveCards(game, selection, to);
+	const actionText = 'invalid ' + calcMoveActionText(selection, getSequenceAt(game, to));
+	return game.__clone({
+		action: { text: actionText, type: 'move', gameFunction: 'recall-or-bury' },
+		cards,
+		cursor: to,
+	});
+	// return game
+	// 	.setCursor(to)
+	// 	.$setSelection(selection, { gameFunction: 'recall-or-bury' })
+	// 	.touch({ gameFunction: 'recall-or-bury' });
 }

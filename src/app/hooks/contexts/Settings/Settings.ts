@@ -13,8 +13,7 @@ export interface Settings {
 
 // TODO (gameplay) (settings) option to skip `$checkCanFlourish` (just return this if setting is false)
 //  - maybe better incorporate the helper function
-// TODO (gameplay) (settings) only run auto-foundation when putting in foundation
-//  - like `autoFoundation: false`, but conditional instead of hard stop
+// TODO (gameplay) (setting) autoFoundation "only after [any] move" vs "only after move to foundation"
 // TODO (hud) (settings) two different deck positions, with 2 different keyboard arrow layouts
 export function calcDefaultSettings(): Settings {
 	return {
