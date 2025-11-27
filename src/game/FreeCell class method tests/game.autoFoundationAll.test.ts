@@ -1,7 +1,7 @@
 import { FreeCell } from '@/game/game';
 import { AutoFoundationLimit } from '@/game/move/move';
 
-describe('game.autoFoundation', () => {
+describe('game.autoFoundationAll', () => {
 	describe('limits all', () => {
 		test.each`
 			limit       | homeStr
@@ -176,6 +176,8 @@ describe('game.autoFoundation', () => {
 	});
 
 	describe('scenarios', () => {
+		// FIXME cannot move whole selection sequence
+		//  - do a game with a selection of length 1,2,3
 		test.each`
 			name                                    | before                                                | after                                      | actionText
 			${'nothing to move'}                    | ${'>2D                \n             \n hand-jammed'} | ${'>2D                \n             \n '} | ${'hand-jammed'}

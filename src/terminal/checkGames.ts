@@ -14,7 +14,7 @@ const flourish52Seeds: number[] = [];
 for (let seed = 1; seed <= 32000; seed++) {
 	const game = new FreeCell().shuffle32(seed).dealAll();
 
-	// FIXME (techdebt) (flourish-anim) (optimize) make canFlourish run faster
+	// canFlourish is about as fast as it can be
 	//  - this takes 33 seconds
 	if (juice.canFlourish(game).length) {
 		flourishCount++;

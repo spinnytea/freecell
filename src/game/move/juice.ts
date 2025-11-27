@@ -33,21 +33,23 @@ function canFlourish(game: FreeCell): Card[] {
 	// the way we check requries this many cascades
 	if (game.tableau.length < SuitList.length + 1) return [];
 
-	const danglingAces: Card[] = [];
-	game.tableau.forEach((cascade) => {
-		const last_card = cascade.at(-1);
-		if (last_card?.rank === 'ace') {
-			danglingAces.push(last_card);
-		}
-	});
+	const allCascadeAces = SuitList
+		// aces are first in the list, so findCard will return quickly
+		.map((suit) => findCard(game.cards, { suit, rank: 'ace' }))
+		// only consider aces in play (aces shouldn't be in a cell, so we can ignore them)
+		.filter((card) => card.location.fixture === 'cascade');
+	if (allCascadeAces.length === 0) return [];
 
+	// isLocationEqual
+	// XXX (flourish-anim) do cards in a cell count as danglingAces?
+	const danglingAces = allCascadeAces.filter(
+		(card) => card === game.tableau[card.location.data[0]].at(-1)
+	);
 	if (danglingAces.length) {
-		// if there are any at the start, then it _must_ be a flourish52 or bust
-		const aces = danglingAces.filter(
-			(danglingAce) => game.$selectCard(danglingAce).touchByPosition('h').win
-		);
-		if (aces.length) {
-			return aces.sort(_sortAces);
+		// if any aces exposed at start, then any of them will do
+		// (it doesn't matter which you move first, they _all_ auto-foundation immediately)
+		if (game.$selectCard(danglingAces[0]).touchByPosition('h').win) {
+			return danglingAces.sort(_sortAces);
 		}
 	}
 
@@ -55,11 +57,10 @@ function canFlourish(game: FreeCell): Card[] {
 	game = _collectCellsToDeck(game);
 	// FIXME this changes the count, find an example
 	// game = _collectCardsTillAceToDeck(game); // optimization (less to move later)
-	const acesToTry = game.cards.filter(
-		(card) => card.rank === 'ace' && card.location.fixture === 'cascade'
-	);
 	const exclude = new Set<Suit>(danglingAces.map((card) => card.suit));
-	acesToTry.forEach((card) => {
+	allCascadeAces.forEach((card) => {
+		// FIXME this changes the count, find an example
+		// if (exclude.has(card.suit)) return;
 		const g = _organizeCardsExcept(game, card);
 		if (g.$selectCard(card).touchByPosition('h').win) {
 			aces.push(card);
@@ -83,18 +84,15 @@ function canFlourish52(game: FreeCell): Card[] {
 	if (game.deck.length) return [];
 	// cells don't matter for this
 	if (game.foundations.some((card) => !!card)) return [];
+
+	/*
 	if (
-		!SuitList.every(
-			(suit) =>
-				/* aces are first in the list, so findCard will return quickly */
-				findCard(game.cards, { suit, rank: 'ace' }).location.fixture ===
-				/* all aces must be in the tableau */
-				'cascade'
+		!SuitList.every((suit) =>
+			findCard(game.cards, { suit, rank: 'ace' }).location.fixture === 'cascade'
 		)
 	) {
 		return [];
 	}
-
 	const danglingAces: Card[] = [];
 	game.tableau.forEach((cascade) => {
 		const last_card = cascade.at(-1);
@@ -102,8 +100,23 @@ function canFlourish52(game: FreeCell): Card[] {
 			danglingAces.push(last_card);
 		}
 	});
+	*/
+
+	const allCascadeAces = SuitList
+		// aces are first in the list, so findCard will return quickly
+		.map((suit) => findCard(game.cards, { suit, rank: 'ace' }))
+		// only consider aces in play (aces shouldn't be in a cell, so we can ignore them)
+		.filter((card) => card.location.fixture === 'cascade');
+	// all aces must be in the tableau
+	if (allCascadeAces.length !== SuitList.length) return [];
+
+	// isLocationEqual
+	const danglingAces = allCascadeAces.filter(
+		(card) => card.location.data[1] === game.tableau[card.location.data[0]].length - 1
+	);
 	if (danglingAces.length) {
 		// if any aces exposed at start, then any of them will do
+		// (it doesn't matter which you move first, they _all_ auto-foundation immediately)
 		if (game.$selectCard(danglingAces[0]).touchByPosition('h').win) {
 			return danglingAces.sort(_sortAces);
 		} else {

@@ -574,11 +574,19 @@ export class FreeCell {
 	}
 
 	/**
-		TODO (techdebt) break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
+		FIXME break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
 		REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
 		 - historyIsInvalidAtIdx?
-		FIXME autoFoundation needs some serious refactoring
-		FIXME (flourish-anim) elephant in the room: this is what takes so long
+		FIXME (flourish-anim) (refactor) elephant in the room: this is what takes so long
+		 - the real problem is: all of these helper functions rely on complete game state
+		 - that we make a new game after having moved each card
+		 - ---
+		 - it was implemented this way on purpose, to rely on all the functions we need to standard gameplay
+		 - but … uhm … {@link canStackFoundation} is the only one
+		 - cuz {@link foundationCanAcceptCards} is specifically "can we do auto-foundation on this foundation, given the limits"
+	    - ---
+		 - implement this as a function in `move` instead, like `autoFoundation` or something
+		 - like {@link moveCards}, have it act on the cards themselves instead of the game board
 	*/
 	autoFoundationAll({
 		limit = 'opp+1',
