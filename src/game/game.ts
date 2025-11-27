@@ -577,12 +577,8 @@ export class FreeCell {
 		TODO (techdebt) break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
 		REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
 		 - historyIsInvalidAtIdx?
-		REVIEW (techdebt) autoFoundation needs some serious refactoring
-
-		XXX (settings) (AutoFoundationMethod) if we want more ways to do the "autoFoundation" logic, we can split it out
-		 - but as it stands, it's only a hair-splicy difference
-		 - the animation is so fast that you don't really notice the difference (and may or may not follow this order anyway)
-		 - the move history is all but ignored
+		FIXME autoFoundation needs some serious refactoring
+		FIXME (flourish-anim) elephant in the room: this is what takes so long
 	*/
 	autoFoundationAll({
 		limit = 'opp+1',

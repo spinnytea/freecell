@@ -15,17 +15,17 @@ for (let seed = 1; seed <= 32000; seed++) {
 	const game = new FreeCell().shuffle32(seed).dealAll();
 
 	// FIXME (techdebt) (flourish-anim) (optimize) make canFlourish run faster
-	//  - this takes 1 minute when executed directly (here)
-	//  - how long will it takes as a unit test
+	//  - this takes 33 seconds
 	if (juice.canFlourish(game).length) {
 		flourishCount++;
 	}
 
-	// FIXME (techdebt) (flourish-anim) (optimize) make canFlourish52 run faster
-	//  - this takes 3 minutes when written as a unit test
-	//  - this takes 10 seconds when executed directly (here)
-	//  - ∴ when benchmarking, do this as a unit test
+	// canFlourish52 is about as fast as it can be
+	//  - this took 3 minutes as a unit test
+	//  - this takes 4.5 seconds
+	// FIXME ∴ when benchmarking, do this as a unit test
 	const aces = juice.canFlourish52(game);
+	// const aces = [];
 
 	if (aces.length) {
 		flourish52Seeds.push(seed);
@@ -46,10 +46,14 @@ for (let seed = 1; seed <= 32000; seed++) {
 // basic data checks
 const pass = '✅';
 const fail = '❌';
+const expectedFlourishCount = 28843;
 const catalogSeeds = getSeedsByTag('canFlourish52');
 
 const checks = [
-	{ title: `canFlourish - seed lengths (${(28843).toString(10)})`, pass: flourishCount === 28843 },
+	{
+		title: `canFlourish - seed lengths (${expectedFlourishCount.toString(10)})`,
+		pass: flourishCount === expectedFlourishCount,
+	},
 	{
 		title: `canFlourish52 - seed lengths (${catalogSeeds.length.toString(10)})`,
 		pass: flourish52Seeds.length === catalogSeeds.length,

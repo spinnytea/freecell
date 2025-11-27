@@ -4,6 +4,7 @@
 	layered in on top of gameplay, but does not change the game rules
 */
 
+import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import {
 	Card,
 	CardLocation,
@@ -11,7 +12,6 @@ import {
 	findCard,
 	getSequenceAt,
 	getSuitForCompare,
-	shorthandPosition,
 	sortCardsBySuitAndRank,
 	Suit,
 	SuitList,
@@ -47,18 +47,14 @@ function canFlourish(game: FreeCell): Card[] {
 			(danglingAce) => game.$selectCard(danglingAce).touchByPosition('h').win
 		);
 		if (aces.length) {
-			return aces.sort((a, b) => {
-				// sort by suit (low to high)
-				const sa = getSuitForCompare(a.suit);
-				const sb = getSuitForCompare(b.suit);
-				return sa - sb;
-			});
+			return aces.sort(_sortAces);
 		}
 	}
 
 	const aces: Card[] = [];
 	game = _collectCellsToDeck(game);
-	game = _collectCardsTillAceToDeck(game); // optimization (less to move later)
+	// FIXME this changes the count, find an example
+	// game = _collectCardsTillAceToDeck(game); // optimization (less to move later)
 	const acesToTry = game.cards.filter(
 		(card) => card.rank === 'ace' && card.location.fixture === 'cascade'
 	);
@@ -75,14 +71,7 @@ function canFlourish(game: FreeCell): Card[] {
 		}
 	});
 
-	return aces
-		.filter((card) => !exclude.has(card.suit))
-		.sort((a, b) => {
-			// sort by suit (low to high)
-			const sa = getSuitForCompare(a.suit);
-			const sb = getSuitForCompare(b.suit);
-			return sa - sb;
-		});
+	return aces.filter((card) => !exclude.has(card.suit)).sort(_sortAces);
 }
 
 /**
@@ -96,15 +85,16 @@ function canFlourish52(game: FreeCell): Card[] {
 	if (game.foundations.some((card) => !!card)) return [];
 	if (
 		!SuitList.every(
-			(suit) => findCard(game.cards, { suit, rank: 'ace' }).location.fixture === 'cascade'
+			(suit) =>
+				/* aces are first in the list, so findCard will return quickly */
+				findCard(game.cards, { suit, rank: 'ace' }).location.fixture ===
+				/* all aces must be in the tableau */
+				'cascade'
 		)
 	) {
 		return [];
 	}
 
-	// if any aces exposed at start, is there a single move we can make to win the game?
-	//  - it needs to be able to flourish immediately
-	//  - really, just try _any_ available move?
 	const danglingAces: Card[] = [];
 	game.tableau.forEach((cascade) => {
 		const last_card = cascade.at(-1);
@@ -113,15 +103,12 @@ function canFlourish52(game: FreeCell): Card[] {
 		}
 	});
 	if (danglingAces.length) {
-		// if there are any, then this is the only way to 52 flourish
-		return danglingAces
-			.filter((danglingAce) => game.$selectCard(danglingAce).touchByPosition('h').win)
-			.sort((a, b) => {
-				// sort by suit (low to high)
-				const sa = getSuitForCompare(a.suit);
-				const sb = getSuitForCompare(b.suit);
-				return sa - sb;
-			});
+		// if any aces exposed at start, then any of them will do
+		if (game.$selectCard(danglingAces[0]).touchByPosition('h').win) {
+			return danglingAces.sort(_sortAces);
+		} else {
+			return [];
+		}
 	}
 
 	game = _collectCellsToDeck(game);
@@ -130,9 +117,9 @@ function canFlourish52(game: FreeCell): Card[] {
 	const selectionsToTry: CardSequence[] = [];
 	const emptyPositions: CardLocation[] = [];
 	for (let c_idx = 0; c_idx < game.tableau.length; c_idx++) {
-		const s = game.touchByPosition(
-			shorthandPosition({ fixture: 'cascade', data: [c_idx, 0] })
-		).selection;
+		const s = game
+			.setCursor({ fixture: 'cascade', data: [c_idx, BOTTOM_OF_CASCADE] })
+			.touch().selection;
 		if (s) {
 			selectionsToTry.push(s);
 		} else {
@@ -143,20 +130,13 @@ function canFlourish52(game: FreeCell): Card[] {
 	if (selectionsToTry.length === 0) return [];
 	if (emptyPositions.length < SuitList.length) return [];
 
-	// XXX (optimize) we could unshuffle deck once, but it's built into `_spreadDeckToEmptyPositions`
-	// sortCardsBySuitAndRank(game.deck);
+	sortCardsBySuitAndRank(game.deck);
+	game = _spreadDeckToEmptyPositions(game, emptyPositions);
 
 	const aces: Card[] = [];
 	selectionsToTry.forEach((selectionToTry) => {
-		let g = game;
-
-		// put deck on board, split by suit
-		g = _spreadDeckToEmptyPositions(g, emptyPositions);
-
 		// try the move
-		g = g.$touchAndMove(selectionToTry.location);
-
-		if (g.win) {
+		if (game.$touchAndMove(selectionToTry.location).win) {
 			// return the ace
 			const [d0, d1] = selectionToTry.location.data;
 			const card = game.tableau[d0].at(d1 - 1);
@@ -167,13 +147,7 @@ function canFlourish52(game: FreeCell): Card[] {
 		}
 	});
 
-	aces.sort((a, b) => {
-		// sort by suit (low to high)
-		const sa = getSuitForCompare(a.suit);
-		const sb = getSuitForCompare(b.suit);
-		return sa - sb;
-	});
-	return aces;
+	return aces.sort(_sortAces);
 }
 
 export function _collectCellsToDeck(game: FreeCell): FreeCell {
@@ -241,6 +215,7 @@ export function _organizeCardsExcept(game: FreeCell, card: Card) {
 			emptyPositions.push({ fixture: 'cascade', data: [d0, 0] });
 		}
 	}
+	sortCardsBySuitAndRank(game.deck);
 	game = _spreadDeckToEmptyPositions(game, emptyPositions);
 
 	return game;
@@ -275,7 +250,7 @@ export function _collectCardsTillAceToDeck(game: FreeCell): FreeCell {
 
 function _spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLocation[]): FreeCell {
 	// unshuffle deck
-	sortCardsBySuitAndRank(g.deck);
+	// sortCardsBySuitAndRank(g.deck);
 
 	// put deck on board, split by suit
 	emptyPositions.forEach((emptyPosition) => {
@@ -294,6 +269,13 @@ function _spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLocation[]
 	});
 
 	return g;
+}
+
+function _sortAces(a: Card, b: Card) {
+	// sort by suit (low to high)
+	const sa = getSuitForCompare(a.suit);
+	const sb = getSuitForCompare(b.suit);
+	return sa - sb;
 }
 
 /**
