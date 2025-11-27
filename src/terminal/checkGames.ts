@@ -15,15 +15,15 @@ for (let seed = 1; seed <= 32000; seed++) {
 	const game = new FreeCell().shuffle32(seed).dealAll();
 
 	// canFlourish is about as fast as it can be
-	//  - this takes 33 seconds
+	//  - this takes 33 seconds (60s → 33s)
+	//  - this takes 12 minutes as a unit test (¿24 minutes? → 730s)
 	if (juice.canFlourish(game).length) {
 		flourishCount++;
 	}
 
 	// canFlourish52 is about as fast as it can be
-	//  - this took 3 minutes as a unit test
-	//  - this takes 4.5 seconds
-	// FIXME ∴ when benchmarking, do this as a unit test
+	//  - this takes 4.5 seconds (10s → 4.5s)
+	//  - this takes 94 seconds as a unit test (3 minutes → 94s)
 	const aces = juice.canFlourish52(game);
 	// const aces = [];
 

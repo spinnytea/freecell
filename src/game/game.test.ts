@@ -659,6 +659,7 @@ describe('game', () => {
 	});
 
 	// TODO (techdebt) (animation) For all these completed games, also make an "animation" version
+	// FIXME game that is flourish but not flourish52
 	describe('complete games', () => {
 		test('Game #1', () => {
 			let game = new FreeCell().shuffle32(1).dealAll();

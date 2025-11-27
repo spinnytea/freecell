@@ -170,12 +170,6 @@ export function foundationCanAcceptCards(
 	limit: AutoFoundationLimit
 ): boolean {
 	if (!(index in game.foundations)) return false;
-	if (
-		game.selection?.location.fixture === 'foundation' &&
-		game.selection.location.data[0] === index
-	) {
-		return false;
-	}
 
 	const card = game.foundations[index];
 	if (!card) return true; // empty can always accept an ace
@@ -223,6 +217,10 @@ export function canStackFoundation(
 	moving_card: Card,
 	laxAdjacent = false
 ): boolean {
+	if (moving_card.location.fixture === 'foundation') {
+		return false;
+	}
+
 	if (!foundation_card && moving_card.rank === 'ace') {
 		return true;
 	} else if (
@@ -545,6 +543,65 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 	}
 
 	return cards;
+}
+
+export function autoFoundationCards(
+	game: FreeCell,
+	limit: AutoFoundationLimit
+): { cards: Card[]; moved: Card[] } {
+	game = game.__copy();
+	const moved: Card[] = [];
+
+	// keep going as long as we move cards
+	let keepGoing = true;
+	while (keepGoing) {
+		keepGoing = false;
+
+		// try every foundation again
+		for (let f_idx = 0; f_idx < game.foundations.length; f_idx++) {
+			const f_card = game.foundations[f_idx];
+			let canAccept = foundationCanAcceptCards(game, f_idx, limit);
+
+			// try cells
+			if (canAccept) {
+				for (const c_card of game.cells) {
+					if (c_card && canStackFoundation(f_card, c_card)) {
+						moved.push({ ...c_card });
+						game.cells[c_card.location.data[0]] = null;
+						c_card.location = {
+							fixture: 'foundation',
+							data: [f_idx],
+						};
+						game.foundations[f_idx] = c_card;
+						keepGoing = true;
+						canAccept = false;
+						break;
+					}
+				}
+			}
+
+			// try last card in each cascade
+			if (canAccept) {
+				for (const cascade of game.tableau) {
+					const c_card = cascade.at(-1);
+					if (c_card && canStackFoundation(f_card, c_card)) {
+						moved.push({ ...c_card });
+						game.tableau[c_card.location.data[0]].pop();
+						c_card.location = {
+							fixture: 'foundation',
+							data: [f_idx],
+						};
+						game.foundations[f_idx] = c_card;
+						keepGoing = true;
+						canAccept = false;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	return { cards: game.cards, moved };
 }
 
 /* ************* */

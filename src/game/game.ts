@@ -34,15 +34,14 @@ import {
 import { juice } from '@/game/move/juice';
 import { KeyboardArrowDirection, moveCursorWithBasicArrows } from '@/game/move/keyboard';
 import {
+	autoFoundationCards,
 	AutoFoundationLimit,
 	AvailableMove,
 	calcAutoFoundationActionText,
 	calcCursorActionText,
 	calcMoveActionText,
-	canStackFoundation,
 	countEmptyFoundations,
 	findAvailableMoves,
-	foundationCanAcceptCards,
 	moveCards,
 	parseShorthandMove,
 	parseShorthandPositionForMove,
@@ -138,14 +137,17 @@ export class FreeCell {
 	readonly win: boolean;
 
 	// REVIEW (techdebt) is this the best way to check? do we need it for other things?
+	// FIXME test `move … (flourish …)` and just `flourish …`
 	get winIsFlourish(): boolean {
 		if (!this.win) return false;
 		// TODO (move-flourish) move-flourish or auto-flourish
 		return this.previousAction.text.includes('flourish');
 	}
-	// REVIEW (techdebt) this is _not_ the best way to check this
+	// FIXME (techdebt) this is _not_ the best way to check this
 	//  - like, _yes_ `move xx xx→xx (flourish xx xx,xx)`
 	//  - but like, also, _NnNoOoOo_
+	// FIXME `move xx xx→xx (flourish52 xx xx,xx)`
+	// FIXME test `move … (flourish52 …)` and just `flourish52 …`
 	get winIsFlourish52(): boolean {
 		if (!this.win) return false;
 		const idx = this.previousAction.text.indexOf('(');
@@ -574,19 +576,12 @@ export class FreeCell {
 	}
 
 	/**
-		FIXME break this down into `autoFoundation()`, and keep a `autoFoundationAll()` for testing
+		Started as a separate action you could take,
+		but it's inherrent to the standard gameplay move notation.
+		Now this is called automatically after moves.
+
 		REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
 		 - historyIsInvalidAtIdx?
-		FIXME (flourish-anim) (refactor) elephant in the room: this is what takes so long
-		 - the real problem is: all of these helper functions rely on complete game state
-		 - that we make a new game after having moved each card
-		 - ---
-		 - it was implemented this way on purpose, to rely on all the functions we need to standard gameplay
-		 - but … uhm … {@link canStackFoundation} is the only one
-		 - cuz {@link foundationCanAcceptCards} is specifically "can we do auto-foundation on this foundation, given the limits"
-	    - ---
-		 - implement this as a function in `move` instead, like `autoFoundation` or something
-		 - like {@link moveCards}, have it act on the cards themselves instead of the game board
 	*/
 	autoFoundationAll({
 		limit = 'opp+1',
@@ -597,106 +592,25 @@ export class FreeCell {
 	} = {}): FreeCell | this {
 		// should only do auto-foundation after a card moves
 		// e.g. don't auto-foundation just because we select a card or move the cursor
+		// TODO (gameplay) (setting) autoFoundation "only after [any] move" vs "only after move to foundation"
 		if (!anytime && this.previousAction.type !== 'move') {
 			return this;
 		}
 
-		// TODO (techdebt) replace `const game = this.__clone({})` with `return this.__clone({})`
-		let game = this.__clone({
-			action: {
-				text: 'invalid auto-foundation setup',
-				type: 'invalid',
-				gameFunction: 'auto-foundation-tween',
-			},
-		});
-		const moved: Card[] = [];
+		const { moved, cards } = autoFoundationCards(this, limit);
 
-		// TODO (gameplay) (setting) autoFoundation "only after [any] move" vs "only after move to foundation"
-
-		let keepGoing = true; // keep going as long as we move cards
-		while (keepGoing) {
-			keepGoing = false;
-
-			for (let f_idx = 0; f_idx < game.foundations.length; f_idx++) {
-				const f_card = game.foundations[f_idx];
-				let canAccept = foundationCanAcceptCards(game, f_idx, limit);
-
-				// try cells
-				if (canAccept) {
-					for (let c_idx = 0; c_idx < game.cells.length; c_idx++) {
-						const c_card = game.cells[c_idx];
-						if (canAccept) {
-							const canMoveToFoundation =
-								c_card &&
-								canStackFoundation(f_card, c_card) &&
-								!game.selection?.cards.includes(c_card);
-							if (canMoveToFoundation) {
-								canAccept = false;
-								keepGoing = true;
-								const cards = moveCards(
-									game,
-									getSequenceAt(game, { fixture: 'cell', data: [c_idx] }),
-									{
-										fixture: 'foundation',
-										data: [f_idx],
-									}
-								);
-								game = game.__clone({
-									action: {
-										text: 'invalid auto-foundation middle',
-										type: 'invalid',
-										gameFunction: 'auto-foundation-tween',
-									},
-									cards,
-								});
-								moved.push(c_card);
-							}
-						}
-					}
-				}
-
-				// try last card in each cascade
-				if (canAccept) {
-					for (let c_idx = 0; c_idx < game.tableau.length; c_idx++) {
-						const cascade = game.tableau[c_idx];
-						const last_idx = cascade.length - 1;
-						if (canAccept && cascade.length > 0) {
-							const c_card = cascade[last_idx];
-							const canMoveToFoundation =
-								canStackFoundation(f_card, c_card) && !game.selection?.cards.includes(c_card);
-							if (canMoveToFoundation) {
-								canAccept = false;
-								keepGoing = true;
-								const cards = moveCards(
-									game,
-									getSequenceAt(game, { fixture: 'cascade', data: [c_idx, last_idx] }),
-									{
-										fixture: 'foundation',
-										data: [f_idx],
-									}
-								);
-								game = game.__clone({
-									action: {
-										text: 'invalid auto-foundation middle',
-										type: 'invalid',
-										gameFunction: 'auto-foundation-tween',
-									},
-									cards,
-								});
-								moved.push(c_card);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		// XXX (techdebt) can we write this function in a way that doesn't confuse typescript?
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (moved.length) {
-			const isFlourish = game.win && countEmptyFoundations(this) > 0;
-			return game.__clone({
+			// REVIEW (joker) where do they need to be? anywhere, i guess
+			//  - do they get stacked onto king?
+			//  - if they are "low", then that doesn't make sense
+			const win = cards.every((card) => card.location.fixture === 'foundation');
+			const isFlourish = win && countEmptyFoundations(this) > 0;
+			// FIXME flourish52
+			return this.__clone({
 				action: { text: calcAutoFoundationActionText(moved, isFlourish), type: 'auto-foundation' },
+				cards,
+				selection: null,
+				availableMoves: null,
 			});
 		}
 

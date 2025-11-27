@@ -1,4 +1,5 @@
 import { findCard, parseShorthandCard } from '@/game/card/card';
+import { getSeedsByTag } from '@/game/catalog/difficulty-catalog';
 import { FreeCell } from '@/game/game';
 import {
 	_organizeCardsExcept,
@@ -469,6 +470,43 @@ describe('move.juice', () => {
 		});
 
 		// XXX (techdebt) 'could flourish, but not all cards dealt' … what?
+	});
+
+	describe('checkGames', () => {
+		// XXX (benchmark) juice.canFlourish:  730 seconds (12 minutes)
+		// eslint-disable-next-line jest/no-disabled-tests
+		test.skip('canFlourish', () => {
+			// const flourishSeeds: number[] = [];
+			let flourishCount = 0;
+			for (let seed = 1; seed <= 32000; seed++) {
+				const game = new FreeCell().shuffle32(seed).dealAll();
+				const aces = juice.canFlourish(game);
+				if (aces.length) {
+					// flourishSeeds.push(seed);
+					flourishCount++;
+				}
+			}
+
+			// expect(flourishSeeds).toMatchSnapshot();
+			expect(flourishCount).toBe(28843);
+		});
+
+		// XXX (benchmark) juice.canFlourish52: 94 seconds
+		// eslint-disable-next-line jest/no-disabled-tests
+		test.skip('canFlourish52', () => {
+			const catalogSeeds = getSeedsByTag('canFlourish52');
+
+			const flourish52Seeds: number[] = [];
+			for (let seed = 1; seed <= 32000; seed++) {
+				const game = new FreeCell().shuffle32(seed).dealAll();
+				const aces = juice.canFlourish52(game);
+				if (aces.length) {
+					flourish52Seeds.push(seed);
+				}
+			}
+
+			expect(flourish52Seeds).toEqual(catalogSeeds);
+		});
 	});
 
 	describe('_organizeCardsExcept', () => {
