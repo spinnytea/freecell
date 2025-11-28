@@ -36,26 +36,11 @@
 	--felt--charcoal: rgb(53, 52, 58);
 	--felt--aztec: rgb(131, 75, 36);
 	--felt--brick: rgb(108, 50, 43);
-	--felt--selected: var(--felt--basic-green);
-}
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		/* TODO (theme) dark text should be based on --felt--selected */
-		/* --foreground-rgb: 33, 33, 33; */
-		--foreground-rgb: 212, 212, 212;
-		--background-glow: radial-gradient(
-			circle at center,
-			transparent 0,
-			#00000020 80%,
-			#00000040 100%
-		);
-
-		/* IDEA (theme) pile colors could be based on --felt--selected */
-		--pile-rgb: 130, 130, 130;
-
-		--felt--selected: var(--felt--bottle-green);
-	}
+	/* REVIEW (hud) (theme) which color is best? maybe pick at random on load? */
+	/* --felt--selected: var(--felt--electric-blue); */
+	/* --felt--selected: var(--felt--championship-green); */
+	--felt--selected: var(--felt--wine);
 }
 
 * {

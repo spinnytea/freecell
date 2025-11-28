@@ -34,10 +34,10 @@ describe('game/history.parsePreviousActionType', () => {
 			${'cursor left'}                              | ${{ text: 'cursor left', type: 'cursor' }}
 			${'cursor down'}                              | ${{ text: 'cursor down', type: 'cursor' }}
 			${'cursor right'}                             | ${{ text: 'cursor right', type: 'cursor' }}
-			${'cursor up w'}                              | ${{ text: 'cursor up w', type: 'cursor' }}
-			${'cursor left w'}                            | ${{ text: 'cursor left w', type: 'cursor' }}
-			${'cursor down w'}                            | ${{ text: 'cursor down w', type: 'cursor' }}
-			${'cursor right w'}                           | ${{ text: 'cursor right w', type: 'cursor' }}
+			${'cursor up wrap'}                           | ${{ text: 'cursor up wrap', type: 'cursor' }}
+			${'cursor left wrap'}                         | ${{ text: 'cursor left wrap', type: 'cursor' }}
+			${'cursor down wrap'}                         | ${{ text: 'cursor down wrap', type: 'cursor' }}
+			${'cursor right wrap'}                        | ${{ text: 'cursor right wrap', type: 'cursor' }}
 			${'cursor stop'}                              | ${{ text: 'cursor stop', type: 'cursor' }}
 			${'cursor stop KH'}                           | ${{ text: 'cursor stop KH', type: 'cursor' }}
 			${'cursor stop b'}                            | ${{ text: 'cursor stop b', type: 'cursor' }}
@@ -82,18 +82,14 @@ describe('game/history.parsePreviousActionType', () => {
 			actionText                   | previousAction
 			${'invalid move bk 6C→deck'} | ${{ text: 'invalid move bk 6C→deck', type: 'invalid', gameFunction: 'recall-or-bury' }}
 			${'invalid move 4k 6D→6H'}   | ${{ text: 'invalid move 4k 6D→6H', type: 'invalid', gameFunction: 'recall-or-bury' }}
+			${'invalid undo tween'}      | ${{ text: 'invalid undo tween', type: 'invalid', gameFunction: 'undo' }}
 			${'juice flash AH,AS'}       | ${{ text: 'juice flash AH,AS', type: 'juice', gameFunction: 'check-can-flourish' }}
-			${'juice flash *AS*'}        | ${{ text: 'juice flash *AS*', type: 'juice', gameFunction: 'check-can-flourish-52' }}
+			${'juice flash *AS*'}        | ${{ text: 'juice flash *AS*', type: 'juice', gameFunction: 'check-can-flourish52' }}
 		`(
 			'$actionText',
 			({ actionText, previousAction }: { actionText: string; previousAction: PreviousAction }) => {
 				expect(parsePreviousActionType(actionText)).toEqual(previousAction);
 			}
 		);
-	});
-
-	// XXX (techdebt) i.e. FreeCell.parse
-	describe('examples', () => {
-		test.todo('auto-foundation-tween');
 	});
 });

@@ -7,7 +7,7 @@ import { calcCursorActionText } from '@/game/move/move';
 export type KeyboardArrowDirection = 'up' | 'right' | 'left' | 'down';
 
 // TODO (controls) actually play the game and see what's not quite right
-//  - "up w" and "down w" to cascade should move to the "first card of the last sequence"
+//  - "up wrap" and "down wrap" to cascade should move to the "first card of the last sequence"
 //  - move to the bottom card, then "cast upwards" while the cards can stack
 export function moveCursorWithBasicArrows(
 	game: FreeCell,
@@ -25,7 +25,7 @@ export function moveCursorWithBasicArrows(
 				case 'left':
 					if (d0 <= 0)
 						return {
-							action: { text: 'cursor left w', type: 'cursor' },
+							action: { text: 'cursor left wrap', type: 'cursor' },
 							cursor: { fixture: 'foundation', data: [game.foundations.length - 1] },
 						};
 					return {
@@ -35,7 +35,7 @@ export function moveCursorWithBasicArrows(
 				case 'right': {
 					if (d0 >= game.cells.length - 1)
 						return {
-							action: { text: 'cursor right w', type: 'cursor' },
+							action: { text: 'cursor right wrap', type: 'cursor' },
 							cursor: { fixture: 'foundation', data: [0] },
 						};
 					return {
@@ -45,7 +45,7 @@ export function moveCursorWithBasicArrows(
 				}
 				case 'down':
 					return {
-						action: { text: 'cursor down w', type: 'cursor' },
+						action: { text: 'cursor down wrap', type: 'cursor' },
 						cursor: { fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] },
 					};
 			}
@@ -57,7 +57,7 @@ export function moveCursorWithBasicArrows(
 				case 'left':
 					if (d0 <= 0)
 						return {
-							action: { text: 'cursor left w', type: 'cursor' },
+							action: { text: 'cursor left wrap', type: 'cursor' },
 							cursor: { fixture: 'cell', data: [game.cells.length - 1] },
 						};
 					return {
@@ -67,7 +67,7 @@ export function moveCursorWithBasicArrows(
 				case 'right': {
 					if (d0 >= game.foundations.length - 1)
 						return {
-							action: { text: 'cursor right w', type: 'cursor' },
+							action: { text: 'cursor right wrap', type: 'cursor' },
 							cursor: { fixture: 'cell', data: [0] },
 						};
 					return {
@@ -77,7 +77,7 @@ export function moveCursorWithBasicArrows(
 				}
 				case 'down':
 					return {
-						action: { text: 'cursor down w', type: 'cursor' },
+						action: { text: 'cursor down wrap', type: 'cursor' },
 						cursor: {
 							fixture: 'cascade',
 							data: [game.tableau.length - game.foundations.length + d0, BOTTOM_OF_CASCADE],
@@ -93,13 +93,13 @@ export function moveCursorWithBasicArrows(
 						//  0123   4567   89ab      01234567   89ab
 						if (d0 < game.cells.length) {
 							return {
-								action: { text: 'cursor up w', type: 'cursor' },
+								action: { text: 'cursor up wrap', type: 'cursor' },
 								cursor: { fixture: 'cell', data: [d0] },
 							};
 						}
 						if (game.tableau.length - 1 - d0 < game.foundations.length) {
 							return {
-								action: { text: 'cursor up w', type: 'cursor' },
+								action: { text: 'cursor up wrap', type: 'cursor' },
 								cursor: {
 									fixture: 'foundation',
 									data: [game.foundations.length - (game.tableau.length - d0)],
@@ -109,14 +109,14 @@ export function moveCursorWithBasicArrows(
 						if (d0 === game.cells.length) {
 							// wrap the one (cut the corner)
 							return {
-								action: { text: 'cursor up w', type: 'cursor' },
+								action: { text: 'cursor up wrap', type: 'cursor' },
 								cursor: { fixture: 'cell', data: [d0 - 1] },
 							};
 						}
 						if (game.tableau.length - 1 - d0 === game.foundations.length) {
 							// wrap the one (cut the corner)
 							return {
-								action: { text: 'cursor up w', type: 'cursor' },
+								action: { text: 'cursor up wrap', type: 'cursor' },
 								cursor: { fixture: 'foundation', data: [0] },
 							};
 						}
@@ -133,7 +133,7 @@ export function moveCursorWithBasicArrows(
 					// if d1 is too large, it will be fixed with __clampCursor
 					if (d0 <= 0)
 						return {
-							action: { text: 'cursor left w', type: 'cursor' },
+							action: { text: 'cursor left wrap', type: 'cursor' },
 							cursor: { fixture: 'cascade', data: [game.tableau.length - 1, d1] },
 						};
 					return {
@@ -144,7 +144,7 @@ export function moveCursorWithBasicArrows(
 					// if d1 is too large, it will be fixed with __clampCursor
 					if (d0 >= game.tableau.length - 1)
 						return {
-							action: { text: 'cursor right w', type: 'cursor' },
+							action: { text: 'cursor right wrap', type: 'cursor' },
 							cursor: { fixture: 'cascade', data: [0, d1] },
 						};
 					return {
@@ -156,7 +156,7 @@ export function moveCursorWithBasicArrows(
 						if (game.deck.length) {
 							// deck is rendered in reverse
 							return {
-								action: { text: 'cursor down w', type: 'cursor' },
+								action: { text: 'cursor down wrap', type: 'cursor' },
 								cursor: { fixture: 'deck', data: [game.deck.length - 1 - d0] },
 							};
 						}
@@ -176,7 +176,7 @@ export function moveCursorWithBasicArrows(
 					// REVIEW (controls) spread up/down between cascade and deck?
 					//  - i.e. use the cascade to jump multiple cards in the deck
 					return {
-						action: { text: 'cursor up w', type: 'cursor' },
+						action: { text: 'cursor up wrap', type: 'cursor' },
 						cursor: {
 							fixture: 'cascade',
 							data: [Math.max(game.deck.length - 1, 0) - d0, BOTTOM_OF_CASCADE],
@@ -186,7 +186,7 @@ export function moveCursorWithBasicArrows(
 					// left and right are reversed in the deck
 					if (d0 === game.deck.length - 1 || game.deck.length === 0) {
 						return {
-							action: { text: 'cursor left w', type: 'cursor' },
+							action: { text: 'cursor left wrap', type: 'cursor' },
 							cursor: { fixture, data: [0] },
 						};
 					}
@@ -198,13 +198,13 @@ export function moveCursorWithBasicArrows(
 					// left and right are reversed in the deck
 					if (game.deck.length === 0) {
 						return {
-							action: { text: 'cursor right w', type: 'cursor' },
+							action: { text: 'cursor right wrap', type: 'cursor' },
 							cursor: { fixture, data: [0] },
 						};
 					}
 					if (d0 === 0) {
 						return {
-							action: { text: 'cursor right w', type: 'cursor' },
+							action: { text: 'cursor right wrap', type: 'cursor' },
 							cursor: { fixture, data: [game.deck.length - 1] },
 						};
 					}

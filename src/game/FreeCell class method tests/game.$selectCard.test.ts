@@ -86,6 +86,9 @@ describe('game.$selectCard', () => {
 					'                         \n' +
 					' move 1h AS→foundation (flourish 523467812345678123456781234567812345678123456781234 2S,AH,AD,AC,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)'
 			);
+			expect(game.win).toBe(true);
+			expect(game.winIsFlourish).toBe(true);
+			expect(game.winIsFlourish52).toBe(false); // first to moves are 52, not because it's a flourish52, lol
 			game = game.$selectCard('AH', { allowSelectFoundation: true });
 			expect(game.print()).toBe(
 				'' + //

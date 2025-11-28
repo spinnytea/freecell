@@ -68,7 +68,7 @@ describe('game.undo (+ history)', () => {
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' move 3b 8S→cell (flourish 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)';
+					' move 3b 8S→cell (flourish52 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)';
 				expect(FreeCell.parse(gamePrint).undo().print()).toBe(
 					'' + //
 						'>7H       2C             \n' +
@@ -256,7 +256,7 @@ describe('game.undo (+ history)', () => {
 					'' + //
 						' KC QC       JC KD KH>KS \n' +
 						'                         \n' +
-						' cursor left w'
+						' cursor left wrap'
 				);
 				expect(game.print({ includeHistory: true })).toBe(
 					'' + //
@@ -1023,6 +1023,9 @@ describe('game.undo (+ history)', () => {
 					'auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS',
 				]);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
+				expect(game.win).toBe(true);
+				expect(game.winIsFlourish).toBe(false);
+				expect(game.winIsFlourish52).toBe(false);
 
 				game = game.undo();
 				expect(game.print({ includeHistory: true })).toBe(
@@ -1081,6 +1084,9 @@ describe('game.undo (+ history)', () => {
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 				expect(game.selection).toEqual(null);
 				expect(game.availableMoves).toEqual(null);
+				expect(game.win).toBe(true);
+				expect(game.winIsFlourish).toBe(true);
+				expect(game.winIsFlourish52).toBe(false);
 
 				game = game.undo();
 				expect(game.print({ includeHistory: true })).toEqual(
@@ -1129,20 +1135,23 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +
-						' flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC\n' +
+						' flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC\n' +
 						' move 46 AC→2H\n' +
 						' deal all cards'
 				);
 				expect(game.previousAction).toEqual({
-					text: 'flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC',
+					text: 'flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC',
 					type: 'auto-foundation',
 				});
 				expect(game.history).toEqual([
 					'deal all cards',
 					'move 46 AC→2H',
-					'flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC',
+					'flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC',
 				]);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
+				expect(game.win).toBe(true);
+				expect(game.winIsFlourish).toBe(true);
+				expect(game.winIsFlourish52).toBe(true);
 
 				game = game.undo();
 				expect(game.print({ includeHistory: true })).toEqual(
@@ -1330,11 +1339,11 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +
-						' move 46 AC→2H (flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)\n' +
+						' move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)\n' +
 						' deal all cards'
 				);
 				expect(game.previousAction).toEqual({
-					text: 'move 46 AC→2H (flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
+					text: 'move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
 					type: 'move-foundation',
 					tweenCards: [
 						{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [5, 6] } },
@@ -1342,7 +1351,7 @@ describe('game.undo (+ history)', () => {
 				});
 				expect(game.history).toEqual([
 					'deal all cards',
-					'move 46 AC→2H (flourish 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
+					'move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
 				]);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 

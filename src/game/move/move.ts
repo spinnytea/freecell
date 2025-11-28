@@ -30,24 +30,6 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 // IDEA (controls) Prioritize moving cards to a completed sequence
 //  - (when the root of it is at the top of a column)
 //  - (unless we are breaking a sequence??)
-/*
-TODO (controls) More control over where next card moves (i.e. cannot move to foundation if multiple valid moves)
- - which is really because click-to-move is the only available control scheme on mobile
- - this is solved with click-to-select, any keyboard, and drag-and-drop
- - Can't put 3D in the foundation, it just waffles between 4S and 4C
- 9C KC 8S 4D AC 2H 2D
- AS KD 2C 7C 6S 7D 9H JC
- 3H QC 7H 6H 5D TC TH 3C
- 8H JD QH    4S TD 9S JS
- KH TS 2S          8D 5S
- QS 9D QD          7S KS
-    8C JH          6D
-       6C          5C
-       5H          4H
-      >4C          3S
-       3D
- move 53 3D→4C
-*/
 
 /**
 	higher priorities take precidence
@@ -241,6 +223,10 @@ export function canStackFoundation(
 	moving_card: Card,
 	laxAdjacent = false
 ): boolean {
+	if (moving_card.location.fixture === 'foundation') {
+		return false;
+	}
+
 	if (!foundation_card && moving_card.rank === 'ace') {
 		return true;
 	} else if (
@@ -565,6 +551,69 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 	return cards;
 }
 
+export function autoFoundationCards(
+	game: FreeCell,
+	limit: AutoFoundationLimit
+): { cards: Card[]; moved: Card[] } {
+	game = game.__copy();
+	const moved: Card[] = [];
+
+	// keep going as long as we move cards
+	let keepGoing = true;
+	while (keepGoing) {
+		keepGoing = false;
+
+		// try every foundation again
+		for (let f_idx = 0; f_idx < game.foundations.length; f_idx++) {
+			const f_card = game.foundations[f_idx];
+			let canAccept = foundationCanAcceptCards(game, f_idx, limit);
+
+			// try cells
+			if (canAccept) {
+				for (const c_card of game.cells) {
+					const canMoveCellToFoundation =
+						c_card && canStackFoundation(f_card, c_card) && !game.selection?.cards.includes(c_card);
+					if (canMoveCellToFoundation) {
+						moved.push({ ...c_card });
+						game.cells[c_card.location.data[0]] = null;
+						c_card.location = {
+							fixture: 'foundation',
+							data: [f_idx],
+						};
+						game.foundations[f_idx] = c_card;
+						keepGoing = true;
+						canAccept = false;
+						break;
+					}
+				}
+			}
+
+			// try last card in each cascade
+			if (canAccept) {
+				for (const cascade of game.tableau) {
+					const c_card = cascade.at(-1);
+					const canMoveCascadeToFoundation =
+						c_card && canStackFoundation(f_card, c_card) && !game.selection?.cards.includes(c_card);
+					if (canMoveCascadeToFoundation) {
+						moved.push({ ...c_card });
+						game.tableau[c_card.location.data[0]].pop();
+						c_card.location = {
+							fixture: 'foundation',
+							data: [f_idx],
+						};
+						game.foundations[f_idx] = c_card;
+						keepGoing = true;
+						canAccept = false;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	return { cards: game.cards, moved };
+}
+
 /* ************* */
 /* PRINT / PARSE */
 /* ************* */
@@ -578,10 +627,14 @@ export function calcMoveActionText(from: CardSequence, to: CardSequence): string
 	return `move ${shorthandMove} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`;
 }
 
-export function calcAutoFoundationActionText(moved: Card[], isFlourish: boolean): string {
+export function calcAutoFoundationActionText(
+	moved: Card[],
+	isFlourish: boolean,
+	isFlourish52: boolean
+): string {
 	const movedCardsStr = moved.map((card) => shorthandCard(card)).join(',');
 	const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
-	const firstWord = isFlourish ? 'flourish' : 'auto-foundation';
+	const firstWord = isFlourish52 ? 'flourish52' : isFlourish ? 'flourish' : 'auto-foundation';
 	return `${firstWord} ${movedPositionsStr} ${movedCardsStr}`;
 }
 

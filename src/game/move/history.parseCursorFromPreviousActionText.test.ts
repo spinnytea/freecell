@@ -63,10 +63,10 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'cursor left'}                              | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor down'}                              | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor right'}                             | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor up w'}                              | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor left w'}                            | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor down w'}                            | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor right w'}                           | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor up wrap'}                           | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor left wrap'}                         | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor down wrap'}                         | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor right wrap'}                        | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor stop'}                              | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor stop KH'}                           | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${undefined}
 			${'cursor stop b'}                            | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${undefined}
@@ -127,11 +127,13 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 
 	describe('other cases', () => {
 		test.each`
-			actionText                   | cards | after                             | before
-			${'invalid move bk 6C→deck'} | ${[]} | ${{ fixture: 'deck', data: [0] }} | ${{ fixture: 'cell', data: [1] }}
-			${'invalid move 4k 6D→6H'}   | ${[]} | ${{ fixture: 'deck', data: [0] }} | ${{ fixture: 'cascade', data: [3, 99] }}
-			${'juice flash AH,AS'}       | ${[]} | ${{ fixture: 'cell', data: [0] }} | ${{ fixture: 'cell', data: [0] }}
-			${'juice flash *AS*'}        | ${[]} | ${{ fixture: 'cell', data: [0] }} | ${{ fixture: 'cell', data: [0] }}
+			actionText                          | cards | after                             | before
+			${'invalid move bk 6C→deck'}        | ${[]} | ${{ fixture: 'deck', data: [0] }} | ${{ fixture: 'cell', data: [1] }}
+			${'invalid move 4k 6D→6H'}          | ${[]} | ${{ fixture: 'deck', data: [0] }} | ${{ fixture: 'cascade', data: [3, 99] }}
+			${'invalid auto-foundation setup'}  | ${[]} | ${undefined}                      | ${undefined}
+			${'invalid auto-foundation middle'} | ${[]} | ${undefined}                      | ${undefined}
+			${'juice flash AH,AS'}              | ${[]} | ${{ fixture: 'cell', data: [0] }} | ${{ fixture: 'cell', data: [0] }}
+			${'juice flash *AS*'}               | ${[]} | ${{ fixture: 'cell', data: [0] }} | ${{ fixture: 'cell', data: [0] }}
 		`(
 			'$actionText',
 			({
@@ -157,10 +159,5 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 				expect(canFindCursor || !canBeInHistory || isException).toBeTruthy();
 			}
 		);
-	});
-
-	// XXX (techdebt) i.e. FreeCell.parse
-	describe('examples', () => {
-		test.todo('auto-foundation-tween');
 	});
 });

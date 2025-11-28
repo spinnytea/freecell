@@ -46,7 +46,6 @@ export const domUtils = {
 	removeClass(elId: string, className: string) {
 		const el = document.getElementById(elId);
 		if (el) {
-			console.log('removeClass', elId, className);
 			el.classList.remove(className);
 		}
 	},

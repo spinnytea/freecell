@@ -14,7 +14,6 @@ import {
 import { FreeCell } from '@/game/game';
 import { moveCards } from '@/game/move/move';
 
-/** TODO (techdebt) remove auto-foundation-tween */
 export type PreviousActionType =
 	| 'init'
 	| 'shuffle'
@@ -23,14 +22,19 @@ export type PreviousActionType =
 	| 'select'
 	| 'deselect'
 	| 'move'
-	| 'move-foundation'
-	// | 'move-flourish' // TODO (move-flourish) move-flourish
-	| 'auto-foundation'
-	// | 'auto-flourish' // TODO (move-flourish) auto-flourish
+	| 'auto-foundation' // can be it's own history item, collapsed in standard gameplay
+	| 'move-foundation' // move + auto-foundation
 	| 'invalid'
-	| 'auto-foundation-tween'
 	| 'juice';
 
+/**
+	Does this action type change the positions of the cards?
+	Every piece of metadata within a game should change the hud in some way,
+	but these actions change the game board / game state.
+
+	Moving the cursor will produce a new {@link FreeCell},
+	but these actions change {@link FreeCell.cards} (and deck, cells, foundations, tableau).
+*/
 export const PREVIOUS_ACTION_TYPE_IN_HISTORY = new Set<PreviousActionType>([
 	'init',
 	'shuffle',
@@ -40,12 +44,17 @@ export const PREVIOUS_ACTION_TYPE_IN_HISTORY = new Set<PreviousActionType>([
 	'auto-foundation',
 ]);
 
+/**
+	Primarily for {@link GameFunction} of `undo` and `restart`.
+	These action types are effectively "game start."
+*/
 export const PREVIOUS_ACTION_TYPE_IS_START_OF_GAME = new Set<PreviousActionType>([
 	'init',
 	'shuffle',
 	'deal',
 ]);
 
+/** @deprecated XXX (techdebt) seems like a duplicate of {@link PREVIOUS_ACTION_TYPE_IN_HISTORY} */
 export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
 	'move',
 	'move-foundation',
@@ -58,12 +67,14 @@ export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
 	 - should we have a special animation for this?
 */
 export type GameFunction =
+	// user actions
 	| 'undo'
 	| 'restart'
 	| 'newGame'
 	| 'drag-drop'
+	// gameplay actions
 	| 'check-can-flourish'
-	| 'check-can-flourish-52'
+	| 'check-can-flourish52'
 	| 'recall-or-bury';
 
 export interface PreviousAction {
@@ -112,10 +123,11 @@ export interface PreviousAction {
 //  - if so, should we just _store_ that parsed info?
 //  - that said, having a regex/parser is needed for, say, parsing a history string and validation/testing
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
-const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (\S+)$/;
+const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish|flourish52) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
-	/^move (\w)(\w) ([\w-]+)→(\S+) \((auto-foundation|flourish) (\w+) (\S+)\)$/;
-const CURSOR_REGEX = /^cursor (set|up|left|down|right|stop)( w)?( [a-z0-9].?)?( [A-Z0-9][A-Z])?$/;
+	/^move (\w)(\w) ([\w-]+)→(\S+) \((auto-foundation|flourish|flourish52) (\w+) (\S+)\)$/;
+const CURSOR_REGEX =
+	/^cursor (set|up|left|down|right|stop)( wrap)?( [a-z0-9].?)?( [A-Z0-9][A-Z])?$/;
 const SELECT_REGEX = /^(de)?select( (\w))? ([\w-]+)$/;
 
 /**
@@ -157,7 +169,6 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 			// …how did this end up in the history in the first place?
 			return game.cards;
 		case 'invalid':
-		case 'auto-foundation-tween':
 			// silent failure
 			// these shouldn't be in the history in the first place
 			// canot undo past these (stuck with them in the history)
@@ -267,7 +278,6 @@ export function parseCursorFromPreviousActionText(
 			return undefined;
 		}
 		case 'auto-foundation':
-		case 'auto-foundation-tween':
 			return undefined;
 		case 'juice':
 			return { fixture: 'cell', data: [0] };
@@ -327,7 +337,6 @@ export function parseAltCursorFromPreviousActionText(
 			return undefined;
 		case 'cursor':
 		case 'auto-foundation':
-		case 'auto-foundation-tween':
 			return undefined;
 		case 'juice':
 			return { fixture: 'cell', data: [0] };
@@ -480,7 +489,7 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 function parseActionTextAutoFoundation(actionText: string) {
 	let match = AUTO_FOUNDATION_REGEX.exec(actionText);
 	if (match) {
-		// match[1] === 'auto-foundation' || match[1] === 'flourish'
+		// match[1] === 'auto-foundation' || match[1] === 'flourish' || match[1] === 'flourish52'
 		const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
 		const shorthands = match[3].split(',').map((s) => parseShorthandCard(s));
 		if (froms.length !== shorthands.length)
@@ -490,7 +499,7 @@ function parseActionTextAutoFoundation(actionText: string) {
 
 	match = MOVE_FOUNDATION_REGEX.exec(actionText);
 	if (match) {
-		// match[5] === 'auto-foundation' || match[5] === 'flourish'
+		// match[5] === 'auto-foundation' || match[5] === 'flourish' || match[5] === 'flourish52'
 		const froms = match[6].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
 		const shorthands = match[7].split(',').map((s) => parseShorthandCard(s));
 		if (froms.length !== shorthands.length)
@@ -534,39 +543,56 @@ function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 		}
 	}
 
-	// XXX (techdebt) can we remove this __clone? probably not…
+	// this is just connective glue because undoMove and moveCards both need a full `game`
+	// should not appear in print
 	return game.__clone({
-		action: { text: 'auto-foundation-setup', type: 'auto-foundation-tween' },
+		action: {
+			text: 'invalid undo tween',
+			type: 'invalid',
+			gameFunction: 'undo',
+		},
 		cards,
 	});
 }
 
+// XXX (techdebt) it's weird to change the `firstWord` of `actionText`
+//  - I keep coming back to this idea
+//  - specifically for flourish/flourish52 being an alias of auto-foundation
+//  - maybe `hand-jammed` should be `init hand-jammed`
+//  - maybe `touch stop` should be `invalid select`
 export function parsePreviousActionType(actionText: string): PreviousAction {
 	const firstWord = actionText.split(' ')[0];
 	// some abnormal cases where the firstWord does not match the type
 	if (firstWord === 'hand-jammed') return { text: actionText, type: 'init' };
 	if (firstWord === 'touch') return { text: actionText, type: 'invalid' };
+	if (firstWord === 'flourish52') return { text: actionText, type: 'auto-foundation' };
 	if (firstWord === 'flourish') return { text: actionText, type: 'auto-foundation' };
-	if (firstWord === 'move' && actionText.endsWith(')')) {
-		if (actionText.includes('auto-foundation')) {
+
+	// move + auto-foundation → move-foundation
+	if (firstWord === 'move' && actionText.at(-1) === ')') {
+		if (actionText.includes('(auto-foundation')) {
 			return { text: actionText, type: 'move-foundation' };
 		}
-		if (actionText.includes('flourish')) {
+		if (actionText.includes('(flourish52')) {
+			return { text: actionText, type: 'move-foundation' };
+		}
+		if (actionText.includes('(flourish')) {
 			return { text: actionText, type: 'move-foundation' };
 		}
 	}
 
-	// if (firstWord === 'auto-foundation-setup') return { text, type: 'auto-foundation-tween' }; // should not appear in print
-	// if (firstWord === 'auto-foundation-middle') return { text, type: 'auto-foundation-tween' }; // should not appear in print
 	const action: PreviousAction = { text: actionText, type: firstWord as PreviousActionType };
 
 	if (firstWord === 'invalid') {
-		if (/^invalid move \w?k\w?\b/.test(actionText)) {
+		if (/^invalid move (\wk|k\w) /.test(actionText)) {
 			action.gameFunction = 'recall-or-bury';
+		} else if (actionText.startsWith('invalid undo')) {
+			// should not appear in print
+			action.gameFunction = 'undo';
 		}
 	} else if (firstWord === 'juice') {
 		if (actionText.endsWith('*')) {
-			action.gameFunction = 'check-can-flourish-52';
+			action.gameFunction = 'check-can-flourish52';
 		} else {
 			action.gameFunction = 'check-can-flourish';
 		}
