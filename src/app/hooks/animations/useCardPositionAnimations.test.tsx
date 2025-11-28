@@ -531,11 +531,7 @@ describe('useCardPositionAnimations', () => {
 			});
 		});
 
-		test.todo('move-flourish');
-
 		test.todo('auto-foundation');
-
-		test.todo('auto-flourish');
 
 		describe('invalid', () => {
 			let gameStateOne: FreeCell;
@@ -960,7 +956,7 @@ describe('useCardPositionAnimations', () => {
 			describe('flash', () => {
 				test.todo('check-can-flourish');
 
-				test.todo('check-can-flourish-52');
+				test.todo('check-can-flourish52');
 			});
 		});
 	});

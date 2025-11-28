@@ -659,7 +659,6 @@ describe('game', () => {
 	});
 
 	// TODO (techdebt) (animation) For all these completed games, also make an "animation" version
-	// FIXME game that is flourish but not flourish52
 	describe('complete games', () => {
 		test('Game #1', () => {
 			let game = new FreeCell().shuffle32(1).dealAll();
@@ -1134,6 +1133,27 @@ describe('game', () => {
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 		});
 
+		/** regular flourish */
+		test('Game #42', () => {
+			let game = new FreeCell().shuffle32(42).dealAll();
+			const moves = getMoves(42);
+			moves.forEach((move) => {
+				game = game.moveByShorthand(move);
+				expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
+			});
+			expect(game.print()).toBe(
+				'' + //
+					'            >KH KC KD KS \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' move 54 8S→9D (flourish 56638136186381366813863468438436436836846843 AS,2S,3D,3S,4H,4C,4D,4S,5H,5C,5D,5S,6H,6C,6D,6S,7H,7C,7D,7S,8H,8C,8D,8S,9H,9C,9D,9S,TH,TC,TD,TS,JH,JC,JD,JS,QH,QC,QD,QS,KH,KC,KD,KS)'
+			);
+			expect(game.winIsFlourish).toBe(true);
+			expect(game.winIsFlourish52).toBe(false);
+			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
+		});
+
 		test('Game #617', () => {
 			let game = new FreeCell().shuffle32(617).dealAll();
 			const moves = getMoves(617);
@@ -1168,7 +1188,7 @@ describe('game', () => {
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' move 3b 8S→cell (flourish 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)'
+					' move 3b 8S→cell (flourish52 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)'
 			);
 			expect(game.winIsFlourish).toBe(true);
 			expect(game.winIsFlourish52).toBe(true);

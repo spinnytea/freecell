@@ -612,7 +612,7 @@ describe('move.juice', () => {
 				// TODO (techdebt) (gameplay) (hud) winning should pick the correct foundation index - we just moved 'move dh 2C→AC', so the cursor should be on KC
 				expect(game.moveByShorthand('dh').print()).toBe(
 					'' +
-						'            >KS KH KD KC \n' +
+						'             KS KH KD>KC \n' +
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +

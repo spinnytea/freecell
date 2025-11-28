@@ -22,13 +22,19 @@ export type PreviousActionType =
 	| 'select'
 	| 'deselect'
 	| 'move'
+	| 'auto-foundation' // can be it's own history item, collapsed in standard gameplay
 	| 'move-foundation' // move + auto-foundation
-	// | 'move-flourish' // TODO (move-flourish) move-flourish
-	| 'auto-foundation' // auto-foundation as it's own history item
-	// | 'auto-flourish' // TODO (move-flourish) auto-flourish
 	| 'invalid'
 	| 'juice';
 
+/**
+	Does this action type change the positions of the cards?
+	Every piece of metadata within a game should change the hud in some way,
+	but these actions change the game board / game state.
+
+	Moving the cursor will produce a new {@link FreeCell},
+	but these actions change {@link FreeCell.cards} (and deck, cells, foundations, tableau).
+*/
 export const PREVIOUS_ACTION_TYPE_IN_HISTORY = new Set<PreviousActionType>([
 	'init',
 	'shuffle',
@@ -38,12 +44,17 @@ export const PREVIOUS_ACTION_TYPE_IN_HISTORY = new Set<PreviousActionType>([
 	'auto-foundation',
 ]);
 
+/**
+	Primarily for {@link GameFunction} of `undo` and `restart`.
+	These action types are effectively "game start."
+*/
 export const PREVIOUS_ACTION_TYPE_IS_START_OF_GAME = new Set<PreviousActionType>([
 	'init',
 	'shuffle',
 	'deal',
 ]);
 
+/** @deprecated XXX (techdebt) seems like a duplicate of {@link PREVIOUS_ACTION_TYPE_IN_HISTORY} */
 export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
 	'move',
 	'move-foundation',
@@ -64,7 +75,7 @@ export type GameFunction =
 	// gameplay actions
 	| 'auto-foundation-tween'
 	| 'check-can-flourish'
-	| 'check-can-flourish-52'
+	| 'check-can-flourish52'
 	| 'recall-or-bury';
 
 export interface PreviousAction {
@@ -113,9 +124,9 @@ export interface PreviousAction {
 //  - if so, should we just _store_ that parsed info?
 //  - that said, having a regex/parser is needed for, say, parsing a history string and validation/testing
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
-const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish) (\w+) (\S+)$/;
+const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish|flourish52) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
-	/^move (\w)(\w) ([\w-]+)→(\S+) \((auto-foundation|flourish) (\w+) (\S+)\)$/;
+	/^move (\w)(\w) ([\w-]+)→(\S+) \((auto-foundation|flourish|flourish52) (\w+) (\S+)\)$/;
 const CURSOR_REGEX =
 	/^cursor (set|up|left|down|right|stop)( wrap)?( [a-z0-9].?)?( [A-Z0-9][A-Z])?$/;
 const SELECT_REGEX = /^(de)?select( (\w))? ([\w-]+)$/;
@@ -479,7 +490,7 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 function parseActionTextAutoFoundation(actionText: string) {
 	let match = AUTO_FOUNDATION_REGEX.exec(actionText);
 	if (match) {
-		// match[1] === 'auto-foundation' || match[1] === 'flourish'
+		// match[1] === 'auto-foundation' || match[1] === 'flourish' || match[1] === 'flourish52'
 		const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
 		const shorthands = match[3].split(',').map((s) => parseShorthandCard(s));
 		if (froms.length !== shorthands.length)
@@ -489,7 +500,7 @@ function parseActionTextAutoFoundation(actionText: string) {
 
 	match = MOVE_FOUNDATION_REGEX.exec(actionText);
 	if (match) {
-		// match[5] === 'auto-foundation' || match[5] === 'flourish'
+		// match[5] === 'auto-foundation' || match[5] === 'flourish' || match[5] === 'flourish52'
 		const froms = match[6].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
 		const shorthands = match[7].split(',').map((s) => parseShorthandCard(s));
 		if (froms.length !== shorthands.length)
@@ -544,17 +555,28 @@ function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 	});
 }
 
+// XXX (techdebt) it's weird to change the `firstWord` of `actionText`
+//  - I keep coming back to this idea
+//  - specifically for flourish/flourish52 being an alias of auto-foundation
+//  - maybe `hand-jammed` should be `init hand-jammed`
+//  - maybe `touch stop` should be `invalid select`
 export function parsePreviousActionType(actionText: string): PreviousAction {
 	const firstWord = actionText.split(' ')[0];
 	// some abnormal cases where the firstWord does not match the type
 	if (firstWord === 'hand-jammed') return { text: actionText, type: 'init' };
 	if (firstWord === 'touch') return { text: actionText, type: 'invalid' };
+	if (firstWord === 'flourish52') return { text: actionText, type: 'auto-foundation' };
 	if (firstWord === 'flourish') return { text: actionText, type: 'auto-foundation' };
-	if (firstWord === 'move' && actionText.endsWith(')')) {
-		if (actionText.includes('auto-foundation')) {
+
+	// move + auto-foundation → move-foundation
+	if (firstWord === 'move' && actionText.at(-1) === ')') {
+		if (actionText.includes('(auto-foundation')) {
 			return { text: actionText, type: 'move-foundation' };
 		}
-		if (actionText.includes('flourish')) {
+		if (actionText.includes('(flourish52')) {
+			return { text: actionText, type: 'move-foundation' };
+		}
+		if (actionText.includes('(flourish')) {
 			return { text: actionText, type: 'move-foundation' };
 		}
 	}
@@ -570,7 +592,7 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 		}
 	} else if (firstWord === 'juice') {
 		if (actionText.endsWith('*')) {
-			action.gameFunction = 'check-can-flourish-52';
+			action.gameFunction = 'check-can-flourish52';
 		} else {
 			action.gameFunction = 'check-can-flourish';
 		}

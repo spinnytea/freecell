@@ -38,7 +38,7 @@ export function WinMessage() {
 					// TODO (4-priority) (animation) (hud) different messages depending on how you win
 					//  - standard: you win!
 					//  - flourish: ??
-					//  - flourish-52: ??
+					//  - flourish52: ??
 					//  - fewer than x moves: ?? (needs calibration)
 					//  - ---
 					//  - messages need to fit on a game board

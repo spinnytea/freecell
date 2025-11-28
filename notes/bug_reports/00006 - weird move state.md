@@ -2,9 +2,15 @@
 
 That last move was animation was super weird (didn't exist, just skipped straight to a new game). Did I triple click on accident?
 
+I don't think this is dependent on the game. I think it simply happens _all of the time_ with `npm start`.
+
+Verify in [prod](https://spinnytea.bitbucket.io/freecell).
+
+It doesn't happen on mobile.
+
 ## Labels
 
-TODO (animation) (gameplay)
+TODO (5-priority) (animation) (gameplay)
 
 ### Game State
 

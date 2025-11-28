@@ -47,7 +47,7 @@ exports[`game.$checkCanFlourish check-can-flourish deep check 1`] = `
 }
 `;
 
-exports[`game.$checkCanFlourish check-can-flourish-52 deep check 1`] = `
+exports[`game.$checkCanFlourish check-can-flourish52 deep check 1`] = `
 {
   "availableMoves": null,
   "cursor": {
@@ -74,7 +74,7 @@ exports[`game.$checkCanFlourish check-can-flourish-52 deep check 1`] = `
     "deal all cards",
   ],
   "previousAction": {
-    "gameFunction": "check-can-flourish-52",
+    "gameFunction": "check-can-flourish52",
     "text": "juice flash *AS*",
     "type": "juice",
   },

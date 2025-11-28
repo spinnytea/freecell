@@ -273,4 +273,120 @@ describe('game.autoFoundationAll', () => {
 			);
 		});
 	});
+
+	describe('winIsFlourish', () => {
+		let game: FreeCell;
+
+		describe('flourish', () => {
+			beforeEach(() => {
+				game = FreeCell.parse(
+					'' +
+						'             3H 3C 2D    \n' +
+						' 7D    KS KD AS KH    KC \n' +
+						' 6C    QH QS 8S QC    QD \n' +
+						' 5H    JC JH    JD    JS \n' +
+						' 4C    TD TC    TS    TH \n' +
+						'       9S 9D    9H    9C \n' +
+						'       8D       8C    8H \n' +
+						'       7S       7H    7C \n' +
+						'       6D       6S    6H \n' +
+						'       5S       5D    5C \n' +
+						'      >4D       4S    4H \n' +
+						'       3S       3D       \n' +
+						'                2S       \n' +
+						' move 53 3S→4D'
+				);
+			});
+
+			test('move-foundation', () => {
+				game = game.$selectCard('8S').touchByPosition('4');
+				expect(game.previousAction).toEqual({
+					text: 'move 54 8S→9D (flourish 56638136186381366813863468438436436836846843 AS,2S,3D,3S,4H,4C,4D,4S,5H,5C,5D,5S,6H,6C,6D,6S,7H,7C,7D,7S,8H,8C,8D,8S,9H,9C,9D,9S,TH,TC,TD,TS,JH,JC,JD,JS,QH,QC,QD,QS,KH,KC,KD,KS)',
+					type: 'move-foundation',
+					tweenCards: [
+						{ rank: '8', suit: 'spades', location: { fixture: 'cascade', data: [3, 5] } },
+					],
+				});
+				expect(game.win).toBe(true);
+				expect(game.winIsFlourish).toBe(true);
+				expect(game.winIsFlourish52).toBe(false);
+			});
+
+			test('move + auto-foundation', () => {
+				game = game.$selectCard('8S').touchByPosition('4', { autoFoundation: false });
+				expect(game.previousAction).toEqual({
+					text: 'move 54 8S→9D',
+					type: 'move',
+				});
+				expect(game.win).toBe(false);
+				expect(game.winIsFlourish).toBe(false);
+				expect(game.winIsFlourish52).toBe(false);
+
+				game = game.autoFoundationAll();
+				expect(game.previousAction).toEqual({
+					text: 'flourish 56638136186381366813863468438436436836846843 AS,2S,3D,3S,4H,4C,4D,4S,5H,5C,5D,5S,6H,6C,6D,6S,7H,7C,7D,7S,8H,8C,8D,8S,9H,9C,9D,9S,TH,TC,TD,TS,JH,JC,JD,JS,QH,QC,QD,QS,KH,KC,KD,KS',
+					type: 'auto-foundation',
+				});
+				expect(game.win).toBe(true);
+				expect(game.winIsFlourish).toBe(true);
+				expect(game.winIsFlourish52).toBe(false);
+			});
+		});
+
+		describe('52-card flourish', () => {
+			beforeEach(() => {
+				game = FreeCell.parse(
+					'' +
+						'>7H       2C             \n' +
+						' KS 6C AC 5H KD 6D KC KH \n' +
+						' QD AH AD 4S QC 5S QH QS \n' +
+						' JC 3D AS    JH 4H JS JD \n' +
+						' TD    8S    TS 3C TH TC \n' +
+						' 9C          9D 2H 9S 9H \n' +
+						' 8D          8C    8H    \n' +
+						' 7S          7D    7C    \n' +
+						'             6S    6H    \n' +
+						'             5D    5C    \n' +
+						'             4C    4D    \n' +
+						'             3H    3S    \n' +
+						'             2S    2D    \n' +
+						' move 3a 7H→cell'
+				);
+			});
+
+			test('move-foundation', () => {
+				game = game.$selectCard('8S').touchByPosition('8');
+				expect(game.previousAction).toEqual({
+					text: 'move 38 8S→9H (flourish52 33357d226765475665745627157a815775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)',
+					type: 'move-foundation',
+					tweenCards: [
+						{ rank: '8', suit: 'spades', location: { fixture: 'cascade', data: [7, 5] } },
+					],
+				});
+				expect(game.win).toBe(true);
+				expect(game.winIsFlourish).toBe(true);
+				expect(game.winIsFlourish52).toBe(true);
+			});
+
+			test('move + auto-foundation', () => {
+				game = game.$selectCard('8S').touchByPosition('8', { autoFoundation: false });
+				expect(game.previousAction).toEqual({
+					text: 'move 38 8S→9H',
+					type: 'move',
+				});
+				expect(game.win).toBe(false);
+				expect(game.winIsFlourish).toBe(false);
+				expect(game.winIsFlourish52).toBe(false);
+
+				game = game.autoFoundationAll();
+				expect(game.previousAction).toEqual({
+					text: 'flourish52 33357d226765475665745627157a815775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH',
+					type: 'auto-foundation',
+				});
+				expect(game.win).toBe(true);
+				expect(game.winIsFlourish).toBe(true);
+				expect(game.winIsFlourish52).toBe(true);
+			});
+		});
+	});
 });

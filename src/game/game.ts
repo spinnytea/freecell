@@ -138,23 +138,13 @@ export class FreeCell {
 	readonly win: boolean;
 
 	// REVIEW (techdebt) is this the best way to check? do we need it for other things?
-	// FIXME test `move … (flourish …)` and just `flourish …`
 	get winIsFlourish(): boolean {
 		if (!this.win) return false;
-		// TODO (move-flourish) move-flourish or auto-flourish
 		return this.previousAction.text.includes('flourish');
 	}
-	// FIXME (techdebt) this is _not_ the best way to check this
-	//  - like, _yes_ `move xx xx→xx (flourish xx xx,xx)`
-	//  - but like, also, _NnNoOoOo_
-	// FIXME `move xx xx→xx (flourish52 xx xx,xx)`
-	// FIXME test `move … (flourish52 …)` and just `flourish52 …`
 	get winIsFlourish52(): boolean {
 		if (!this.win) return false;
-		const idx = this.previousAction.text.indexOf('(');
-		if (idx === -1) return false;
-		const autoActionTextLength = 219; // '(flourish  )'.length + (52*3) + 51;
-		return this.previousAction.text.length - idx === autoActionTextLength;
+		return this.previousAction.text.includes('flourish52');
 	}
 
 	// REVIEW (motivation) consider: preferred foundation suits? (HSDC) - render these?
@@ -260,7 +250,9 @@ export class FreeCell {
 			// when using only the arrow keys to play the game,
 			// it helps to reset the cursor when we win the game
 			// after we win the game, we don't want to reset
-			cursor = { fixture: 'foundation', data: [0] };
+			if (cursor?.fixture !== 'foundation') {
+				cursor = { fixture: 'foundation', data: [0] };
+			}
 		}
 
 		// clamp cursor is a helper in case the game changes and the cursor is no longer valid
@@ -605,10 +597,14 @@ export class FreeCell {
 			//  - do they get stacked onto king?
 			//  - if they are "low", then that doesn't make sense
 			const win = cards.every((card) => card.location.fixture === 'foundation');
-			const isFlourish = win && countEmptyFoundations(this) > 0;
-			// FIXME flourish52
+			const emptyCount = countEmptyFoundations(this);
+			const isFlourish = win && emptyCount > 0;
+			const isFlourish52 = isFlourish && emptyCount === this.foundations.length;
 			return this.__clone({
-				action: { text: calcAutoFoundationActionText(moved, isFlourish), type: 'auto-foundation' },
+				action: {
+					text: calcAutoFoundationActionText(moved, isFlourish, isFlourish52),
+					type: 'auto-foundation',
+				},
 				cards,
 				selection: null,
 				availableMoves: null,
@@ -988,11 +984,11 @@ export class FreeCell {
 	/**
 		juice:
 		check if we can flourish any of the aces,
-		or if we can to a 52 card flourish
+		or if we can do a 52-card flourish
 	*/
 	$checkCanFlourish(): FreeCell {
 		let aces = juice.canFlourish52(this);
-		let gameFunction: GameFunction = 'check-can-flourish-52';
+		let gameFunction: GameFunction = 'check-can-flourish52';
 		if (!aces.length) {
 			aces = juice.canFlourish(this);
 			gameFunction = 'check-can-flourish';
@@ -1001,7 +997,7 @@ export class FreeCell {
 			return this;
 		}
 		const sh = aces.map((card) => shorthandCard(card)).join(',');
-		const mod = gameFunction === 'check-can-flourish-52' ? '*' : '';
+		const mod = gameFunction === 'check-can-flourish52' ? '*' : '';
 		return this.__clone({
 			action: {
 				text: `juice flash ${mod}${sh}${mod}`,

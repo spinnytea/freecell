@@ -15,6 +15,9 @@ gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(Draggable);
 
 const GLOBALS_CSS_COLOR_OPTIONS = [
+	// XXX (hud) red orange yellow green blue pruple?
+	//  -        sep oct    nov    dec   jan  feb
+	//  -        mar apr    may    jun   july aug
 	'var(--felt--electric-blue)',
 	'var(--felt--championship-green)',
 	'var(--felt--wine)',

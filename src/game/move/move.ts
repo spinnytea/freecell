@@ -617,10 +617,14 @@ export function calcMoveActionText(from: CardSequence, to: CardSequence): string
 	return `move ${shorthandMove} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`;
 }
 
-export function calcAutoFoundationActionText(moved: Card[], isFlourish: boolean): string {
+export function calcAutoFoundationActionText(
+	moved: Card[],
+	isFlourish: boolean,
+	isFlourish52: boolean
+): string {
 	const movedCardsStr = moved.map((card) => shorthandCard(card)).join(',');
 	const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
-	const firstWord = isFlourish ? 'flourish' : 'auto-foundation';
+	const firstWord = isFlourish52 ? 'flourish52' : isFlourish ? 'flourish' : 'auto-foundation';
 	return `${firstWord} ${movedPositionsStr} ${movedCardsStr}`;
 }
 

@@ -202,7 +202,7 @@ describe('game.$checkCanFlourish', () => {
 		});
 	});
 
-	describe('check-can-flourish-52', () => {
+	describe('check-can-flourish52', () => {
 		test('deep check', () => {
 			let game = new FreeCell().shuffle32(23190).dealAll();
 			expect(game.print()).toBe(
@@ -257,7 +257,7 @@ describe('game.$checkCanFlourish', () => {
 			expect(parsed.previousAction).toEqual({
 				text: 'juice flash *AS*',
 				type: 'juice',
-				gameFunction: 'check-can-flourish-52',
+				gameFunction: 'check-can-flourish52',
 			});
 			expect(copy.flashCards).toEqual([
 				{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } },
@@ -265,7 +265,7 @@ describe('game.$checkCanFlourish', () => {
 			expect(copy.previousAction).toEqual({
 				text: 'juice flash *AS*',
 				type: 'juice',
-				gameFunction: 'check-can-flourish-52',
+				gameFunction: 'check-can-flourish52',
 			});
 			expect(copy.history).toEqual(['shuffle deck (23190)', 'deal all cards']);
 			copy.flashCards = null;
@@ -288,7 +288,7 @@ describe('game.$checkCanFlourish', () => {
 			expect(copy.previousAction).toEqual({
 				text: 'juice flash *AS*',
 				type: 'juice',
-				gameFunction: 'check-can-flourish-52',
+				gameFunction: 'check-can-flourish52',
 			});
 			expect(copy.history).toEqual(['shuffle deck (23190)', 'deal all cards']);
 			copy.flashCards = null;

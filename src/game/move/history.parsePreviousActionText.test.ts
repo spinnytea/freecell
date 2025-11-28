@@ -85,7 +85,7 @@ describe('game/history.parsePreviousActionType', () => {
 			${'invalid auto-foundation setup'}  | ${{ text: 'invalid auto-foundation setup', type: 'invalid', gameFunction: 'auto-foundation-tween' }}
 			${'invalid auto-foundation middle'} | ${{ text: 'invalid auto-foundation middle', type: 'invalid', gameFunction: 'auto-foundation-tween' }}
 			${'juice flash AH,AS'}              | ${{ text: 'juice flash AH,AS', type: 'juice', gameFunction: 'check-can-flourish' }}
-			${'juice flash *AS*'}               | ${{ text: 'juice flash *AS*', type: 'juice', gameFunction: 'check-can-flourish-52' }}
+			${'juice flash *AS*'}               | ${{ text: 'juice flash *AS*', type: 'juice', gameFunction: 'check-can-flourish52' }}
 		`(
 			'$actionText',
 			({ actionText, previousAction }: { actionText: string; previousAction: PreviousAction }) => {
