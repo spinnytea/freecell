@@ -96,6 +96,26 @@ export type Position =
 	| '8'
 	| '9'
 	| '0';
+export const PositionList: Position[] = [
+	'a',
+	'b',
+	'c',
+	'd',
+	'e',
+	'f',
+	'h',
+	'k', // deck
+	'1',
+	'2',
+	'3',
+	'4',
+	'5',
+	'6',
+	'7',
+	'8',
+	'9',
+	'0',
+];
 
 // REVIEW (optimize) should CardSH include `sh/rs = shorthandCard(this)`?
 export interface CardSH {

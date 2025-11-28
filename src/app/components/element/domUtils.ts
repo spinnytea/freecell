@@ -38,7 +38,6 @@ export const domUtils = {
 	addClass(elId: string, className: string) {
 		const el = document.getElementById(elId);
 		if (el) {
-			console.log('addClass', elId, className);
 			el.classList.add(className);
 		}
 	},

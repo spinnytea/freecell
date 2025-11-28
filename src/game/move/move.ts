@@ -100,6 +100,7 @@ export interface AvailableMove {
 		TODO (gameplay) (motivation) Reverse order of cell -> cascade
 		 - kings should prioritize the right side under the foundation
 		 - I guess all cards can? Kings in particular
+		TODO (gameplay) (motivation) When queen is home and king clicktomove, it should prioritize foundation
 	*/
 	priority: number;
 }
@@ -147,6 +148,11 @@ export function countEmptyFoundations(game: FreeCell): number {
 
 export function countEmptyCascades(game: FreeCell): number {
 	return game.tableau.reduce((ret, cascade) => ret + (cascade.length ? 0 : 1), 0);
+}
+
+export function countCardsInFoundations(game: FreeCell): number {
+	return game.cards.filter((card) => card.location.fixture === 'foundation').length;
+	// return game.cards.reduce((ret, card) => ret + (card.location.fixture === 'foundation' ? 1 : 0), 0);
 }
 
 /**

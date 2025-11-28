@@ -14,6 +14,7 @@
     "test:cov": "jest --coverage",
     "term": "ts-node src/terminal/term.ts",
     "checkGames": "ts-node src/terminal/checkGames.ts",
+    "solveGame": "ts-node src/terminal/solveGame.ts",
     "clean": "npx rimraf out && npx rimraf coverage && npm prune && git prune"
   },
   "dependencies": {

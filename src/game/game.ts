@@ -634,8 +634,8 @@ export class FreeCell {
 		if (this.previousAction.type !== 'select') return this;
 
 		// find the highest priority, prioritize first one
-		const to_location = this.availableMoves.reduce((ret, next) => {
-			if (next.priority > ret.priority) return next;
+		const to_location = this.availableMoves.reduce((ret, availableMove) => {
+			if (availableMove.priority > ret.priority) return availableMove;
 			return ret;
 		}, this.availableMoves[0]).location;
 
