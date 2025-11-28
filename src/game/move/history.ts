@@ -73,7 +73,6 @@ export type GameFunction =
 	| 'newGame'
 	| 'drag-drop'
 	// gameplay actions
-	| 'auto-foundation-tween'
 	| 'check-can-flourish'
 	| 'check-can-flourish52'
 	| 'recall-or-bury';
@@ -544,12 +543,13 @@ function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 		}
 	}
 
-	// XXX (techdebt) can we remove this __clone? probably not…
+	// this is just connective glue because undoMove and moveCards both need a full `game`
+	// should not appear in print
 	return game.__clone({
 		action: {
-			text: 'invalid auto-foundation setup',
+			text: 'invalid undo tween',
 			type: 'invalid',
-			gameFunction: 'auto-foundation-tween',
+			gameFunction: 'undo',
 		},
 		cards,
 	});
@@ -586,9 +586,9 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 	if (firstWord === 'invalid') {
 		if (/^invalid move (\wk|k\w) /.test(actionText)) {
 			action.gameFunction = 'recall-or-bury';
-		} else if (actionText.startsWith('invalid auto-foundation')) {
+		} else if (actionText.startsWith('invalid undo')) {
 			// should not appear in print
-			action.gameFunction = 'auto-foundation-tween';
+			action.gameFunction = 'undo';
 		}
 	} else if (firstWord === 'juice') {
 		if (actionText.endsWith('*')) {

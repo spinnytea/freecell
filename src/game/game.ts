@@ -606,8 +606,6 @@ export class FreeCell {
 					type: 'auto-foundation',
 				},
 				cards,
-				selection: null,
-				availableMoves: null,
 			});
 		}
 

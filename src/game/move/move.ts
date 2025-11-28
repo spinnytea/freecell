@@ -170,6 +170,12 @@ export function foundationCanAcceptCards(
 	limit: AutoFoundationLimit
 ): boolean {
 	if (!(index in game.foundations)) return false;
+	if (
+		game.selection?.location.fixture === 'foundation' &&
+		game.selection.location.data[0] === index
+	) {
+		return false;
+	}
 
 	const card = game.foundations[index];
 	if (!card) return true; // empty can always accept an ace
@@ -565,7 +571,9 @@ export function autoFoundationCards(
 			// try cells
 			if (canAccept) {
 				for (const c_card of game.cells) {
-					if (c_card && canStackFoundation(f_card, c_card)) {
+					const canMoveCellToFoundation =
+						c_card && canStackFoundation(f_card, c_card) && !game.selection?.cards.includes(c_card);
+					if (canMoveCellToFoundation) {
 						moved.push({ ...c_card });
 						game.cells[c_card.location.data[0]] = null;
 						c_card.location = {
@@ -584,7 +592,9 @@ export function autoFoundationCards(
 			if (canAccept) {
 				for (const cascade of game.tableau) {
 					const c_card = cascade.at(-1);
-					if (c_card && canStackFoundation(f_card, c_card)) {
+					const canMoveCascadeToFoundation =
+						c_card && canStackFoundation(f_card, c_card) && !game.selection?.cards.includes(c_card);
+					if (canMoveCascadeToFoundation) {
 						moved.push({ ...c_card });
 						game.tableau[c_card.location.data[0]].pop();
 						c_card.location = {

@@ -176,21 +176,16 @@ describe('game.autoFoundationAll', () => {
 	});
 
 	describe('scenarios', () => {
-		/*
-			when will this ever happen?
-			auto-foundation only occurs after a move
-			selections are cleared after a move
+		test.each`
+			name                                    | before                                                | after                                      | actionText
+			${'nothing to move'}                    | ${'>2D                \n             \n hand-jammed'} | ${'>2D                \n             \n '} | ${'hand-jammed'}
+			${'move ace from cell'}                 | ${'>AS                \n             \n hand-jammed'} | ${'>      AS          \n             \n '} | ${'auto-foundation a AS'}
+			${'move ace from cascade'}              | ${'>                  \n    AS       \n hand-jammed'} | ${'>      AS          \n             \n '} | ${'auto-foundation 2 AS'}
+			${'move from cell'}                     | ${'>2D    AS AD       \n             \n hand-jammed'} | ${'>      AS 2D       \n             \n '} | ${'auto-foundation a 2D'}
+			${'move from cascade'}                  | ${'>      AS AD       \n    2D       \n hand-jammed'} | ${'>      AS 2D       \n             \n '} | ${'auto-foundation 2 2D'}
 			${'cannot move selected cell card'}     | ${'|2D|AD         >   \n             \n hand-jammed'} | ${'|2D|   AD      >   \n             \n '} | ${'auto-foundation b AD'}
 			${'cannot move selected cascade card'}  | ${'               >   \n|2D|AD       \n hand-jammed'} | ${'       AD      >   \n|2D|         \n '} | ${'auto-foundation 2 AD'}
 			${'cannot move to selected foundation'} | ${' 3H 3S AH|AS|AD>AC \n 2H 2S 2D 2C \n hand-jammed'} | ${'    3S 3H|AS|2D>2C \n    2S       \n '} | ${'auto-foundation 134a 2H,2D,2C,3H'}
-		*/
-		test.each`
-			name                       | before                                                | after                                      | actionText
-			${'nothing to move'}       | ${'>2D                \n             \n hand-jammed'} | ${'>2D                \n             \n '} | ${'hand-jammed'}
-			${'move ace from cell'}    | ${'>AS                \n             \n hand-jammed'} | ${'>      AS          \n             \n '} | ${'auto-foundation a AS'}
-			${'move ace from cascade'} | ${'>                  \n    AS       \n hand-jammed'} | ${'>      AS          \n             \n '} | ${'auto-foundation 2 AS'}
-			${'move from cell'}        | ${'>2D    AS AD       \n             \n hand-jammed'} | ${'>      AS 2D       \n             \n '} | ${'auto-foundation a 2D'}
-			${'move from cascade'}     | ${'>      AS AD       \n    2D       \n hand-jammed'} | ${'>      AS 2D       \n             \n '} | ${'auto-foundation 2 2D'}
 		`(
 			'$name',
 			({ before, after, actionText }: { before: string; after: string; actionText: string }) => {
@@ -204,12 +199,8 @@ describe('game.autoFoundationAll', () => {
 			}
 		);
 
-		/*
-		when will this ever happen?
-		auto-foundation only occurs after a move
-		selections are cleared after a move
-
-		d('cannot move whole selection sequence', () => {
+		describe('cannot move whole selection sequence', () => {
+			/*
 			const gamePrint =
 				'' + //
 				'               >   \n' +
@@ -217,11 +208,14 @@ describe('game.autoFoundationAll', () => {
 				'|3C|         \n' +
 				'|2D|         \n' +
 				' hand-jammed';
-			t('top');
-			t('middle');
-			t('bottom');
+			*/
+
+			test.todo('top');
+
+			test.todo('middle');
+
+			test.todo('bottom');
 		});
-		*/
 
 		describe('solves everything', () => {
 			test.each`
