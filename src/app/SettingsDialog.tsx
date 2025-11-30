@@ -6,7 +6,10 @@ import styles_dialog from '@/app/components/dialog/dialog.module.css';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
-/** TODO (hud) (deployment) iPad dialog buttons are wweeeiiirddd */
+/**
+	TODO (deployment) (hud) iPad dialog buttons are wweeeiiirddd
+	IDEA (animation) (hud) button for instant replay
+*/
 export default function SettingsDialog() {
 	const [, setGame, newGame] = useContext(GameContext);
 	const [{ showSettingsDialog }, setSettings] = useContext(SettingsContext);

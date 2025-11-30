@@ -97,10 +97,10 @@ export interface AvailableMove {
 		if we are going to visualize them debug mode, we need to have it precomputed
 		we really only need high|low for this
 
-		TODO (gameplay) (motivation) Reverse order of cell -> cascade
+		TODO (controls) (gameplay) (motivation) Reverse order of cell -> cascade
 		 - kings should prioritize the right side under the foundation
 		 - I guess all cards can? Kings in particular
-		TODO (gameplay) (motivation) When queen is home and king clicktomove, it should prioritize foundation
+		TODO (controls) (gameplay) (motivation) When queen is home and king clicktomove, it should prioritize foundation
 	*/
 	priority: number;
 }

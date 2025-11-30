@@ -585,34 +585,111 @@ describe('game', () => {
 				);
 			});
 
-			test.each`
-				cascadeCount | emptyLine                            | winLine
-				${4}         | ${'             '}                   | ${': YOU WIN ! :'}
-				${5}         | ${'                '}                | ${':  YOU WIN !   :'}
-				${6}         | ${'                   '}             | ${':    YOU WIN !    :'}
-				${7}         | ${'                      '}          | ${':  Y O U   W I N !   :'}
-				${8}         | ${'                         '}       | ${':    Y O U   W I N !    :'}
-				${9}         | ${'                            '}    | ${':     Y O U   W I N !      :'}
-				${10}        | ${'                               '} | ${':       Y O U   W I N !       :'}
-			`(
-				'$cascadeCount cascades',
-				({
-					cascadeCount,
-					emptyLine,
-					winLine,
-				}: {
-					cascadeCount: number;
-					emptyLine: string;
-					winLine: string;
-				}) => {
-					expect(emptyLine.length).toBe(cascadeCount * 3 + 1);
-					const game = FreeCell.parse(`>            KC KD KH KS \n${emptyLine}\n hand-jammed`);
-					expect(game.tableau.length).toBe(cascadeCount);
-					expect(game.print().replaceAll(' ', '·')).toMatchSnapshot();
-					expect(FreeCell.parse(game.print()).print()).toBe(game.print());
-					expect(game.print().split('\n')[2]).toBe(winLine);
-				}
-			);
+			describe('standard', () => {
+				test.each`
+					cascadeCount | emptyLine                            | winLine
+					${4}         | ${'             '}                   | ${': YOU WIN ! :'}
+					${5}         | ${'                '}                | ${':  YOU WIN !   :'}
+					${6}         | ${'                   '}             | ${':    YOU WIN !    :'}
+					${7}         | ${'                      '}          | ${':  Y O U   W I N !   :'}
+					${8}         | ${'                         '}       | ${':    Y O U   W I N !    :'}
+					${9}         | ${'                            '}    | ${':     Y O U   W I N !      :'}
+					${10}        | ${'                               '} | ${':       Y O U   W I N !       :'}
+				`(
+					'$cascadeCount cascades',
+					({
+						cascadeCount,
+						emptyLine,
+						winLine,
+					}: {
+						cascadeCount: number;
+						emptyLine: string;
+						winLine: string;
+					}) => {
+						expect(emptyLine.length).toBe(cascadeCount * 3 + 1);
+						const game = FreeCell.parse(`>            KC KD KH KS \n${emptyLine}\n hand-jammed`);
+						expect(game.tableau.length).toBe(cascadeCount);
+						expect(game.win).toBe(true);
+						expect(game.winIsFlourish).toBe(false);
+						expect(game.winIsFlourish52).toBe(false);
+						expect(game.print().replaceAll(' ', '·')).toMatchSnapshot();
+						expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+						expect(game.print().split('\n')[2]).toBe(winLine);
+					}
+				);
+			});
+
+			describe('flourish', () => {
+				test.each`
+					cascadeCount | emptyLine                            | winLine
+					${4}         | ${'             '}                   | ${': YOU WIN ! :'}
+					${5}         | ${'                '}                | ${':  YOU WIN !   :'}
+					${6}         | ${'                   '}             | ${':    YOU WIN !    :'}
+					${7}         | ${'                      '}          | ${':  Y O U   W I N !   :'}
+					${8}         | ${'                         '}       | ${':    Y O U   W I N !    :'}
+					${9}         | ${'                            '}    | ${':     Y O U   W I N !      :'}
+					${10}        | ${'                               '} | ${':       Y O U   W I N !       :'}
+				`(
+					'$cascadeCount cascades',
+					({
+						cascadeCount,
+						emptyLine,
+						winLine,
+					}: {
+						cascadeCount: number;
+						emptyLine: string;
+						winLine: string;
+					}) => {
+						expect(emptyLine.length).toBe(cascadeCount * 3 + 1);
+						const game = FreeCell.parse(
+							`>            KC KD KH KS \n${emptyLine}\n hand-jammed flourish`
+						);
+						expect(game.tableau.length).toBe(cascadeCount);
+						expect(game.win).toBe(true);
+						expect(game.winIsFlourish).toBe(true);
+						expect(game.winIsFlourish52).toBe(false);
+						expect(game.print().replaceAll(' ', '·')).toMatchSnapshot();
+						expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+						expect(game.print().split('\n')[2]).toBe(winLine);
+					}
+				);
+			});
+
+			describe('flourish52', () => {
+				test.each`
+					cascadeCount | emptyLine                            | winLine
+					${4}         | ${'             '}                   | ${': AMAZING ! :'}
+					${5}         | ${'                '}                | ${':  AMAZING !   :'}
+					${6}         | ${'                   '}             | ${':    AMAZING !    :'}
+					${7}         | ${'                      '}          | ${':  A M A Z I N G !   :'}
+					${8}         | ${'                         '}       | ${':    A M A Z I N G !    :'}
+					${9}         | ${'                            '}    | ${':     A M A Z I N G !      :'}
+					${10}        | ${'                               '} | ${':       A M A Z I N G !       :'}
+				`(
+					'$cascadeCount cascades',
+					({
+						cascadeCount,
+						emptyLine,
+						winLine,
+					}: {
+						cascadeCount: number;
+						emptyLine: string;
+						winLine: string;
+					}) => {
+						expect(emptyLine.length).toBe(cascadeCount * 3 + 1);
+						const game = FreeCell.parse(
+							`>            KC KD KH KS \n${emptyLine}\n hand-jammed flourish52`
+						);
+						expect(game.tableau.length).toBe(cascadeCount);
+						expect(game.win).toBe(true);
+						expect(game.winIsFlourish).toBe(true);
+						expect(game.winIsFlourish52).toBe(true);
+						expect(game.print().replaceAll(' ', '·')).toMatchSnapshot();
+						expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+						expect(game.print().split('\n')[2]).toBe(winLine);
+					}
+				);
+			});
 		});
 	});
 
@@ -675,6 +752,24 @@ describe('game', () => {
 					'                         \n' +
 					' move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)'
 			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					'             KC KS KH KD \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)\n' +
+					':h shuffle32 1\n' +
+					' 3a 32 7b 3c 37 37 b7 8b \n' +
+					' 87 48 82 a8 4a 34 57 54 \n' +
+					' 85 8d 87 c7 d7 b8 38 23 \n' +
+					' 28 32 6b 6c 78 a3 73 7a \n' +
+					' 7c 74 c7 67 63 56 8h b8 \n' +
+					' 5b 51 b5 24 25 6h 6h 24 \n' +
+					' 26 a4 37 2a 8h 4h 1h 17 \n' +
+					' 1h 1b 8h 4h 4b 4c 4d a2 \n' +
+					' 42 46 3h 7h 13 '
+			);
 			expect(game.winIsFlourish).toBe(false);
 			expect(game.winIsFlourish52).toBe(false);
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
@@ -694,6 +789,21 @@ describe('game', () => {
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
 					' move 42 JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					'             KH KC KS KD \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' move 42 JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)\n' +
+					':h shuffle32 3\n' +
+					' 28 5a 5b 56 27 72 b7 37 \n' +
+					' 38 5b 65 35 35 35 15 3c \n' +
+					' 83 8h 3h 7h bh 3b 83 c3 \n' +
+					' 8c 84 c8 28 18 46 4c 4h \n' +
+					' ch 2c 23 74 67 62 c2 1c \n' +
+					' 13 48 42 '
 			);
 			expect(game.winIsFlourish).toBe(false);
 			expect(game.winIsFlourish52).toBe(false);
@@ -1133,27 +1243,6 @@ describe('game', () => {
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 		});
 
-		/** regular flourish */
-		test('Game #42', () => {
-			let game = new FreeCell().shuffle32(42).dealAll();
-			const moves = getMoves(42);
-			moves.forEach((move) => {
-				game = game.moveByShorthand(move);
-				expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
-			});
-			expect(game.print()).toBe(
-				'' + //
-					'            >KH KC KD KS \n' +
-					'                         \n' +
-					':    Y O U   W I N !    :\n' +
-					'                         \n' +
-					' move 54 8S→9D (flourish 56638136186381366813863468438436436836846843 AS,2S,3D,3S,4H,4C,4D,4S,5H,5C,5D,5S,6H,6C,6D,6S,7H,7C,7D,7S,8H,8C,8D,8S,9H,9C,9D,9S,TH,TC,TD,TS,JH,JC,JD,JS,QH,QC,QD,QS,KH,KC,KD,KS)'
-			);
-			expect(game.winIsFlourish).toBe(true);
-			expect(game.winIsFlourish52).toBe(false);
-			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
-		});
-
 		test('Game #617', () => {
 			let game = new FreeCell().shuffle32(617).dealAll();
 			const moves = getMoves(617);
@@ -1169,7 +1258,59 @@ describe('game', () => {
 					'                         \n' +
 					' move 1b TD→cell (auto-foundation 1866628353ba8483734784387 7D,8S,8D,8H,8C,9S,9D,9H,9C,TS,TD,TH,TC,JS,JD,JH,JC,QS,QD,QH,QC,KS,KD,KH,KC)'
 			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					'             KC KS KD KH \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' move 1b TD→cell (auto-foundation 1866628353ba8483734784387 7D,8S,8D,8H,8C,9S,9D,9H,9C,TS,TD,TH,TC,JS,JD,JH,JC,QS,QD,QH,QC,KS,KD,KH,KC)\n' +
+					':h shuffle32 617\n' +
+					' 83 53 6a 6b 6c 56 c5 a5 \n' +
+					' b6 2a 4b 45 21 41 72 4c \n' +
+					' 4d 47 ch 51 54 5c 56 b6 \n' +
+					' 76 d5 14 15 12 7b 7d 76 \n' +
+					' 17 14 d4 1h 27 21 25 71 \n' +
+					' 7d 27 d7 2d d2 c2 bh 8b \n' +
+					' 87 8c c8 78 58 37 35 3c \n' +
+					' a4 34 b4 c2 13 1a 1b '
+			);
 			expect(game.winIsFlourish).toBe(false);
+			expect(game.winIsFlourish52).toBe(false);
+			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
+		});
+
+		/** regular flourish */
+		test('Game #7851', () => {
+			let game = new FreeCell().shuffle32(7851).dealAll();
+			const moves = getMoves(7851);
+			moves.forEach((move) => {
+				game = game.moveByShorthand(move);
+				expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
+			});
+			expect(game.print()).toBe(
+				'' + //
+					'            >KC KH KS KD \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' move 56 3S→4D (flourish 51118225688246284d8251382c836b375873861738738a2838 AH,2H,AS,AD,2S,2D,3C,3H,3S,3D,4C,4H,4S,4D,5C,5H,5S,5D,6C,6H,6S,6D,7C,7H,7S,7D,8C,8H,8S,8D,9C,9H,9S,9D,TC,TH,TS,TD,JC,JH,JS,JD,QC,QH,QS,QD,KC,KH,KS,KD)'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					'             KC KH KS KD \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' move 56 3S→4D (flourish 51118225688246284d8251382c836b375873861738738a2838 AH,2H,AS,AD,2S,2D,3C,3H,3S,3D,4C,4H,4S,4D,5C,5H,5S,5D,6C,6H,6S,6D,7C,7H,7S,7D,8C,8H,8S,8D,9C,9H,9S,9D,TC,TH,TS,TD,JC,JH,JS,JD,QC,QH,QS,QD,KC,KH,KS,KD)\n' +
+					':h shuffle32 7851\n' +
+					' 26 83 87 38 38 38 34 27 \n' +
+					' 27 21 37 37 83 2a 72 73 \n' +
+					' 18 48 18 64 62 68 7b 78 \n' +
+					' 48 7c 7d b7 d7 c7 57 4b \n' +
+					' 4c 4d 56 '
+			);
+			expect(game.winIsFlourish).toBe(true);
 			expect(game.winIsFlourish52).toBe(false);
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 		});
@@ -1186,9 +1327,26 @@ describe('game', () => {
 				'' + //
 					'            >KS KD KC KH \n' +
 					'                         \n' +
-					':    Y O U   W I N !    :\n' +
+					':    A M A Z I N G !    :\n' +
 					'                         \n' +
 					' move 3b 8S→cell (flourish52 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)'
+			);
+			expect(game.print({ includeHistory: true })).toBe(
+				'' + //
+					'             KS KD KC KH \n' +
+					'                         \n' +
+					':    A M A Z I N G !    :\n' +
+					'                         \n' +
+					' move 3b 8S→cell (flourish52 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)\n' +
+					':h shuffle32 23190\n' +
+					' 6d 76 75 d5 7d 75 72 7a \n' +
+					' 37 57 27 31 37 17 d3 5d \n' +
+					' 57 5c 57 5b 52 a2 c5 b5 \n' +
+					' 1c 12 15 17 16 15 d1 c1 \n' +
+					' 85 85 45 4d 4c 41 46 45 \n' +
+					' d4 c5 25 86 81 8a 48 64 \n' +
+					' 6b 61 6c 62 6d a6 c6 86 \n' +
+					' b8 48 24 21 3a 3b '
 			);
 			expect(game.winIsFlourish).toBe(true);
 			expect(game.winIsFlourish52).toBe(true);

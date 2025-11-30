@@ -1,7 +1,11 @@
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
-import { WIN_TEXT_ANIMATION_DURATION, WIN_TEXT_COLOR_DURATION } from '@/app/animation_constants';
+import {
+	WIN_TEXT_ANIMATION_DURATION,
+	WIN_TEXT_COLOR_DURATION,
+	WIN_TEXT_COLOR_DURATION_52,
+} from '@/app/animation_constants';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
@@ -12,7 +16,7 @@ const toGradient = (a: string, b: string) => `linear-gradient(to right, ${a}, ${
 
 export function WinMessage() {
 	const elementRef = useRef<HTMLDivElement | null>(null);
-	const { win, winIsFlourish } = useGame();
+	const { win, winIsFlourish, winIsFlourish52 } = useGame();
 	const fixtureSizes = useFixtureSizes();
 
 	useGSAP(
@@ -26,24 +30,13 @@ export function WinMessage() {
 					ease: 'power1.out',
 				});
 
+				// animate color hue, to white
 				if (winIsFlourish) {
-					// TODO (4-priority) (animation) (flourish-anim) 52-card flourish cycles color forever
-					//  - basically, disable s/l and repeat h
-					// animate color hue, to white
 					// TODO (4-priority) (animation) "you win" animation should start after the cards finish moving?
 					//  - Or at least during the last one and after the auto-foundation
 					//  - we may need a useContext so we can use a single global timeline
 					//  - and then never use gsap directly, always add it to a timeline
 					//  - maybe we need a wrapper around gsap
-					// TODO (4-priority) (animation) (hud) different messages depending on how you win
-					//  - standard: you win!
-					//  - flourish: ??
-					//  - flourish52: ??
-					//  - fewer than x moves: ?? (needs calibration)
-					//  - ---
-					//  - messages need to fit on a game board
-					//  - test various sizes
-					//  - each of these should also have an animation
 					const color = { h: 0, s: 100, l: 44 }; /* #df0000 */
 					const applyColor: gsap.Callback = () => {
 						if (elementRef.current) {
@@ -55,19 +48,26 @@ export function WinMessage() {
 						}
 					};
 					gsap.set(elementRef.current, { backgroundClip: 'text', color: 'transparent' });
+
+					// rainbow cycle
 					gsap.to(color, {
 						h: 360,
 						onUpdate: applyColor,
-						duration: WIN_TEXT_COLOR_DURATION,
+						duration: winIsFlourish52 ? WIN_TEXT_COLOR_DURATION_52 : WIN_TEXT_COLOR_DURATION,
 						ease: 'none',
+						repeat: -1,
 					});
-					gsap.to(color, {
-						s: 0,
-						l: 90,
-						onUpdate: applyColor,
-						duration: WIN_TEXT_COLOR_DURATION,
-						ease: 'power3.in',
-					});
+
+					if (!winIsFlourish52) {
+						// fade to white
+						gsap.to(color, {
+							s: 0,
+							l: 90,
+							onUpdate: applyColor,
+							duration: WIN_TEXT_COLOR_DURATION,
+							ease: 'power3.in',
+						});
+					}
 				}
 			}
 		},
@@ -81,9 +81,11 @@ export function WinMessage() {
 		fontSize: fixtureSizes.cardWidth,
 	};
 
+	const text = winIsFlourish52 ? 'Amazing!' : 'You Win!';
+
 	return (
 		<div className={styles_gameboard.winmessage} ref={elementRef} style={style}>
-			You Win!
+			{text}
 		</div>
 	);
 }

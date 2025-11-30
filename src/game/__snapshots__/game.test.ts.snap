@@ -1757,62 +1757,6 @@ FreeCell {
 }
 `;
 
-exports[`game parse win state 4 cascades 1`] = `
-">············KC·KD·KH·KS·
-·············
-:·YOU·WIN·!·:
-·············
-·hand-jammed"
-`;
-
-exports[`game parse win state 5 cascades 1`] = `
-">············KC·KD·KH·KS·
-················
-:··YOU·WIN·!···:
-················
-·hand-jammed"
-`;
-
-exports[`game parse win state 6 cascades 1`] = `
-">············KC·KD·KH·KS·
-···················
-:····YOU·WIN·!····:
-···················
-·hand-jammed"
-`;
-
-exports[`game parse win state 7 cascades 1`] = `
-">············KC·KD·KH·KS·
-······················
-:··Y·O·U···W·I·N·!···:
-······················
-·hand-jammed"
-`;
-
-exports[`game parse win state 8 cascades 1`] = `
-">············KC·KD·KH·KS·
-·························
-:····Y·O·U···W·I·N·!····:
-·························
-·hand-jammed"
-`;
-
-exports[`game parse win state 9 cascades 1`] = `
-">············KC·KD·KH·KS·
-····························
-:·····Y·O·U···W·I·N·!······:
-····························
-·hand-jammed"
-`;
-
-exports[`game parse win state 10 cascades 1`] = `
-">············KC·KD·KH·KS·
-·······························
-:·······Y·O·U···W·I·N·!·······:
-·······························
-·hand-jammed"
-`;
-
 exports[`game parse win state first 1`] = `
 FreeCell {
   "availableMoves": null,
@@ -2414,4 +2358,172 @@ FreeCell {
   ],
   "win": true,
 }
+`;
+
+exports[`game parse win state flourish 4 cascades 1`] = `
+">············KC·KD·KH·KS·
+·············
+:·YOU·WIN·!·:
+·············
+·hand-jammed·flourish"
+`;
+
+exports[`game parse win state flourish 5 cascades 1`] = `
+">············KC·KD·KH·KS·
+················
+:··YOU·WIN·!···:
+················
+·hand-jammed·flourish"
+`;
+
+exports[`game parse win state flourish 6 cascades 1`] = `
+">············KC·KD·KH·KS·
+···················
+:····YOU·WIN·!····:
+···················
+·hand-jammed·flourish"
+`;
+
+exports[`game parse win state flourish 7 cascades 1`] = `
+">············KC·KD·KH·KS·
+······················
+:··Y·O·U···W·I·N·!···:
+······················
+·hand-jammed·flourish"
+`;
+
+exports[`game parse win state flourish 8 cascades 1`] = `
+">············KC·KD·KH·KS·
+·························
+:····Y·O·U···W·I·N·!····:
+·························
+·hand-jammed·flourish"
+`;
+
+exports[`game parse win state flourish 9 cascades 1`] = `
+">············KC·KD·KH·KS·
+····························
+:·····Y·O·U···W·I·N·!······:
+····························
+·hand-jammed·flourish"
+`;
+
+exports[`game parse win state flourish 10 cascades 1`] = `
+">············KC·KD·KH·KS·
+·······························
+:·······Y·O·U···W·I·N·!·······:
+·······························
+·hand-jammed·flourish"
+`;
+
+exports[`game parse win state flourish52 4 cascades 1`] = `
+">············KC·KD·KH·KS·
+·············
+:·AMAZING·!·:
+·············
+·hand-jammed·flourish52"
+`;
+
+exports[`game parse win state flourish52 5 cascades 1`] = `
+">············KC·KD·KH·KS·
+················
+:··AMAZING·!···:
+················
+·hand-jammed·flourish52"
+`;
+
+exports[`game parse win state flourish52 6 cascades 1`] = `
+">············KC·KD·KH·KS·
+···················
+:····AMAZING·!····:
+···················
+·hand-jammed·flourish52"
+`;
+
+exports[`game parse win state flourish52 7 cascades 1`] = `
+">············KC·KD·KH·KS·
+······················
+:··A·M·A·Z·I·N·G·!···:
+······················
+·hand-jammed·flourish52"
+`;
+
+exports[`game parse win state flourish52 8 cascades 1`] = `
+">············KC·KD·KH·KS·
+·························
+:····A·M·A·Z·I·N·G·!····:
+·························
+·hand-jammed·flourish52"
+`;
+
+exports[`game parse win state flourish52 9 cascades 1`] = `
+">············KC·KD·KH·KS·
+····························
+:·····A·M·A·Z·I·N·G·!······:
+····························
+·hand-jammed·flourish52"
+`;
+
+exports[`game parse win state flourish52 10 cascades 1`] = `
+">············KC·KD·KH·KS·
+·······························
+:·······A·M·A·Z·I·N·G·!·······:
+·······························
+·hand-jammed·flourish52"
+`;
+
+exports[`game parse win state standard 4 cascades 1`] = `
+">············KC·KD·KH·KS·
+·············
+:·YOU·WIN·!·:
+·············
+·hand-jammed"
+`;
+
+exports[`game parse win state standard 5 cascades 1`] = `
+">············KC·KD·KH·KS·
+················
+:··YOU·WIN·!···:
+················
+·hand-jammed"
+`;
+
+exports[`game parse win state standard 6 cascades 1`] = `
+">············KC·KD·KH·KS·
+···················
+:····YOU·WIN·!····:
+···················
+·hand-jammed"
+`;
+
+exports[`game parse win state standard 7 cascades 1`] = `
+">············KC·KD·KH·KS·
+······················
+:··Y·O·U···W·I·N·!···:
+······················
+·hand-jammed"
+`;
+
+exports[`game parse win state standard 8 cascades 1`] = `
+">············KC·KD·KH·KS·
+·························
+:····Y·O·U···W·I·N·!····:
+·························
+·hand-jammed"
+`;
+
+exports[`game parse win state standard 9 cascades 1`] = `
+">············KC·KD·KH·KS·
+····························
+:·····Y·O·U···W·I·N·!······:
+····························
+·hand-jammed"
+`;
+
+exports[`game parse win state standard 10 cascades 1`] = `
+">············KC·KD·KH·KS·
+·······························
+:·······Y·O·U···W·I·N·!·······:
+·······························
+·hand-jammed"
 `;

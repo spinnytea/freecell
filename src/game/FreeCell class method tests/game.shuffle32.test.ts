@@ -1,4 +1,5 @@
 import { shorthandCard } from '@/game/card/card';
+import { IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
 import { FreeCell } from '@/game/game';
 
 describe('game.shuffle32', () => {
@@ -101,7 +102,8 @@ describe('game.shuffle32', () => {
 	});
 
 	test('Game #11982', () => {
-		const game = new FreeCell().shuffle32(11982);
+		expect(11982).toBe(IMPOSSIBLE_SEED);
+		const game = new FreeCell().shuffle32(11982); // IMPOSSIBLE_SEED
 		const matchSeed = /shuffle deck \((\d+)\)/.exec(game.previousAction.text);
 		expect(matchSeed).not.toBe(null);
 		expect(matchSeed?.[1]).toMatch(/^\d+$/);

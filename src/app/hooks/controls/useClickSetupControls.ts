@@ -19,7 +19,7 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 */
 export function useClickSetupControls() {
 	const [game, setGame, newGame] = useContext(GameContext);
-	const [{ enabledControlSchemes }, setSettings] = useContext(SettingsContext);
+	const [{ showDebugInfo, enabledControlSchemes }, setSettings] = useContext(SettingsContext);
 	const enableClickToMove = enabledControlSchemes.has(ControlSchemes.ClickToMove);
 	const enableClickToSelect = enabledControlSchemes.has(ControlSchemes.ClickToSelect);
 	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
@@ -29,6 +29,11 @@ export function useClickSetupControls() {
 	}
 
 	function handleClickSetup(event: MouseEvent) {
+		if (showDebugInfo) {
+			console.debug('handleClickSetup', { defaultPrevented: event.defaultPrevented });
+		}
+
+		if (event.defaultPrevented) return;
 		if (game.win) {
 			// click to reset
 			domUtils.consumeDomEvent(event);

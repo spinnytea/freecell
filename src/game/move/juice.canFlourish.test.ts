@@ -246,6 +246,27 @@ describe('move.juice', () => {
 				expect(juice.canFlourish52(game)).toEqual([]);
 			});
 
+			test('Game #7851', () => {
+				const game = new FreeCell().shuffle32(7851).dealAll();
+				expect(game.print()).toBe(
+					'' +
+						'>                        \n' +
+						' JC KC 3C 5S 9S TD JH KD \n' +
+						' 6D 7S 4H 4S 6S 8S TC KH \n' +
+						' AD QD 8C 5D 3H 4D 5H QS \n' +
+						' AS TS 9C 7D AH 6C QC KS \n' +
+						' 2H 5C AC 8D 3S 2D 2C 7C \n' +
+						' 7H 6H TH 4C 9H 3D 8H JS \n' +
+						' JD 2S QH 9D             \n' +
+						' deal all cards'
+				);
+				expect(juice.canFlourish(game)).toEqual([
+					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [4, 3] } },
+					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 3] } },
+				]);
+				expect(juice.canFlourish52(game)).toEqual([]);
+			});
+
 			test('Game #19508', () => {
 				const game = new FreeCell().shuffle32(19508).dealAll();
 				expect(game.print()).toBe(

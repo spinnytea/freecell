@@ -18,7 +18,7 @@ export function useClickToMoveControls(
 	disabledInProd?: boolean
 ) {
 	const [game, setGame] = useContext(GameContext);
-	const [{ enabledControlSchemes }, setSettings] = useContext(SettingsContext);
+	const [{ showDebugInfo, enabledControlSchemes }, setSettings] = useContext(SettingsContext);
 	const enableClickToMove = enabledControlSchemes.has(ControlSchemes.ClickToMove);
 	const enableClickToSelect = enabledControlSchemes.has(ControlSchemes.ClickToSelect);
 
@@ -30,10 +30,17 @@ export function useClickToMoveControls(
 		// handleClickSetup / useClickSetupControls
 		if (game.win) return; // if the game is over (reset)
 		if (game.deck.length) return; // game init (shuffle / deal)
-		// if (location.fixture === 'deck') return; // not valid move (from or to)
 
 		// XXX (techdebt) (dragndrop-bugs) disabledInProd buz unit tests, unless I can figure something else out
-		if (disabledInProd !== undefined && disabledInProd === !isTestEnv) return;
+		const skipBcuzDragAndDropIntegration =
+			disabledInProd !== undefined && disabledInProd === !isTestEnv;
+		if (showDebugInfo) {
+			console.debug(
+				'handleClickToMove',
+				JSON.stringify({ skipBcuzDragAndDropIntegration, location })
+			);
+		}
+		if (skipBcuzDragAndDropIntegration) return;
 
 		// TODO (techdebt) (gameplay) (dragndrop-bugs) remove allowPeekOnly: false
 		//  - I have _no_ idea why this allows click-to-move to work on mobile

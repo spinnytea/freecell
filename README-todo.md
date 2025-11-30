@@ -93,8 +93,11 @@
   - spitball impl: attempts positive and negative, display Math.abs(attempts), set neg when undo, set pos and increase when move
 - IDEA (theme) sounds - normally i don't like to, but some folio for moving cards should be okay
 - TODO (theme) more themes - card themes / decks / colors, background colors, etc
-- IDEA (techdebt) (deployment) (offline) (refactor) re-package as an android app?
-- IDEA (2-priority) (deployment) (offline) download on android: "play offline"
+- TODO (2-priority) (deployment) (offline) need some way to play without internet
+  - android "save page" isn't interactive
+  - it just has the last rendered image and is otherwise frozen
+- IDEA (deployment) (offline) (refactor) re-package as an android app?
+- IDEA (deployment) (motivation) (offline) download on android: "play offline"
   - single html file? try testing that first (javascript + svg)
   - airplane mode?
   - https://dev.to/stephengade/pwa-build-installable-nextjs-app-that-works-offline-3fff

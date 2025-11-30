@@ -44,4 +44,5 @@ export const SHUFFLE_DURATION = 0.3;
 export const CURSOR_TRANSLATE_DURATION = 1 / 16;
 
 export const WIN_TEXT_ANIMATION_DURATION = 0.75;
-export const WIN_TEXT_COLOR_DURATION = 1;
+export const WIN_TEXT_COLOR_DURATION = 1.2;
+export const WIN_TEXT_COLOR_DURATION_52 = 2;

@@ -1127,7 +1127,15 @@ export class FreeCell {
 
 	__printWin(): string {
 		if (this.win) {
-			const msg = this.tableau.length > 6 ? 'Y O U   W I N !' : 'YOU WIN !';
+			// XXX (hud) different messages depending on how you win
+			const msg = this.winIsFlourish52
+				? this.tableau.length > 6
+					? 'A M A Z I N G !'
+					: 'AMAZING !'
+				: this.tableau.length > 6
+					? 'Y O U   W I N !'
+					: 'YOU WIN !';
+
 			const lineLength = this.tableau.length * 3 + 1;
 			const paddingLength = (lineLength - msg.length - 2) / 2;
 			const spaces = '                               '; // enough spaces for 10 cascadeCount
