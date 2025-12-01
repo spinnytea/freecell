@@ -668,7 +668,7 @@ export function getCardsFromInvalid(
 	if (toShorthand.length === 2) {
 		to.push(findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1])));
 	} else {
-		// TODO (animation) (motivation) animate piles
+		// TODO (motivation) (animation) animate piles
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
 	}
 	return { from, to };

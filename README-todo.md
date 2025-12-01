@@ -46,7 +46,7 @@
   - maybe it just doesn't have any "previous positions" available
   - still, there's got to be something we can do
 - REVIEW (hud) (mobile) icon for bookmarks / save link to home screen (Andriod, iOS)
-- TODO (flourish-anim) (motivation) animate card flash for use in flourishes and end of game
+- TODO (motivation) (flourish-anim) animate card flash for use in flourishes and end of game
   - blue, red, pink, etc
   - snazzy explosion when you place the last card
   - based on the image svg so we can do it with any card (king, ace, whatever)
@@ -60,7 +60,7 @@
   - swap foundations (actually, that's easy)
   - need to replay game to ensure history is valid; swapping columns needs a note after the shuffle
   - `:h shuffle32 5, swap 21435678`
-- TODO (flourish-anim) (motivation) extra pizzazz when it's a 52-card flourish
+- TODO (motivation) (flourish-anim) extra pizzazz when it's a 52-card flourish
 - TODO (settings) (undo) undo limit - all, until deal, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
 - TODO (settings) ensure that new game is always shuffled
   - GameContextProvider
@@ -73,7 +73,7 @@
 - IDEA (animation) auto-foundation gets faster the longer it runs
 - TODO (animation) animations after/during win state (celbration)
 - IDEA (settings) toggle for: move sequence as one vs animate in-between steps (sequence moves vs each card moves)
-- IDEA (animation) (motivation) instant replay after game is over
+- IDEA (motivation) (animation) instant replay after game is over
 - IDEA (motivation) implement War? just so it's flexible?
   - what is "it", the UI? the controls?
 - IDEA (motivation) implement Spider Solitaire, that could be fun

@@ -31,7 +31,7 @@ export interface InvalidMoveCardType {
 }
 
 // TODO (techdebt) (combine-move-auto-foundation) unit test
-// TODO (animation) (motivation) optimize
+// TODO (motivation) (animation) optimize
 // IDEA (animation) animations by move type
 //  - first check all the cards that did move (updateCardPositions)
 //  - then check all the cards we expected to move based on actionText

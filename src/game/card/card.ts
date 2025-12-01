@@ -209,7 +209,7 @@ export function sortCardsOG(game: FreeCell, cards: Card[]): void {
 	and then assigns d0 to all of them
 	(this is meant to be used _as a_ game.deck)
 
-	TODO (techdebt) (flourish-anim) (motivation) (optimize) do not shuffle in place, produce a new state
+	TODO (techdebt) (motivation) (flourish-anim) (optimize) do not shuffle in place, produce a new state
 	 - basically, we should do another game.__clone
 	 - or maybe, since this is only used by juice, we should move it there for now
 */

@@ -51,8 +51,8 @@ export enum ControlSchemes {
 
 		The biggest problem is HHHoowwoowwwWWa
 		 - touch = wheel select?
-		 - keyboard = ??
-		 - mouse = ??
+		 - keyboard = Ctrl key, prolly
+		 - mouse = Ctrl + Click?
 		 - does the GUI just put it in the settings dialog?
 		 - unit tests can just call the function
 		 - but, imaging keyboard console game, how do we even get to it?

@@ -296,6 +296,7 @@ export function calcTopLeftZ(
 				}
 			}
 			if (flashCards) {
+				// TODO (2-priority) (animation) (flash-rank) try rotating of the "selection" style, this is confusing
 				let belowCount = 0;
 				let isEqual = false;
 				for (const card of flashCards) {

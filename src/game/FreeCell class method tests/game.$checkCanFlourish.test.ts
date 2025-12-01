@@ -16,6 +16,42 @@ describe('game.$checkCanFlourish', () => {
 		expect(once).toEqual(twice);
 	});
 
+	test('skips if selection', () => {
+		const game = new FreeCell().shuffle32(5).dealAll().touchByPosition('1').$checkCanFlourish();
+		expect(game.print()).toBe(
+			'' + //
+				'                         \n' +
+				' AH 8S 2D QS 4C 9H 2S 3D \n' +
+				' 5C AS 9C KH 4D 2C 3C 4S \n' +
+				' 3S 5D KC 3H KD 5H 6S 8D \n' +
+				' TD 7S JD 7H 8H JH JC 7D \n' +
+				' 5S QH 8C 9D KS QD 4H AC \n' +
+				' 2H TC TH 6D 6H 6C QC JS \n' +
+				'>9S|AD 7C TS             \n' +
+				' select 1 9S'
+		);
+
+		// TODO (motivation) (flourish-anim) if we refresh page, we want to keep the selection
+		expect(FreeCell.parse(game.print()).$checkCanFlourish().print()).toEqual(game.print());
+		// expect(FreeCell.parse(game.print({ includeHistory: true })).$checkCanFlourish().print()).toEqual(game.print());
+		expect(
+			FreeCell.parse(game.print({ includeHistory: true }))
+				.$checkCanFlourish()
+				.print()
+		).toEqual(
+			'' + //
+				'>                        \n' +
+				'*AH*8S 2D QS 4C 9H 2S 3D \n' +
+				' 5C*AS*9C KH 4D 2C 3C 4S \n' +
+				' 3S 5D KC 3H KD 5H 6S 8D \n' +
+				' TD 7S JD 7H 8H JH JC 7D \n' +
+				' 5S QH 8C 9D KS QD 4H AC \n' +
+				' 2H TC TH 6D 6H 6C QC JS \n' +
+				' 9S AD 7C TS             \n' +
+				' juice flash AH,AS'
+		);
+	});
+
 	describe('check-can-flourish', () => {
 		test('deep check', () => {
 			let game = new FreeCell().shuffle32(5).dealAll();
@@ -70,7 +106,7 @@ describe('game.$checkCanFlourish', () => {
 			expect(copy).toEqual(game);
 			let parsed = FreeCell.parse(game.print());
 			// parsed is missing some info
-			expect(parsed.flashCards).toBe(null); // XXX (techdebt) (flourish-anim) (motivation) recover this, since it's int he print
+			expect(parsed.flashCards).toBe(null); // TODO (techdebt) (motivation) (flourish-anim) recover this, since it's int he print
 			expect(parsed.history).toEqual([]); // does not include history
 			expect(parsed.previousAction).toEqual({
 				text: 'juice flash AH,AS',
@@ -252,7 +288,7 @@ describe('game.$checkCanFlourish', () => {
 			let copy = game.__copy();
 			let parsed = FreeCell.parse(game.print());
 			// parsed is missing some info
-			expect(parsed.flashCards).toBe(null); // XXX (techdebt) (flourish-anim) (motivation) recover this, since it's int he print
+			expect(parsed.flashCards).toBe(null); // TODO (techdebt) (motivation) (flourish-anim) recover this, since it's int he print
 			expect(parsed.history).toEqual([]); // does not include history
 			expect(parsed.previousAction).toEqual({
 				text: 'juice flash *AS*',

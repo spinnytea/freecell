@@ -985,6 +985,7 @@ export class FreeCell {
 		or if we can do a 52-card flourish
 	*/
 	$checkCanFlourish(): FreeCell {
+		if (this.selection) return this;
 		let aces = juice.canFlourish52(this);
 		let gameFunction: GameFunction = 'check-can-flourish52';
 		if (!aces.length) {
