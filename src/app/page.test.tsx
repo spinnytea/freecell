@@ -25,11 +25,13 @@ describe('page', () => {
 			fromToSpy: 0,
 			toSpy: 0,
 			setSpy: 52,
-			addLabelSpy: 1,
+			addLabelSpy: 2,
 			addSpy: 0,
 			timeScaleSpy: 0,
 			consoleDebugSpy: 0,
 		});
+		// TODO (techdebt) (test) lock down the shuffle seed
+		// expect(addLabelSpy.mock.calls).toEqual([['shuffle deck (20616)'], ['updateCardPositions']]);
 
 		mockReset(true);
 		fireEvent.click(screen.getAllByAltText('card back')[0]);
@@ -41,11 +43,13 @@ describe('page', () => {
 			fromToSpy: 52,
 			toSpy: 52,
 			setSpy: 0,
-			addLabelSpy: 1,
+			addLabelSpy: 2,
 			addSpy: 0,
 			timeScaleSpy: 0,
 			consoleDebugSpy: 0,
 		});
+		// TODO (techdebt) (test) lock down the shuffle seed
+		// expect(addLabelSpy.mock.calls).toEqual([['juice flash AD,AH'], ['updateCardPositions']]);
 
 		expect(screen.queryAllByAltText('card back').length).toBe(1); // there is hidden card back
 		expect(screen.getByText('king of hearts')).toBeTruthy();
