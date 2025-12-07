@@ -115,7 +115,6 @@ describe('game.$toggleCursor', () => {
 			game = game.$toggleCursor().moveCursor('right').$touchAndMove();
 			expect(game.previousAction.text).toBe('move b7 5D→6C');
 			// okay, this last one is a little far
-			// expect(game.print()).toBe('');
 			game = game
 				.moveCursor('right')
 				.moveCursor('down')

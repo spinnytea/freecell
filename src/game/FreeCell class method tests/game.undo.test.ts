@@ -536,7 +536,7 @@ describe('game.undo (+ history)', () => {
 
 					describe('sequence', () => {
 						test.todo('top');
-						// ('top', () => {
+						// t('top', () => {
 						// 	let game = FreeCell.parse(
 						// 		'' + //
 						// 			'   |TC|      9C TD KH KS \n' +
@@ -842,10 +842,10 @@ describe('game.undo (+ history)', () => {
 					test.todo('to: deck');
 
 					// invalid, cannot move a sequence to a cell, so cannot undo
-					// ('to: cell');
+					// t('to: cell');
 
 					// invalid, cannot move a sequence to a cell, so cannot undo
-					// todo('to: foundation');
+					// t('to: foundation');
 
 					describe('to: cascade', () => {
 						test.todo('single');
