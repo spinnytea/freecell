@@ -1087,7 +1087,7 @@ describe('useCardPositionAnimations', () => {
 					timeScaleSpy: 0,
 					consoleDebugSpy: 0,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['init']]);
+				expect(addLabelSpy.mock.calls).toEqual([['gameFunction undo']]);
 			});
 
 			test.todo('· deal all cards');
@@ -1149,18 +1149,19 @@ describe('useCardPositionAnimations', () => {
 			});
 
 			describe.each`
-				actionText                                    | shorthandMove | toSpyIDs                                    | fromToSpyIDs                | setSpyLength | toSpyUndoIDs         | fromToSpyUndoIDs     | labels
-				${'move 3a KC→cell'}                          | ${'3a'}       | ${['#cKC']}                                 | ${['#cKC']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
-				${'move 15 TD→JS'}                            | ${'15'}       | ${['#cTD']}                                 | ${['#cTD']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
-				${'move 23 KC-QD-JS→cascade'}                 | ${'23'}       | ${['#cKC', '#cQD', '#cJS']}                 | ${['#cKC', '#cQD', '#cJS']} | ${49}        | ${undefined}         | ${undefined}         | ${undefined}
-				${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${'53'}       | ${['#c6H', '#cAD']}                         | ${['#c6H', '#cAD']}         | ${50}        | ${undefined}         | ${undefined}         | ${[['move 53 6H→7C (auto-foundation 2 AD)'], ['updateCardPositionsPrev'], ['updateCardPositions']]}
-				${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${'14'}       | ${['#c2S', '#cAS', '#cAS', '#c2S', '#c2S']} | ${['#c2S']}                 | ${50}        | ${['#cAS', '#c2S']}  | ${['#cAS', '#c2S']}  | ${[['move 14 2S→3D (auto-foundation 14 AS,2S)'], ['updateCardPositionsPrev'], ['updateCardPositions']]}
-				${'move 21 8H-7C→cascade'}                    | ${'21'}       | ${['#c8H', '#c7C']}                         | ${['#c8H', '#c7C']}         | ${50}        | ${undefined}         | ${undefined}         | ${undefined}
-				${FIFTY_TWO_CARD_FLOURISH}                    | ${'3b'}       | ${ftcf_toSpyIDs}                            | ${['#c8S']}                 | ${0}         | ${ftcf_toSpyUndoIDs} | ${ftcf_toSpyUndoIDs} | ${[[FIFTY_TWO_CARD_FLOURISH], ['updateCardPositionsPrev'], ['updateCardPositions']]}
+				actionText                                    | prevActionText                                | shorthandMove | toSpyIDs                                    | fromToSpyIDs                | setSpyLength | toSpyUndoIDs         | fromToSpyUndoIDs     | labels
+				${'move 3a KC→cell'}                          | ${undefined}                                  | ${'3a'}       | ${['#cKC']}                                 | ${['#cKC']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 15 TD→JS'}                            | ${undefined}                                  | ${'15'}       | ${['#cTD']}                                 | ${['#cTD']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 23 KC-QD-JS→cascade'}                 | ${undefined}                                  | ${'23'}       | ${['#cKC', '#cQD', '#cJS']}                 | ${['#cKC', '#cQD', '#cJS']} | ${49}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${undefined}                                  | ${'53'}       | ${['#c6H', '#cAD']}                         | ${['#c6H', '#cAD']}         | ${50}        | ${undefined}         | ${undefined}         | ${[['move 53 6H→7C (auto-foundation 2 AD)'], ['updateCardPositionsPrev'], ['updateCardPositions']]}
+				${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${undefined}                                  | ${'14'}       | ${['#c2S', '#cAS', '#cAS', '#c2S', '#c2S']} | ${['#c2S']}                 | ${50}        | ${['#cAS', '#c2S']}  | ${['#cAS', '#c2S']}  | ${[['move 14 2S→3D (auto-foundation 14 AS,2S)'], ['updateCardPositionsPrev'], ['updateCardPositions']]}
+				${'move 21 8H-7C→cascade'}                    | ${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${'21'}       | ${['#c8H', '#c7C']}                         | ${['#c8H', '#c7C']}         | ${50}        | ${undefined}         | ${undefined}         | ${undefined}
+				${FIFTY_TWO_CARD_FLOURISH}                    | ${undefined}                                  | ${'3b'}       | ${ftcf_toSpyIDs}                            | ${['#c8S']}                 | ${0}         | ${ftcf_toSpyUndoIDs} | ${ftcf_toSpyUndoIDs} | ${[[FIFTY_TWO_CARD_FLOURISH], ['updateCardPositionsPrev'], ['updateCardPositions']]}
 			`(
 				'$actionText',
 				({
 					actionText,
+					prevActionText,
 					shorthandMove,
 					toSpyIDs,
 					fromToSpyIDs,
@@ -1170,6 +1171,7 @@ describe('useCardPositionAnimations', () => {
 					labels = [[actionText], ['updateCardPositions']],
 				}: {
 					actionText: string;
+					prevActionText: string;
 					shorthandMove: string;
 					toSpyIDs: string[];
 					fromToSpyIDs: string[];
@@ -1196,8 +1198,15 @@ describe('useCardPositionAnimations', () => {
 						expect(gameStateThree.print({ includeHistory: true })).toBe(
 							gameStateOne.print({ includeHistory: true })
 						);
-						// TODO (techdebt) move cursor during undo
-						// expect(gameStateThree.print()).toBe(gameStateOne.print());
+						// if (!prevActionText) expect(undefined).toBe(prevActionText);
+						// else expect(gameStateOne.previousAction.text).toBe(prevActionText);
+						expect(prevActionText && gameStateOne.previousAction.text).toBe(prevActionText);
+
+						if (actionText !== 'move 23 KC-QD-JS→cascade') {
+							// FIXME (techdebt) move cursor during undo - just one more edge case
+							// eslint-disable-next-line jest/no-conditional-expect
+							expect(gameStateThree.print()).toBe(gameStateOne.print());
+						}
 					});
 
 					test('move →', () => {
@@ -1232,20 +1241,13 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
-						// FIXME (animation) (undo) note that undo animations do not match the label
-						//  - move forward adds an action to the history
-						//  - undo backwards removes an action from the history
-						//  - and the undo actually moves the cards from the missing action, not the one shown
-						//  - we don't keep track of what the removed action was
-						//  - maybe we should track like we do with PreviousAction.tweenCards?
-						//  - ---
-						//  - or maybe, we just need to play the "default move animation" for any gameFunction
 						expect(addLabelSpy.mock.calls).toEqual([
-							[gameStateThree.previousAction.text],
+							['gameFunction undo'],
 							['updateCardPositions'],
 						]);
-						expect(gameStateOne.previousAction.text).not.toBe(actionText);
-						expect(gameStateOne.previousAction.text).toBe(gameStateThree.previousAction.text);
+						const firstLabel = (addLabelSpy.mock.calls as string[][])[0][0];
+						expect(firstLabel).toBe('gameFunction undo');
+						expect(firstLabel).not.toBe(prevActionText);
 						expect(mockCallTimes()).toEqual({
 							toGsapSpy: 0,
 							setGsapSpy: 0,
@@ -1291,9 +1293,12 @@ describe('useCardPositionAnimations', () => {
 						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
 						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
 						expect(addLabelSpy.mock.calls).toEqual([
-							[gameStateThree.previousAction.text],
+							['gameFunction undo'],
 							['updateCardPositions'],
 						]);
+						const firstLabel = (addLabelSpy.mock.calls as string[][])[0][0];
+						expect(firstLabel).toBe('gameFunction undo');
+						expect(firstLabel).not.toBe(prevActionText);
 						expect(mockCallTimes()).toEqual({
 							toGsapSpy: 0,
 							setGsapSpy: 0,
@@ -1607,10 +1612,7 @@ describe('useCardPositionAnimations', () => {
 			expect(setCardIds.length).toBe(50);
 			expect(setCardIds).not.toContain('#c7C'); // 51
 			expect(setCardIds).not.toContain('#c8H'); // 52
-			expect(addLabelSpy.mock.calls).toEqual([
-				['move 14 2S→3D (auto-foundation 14 AS,2S)'],
-				['updateCardPositions'],
-			]);
+			expect(addLabelSpy.mock.calls).toEqual([['gameFunction undo'], ['updateCardPositions']]);
 			expect(mockCallTimes()).toEqual({
 				toGsapSpy: 0,
 				setGsapSpy: 0,

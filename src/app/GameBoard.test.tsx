@@ -103,7 +103,10 @@ describe('GameBoard', () => {
 		fireEvent.click(screen.getAllByAltText('card back')[0]);
 
 		// animations
-		expect(addLabelSpy.mock.calls).toEqual([['juice flash AD'], ['updateCardPositions']]);
+		expect(addLabelSpy.mock.calls).toEqual([
+			['gameFunction check-can-flourish'],
+			['updateCardPositions'],
+		]);
 		expect(mockCallTimes()).toEqual({
 			toGsapSpy: 0,
 			setGsapSpy: 0,
@@ -145,7 +148,7 @@ describe('GameBoard', () => {
 		expect(addLabelSpy.mock.calls).toEqual([
 			['shuffle deck (5)'],
 			['updateCardPositions'],
-			['juice flash AH,AS'],
+			['gameFunction check-can-flourish'],
 			['updateCardPositions'],
 		]);
 		mockReset();

@@ -46,7 +46,11 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					previousTimeline.current = null;
 				},
 			});
-			timeline.addLabel(previousAction.text);
+			if (previousAction.gameFunction) {
+				timeline.addLabel(`gameFunction ${previousAction.gameFunction}`);
+			} else {
+				timeline.addLabel(previousAction.text);
+			}
 
 			// REVIEW (techdebt) if we are going to use this as storage, we need to update it _every time we move the cards_
 			//  - which I believe we do now, but like, this might be a constant task now?
