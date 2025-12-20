@@ -1201,12 +1201,8 @@ describe('useCardPositionAnimations', () => {
 						// if (!prevActionText) expect(undefined).toBe(prevActionText);
 						// else expect(gameStateOne.previousAction.text).toBe(prevActionText);
 						expect(prevActionText && gameStateOne.previousAction.text).toBe(prevActionText);
-
-						if (actionText !== 'move 23 KC-QD-JS→cascade') {
-							// FIXME (techdebt) move cursor during undo - just one more edge case
-							// eslint-disable-next-line jest/no-conditional-expect
-							expect(gameStateThree.print()).toBe(gameStateOne.print());
-						}
+						// move cursor during undo
+						expect(gameStateThree.print()).toBe(gameStateOne.print());
 					});
 
 					test('move →', () => {

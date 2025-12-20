@@ -225,7 +225,7 @@ describe('game', () => {
 		game = game.undo();
 		expect(game.print()).toEqual(
 			'' + //
-				'            >            \n' +
+				'                         \n' +
 				' KS KH KD KC             \n' +
 				' QS QH QD QC             \n' +
 				' JS JH JD JC             \n' +
@@ -239,6 +239,7 @@ describe('game', () => {
 				' 3S 3H 3D 3C             \n' +
 				' 2S 2H 2D 2C             \n' +
 				' AS AH AD AC             \n' +
+				':d>   \n' +
 				' hand-jammed'
 		);
 	});
