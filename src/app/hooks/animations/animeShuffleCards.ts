@@ -17,8 +17,10 @@ export function animShuffleCards({
 	let shRight: string | undefined = undefined;
 	let shLeft = undefined;
 	if (list.length === 1) {
+		// FIXME test
 		shRight = shorthandCard(list[0]);
 	} else if (list.length === 2) {
+		// FIXME test
 		shLeft = shorthandCard(list[0]);
 		shRight = shorthandCard(list[1]);
 	} else if (list.length > 2) {

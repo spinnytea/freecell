@@ -20,6 +20,8 @@ import {
 import { FreeCell } from '@/game/game';
 import { parseShorthandMove } from '@/game/move/move';
 
+const gsapUtilsRandom = gsap.utils.random as jest.Mock;
+
 /** HACK (techdebt) we need the game state to know which card we are moving */
 let moveByShorthand: (shorthandMove: string) => void;
 function CribTheGame() {
@@ -78,6 +80,8 @@ describe('GameBoard', () => {
 		({ toGsapSpy, fromGsapSpy, addLabelSpy, consoleDebugSpy, mockReset, mockCallTimes } =
 			spyOnGsap(gsap));
 		consoleDebugSpy.mockReturnValue(undefined);
+		// FIXME return different values to test different things
+		gsapUtilsRandom.mockReturnValue(undefined);
 	});
 
 	/** https://www.solitairelaboratory.com/tutorial.html */

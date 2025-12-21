@@ -79,6 +79,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				previousAction,
 			});
 
+			// FIXME review/refactor: the rest determines "how" each category needs to move
 			if (updateCardPositions.length) {
 				if (previousTimeline.current && previousTimeline.current !== timeline) {
 					if (process.env.NODE_ENV === 'test') {
@@ -134,11 +135,12 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					domUtils.setDomAttributes(cardId, tlz);
 				});
 			} else if (enableDragAndDrop) {
+				// FIXME test
 				// between "repeated deal and undo"
 				// and "drag-and-drop controls"
 				// cards can sometimes get stranded
 				// ---
-				// this is a stabilizing force to get cards back into their correct positions
+				// HACK (techdebt) this is a stabilizing force to get cards back into their correct positions
 				// kind of an "in case of emergency, break glass"
 				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
 					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);

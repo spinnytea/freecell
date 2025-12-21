@@ -15,6 +15,13 @@
 			"foreground": "#111",
 			"background": "#bb3c"
 		},
+		"HACK": {
+			"type": "text-and-comment",
+			"icon": "bug",
+			"iconColour": "#a52",
+			"foreground": "#111",
+			"background": "#d61b"
+		},
 		"TODO": {
 			"icon": "bookmark",
 			"type": "text-and-comment",
@@ -58,7 +65,7 @@
 			"background": "#84e3"
 		}
 	},
-	"todo-tree.general.tags": ["FIXME", "BUG", "TODO", "XXX", "REVIEW", "IDEA", "[ ]", "[x]"],
+	"todo-tree.general.tags": ["FIXME", "BUG", "HACK", "TODO", "XXX", "REVIEW", "IDEA", "[ ]", "[x]"],
 	"todo-tree.general.statusBar": "tags",
 	"todo-tree.highlights.useColourScheme": true,
 	"todo-tree.tree.showCountsInTree": true,

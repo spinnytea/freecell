@@ -7,7 +7,9 @@ jest.mock('gsap/all', () => ({
 		getProperty: () => ({}),
 		registerPlugin: () => ({}),
 		utils: {
-			random: () => undefined,
+			random: jest.fn().mockImplementation(() => {
+				throw new Error('you MUST mock gsap.utils.random');
+			}),
 		},
 	},
 	Draggable: {

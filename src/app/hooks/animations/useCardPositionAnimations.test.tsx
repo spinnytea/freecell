@@ -13,6 +13,8 @@ import {
 } from '@/game/catalog/actionText-examples';
 import { FreeCell } from '@/game/game';
 
+const gsapUtilsRandom = gsap.utils.random as jest.Mock;
+
 jest.mock('@/app/components/element/domUtils.ts', () => {
 	const domTLZ = new Map<string, { top: number; left: number; zIndex: number }>();
 	return {
@@ -59,6 +61,8 @@ describe('useCardPositionAnimations', () => {
 	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
 		domUtils.domTLZ.clear();
+		// FIXME return different values to test different things
+		gsapUtilsRandom.mockReturnValue(undefined);
 
 		({ fromToSpy, toSpy, setSpy, addLabelSpy, consoleDebugSpy, mockReset, mockCallTimes } =
 			spyOnGsap(gsap));

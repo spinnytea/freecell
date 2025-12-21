@@ -1,9 +1,9 @@
 # Code TODOs
 
 ```
-\b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b
-\b((F)IXME|BUG|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
-\b(BUG|TODO|XXX|REVIEW|IDEA)\b(\S|\s[^(])
+\b((F)IXME|BUG|HACK|TODO|XXX|REVIEW|IDEA)\b
+\b((F)IXME|BUG|HACK|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
+\b(BUG|HACK|TODO|XXX|REVIEW|IDEA)\b(\S|\s[^(])
 \([5432]-priority\)
 ```
 
