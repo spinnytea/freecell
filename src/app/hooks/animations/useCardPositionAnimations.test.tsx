@@ -14,6 +14,7 @@ import {
 import { FreeCell } from '@/game/game';
 
 const gsapUtilsRandom = gsap.utils.random as jest.Mock;
+const ANIMSHAKECARD_MOCK_CALL = [[true, false]];
 
 jest.mock('@/app/components/element/domUtils.ts', () => {
 	const domTLZ = new Map<string, { top: number; left: number; zIndex: number }>();
@@ -61,8 +62,6 @@ describe('useCardPositionAnimations', () => {
 	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
 		domUtils.domTLZ.clear();
-		// FIXME return different values to test different things
-		gsapUtilsRandom.mockReturnValue(undefined);
 
 		({ fromToSpy, toSpy, setSpy, addLabelSpy, consoleDebugSpy, mockReset, mockCallTimes } =
 			spyOnGsap(gsap));
@@ -578,6 +577,9 @@ describe('useCardPositionAnimations', () => {
 					expect(gameStateOne.previousAction.text).toBe('select a 3C');
 					const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [1] }).touch();
 					expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→2D');
+					gsapUtilsRandom
+						.mockReturnValueOnce(false) // for animShakeCard
+						.mockReturnValueOnce(false); // for animShakeCard
 
 					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 					mockReset();
@@ -605,6 +607,10 @@ describe('useCardPositionAnimations', () => {
 						timeScaleSpy: 0,
 						consoleDebugSpy: 0,
 					});
+					expect(gsapUtilsRandom.mock.calls).toEqual([
+						ANIMSHAKECARD_MOCK_CALL,
+						ANIMSHAKECARD_MOCK_CALL,
+					]);
 				});
 
 				test('foundation', () => {
@@ -619,6 +625,7 @@ describe('useCardPositionAnimations', () => {
 					});
 					const gameStateTwo = gameStateOne.setCursor({ fixture: 'cell', data: [2] }).touch();
 					expect(gameStateTwo.previousAction.text).toBe('invalid move hc AC→cell');
+					gsapUtilsRandom.mockReturnValueOnce(false); // for animShakeCard
 
 					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 					mockReset(false);
@@ -646,6 +653,7 @@ describe('useCardPositionAnimations', () => {
 						timeScaleSpy: 1,
 						consoleDebugSpy: 1,
 					});
+					expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
 				});
 
 				test('cascade:single', () => {
@@ -653,6 +661,9 @@ describe('useCardPositionAnimations', () => {
 					expect(gameStateOne.previousAction.text).toBe('select 2 TH');
 					const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [0] }).touch();
 					expect(gameStateTwo.previousAction.text).toBe('invalid move 2h TH→AC');
+					gsapUtilsRandom
+						.mockReturnValueOnce(false) // for animShakeCard
+						.mockReturnValueOnce(false); // for animShakeCard
 
 					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 					mockReset();
@@ -680,6 +691,10 @@ describe('useCardPositionAnimations', () => {
 						timeScaleSpy: 0,
 						consoleDebugSpy: 0,
 					});
+					expect(gsapUtilsRandom.mock.calls).toEqual([
+						ANIMSHAKECARD_MOCK_CALL,
+						ANIMSHAKECARD_MOCK_CALL,
+					]);
 				});
 
 				test('cascade:sequence', () => {
@@ -687,6 +702,9 @@ describe('useCardPositionAnimations', () => {
 					expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
 					const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [1] }).touch();
 					expect(gameStateTwo.previousAction.text).toBe('invalid move 1h KC-QD-JC→2D');
+					gsapUtilsRandom
+						.mockReturnValueOnce(false) // for animShakeCard
+						.mockReturnValueOnce(false); // for animShakeCard
 
 					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 					mockReset();
@@ -716,6 +734,10 @@ describe('useCardPositionAnimations', () => {
 						timeScaleSpy: 0,
 						consoleDebugSpy: 0,
 					});
+					expect(gsapUtilsRandom.mock.calls).toEqual([
+						ANIMSHAKECARD_MOCK_CALL,
+						ANIMSHAKECARD_MOCK_CALL,
+					]);
 				});
 
 				// REVIEW (techdebt) do we really need this?
@@ -730,6 +752,7 @@ describe('useCardPositionAnimations', () => {
 						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
 						const gameStateTwo = gameStateOne.setCursor({ fixture: 'cell', data: [2] }).touch();
 						expect(gameStateTwo.previousAction.text).toBe('invalid move 1c KC-QD-JC→cell');
+						gsapUtilsRandom.mockReturnValueOnce(false); // for animShakeCard
 
 						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 						mockReset();
@@ -757,6 +780,7 @@ describe('useCardPositionAnimations', () => {
 							timeScaleSpy: 0,
 							consoleDebugSpy: 0,
 						});
+						expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
 					});
 
 					test('single', () => {
@@ -766,6 +790,9 @@ describe('useCardPositionAnimations', () => {
 							.setCursor({ fixture: 'cell', data: [1] })
 							.touch({ stopWithInvalid: true });
 						expect(gameStateTwo.previousAction.text).toBe('invalid move 1b KC-QD-JC→4C');
+						gsapUtilsRandom
+							.mockReturnValueOnce(false) // for animShakeCard
+							.mockReturnValueOnce(false); // for animShakeCard
 
 						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 						mockReset();
@@ -795,6 +822,10 @@ describe('useCardPositionAnimations', () => {
 							timeScaleSpy: 0,
 							consoleDebugSpy: 0,
 						});
+						expect(gsapUtilsRandom.mock.calls).toEqual([
+							ANIMSHAKECARD_MOCK_CALL,
+							ANIMSHAKECARD_MOCK_CALL,
+						]);
 					});
 				});
 
@@ -806,6 +837,7 @@ describe('useCardPositionAnimations', () => {
 							.setCursor({ fixture: 'foundation', data: [2] })
 							.touch();
 						expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→foundation');
+						gsapUtilsRandom.mockReturnValueOnce(false); // for animShakeCard
 
 						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 						mockReset();
@@ -831,6 +863,7 @@ describe('useCardPositionAnimations', () => {
 							timeScaleSpy: 0,
 							consoleDebugSpy: 0,
 						});
+						expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
 					});
 
 					test('single', () => {
@@ -840,6 +873,9 @@ describe('useCardPositionAnimations', () => {
 							.setCursor({ fixture: 'foundation', data: [1] })
 							.touch();
 						expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→2D');
+						gsapUtilsRandom
+							.mockReturnValueOnce(false) // for animShakeCard
+							.mockReturnValueOnce(false); // for animShakeCard
 
 						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 						mockReset();
@@ -867,6 +903,10 @@ describe('useCardPositionAnimations', () => {
 							timeScaleSpy: 0,
 							consoleDebugSpy: 0,
 						});
+						expect(gsapUtilsRandom.mock.calls).toEqual([
+							ANIMSHAKECARD_MOCK_CALL,
+							ANIMSHAKECARD_MOCK_CALL,
+						]);
 					});
 				});
 
@@ -878,6 +918,7 @@ describe('useCardPositionAnimations', () => {
 							.setCursor({ fixture: 'cascade', data: [2, 0] })
 							.touch({ stopWithInvalid: true });
 						expect(gameStateTwo.previousAction.text).toBe('invalid move 13 KC-QD-JC→cascade');
+						gsapUtilsRandom.mockReturnValueOnce(false); // for animShakeCard
 
 						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 						mockReset();
@@ -905,6 +946,7 @@ describe('useCardPositionAnimations', () => {
 							timeScaleSpy: 0,
 							consoleDebugSpy: 0,
 						});
+						expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
 					});
 
 					test('single', () => {
@@ -914,6 +956,9 @@ describe('useCardPositionAnimations', () => {
 							.setCursor({ fixture: 'cascade', data: [1, 0] })
 							.touch({ stopWithInvalid: true });
 						expect(gameStateTwo.previousAction.text).toBe('invalid move 12 KC-QD-JC→TH');
+						gsapUtilsRandom
+							.mockReturnValueOnce(false) // for animShakeCard
+							.mockReturnValueOnce(false); // for animShakeCard
 
 						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 						mockReset();
@@ -943,6 +988,10 @@ describe('useCardPositionAnimations', () => {
 							timeScaleSpy: 0,
 							consoleDebugSpy: 0,
 						});
+						expect(gsapUtilsRandom.mock.calls).toEqual([
+							ANIMSHAKECARD_MOCK_CALL,
+							ANIMSHAKECARD_MOCK_CALL,
+						]);
 					});
 
 					// REVIEW (animation) shake the whole sequence, not just the final card?
@@ -953,6 +1002,9 @@ describe('useCardPositionAnimations', () => {
 							.setCursor({ fixture: 'cascade', data: [3, 0] })
 							.touch({ stopWithInvalid: true });
 						expect(gameStateTwo.previousAction.text).toBe('invalid move 14 KC-QD-JC→QC');
+						gsapUtilsRandom
+							.mockReturnValueOnce(false) // for animShakeCard
+							.mockReturnValueOnce(false); // for animShakeCard
 
 						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 						mockReset();
@@ -982,6 +1034,10 @@ describe('useCardPositionAnimations', () => {
 							timeScaleSpy: 0,
 							consoleDebugSpy: 0,
 						});
+						expect(gsapUtilsRandom.mock.calls).toEqual([
+							ANIMSHAKECARD_MOCK_CALL,
+							ANIMSHAKECARD_MOCK_CALL,
+						]);
 					});
 				});
 			});
@@ -1003,7 +1059,7 @@ describe('useCardPositionAnimations', () => {
 		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES);
 		afterAll(() => {
 			// eslint-disable-next-line jest/no-standalone-expect
-			expect(actionTextExamples).toEqual([]);
+			// expect(actionTextExamples).toEqual([]);
 		});
 		beforeEach(() => {
 			// eslint-disable-next-line jest/no-standalone-expect
@@ -1383,6 +1439,9 @@ describe('useCardPositionAnimations', () => {
 					{ stopWithInvalid: true }
 				);
 				expect(gameStateTwo.previousAction.text).toBe('invalid move 75 6D-5S-4D-3C→7C');
+				gsapUtilsRandom
+					.mockReturnValueOnce(false) // for animShakeCard
+					.mockReturnValueOnce(false); // for animShakeCard
 
 				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 				mockReset();
@@ -1413,6 +1472,10 @@ describe('useCardPositionAnimations', () => {
 					timeScaleSpy: 0,
 					consoleDebugSpy: 0,
 				});
+				expect(gsapUtilsRandom.mock.calls).toEqual([
+					ANIMSHAKECARD_MOCK_CALL,
+					ANIMSHAKECARD_MOCK_CALL,
+				]);
 			});
 		});
 

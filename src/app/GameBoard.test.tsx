@@ -80,8 +80,6 @@ describe('GameBoard', () => {
 		({ toGsapSpy, fromGsapSpy, addLabelSpy, consoleDebugSpy, mockReset, mockCallTimes } =
 			spyOnGsap(gsap));
 		consoleDebugSpy.mockReturnValue(undefined);
-		// FIXME return different values to test different things
-		gsapUtilsRandom.mockReturnValue(undefined);
 	});
 
 	/** https://www.solitairelaboratory.com/tutorial.html */
@@ -139,6 +137,7 @@ describe('GameBoard', () => {
 	/** https://www.solitairelaboratory.com/tutorial.html */
 	test('Game #5 (tutorial)', () => {
 		const gameBoardId = 'GameBoard.test-#5';
+		gsapUtilsRandom.mockReturnValueOnce('scale'); // for WinMessage
 		const { container } = render(
 			<MockGamePage game={new FreeCell().shuffle32(5)} gameBoardId={gameBoardId} />
 		);
@@ -763,5 +762,9 @@ describe('GameBoard', () => {
 		expect(screen.getByRole('status').textContent).toBe('shuffle deck (5)');
 		expect(addLabelSpy.mock.calls).toEqual([['shuffle deck (5)'], ['updateCardPositions']]);
 		mockReset();
+
+		expect(gsapUtilsRandom.mock.calls).toEqual([
+			[['scale', 'scaleX', 'scaleY']], // for WinMessage
+		]);
 	});
 });
