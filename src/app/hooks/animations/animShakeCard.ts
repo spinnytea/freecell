@@ -3,6 +3,12 @@ import { gsap } from 'gsap/all';
 import { INVALID_SHAKE_MAGNITUDE, INVALID_SHAKE_PORTION } from '@/app/animation_constants';
 import { calcCardId } from '@/game/card/card';
 
+/*
+FIXME unit tests
+const gsapUtilsRandom = gsap.utils.random as jest.Mock;
+const ANIMSHAKECARD_MOCK_CALL = [[true, false]];
+*/
+
 // FIXME test this directly? mock it for useCardPositionAnimations.test?
 export function animShakeCard({
 	timeline,
