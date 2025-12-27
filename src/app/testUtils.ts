@@ -47,8 +47,9 @@ export function spyOnGsap(_gsap: typeof gsap) {
 		timeScaleSpy.mockReset();
 	}
 
+	// FIXME cleanup, this is ugly
 	function mockCallTimes(): Record<string, number> {
-		return {
+		const data: Record<string, number> = {
 			toGsapSpy: toGsapSpy.mock.calls.length,
 			setGsapSpy: setGsapSpy.mock.calls.length,
 			fromGsapSpy: fromGsapSpy.mock.calls.length,
@@ -60,6 +61,13 @@ export function spyOnGsap(_gsap: typeof gsap) {
 			timeScaleSpy: timeScaleSpy.mock.calls.length,
 			consoleDebugSpy: consoleDebugSpy.mock.calls.length,
 		};
+		const ret = {} as Record<string, number>;
+		Object.keys(data).forEach((key) => {
+			if (data[key]) {
+				ret[key] = data[key];
+			}
+		});
+		return ret;
 	}
 
 	// REVIEW (techdebt) can we add more helper functions and remove the spies?

@@ -91,14 +91,8 @@ describe('GameBoard', () => {
 		expect(mockCallTimes()).toEqual({
 			toGsapSpy: 52,
 			setGsapSpy: 52,
-			fromGsapSpy: 0,
-			fromToSpy: 0,
-			toSpy: 0,
 			setSpy: 52,
 			addLabelSpy: 2,
-			addSpy: 0,
-			timeScaleSpy: 0,
-			consoleDebugSpy: 0,
 		});
 
 		mockReset();
@@ -110,16 +104,9 @@ describe('GameBoard', () => {
 			['updateCardPositions'],
 		]);
 		expect(mockCallTimes()).toEqual({
-			toGsapSpy: 0,
-			setGsapSpy: 0,
-			fromGsapSpy: 0,
 			fromToSpy: 52,
 			toSpy: 52,
-			setSpy: 0,
 			addLabelSpy: 2,
-			addSpy: 0,
-			timeScaleSpy: 0,
-			consoleDebugSpy: 0,
 		});
 
 		expect(container).toMatchSnapshot();
