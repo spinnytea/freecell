@@ -54,6 +54,74 @@ jest.mock('@/app/hooks/animations/animShakeCard.ts', () => {
 	};
 });
 
+jest.mock('@/app/hooks/animations/animShuffleCards.ts', () => {
+	return {
+		animShuffleCards: jest
+			.fn()
+			.mockImplementation(
+				({
+					timeline,
+					list,
+					gameBoardIdRef,
+				}: {
+					timeline: gsap.core.Timeline;
+					list: string[];
+					gameBoardIdRef?: MutableRefObject<string>;
+				}) => {
+					const gameBoardId: string = gameBoardIdRef?.current ?? '';
+					timeline.addLabel(
+						`mock animShuffleCards ${list.length.toString(10)}${gameBoardId ? ` in id ${gameBoardId}` : ''}`
+					);
+				}
+			),
+	};
+});
+
+/*
+FIXME mock animUpdatedCardPositions
+jest.mock('@/app/hooks/animations/animUpdatedCardPositions.ts', () => {
+	return {
+		animUpdatedCardPositions: jest
+			.fn()
+			.mockImplementation(
+				({
+					timeline,
+					list,
+					nextTLZ,
+					fixtureSizes,
+					prevFixtureSizes,
+					gameBoardIdRef,
+					pause = false,
+					cardsNearTarget = false,
+				}: {
+					timeline: gsap.core.Timeline;
+					list: UpdateCardPositionsType[];
+					nextTLZ: Map<string, TLZ>;
+					fixtureSizes: FixtureSizes;
+					prevFixtureSizes: MutableRefObject<FixtureSizes>;
+					gameBoardIdRef?: MutableRefObject<string>;
+					pause?: boolean;
+					cardsNearTarget?: boolean;
+				}) => {
+					// FIXME this mock is so complex, does that mean we need to break things down?
+					const gameBoardId: string = gameBoardIdRef?.current ?? '';
+					timeline.addLabel(
+						[
+							`mock animUpdatedCardPositions`,
+							`${list.length.toString(10)}`, // FIXME review
+							`${nextTLZ.size.toString(10)}`, // FIXME review
+							fixtureSizes === prevFixtureSizes.current,
+							(gameBoardId ? `in id ${gameBoardId}` : 'none'),
+							pause,
+							cardsNearTarget,
+						].join(' ')
+					);
+				}
+			),
+	};
+});
+*/
+
 function MockGamePage({ games }: { games: (FreeCell | string)[] }) {
 	return (
 		<StaticGameContextProvider games={games}>
@@ -201,30 +269,13 @@ describe('useCardPositionAnimations', () => {
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 			expect(mockCallTimes()).toEqual({
-				toSpy: 4,
-				setSpy: 2,
-				addLabelSpy: 2,
-				addSpy: 2,
+				addLabelSpy: 3,
 			});
-			expect(toSpy.mock.calls[0]).toEqual([
-				'#cAD',
-				{ x: '-=8', y: '-=25', rotation: '-=8', duration: 0.15, ease: 'sine.out' },
+			expect(addLabelSpy.mock.calls).toEqual([
+				['shuffle deck (5)'],
+				['shuffle'],
+				['mock animShuffleCards 52'],
 			]);
-			expect(toSpy.mock.calls[1]).toEqual([
-				'#cAD',
-				{ x: '0', y: '0', rotation: 0, duration: 0.15, ease: 'sine.in' },
-			]);
-			expect(toSpy.mock.calls[2]).toEqual([
-				'#cAH',
-				{ x: '+=8', y: '-=25', rotation: '+=8', duration: 0.15, ease: 'sine.in' },
-			]);
-			expect(toSpy.mock.calls[3]).toEqual([
-				'#cAH',
-				{ x: '0', y: '0', rotation: 0, duration: 0.15, ease: 'sine.out' },
-			]);
-			expect(setSpy.mock.calls[0]).toEqual(['#cAD', { zIndex: -100 }]);
-			expect(setSpy.mock.calls[1]).toEqual(['#cAH', { zIndex: -99 }]);
-			expect(addLabelSpy.mock.calls).toEqual([['shuffle deck (5)'], ['shuffle']]);
 		});
 
 		test('deal', () => {
@@ -876,14 +927,13 @@ describe('useCardPositionAnimations', () => {
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
 
 				// shuffle animation
-				expect(getCardIdsFromSpy(toSpy)).toEqual(['#cAD', '#cAD', '#cAH', '#cAH']);
-				expect(getCardIdsFromSpy(setSpy)).toEqual(['#cAD', '#cAH']);
-				expect(addLabelSpy.mock.calls).toEqual([['shuffle deck (1)'], ['shuffle']]);
+				expect(addLabelSpy.mock.calls).toEqual([
+					['shuffle deck (1)'],
+					['shuffle'],
+					['mock animShuffleCards 52'],
+				]);
 				expect(mockCallTimes()).toEqual({
-					toSpy: 4,
-					setSpy: 2,
-					addLabelSpy: 2,
-					addSpy: 2,
+					addLabelSpy: 3,
 				});
 
 				mockReset();
