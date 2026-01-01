@@ -101,14 +101,23 @@ describe('useCardPositionAnimations', () => {
 	let toSpy: jest.SpyInstance;
 	let setSpy: jest.SpyInstance;
 	let addLabelSpy: jest.SpyInstance;
+	let timeScaleSpy: jest.SpyInstance;
 	let consoleDebugSpy: jest.SpyInstance;
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
 		domUtils.domTLZ.clear();
 
-		({ fromToSpy, toSpy, setSpy, addLabelSpy, consoleDebugSpy, mockReset, mockCallTimes } =
-			spyOnGsap(gsap));
+		({
+			fromToSpy,
+			toSpy,
+			setSpy,
+			addLabelSpy,
+			timeScaleSpy,
+			consoleDebugSpy,
+			mockReset,
+			mockCallTimes,
+		} = spyOnGsap(gsap));
 	});
 
 	function getCardIdsFromSpy(spy: jest.SpyInstance) {
@@ -580,6 +589,7 @@ describe('useCardPositionAnimations', () => {
 						['invalidMoveCards.fromShorthands'],
 						['mock animShakeCard AC'],
 					]);
+					expect(timeScaleSpy.mock.calls).toEqual([[2]]);
 					expect(consoleDebugSpy.mock.calls).toEqual([['speedup invalidMoveCards', 'invalid']]);
 					expect(mockCallTimes()).toEqual({
 						addLabelSpy: 3,
@@ -1445,6 +1455,7 @@ describe('useCardPositionAnimations', () => {
 
 			const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+			expect(setSpy.mock.calls.length).toBe(52);
 			expect(addLabelSpy.mock.calls).toEqual([
 				['move 7a 8H→cell (auto-foundation 77 AS,AD)'],
 				['updateCardPositions'],

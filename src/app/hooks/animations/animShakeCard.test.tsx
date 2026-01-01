@@ -14,7 +14,84 @@ describe('animShakeCard', () => {
 		({ toSpy, addSpy, mockCallTimes } = spyOnGsap(gsap));
 	});
 
-	test.todo('list');
+	describe('list', () => {
+		test('zero', () => {
+			gsapUtilsRandom.mockReturnValueOnce(true);
+			const timeline = gsap.timeline();
+
+			animShakeCard({
+				timeline,
+				list: [],
+			});
+
+			expect(mockCallTimes()).toEqual({});
+			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
+				'timeline.add'
+			);
+			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
+		});
+
+		test('one', () => {
+			gsapUtilsRandom.mockReturnValueOnce(true);
+			const timeline = gsap.timeline();
+
+			animShakeCard({
+				timeline,
+				list: ['KH'],
+			});
+
+			expect(mockCallTimes()).toEqual({
+				addSpy: 1,
+				toSpy: 3,
+			});
+			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
+				'timeline.add'
+			);
+			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
+		});
+
+		test('two', () => {
+			gsapUtilsRandom.mockReturnValueOnce(true);
+			const timeline = gsap.timeline();
+
+			animShakeCard({
+				timeline,
+				list: ['KH', 'QS'],
+			});
+
+			expect(mockCallTimes()).toEqual({
+				addSpy: 2,
+				toSpy: 6,
+			});
+			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
+				'timeline.add'
+			);
+			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
+		});
+
+		test('three', () => {
+			gsapUtilsRandom.mockReturnValueOnce(true);
+			const timeline = gsap.timeline();
+
+			animShakeCard({
+				timeline,
+				list: ['KH', 'QS', 'JD'],
+			});
+
+			expect(mockCallTimes()).toEqual({
+				addSpy: 3,
+				toSpy: 9,
+			});
+			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
+				'timeline.add'
+			);
+			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
+		});
+	});
 
 	test('gameBoardId', () => {
 		gsapUtilsRandom.mockReturnValueOnce(true);

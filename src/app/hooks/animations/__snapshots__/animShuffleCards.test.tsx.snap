@@ -335,3 +335,9 @@ exports[`animShuffleCards list two: timeline.to 1`] = `
   ],
 ]
 `;
+
+exports[`animShuffleCards list zero: timeline.add 1`] = `[]`;
+
+exports[`animShuffleCards list zero: timeline.set 1`] = `[]`;
+
+exports[`animShuffleCards list zero: timeline.to 1`] = `[]`;
