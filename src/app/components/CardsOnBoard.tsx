@@ -63,6 +63,7 @@ function CardOnBoard({
 		gsap.set(cardRef.current, { top, left, zIndex });
 	});
 
+	// TODO (techdebt) (flourish-anim) (gsap) move to useCardPositionAnimations
 	useGSAP(
 		() => {
 			gsap.to(cardRef.current, {

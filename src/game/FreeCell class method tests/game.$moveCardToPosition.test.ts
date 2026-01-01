@@ -118,7 +118,7 @@ describe('game.$moveCardToPosition', () => {
 		});
 
 		describe('deck', () => {
-			// ('empty'); // we need a card to be in the deck
+			// t('empty'); // we need a card to be in the deck
 
 			test('present', () => {
 				let game = new FreeCell().dealAll({ demo: true, keepDeck: true });

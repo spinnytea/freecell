@@ -48,18 +48,24 @@ export function spyOnGsap(_gsap: typeof gsap) {
 	}
 
 	function mockCallTimes(): Record<string, number> {
-		return {
-			toGsapSpy: toGsapSpy.mock.calls.length,
-			setGsapSpy: setGsapSpy.mock.calls.length,
-			fromGsapSpy: fromGsapSpy.mock.calls.length,
-			fromToSpy: fromToSpy.mock.calls.length,
-			toSpy: toSpy.mock.calls.length,
-			setSpy: setSpy.mock.calls.length,
-			addLabelSpy: addLabelSpy.mock.calls.length,
-			addSpy: addSpy.mock.calls.length,
-			timeScaleSpy: timeScaleSpy.mock.calls.length,
-			consoleDebugSpy: consoleDebugSpy.mock.calls.length,
-		};
+		return Object.entries({
+			toGsapSpy,
+			setGsapSpy,
+			fromGsapSpy,
+			fromToSpy,
+			toSpy,
+			setSpy,
+			addLabelSpy,
+			addSpy,
+			timeScaleSpy,
+			consoleDebugSpy,
+		} as Record<string, jest.SpyInstance>).reduce<Record<string, number>>((acc, [key, spy]) => {
+			const length = spy.mock.calls.length;
+			if (length > 0) {
+				acc[key] = length;
+			}
+			return acc;
+		}, {});
 	}
 
 	// REVIEW (techdebt) can we add more helper functions and remove the spies?

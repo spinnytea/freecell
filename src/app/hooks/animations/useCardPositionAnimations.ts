@@ -4,8 +4,8 @@ import { gsap } from 'gsap/all';
 import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils, TLZ } from '@/app/components/element/domUtils';
-import { animShuffleCards } from '@/app/hooks/animations/animeShuffleCards';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
+import { animShuffleCards } from '@/app/hooks/animations/animShuffleCards';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
 import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCardPositions';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
@@ -46,9 +46,15 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					previousTimeline.current = null;
 				},
 			});
+			if (previousAction.gameFunction) {
+				timeline.addLabel(`gameFunction ${previousAction.gameFunction}`);
+			} else {
+				timeline.addLabel(previousAction.text);
+			}
 
 			// REVIEW (techdebt) if we are going to use this as storage, we need to update it _every time we move the cards_
 			//  - which I believe we do now, but like, this might be a constant task now?
+			// REVIEW (techdebt) previousTLZ / nextTLZ is a source of bugs and initialization problems
 			const previousTLZ = new Map<string, TLZ>();
 			cards.forEach((card) => {
 				const shorthand = shorthandCard(card);
@@ -87,15 +93,6 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				previousTimeline.current = timeline;
 
 				const nextTLZ = new Map(previousTLZ);
-				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
-					// XXX (animation) should this be in animUpdatedCardPositions somehow?
-					const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
-					// REVIEW (techdebt) setting nextTLZ breaks things?
-					// nextTLZ.set(shorthand, { top, left, zIndex });
-					// NOTE if we `transform: '',` that also clear the rotation
-					// REVIEW (techdebt) (animations) "integration" test this rotation bug - can we? is it possible? tlz-r-xy
-					timeline.set(cardIdSelector, { top, left, zIndex });
-				});
 				if (updateCardPositionsPrev) {
 					// XXX (techdebt) (motivation) this needs to be refactored this is the first non-trivial animation, so it's a bit of a 1-off
 					//  - everything else so far has been about making sure the cards move in the right order
@@ -127,28 +124,6 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				nextTLZ.forEach((tlz, shorthand) => {
 					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
 					domUtils.setDomAttributes(cardId, tlz);
-				});
-			} else if (enableDragAndDrop) {
-				// between "repeated deal and undo"
-				// and "drag-and-drop controls"
-				// cards can sometimes get stranded
-				// ---
-				// this is a stabilizing force to get cards back into their correct positions
-				// kind of an "in case of emergency, break glass"
-				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
-					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
-					const cardIdSelector = '#' + cardId;
-					domUtils.setDomAttributes(cardId, { top, left, zIndex });
-					// NOTE if we `transform: '',` that also clear the rotation
-					timeline.set(cardIdSelector, { top, left, zIndex, duration: 0.1 }, '<0');
-
-					// REVIEW (techdebt) (animation) if we split this out into two, then "refresh -> deal" and "refresh -> undo deal" are _busted_
-					//  - which like, we don't need to, just `set` is fine
-					//  - but like, it would be nice-if
-					//  - and like, that means i do not understand what gsap is doing
-					//  - what other bugs are here (drag-and-drop is ripe with them)
-					// timeline.set(cardIdSelector, { zIndex, transform: '' });
-					// timeline.to(cardIdSelector, { top, left, duration: 0.1 }, '<0');
 				});
 			}
 
@@ -187,6 +162,33 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 						gameBoardIdRef,
 					});
 				}
+			}
+
+			if (updateCardPositions.length || enableDragAndDrop) {
+				// HACK (techdebt) this is a stabilizing force to get cards back into their correct positions
+				//  - cards can sometimes get stranded
+				//  - kind of an "in case of emergency, break glass"
+				// XXX (animation) should this be in animUpdatedCardPositions somehow?
+				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
+					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
+					const cardIdSelector = '#' + cardId;
+					domUtils.setDomAttributes(cardId, { top, left, zIndex });
+
+					// REVIEW (techdebt) setting nextTLZ breaks things?
+					// NOTE if we `transform: '',` that also clear the rotation
+					// nextTLZ.set(shorthand, { top, left, zIndex });
+
+					// REVIEW (techdebt) (animations) "integration" test this rotation bug - can we? is it possible? tlz-r-xy
+					timeline.set(cardIdSelector, { top, left, zIndex, duration: 0.1 }, '<0');
+
+					// REVIEW (techdebt) (animation) if we split this out into two, then "refresh -> deal" and "refresh -> undo deal" are _busted_
+					//  - which like, we don't need to, just `set` is fine
+					//  - but like, it would be nice-if
+					//  - and like, that means i do not understand what gsap is doing
+					//  - what other bugs are here (drag-and-drop is ripe with them)
+					// timeline.set(cardIdSelector, { zIndex, transform: '' });
+					// timeline.to(cardIdSelector, { top, left, duration: 0.1 }, '<0');
+				});
 			}
 		},
 		{ dependencies: [cards, selection, previousAction, fixtureSizes, enableDragAndDrop] }

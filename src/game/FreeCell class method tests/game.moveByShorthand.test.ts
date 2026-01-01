@@ -248,7 +248,18 @@ describe('game.moveByShorthand', () => {
 
 		test('cannot stack that', () => {
 			const game = new FreeCell().shuffle32(1).dealAll();
-			// expect(game.print()).toBe('');
+			expect(game.print()).toBe(
+				'' +
+					'>                        \n' +
+					' JD 2D 9H JC 5D 7H 7C 5H \n' +
+					' KD KC 9S 5S AD QC KH 3H \n' +
+					' 2S KS 9D QD JS AS AH 3C \n' +
+					' 4C 5C TS QH 4H AC 4D 7S \n' +
+					' 3S TD 4S TH 8H 2C JH 7D \n' +
+					' 6D 8S 8D QS 6C 3D 8C TC \n' +
+					' 6S 9C 2H 6H             \n' +
+					' deal all cards'
+			);
 			expect(game.$selectCard('2H').availableMoves).toEqual([
 				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: 4 },
 				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: 3 },

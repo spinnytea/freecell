@@ -1,0 +1,413 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`animShakeCard gameBoardId: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+  [
+    "<+0.050",
+  ],
+]
+`;
+
+exports[`animShakeCard gameBoardId: timeline.to 1`] = `
+[
+  [
+    "#cKH-1",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#cKH-1",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#cKH-1",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+  [
+    "#cQS-1",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#cQS-1",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#cQS-1",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShakeCard gsap.utils.random false: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+  [
+    "<+0.050",
+  ],
+]
+`;
+
+exports[`animShakeCard gsap.utils.random false: timeline.to 1`] = `
+[
+  [
+    "#cKH",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "+=3.000",
+    },
+  ],
+  [
+    "#cKH",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "-=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#cKH",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+  [
+    "#cQS",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "+=3.000",
+    },
+  ],
+  [
+    "#cQS",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "-=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#cQS",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShakeCard gsap.utils.random true: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+  [
+    "<+0.050",
+  ],
+]
+`;
+
+exports[`animShakeCard gsap.utils.random true: timeline.to 1`] = `
+[
+  [
+    "#cKH",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#cKH",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#cKH",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+  [
+    "#cQS",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#cQS",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#cQS",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShakeCard list one: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+]
+`;
+
+exports[`animShakeCard list one: timeline.to 1`] = `
+[
+  [
+    "#cKH",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#cKH",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#cKH",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShakeCard list three: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+  [
+    "<+0.050",
+  ],
+  [
+    "<+0.050",
+  ],
+]
+`;
+
+exports[`animShakeCard list three: timeline.to 1`] = `
+[
+  [
+    "#cKH",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#cKH",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#cKH",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+  [
+    "#cQS",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#cQS",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#cQS",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+  [
+    "#cJD",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#cJD",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#cJD",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShakeCard list two: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+  [
+    "<+0.050",
+  ],
+]
+`;
+
+exports[`animShakeCard list two: timeline.to 1`] = `
+[
+  [
+    "#cKH",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#cKH",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#cKH",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+  [
+    "#cQS",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#cQS",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#cQS",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShakeCard list zero: timeline.add 1`] = `[]`;
+
+exports[`animShakeCard list zero: timeline.to 1`] = `[]`;

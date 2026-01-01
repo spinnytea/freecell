@@ -521,15 +521,9 @@ export class FreeCell {
 		const action = parsePreviousActionType(history.pop() ?? 'init partial');
 		action.gameFunction = 'undo';
 
-		// TODO (techdebt) remove 'hand-jammed' special case from here?
-		//  - why not "any" init?
-		//  - why at all?
-		const cursor =
-			action.text === 'hand-jammed'
-				? undefined
-				: toggleCursor
-					? parseAltCursorFromPreviousActionText(action.text, cards)
-					: parseCursorFromPreviousActionText(action.text, cards);
+		const cursor = toggleCursor
+			? parseAltCursorFromPreviousActionText(action.text, cards)
+			: parseCursorFromPreviousActionText(action.text, cards);
 
 		// we _need_ an action in __clone
 		// __clone will add it back to the history

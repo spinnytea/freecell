@@ -1,4 +1,3 @@
-import { ACTION_TEXT_EXAMPLES } from '@/game/catalog/actionText-examples';
 import {
 	getMoves,
 	SEED_SOLUTIONS_4x8,
@@ -272,8 +271,9 @@ describe('game.undo (+ history)', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' KC    QC    JC KD KH>KS \n' +
+						' KC    QC    JC KD KH KS \n' +
 						'                         \n' +
+						':d>   \n' +
 						' hand-jammed'
 				);
 				expect(game.print({ includeHistory: true })).toBe(
@@ -282,7 +282,7 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						' hand-jammed'
 				);
-				expect(game.cursor).toEqual({ fixture: 'foundation', data: [3] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
 				expect(game.history).toEqual(['hand-jammed']);
 			});
 
@@ -319,8 +319,9 @@ describe('game.undo (+ history)', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' KC>   QC    JC KD KH KS \n' +
+						' KC    QC    JC KD KH KS \n' +
 						'                         \n' +
+						':d>   \n' +
 						' hand-jammed'
 				);
 				expect(game.print({ includeHistory: true })).toBe(
@@ -329,7 +330,7 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						' hand-jammed'
 				);
-				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
 				expect(game.history).toEqual(['hand-jammed']);
 			});
 
@@ -366,8 +367,9 @@ describe('game.undo (+ history)', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' KC>   QC    JC KD KH KS \n' +
+						' KC    QC    JC KD KH KS \n' +
 						'                         \n' +
+						':d>   \n' +
 						' hand-jammed'
 				);
 				expect(game.print({ includeHistory: true })).toBe(
@@ -376,7 +378,7 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						' hand-jammed'
 				);
-				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
 				expect(game.history).toEqual(['hand-jammed']);
 			});
 
@@ -536,7 +538,7 @@ describe('game.undo (+ history)', () => {
 
 					describe('sequence', () => {
 						test.todo('top');
-						// ('top', () => {
+						// t('top', () => {
 						// 	let game = FreeCell.parse(
 						// 		'' + //
 						// 			'   |TC|      9C TD KH KS \n' +
@@ -713,8 +715,9 @@ describe('game.undo (+ history)', () => {
 						);
 						expect(game.undo().print()).toBe(
 							'' + //
-								' KC>         JC QD KH KS \n' +
+								' KC          JC QD KH KS \n' +
 								' QC KD                   \n' +
+								':d>   \n' +
 								' hand-jammed'
 						);
 					});
@@ -735,8 +738,9 @@ describe('game.undo (+ history)', () => {
 						);
 						expect(game.undo().print()).toBe(
 							'' + //
-								' KC         >JC QD KH KS \n' +
+								' KC          JC QD KH KS \n' +
 								' QC KD                   \n' +
+								':d>   \n' +
 								' hand-jammed'
 						);
 					});
@@ -818,7 +822,8 @@ describe('game.undo (+ history)', () => {
 										'             TC 8D KH KS \n' +
 										'    TD KC KD    9D       \n' +
 										'       QD QC             \n' +
-										'      >JC JD             \n' +
+										'       JC JD             \n' +
+										':d>   \n' +
 										' hand-jammed'
 								);
 								expect(game.print({ includeHistory: true })).toBe(
@@ -842,10 +847,10 @@ describe('game.undo (+ history)', () => {
 					test.todo('to: deck');
 
 					// invalid, cannot move a sequence to a cell, so cannot undo
-					// ('to: cell');
+					// t('to: cell');
 
 					// invalid, cannot move a sequence to a cell, so cannot undo
-					// todo('to: foundation');
+					// t('to: foundation');
 
 					describe('to: cascade', () => {
 						test.todo('single');
@@ -1056,9 +1061,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed']);
-				// XXX (undo) undo should update position of cursor
-				// expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
-				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
 			});
 
 			test('flourish', () => {
@@ -1121,9 +1124,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed']);
-				// XXX (undo) undo should update position of cursor
-				// expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 0] });
-				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
 				expect(game.selection).toEqual(null);
 				expect(game.availableMoves).toEqual(null);
 			});
@@ -1289,7 +1290,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed']);
-				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
 			});
 
 			test('flourish', () => {
@@ -1329,7 +1330,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed']);
-				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
 			});
 
 			test('52-card flourish', () => {
@@ -1800,7 +1801,31 @@ describe('game.undo (+ history)', () => {
 	});
 
 	test('parse history actions', () => {
-		const game = FreeCell.parse(ACTION_TEXT_EXAMPLES['move 3a KC→cell']);
+		const game = FreeCell.parse(
+			'' +
+				'             AD 3C 4H 3S \n' +
+				' QH TS 2D 7C 4C 7D QC KH \n' +
+				' JC 9D 9C 6H 4D 6C JD QS \n' +
+				' TH 8C KC 5S KD 5H    JH \n' +
+				'             8H 4S    TC \n' +
+				'             KS 3D    9H \n' +
+				'             QD       8S \n' +
+				'             JS       7H \n' +
+				'             TD       6S \n' +
+				'             9S       5D \n' +
+				'             8D          \n' +
+				'             7S          \n' +
+				'             6D          \n' +
+				'             5C          \n' +
+				' move 37 JD→QC\n' +
+				':h shuffle32 5\n' +
+				' 53 6a 65 67 85 a8 68 27 \n' +
+				' 67 1a 1b 13 15 a5 1a 1c \n' +
+				' 86 85 86 86 21 25 2b 27 \n' +
+				' 42 45 c5 42 47 4h 48 48 \n' +
+				' 78 7c 7h 71 78 7h ah b8 \n' +
+				' 34 31 32 c7 37 '
+		);
 		game.history.splice(0, game.history.length - 8);
 		game.history.unshift('hand-jammed');
 		expect(game.history).toEqual([
@@ -1855,29 +1880,82 @@ describe('game.undo (+ history)', () => {
 		expect(parsed).toEqual(game);
 	});
 
-	test('broken game', () => {
-		const game = FreeCell.parse(
-			'' + //
-				'             AD 2C       \n' +
-				' AH 8S 2D QS 4C 9H 2S 3D \n' + // 9H is in the wrong place
-				' 5C AS 9C KH 4D    3C 4S \n' +
-				' 3S 5D KC 3H KD    6S 8D \n' +
-				' TD 7S JD 7H 8H    JC 7D \n' +
-				' 5S QH 8C 9D KS    4H 6C \n' +
-				' 2H    TH 6D QD    QC 5H \n' +
-				' 9S    7C TS JS    JH    \n' +
-				'       6H          TC    \n' +
-				//                  9H
-				' move 67 9H→TC\n' +
-				':h shuffle32 5\n' +
-				' 53 6a 65 67 85 a8 68 27 \n' +
-				' 67 '
-		);
-		expect(game.history).toEqual(['init with invalid history', 'move 67 9H→TC']);
-		// REVIEW (more-undo) should this throw an error?
-		//  - should it just "cancel" the undo?
-		//  - it's totally fine to console.error the entire game state or something
-		expect(() => game.undo()).toThrow('invalid first card position: move 67 9H→TC; 6 !== 7');
+	describe('bugfixes', () => {
+		test('broken game', () => {
+			const game = FreeCell.parse(
+				'' + //
+					'             AD 2C       \n' +
+					' AH 8S 2D QS 4C 9H 2S 3D \n' + // 9H is in the wrong place
+					' 5C AS 9C KH 4D    3C 4S \n' +
+					' 3S 5D KC 3H KD    6S 8D \n' +
+					' TD 7S JD 7H 8H    JC 7D \n' +
+					' 5S QH 8C 9D KS    4H 6C \n' +
+					' 2H    TH 6D QD    QC 5H \n' +
+					' 9S    7C TS JS    JH    \n' +
+					'       6H          TC    \n' +
+					//                  9H
+					' move 67 9H→TC\n' +
+					':h shuffle32 5\n' +
+					' 53 6a 65 67 85 a8 68 27 \n' +
+					' 67 '
+			);
+			expect(game.history).toEqual(['init with invalid history', 'move 67 9H→TC']);
+			// REVIEW (more-undo) should this throw an error?
+			//  - should it just "cancel" the undo?
+			//  - it's totally fine to console.error the entire game state or something
+			expect(() => game.undo()).toThrow('invalid first card position: move 67 9H→TC; 6 !== 7');
+		});
+
+		test('undo to init (hand-jammed)', () => {
+			// hand-jammed (type: 'init') just has the cursor in the deck
+			// there is no way of knowing where gameStateOne cursor should be, so it's in the deck
+			// the move is 23
+			// when we undo there _was_ a specical condition for hand-jammed to just ignore it
+			// …to make all the tests prettier (not cursor in the deck)
+			// but we _are_ undoing to init, even if hand-jammed, having the special case is weird
+			// there was a comment to remove that special case, and here is the proof why
+
+			const gamePrintHist =
+				'' +
+				'             QC TD KH 9S \n' +
+				' QS KC       TS          \n' +
+				' JD QD       KS          \n' +
+				' KD JS                   \n' +
+				' hand-jammed';
+
+			const gameStateOne = FreeCell.parse(gamePrintHist);
+			const gameStateTwo = gameStateOne.moveByShorthand('23');
+			const gameStateThree = gameStateTwo.undo();
+
+			expect(gameStateOne.print()).toBe(
+				'' +
+					'             QC TD KH 9S \n' +
+					' QS KC       TS          \n' +
+					' JD QD       KS          \n' +
+					' KD JS                   \n' +
+					':d>   \n' +
+					' hand-jammed'
+			);
+			expect(gameStateOne.print({ includeHistory: true })).toBe(gamePrintHist);
+			expect(gameStateThree.print()).toBe(
+				'' +
+					'             QC TD KH 9S \n' +
+					' QS KC       TS          \n' +
+					' JD QD       KS          \n' +
+					' KD JS                   \n' +
+					':d>   \n' +
+					' hand-jammed'
+			);
+			expect(gameStateThree.print({ includeHistory: true })).toBe(gamePrintHist);
+
+			// the original parse has the history, so this should be fine
+			expect(gameStateThree.print({ includeHistory: true })).toBe(
+				gameStateOne.print({ includeHistory: true })
+			);
+
+			// this is the goal of every undo
+			expect(gameStateThree.print()).toBe(gameStateOne.print());
+		});
 	});
 
 	/*

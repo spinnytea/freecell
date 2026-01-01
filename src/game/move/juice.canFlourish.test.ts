@@ -660,7 +660,6 @@ describe('move.juice', () => {
 				}
 			}
 
-			// expect(flourishSeeds).toMatchSnapshot();
 			expect(flourishCount).toBe(28843);
 		});
 

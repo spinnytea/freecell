@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`animUpdatedCardPositions basic: timeline.fromTo 1`] = `
+[
+  [
+    "#cKH",
+    {
+      "left": 100,
+      "top": 100,
+    },
+    {
+      "duration": 0.3,
+      "ease": "power1.out",
+      "left": 0,
+      "top": 0,
+    },
+    ">0",
+  ],
+]
+`;
+
+exports[`animUpdatedCardPositions basic: timeline.to 1`] = `
+[
+  [
+    "#cKH",
+    {
+      "duration": 0.15,
+      "ease": "none",
+      "zIndex": 0,
+    },
+    "<",
+  ],
+]
+`;
