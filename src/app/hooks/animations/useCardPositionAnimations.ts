@@ -54,6 +54,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 
 			// REVIEW (techdebt) if we are going to use this as storage, we need to update it _every time we move the cards_
 			//  - which I believe we do now, but like, this might be a constant task now?
+			// REVIEW (techdebt) previousTLZ / nextTLZ is a source of bugs and initialization problems
 			const previousTLZ = new Map<string, TLZ>();
 			cards.forEach((card) => {
 				const shorthand = shorthandCard(card);

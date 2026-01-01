@@ -1,0 +1,337 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`animShuffleCards gameBoardId: timeline.add 1`] = `
+[
+  [
+    "shuffle",
+  ],
+  [
+    "shuffle",
+  ],
+]
+`;
+
+exports[`animShuffleCards gameBoardId: timeline.set 1`] = `
+[
+  [
+    "#c2C-1",
+    {
+      "zIndex": -100,
+    },
+  ],
+  [
+    "#c3D-1",
+    {
+      "zIndex": -99,
+    },
+  ],
+]
+`;
+
+exports[`animShuffleCards gameBoardId: timeline.to 1`] = `
+[
+  [
+    "#c2C-1",
+    {
+      "duration": 0.15,
+      "ease": "sine.out",
+      "rotation": "-=8",
+      "x": "-=8",
+      "y": "-=25",
+    },
+  ],
+  [
+    "#c2C-1",
+    {
+      "duration": 0.15,
+      "ease": "sine.in",
+      "rotation": 0,
+      "x": "0",
+      "y": "0",
+    },
+  ],
+  [
+    "#c3D-1",
+    {
+      "duration": 0.15,
+      "ease": "sine.in",
+      "rotation": "+=8",
+      "x": "+=8",
+      "y": "-=25",
+    },
+  ],
+  [
+    "#c3D-1",
+    {
+      "duration": 0.15,
+      "ease": "sine.out",
+      "rotation": 0,
+      "x": "0",
+      "y": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShuffleCards list four: timeline.add 1`] = `
+[
+  [
+    "shuffle",
+  ],
+  [
+    "shuffle",
+  ],
+]
+`;
+
+exports[`animShuffleCards list four: timeline.set 1`] = `
+[
+  [
+    "#c2C",
+    {
+      "zIndex": -100,
+    },
+  ],
+  [
+    "#c3D",
+    {
+      "zIndex": -99,
+    },
+  ],
+]
+`;
+
+exports[`animShuffleCards list four: timeline.to 1`] = `
+[
+  [
+    "#c2C",
+    {
+      "duration": 0.15,
+      "ease": "sine.out",
+      "rotation": "-=8",
+      "x": "-=8",
+      "y": "-=25",
+    },
+  ],
+  [
+    "#c2C",
+    {
+      "duration": 0.15,
+      "ease": "sine.in",
+      "rotation": 0,
+      "x": "0",
+      "y": "0",
+    },
+  ],
+  [
+    "#c3D",
+    {
+      "duration": 0.15,
+      "ease": "sine.in",
+      "rotation": "+=8",
+      "x": "+=8",
+      "y": "-=25",
+    },
+  ],
+  [
+    "#c3D",
+    {
+      "duration": 0.15,
+      "ease": "sine.out",
+      "rotation": 0,
+      "x": "0",
+      "y": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShuffleCards list one: timeline.add 1`] = `
+[
+  [
+    "shuffle",
+  ],
+]
+`;
+
+exports[`animShuffleCards list one: timeline.set 1`] = `
+[
+  [
+    "#cAS",
+    {
+      "zIndex": -99,
+    },
+  ],
+]
+`;
+
+exports[`animShuffleCards list one: timeline.to 1`] = `
+[
+  [
+    "#cAS",
+    {
+      "duration": 0.15,
+      "ease": "sine.in",
+      "rotation": "+=8",
+      "x": "+=8",
+      "y": "-=25",
+    },
+  ],
+  [
+    "#cAS",
+    {
+      "duration": 0.15,
+      "ease": "sine.out",
+      "rotation": 0,
+      "x": "0",
+      "y": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShuffleCards list three: timeline.add 1`] = `
+[
+  [
+    "shuffle",
+  ],
+  [
+    "shuffle",
+  ],
+]
+`;
+
+exports[`animShuffleCards list three: timeline.set 1`] = `
+[
+  [
+    "#c2C",
+    {
+      "zIndex": -100,
+    },
+  ],
+  [
+    "#c3D",
+    {
+      "zIndex": -99,
+    },
+  ],
+]
+`;
+
+exports[`animShuffleCards list three: timeline.to 1`] = `
+[
+  [
+    "#c2C",
+    {
+      "duration": 0.15,
+      "ease": "sine.out",
+      "rotation": "-=8",
+      "x": "-=8",
+      "y": "-=25",
+    },
+  ],
+  [
+    "#c2C",
+    {
+      "duration": 0.15,
+      "ease": "sine.in",
+      "rotation": 0,
+      "x": "0",
+      "y": "0",
+    },
+  ],
+  [
+    "#c3D",
+    {
+      "duration": 0.15,
+      "ease": "sine.in",
+      "rotation": "+=8",
+      "x": "+=8",
+      "y": "-=25",
+    },
+  ],
+  [
+    "#c3D",
+    {
+      "duration": 0.15,
+      "ease": "sine.out",
+      "rotation": 0,
+      "x": "0",
+      "y": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShuffleCards list two: timeline.add 1`] = `
+[
+  [
+    "shuffle",
+  ],
+  [
+    "shuffle",
+  ],
+]
+`;
+
+exports[`animShuffleCards list two: timeline.set 1`] = `
+[
+  [
+    "#cAS",
+    {
+      "zIndex": -100,
+    },
+  ],
+  [
+    "#c2C",
+    {
+      "zIndex": -99,
+    },
+  ],
+]
+`;
+
+exports[`animShuffleCards list two: timeline.to 1`] = `
+[
+  [
+    "#cAS",
+    {
+      "duration": 0.15,
+      "ease": "sine.out",
+      "rotation": "-=8",
+      "x": "-=8",
+      "y": "-=25",
+    },
+  ],
+  [
+    "#cAS",
+    {
+      "duration": 0.15,
+      "ease": "sine.in",
+      "rotation": 0,
+      "x": "0",
+      "y": "0",
+    },
+  ],
+  [
+    "#c2C",
+    {
+      "duration": 0.15,
+      "ease": "sine.in",
+      "rotation": "+=8",
+      "x": "+=8",
+      "y": "-=25",
+    },
+  ],
+  [
+    "#c2C",
+    {
+      "duration": 0.15,
+      "ease": "sine.out",
+      "rotation": 0,
+      "x": "0",
+      "y": "0",
+    },
+  ],
+]
+`;

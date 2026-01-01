@@ -284,7 +284,7 @@ describe('GameBoard', () => {
 			['move 15 TD→JS'],
 			['updateCardPositions'],
 			['select a 9S'],
-			// TODO (techdebt) selecting a cell uses rotation, and is not part of the timeline
+			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
 			['move a5 9S→TD'],
 			['updateCardPositions'],
 		]);
@@ -411,7 +411,7 @@ describe('GameBoard', () => {
 			['move 45 6D→7S'],
 			['updateCardPositions'],
 			['select c 5C'],
-			// TODO (techdebt) selecting a cell uses rotation, and is not part of the timeline
+			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
 			['move c5 5C→6D'],
 			['updateCardPositions'],
 		]);
@@ -536,7 +536,7 @@ describe('GameBoard', () => {
 		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select a 3S'],
-			// TODO (techdebt) selecting a cell uses rotation, and is not part of the timeline
+			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
 			['move ah 3S→2S'],
 			['updateCardPositions'],
 		]);
@@ -547,7 +547,7 @@ describe('GameBoard', () => {
 		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select b, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select b 5D'],
-			// TODO (techdebt) selecting a cell uses rotation, and is not part of the timeline
+			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
 			['move b8 5D→6S'],
 			['updateCardPositions'],
 		]);
@@ -591,7 +591,7 @@ describe('GameBoard', () => {
 		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select c, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select c QC'],
-			// TODO (techdebt) selecting a cell uses rotation, and is not part of the timeline
+			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
 			['move c7 QC→cascade'],
 			['updateCardPositions'],
 		]);
@@ -636,7 +636,7 @@ describe('GameBoard', () => {
 		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select a KC'],
-			// TODO (techdebt) selecting a cell uses rotation, and is not part of the timeline
+			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
 			['move a3 KC→cascade'],
 			['updateCardPositions'],
 		]);

@@ -32,7 +32,7 @@ export function WinMessage() {
 
 				// animate color hue, to white
 				if (winIsFlourish) {
-					// FIXME (4-priority) (animation) "you win" animation should start after the cards finish moving?
+					// TODO (4-priority) (animation) "you win" animation should start after the cards finish moving?
 					//  - Or at least during the last one and after the auto-foundation
 					//  - we may need a useContext so we can use a single global timeline
 					//  - and then never use gsap directly, always add it to a timeline

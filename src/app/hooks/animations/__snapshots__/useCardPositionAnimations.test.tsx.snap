@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`useCardPositionAnimations game (each PreviousActionType) init undefined -> init 1`] = `
+exports[`useCardPositionAnimations game (each PreviousActionType) init undefined -> init: timeline.set 1`] = `
 [
   [
     "#cAC",
