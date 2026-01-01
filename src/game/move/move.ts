@@ -27,9 +27,11 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 // IDEA (controls) only single -> foundation if opp+2 or no other option
 //  - put it last in the list, or IFF do it first
 // IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
-// IDEA (controls) Prioritize moving cards to a completed sequence
-//  - (when the root of it is at the top of a column)
-//  - (unless we are breaking a sequence??)
+// TODO (2-priority) (controls) Prioritize moving cards to a completed sequence
+//  - when between 2 cards of different suit
+//  - when the root of it is at the top of a column (to sequence that starts at a pile)
+//  - i.e. select by column and see if it's `data: [c, 0]`
+//  - ¿unless we are breaking a sequence?
 
 /**
 	higher priorities take precidence

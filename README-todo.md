@@ -62,6 +62,7 @@
   - `:h shuffle32 5, swap 21435678`
 - TODO (motivation) (flourish-anim) extra pizzazz when it's a 52-card flourish
 - TODO (settings) (undo) undo limit - all, until deal, until foundation (i.e. can never bring a card off foundation, even through undo), few, once, none
+  - undo count starts at 0, increases with each move, clamps at 3, decreases with undo, can only undo if greater than 0
 - TODO (settings) ensure that new game is always shuffled
   - GameContextProvider
   - every place we call new FreeCell (not tests)

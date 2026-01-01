@@ -48,6 +48,7 @@ import {
 	parseShorthandPositionForMove,
 	parseShorthandPositionForSelect,
 } from '@/game/move/move';
+import { utils } from '@/utils';
 
 const DEFAULT_NUMBER_OF_CELLS = 4;
 const NUMBER_OF_FOUNDATIONS = SuitList.length;
@@ -729,14 +730,21 @@ export class FreeCell {
 	/**
 		These deals are numbered from 1 to 32000.
 
-		XXX (techdebt) rename to shuffle32k, including actionText and print history
-		XXX (motivation) more shuffle options bcuz why not
+		- TODO (controls) (gameplay) add some kind of shortcut to can-flourish52 seeds
+		  - e.g. if we shuffle N times in a row, then pick a random seed from the list
+		- XXX (techdebt) rename to shuffle32k, including actionText and print history
+		- XXX (motivation) more shuffle options bcuz why not
 
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/
 	shuffle32(seed?: number): FreeCell | this {
-		while (seed === undefined || seed === IMPOSSIBLE_SEED || seed < 1 || seed > 32000) {
-			seed = Math.floor(Math.random() * 32000) + 1;
+		// if we pass the seed in directly (and it's valid), then use it
+		if (seed === undefined || seed < 1 || seed > 32000) {
+			// if we do not pass the seed in directly, then randomize it
+			// do not allow the impossible seed
+			while (seed === undefined || seed < 1 || seed > 32000 || seed === IMPOSSIBLE_SEED) {
+				seed = utils.randomInteger(32000);
+			}
 		}
 
 		const actionText = `shuffle deck (${seed.toString(10)})`;
@@ -1265,6 +1273,8 @@ export class FreeCell {
 			const printDeck = this.__printDeck(cursor, selection);
 			str += `\n:d${printDeck}`;
 		}
+
+		// TODO (print) (settings) have a dedicated line for house rules, e.g. "with jokers", "auto-foundation opp+2", etc.
 
 		if (includeHistory) {
 			str += this.__printHistory();

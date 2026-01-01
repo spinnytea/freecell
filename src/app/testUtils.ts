@@ -1,7 +1,7 @@
 export function spyOnGsap(_gsap: typeof gsap) {
-	const toGsapSpy = jest.spyOn(_gsap, 'to');
-	const setGsapSpy = jest.spyOn(_gsap, 'set');
-	const fromGsapSpy = jest.spyOn(_gsap, 'from');
+	const gsapToSpy = jest.spyOn(_gsap, 'to');
+	const gsapSetSpy = jest.spyOn(_gsap, 'set');
+	const gsapFromSpy = jest.spyOn(_gsap, 'from');
 	const fromToSpy = jest.fn();
 	const toSpy = jest.fn();
 	const setSpy = jest.fn();
@@ -36,9 +36,9 @@ export function spyOnGsap(_gsap: typeof gsap) {
 			timelineOnComplete();
 		}
 
-		toGsapSpy.mockReset();
-		setGsapSpy.mockReset();
-		fromGsapSpy.mockReset();
+		gsapToSpy.mockReset();
+		gsapSetSpy.mockReset();
+		gsapFromSpy.mockReset();
 		fromToSpy.mockReset();
 		toSpy.mockReset();
 		setSpy.mockReset();
@@ -49,9 +49,9 @@ export function spyOnGsap(_gsap: typeof gsap) {
 
 	function mockCallTimes(): Record<string, number> {
 		return Object.entries({
-			toGsapSpy,
-			setGsapSpy,
-			fromGsapSpy,
+			gsapToSpy,
+			gsapSetSpy,
+			gsapFromSpy,
 			fromToSpy,
 			toSpy,
 			setSpy,
@@ -71,9 +71,9 @@ export function spyOnGsap(_gsap: typeof gsap) {
 	// REVIEW (techdebt) can we add more helper functions and remove the spies?
 	return {
 		// gsap spies
-		toGsapSpy,
-		setGsapSpy,
-		fromGsapSpy,
+		gsapToSpy,
+		gsapSetSpy,
+		gsapFromSpy,
 		fromToSpy,
 		toSpy,
 		setSpy,

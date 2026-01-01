@@ -1,7 +1,7 @@
 import { getSeedsByTag } from '@/game/catalog/difficulty-catalog';
 import { FreeCell } from '@/game/game';
 import { juice } from '@/game/move/juice';
-import { sortedDiff } from '@/utils';
+import { utils } from '@/utils';
 import { writeFileSync } from 'node:fs';
 
 /*
@@ -50,8 +50,8 @@ const fail = '❌';
 const catalogSeeds_canFlourish = getSeedsByTag('canFlourish');
 const catalogSeeds_canFlourish52 = getSeedsByTag('canFlourish52');
 
-const flourishDiff = sortedDiff(flourishSeeds, catalogSeeds_canFlourish);
-const flourish52Diff = sortedDiff(flourish52Seeds, catalogSeeds_canFlourish52);
+const flourishDiff = utils.sortedDiff(flourishSeeds, catalogSeeds_canFlourish);
+const flourish52Diff = utils.sortedDiff(flourish52Seeds, catalogSeeds_canFlourish52);
 
 const checks = [
 	{

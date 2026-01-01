@@ -33,6 +33,7 @@ const TB_CASCADE_OFFSET_SMOL = 0.3;
 export const PEEK_UP = 0.25;
 export const PEEK_DOWN = 0.5;
 const SELECT_ROTATION_ANGLE = 10;
+// const FLASH_ROTATION_ANGLE = -5;
 
 export interface FixtureSizes {
 	/** HACK (techdebt) used for StaticFixtureSizesContextProvider for testing */
@@ -296,7 +297,12 @@ export function calcTopLeftZ(
 				}
 			}
 			if (flashCards) {
-				// TODO (2-priority) (animation) (flash-rank) try rotating of the "selection" style, this is confusing
+				// TODO (5-priority) (animation) (flash-rank) try rotating of the "selection" style, this is confusing
+				// TODO (5-priority) (techdebt) (flourish-anim) (gsap) TLZR - include rotation
+				// if (flashCards.some((card) => isLocationEqual(card.location, { fixture, data }))) {
+				// 	ret.rotation = FLASH_ROTATION_ANGLE;
+				// }
+
 				let belowCount = 0;
 				let isEqual = false;
 				for (const card of flashCards) {

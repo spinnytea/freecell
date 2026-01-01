@@ -70,14 +70,14 @@ function MockGamePage({ game, gameBoardId }: { game: FreeCell; gameBoardId?: str
 }
 
 describe('GameBoard', () => {
-	let toGsapSpy: jest.SpyInstance;
-	let fromGsapSpy: jest.SpyInstance;
+	let gsapToSpy: jest.SpyInstance;
+	let gsapFromSpy: jest.SpyInstance;
 	let addLabelSpy: jest.SpyInstance;
 	let consoleDebugSpy: jest.SpyInstance;
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
-		({ toGsapSpy, fromGsapSpy, addLabelSpy, consoleDebugSpy, mockReset, mockCallTimes } =
+		({ gsapToSpy, gsapFromSpy, addLabelSpy, consoleDebugSpy, mockReset, mockCallTimes } =
 			spyOnGsap(gsap));
 		consoleDebugSpy.mockReturnValue(undefined);
 	});
@@ -89,8 +89,8 @@ describe('GameBoard', () => {
 		// initial state
 		expect(addLabelSpy.mock.calls).toEqual([['shuffle deck (1)'], ['updateCardPositions']]);
 		expect(mockCallTimes()).toEqual({
-			toGsapSpy: 52,
-			setGsapSpy: 52,
+			gsapToSpy: 52,
+			gsapSetSpy: 52,
 			setSpy: 52,
 			addLabelSpy: 2,
 		});
@@ -119,8 +119,8 @@ describe('GameBoard', () => {
 		expect(container).toMatchSnapshot();
 	});
 
-	// XXX (techdebt) instead of just checking toGsapSpy call count, actually check what it did
-	//  - expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
+	// XXX (techdebt) instead of just checking gsapToSpy call count, actually check what it did
+	//  - expect(gsapToSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 	/** https://www.solitairelaboratory.com/tutorial.html */
 	test('Game #5 (tutorial)', () => {
 		const gameBoardId = 'GameBoard.test-#5';
@@ -200,7 +200,7 @@ describe('GameBoard', () => {
 		// Now move the six of clubs from its freecell onto the seven of diamonds,
 		moveByShorthand('a8');
 		expect(screen.getByRole('status').textContent).toBe('move a8 6C→7D');
-		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
+		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select a 6C'],
 			['move a8 6C→7D'],
@@ -277,7 +277,7 @@ describe('GameBoard', () => {
 		expect(screen.getByRole('status').textContent).toBe('move 15 TD→JS');
 		moveByShorthand('a5');
 		expect(screen.getByRole('status').textContent).toBe('move a5 9S→TD');
-		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
+		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select 1 TD'],
 			['updateCardPositions'],
@@ -404,7 +404,7 @@ describe('GameBoard', () => {
 		expect(screen.getByRole('status').textContent).toBe('move 45 6D→7S');
 		moveByShorthand('c5');
 		expect(screen.getByRole('status').textContent).toBe('move c5 5C→6D');
-		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select c, then rotate back
+		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select c, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select 4 6D'],
 			['updateCardPositions'],
@@ -533,7 +533,7 @@ describe('GameBoard', () => {
 		// Move the three of spades home
 		moveByShorthand('ah');
 		expect(screen.getByRole('status').textContent).toBe('move ah 3S→2S');
-		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
+		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select a 3S'],
 			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
@@ -544,7 +544,7 @@ describe('GameBoard', () => {
 		// and the five of diamonds onto the six of spades.
 		moveByShorthand('b8');
 		expect(screen.getByRole('status').textContent).toBe('move b8 5D→6S');
-		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select b, then rotate back
+		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select b, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select b 5D'],
 			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
@@ -588,7 +588,7 @@ describe('GameBoard', () => {
 		// the queen of clubs from its freecell to the empty seventh column,
 		moveByShorthand('c7');
 		expect(screen.getByRole('status').textContent).toBe('move c7 QC→cascade');
-		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select c, then rotate back
+		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select c, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select c QC'],
 			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
@@ -633,7 +633,7 @@ describe('GameBoard', () => {
 		// Move the king of clubs back into the empty third column,
 		moveByShorthand('a3');
 		expect(screen.getByRole('status').textContent).toBe('move a3 KC→cascade');
-		expect(toGsapSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
+		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select a KC'],
 			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
@@ -716,7 +716,7 @@ describe('GameBoard', () => {
 			['updateCardPositionsPrev'],
 			['updateCardPositions'],
 		]);
-		expect(fromGsapSpy).toHaveBeenCalledTimes(1); // animate win message
+		expect(gsapFromSpy).toHaveBeenCalledTimes(1); // animate win message
 		mockReset();
 
 		expect(container).toMatchSnapshot();

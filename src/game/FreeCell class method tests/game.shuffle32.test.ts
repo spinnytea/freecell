@@ -1,6 +1,7 @@
 import { shorthandCard } from '@/game/card/card';
 import { IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
 import { FreeCell } from '@/game/game';
+import { utils } from '@/utils';
 
 describe('game.shuffle32', () => {
 	test('Game #1', () => {
@@ -103,11 +104,113 @@ describe('game.shuffle32', () => {
 
 	test('Game #11982', () => {
 		expect(11982).toBe(IMPOSSIBLE_SEED);
-		const game = new FreeCell().shuffle32(11982); // IMPOSSIBLE_SEED
-		const matchSeed = /shuffle deck \((\d+)\)/.exec(game.previousAction.text);
-		expect(matchSeed).not.toBe(null);
-		expect(matchSeed?.[1]).toMatch(/^\d+$/);
-		expect(matchSeed?.[1]).not.toBe('11982');
+
+		const randomIntegerSpy = jest.spyOn(utils, 'randomInteger').mockImplementation(() => {
+			throw new Error('you MUST mock utils.randomInteger');
+		});
+
+		// by default, we should do not allow the impossible seed
+		randomIntegerSpy.mockReturnValueOnce(IMPOSSIBLE_SEED);
+		randomIntegerSpy.mockReturnValueOnce(3);
+
+		let game = new FreeCell().shuffle32();
+		expect(game.previousAction.text).toBe('shuffle deck (3)');
+		expect(randomIntegerSpy.mock.calls).toEqual([[32000], [32000]]);
+
+		/* reset */
+		randomIntegerSpy.mockClear();
+		/* reset */
+
+		// if we pass it in directly, then we should allow it
+		game = new FreeCell().shuffle32(IMPOSSIBLE_SEED);
+		expect(game.previousAction.text).toBe('shuffle deck (11982)');
+		expect(randomIntegerSpy.mock.calls).toEqual([]);
+
+		// this shuffle is given as an example, so let's make sure we match it
+		game = game.dealAll();
+		expect(game.print({ includeHistory: true })).toBe(
+			'' + //
+				'                         \n' +
+				' AH AS 4H AC 2D 6S TS JS \n' +
+				' 3D 3H QS QC 8S 7H AD KS \n' +
+				' KD 6H 5S 4D 9H JH 9S 3C \n' +
+				' JC 5D 5C 8C 9D TD KH 7C \n' +
+				' 6C 2C TH QH 6D TC 4S 7S \n' +
+				' JD 7D 8H 9C 2H QD 4C 5H \n' +
+				' KC 8D 2S 3S             \n' +
+				' deal all cards\n' +
+				':h shuffle32 11982'
+		);
+	});
+
+	describe('randomize seed', () => {
+		let randomIntegerSpy: jest.SpyInstance;
+		beforeEach(() => {
+			randomIntegerSpy = jest.spyOn(utils, 'randomInteger').mockImplementation(() => {
+				throw new Error('you MUST mock utils.randomInteger');
+			});
+		});
+
+		describe('value provided', () => {
+			test.each([1, 3, 5, 617, 23190, 32000])('%d', (value: number) => {
+				const game = new FreeCell().shuffle32(value);
+				expect(game.previousAction).toEqual({
+					text: `shuffle deck (${value.toString(10)})`,
+					type: 'shuffle',
+				});
+				expect(randomIntegerSpy).not.toHaveBeenCalled();
+			});
+		});
+
+		describe('value not provided', () => {
+			describe('first is good', () => {
+				test.each([1, 3, 5, 617, 23190, 32000])('%d', (value: number) => {
+					randomIntegerSpy.mockReturnValueOnce(value);
+					const game = new FreeCell().shuffle32();
+					expect(game.previousAction).toEqual({
+						text: `shuffle deck (${value.toString(10)})`,
+						type: 'shuffle',
+					});
+					expect(randomIntegerSpy.mock.calls).toEqual([[32000]]);
+				});
+			});
+
+			describe('reroll', () => {
+				// certainly not a possible from utils.randomInteger
+				test('too small', () => {
+					randomIntegerSpy.mockReturnValueOnce(5);
+					const game = new FreeCell().shuffle32(-1);
+					expect(game.previousAction).toEqual({
+						text: `shuffle deck (5)`,
+						type: 'shuffle',
+					});
+					expect(randomIntegerSpy.mock.calls).toEqual([[32000]]);
+				});
+
+				test('IMPOSSIBLE_SEED', () => {
+					randomIntegerSpy.mockReturnValueOnce(IMPOSSIBLE_SEED);
+					randomIntegerSpy.mockReturnValueOnce(IMPOSSIBLE_SEED);
+					randomIntegerSpy.mockReturnValueOnce(617);
+					const game = new FreeCell().shuffle32();
+					expect(game.previousAction).toEqual({
+						text: `shuffle deck (617)`,
+						type: 'shuffle',
+					});
+					expect(randomIntegerSpy.mock.calls).toEqual([[32000], [32000], [32000]]);
+				});
+
+				// probably not a possible from utils.randomInteger
+				test('too large', () => {
+					randomIntegerSpy.mockReturnValueOnce(3);
+					const game = new FreeCell().shuffle32(33444);
+					expect(game.previousAction).toEqual({
+						text: `shuffle deck (3)`,
+						type: 'shuffle',
+					});
+					expect(randomIntegerSpy.mock.calls).toEqual([[32000]]);
+				});
+			});
+		});
 	});
 
 	test('noop', () => {

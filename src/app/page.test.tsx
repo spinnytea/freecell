@@ -3,15 +3,21 @@ import { gsap } from 'gsap/all';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
 import Page from '@/app/page';
 import { spyOnGsap } from '@/app/testUtils';
+import { utils } from '@/utils';
 
 describe('page', () => {
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
+	let randomIntegerSpy: jest.SpyInstance;
 	beforeEach(() => {
 		({ mockCallTimes, mockReset } = spyOnGsap(gsap));
+		randomIntegerSpy = jest.spyOn(utils, 'randomInteger').mockImplementation(() => {
+			throw new Error('you MUST mock utils.randomInteger');
+		});
 	});
 
 	test('should render without crashing', () => {
+		randomIntegerSpy.mockReturnValueOnce(5); // seed for shuffle
 		render(
 			<ErrorBoundary>
 				<Page />
@@ -19,8 +25,8 @@ describe('page', () => {
 		);
 		expect(screen.queryAllByAltText('card back').length).toBe(53); // there is hidden card back
 		expect(mockCallTimes()).toEqual({
-			toGsapSpy: 52,
-			setGsapSpy: 52,
+			gsapToSpy: 52,
+			gsapSetSpy: 52,
 			setSpy: 52,
 			addLabelSpy: 2,
 		});
@@ -40,5 +46,6 @@ describe('page', () => {
 
 		expect(screen.queryAllByAltText('card back').length).toBe(1); // there is hidden card back
 		expect(screen.getByText('king of hearts')).toBeTruthy();
+		expect(randomIntegerSpy.mock.calls).toEqual([[32000]]); // just one shuffle
 	});
 });

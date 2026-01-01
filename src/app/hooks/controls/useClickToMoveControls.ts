@@ -9,7 +9,6 @@ import { CardLocation } from '@/game/card/card';
 const isTestEnv = process.env.NODE_ENV === 'test';
 
 /**
-	REVIEW (controls) click-to-move
 	REVIEW (techdebt) (controls) "integration" test
 */
 export function useClickToMoveControls(

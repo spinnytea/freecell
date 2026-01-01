@@ -1,4 +1,4 @@
-export function sortedDiff<T>(a: T[], b: T[]) {
+function sortedDiff<T>(a: T[], b: T[]) {
 	const in_a: T[] = [];
 	const in_b: T[] = [];
 	const in_both: T[] = [];
@@ -27,3 +27,13 @@ export function sortedDiff<T>(a: T[], b: T[]) {
 
 	return { in_a, in_b, in_both };
 }
+
+/** @return a number 1 <= result <= max */
+function randomInteger(max = Number.MAX_SAFE_INTEGER): number {
+	return Math.min(Math.max(1, Math.floor(Math.random() * max) + 1), max);
+}
+
+export const utils = {
+	sortedDiff,
+	randomInteger,
+};
