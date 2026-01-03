@@ -1,3 +1,4 @@
+import { SELECT_ROTATION_ANGLE } from '@/app/animation_constants';
 import {
 	BOTTOM_OF_CASCADE,
 	CARD_FACE_CUTOFF,
@@ -32,8 +33,6 @@ const TB_CASCADE_OFFSET_STANDARD = 0.2;
 const TB_CASCADE_OFFSET_SMOL = 0.3;
 export const PEEK_UP = 0.25;
 export const PEEK_DOWN = 0.5;
-const SELECT_ROTATION_ANGLE = 10;
-// const FLASH_ROTATION_ANGLE = -5;
 
 export interface FixtureSizes {
 	/** HACK (techdebt) used for StaticFixtureSizesContextProvider for testing */
@@ -234,6 +233,7 @@ function toFixed(num: number): number {
 	return parseFloat(num.toFixed(3));
 }
 
+/** REVIEW (techdebt) (animation) review when and why this is called competing concerns might be the cause of animation bugs */
 export function calcTopLeftZ(
 	fixtureSizes: FixtureSizes,
 	{ fixture, data }: CardLocation,
@@ -297,8 +297,8 @@ export function calcTopLeftZ(
 				}
 			}
 			if (flashCards) {
-				// TODO (5-priority) (animation) (flash-rank) try rotating of the "selection" style, this is confusing
-				// TODO (5-priority) (techdebt) (flourish-anim) (gsap) TLZR - include rotation
+				// FIXME (5-priority) (animation) (flash-rank) try rotating of the "selection" style, this is confusing
+				// FIXME (5-priority) (techdebt) (flourish-anim) (gsap) TLZR - include rotation
 				// if (flashCards.some((card) => isLocationEqual(card.location, { fixture, data }))) {
 				// 	ret.rotation = FLASH_ROTATION_ANGLE;
 				// }

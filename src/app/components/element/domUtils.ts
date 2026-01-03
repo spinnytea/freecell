@@ -1,6 +1,6 @@
 import { SyntheticEvent } from 'react';
 
-// TODO (5-priority) (techdebt) (flourish-anim) (gsap) TLZR - include rotation
+// FIXME (5-priority) (techdebt) (flourish-anim) (gsap) TLZR - include rotation
 export interface TLZ {
 	top: number;
 	left: number;
@@ -11,6 +11,7 @@ export const domUtils = {
 	/** @deprecated this is used by some unit tests when there is no DOM */
 	domTLZ: new Map<string, TLZ>(),
 
+	/** @deprecated FIXME remove */
 	getDomAttributes(cardId: string): TLZ | undefined {
 		const cardEl = document.getElementById(cardId);
 		if (cardEl) {
@@ -27,6 +28,7 @@ export const domUtils = {
 		return undefined;
 	},
 
+	/** useful for testing */
 	setDomAttributes(cardId: string, { top, left, zIndex }: TLZ) {
 		const cardEl = document.getElementById(cardId);
 		if (cardEl) {

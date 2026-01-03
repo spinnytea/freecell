@@ -152,6 +152,7 @@ export function animDragOverlap({
 		if (dropTarget.shorthand) {
 			const cardId = calcCardId(dropTarget.shorthand, gameBoardIdRef?.current);
 			const cardIdSelector = '#' + cardId;
+			// BUG (animation) (controls) mobile does not rotate drop targets
 			const rotation = dropTarget.isOverlapping ? -5 : 0;
 			gsap.set(cardIdSelector, { rotation });
 		} else {
