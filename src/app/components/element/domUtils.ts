@@ -1,6 +1,6 @@
 import { SyntheticEvent } from 'react';
 
-// TODO (5-priority) (techdebt) (flourish-anim) (gsap) TLZR - include rotation
+// FIXME (5-priority) (techdebt) (flourish-anim) (gsap) TLZR - include rotation
 export interface TLZ {
 	top: number;
 	left: number;
