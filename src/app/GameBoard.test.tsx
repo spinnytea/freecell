@@ -8,7 +8,7 @@ import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameConte
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
-import { spyOnGsap } from '@/app/testUtils';
+import { getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';
 import {
 	calcCardId,
 	CardLocation,
@@ -71,12 +71,14 @@ function MockGamePage({ game, gameBoardId }: { game: FreeCell; gameBoardId?: str
 
 describe('GameBoard', () => {
 	let gsapFromSpy: jest.SpyInstance;
+	let toSpy: jest.SpyInstance;
 	let addLabelSpy: jest.SpyInstance;
 	let consoleDebugSpy: jest.SpyInstance;
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
-		({ gsapFromSpy, addLabelSpy, consoleDebugSpy, mockReset, mockCallTimes } = spyOnGsap(gsap));
+		({ gsapFromSpy, toSpy, addLabelSpy, consoleDebugSpy, mockReset, mockCallTimes } =
+			spyOnGsap(gsap));
 		consoleDebugSpy.mockReturnValue(undefined);
 	});
 
@@ -102,8 +104,12 @@ describe('GameBoard', () => {
 		]);
 		expect(mockCallTimes()).toEqual({
 			fromToSpy: 52,
-			toSpy: 51,
+			toSpy: 52,
 			addLabelSpy: 2,
+		});
+		expect(getPropertiesFromSpy(toSpy)).toEqual({
+			zIndex: 51,
+			rotation: 1,
 		});
 
 		expect(container).toMatchSnapshot();

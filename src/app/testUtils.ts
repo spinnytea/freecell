@@ -1,3 +1,5 @@
+import { gsap } from 'gsap/all';
+
 export function spyOnGsap(_gsap: typeof gsap) {
 	const gsapToSpy = jest.spyOn(_gsap, 'to');
 	const gsapSetSpy = jest.spyOn(_gsap, 'set');
@@ -87,4 +89,24 @@ export function spyOnGsap(_gsap: typeof gsap) {
 		mockReset,
 		mockCallTimes,
 	};
+}
+
+export function getCardIdsFromSpy(spy: jest.SpyInstance) {
+	return spy.mock.calls.map(([cardIdSelector]: [string]) => cardIdSelector);
+}
+
+export function getPropertiesFromSpy(spy: jest.SpyInstance): Record<string, number> {
+	const counts = spy.mock.calls.reduce<Record<string, number>>(
+		(acc, [, properties]: [string, gsap.TweenVars]) => {
+			Object.keys(properties).forEach((key) => {
+				acc[key] = (acc[key] || 0) + 1;
+			});
+			return acc;
+		},
+		{}
+	);
+	// not a property being animated
+	delete counts.duration;
+	delete counts.ease;
+	return counts;
 }

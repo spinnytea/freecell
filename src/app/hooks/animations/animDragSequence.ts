@@ -34,7 +34,11 @@ export function animDragSequence({
 		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 		// do not animate zIndex, it causes bugs
 		// needs a double boost for foundation
-		gsap.set(cardIdSelector, { zIndex: BOTTOM_OF_CASCADE + BOTTOM_OF_CASCADE + index });
+		// clear rotation, in case a cell is selected or something
+		gsap.set(cardIdSelector, {
+			zIndex: BOTTOM_OF_CASCADE + BOTTOM_OF_CASCADE + index,
+			rotation: 0,
+		});
 		if (index === 0) {
 			transform = gsap.getProperty(cardIdSelector, 'transform');
 		} else {
@@ -136,7 +140,7 @@ export function animDragSequencePivot({
 			top: tlzr.top,
 			left: tlzr.left,
 			zIndex: tlzr.zIndex,
-			rotation: tlzr.rotation, // FIXME review
+			rotation: tlzr.rotation, // should be zero
 			transform: '', // 'translate3d(0px, 0px, 0px)',
 		});
 	});

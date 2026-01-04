@@ -1,11 +1,18 @@
-import { SELECT_ROTATION_ANGLE } from '@/app/animation_constants';
+import { FLASH_ROTATION_ANGLE, SELECT_ROTATION_ANGLE } from '@/app/animation_constants';
 import {
 	BOTTOM_OF_CASCADE,
 	CARD_FACE_CUTOFF,
 	scale_height,
 } from '@/app/components/cards/constants';
 import { CursorType } from '@/app/components/DebugCursors';
-import { Card, CardLocation, CardSequence, getRankForCompare, Rank } from '@/game/card/card';
+import {
+	Card,
+	CardLocation,
+	CardSequence,
+	getRankForCompare,
+	isLocationEqual,
+	Rank,
+} from '@/game/card/card';
 
 // IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)
 //  - so tableau can start at the top of the screen?
@@ -297,27 +304,9 @@ export function calcTopLeftZ(
 				}
 			}
 			if (flashCards) {
-				// FIXME (5-priority) (animation) (flash-rank) try rotating of the "selection" style, this is confusing
-				// FIXME (5-priority) (techdebt) (flourish-anim) (gsap) TLZR - include rotation
-				// if (flashCards.some((card) => isLocationEqual(card.location, { fixture, data }))) {
-				// 	ret.rotation = FLASH_ROTATION_ANGLE;
-				// }
-
-				let belowCount = 0;
-				let isEqual = false;
-				for (const card of flashCards) {
-					if (card.location.fixture === 'cascade' && card.location.data[0] === data[0]) {
-						if (data[1] === card.location.data[1]) {
-							isEqual = true;
-						} else if (data[1] > card.location.data[1]) {
-							belowCount++;
-						}
-					}
+				if (flashCards.some((card) => isLocationEqual(card.location, { fixture, data }))) {
+					ret.rotation = FLASH_ROTATION_ANGLE;
 				}
-				if (isEqual && data[1] > 0) {
-					ret.top -= fixtureSizes.tableau.offsetTop * PEEK_UP;
-				}
-				ret.top += belowCount * fixtureSizes.tableau.offsetTop * PEEK_DOWN;
 			}
 			ret.top = toFixed(ret.top);
 			return ret;

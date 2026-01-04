@@ -49,7 +49,6 @@ export function animUpdatedCardPositions({
 		// TODO (3-priority) (motivation) (animation) when flourish, translate X and Y at different rates to make a curving effect, e.g. power1.out vs power1.in
 		nextTLZR.set(shorthand, { top, left, zIndex, rotation });
 		if (prevTLZR) {
-			// FIXME also animate rotation
 			if (!pause) {
 				// bugfix: timeline.to should be enough, but mobile sometimes remakes cards at 0,0
 				//  - timeline.fromTo ensures we start the animation from the actual previous place

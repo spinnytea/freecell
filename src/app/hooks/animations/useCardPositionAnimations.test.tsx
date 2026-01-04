@@ -6,7 +6,7 @@ import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositio
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
 import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
-import { spyOnGsap } from '@/app/testUtils';
+import { getCardIdsFromSpy, spyOnGsap } from '@/app/testUtils';
 import {
 	ACTION_TEXT_EXAMPLES,
 	FIFTY_TWO_CARD_FLOURISH,
@@ -120,10 +120,6 @@ describe('useCardPositionAnimations', () => {
 		} = spyOnGsap(gsap));
 	});
 
-	function getCardIdsFromSpy(spy: jest.SpyInstance) {
-		return spy.mock.calls.map(([cardIdSelector]: [string]) => cardIdSelector);
-	}
-
 	test.todo('change fixtureSizes');
 
 	// REVIEW (animation) all of (each PreviousActionType) should be on manualtesting/page
@@ -141,9 +137,7 @@ describe('useCardPositionAnimations', () => {
 
 				expect(setSpy.mock.calls).toMatchSnapshot('timeline.set');
 				// we don't need to check the whole list, but this is what it looks like
-				const cardIdSelectors = setSpy.mock.calls.map(
-					([cardIdSelector]) => cardIdSelector as string
-				);
+				const cardIdSelectors = getCardIdsFromSpy(setSpy);
 				expect(cardIdSelectors.length).toBe(52);
 				expect(cardIdSelectors.at(0)).toBe('#cAC');
 				expect(cardIdSelectors.at(1)).toBe('#cAD');
