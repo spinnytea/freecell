@@ -8,15 +8,13 @@ import {
 } from '@/app/animation_constants';
 import { TLZ } from '@/app/components/element/domUtils';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';
-import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { calcCardId } from '@/game/card/card';
 
 export function animUpdatedCardPositions({
 	timeline,
 	list,
 	nextTLZ,
-	fixtureSizes,
-	prevFixtureSizes,
+	fixtureSizesChanged,
 	gameBoardIdRef,
 	pause = false,
 	cardsNearTarget = false,
@@ -24,8 +22,7 @@ export function animUpdatedCardPositions({
 	timeline: gsap.core.Timeline;
 	list: UpdateCardPositionsType[];
 	nextTLZ: Map<string, TLZ>;
-	fixtureSizes: FixtureSizes;
-	prevFixtureSizes: MutableRefObject<FixtureSizes>;
+	fixtureSizesChanged: boolean;
 	gameBoardIdRef?: MutableRefObject<string>;
 	pause?: boolean;
 	cardsNearTarget?: boolean;
@@ -42,9 +39,8 @@ export function animUpdatedCardPositions({
 		overlap *= 0.3; // all the cards move in unison (start at the same time)
 		duration *= DRAG_RELEASE_CLEAR_SPEEDUP; // how long it takes the cards to get there once started
 	}
-	if (prevFixtureSizes.current !== fixtureSizes) {
+	if (fixtureSizesChanged) {
 		overlap = 0;
-		prevFixtureSizes.current = fixtureSizes;
 	}
 	list.forEach(({ shorthand, top, left, zIndex }, index) => {
 		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);

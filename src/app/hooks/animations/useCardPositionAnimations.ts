@@ -11,6 +11,7 @@ import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCard
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
+import { useRefPrevious } from '@/app/hooks/useRefPrevious';
 import { calcCardId, shorthandCard } from '@/game/card/card';
 
 // IDEA (settings) setting for "reduced motion" - disable most animations
@@ -18,6 +19,7 @@ import { calcCardId, shorthandCard } from '@/game/card/card';
 export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<string>) {
 	const { cards, selection, flashCards, previousAction } = useGame();
 	const fixtureSizes = useFixtureSizes();
+	const prevFixtureSizesRef = useRefPrevious(fixtureSizes);
 	const { enabledControlSchemes } = useSettings();
 	const enableDragAndDrop = enabledControlSchemes.has(ControlSchemes.DragAndDrop);
 
@@ -26,10 +28,8 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 		don't do any offsets, just move/update all the cards immediately
 
 		positions of cards are controlled entirely by the animates
-
-		TODO (techdebt) change to "usePrevious" which can/should return hasChanged
 	*/
-	const prevFixtureSizes = useRef(fixtureSizes);
+	const fixtureSizesChanged = prevFixtureSizesRef.current !== fixtureSizes;
 
 	/**
 		handle on the currently running / previous animation
@@ -102,8 +102,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 						timeline,
 						list: updateCardPositionsPrev,
 						nextTLZ,
-						fixtureSizes,
-						prevFixtureSizes,
+						fixtureSizesChanged,
 						gameBoardIdRef,
 					});
 				}
@@ -115,8 +114,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					timeline,
 					list: updateCardPositions,
 					nextTLZ,
-					fixtureSizes,
-					prevFixtureSizes,
+					fixtureSizesChanged,
 					gameBoardIdRef,
 					pause: secondMustComeAfter,
 					cardsNearTarget: previousAction.gameFunction === 'drag-drop',
