@@ -6,11 +6,12 @@ import { spyOnGsap } from '@/app/testUtils';
 import { utils } from '@/utils';
 
 describe('page', () => {
+	let addLabelSpy: jest.SpyInstance;
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
 	let randomIntegerSpy: jest.SpyInstance;
 	beforeEach(() => {
-		({ mockCallTimes, mockReset } = spyOnGsap(gsap));
+		({ addLabelSpy, mockCallTimes, mockReset } = spyOnGsap(gsap));
 		randomIntegerSpy = jest.spyOn(utils, 'randomInteger').mockImplementation(() => {
 			throw new Error('you MUST mock utils.randomInteger');
 		});
@@ -25,24 +26,24 @@ describe('page', () => {
 		);
 		expect(screen.queryAllByAltText('card back').length).toBe(53); // there is hidden card back
 		expect(mockCallTimes()).toEqual({
-			gsapToSpy: 52,
 			gsapSetSpy: 52,
 			setSpy: 52,
 			addLabelSpy: 2,
 		});
-		// TODO (techdebt) (test) lock down the shuffle seed
-		// expect(addLabelSpy.mock.calls).toEqual([['shuffle deck (20616)'], ['updateCardPositions']]);
+		expect(addLabelSpy.mock.calls).toEqual([['shuffle deck (5)'], ['updateCardPositions']]);
 
 		mockReset(true);
 		fireEvent.click(screen.getAllByAltText('card back')[0]);
 
 		expect(mockCallTimes()).toEqual({
 			fromToSpy: 52,
-			toSpy: 52,
+			toSpy: 51,
 			addLabelSpy: 2,
 		});
-		// TODO (techdebt) (test) lock down the shuffle seed
-		// expect(addLabelSpy.mock.calls).toEqual([['juice flash AD,AH'], ['updateCardPositions']]);
+		expect(addLabelSpy.mock.calls).toEqual([
+			['gameFunction check-can-flourish'],
+			['updateCardPositions'],
+		]);
 
 		expect(screen.queryAllByAltText('card back').length).toBe(1); // there is hidden card back
 		expect(screen.getByText('king of hearts')).toBeTruthy();

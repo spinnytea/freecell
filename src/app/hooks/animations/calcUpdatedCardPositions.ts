@@ -92,8 +92,13 @@ export function calcUpdatedCardPositions({
 			suit: card.suit,
 			previousTop: prev?.top ?? top,
 		};
-		if (!prev || prev.top !== top || prev.left !== left) {
-			// FIXME what if zIndex and rotation changes?
+		if (
+			!prev ||
+			prev.top !== top ||
+			prev.left !== left ||
+			// prev.zIndex !== zIndex || // REVIEW (animation) this breaks shuffle
+			prev.rotation !== rotation
+		) {
 			updateCardPositions.push(updateCardPosition);
 			fixtures.add(card.location.fixture);
 		} else {

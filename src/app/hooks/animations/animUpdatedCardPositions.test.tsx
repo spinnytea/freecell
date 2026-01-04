@@ -42,7 +42,7 @@ describe('animUpdatedCardPositions', () => {
 		});
 
 		expect(mockCallTimes()).toEqual({
-			toSpy: 1,
+			toSpy: 2,
 			fromToSpy: 1,
 		});
 		expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');

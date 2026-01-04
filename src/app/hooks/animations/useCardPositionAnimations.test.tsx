@@ -255,7 +255,7 @@ describe('useCardPositionAnimations', () => {
 
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 52,
-				toSpy: 52,
+				toSpy: 51, // 2D has the same zIndex
 				addLabelSpy: 2,
 				timeScaleSpy: 1,
 				consoleDebugSpy: 1,
@@ -265,11 +265,15 @@ describe('useCardPositionAnimations', () => {
 				{ duration: 0.15, ease: 'none', zIndex: 0 },
 				'<',
 			]);
-			expect(toSpy.mock.calls[51]).toEqual([
+			expect(toSpy.mock.calls[50]).toEqual([
 				'#cAS',
 				{ duration: 0.15, ease: 'none', zIndex: 6 },
 				'<',
 			]);
+			const toSpyIds = getCardIdsFromSpy(toSpy);
+			expect(toSpyIds).toContain('#cQC');
+			expect(toSpyIds).toContain('#cAS');
+			expect(toSpyIds).not.toContain('#c2D');
 			expect(fromToSpy.mock.calls[0]).toEqual([
 				'#cQC',
 				{ top: 441.4, left: 14.035 },
@@ -399,8 +403,9 @@ describe('useCardPositionAnimations', () => {
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 				expect(toSpy.mock.calls).toEqual([
-					['#cQD', { zIndex: 1, duration: 0.15, ease: 'none' }, '<'],
-					['#cJS', { zIndex: 2, duration: 0.15, ease: 'none' }, '<'],
+					// select
+					// ['#cQD', { zIndex: 1, duration: 0.15, ease: 'none' }, '<'],
+					// ['#cJS', { zIndex: 2, duration: 0.15, ease: 'none' }, '<'],
 					// and then
 					['#cJD', { top: 36.6, left: 519.298, duration: 0.3, ease: 'power1.out' }, '>0.043'],
 					['#cJD', { zIndex: 109, duration: 0.15, ease: 'none' }, '<'],
@@ -447,7 +452,7 @@ describe('useCardPositionAnimations', () => {
 				]);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 2,
-					toSpy: 16,
+					toSpy: 14,
 					setSpy: 45,
 					addLabelSpy: 3,
 				});
@@ -817,6 +822,25 @@ describe('useCardPositionAnimations', () => {
 			});
 		});
 
+		describe('selected', () => {
+			describe('MoveSourceType', () => {
+				test.todo('deck');
+
+				test.todo('cell');
+
+				test.todo('foundation');
+
+				test.todo('cascade:single');
+
+				test.todo('cascade:sequence');
+			});
+
+			describe('two part animations', () => {
+				// FIXME test this now deselect should be part of the first action :o
+				test.todo('move-foundation');
+			});
+		});
+
 		// TODO (flourish-anim) test.todo
 		describe('juice', () => {
 			describe('flash', () => {
@@ -970,7 +994,7 @@ describe('useCardPositionAnimations', () => {
 				actionText                                    | prevActionText                                | shorthandMove | toSpyIDs                                    | fromToSpyIDs                | setSpyLength | toSpyUndoIDs         | fromToSpyUndoIDs     | labels
 				${'move 3a KC→cell'}                          | ${undefined}                                  | ${'3a'}       | ${['#cKC']}                                 | ${['#cKC']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
 				${'move 15 TD→JS'}                            | ${undefined}                                  | ${'15'}       | ${['#cTD']}                                 | ${['#cTD']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
-				${'move 23 KC-QD-JS→cascade'}                 | ${undefined}                                  | ${'23'}       | ${['#cKC', '#cQD', '#cJS']}                 | ${['#cKC', '#cQD', '#cJS']} | ${49}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 23 KC-QD-JS→cascade'}                 | ${undefined}                                  | ${'23'}       | ${[]}                                       | ${['#cKC', '#cQD', '#cJS']} | ${49}        | ${undefined}         | ${undefined}         | ${undefined}
 				${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${undefined}                                  | ${'53'}       | ${['#c6H', '#cAD']}                         | ${['#c6H', '#cAD']}         | ${50}        | ${undefined}         | ${undefined}         | ${[['move 53 6H→7C (auto-foundation 2 AD)'], ['updateCardPositionsPrev'], ['updateCardPositions']]}
 				${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${undefined}                                  | ${'14'}       | ${['#c2S', '#cAS', '#cAS', '#c2S', '#c2S']} | ${['#c2S']}                 | ${50}        | ${['#cAS', '#c2S']}  | ${['#cAS', '#c2S']}  | ${[['move 14 2S→3D (auto-foundation 14 AS,2S)'], ['updateCardPositionsPrev'], ['updateCardPositions']]}
 				${'move 21 8H-7C→cascade'}                    | ${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${'21'}       | ${['#c8H', '#c7C']}                         | ${['#c8H', '#c7C']}         | ${50}        | ${undefined}         | ${undefined}         | ${undefined}
@@ -1035,7 +1059,7 @@ describe('useCardPositionAnimations', () => {
 						expect(addLabelSpy.mock.calls).toEqual(labels);
 						expect(mockCallTimes()).toEqual({
 							fromToSpy: fromToSpyIDs.length,
-							toSpy: toSpyIDs.length,
+							...(toSpyIDs.length ? { toSpy: toSpyIDs.length } : {}),
 							...(setSpyLength ? { setSpy: setSpyLength } : {}),
 							addLabelSpy: labels.length,
 						});
@@ -1058,7 +1082,7 @@ describe('useCardPositionAnimations', () => {
 						expect(firstLabel).not.toBe(prevActionText);
 						expect(mockCallTimes()).toEqual({
 							fromToSpy: fromToSpyUndoIDs.length,
-							toSpy: toSpyUndoIDs.length,
+							...(toSpyUndoIDs.length ? { toSpy: toSpyUndoIDs.length } : {}),
 							...(setSpyLength ? { setSpy: setSpyLength } : {}),
 							addLabelSpy: 2,
 						});
@@ -1077,7 +1101,7 @@ describe('useCardPositionAnimations', () => {
 						expect(addLabelSpy.mock.calls).toEqual(labels);
 						expect(mockCallTimes()).toEqual({
 							fromToSpy: fromToSpyIDs.length,
-							toSpy: toSpyIDs.length,
+							...(toSpyIDs.length ? { toSpy: toSpyIDs.length } : {}),
 							...(setSpyLength ? { setSpy: setSpyLength } : {}),
 							addLabelSpy: labels.length,
 						});
@@ -1097,7 +1121,7 @@ describe('useCardPositionAnimations', () => {
 						expect(firstLabel).not.toBe(prevActionText);
 						expect(mockCallTimes()).toEqual({
 							fromToSpy: fromToSpyUndoIDs.length,
-							toSpy: toSpyUndoIDs.length,
+							...(toSpyUndoIDs.length ? { toSpy: toSpyUndoIDs.length } : {}),
 							...(setSpyLength ? { setSpy: setSpyLength } : {}),
 							addLabelSpy: 2,
 						});

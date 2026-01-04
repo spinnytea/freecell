@@ -4,6 +4,7 @@ import {
 	DEFAULT_TRANSLATE_DURATION,
 	DRAG_RELEASE_CLEAR_SPEEDUP,
 	MAX_ANIMATION_OVERLAP,
+	SELECT_ROTATION_DURATION,
 	TOTAL_DEFAULT_MOVEMENT_DURATION,
 } from '@/app/animation_constants';
 import { TLZR } from '@/app/components/element/domUtils';
@@ -72,7 +73,20 @@ export function animUpdatedCardPositions({
 			//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
 			//  - as soon as it finishes animating, set it to the correct value
 			// timeline.fromTo(cardIdSelector, { zIndex: zIndex + 100 }, { zIndex, duration, ease: 'power4.out' }, `<`);
-			timeline.to(cardIdSelector, { zIndex, duration: duration / 2, ease: 'none' }, `<`);
+			if (prevTLZR.zIndex !== zIndex) {
+				timeline.to(cardIdSelector, { zIndex, duration: duration / 2, ease: 'none' }, `<`);
+			}
+			if (prevTLZR.rotation !== rotation) {
+				timeline.to(
+					cardIdSelector,
+					{
+						rotation,
+						duration: SELECT_ROTATION_DURATION,
+						ease: 'power1.inOut',
+					},
+					`<`
+				);
+			}
 		} else {
 			// when we draw the cards for the first time, don't animate them from (0, 0)
 			// for gameplay, this should just be drawing the deck
