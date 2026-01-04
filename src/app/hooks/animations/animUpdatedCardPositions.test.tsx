@@ -1,5 +1,5 @@
 import { gsap } from 'gsap/all';
-import { TLZ } from '@/app/components/element/domUtils';
+import { TLZR } from '@/app/components/element/domUtils';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';
 import { spyOnGsap } from '@/app/testUtils';
@@ -23,18 +23,21 @@ describe('animUpdatedCardPositions', () => {
 				top: 0, // calcTopLeftZ
 				left: 0, // calcTopLeftZ
 				zIndex: 0, // calcTopLeftZ
+				rotation: 0, // calcTopLeftZ
 				rank: getRankForCompare('king'),
 				suit: 'hearts',
 				previousTop: 0, // prev?.top ?? top,
 			},
 		];
-		const nextTLZ = new Map<string, TLZ>([['KH', { top: 100, left: 100, zIndex: 10 }]]);
+		const nextTLZR = new Map<string, TLZR>([
+			['KH', { top: 100, left: 100, zIndex: 10, rotation: -5 }],
+		]);
 		const fixtureSizesChanged = false;
 
 		animUpdatedCardPositions({
 			timeline,
 			list,
-			nextTLZ,
+			nextTLZR,
 			fixtureSizesChanged,
 		});
 
@@ -48,7 +51,7 @@ describe('animUpdatedCardPositions', () => {
 
 	test.todo('list');
 
-	test.todo('nextTLZ');
+	test.todo('nextTLZR');
 
 	test.todo('fixtureSizesChanged');
 

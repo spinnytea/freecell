@@ -6,14 +6,14 @@ import {
 	MAX_ANIMATION_OVERLAP,
 	TOTAL_DEFAULT_MOVEMENT_DURATION,
 } from '@/app/animation_constants';
-import { TLZ } from '@/app/components/element/domUtils';
+import { TLZR } from '@/app/components/element/domUtils';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';
 import { calcCardId } from '@/game/card/card';
 
 export function animUpdatedCardPositions({
 	timeline,
 	list,
-	nextTLZ,
+	nextTLZR,
 	fixtureSizesChanged,
 	gameBoardIdRef,
 	pause = false,
@@ -21,7 +21,7 @@ export function animUpdatedCardPositions({
 }: {
 	timeline: gsap.core.Timeline;
 	list: UpdateCardPositionsType[];
-	nextTLZ: Map<string, TLZ>;
+	nextTLZR: Map<string, TLZR>;
 	fixtureSizesChanged: boolean;
 	gameBoardIdRef?: MutableRefObject<string>;
 	pause?: boolean;
@@ -42,18 +42,19 @@ export function animUpdatedCardPositions({
 	if (fixtureSizesChanged) {
 		overlap = 0;
 	}
-	list.forEach(({ shorthand, top, left, zIndex }, index) => {
+	list.forEach(({ shorthand, top, left, zIndex, rotation }, index) => {
 		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
-		const prevTLZ = nextTLZ.get(shorthand);
+		const prevTLZR = nextTLZR.get(shorthand);
 		// TODO (3-priority) (motivation) (animation) when flourish, translate X and Y at different rates to make a curving effect, e.g. power1.out vs power1.in
-		nextTLZ.set(shorthand, { top, left, zIndex });
-		if (prevTLZ) {
+		nextTLZR.set(shorthand, { top, left, zIndex, rotation });
+		if (prevTLZR) {
+			// FIXME also animate rotation
 			if (!pause) {
 				// bugfix: timeline.to should be enough, but mobile sometimes remakes cards at 0,0
 				//  - timeline.fromTo ensures we start the animation from the actual previous place
 				timeline.fromTo(
 					cardIdSelector,
-					{ top: prevTLZ.top, left: prevTLZ.left },
+					{ top: prevTLZR.top, left: prevTLZR.left },
 					{ top, left, duration, ease: 'power1.out' },
 					index === 0 ? `>0` : `<${overlap.toFixed(3)}`
 				);
@@ -75,7 +76,7 @@ export function animUpdatedCardPositions({
 		} else {
 			// when we draw the cards for the first time, don't animate them from (0, 0)
 			// for gameplay, this should just be drawing the deck
-			timeline.set(cardIdSelector, { top, left, zIndex });
+			timeline.set(cardIdSelector, { top, left, zIndex, rotation });
 		}
 	});
 }

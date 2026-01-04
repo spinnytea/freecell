@@ -1,40 +1,42 @@
 import { SyntheticEvent } from 'react';
 
-// FIXME (5-priority) (techdebt) (flourish-anim) (gsap) TLZR - include rotation
-export interface TLZ {
+export interface TLZR {
 	top: number;
 	left: number;
 	zIndex: number;
+	rotation: number;
 }
 
 export const domUtils = {
 	/** @deprecated this is used by some unit tests when there is no DOM */
-	domTLZ: new Map<string, TLZ>(),
+	domTLZR: new Map<string, TLZR>(),
 
-	/** @deprecated FIXME remove */
-	getDomAttributes(cardId: string): TLZ | undefined {
+	getDomAttributes(cardId: string): TLZR | undefined {
 		const cardEl = document.getElementById(cardId);
 		if (cardEl) {
 			const dataTop = cardEl.getAttribute('data-top');
 			const dataLeft = cardEl.getAttribute('data-left');
 			const dataZIndex = cardEl.getAttribute('data-zIndex');
+			const dataRotation = cardEl.getAttribute('data-rotation');
 			if (dataTop && dataLeft) {
 				const top = parseFloat(dataTop);
 				const left = parseFloat(dataLeft);
 				const zIndex = parseInt(dataZIndex ?? '0', 10);
-				return { top, left, zIndex };
+				const rotation = parseInt(dataRotation ?? '0', 10);
+				return { top, left, zIndex, rotation };
 			}
 		}
 		return undefined;
 	},
 
 	/** useful for testing */
-	setDomAttributes(cardId: string, { top, left, zIndex }: TLZ) {
+	setDomAttributes(cardId: string, { top, left, zIndex, rotation }: TLZR) {
 		const cardEl = document.getElementById(cardId);
 		if (cardEl) {
 			cardEl.setAttribute('data-top', top.toString(10));
 			cardEl.setAttribute('data-left', left.toString(10));
 			cardEl.setAttribute('data-zIndex', zIndex.toString(10));
+			cardEl.setAttribute('data-rotation', rotation.toString(10));
 		}
 	},
 

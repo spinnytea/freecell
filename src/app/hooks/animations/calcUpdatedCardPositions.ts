@@ -1,4 +1,4 @@
-import { TLZ } from '@/app/components/element/domUtils';
+import { TLZR } from '@/app/components/element/domUtils';
 import { calcTopLeftZ, FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import {
 	Card,
@@ -14,11 +14,12 @@ import {
 	PreviousAction,
 } from '@/game/move/history';
 
-export interface UpdateCardPositionsType {
+export interface UpdateCardPositionsType extends TLZR {
 	shorthand: string;
-	top: number;
-	left: number;
-	zIndex: number;
+	// top: number;
+	// left: number;
+	// zIndex: number;
+	// rotation: number;
 	rank: number;
 	suit: Suit;
 	previousTop: number;
@@ -47,14 +48,14 @@ export interface InvalidMoveCardType {
 */
 export function calcUpdatedCardPositions({
 	fixtureSizes,
-	previousTLZ,
+	previousTLZR,
 	cards,
 	selection,
 	flashCards,
 	previousAction,
 }: {
 	fixtureSizes: FixtureSizes;
-	previousTLZ: Map<string, TLZ>;
+	previousTLZR: Map<string, TLZR>;
 	cards: Card[];
 	selection: CardSequence | null;
 	flashCards: Card[] | null;
@@ -71,7 +72,7 @@ export function calcUpdatedCardPositions({
 	const fixtures = new Set<Fixture>();
 
 	cards.forEach((card) => {
-		const { top, left, zIndex } = calcTopLeftZ(
+		const { top, left, zIndex, rotation } = calcTopLeftZ(
 			fixtureSizes,
 			card.location,
 			selection,
@@ -80,17 +81,19 @@ export function calcUpdatedCardPositions({
 		);
 		const shorthand = shorthandCard(card);
 
-		const prev = previousTLZ.get(shorthand);
+		const prev = previousTLZR.get(shorthand);
 		const updateCardPosition: UpdateCardPositionsType = {
 			shorthand,
 			top,
 			left,
 			zIndex,
+			rotation,
 			rank: getRankForCompare(card.rank),
 			suit: card.suit,
 			previousTop: prev?.top ?? top,
 		};
 		if (!prev || prev.top !== top || prev.left !== left) {
+			// FIXME what if zIndex and rotation changes?
 			updateCardPositions.push(updateCardPosition);
 			fixtures.add(card.location.fixture);
 		} else {
@@ -134,7 +137,7 @@ export function calcUpdatedCardPositions({
 		) {
 			const { updateCardPositions: prevUpdateCardPositions } = calcUpdatedCardPositions({
 				fixtureSizes,
-				previousTLZ,
+				previousTLZR,
 				cards: previousAction.tweenCards,
 				selection: null,
 				flashCards: null,

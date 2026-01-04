@@ -3,7 +3,7 @@ import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
 import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
 import { ControlSchemes } from '@/app/components/cards/constants';
-import { domUtils, TLZ } from '@/app/components/element/domUtils';
+import { domUtils, TLZR } from '@/app/components/element/domUtils';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
 import { animShuffleCards } from '@/app/hooks/animations/animShuffleCards';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
@@ -54,15 +54,15 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 
 			// REVIEW (techdebt) if we are going to use this as storage, we need to update it _every time we move the cards_
 			//  - which I believe we do now, but like, this might be a constant task now?
-			// REVIEW (techdebt) previousTLZ / nextTLZ is a source of bugs and initialization problems
+			// REVIEW (techdebt) previousTLZR / nextTLZR is a source of bugs and initialization problems
 			// FIXME usePrevious to store the game, instead of loading the previou values from the dom
-			const previousTLZ = new Map<string, TLZ>();
+			const previousTLZR = new Map<string, TLZR>();
 			cards.forEach((card) => {
 				const shorthand = shorthandCard(card);
 				const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
-				const tlz = domUtils.getDomAttributes(cardId);
-				if (tlz) {
-					previousTLZ.set(shorthand, tlz);
+				const tlzr = domUtils.getDomAttributes(cardId);
+				if (tlzr) {
+					previousTLZR.set(shorthand, tlzr);
 				}
 			});
 
@@ -74,7 +74,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				invalidMoveCards,
 			} = calcUpdatedCardPositions({
 				fixtureSizes,
-				previousTLZ,
+				previousTLZR,
 				cards,
 				selection,
 				flashCards,
@@ -93,7 +93,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				}
 				previousTimeline.current = timeline;
 
-				const nextTLZ = new Map(previousTLZ);
+				const nextTLZR = new Map(previousTLZR);
 				if (updateCardPositionsPrev) {
 					// XXX (techdebt) (motivation) this needs to be refactored this is the first non-trivial animation, so it's a bit of a 1-off
 					//  - everything else so far has been about making sure the cards move in the right order
@@ -101,9 +101,14 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					animUpdatedCardPositions({
 						timeline,
 						list: updateCardPositionsPrev,
-						nextTLZ,
+						nextTLZR,
 						fixtureSizesChanged,
 						gameBoardIdRef,
+					});
+
+					updateCardPositionsPrev.forEach(({ shorthand, top, left, zIndex, rotation }) => {
+						const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
+						domUtils.setDomAttributes(cardId, { top, left, zIndex, rotation });
 					});
 				}
 				// TODO (animation) "de-select AND THEN move card" is currently two game states
@@ -113,17 +118,23 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				animUpdatedCardPositions({
 					timeline,
 					list: updateCardPositions,
-					nextTLZ,
+					nextTLZR,
 					fixtureSizesChanged,
 					gameBoardIdRef,
 					pause: secondMustComeAfter,
 					cardsNearTarget: previousAction.gameFunction === 'drag-drop',
 				});
 
-				nextTLZ.forEach((tlz, shorthand) => {
+				updateCardPositions.forEach(({ shorthand, top, left, zIndex, rotation }) => {
 					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
-					domUtils.setDomAttributes(cardId, tlz);
+					domUtils.setDomAttributes(cardId, { top, left, zIndex, rotation });
 				});
+
+				// REVIEW (techdebt) should we just set them _all_?
+				// nextTLZR.forEach((tlzr, shorthand) => {
+				// 	const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
+				// 	domUtils.setDomAttributes(cardId, tlzr);
+				// });
 			}
 
 			if (!updateCardPositions.length && previousAction.type === 'shuffle') {
@@ -168,14 +179,14 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				//  - cards can sometimes get stranded
 				//  - kind of an "in case of emergency, break glass"
 				// XXX (animation) should this be in animUpdatedCardPositions somehow?
-				unmovedCards.forEach(({ shorthand, top, left, zIndex }) => {
+				unmovedCards.forEach(({ shorthand, top, left, zIndex, rotation }) => {
 					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
 					const cardIdSelector = '#' + cardId;
-					domUtils.setDomAttributes(cardId, { top, left, zIndex });
+					domUtils.setDomAttributes(cardId, { top, left, zIndex, rotation });
 
-					// REVIEW (techdebt) setting nextTLZ breaks things?
+					// REVIEW (techdebt) setting nextTLZR breaks things?
 					// NOTE if we `transform: '',` that also clear the rotation
-					// nextTLZ.set(shorthand, { top, left, zIndex });
+					// nextTLZR.set(shorthand, { top, left, zIndex });
 
 					// REVIEW (techdebt) (animations) "integration" test this rotation bug - can we? is it possible? tlz-r-xy
 					timeline.set(cardIdSelector, { top, left, zIndex, duration: 0.1 }, '<0');

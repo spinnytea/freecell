@@ -15,15 +15,15 @@ import {
 import { FreeCell } from '@/game/game';
 
 jest.mock('@/app/components/element/domUtils.ts', () => {
-	const domTLZ = new Map<string, { top: number; left: number; zIndex: number }>();
+	const domTLZR = new Map<string, { top: number; left: number; zIndex: number }>();
 	return {
 		domUtils: {
-			domTLZ,
+			domTLZR,
 			getDomAttributes: (cardId: string) => {
-				return domTLZ.get(cardId);
+				return domTLZR.get(cardId);
 			},
-			setDomAttributes: (cardId: string, tlz: { top: number; left: number; zIndex: number }) => {
-				domTLZ.set(cardId, tlz);
+			setDomAttributes: (cardId: string, tlzr: { top: number; left: number; zIndex: number }) => {
+				domTLZR.set(cardId, tlzr);
 			},
 		},
 	};
@@ -106,7 +106,7 @@ describe('useCardPositionAnimations', () => {
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
-		domUtils.domTLZ.clear();
+		domUtils.domTLZR.clear();
 
 		({
 			fromToSpy,
@@ -1418,10 +1418,10 @@ describe('useCardPositionAnimations', () => {
 
 			Second paint:
 			- `updateCardPositions` sets everything (as expected)
-			- `previousTLZ` is empty (as expected)
+			- `previousTLZR` is empty (as expected)
 			Initial paint:
 			- `updateCardPositions` is empty (as expected)
-			- `previousTLZ` has all the correct values (as it should be)
+			- `previousTLZR` has all the correct values (as it should be)
 		*/
 		test('Setting all cards after refresh then touch stop', () => {
 			const gameStateOne = new FreeCell().shuffle32(24827).dealAll().moveByShorthand('7a');

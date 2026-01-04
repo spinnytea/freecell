@@ -142,6 +142,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="12"
         id="cAC-GameBoard.test-#5"
@@ -160,6 +161,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="2"
         id="cAD-GameBoard.test-#5"
@@ -178,6 +180,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="51"
         id="cAH-GameBoard.test-#5"
@@ -196,6 +199,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="42"
         id="cAS-GameBoard.test-#5"
@@ -214,6 +218,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="38"
         id="c2C-GameBoard.test-#5"
@@ -232,6 +237,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="49"
         id="c2D-GameBoard.test-#5"
@@ -250,6 +256,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="11"
         id="c2H-GameBoard.test-#5"
@@ -268,6 +275,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="45"
         id="c2S-GameBoard.test-#5"
@@ -286,6 +294,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="37"
         id="c3C-GameBoard.test-#5"
@@ -304,6 +313,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="44"
         id="c3D-GameBoard.test-#5"
@@ -322,6 +332,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="32"
         id="c3H-GameBoard.test-#5"
@@ -340,6 +351,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="35"
         id="c3S-GameBoard.test-#5"
@@ -358,6 +370,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="47"
         id="c4C-GameBoard.test-#5"
@@ -376,6 +389,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="39"
         id="c4D-GameBoard.test-#5"
@@ -394,6 +408,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="13"
         id="c4H-GameBoard.test-#5"
@@ -412,6 +427,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="36"
         id="c4S-GameBoard.test-#5"
@@ -430,6 +446,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="43"
         id="c5C-GameBoard.test-#5"
@@ -448,6 +465,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="34"
         id="c5D-GameBoard.test-#5"
@@ -466,6 +484,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="30"
         id="c5H-GameBoard.test-#5"
@@ -484,6 +503,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="19"
         id="c5S-GameBoard.test-#5"
@@ -502,6 +522,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="6"
         id="c6C-GameBoard.test-#5"
@@ -520,6 +541,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="8"
         id="c6D-GameBoard.test-#5"
@@ -538,6 +560,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="7"
         id="c6H-GameBoard.test-#5"
@@ -556,6 +579,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="29"
         id="c6S-GameBoard.test-#5"
@@ -574,6 +598,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="1"
         id="c7C-GameBoard.test-#5"
@@ -592,6 +617,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="20"
         id="c7D-GameBoard.test-#5"
@@ -610,6 +636,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="24"
         id="c7H-GameBoard.test-#5"
@@ -628,6 +655,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="26"
         id="c7S-GameBoard.test-#5"
@@ -646,6 +674,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="17"
         id="c8C-GameBoard.test-#5"
@@ -664,6 +693,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="28"
         id="c8D-GameBoard.test-#5"
@@ -682,6 +712,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="23"
         id="c8H-GameBoard.test-#5"
@@ -700,6 +731,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="50"
         id="c8S-GameBoard.test-#5"
@@ -718,6 +750,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="41"
         id="c9C-GameBoard.test-#5"
@@ -736,6 +769,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="16"
         id="c9D-GameBoard.test-#5"
@@ -754,6 +788,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="46"
         id="c9H-GameBoard.test-#5"
@@ -772,6 +807,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="3"
         id="c9S-GameBoard.test-#5"
@@ -790,6 +826,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="10"
         id="cTC-GameBoard.test-#5"
@@ -808,6 +845,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="27"
         id="cTD-GameBoard.test-#5"
@@ -826,6 +864,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="9"
         id="cTH-GameBoard.test-#5"
@@ -844,6 +883,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="0"
         id="cTS-GameBoard.test-#5"
@@ -862,6 +902,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="21"
         id="cJC-GameBoard.test-#5"
@@ -880,6 +921,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="25"
         id="cJD-GameBoard.test-#5"
@@ -898,6 +940,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="22"
         id="cJH-GameBoard.test-#5"
@@ -916,6 +959,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="4"
         id="cJS-GameBoard.test-#5"
@@ -934,6 +978,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="5"
         id="cQC-GameBoard.test-#5"
@@ -952,6 +997,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="14"
         id="cQD-GameBoard.test-#5"
@@ -970,6 +1016,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="18"
         id="cQH-GameBoard.test-#5"
@@ -988,6 +1035,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="48"
         id="cQS-GameBoard.test-#5"
@@ -1006,6 +1054,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="33"
         id="cKC-GameBoard.test-#5"
@@ -1024,6 +1073,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="31"
         id="cKD-GameBoard.test-#5"
@@ -1042,6 +1092,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="40"
         id="cKH-GameBoard.test-#5"
@@ -1060,6 +1111,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="15"
         id="cKS-GameBoard.test-#5"
@@ -1279,6 +1331,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cAC-GameBoard.test-#5"
@@ -1297,6 +1350,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="26.5"
         data-zindex="6"
         id="cAD-GameBoard.test-#5"
@@ -1315,6 +1369,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cAH-GameBoard.test-#5"
@@ -1333,6 +1388,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="20.75"
         data-zindex="1"
         id="cAS-GameBoard.test-#5"
@@ -1351,6 +1407,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c2C-GameBoard.test-#5"
@@ -1369,6 +1426,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c2D-GameBoard.test-#5"
@@ -1387,6 +1445,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="25.5"
         data-zindex="5"
         id="c2H-GameBoard.test-#5"
@@ -1405,6 +1464,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c2S-GameBoard.test-#5"
@@ -1423,6 +1483,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c3C-GameBoard.test-#5"
@@ -1441,6 +1502,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c3D-GameBoard.test-#5"
@@ -1459,6 +1521,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c3H-GameBoard.test-#5"
@@ -1477,6 +1540,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="22.5"
         data-zindex="2"
         id="c3S-GameBoard.test-#5"
@@ -1495,6 +1559,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c4C-GameBoard.test-#5"
@@ -1513,6 +1578,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c4D-GameBoard.test-#5"
@@ -1531,6 +1597,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c4H-GameBoard.test-#5"
@@ -1549,6 +1616,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c4S-GameBoard.test-#5"
@@ -1567,6 +1635,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="21.5"
         data-zindex="1"
         id="c5C-GameBoard.test-#5"
@@ -1585,6 +1654,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="22.5"
         data-zindex="2"
         id="c5D-GameBoard.test-#5"
@@ -1603,6 +1673,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c5H-GameBoard.test-#5"
@@ -1621,6 +1692,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="24.5"
         data-zindex="4"
         id="c5S-GameBoard.test-#5"
@@ -1639,6 +1711,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c6C-GameBoard.test-#5"
@@ -1657,6 +1730,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c6D-GameBoard.test-#5"
@@ -1675,6 +1749,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c6H-GameBoard.test-#5"
@@ -1693,6 +1768,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c6S-GameBoard.test-#5"
@@ -1711,6 +1787,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c7C-GameBoard.test-#5"
@@ -1729,6 +1806,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c7D-GameBoard.test-#5"
@@ -1747,6 +1825,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c7H-GameBoard.test-#5"
@@ -1765,6 +1844,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="23.5"
         data-zindex="3"
         id="c7S-GameBoard.test-#5"
@@ -1783,6 +1863,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c8C-GameBoard.test-#5"
@@ -1801,6 +1882,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c8D-GameBoard.test-#5"
@@ -1819,6 +1901,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c8H-GameBoard.test-#5"
@@ -1837,6 +1920,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c8S-GameBoard.test-#5"
@@ -1855,6 +1939,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c9C-GameBoard.test-#5"
@@ -1873,6 +1958,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c9D-GameBoard.test-#5"
@@ -1891,6 +1977,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c9H-GameBoard.test-#5"
@@ -1909,6 +1996,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="26.5"
         data-zindex="6"
         id="c9S-GameBoard.test-#5"
@@ -1927,6 +2015,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="25.5"
         data-zindex="5"
         id="cTC-GameBoard.test-#5"
@@ -1945,6 +2034,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="23.5"
         data-zindex="3"
         id="cTD-GameBoard.test-#5"
@@ -1963,6 +2053,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cTH-GameBoard.test-#5"
@@ -1981,6 +2072,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="cTS-GameBoard.test-#5"
@@ -1999,6 +2091,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cJC-GameBoard.test-#5"
@@ -2017,6 +2110,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cJD-GameBoard.test-#5"
@@ -2035,6 +2129,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cJH-GameBoard.test-#5"
@@ -2053,6 +2148,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cJS-GameBoard.test-#5"
@@ -2071,6 +2167,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cQC-GameBoard.test-#5"
@@ -2089,6 +2186,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cQD-GameBoard.test-#5"
@@ -2107,6 +2205,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="24.5"
         data-zindex="4"
         id="cQH-GameBoard.test-#5"
@@ -2125,6 +2224,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cQS-GameBoard.test-#5"
@@ -2143,6 +2243,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cKC-GameBoard.test-#5"
@@ -2161,6 +2262,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cKD-GameBoard.test-#5"
@@ -2179,6 +2281,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cKH-GameBoard.test-#5"
@@ -2197,6 +2300,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cKS-GameBoard.test-#5"
@@ -2416,6 +2520,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAC-GameBoard.test-#5"
@@ -2434,6 +2539,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAD-GameBoard.test-#5"
@@ -2452,6 +2558,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cAH-GameBoard.test-#5"
@@ -2470,6 +2577,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cAS-GameBoard.test-#5"
@@ -2488,6 +2596,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="100"
         id="c2C-GameBoard.test-#5"
@@ -2506,6 +2615,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c2D-GameBoard.test-#5"
@@ -2524,6 +2634,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c2H-GameBoard.test-#5"
@@ -2542,6 +2653,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c2S-GameBoard.test-#5"
@@ -2560,6 +2672,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c3C-GameBoard.test-#5"
@@ -2578,6 +2691,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c3D-GameBoard.test-#5"
@@ -2596,6 +2710,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c3H-GameBoard.test-#5"
@@ -2614,6 +2729,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c3S-GameBoard.test-#5"
@@ -2632,6 +2748,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c4C-GameBoard.test-#5"
@@ -2650,6 +2767,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c4D-GameBoard.test-#5"
@@ -2668,6 +2786,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c4H-GameBoard.test-#5"
@@ -2686,6 +2805,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c4S-GameBoard.test-#5"
@@ -2704,6 +2824,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c5C-GameBoard.test-#5"
@@ -2722,6 +2843,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c5D-GameBoard.test-#5"
@@ -2740,6 +2862,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c5H-GameBoard.test-#5"
@@ -2758,6 +2881,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c5S-GameBoard.test-#5"
@@ -2776,6 +2900,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c6C-GameBoard.test-#5"
@@ -2794,6 +2919,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c6D-GameBoard.test-#5"
@@ -2812,6 +2938,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="27"
         data-zindex="7"
         id="c6H-GameBoard.test-#5"
@@ -2830,6 +2957,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c6S-GameBoard.test-#5"
@@ -2848,6 +2976,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c7C-GameBoard.test-#5"
@@ -2866,6 +2995,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c7D-GameBoard.test-#5"
@@ -2884,6 +3014,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c7H-GameBoard.test-#5"
@@ -2902,6 +3033,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c7S-GameBoard.test-#5"
@@ -2920,6 +3052,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c8C-GameBoard.test-#5"
@@ -2938,6 +3071,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c8D-GameBoard.test-#5"
@@ -2956,6 +3090,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c8H-GameBoard.test-#5"
@@ -2974,6 +3109,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c8S-GameBoard.test-#5"
@@ -2992,6 +3128,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c9C-GameBoard.test-#5"
@@ -3010,6 +3147,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c9D-GameBoard.test-#5"
@@ -3028,6 +3166,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="28"
         data-zindex="8"
         id="c9H-GameBoard.test-#5"
@@ -3046,6 +3185,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c9S-GameBoard.test-#5"
@@ -3064,6 +3204,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="27"
         data-zindex="7"
         id="cTC-GameBoard.test-#5"
@@ -3082,6 +3223,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cTD-GameBoard.test-#5"
@@ -3100,6 +3242,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cTH-GameBoard.test-#5"
@@ -3118,6 +3261,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="cTS-GameBoard.test-#5"
@@ -3136,6 +3280,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cJC-GameBoard.test-#5"
@@ -3154,6 +3299,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cJD-GameBoard.test-#5"
@@ -3172,6 +3318,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="cJH-GameBoard.test-#5"
@@ -3190,6 +3337,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="cJS-GameBoard.test-#5"
@@ -3208,6 +3356,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cQC-GameBoard.test-#5"
@@ -3226,6 +3375,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cQD-GameBoard.test-#5"
@@ -3244,6 +3394,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cQH-GameBoard.test-#5"
@@ -3262,6 +3413,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cQS-GameBoard.test-#5"
@@ -3280,6 +3432,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cKC-GameBoard.test-#5"
@@ -3298,6 +3451,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cKD-GameBoard.test-#5"
@@ -3316,6 +3470,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cKH-GameBoard.test-#5"
@@ -3334,6 +3489,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cKS-GameBoard.test-#5"
@@ -3553,6 +3709,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAC-GameBoard.test-#5"
@@ -3571,6 +3728,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAD-GameBoard.test-#5"
@@ -3589,6 +3747,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAH-GameBoard.test-#5"
@@ -3607,6 +3766,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cAS-GameBoard.test-#5"
@@ -3625,6 +3785,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="100"
         id="c2C-GameBoard.test-#5"
@@ -3643,6 +3804,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c2D-GameBoard.test-#5"
@@ -3661,6 +3823,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="100"
         id="c2H-GameBoard.test-#5"
@@ -3679,6 +3842,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c2S-GameBoard.test-#5"
@@ -3697,6 +3861,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c3C-GameBoard.test-#5"
@@ -3715,6 +3880,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c3D-GameBoard.test-#5"
@@ -3733,6 +3899,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c3H-GameBoard.test-#5"
@@ -3751,6 +3918,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="5"
         data-zindex="0"
         id="c3S-GameBoard.test-#5"
@@ -3769,6 +3937,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c4C-GameBoard.test-#5"
@@ -3787,6 +3956,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c4D-GameBoard.test-#5"
@@ -3805,6 +3975,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c4H-GameBoard.test-#5"
@@ -3823,6 +3994,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c4S-GameBoard.test-#5"
@@ -3841,6 +4013,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="5"
         data-zindex="2"
         id="c5C-GameBoard.test-#5"
@@ -3859,6 +4032,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c5D-GameBoard.test-#5"
@@ -3877,6 +4051,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c5H-GameBoard.test-#5"
@@ -3895,6 +4070,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="28"
         data-zindex="8"
         id="c5S-GameBoard.test-#5"
@@ -3913,6 +4089,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c6C-GameBoard.test-#5"
@@ -3931,6 +4108,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c6D-GameBoard.test-#5"
@@ -3949,6 +4127,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="27"
         data-zindex="7"
         id="c6H-GameBoard.test-#5"
@@ -3967,6 +4146,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c6S-GameBoard.test-#5"
@@ -3985,6 +4165,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c7C-GameBoard.test-#5"
@@ -4003,6 +4184,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c7D-GameBoard.test-#5"
@@ -4021,6 +4203,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c7H-GameBoard.test-#5"
@@ -4039,6 +4222,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c7S-GameBoard.test-#5"
@@ -4057,6 +4241,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c8C-GameBoard.test-#5"
@@ -4075,6 +4260,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c8D-GameBoard.test-#5"
@@ -4093,6 +4279,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c8H-GameBoard.test-#5"
@@ -4111,6 +4298,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c8S-GameBoard.test-#5"
@@ -4129,6 +4317,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c9C-GameBoard.test-#5"
@@ -4147,6 +4336,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c9D-GameBoard.test-#5"
@@ -4165,6 +4355,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="28"
         data-zindex="8"
         id="c9H-GameBoard.test-#5"
@@ -4183,6 +4374,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="28"
         data-zindex="8"
         id="c9S-GameBoard.test-#5"
@@ -4201,6 +4393,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="27"
         data-zindex="7"
         id="cTC-GameBoard.test-#5"
@@ -4219,6 +4412,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="27"
         data-zindex="7"
         id="cTD-GameBoard.test-#5"
@@ -4237,6 +4431,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cTH-GameBoard.test-#5"
@@ -4255,6 +4450,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="cTS-GameBoard.test-#5"
@@ -4273,6 +4469,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cJC-GameBoard.test-#5"
@@ -4291,6 +4488,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cJD-GameBoard.test-#5"
@@ -4309,6 +4507,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="cJH-GameBoard.test-#5"
@@ -4327,6 +4526,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="cJS-GameBoard.test-#5"
@@ -4345,6 +4545,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cQC-GameBoard.test-#5"
@@ -4363,6 +4564,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cQD-GameBoard.test-#5"
@@ -4381,6 +4583,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cQH-GameBoard.test-#5"
@@ -4399,6 +4602,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cQS-GameBoard.test-#5"
@@ -4417,6 +4621,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cKC-GameBoard.test-#5"
@@ -4435,6 +4640,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cKD-GameBoard.test-#5"
@@ -4453,6 +4659,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cKH-GameBoard.test-#5"
@@ -4471,6 +4678,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cKS-GameBoard.test-#5"
@@ -4690,6 +4898,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAC-GameBoard.test-#5"
@@ -4708,6 +4917,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAD-GameBoard.test-#5"
@@ -4726,6 +4936,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAH-GameBoard.test-#5"
@@ -4744,6 +4955,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAS-GameBoard.test-#5"
@@ -4762,6 +4974,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="100"
         id="c2C-GameBoard.test-#5"
@@ -4780,6 +4993,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c2D-GameBoard.test-#5"
@@ -4798,6 +5012,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="100"
         id="c2H-GameBoard.test-#5"
@@ -4816,6 +5031,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c2S-GameBoard.test-#5"
@@ -4834,6 +5050,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c3C-GameBoard.test-#5"
@@ -4852,6 +5069,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c3D-GameBoard.test-#5"
@@ -4870,6 +5088,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="101"
         id="c3H-GameBoard.test-#5"
@@ -4888,6 +5107,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="5"
         data-zindex="0"
         id="c3S-GameBoard.test-#5"
@@ -4906,6 +5126,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c4C-GameBoard.test-#5"
@@ -4924,6 +5145,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c4D-GameBoard.test-#5"
@@ -4942,6 +5164,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c4H-GameBoard.test-#5"
@@ -4960,6 +5183,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c4S-GameBoard.test-#5"
@@ -4978,6 +5202,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="32"
         data-zindex="12"
         id="c5C-GameBoard.test-#5"
@@ -4996,6 +5221,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="5"
         data-zindex="1"
         id="c5D-GameBoard.test-#5"
@@ -5014,6 +5240,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c5H-GameBoard.test-#5"
@@ -5032,6 +5259,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="28"
         data-zindex="8"
         id="c5S-GameBoard.test-#5"
@@ -5050,6 +5278,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c6C-GameBoard.test-#5"
@@ -5068,6 +5297,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="31"
         data-zindex="11"
         id="c6D-GameBoard.test-#5"
@@ -5086,6 +5316,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="27"
         data-zindex="7"
         id="c6H-GameBoard.test-#5"
@@ -5104,6 +5335,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c6S-GameBoard.test-#5"
@@ -5122,6 +5354,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c7C-GameBoard.test-#5"
@@ -5140,6 +5373,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c7D-GameBoard.test-#5"
@@ -5158,6 +5392,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="30"
         data-zindex="10"
         id="c7H-GameBoard.test-#5"
@@ -5176,6 +5411,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="30"
         data-zindex="10"
         id="c7S-GameBoard.test-#5"
@@ -5194,6 +5430,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c8C-GameBoard.test-#5"
@@ -5212,6 +5449,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="29"
         data-zindex="9"
         id="c8D-GameBoard.test-#5"
@@ -5230,6 +5468,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c8H-GameBoard.test-#5"
@@ -5248,6 +5487,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="29"
         data-zindex="9"
         id="c8S-GameBoard.test-#5"
@@ -5266,6 +5506,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c9C-GameBoard.test-#5"
@@ -5284,6 +5525,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c9D-GameBoard.test-#5"
@@ -5302,6 +5544,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="28"
         data-zindex="8"
         id="c9H-GameBoard.test-#5"
@@ -5320,6 +5563,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="28"
         data-zindex="8"
         id="c9S-GameBoard.test-#5"
@@ -5338,6 +5582,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="27"
         data-zindex="7"
         id="cTC-GameBoard.test-#5"
@@ -5356,6 +5601,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="27"
         data-zindex="7"
         id="cTD-GameBoard.test-#5"
@@ -5374,6 +5620,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cTH-GameBoard.test-#5"
@@ -5392,6 +5639,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cTS-GameBoard.test-#5"
@@ -5410,6 +5658,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cJC-GameBoard.test-#5"
@@ -5428,6 +5677,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cJD-GameBoard.test-#5"
@@ -5446,6 +5696,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="cJH-GameBoard.test-#5"
@@ -5464,6 +5715,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="cJS-GameBoard.test-#5"
@@ -5482,6 +5734,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cQC-GameBoard.test-#5"
@@ -5500,6 +5753,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cQD-GameBoard.test-#5"
@@ -5518,6 +5772,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cQH-GameBoard.test-#5"
@@ -5536,6 +5791,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cQS-GameBoard.test-#5"
@@ -5554,6 +5810,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cKC-GameBoard.test-#5"
@@ -5572,6 +5829,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cKD-GameBoard.test-#5"
@@ -5590,6 +5848,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cKH-GameBoard.test-#5"
@@ -5608,6 +5867,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cKS-GameBoard.test-#5"
@@ -5827,6 +6087,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAC-GameBoard.test-#5"
@@ -5845,6 +6106,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAD-GameBoard.test-#5"
@@ -5863,6 +6125,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAH-GameBoard.test-#5"
@@ -5881,6 +6144,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAS-GameBoard.test-#5"
@@ -5899,6 +6163,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="100"
         id="c2C-GameBoard.test-#5"
@@ -5917,6 +6182,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c2D-GameBoard.test-#5"
@@ -5935,6 +6201,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="100"
         id="c2H-GameBoard.test-#5"
@@ -5953,6 +6220,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="100"
         id="c2S-GameBoard.test-#5"
@@ -5971,6 +6239,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="101"
         id="c3C-GameBoard.test-#5"
@@ -5989,6 +6258,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c3D-GameBoard.test-#5"
@@ -6007,6 +6277,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="101"
         id="c3H-GameBoard.test-#5"
@@ -6025,6 +6296,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="101"
         id="c3S-GameBoard.test-#5"
@@ -6043,6 +6315,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c4C-GameBoard.test-#5"
@@ -6061,6 +6334,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c4D-GameBoard.test-#5"
@@ -6079,6 +6353,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="102"
         id="c4H-GameBoard.test-#5"
@@ -6097,6 +6372,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c4S-GameBoard.test-#5"
@@ -6115,6 +6391,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="32"
         data-zindex="12"
         id="c5C-GameBoard.test-#5"
@@ -6133,6 +6410,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="28"
         data-zindex="8"
         id="c5D-GameBoard.test-#5"
@@ -6151,6 +6429,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c5H-GameBoard.test-#5"
@@ -6169,6 +6448,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="28"
         data-zindex="8"
         id="c5S-GameBoard.test-#5"
@@ -6187,6 +6467,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c6C-GameBoard.test-#5"
@@ -6205,6 +6486,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="31"
         data-zindex="11"
         id="c6D-GameBoard.test-#5"
@@ -6223,6 +6505,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="27"
         data-zindex="7"
         id="c6H-GameBoard.test-#5"
@@ -6241,6 +6524,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="27"
         data-zindex="7"
         id="c6S-GameBoard.test-#5"
@@ -6259,6 +6543,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c7C-GameBoard.test-#5"
@@ -6277,6 +6562,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c7D-GameBoard.test-#5"
@@ -6295,6 +6581,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c7H-GameBoard.test-#5"
@@ -6313,6 +6600,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="30"
         data-zindex="10"
         id="c7S-GameBoard.test-#5"
@@ -6331,6 +6619,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c8C-GameBoard.test-#5"
@@ -6349,6 +6638,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="29"
         data-zindex="9"
         id="c8D-GameBoard.test-#5"
@@ -6367,6 +6657,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c8H-GameBoard.test-#5"
@@ -6385,6 +6676,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c8S-GameBoard.test-#5"
@@ -6403,6 +6695,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c9C-GameBoard.test-#5"
@@ -6421,6 +6714,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c9D-GameBoard.test-#5"
@@ -6439,6 +6733,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c9H-GameBoard.test-#5"
@@ -6457,6 +6752,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="28"
         data-zindex="8"
         id="c9S-GameBoard.test-#5"
@@ -6475,6 +6771,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cTC-GameBoard.test-#5"
@@ -6493,6 +6790,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="27"
         data-zindex="7"
         id="cTD-GameBoard.test-#5"
@@ -6511,6 +6809,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cTH-GameBoard.test-#5"
@@ -6529,6 +6828,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cTS-GameBoard.test-#5"
@@ -6547,6 +6847,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cJC-GameBoard.test-#5"
@@ -6565,6 +6866,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cJD-GameBoard.test-#5"
@@ -6583,6 +6885,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cJH-GameBoard.test-#5"
@@ -6601,6 +6904,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="cJS-GameBoard.test-#5"
@@ -6619,6 +6923,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="5"
         data-zindex="2"
         id="cQC-GameBoard.test-#5"
@@ -6637,6 +6942,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cQD-GameBoard.test-#5"
@@ -6655,6 +6961,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cQH-GameBoard.test-#5"
@@ -6673,6 +6980,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cQS-GameBoard.test-#5"
@@ -6691,6 +6999,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cKC-GameBoard.test-#5"
@@ -6709,6 +7018,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cKD-GameBoard.test-#5"
@@ -6727,6 +7037,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cKH-GameBoard.test-#5"
@@ -6745,6 +7056,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cKS-GameBoard.test-#5"
@@ -6970,6 +7282,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAC-GameBoard.test-#5"
@@ -6988,6 +7301,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAD-GameBoard.test-#5"
@@ -7006,6 +7320,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAH-GameBoard.test-#5"
@@ -7024,6 +7339,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="99"
         id="cAS-GameBoard.test-#5"
@@ -7042,6 +7358,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="100"
         id="c2C-GameBoard.test-#5"
@@ -7060,6 +7377,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="100"
         id="c2D-GameBoard.test-#5"
@@ -7078,6 +7396,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="100"
         id="c2H-GameBoard.test-#5"
@@ -7096,6 +7415,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="100"
         id="c2S-GameBoard.test-#5"
@@ -7114,6 +7434,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="101"
         id="c3C-GameBoard.test-#5"
@@ -7132,6 +7453,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="101"
         id="c3D-GameBoard.test-#5"
@@ -7150,6 +7472,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="101"
         id="c3H-GameBoard.test-#5"
@@ -7168,6 +7491,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="101"
         id="c3S-GameBoard.test-#5"
@@ -7186,6 +7510,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="102"
         id="c4C-GameBoard.test-#5"
@@ -7204,6 +7529,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="102"
         id="c4D-GameBoard.test-#5"
@@ -7222,6 +7548,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="102"
         id="c4H-GameBoard.test-#5"
@@ -7240,6 +7567,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="102"
         id="c4S-GameBoard.test-#5"
@@ -7258,6 +7586,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="103"
         id="c5C-GameBoard.test-#5"
@@ -7276,6 +7605,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="103"
         id="c5D-GameBoard.test-#5"
@@ -7294,6 +7624,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="103"
         id="c5H-GameBoard.test-#5"
@@ -7312,6 +7643,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="103"
         id="c5S-GameBoard.test-#5"
@@ -7330,6 +7662,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="104"
         id="c6C-GameBoard.test-#5"
@@ -7348,6 +7681,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="104"
         id="c6D-GameBoard.test-#5"
@@ -7366,6 +7700,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="104"
         id="c6H-GameBoard.test-#5"
@@ -7384,6 +7719,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="104"
         id="c6S-GameBoard.test-#5"
@@ -7402,6 +7738,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="105"
         id="c7C-GameBoard.test-#5"
@@ -7420,6 +7757,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="105"
         id="c7D-GameBoard.test-#5"
@@ -7438,6 +7776,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="105"
         id="c7H-GameBoard.test-#5"
@@ -7456,6 +7795,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="105"
         id="c7S-GameBoard.test-#5"
@@ -7474,6 +7814,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="106"
         id="c8C-GameBoard.test-#5"
@@ -7492,6 +7833,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="106"
         id="c8D-GameBoard.test-#5"
@@ -7510,6 +7852,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="106"
         id="c8H-GameBoard.test-#5"
@@ -7528,6 +7871,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="106"
         id="c8S-GameBoard.test-#5"
@@ -7546,6 +7890,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="107"
         id="c9C-GameBoard.test-#5"
@@ -7564,6 +7909,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="107"
         id="c9D-GameBoard.test-#5"
@@ -7582,6 +7928,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="107"
         id="c9H-GameBoard.test-#5"
@@ -7600,6 +7947,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="107"
         id="c9S-GameBoard.test-#5"
@@ -7618,6 +7966,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="108"
         id="cTC-GameBoard.test-#5"
@@ -7636,6 +7985,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="108"
         id="cTD-GameBoard.test-#5"
@@ -7654,6 +8004,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="108"
         id="cTH-GameBoard.test-#5"
@@ -7672,6 +8023,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="108"
         id="cTS-GameBoard.test-#5"
@@ -7690,6 +8042,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="109"
         id="cJC-GameBoard.test-#5"
@@ -7708,6 +8061,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="109"
         id="cJD-GameBoard.test-#5"
@@ -7726,6 +8080,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="109"
         id="cJH-GameBoard.test-#5"
@@ -7744,6 +8099,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="109"
         id="cJS-GameBoard.test-#5"
@@ -7762,6 +8118,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="110"
         id="cQC-GameBoard.test-#5"
@@ -7780,6 +8137,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="110"
         id="cQD-GameBoard.test-#5"
@@ -7798,6 +8156,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="110"
         id="cQH-GameBoard.test-#5"
@@ -7816,6 +8175,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="110"
         id="cQS-GameBoard.test-#5"
@@ -7834,6 +8194,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="5"
         data-zindex="111"
         id="cKC-GameBoard.test-#5"
@@ -7852,6 +8213,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="5"
         data-zindex="111"
         id="cKD-GameBoard.test-#5"
@@ -7870,6 +8232,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="5"
         data-zindex="111"
         id="cKH-GameBoard.test-#5"
@@ -7888,6 +8251,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="5"
         data-zindex="111"
         id="cKS-GameBoard.test-#5"
@@ -8107,6 +8471,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="12"
         id="cAC-GameBoard.test-#5"
@@ -8125,6 +8490,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="2"
         id="cAD-GameBoard.test-#5"
@@ -8143,6 +8509,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="51"
         id="cAH-GameBoard.test-#5"
@@ -8161,6 +8528,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="42"
         id="cAS-GameBoard.test-#5"
@@ -8179,6 +8547,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="38"
         id="c2C-GameBoard.test-#5"
@@ -8197,6 +8566,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="49"
         id="c2D-GameBoard.test-#5"
@@ -8215,6 +8585,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="11"
         id="c2H-GameBoard.test-#5"
@@ -8233,6 +8604,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="45"
         id="c2S-GameBoard.test-#5"
@@ -8251,6 +8623,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="37"
         id="c3C-GameBoard.test-#5"
@@ -8269,6 +8642,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="44"
         id="c3D-GameBoard.test-#5"
@@ -8287,6 +8661,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="32"
         id="c3H-GameBoard.test-#5"
@@ -8305,6 +8680,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="35"
         id="c3S-GameBoard.test-#5"
@@ -8323,6 +8699,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="47"
         id="c4C-GameBoard.test-#5"
@@ -8341,6 +8718,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="39"
         id="c4D-GameBoard.test-#5"
@@ -8359,6 +8737,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="13"
         id="c4H-GameBoard.test-#5"
@@ -8377,6 +8756,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="36"
         id="c4S-GameBoard.test-#5"
@@ -8395,6 +8775,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="43"
         id="c5C-GameBoard.test-#5"
@@ -8413,6 +8794,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="34"
         id="c5D-GameBoard.test-#5"
@@ -8431,6 +8813,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="30"
         id="c5H-GameBoard.test-#5"
@@ -8449,6 +8832,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="19"
         id="c5S-GameBoard.test-#5"
@@ -8467,6 +8851,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="6"
         id="c6C-GameBoard.test-#5"
@@ -8485,6 +8870,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="8"
         id="c6D-GameBoard.test-#5"
@@ -8503,6 +8889,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="7"
         id="c6H-GameBoard.test-#5"
@@ -8521,6 +8908,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="29"
         id="c6S-GameBoard.test-#5"
@@ -8539,6 +8927,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="1"
         id="c7C-GameBoard.test-#5"
@@ -8557,6 +8946,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="20"
         id="c7D-GameBoard.test-#5"
@@ -8575,6 +8965,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="24"
         id="c7H-GameBoard.test-#5"
@@ -8593,6 +8984,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="26"
         id="c7S-GameBoard.test-#5"
@@ -8611,6 +9003,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="17"
         id="c8C-GameBoard.test-#5"
@@ -8629,6 +9022,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="28"
         id="c8D-GameBoard.test-#5"
@@ -8647,6 +9041,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="23"
         id="c8H-GameBoard.test-#5"
@@ -8665,6 +9060,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="50"
         id="c8S-GameBoard.test-#5"
@@ -8683,6 +9079,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="41"
         id="c9C-GameBoard.test-#5"
@@ -8701,6 +9098,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="16"
         id="c9D-GameBoard.test-#5"
@@ -8719,6 +9117,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="46"
         id="c9H-GameBoard.test-#5"
@@ -8737,6 +9136,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="3"
         id="c9S-GameBoard.test-#5"
@@ -8755,6 +9155,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="10"
         id="cTC-GameBoard.test-#5"
@@ -8773,6 +9174,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="27"
         id="cTD-GameBoard.test-#5"
@@ -8791,6 +9193,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="9"
         id="cTH-GameBoard.test-#5"
@@ -8809,6 +9212,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="0"
         id="cTS-GameBoard.test-#5"
@@ -8827,6 +9231,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="21"
         id="cJC-GameBoard.test-#5"
@@ -8845,6 +9250,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="25"
         id="cJD-GameBoard.test-#5"
@@ -8863,6 +9269,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="22"
         id="cJH-GameBoard.test-#5"
@@ -8881,6 +9288,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="4"
         id="cJS-GameBoard.test-#5"
@@ -8899,6 +9307,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="5"
         id="cQC-GameBoard.test-#5"
@@ -8917,6 +9326,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="14"
         id="cQD-GameBoard.test-#5"
@@ -8935,6 +9345,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="18"
         id="cQH-GameBoard.test-#5"
@@ -8953,6 +9364,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="48"
         id="cQS-GameBoard.test-#5"
@@ -8971,6 +9383,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="33"
         id="cKC-GameBoard.test-#5"
@@ -8989,6 +9402,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="31"
         id="cKD-GameBoard.test-#5"
@@ -9007,6 +9421,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="40"
         id="cKH-GameBoard.test-#5"
@@ -9025,6 +9440,7 @@ exports[`GameBoard Game #5 (tutorial) 8`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="90"
         data-zindex="15"
         id="cKS-GameBoard.test-#5"
@@ -9244,6 +9660,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cAC-1"
@@ -9262,6 +9679,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cAD-1"
@@ -9280,6 +9698,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cAH-1"
@@ -9298,6 +9717,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cAS-1"
@@ -9316,6 +9736,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c2C-1"
@@ -9334,6 +9755,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c2D-1"
@@ -9352,6 +9774,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c2H-1"
@@ -9370,6 +9793,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c2S-1"
@@ -9388,6 +9812,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c3C-1"
@@ -9406,6 +9831,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c3D-1"
@@ -9424,6 +9850,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c3H-1"
@@ -9442,6 +9869,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c3S-1"
@@ -9460,6 +9888,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c4C-1"
@@ -9478,6 +9907,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c4D-1"
@@ -9496,6 +9926,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c4H-1"
@@ -9514,6 +9945,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c4S-1"
@@ -9532,6 +9964,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c5C-1"
@@ -9550,6 +9983,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c5D-1"
@@ -9568,6 +10002,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c5H-1"
@@ -9586,6 +10021,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c5S-1"
@@ -9604,6 +10040,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="25.5"
         data-zindex="5"
         id="c6C-1"
@@ -9622,6 +10059,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c6D-1"
@@ -9640,6 +10078,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c6H-1"
@@ -9658,6 +10097,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c6S-1"
@@ -9676,6 +10116,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c7C-1"
@@ -9694,6 +10135,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c7D-1"
@@ -9712,6 +10154,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c7H-1"
@@ -9730,6 +10173,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c7S-1"
@@ -9748,6 +10192,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c8C-1"
@@ -9766,6 +10211,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c8D-1"
@@ -9784,6 +10230,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c8H-1"
@@ -9802,6 +10249,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c8S-1"
@@ -9820,6 +10268,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c9C-1"
@@ -9838,6 +10287,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c9D-1"
@@ -9856,6 +10306,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c9H-1"
@@ -9874,6 +10325,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c9S-1"
@@ -9892,6 +10344,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cTC-1"
@@ -9910,6 +10363,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cTD-1"
@@ -9928,6 +10382,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cTH-1"
@@ -9946,6 +10401,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cTS-1"
@@ -9964,6 +10420,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cJC-1"
@@ -9982,6 +10439,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cJD-1"
@@ -10000,6 +10458,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cJH-1"
@@ -10018,6 +10477,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cJS-1"
@@ -10036,6 +10496,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cQC-1"
@@ -10054,6 +10515,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cQD-1"
@@ -10072,6 +10534,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cQH-1"
@@ -10090,6 +10553,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cQS-1"
@@ -10108,6 +10572,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cKC-1"
@@ -10126,6 +10591,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cKD-1"
@@ -10144,6 +10610,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cKH-1"
@@ -10162,6 +10629,7 @@ exports[`GameBoard enable debug mode 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cKS-1"
@@ -10437,6 +10905,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cAC-0"
@@ -10455,6 +10924,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="20.75"
         data-zindex="1"
         id="cAD-0"
@@ -10473,6 +10943,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cAH-0"
@@ -10491,6 +10962,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cAS-0"
@@ -10509,6 +10981,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c2C-0"
@@ -10527,6 +11000,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c2D-0"
@@ -10545,6 +11019,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c2H-0"
@@ -10563,6 +11038,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c2S-0"
@@ -10581,6 +11057,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c3C-0"
@@ -10599,6 +11076,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c3D-0"
@@ -10617,6 +11095,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c3H-0"
@@ -10635,6 +11114,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c3S-0"
@@ -10653,6 +11133,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c4C-0"
@@ -10671,6 +11152,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c4D-0"
@@ -10689,6 +11171,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="23.5"
         data-zindex="3"
         id="c4H-0"
@@ -10707,6 +11190,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c4S-0"
@@ -10725,6 +11209,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c5C-0"
@@ -10743,6 +11228,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c5D-0"
@@ -10761,6 +11247,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c5H-0"
@@ -10779,6 +11266,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c5S-0"
@@ -10797,6 +11285,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="25.5"
         data-zindex="5"
         id="c6C-0"
@@ -10815,6 +11304,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c6D-0"
@@ -10833,6 +11323,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c6H-0"
@@ -10851,6 +11342,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c6S-0"
@@ -10869,6 +11361,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c7C-0"
@@ -10887,6 +11380,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="c7D-0"
@@ -10905,6 +11399,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c7H-0"
@@ -10923,6 +11418,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="c7S-0"
@@ -10941,6 +11437,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c8C-0"
@@ -10959,6 +11456,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c8D-0"
@@ -10977,6 +11475,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="24.5"
         data-zindex="4"
         id="c8H-0"
@@ -10995,6 +11494,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="c8S-0"
@@ -11013,6 +11513,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="26"
         data-zindex="6"
         id="c9C-0"
@@ -11031,6 +11532,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="c9D-0"
@@ -11049,6 +11551,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="c9H-0"
@@ -11067,6 +11570,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="c9S-0"
@@ -11085,6 +11589,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="80"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cTC-0"
@@ -11103,6 +11608,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cTD-0"
@@ -11121,6 +11627,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cTH-0"
@@ -11139,6 +11646,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="30"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cTS-0"
@@ -11157,6 +11665,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cJC-0"
@@ -11175,6 +11684,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="20"
         data-zindex="0"
         id="cJD-0"
@@ -11193,6 +11703,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="24"
         data-zindex="4"
         id="cJH-0"
@@ -11211,6 +11722,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="50"
+        data-rotation="0"
         data-top="22.5"
         data-zindex="2"
         id="cJS-0"
@@ -11229,6 +11741,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="60"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cQC-0"
@@ -11247,6 +11760,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cQD-0"
@@ -11265,6 +11779,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="23"
         data-zindex="3"
         id="cQH-0"
@@ -11283,6 +11798,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="40"
+        data-rotation="0"
         data-top="25"
         data-zindex="5"
         id="cQS-0"
@@ -11301,6 +11817,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cKC-0"
@@ -11319,6 +11836,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="10"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cKD-0"
@@ -11337,6 +11855,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="70"
+        data-rotation="0"
         data-top="21"
         data-zindex="1"
         id="cKH-0"
@@ -11355,6 +11874,7 @@ exports[`GameBoard renders a game 1`] = `
       <div
         class="card"
         data-left="20"
+        data-rotation="0"
         data-top="22"
         data-zindex="2"
         id="cKS-0"

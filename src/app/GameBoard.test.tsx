@@ -723,21 +723,22 @@ describe('GameBoard', () => {
 		expect(screen.queryByText('You Win!')).toBeTruthy();
 
 		SuitList.forEach((suit) => {
-			const aceTLZ = domUtils.getDomAttributes(
+			const aceTLZR = domUtils.getDomAttributes(
 				calcCardId(shorthandCard({ rank: 'ace', suit }), gameBoardId)
 			);
-			if (!aceTLZ) throw new Error(`Card not found: ace of ${suit}`);
+			if (!aceTLZR) throw new Error(`Card not found: ace of ${suit}`);
 
 			RankList.forEach((rank, idx) => {
 				const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardId);
-				const tlz = domUtils.getDomAttributes(cardId);
-				if (!tlz) throw new Error(`Card not found: ${cardId}`);
+				const tlzr = domUtils.getDomAttributes(cardId);
+				if (!tlzr) throw new Error(`Card not found: ${cardId}`);
 
 				// cards are stacked on aces
-				expect(tlz.top).toBe(aceTLZ.top);
-				expect(tlz.left).toBe(aceTLZ.left);
+				expect(tlzr.top).toBe(aceTLZR.top);
+				expect(tlzr.left).toBe(aceTLZR.left);
 				// cards are stacked in order by rank
-				expect(tlz.zIndex).toBe(aceTLZ.zIndex + idx);
+				expect(tlzr.zIndex).toBe(aceTLZR.zIndex + idx);
+				// FIXME rotation
 			});
 		});
 

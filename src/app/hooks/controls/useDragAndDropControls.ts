@@ -201,7 +201,7 @@ export function useDragAndDropControls(
 								// clean up drag state (mischief managed)
 								dragStateRef.current = undefined;
 
-								const { top, left, zIndex } = calcTopLeftZ(
+								const tlzr = calcTopLeftZ(
 									gameStateRef.current.fixtureSizes,
 									gameStateRef.current.location,
 									null,
@@ -211,7 +211,7 @@ export function useDragAndDropControls(
 								// drag-drop using the tween selection state
 								contextSafe(animDragSequencePivot)({
 									list: shorthands,
-									firstCardTLZ: { top, left, zIndex },
+									firstCardTLZR: tlzr,
 									offsetTop: gameStateRef.current.fixtureSizes.tableau.offsetTop,
 									gameBoardIdRef,
 								});
@@ -249,7 +249,7 @@ export function useDragAndDropControls(
 							// clean up drag state (mischief managed)
 							dragStateRef.current = undefined;
 
-							const { top, left, zIndex } = calcTopLeftZ(
+							const tlzr = calcTopLeftZ(
 								gameStateRef.current.fixtureSizes,
 								gameStateRef.current.location,
 								null,
@@ -257,7 +257,7 @@ export function useDragAndDropControls(
 							);
 							contextSafe(animDragSequenceClear)({
 								list: shorthands,
-								firstCardTLZ: { top, left, zIndex },
+								firstCardTLZR: tlzr,
 								gameBoardIdRef,
 							});
 
