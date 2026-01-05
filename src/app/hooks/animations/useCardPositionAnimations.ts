@@ -139,7 +139,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				});
 			}
 
-			if (invalidMoveCards?.fromShorthands.length) {
+			if (invalidMoveCards?.fromShorthands.length && !fixtureSizesChanged) {
 				if (previousTimeline.current && previousTimeline.current !== timeline) {
 					if (process.env.NODE_ENV === 'test') {
 						console.debug('speedup invalidMoveCards', previousAction.type);
@@ -170,26 +170,19 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				// HACK (techdebt) this is a stabilizing force to get cards back into their correct positions
 				//  - cards can sometimes get stranded
 				//  - kind of an "in case of emergency, break glass"
-				// XXX (animation) should this be in animUpdatedCardPositions somehow?
+				// XXX (animation) should this be refactored to animUnmovedCards?
 				unmovedCards.forEach(({ shorthand, top, left, zIndex, rotation }) => {
 					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
 					const cardIdSelector = '#' + cardId;
 					domUtils.setDomAttributes(cardId, { top, left, zIndex, rotation });
-
-					// REVIEW (techdebt) setting nextTLZR breaks things?
-					// NOTE if we `transform: '',` that also clear the rotation
-					// nextTLZR.set(shorthand, { top, left, zIndex });
-
-					// REVIEW (techdebt) (animations) "integration" test this rotation bug - can we? is it possible? tlz-r-xy
-					timeline.set(cardIdSelector, { top, left, zIndex, rotation, duration: 0.1 }, '<0');
-
-					// REVIEW (techdebt) (animation) if we split this out into two, then "refresh -> deal" and "refresh -> undo deal" are _busted_
-					//  - which like, we don't need to, just `set` is fine
-					//  - but like, it would be nice-if
-					//  - and like, that means i do not understand what gsap is doing
-					//  - what other bugs are here (drag-and-drop is ripe with them)
-					// timeline.set(cardIdSelector, { zIndex, transform: '' });
-					// timeline.to(cardIdSelector, { top, left, duration: 0.1 }, '<0');
+					timeline.set(cardIdSelector, {
+						top,
+						left,
+						zIndex,
+						rotation,
+						transform: '',
+						duration: 0.1,
+					});
 				});
 			}
 		},
