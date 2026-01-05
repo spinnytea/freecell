@@ -52,14 +52,17 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				timeline.addLabel(previousAction.text);
 			}
 
-			// REVIEW (techdebt) if we are going to use this as storage, we need to update it _every time we move the cards_
-			//  - which I believe we do now, but like, this might be a constant task now?
+			// REVIEW (techdebt) we need to call domUtils.setDomAttributes for any cards that have moved
 			// REVIEW (techdebt) previousTLZR / nextTLZR is a source of bugs and initialization problems
-			// FIXME usePrevious to store the game, instead of loading the previou values from the dom
+			//  - if we haven't moved a card yet, then the animations are all weird
+			//  - i.e. click-to-move a sequence of cards after refreshing the page
+			// REVIEW (techdebt) is there a better way to merge react and gsap, to include drag-and-drop?
 			const previousTLZR = new Map<string, TLZR>();
 			cards.forEach((card) => {
 				const shorthand = shorthandCard(card);
 				const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
+				// we use the DOM as a go-between because of animDragSequencePivot
+				// we use the DOM to store because react "can discard state" in between renders
 				const tlzr = domUtils.getDomAttributes(cardId);
 				if (tlzr) {
 					previousTLZR.set(shorthand, tlzr);
@@ -87,9 +90,6 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 						console.debug('speedup updateCardPositions', previousAction.type);
 					}
 					previousTimeline.current.timeScale(MULTI_ANIMATION_TIMESCALE); // speed up the previous animations
-					// previousTimeline.current
-					// 	.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
-					// 	.kill(); // stop animating
 				}
 				previousTimeline.current = timeline;
 
@@ -111,9 +111,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 						domUtils.setDomAttributes(cardId, { top, left, zIndex, rotation });
 					});
 				}
-				// TODO (animation) "de-select AND THEN move card" is currently two game states
-				//  - the animations are also "de-select AND THEN move card"
-				//  - can we put in a label or whatever to "de-select AND ALSO move card" at the same time?
+
 				timeline.addLabel('updateCardPositions');
 				animUpdatedCardPositions({
 					timeline,
@@ -129,15 +127,10 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
 					domUtils.setDomAttributes(cardId, { top, left, zIndex, rotation });
 				});
-
-				// REVIEW (techdebt) should we just set them _all_?
-				// nextTLZR.forEach((tlzr, shorthand) => {
-				// 	const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
-				// 	domUtils.setDomAttributes(cardId, tlzr);
-				// });
 			}
 
 			if (!updateCardPositions.length && previousAction.type === 'shuffle') {
+				// shuffle does not move cards, they just wiggle in place
 				timeline.addLabel('shuffle');
 				animShuffleCards({
 					timeline,
@@ -151,19 +144,18 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					if (process.env.NODE_ENV === 'test') {
 						console.debug('speedup invalidMoveCards', previousAction.type);
 					}
-					previousTimeline.current.timeScale(MULTI_ANIMATION_TIMESCALE);
-					// previousTimeline.current
-					// 	.totalProgress(1) // jump to the end of the animation (no tweening, no timing, just get there)
-					// 	.kill(); // stop animating
+					previousTimeline.current.timeScale(MULTI_ANIMATION_TIMESCALE); // speed up the previous animations
 				}
 				previousTimeline.current = timeline;
 
+				// invalid does not move cards, they just wiggle in place
 				timeline.addLabel('invalidMoveCards.fromShorthands');
 				animShakeCard({
 					timeline,
 					list: invalidMoveCards.fromShorthands,
 					gameBoardIdRef,
 				});
+
 				if (invalidMoveCards.toShorthands.length) {
 					timeline.addLabel('invalidMoveCards.toShorthands');
 					animShakeCard({
@@ -189,7 +181,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					// nextTLZR.set(shorthand, { top, left, zIndex });
 
 					// REVIEW (techdebt) (animations) "integration" test this rotation bug - can we? is it possible? tlz-r-xy
-					timeline.set(cardIdSelector, { top, left, zIndex, duration: 0.1 }, '<0');
+					timeline.set(cardIdSelector, { top, left, zIndex, rotation, duration: 0.1 }, '<0');
 
 					// REVIEW (techdebt) (animation) if we split this out into two, then "refresh -> deal" and "refresh -> undo deal" are _busted_
 					//  - which like, we don't need to, just `set` is fine

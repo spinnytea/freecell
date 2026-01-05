@@ -10,6 +10,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 	const addLabelSpy = jest.fn();
 	const addSpy = jest.fn();
 	const timeScaleSpy = jest.fn();
+	const killTweensOfSpy = jest.fn();
 	let timelineOnComplete: gsap.Callback | undefined;
 	const consoleDebugSpy = jest.spyOn(console, 'debug').mockImplementation(() => {
 		throw new Error('must mock console.debug');
@@ -24,11 +25,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 			addLabel: addLabelSpy,
 			add: addSpy,
 			timeScale: timeScaleSpy,
-			totalProgress: () => ({
-				kill: () => {
-					/* empty */
-				},
-			}),
+			killTweensOf: killTweensOfSpy,
 		};
 		return timelineMock as gsap.core.Timeline;
 	});
@@ -47,6 +44,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 		addLabelSpy.mockReset();
 		addSpy.mockReset();
 		timeScaleSpy.mockReset();
+		killTweensOfSpy.mockReset();
 	}
 
 	function mockCallTimes(): Record<string, number> {
@@ -60,6 +58,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 			addLabelSpy,
 			addSpy,
 			timeScaleSpy,
+			killTweensOfSpy,
 			consoleDebugSpy,
 		} as Record<string, jest.SpyInstance>).reduce<Record<string, number>>((acc, [key, spy]) => {
 			const length = spy.mock.calls.length;
@@ -82,6 +81,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 		addLabelSpy,
 		addSpy,
 		timeScaleSpy,
+		killTweensOfSpy,
 		// others
 		timelineOnComplete,
 		consoleDebugSpy,
