@@ -135,24 +135,25 @@ describe('useCardPositionAnimations', () => {
 
 				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-				expect(setSpy.mock.calls).toMatchSnapshot('timeline.set');
-				// we don't need to check the whole list, but this is what it looks like
-				const cardIdSelectors = getCardIdsFromSpy(setSpy);
-				expect(cardIdSelectors.length).toBe(52);
-				expect(cardIdSelectors.at(0)).toBe('#cAC');
-				expect(cardIdSelectors.at(1)).toBe('#cAD');
-				// …
-				expect(cardIdSelectors.at(-2)).toBe('#cKH');
-				expect(cardIdSelectors.at(-1)).toBe('#cKS');
 				expect(addLabelSpy.mock.calls).toEqual([['init'], ['updateCardPositions']]);
 				expect(mockCallTimes()).toEqual({
 					setSpy: 52,
 					addLabelSpy: 2,
 				});
+				expect(setSpy.mock.calls).toMatchSnapshot('timeline.set');
+				// we don't need to check the whole list, but this is what it looks like
+				const setSpyIds = getCardIdsFromSpy(setSpy);
+				expect(setSpyIds.length).toBe(52);
+				expect(setSpyIds.at(0)).toBe('#cAC');
+				expect(setSpyIds.at(1)).toBe('#cAD');
+				// …
+				expect(setSpyIds.at(-2)).toBe('#cKH');
+				expect(setSpyIds.at(-1)).toBe('#cKS');
 
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+				expect(addLabelSpy.mock.calls).toEqual([]);
 				expect(mockCallTimes()).toEqual({});
 			});
 
@@ -173,6 +174,7 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+				expect(addLabelSpy.mock.calls).toEqual([['init'], ['updateCardPositions']]);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 52,
 					toSpy: 52,
@@ -203,7 +205,6 @@ describe('useCardPositionAnimations', () => {
 					{ top: 441.4, left: 14.035, duration: 0.3, ease: 'power1.out' },
 					'<0.006',
 				]);
-				expect(addLabelSpy.mock.calls).toEqual([['init'], ['updateCardPositions']]);
 			});
 
 			// we (read: _i_) very often win a game then set it aside
@@ -224,14 +225,14 @@ describe('useCardPositionAnimations', () => {
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-			expect(mockCallTimes()).toEqual({
-				addLabelSpy: 3,
-			});
 			expect(addLabelSpy.mock.calls).toEqual([
 				['shuffle deck (5)'],
 				['shuffle'],
 				['mock animShuffleCards 52'],
 			]);
+			expect(mockCallTimes()).toEqual({
+				addLabelSpy: 3,
+			});
 		});
 
 		test('deal', () => {
@@ -247,6 +248,7 @@ describe('useCardPositionAnimations', () => {
 			consoleDebugSpy.mockReturnValueOnce(undefined);
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+			expect(addLabelSpy.mock.calls).toEqual([['deal all cards'], ['updateCardPositions']]);
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 52,
 				toSpy: 51, // 2D has the same zIndex
@@ -286,7 +288,6 @@ describe('useCardPositionAnimations', () => {
 				{ top: 341.6, left: 14.035, duration: 0.3, ease: 'power1.out' },
 				'<0.006',
 			]);
-			expect(addLabelSpy.mock.calls).toEqual([['deal all cards'], ['updateCardPositions']]);
 			expect(consoleDebugSpy.mock.calls).toEqual([['speedup updateCardPositions', 'deal']]);
 		});
 
@@ -330,6 +331,17 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+				expect(addLabelSpy.mock.calls).toEqual([
+					['move 53 6H→7C (auto-foundation 2 AD)'],
+					['updateCardPositionsPrev'],
+					['updateCardPositions'],
+				]);
+				expect(mockCallTimes()).toEqual({
+					fromToSpy: 2,
+					toSpy: 2,
+					setSpy: 50,
+					addLabelSpy: 3,
+				});
 				expect(toSpy.mock.calls).toEqual([
 					['#c6H', { zIndex: 7, duration: 0.15, ease: 'none' }, '<'],
 					['#cAD', { zIndex: 99, duration: 0.15, ease: 'none' }, '<'],
@@ -348,21 +360,10 @@ describe('useCardPositionAnimations', () => {
 						'>0',
 					],
 				]);
-				const setCardIds = getCardIdsFromSpy(setSpy);
-				expect(setCardIds.length).toBe(50);
-				expect(setCardIds).not.toContain('#cAD'); // 51
-				expect(setCardIds).not.toContain('#c6H'); // 52
-				expect(addLabelSpy.mock.calls).toEqual([
-					['move 53 6H→7C (auto-foundation 2 AD)'],
-					['updateCardPositionsPrev'],
-					['updateCardPositions'],
-				]);
-				expect(mockCallTimes()).toEqual({
-					fromToSpy: 2,
-					toSpy: 2,
-					setSpy: 50,
-					addLabelSpy: 3,
-				});
+				const setSpyIds = getCardIdsFromSpy(setSpy);
+				expect(setSpyIds.length).toBe(50);
+				expect(setSpyIds).not.toContain('#cAD'); // 51
+				expect(setSpyIds).not.toContain('#c6H'); // 52
 			});
 
 			test('multiple with overlap', () => {
@@ -396,6 +397,17 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+				expect(addLabelSpy.mock.calls).toEqual([
+					['move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)'],
+					['updateCardPositionsPrev'],
+					['updateCardPositions'],
+				]);
+				expect(mockCallTimes()).toEqual({
+					fromToSpy: 2,
+					toSpy: 14,
+					setSpy: 45,
+					addLabelSpy: 3,
+				});
 				expect(toSpy.mock.calls).toEqual([
 					// select
 					// ['#cQD', { zIndex: 1, duration: 0.15, ease: 'none' }, '<'],
@@ -430,26 +442,15 @@ describe('useCardPositionAnimations', () => {
 						'<0.060',
 					],
 				]);
-				const setCardIds = getCardIdsFromSpy(setSpy);
-				expect(setCardIds.length).toBe(45);
-				expect(setCardIds).not.toContain('#cJD'); // 46
-				expect(setCardIds).not.toContain('#cJS');
-				expect(setCardIds).not.toContain('#cQD');
-				expect(setCardIds).not.toContain('#cQS');
-				expect(setCardIds).not.toContain('#cKC'); // 50
-				expect(setCardIds).not.toContain('#cKD');
-				expect(setCardIds).not.toContain('#cKS'); // 52
-				expect(addLabelSpy.mock.calls).toEqual([
-					['move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)'],
-					['updateCardPositionsPrev'],
-					['updateCardPositions'],
-				]);
-				expect(mockCallTimes()).toEqual({
-					fromToSpy: 2,
-					toSpy: 14,
-					setSpy: 45,
-					addLabelSpy: 3,
-				});
+				const setSpyIds = getCardIdsFromSpy(setSpy);
+				expect(setSpyIds.length).toBe(45);
+				expect(setSpyIds).not.toContain('#cJD'); // 46
+				expect(setSpyIds).not.toContain('#cJS');
+				expect(setSpyIds).not.toContain('#cQD');
+				expect(setSpyIds).not.toContain('#cQS');
+				expect(setSpyIds).not.toContain('#cKC'); // 50
+				expect(setSpyIds).not.toContain('#cKD');
+				expect(setSpyIds).not.toContain('#cKS'); // 52
 			});
 
 			/**
@@ -500,10 +501,6 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-				expect(getCardIdsFromSpy(toSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
-				expect(getCardIdsFromSpy(fromToSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
-				expect(getCardIdsFromSpy(setSpy).length).toBe(47); // 52 - 5
-				// TODO (techdebt) verify exactly which cards are missing
 				expect(addLabelSpy.mock.calls).toEqual([
 					['move 76 8H-7C→cascade (auto-foundation 77c AS,AD,2S)'],
 					['updateCardPositionsPrev'],
@@ -515,6 +512,15 @@ describe('useCardPositionAnimations', () => {
 					setSpy: 47,
 					addLabelSpy: 3,
 				});
+				expect(getCardIdsFromSpy(toSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
+				expect(getCardIdsFromSpy(fromToSpy)).toEqual(['#c8H', '#c7C', '#cAD', '#cAS', '#c2S']);
+				const setSpyIds = getCardIdsFromSpy(setSpy);
+				expect(setSpyIds.length).toBe(47); // 52 - 5
+				expect(setSpyIds).not.toContain('#c8H');
+				expect(setSpyIds).not.toContain('#c7C');
+				expect(setSpyIds).not.toContain('#cAD');
+				expect(setSpyIds).not.toContain('#cAS');
+				expect(setSpyIds).not.toContain('#c2S');
 			});
 		});
 
@@ -588,13 +594,13 @@ describe('useCardPositionAnimations', () => {
 						['invalidMoveCards.fromShorthands'],
 						['mock animShakeCard AC'],
 					]);
-					expect(timeScaleSpy.mock.calls).toEqual([[2]]);
-					expect(consoleDebugSpy.mock.calls).toEqual([['speedup invalidMoveCards', 'invalid']]);
 					expect(mockCallTimes()).toEqual({
 						addLabelSpy: 3,
 						timeScaleSpy: 1,
 						consoleDebugSpy: 1,
 					});
+					expect(timeScaleSpy.mock.calls).toEqual([[2]]);
+					expect(consoleDebugSpy.mock.calls).toEqual([['speedup invalidMoveCards', 'invalid']]);
 				});
 
 				test('cascade:single', () => {
@@ -829,9 +835,154 @@ describe('useCardPositionAnimations', () => {
 				test.todo('cascade:sequence');
 			});
 
-			describe('two part animations', () => {
-				// FIXME test this now deselect should be part of the first action :o
-				test.todo('move-foundation');
+			describe('three part animations', () => {
+				describe('move-foundation', () => {
+					describe('MoveSourceType', () => {
+						test.todo('deck');
+
+						test('cell', () => {
+							// deselect → move → auto-foundation
+							const gameStateOne = FreeCell.parse(
+								'' +
+									'>3D|         3C 3H 2D    \n' +
+									' KC KH KS KD AS       2S \n' +
+									' QD QC QH QS 4H          \n' +
+									' JS JH JC JD 3S          \n' +
+									' TD TC TH TS             \n' +
+									' 9S 9D 9C 9H             \n' +
+									' 8H 8S 8D 8C             \n' +
+									' 7C 7D 7S 7H             \n' +
+									' 6H 6S 6D 6C             \n' +
+									' 5C 5H 5S 5D             \n' +
+									' 4D 4S    4C             \n' +
+									' select a 3D'
+							);
+							const gameStateTwo = gameStateOne.touchByPosition('h');
+							expect(gameStateTwo.previousAction.text).not.toBe('deselect 3D');
+							expect(gameStateTwo.previousAction.text).toBe('move ah 3D→2D (auto-foundation 4 4C)');
+
+							const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+							mockReset();
+							rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+							expect(addLabelSpy.mock.calls).toEqual([
+								['move ah 3D→2D (auto-foundation 4 4C)'],
+								['updateCardPositionsPrev'],
+								['updateCardPositions'],
+							]);
+							expect(mockCallTimes()).toEqual({
+								fromToSpy: 2,
+								toSpy: 3,
+								setSpy: 50,
+								addLabelSpy: 3,
+							});
+							expect(fromToSpy.mock.calls).toEqual([
+								[
+									'#c3D',
+									{ top: 36.6, left: 14.035 },
+									{ top: 36.6, left: 610.526, duration: 0.3, ease: 'power1.out' },
+									'>0',
+								],
+								[
+									'#c4C',
+									{ top: 414.8, left: 308.772 },
+									{ top: 36.6, left: 428.07, duration: 0.3, ease: 'power1.out' },
+									'>0',
+								],
+							]);
+							expect(toSpy.mock.calls).toEqual([
+								['#c3D', { zIndex: 101, duration: 0.15, ease: 'none' }, '<'],
+								['#c3D', { rotation: 0, duration: 0.1, ease: 'power1.inOut' }, '<'],
+								['#c4C', { zIndex: 102, duration: 0.15, ease: 'none' }, '<'],
+							]);
+							const setSpyIds = getCardIdsFromSpy(setSpy);
+							expect(setSpyIds.length).toBe(50);
+							expect(setSpyIds).not.toContain('#c3D'); // 51
+							expect(setSpyIds).not.toContain('#c4C'); // 52
+						});
+
+						test.todo('foundation');
+
+						test('cascade:single', () => {
+							// deselect → move → auto-foundation
+							const gameStateOne = FreeCell.parse(
+								'' +
+									' 4S          2C AH 2D    \n' +
+									'>   TS KS 9H AS KD QS JS \n' +
+									'    5H QH 8C 4H 3D JD TD \n' +
+									'    2H JC 7H 3S 6S    9S \n' +
+									'   |KC|TH       QD    8H \n' +
+									'       9C       5S    7C \n' +
+									'       8D       KH    6H \n' +
+									'       7S       QC    5C \n' +
+									'       6D       JH    4D \n' +
+									'                TC    3C \n' +
+									'                9D       \n' +
+									'                8S       \n' +
+									'                7D       \n' +
+									'                6C       \n' +
+									'                5D       \n' +
+									'                4C       \n' +
+									'                3H       \n' +
+									'                2S       \n' +
+									' select KC'
+							);
+							const gameStateTwo = gameStateOne.touch();
+							expect(gameStateTwo.previousAction.text).not.toBe('deselect KC');
+							expect(gameStateTwo.previousAction.text).toBe(
+								'move 21 KC→cascade (auto-foundation 28 2H,3C)'
+							);
+
+							const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+							mockReset();
+							rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+							expect(addLabelSpy.mock.calls).toEqual([
+								['move 21 KC→cascade (auto-foundation 28 2H,3C)'],
+								['updateCardPositionsPrev'],
+								['updateCardPositions'],
+							]);
+							expect(mockCallTimes()).toEqual({
+								fromToSpy: 3,
+								toSpy: 3,
+								setSpy: 49,
+								addLabelSpy: 3,
+							});
+							expect(fromToSpy.mock.calls).toEqual([
+								[
+									'#cKC',
+									{ top: 280.6, left: 112.281 },
+									{ top: 195.2, left: 14.035, duration: 0.3, ease: 'power1.out' },
+									'>0',
+								],
+								[
+									'#c2H',
+									{ top: 244, left: 112.281 },
+									{ top: 36.6, left: 519.298, duration: 0.3, ease: 'power1.out' },
+									'>0',
+								],
+								[
+									'#c3C',
+									{ top: 390.4, left: 701.754 },
+									{ top: 36.6, left: 428.07, duration: 0.3, ease: 'power1.out' },
+									'<0.060',
+								],
+							]);
+							expect(toSpy.mock.calls).toEqual([
+								['#cKC', { zIndex: 0, duration: 0.15, ease: 'none' }, '<'],
+								['#c2H', { zIndex: 100, duration: 0.15, ease: 'none' }, '<'],
+								['#c3C', { zIndex: 101, duration: 0.15, ease: 'none' }, '<'],
+							]);
+							const setSpyIds = getCardIdsFromSpy(setSpy);
+							expect(setSpyIds.length).toBe(49);
+							expect(setSpyIds).not.toContain('#cKC'); // 50
+							expect(setSpyIds).not.toContain('#c2H'); // 51
+							expect(setSpyIds).not.toContain('#c3C'); // 52
+						});
+
+						test.todo('cascade:sequence');
+					});
+				});
 			});
 		});
 
@@ -920,10 +1071,10 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
 
+				expect(addLabelSpy.mock.calls).toEqual([['gameFunction undo']]);
 				expect(mockCallTimes()).toEqual({
 					addLabelSpy: 1,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['gameFunction undo']]);
 			});
 
 			test.todo('· deal all cards');
@@ -1046,10 +1197,6 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyIDs);
-						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyIDs);
-						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
-						// TODO (techdebt) confirm which cards are not in setSpy
 						expect(addLabelSpy.mock.calls).toEqual(labels);
 						expect(mockCallTimes()).toEqual({
 							fromToSpy: fromToSpyIDs.length,
@@ -1057,6 +1204,10 @@ describe('useCardPositionAnimations', () => {
 							...(setSpyLength ? { setSpy: setSpyLength } : {}),
 							addLabelSpy: labels.length,
 						});
+						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyIDs);
+						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyIDs);
+						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+						// TODO (techdebt) confirm which cards are not in setSpy
 					});
 
 					test('undo ←', () => {
@@ -1064,22 +1215,23 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateTwo, gameStateThree]} />);
 
-						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
-						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
-						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
 						expect(addLabelSpy.mock.calls).toEqual([
 							['gameFunction undo'],
 							['updateCardPositions'],
 						]);
-						const firstLabel = (addLabelSpy.mock.calls as string[][])[0][0];
-						expect(firstLabel).toBe('gameFunction undo');
-						expect(firstLabel).not.toBe(prevActionText);
 						expect(mockCallTimes()).toEqual({
 							fromToSpy: fromToSpyUndoIDs.length,
 							...(toSpyUndoIDs.length ? { toSpy: toSpyUndoIDs.length } : {}),
 							...(setSpyLength ? { setSpy: setSpyLength } : {}),
 							addLabelSpy: 2,
 						});
+						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
+						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
+						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+						// bonus
+						const firstLabel = (addLabelSpy.mock.calls as string[][])[0][0];
+						expect(firstLabel).toBe('gameFunction undo');
+						expect(firstLabel).not.toBe(prevActionText);
 					});
 
 					test('both →←', () => {
@@ -1089,9 +1241,6 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
 
-						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyIDs);
-						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyIDs);
-						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
 						expect(addLabelSpy.mock.calls).toEqual(labels);
 						expect(mockCallTimes()).toEqual({
 							fromToSpy: fromToSpyIDs.length,
@@ -1099,26 +1248,30 @@ describe('useCardPositionAnimations', () => {
 							...(setSpyLength ? { setSpy: setSpyLength } : {}),
 							addLabelSpy: labels.length,
 						});
+						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyIDs);
+						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyIDs);
+						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
 
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo, gameStateThree]} />);
 
-						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
-						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
-						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
 						expect(addLabelSpy.mock.calls).toEqual([
 							['gameFunction undo'],
 							['updateCardPositions'],
 						]);
-						const firstLabel = (addLabelSpy.mock.calls as string[][])[0][0];
-						expect(firstLabel).toBe('gameFunction undo');
-						expect(firstLabel).not.toBe(prevActionText);
 						expect(mockCallTimes()).toEqual({
 							fromToSpy: fromToSpyUndoIDs.length,
 							...(toSpyUndoIDs.length ? { toSpy: toSpyUndoIDs.length } : {}),
 							...(setSpyLength ? { setSpy: setSpyLength } : {}),
 							addLabelSpy: 2,
 						});
+						expect(getCardIdsFromSpy(toSpy)).toEqual(toSpyUndoIDs);
+						expect(getCardIdsFromSpy(fromToSpy)).toEqual(fromToSpyUndoIDs);
+						expect(getCardIdsFromSpy(setSpy).length).toBe(setSpyLength);
+						// bonus
+						const firstLabel = (addLabelSpy.mock.calls as string[][])[0][0];
+						expect(firstLabel).toBe('gameFunction undo');
+						expect(firstLabel).not.toBe(prevActionText);
 					});
 				}
 			);
@@ -1390,6 +1543,13 @@ describe('useCardPositionAnimations', () => {
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
+			expect(addLabelSpy.mock.calls).toEqual([['gameFunction undo'], ['updateCardPositions']]);
+			expect(mockCallTimes()).toEqual({
+				fromToSpy: 2,
+				toSpy: 2,
+				setSpy: 50,
+				addLabelSpy: 2,
+			});
 			expect(getCardIdsFromSpy(toSpy)).toEqual([
 				// '#c2S',
 				'#c8H',
@@ -1400,18 +1560,11 @@ describe('useCardPositionAnimations', () => {
 				'#c8H',
 				'#c7C',
 			]);
-			const setCardIds = getCardIdsFromSpy(setSpy);
-			expect(setCardIds).toContain('#c2S');
-			expect(setCardIds.length).toBe(50);
-			expect(setCardIds).not.toContain('#c7C'); // 51
-			expect(setCardIds).not.toContain('#c8H'); // 52
-			expect(addLabelSpy.mock.calls).toEqual([['gameFunction undo'], ['updateCardPositions']]);
-			expect(mockCallTimes()).toEqual({
-				fromToSpy: 2,
-				toSpy: 2,
-				setSpy: 50,
-				addLabelSpy: 2,
-			});
+			const setSpyIds = getCardIdsFromSpy(setSpy);
+			expect(setSpyIds).toContain('#c2S');
+			expect(setSpyIds.length).toBe(50);
+			expect(setSpyIds).not.toContain('#c7C'); // 51
+			expect(setSpyIds).not.toContain('#c8H'); // 52
 		});
 
 		/**
@@ -1473,7 +1626,6 @@ describe('useCardPositionAnimations', () => {
 
 			const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-			expect(setSpy.mock.calls.length).toBe(52);
 			expect(addLabelSpy.mock.calls).toEqual([
 				['move 7a 8H→cell (auto-foundation 77 AS,AD)'],
 				['updateCardPositions'],
@@ -1482,6 +1634,7 @@ describe('useCardPositionAnimations', () => {
 				setSpy: 52,
 				addLabelSpy: 2,
 			});
+			expect(setSpy.mock.calls.length).toBe(52);
 
 			mockReset();
 			rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);

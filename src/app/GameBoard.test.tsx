@@ -8,7 +8,7 @@ import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameConte
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
-import { getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';
+import { getPropertiesFromFromToSpy, getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';
 import {
 	calcCardId,
 	CardLocation,
@@ -70,15 +70,27 @@ function MockGamePage({ game, gameBoardId }: { game: FreeCell; gameBoardId?: str
 }
 
 describe('GameBoard', () => {
+	let gsapSetSpy: jest.SpyInstance;
 	let gsapFromSpy: jest.SpyInstance;
+	let fromToSpy: jest.SpyInstance;
 	let toSpy: jest.SpyInstance;
+	let setSpy: jest.SpyInstance;
 	let addLabelSpy: jest.SpyInstance;
 	let consoleDebugSpy: jest.SpyInstance;
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
-		({ gsapFromSpy, toSpy, addLabelSpy, consoleDebugSpy, mockReset, mockCallTimes } =
-			spyOnGsap(gsap));
+		({
+			gsapSetSpy,
+			gsapFromSpy,
+			fromToSpy,
+			toSpy,
+			setSpy,
+			addLabelSpy,
+			consoleDebugSpy,
+			mockReset,
+			mockCallTimes,
+		} = spyOnGsap(gsap));
 		consoleDebugSpy.mockReturnValue(undefined);
 	});
 
@@ -93,6 +105,18 @@ describe('GameBoard', () => {
 			setSpy: 52,
 			addLabelSpy: 2,
 		});
+		expect(getPropertiesFromSpy(gsapSetSpy)).toEqual({
+			top: 52,
+			left: 52,
+			zIndex: 52,
+			rotation: 52,
+		});
+		expect(getPropertiesFromSpy(setSpy)).toEqual({
+			top: 52,
+			left: 52,
+			zIndex: 52,
+			rotation: 52,
+		});
 
 		mockReset();
 		fireEvent.click(screen.getAllByAltText('card back')[0]);
@@ -106,6 +130,16 @@ describe('GameBoard', () => {
 			fromToSpy: 52,
 			toSpy: 52,
 			addLabelSpy: 2,
+		});
+		expect(getPropertiesFromFromToSpy(fromToSpy)).toEqual({
+			from: {
+				top: 52,
+				left: 52,
+			},
+			to: {
+				top: 52,
+				left: 52,
+			},
 		});
 		expect(getPropertiesFromSpy(toSpy)).toEqual({
 			zIndex: 51,
@@ -713,7 +747,48 @@ describe('GameBoard', () => {
 			['updateCardPositionsPrev'],
 			['updateCardPositions'],
 		]);
-		expect(gsapFromSpy).toHaveBeenCalledTimes(1); // animate win message
+		expect(mockCallTimes()).toEqual({
+			gsapFromSpy: 1, // animate win message
+			fromToSpy: 2,
+			toSpy: 77,
+			setSpy: 65,
+			addLabelSpy: 5,
+			timeScaleSpy: 1,
+			consoleDebugSpy: 1,
+		});
+		expect(getPropertiesFromSpy(gsapFromSpy)).toEqual({
+			scale: 1,
+		});
+		// REVIEW (animation) this feels a little redundant; is this a "deselect" and a "move"
+		expect(fromToSpy.mock.calls).toEqual([
+			[
+				'#cKD-GameBoard.test-#5',
+				{ top: 22, left: 50 },
+				{ top: 22.5, left: 50, duration: 0.3, ease: 'power1.out' },
+				'>0',
+			],
+			[
+				'#cKD-GameBoard.test-#5',
+				{ top: 22.5, left: 50 },
+				{ top: 20, left: 60, duration: 0.3, ease: 'power1.out' },
+				'>0',
+			],
+		]);
+		expect(getPropertiesFromSpy(toSpy)).toEqual({
+			top: 38,
+			left: 38,
+			zIndex: 39,
+		});
+		expect(getPropertiesFromSpy(setSpy)).toEqual({
+			top: 65,
+			left: 65,
+			zIndex: 65,
+			rotation: 65,
+			transform: 65,
+		});
+		expect(consoleDebugSpy.mock.calls).toEqual([
+			['speedup updateCardPositions', 'move-foundation'],
+		]);
 		mockReset();
 
 		expect(container).toMatchSnapshot();

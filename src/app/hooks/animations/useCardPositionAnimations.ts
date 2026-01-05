@@ -112,6 +112,9 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					});
 				}
 
+				// TODO (animation) "deselect AND THEN move card" is currently two game states
+				//  - the animations are also "deselect AND THEN move card"
+				//  - can we put in a label or whatever to "deselect AND ALSO move card" at the same time?
 				timeline.addLabel('updateCardPositions');
 				animUpdatedCardPositions({
 					timeline,
