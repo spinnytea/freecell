@@ -1,13 +1,5 @@
 import { TLZR } from '@/app/components/element/domUtils';
-import { calcTopLeftZ, FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
-import {
-	Card,
-	CardSequence,
-	Fixture,
-	getRankForCompare,
-	shorthandCard,
-	Suit,
-} from '@/game/card/card';
+import { Card, Fixture, getRankForCompare, shorthandCard, Suit } from '@/game/card/card';
 import {
 	getCardsFromInvalid,
 	parsePreviousActionMoveShorthands,
@@ -47,19 +39,15 @@ export interface InvalidMoveCardType {
 		- we are informally doing this for `move-foundation`
 */
 export function calcUpdatedCardPositions({
-	fixtureSizes,
-	previousTLZR,
 	cards,
-	selection,
-	flashCards,
 	previousAction,
+	previousTLZR,
+	calcTLZRForCard,
 }: {
-	fixtureSizes: FixtureSizes;
-	previousTLZR: Map<string, TLZR>;
 	cards: Card[];
-	selection: CardSequence | null;
-	flashCards: Card[] | null;
 	previousAction?: PreviousAction;
+	previousTLZR: Map<string, TLZR>;
+	calcTLZRForCard: (card: Card) => TLZR;
 }): {
 	updateCardPositions: UpdateCardPositionsType[];
 	updateCardPositionsPrev?: UpdateCardPositionsType[];
@@ -72,13 +60,7 @@ export function calcUpdatedCardPositions({
 	const fixtures = new Set<Fixture>();
 
 	cards.forEach((card) => {
-		const { top, left, zIndex, rotation } = calcTopLeftZ(
-			fixtureSizes,
-			card.location,
-			selection,
-			flashCards,
-			card.rank
-		);
+		const { top, left, zIndex, rotation } = calcTLZRForCard(card);
 		const shorthand = shorthandCard(card);
 
 		const prev = previousTLZR.get(shorthand);
@@ -141,11 +123,9 @@ export function calcUpdatedCardPositions({
 			updateCardPositions.length <= moveShorthands.length + autoFoundationShorthands.length
 		) {
 			const { updateCardPositions: prevUpdateCardPositions } = calcUpdatedCardPositions({
-				fixtureSizes,
 				previousTLZR,
 				cards: previousAction.tweenCards,
-				selection: null,
-				flashCards: null,
+				calcTLZRForCard,
 			});
 
 			let anyMissing = false;

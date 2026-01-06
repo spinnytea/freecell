@@ -8,11 +8,13 @@ import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
 import { animShuffleCards } from '@/app/hooks/animations/animShuffleCards';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
 import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCardPositions';
+import { calcTopLeftZ } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
+import { useRefCurrent } from '@/app/hooks/useRefCurrent';
 import { useRefPrevious } from '@/app/hooks/useRefPrevious';
-import { calcCardId, shorthandCard } from '@/game/card/card';
+import { calcCardId, Card, shorthandCard } from '@/game/card/card';
 
 // IDEA (settings) setting for "reduced motion" - disable most animations
 // IDEA (animation) faster "select-to-peek" animation - when the cards are shifting to peek the selected card
@@ -38,6 +40,10 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 		this is a user-interactive game, and we want to prioritize responsiveness
 	*/
 	const previousTimeline = useRef<gsap.core.Timeline | null>(null);
+
+	const calcTLZRForCardRef = useRefCurrent(function calcTLZRForCard(card: Card): TLZR {
+		return calcTopLeftZ(fixtureSizes, card.location, selection, flashCards, card.rank);
+	});
 
 	useGSAP(
 		() => {
@@ -76,12 +82,10 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				unmovedCards,
 				invalidMoveCards,
 			} = calcUpdatedCardPositions({
-				fixtureSizes,
-				previousTLZR,
 				cards,
-				selection,
-				flashCards,
 				previousAction,
+				previousTLZR,
+				calcTLZRForCard: calcTLZRForCardRef.current,
 			});
 
 			if (updateCardPositions.length) {
@@ -189,6 +193,19 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				});
 			}
 		},
-		{ dependencies: [cards, selection, previousAction, fixtureSizes, enableDragAndDrop] }
+		{
+			dependencies: [
+				// used within useGSAP
+				cards,
+				previousAction,
+				calcTLZRForCardRef,
+				enableDragAndDrop,
+				// we still want to move cards if these change
+				fixtureSizes,
+				// these cannot change without previousAction also changing
+				// selection,
+				// flashCards,
+			],
+		}
 	);
 }
