@@ -2,15 +2,18 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { gsap } from 'gsap/all';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
 import Page from '@/app/page';
-import { spyOnGsap } from '@/app/testUtils';
+import { getPropertiesFromFromToSpy, getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';
 import { utils } from '@/utils';
 
 describe('page', () => {
+	let fromToSpy: jest.SpyInstance;
+	let toSpy: jest.SpyInstance;
+	let addLabelSpy: jest.SpyInstance;
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
 	let randomIntegerSpy: jest.SpyInstance;
 	beforeEach(() => {
-		({ mockCallTimes, mockReset } = spyOnGsap(gsap));
+		({ fromToSpy, toSpy, addLabelSpy, mockCallTimes, mockReset } = spyOnGsap(gsap));
 		randomIntegerSpy = jest.spyOn(utils, 'randomInteger').mockImplementation(() => {
 			throw new Error('you MUST mock utils.randomInteger');
 		});
@@ -24,25 +27,41 @@ describe('page', () => {
 			</ErrorBoundary>
 		);
 		expect(screen.queryAllByAltText('card back').length).toBe(53); // there is hidden card back
+		expect(addLabelSpy.mock.calls).toEqual([['shuffle deck (5)'], ['updateCardPositions']]);
 		expect(mockCallTimes()).toEqual({
-			gsapToSpy: 52,
 			gsapSetSpy: 52,
 			setSpy: 52,
 			addLabelSpy: 2,
 		});
-		// TODO (techdebt) (test) lock down the shuffle seed
-		// expect(addLabelSpy.mock.calls).toEqual([['shuffle deck (20616)'], ['updateCardPositions']]);
+		// XXX (test) gsapSetSpy
+		// XXX (test) setSpy
 
 		mockReset(true);
 		fireEvent.click(screen.getAllByAltText('card back')[0]);
 
+		expect(addLabelSpy.mock.calls).toEqual([
+			['gameFunction check-can-flourish'],
+			['updateCardPositions'],
+		]);
 		expect(mockCallTimes()).toEqual({
 			fromToSpy: 52,
-			toSpy: 52,
+			toSpy: 53,
 			addLabelSpy: 2,
 		});
-		// TODO (techdebt) (test) lock down the shuffle seed
-		// expect(addLabelSpy.mock.calls).toEqual([['juice flash AD,AH'], ['updateCardPositions']]);
+		expect(getPropertiesFromFromToSpy(fromToSpy)).toEqual({
+			from: {
+				top: 52,
+				left: 52,
+			},
+			to: {
+				top: 52,
+				left: 52,
+			},
+		});
+		expect(getPropertiesFromSpy(toSpy)).toEqual({
+			zIndex: 51,
+			rotation: 2,
+		});
 
 		expect(screen.queryAllByAltText('card back').length).toBe(1); // there is hidden card back
 		expect(screen.getByText('king of hearts')).toBeTruthy();

@@ -4,28 +4,26 @@ import {
 	DEFAULT_TRANSLATE_DURATION,
 	DRAG_RELEASE_CLEAR_SPEEDUP,
 	MAX_ANIMATION_OVERLAP,
+	SELECT_ROTATION_DURATION,
 	TOTAL_DEFAULT_MOVEMENT_DURATION,
 } from '@/app/animation_constants';
-import { TLZ } from '@/app/components/element/domUtils';
+import { TLZR } from '@/app/animation_interfaces';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';
-import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { calcCardId } from '@/game/card/card';
 
 export function animUpdatedCardPositions({
 	timeline,
 	list,
-	nextTLZ,
-	fixtureSizes,
-	prevFixtureSizes,
+	nextTLZR,
+	fixtureSizesChanged,
 	gameBoardIdRef,
 	pause = false,
 	cardsNearTarget = false,
 }: {
 	timeline: gsap.core.Timeline;
 	list: UpdateCardPositionsType[];
-	nextTLZ: Map<string, TLZ>;
-	fixtureSizes: FixtureSizes;
-	prevFixtureSizes: MutableRefObject<FixtureSizes>;
+	nextTLZR: Map<string, TLZR>;
+	fixtureSizesChanged: boolean;
 	gameBoardIdRef?: MutableRefObject<string>;
 	pause?: boolean;
 	cardsNearTarget?: boolean;
@@ -42,22 +40,21 @@ export function animUpdatedCardPositions({
 		overlap *= 0.3; // all the cards move in unison (start at the same time)
 		duration *= DRAG_RELEASE_CLEAR_SPEEDUP; // how long it takes the cards to get there once started
 	}
-	if (prevFixtureSizes.current !== fixtureSizes) {
+	if (fixtureSizesChanged) {
 		overlap = 0;
-		prevFixtureSizes.current = fixtureSizes;
 	}
-	list.forEach(({ shorthand, top, left, zIndex }, index) => {
+	list.forEach(({ shorthand, top, left, zIndex, rotation }, index) => {
 		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
-		const prevTLZ = nextTLZ.get(shorthand);
+		const prevTLZR = nextTLZR.get(shorthand);
 		// TODO (3-priority) (motivation) (animation) when flourish, translate X and Y at different rates to make a curving effect, e.g. power1.out vs power1.in
-		nextTLZ.set(shorthand, { top, left, zIndex });
-		if (prevTLZ) {
+		nextTLZR.set(shorthand, { top, left, zIndex, rotation });
+		if (prevTLZR) {
 			if (!pause) {
 				// bugfix: timeline.to should be enough, but mobile sometimes remakes cards at 0,0
 				//  - timeline.fromTo ensures we start the animation from the actual previous place
 				timeline.fromTo(
 					cardIdSelector,
-					{ top: prevTLZ.top, left: prevTLZ.left },
+					{ top: prevTLZR.top, left: prevTLZR.left },
 					{ top, left, duration, ease: 'power1.out' },
 					index === 0 ? `>0` : `<${overlap.toFixed(3)}`
 				);
@@ -75,11 +72,24 @@ export function animUpdatedCardPositions({
 			//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
 			//  - as soon as it finishes animating, set it to the correct value
 			// timeline.fromTo(cardIdSelector, { zIndex: zIndex + 100 }, { zIndex, duration, ease: 'power4.out' }, `<`);
-			timeline.to(cardIdSelector, { zIndex, duration: duration / 2, ease: 'none' }, `<`);
+			if (prevTLZR.zIndex !== zIndex) {
+				timeline.to(cardIdSelector, { zIndex, duration: duration / 2, ease: 'none' }, `<`);
+			}
+			if (prevTLZR.rotation !== rotation) {
+				timeline.to(
+					cardIdSelector,
+					{
+						rotation,
+						duration: SELECT_ROTATION_DURATION,
+						ease: 'power1.inOut',
+					},
+					`<`
+				);
+			}
 		} else {
 			// when we draw the cards for the first time, don't animate them from (0, 0)
 			// for gameplay, this should just be drawing the deck
-			timeline.set(cardIdSelector, { top, left, zIndex });
+			timeline.set(cardIdSelector, { top, left, zIndex, rotation });
 		}
 	});
 }

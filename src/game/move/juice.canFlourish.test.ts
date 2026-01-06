@@ -622,7 +622,7 @@ describe('move.juice', () => {
 			});
 		});
 
-		describe('coul canFlourish52, but aces in foundation', () => {
+		describe('could canFlourish52, but aces in foundation', () => {
 			// XXX (techdebt) (test) gameplay but: one, two, three, four aces
 
 			test('demo', () => {

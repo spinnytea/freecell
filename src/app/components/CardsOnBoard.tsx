@@ -1,7 +1,6 @@
 import { MutableRefObject, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
-import { SELECT_ROTATION_DURATION } from '@/app/animation_constants';
 import { CardImage } from '@/app/components/cards/CardImage';
 import styles_cardsonboard from '@/app/components/cardsonboard.module.css';
 import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositionAnimations';
@@ -60,20 +59,8 @@ function CardOnBoard({
 
 	useGSAP(() => {
 		// set the initial position, once on load
-		gsap.set(cardRef.current, { top, left, zIndex });
+		gsap.set(cardRef.current, { top, left, zIndex, rotation });
 	});
-
-	// TODO (techdebt) (flourish-anim) (gsap) move to useCardPositionAnimations
-	useGSAP(
-		() => {
-			gsap.to(cardRef.current, {
-				rotation,
-				duration: SELECT_ROTATION_DURATION,
-				ease: 'power1.inOut',
-			});
-		},
-		{ dependencies: [rotation] }
-	);
 
 	// XXX (techdebt) (dragndrop-bugs) even if we move onClick to it's own dedicated div, Draggable _still_ eats the event
 	//  - I'm starting to think we can't use Dragable in conjunction with another mouse event

@@ -1,10 +1,7 @@
-import { MutableRefObject } from 'react';
 import { gsap } from 'gsap/all';
-import { TLZ } from '@/app/components/element/domUtils';
+import { TLZR } from '@/app/animation_interfaces';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';
-import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
-import { calcStaticFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/StaticFixtureSizesContextProvider';
 import { spyOnGsap } from '@/app/testUtils';
 import { getRankForCompare } from '@/game/card/card';
 
@@ -26,25 +23,26 @@ describe('animUpdatedCardPositions', () => {
 				top: 0, // calcTopLeftZ
 				left: 0, // calcTopLeftZ
 				zIndex: 0, // calcTopLeftZ
+				rotation: 0, // calcTopLeftZ
 				rank: getRankForCompare('king'),
 				suit: 'hearts',
 				previousTop: 0, // prev?.top ?? top,
 			},
 		];
-		const nextTLZ = new Map<string, TLZ>([['KH', { top: 100, left: 100, zIndex: 10 }]]);
-		const fixtureSizes = calcStaticFixtureSizes(2, 4, 10);
-		const prevFixtureSizes: MutableRefObject<FixtureSizes> = { current: fixtureSizes };
+		const nextTLZR = new Map<string, TLZR>([
+			['KH', { top: 100, left: 100, zIndex: 10, rotation: -5 }],
+		]);
+		const fixtureSizesChanged = false;
 
 		animUpdatedCardPositions({
 			timeline,
 			list,
-			nextTLZ,
-			fixtureSizes,
-			prevFixtureSizes,
+			nextTLZR,
+			fixtureSizesChanged,
 		});
 
 		expect(mockCallTimes()).toEqual({
-			toSpy: 1,
+			toSpy: 2,
 			fromToSpy: 1,
 		});
 		expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
@@ -53,11 +51,9 @@ describe('animUpdatedCardPositions', () => {
 
 	test.todo('list');
 
-	test.todo('nextTLZ');
+	test.todo('nextTLZR');
 
-	test.todo('fixtureSizes');
-
-	test.todo('prevFixtureSizes');
+	test.todo('fixtureSizesChanged');
 
 	test.todo('gameBoardIdRef');
 

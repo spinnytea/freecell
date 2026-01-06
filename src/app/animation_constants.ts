@@ -18,6 +18,12 @@ export const MULTI_ANIMATION_TIMESCALE = 2;
 /** when we select a card, and it needs to rotate to show it's selected, this is how long that takes */
 export const SELECT_ROTATION_DURATION = 0.1;
 
+/** when we select a card, and it needs to rotate to show it's selected, this is the angle it rotates */
+export const SELECT_ROTATION_ANGLE = 10;
+
+/** when we flash a card, this is the angle it rotates */
+export const FLASH_ROTATION_ANGLE = -5;
+
 /**
 	we want the same† reset animation for animDragSequenceClear and animUpdatedCardPositions
 	REVIEW (drag-and-drop) but they need to be separate implementations

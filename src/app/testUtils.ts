@@ -1,3 +1,5 @@
+import { gsap } from 'gsap/all';
+
 export function spyOnGsap(_gsap: typeof gsap) {
 	const gsapToSpy = jest.spyOn(_gsap, 'to');
 	const gsapSetSpy = jest.spyOn(_gsap, 'set');
@@ -8,6 +10,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 	const addLabelSpy = jest.fn();
 	const addSpy = jest.fn();
 	const timeScaleSpy = jest.fn();
+	const killTweensOfSpy = jest.fn();
 	let timelineOnComplete: gsap.Callback | undefined;
 	const consoleDebugSpy = jest.spyOn(console, 'debug').mockImplementation(() => {
 		throw new Error('must mock console.debug');
@@ -22,11 +25,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 			addLabel: addLabelSpy,
 			add: addSpy,
 			timeScale: timeScaleSpy,
-			totalProgress: () => ({
-				kill: () => {
-					/* empty */
-				},
-			}),
+			killTweensOf: killTweensOfSpy,
 		};
 		return timelineMock as gsap.core.Timeline;
 	});
@@ -45,6 +44,8 @@ export function spyOnGsap(_gsap: typeof gsap) {
 		addLabelSpy.mockReset();
 		addSpy.mockReset();
 		timeScaleSpy.mockReset();
+		killTweensOfSpy.mockReset();
+		consoleDebugSpy.mockReset();
 	}
 
 	function mockCallTimes(): Record<string, number> {
@@ -58,6 +59,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 			addLabelSpy,
 			addSpy,
 			timeScaleSpy,
+			killTweensOfSpy,
 			consoleDebugSpy,
 		} as Record<string, jest.SpyInstance>).reduce<Record<string, number>>((acc, [key, spy]) => {
 			const length = spy.mock.calls.length;
@@ -80,6 +82,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 		addLabelSpy,
 		addSpy,
 		timeScaleSpy,
+		killTweensOfSpy,
 		// others
 		timelineOnComplete,
 		consoleDebugSpy,
@@ -87,4 +90,39 @@ export function spyOnGsap(_gsap: typeof gsap) {
 		mockReset,
 		mockCallTimes,
 	};
+}
+
+export function getCardIdsFromSpy(spy: jest.SpyInstance) {
+	return spy.mock.calls.map(([cardIdSelector]: [string]) => cardIdSelector);
+}
+
+export function getPropertiesFromSpy(spy: jest.SpyInstance): Record<string, number> {
+	return accumulateGsapTweenVars(
+		spy.mock.calls.map(([, properties]: [string, gsap.TweenVars]) => properties)
+	);
+}
+export function getPropertiesFromFromToSpy(spy: jest.SpyInstance): {
+	from: Record<string, number>;
+	to: Record<string, number>;
+} {
+	const from = accumulateGsapTweenVars(
+		spy.mock.calls.map(([, properties]: [string, gsap.TweenVars]) => properties)
+	);
+	const to = accumulateGsapTweenVars(
+		spy.mock.calls.map(([, , properties]: [string, gsap.TweenVars, gsap.TweenVars]) => properties)
+	);
+	return { from, to };
+}
+
+function accumulateGsapTweenVars(list: gsap.TweenVars[]): Record<string, number> {
+	const counts = list.reduce<Record<string, number>>((acc, properties) => {
+		Object.keys(properties).forEach((key) => {
+			acc[key] = (acc[key] || 0) + 1;
+		});
+		return acc;
+	}, {});
+	// not a property being animated
+	delete counts.duration;
+	delete counts.ease;
+	return counts;
 }

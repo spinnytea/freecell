@@ -6,8 +6,9 @@ import {
 	MAX_ANIMATION_OVERLAP,
 	TOTAL_DEFAULT_MOVEMENT_DURATION,
 } from '@/app/animation_constants';
+import { TLZR } from '@/app/animation_interfaces';
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
-import { domUtils, TLZ } from '@/app/components/element/domUtils';
+import { domUtils } from '@/app/components/element/domUtils';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
 import { DropTarget } from '@/app/hooks/controls/useDragAndDropControls';
 import { calcCardId, calcPilemarkerId } from '@/game/card/card';
@@ -64,11 +65,11 @@ animDragSequence.calcDuration = (index: number) => 0.06 * Math.log2(index + 2) -
 /** cancel the drag; reset transform; leave top/left alone */
 export function animDragSequenceClear({
 	list,
-	firstCardTLZ: { zIndex },
+	firstCardTLZR: { zIndex },
 	gameBoardIdRef,
 }: {
 	list: string[];
-	firstCardTLZ: TLZ;
+	firstCardTLZR: TLZR;
 	gameBoardIdRef?: MutableRefObject<string>;
 }) {
 	// REVIEW (animation) (drag-and-drop) same overlap as animUpdatedCardPositions
@@ -100,12 +101,12 @@ export function animDragSequenceClear({
 /** switch from drag (transform: translate3d()) to fixtureSizes (top, left) */
 export function animDragSequencePivot({
 	list,
-	firstCardTLZ,
+	firstCardTLZR,
 	offsetTop,
 	gameBoardIdRef,
 }: {
 	list: string[];
-	firstCardTLZ: TLZ;
+	firstCardTLZR: TLZR;
 	offsetTop: number;
 	gameBoardIdRef?: MutableRefObject<string>;
 }) {
@@ -121,21 +122,22 @@ export function animDragSequencePivot({
 		const y = Number(gsap.getProperty(cardIdSelector, 'y'));
 		const x = Number(gsap.getProperty(cardIdSelector, 'x'));
 
-		const tlz = domUtils.getDomAttributes(cardId) ?? {
-			...firstCardTLZ,
-			top: firstCardTLZ.top + offsetTop * index,
+		const tlzr = domUtils.getDomAttributes(cardId) ?? {
+			...firstCardTLZR,
+			top: firstCardTLZR.top + offsetTop * index,
 		};
-		tlz.zIndex = firstCardTLZ.zIndex + index + BOTTOM_OF_CASCADE;
-		tlz.top += y;
-		tlz.left += x;
+		tlzr.zIndex = firstCardTLZR.zIndex + index + BOTTOM_OF_CASCADE;
+		tlzr.top += y;
+		tlzr.left += x;
 
-		// update the "prevTLZ"
-		domUtils.setDomAttributes(cardId, tlz);
+		// update the "prevTLZR"
+		domUtils.setDomAttributes(cardId, tlzr);
 		gsap.killTweensOf(cardIdSelector);
 		gsap.set(cardIdSelector, {
-			top: tlz.top,
-			left: tlz.left,
-			zIndex: tlz.zIndex,
+			top: tlzr.top,
+			left: tlzr.left,
+			zIndex: tlzr.zIndex,
+			rotation: tlzr.rotation, // should just be zero
 			transform: '', // 'translate3d(0px, 0px, 0px)',
 		});
 	});
@@ -152,6 +154,7 @@ export function animDragOverlap({
 		if (dropTarget.shorthand) {
 			const cardId = calcCardId(dropTarget.shorthand, gameBoardIdRef?.current);
 			const cardIdSelector = '#' + cardId;
+			// BUG (animation) (controls) (drag-and-drop) mobile does not rotate drop targets
 			const rotation = dropTarget.isOverlapping ? -5 : 0;
 			gsap.set(cardIdSelector, { rotation });
 		} else {

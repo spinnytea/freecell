@@ -1,24 +1,17 @@
-import { TLZ } from '@/app/components/element/domUtils';
-import { calcTopLeftZ, FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
-import {
-	Card,
-	CardSequence,
-	Fixture,
-	getRankForCompare,
-	shorthandCard,
-	Suit,
-} from '@/game/card/card';
+import { TLZR } from '@/app/animation_interfaces';
+import { Card, Fixture, getRankForCompare, shorthandCard, Suit } from '@/game/card/card';
 import {
 	getCardsFromInvalid,
 	parsePreviousActionMoveShorthands,
 	PreviousAction,
 } from '@/game/move/history';
 
-export interface UpdateCardPositionsType {
+export interface UpdateCardPositionsType extends TLZR {
 	shorthand: string;
-	top: number;
-	left: number;
-	zIndex: number;
+	// top: number;
+	// left: number;
+	// zIndex: number;
+	// rotation: number;
 	rank: number;
 	suit: Suit;
 	previousTop: number;
@@ -46,19 +39,15 @@ export interface InvalidMoveCardType {
 		- we are informally doing this for `move-foundation`
 */
 export function calcUpdatedCardPositions({
-	fixtureSizes,
-	previousTLZ,
 	cards,
-	selection,
-	flashCards,
 	previousAction,
+	previousTLZR,
+	calcTLZRForCard,
 }: {
-	fixtureSizes: FixtureSizes;
-	previousTLZ: Map<string, TLZ>;
 	cards: Card[];
-	selection: CardSequence | null;
-	flashCards: Card[] | null;
 	previousAction?: PreviousAction;
+	previousTLZR: Map<string, TLZR>;
+	calcTLZRForCard: (card: Card) => TLZR;
 }): {
 	updateCardPositions: UpdateCardPositionsType[];
 	updateCardPositionsPrev?: UpdateCardPositionsType[];
@@ -71,26 +60,27 @@ export function calcUpdatedCardPositions({
 	const fixtures = new Set<Fixture>();
 
 	cards.forEach((card) => {
-		const { top, left, zIndex } = calcTopLeftZ(
-			fixtureSizes,
-			card.location,
-			selection,
-			flashCards,
-			card.rank
-		);
+		const { top, left, zIndex, rotation } = calcTLZRForCard(card);
 		const shorthand = shorthandCard(card);
 
-		const prev = previousTLZ.get(shorthand);
+		const prev = previousTLZR.get(shorthand);
 		const updateCardPosition: UpdateCardPositionsType = {
 			shorthand,
 			top,
 			left,
 			zIndex,
+			rotation,
 			rank: getRankForCompare(card.rank),
 			suit: card.suit,
 			previousTop: prev?.top ?? top,
 		};
-		if (!prev || prev.top !== top || prev.left !== left) {
+		if (
+			!prev ||
+			prev.top !== top ||
+			prev.left !== left ||
+			// prev.zIndex !== zIndex || // zIndex is a by-product of top/left, not a position in-and-of-itself
+			prev.rotation !== rotation
+		) {
 			updateCardPositions.push(updateCardPosition);
 			fixtures.add(card.location.fixture);
 		} else {
@@ -133,11 +123,9 @@ export function calcUpdatedCardPositions({
 			updateCardPositions.length <= moveShorthands.length + autoFoundationShorthands.length
 		) {
 			const { updateCardPositions: prevUpdateCardPositions } = calcUpdatedCardPositions({
-				fixtureSizes,
-				previousTLZ,
+				previousTLZR,
 				cards: previousAction.tweenCards,
-				selection: null,
-				flashCards: null,
+				calcTLZRForCard,
 			});
 
 			let anyMissing = false;

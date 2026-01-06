@@ -8,7 +8,7 @@ import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameConte
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
-import { spyOnGsap } from '@/app/testUtils';
+import { getPropertiesFromFromToSpy, getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';
 import {
 	calcCardId,
 	CardLocation,
@@ -70,15 +70,27 @@ function MockGamePage({ game, gameBoardId }: { game: FreeCell; gameBoardId?: str
 }
 
 describe('GameBoard', () => {
-	let gsapToSpy: jest.SpyInstance;
+	let gsapSetSpy: jest.SpyInstance;
 	let gsapFromSpy: jest.SpyInstance;
+	let fromToSpy: jest.SpyInstance;
+	let toSpy: jest.SpyInstance;
+	let setSpy: jest.SpyInstance;
 	let addLabelSpy: jest.SpyInstance;
 	let consoleDebugSpy: jest.SpyInstance;
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
-		({ gsapToSpy, gsapFromSpy, addLabelSpy, consoleDebugSpy, mockReset, mockCallTimes } =
-			spyOnGsap(gsap));
+		({
+			gsapSetSpy,
+			gsapFromSpy,
+			fromToSpy,
+			toSpy,
+			setSpy,
+			addLabelSpy,
+			consoleDebugSpy,
+			mockReset,
+			mockCallTimes,
+		} = spyOnGsap(gsap));
 		consoleDebugSpy.mockReturnValue(undefined);
 	});
 
@@ -89,10 +101,21 @@ describe('GameBoard', () => {
 		// initial state
 		expect(addLabelSpy.mock.calls).toEqual([['shuffle deck (1)'], ['updateCardPositions']]);
 		expect(mockCallTimes()).toEqual({
-			gsapToSpy: 52,
 			gsapSetSpy: 52,
 			setSpy: 52,
 			addLabelSpy: 2,
+		});
+		expect(getPropertiesFromSpy(gsapSetSpy)).toEqual({
+			top: 52,
+			left: 52,
+			zIndex: 52,
+			rotation: 52,
+		});
+		expect(getPropertiesFromSpy(setSpy)).toEqual({
+			top: 52,
+			left: 52,
+			zIndex: 52,
+			rotation: 52,
 		});
 
 		mockReset();
@@ -107,6 +130,20 @@ describe('GameBoard', () => {
 			fromToSpy: 52,
 			toSpy: 52,
 			addLabelSpy: 2,
+		});
+		expect(getPropertiesFromFromToSpy(fromToSpy)).toEqual({
+			from: {
+				top: 52,
+				left: 52,
+			},
+			to: {
+				top: 52,
+				left: 52,
+			},
+		});
+		expect(getPropertiesFromSpy(toSpy)).toEqual({
+			zIndex: 51,
+			rotation: 1,
 		});
 
 		expect(container).toMatchSnapshot();
@@ -200,9 +237,9 @@ describe('GameBoard', () => {
 		// Now move the six of clubs from its freecell onto the seven of diamonds,
 		moveByShorthand('a8');
 		expect(screen.getByRole('status').textContent).toBe('move a8 6C→7D');
-		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select a 6C'],
+			['updateCardPositions'],
 			['move a8 6C→7D'],
 			['updateCardPositions'],
 		]);
@@ -277,14 +314,13 @@ describe('GameBoard', () => {
 		expect(screen.getByRole('status').textContent).toBe('move 15 TD→JS');
 		moveByShorthand('a5');
 		expect(screen.getByRole('status').textContent).toBe('move a5 9S→TD');
-		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select 1 TD'],
 			['updateCardPositions'],
 			['move 15 TD→JS'],
 			['updateCardPositions'],
 			['select a 9S'],
-			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
+			['updateCardPositions'],
 			['move a5 9S→TD'],
 			['updateCardPositions'],
 		]);
@@ -404,14 +440,13 @@ describe('GameBoard', () => {
 		expect(screen.getByRole('status').textContent).toBe('move 45 6D→7S');
 		moveByShorthand('c5');
 		expect(screen.getByRole('status').textContent).toBe('move c5 5C→6D');
-		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select c, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select 4 6D'],
 			['updateCardPositions'],
 			['move 45 6D→7S'],
 			['updateCardPositions'],
 			['select c 5C'],
-			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
+			['updateCardPositions'],
 			['move c5 5C→6D'],
 			['updateCardPositions'],
 		]);
@@ -533,10 +568,9 @@ describe('GameBoard', () => {
 		// Move the three of spades home
 		moveByShorthand('ah');
 		expect(screen.getByRole('status').textContent).toBe('move ah 3S→2S');
-		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select a 3S'],
-			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
+			['updateCardPositions'],
 			['move ah 3S→2S'],
 			['updateCardPositions'],
 		]);
@@ -544,10 +578,9 @@ describe('GameBoard', () => {
 		// and the five of diamonds onto the six of spades.
 		moveByShorthand('b8');
 		expect(screen.getByRole('status').textContent).toBe('move b8 5D→6S');
-		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select b, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select b 5D'],
-			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
+			['updateCardPositions'],
 			['move b8 5D→6S'],
 			['updateCardPositions'],
 		]);
@@ -588,10 +621,9 @@ describe('GameBoard', () => {
 		// the queen of clubs from its freecell to the empty seventh column,
 		moveByShorthand('c7');
 		expect(screen.getByRole('status').textContent).toBe('move c7 QC→cascade');
-		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select c, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select c QC'],
-			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
+			['updateCardPositions'],
 			['move c7 QC→cascade'],
 			['updateCardPositions'],
 		]);
@@ -633,10 +665,9 @@ describe('GameBoard', () => {
 		// Move the king of clubs back into the empty third column,
 		moveByShorthand('a3');
 		expect(screen.getByRole('status').textContent).toBe('move a3 KC→cascade');
-		expect(gsapToSpy).toHaveBeenCalledTimes(2); // select a, then rotate back
 		expect(addLabelSpy.mock.calls).toEqual([
 			['select a KC'],
-			// TODO (techdebt) (flourish-anim) (gsap) selecting a cell uses rotation, and is not part of the timeline
+			['updateCardPositions'],
 			['move a3 KC→cascade'],
 			['updateCardPositions'],
 		]);
@@ -716,28 +747,71 @@ describe('GameBoard', () => {
 			['updateCardPositionsPrev'],
 			['updateCardPositions'],
 		]);
-		expect(gsapFromSpy).toHaveBeenCalledTimes(1); // animate win message
+		expect(mockCallTimes()).toEqual({
+			gsapFromSpy: 1, // animate win message
+			fromToSpy: 2,
+			toSpy: 77,
+			setSpy: 65,
+			addLabelSpy: 5,
+			timeScaleSpy: 1,
+			consoleDebugSpy: 1,
+		});
+		expect(getPropertiesFromSpy(gsapFromSpy)).toEqual({
+			scale: 1,
+		});
+		// REVIEW (animation) this feels a little redundant; is this a "deselect" and a "move"
+		expect(fromToSpy.mock.calls).toEqual([
+			[
+				'#cKD-GameBoard.test-#5',
+				{ top: 22, left: 50 },
+				{ top: 22.5, left: 50, duration: 0.3, ease: 'power1.out' },
+				'>0',
+			],
+			[
+				'#cKD-GameBoard.test-#5',
+				{ top: 22.5, left: 50 },
+				{ top: 20, left: 60, duration: 0.3, ease: 'power1.out' },
+				'>0',
+			],
+		]);
+		expect(getPropertiesFromSpy(toSpy)).toEqual({
+			top: 38,
+			left: 38,
+			zIndex: 39,
+		});
+		expect(getPropertiesFromSpy(setSpy)).toEqual({
+			top: 65,
+			left: 65,
+			zIndex: 65,
+			rotation: 65,
+			transform: 65,
+		});
+		expect(consoleDebugSpy.mock.calls).toEqual([
+			['speedup updateCardPositions', 'move-foundation'],
+		]);
 		mockReset();
 
 		expect(container).toMatchSnapshot();
 		expect(screen.queryByText('You Win!')).toBeTruthy();
 
 		SuitList.forEach((suit) => {
-			const aceTLZ = domUtils.getDomAttributes(
+			const aceTLZR = domUtils.getDomAttributes(
 				calcCardId(shorthandCard({ rank: 'ace', suit }), gameBoardId)
 			);
-			if (!aceTLZ) throw new Error(`Card not found: ace of ${suit}`);
+			if (!aceTLZR) throw new Error(`Card not found: ace of ${suit}`);
 
 			RankList.forEach((rank, idx) => {
 				const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardId);
-				const tlz = domUtils.getDomAttributes(cardId);
-				if (!tlz) throw new Error(`Card not found: ${cardId}`);
+				const tlzr = domUtils.getDomAttributes(cardId);
+				if (!tlzr) throw new Error(`Card not found: ${cardId}`);
 
 				// cards are stacked on aces
-				expect(tlz.top).toBe(aceTLZ.top);
-				expect(tlz.left).toBe(aceTLZ.left);
+				expect(tlzr.top).toBe(aceTLZR.top);
+				expect(tlzr.left).toBe(aceTLZR.left);
 				// cards are stacked in order by rank
-				expect(tlz.zIndex).toBe(aceTLZ.zIndex + idx);
+				expect(tlzr.zIndex).toBe(aceTLZR.zIndex + idx);
+				// they are all in foundations, so they shouldn't be rotated
+				expect(tlzr.rotation).toBe(0);
 			});
 		});
 
