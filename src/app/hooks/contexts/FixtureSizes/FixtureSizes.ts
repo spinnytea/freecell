@@ -1,4 +1,5 @@
 import { FLASH_ROTATION_ANGLE, SELECT_ROTATION_ANGLE } from '@/app/animation_constants';
+import { TLZR } from '@/app/animation_interfaces';
 import {
 	BOTTOM_OF_CASCADE,
 	CARD_FACE_CUTOFF,
@@ -240,14 +241,13 @@ function toFixed(num: number): number {
 	return parseFloat(num.toFixed(3));
 }
 
-/** REVIEW (techdebt) (animation) review when and why this is called competing concerns might be the cause of animation bugs */
 export function calcTopLeftZ(
 	fixtureSizes: FixtureSizes,
 	{ fixture, data }: CardLocation,
 	selection: CardSequence | null,
 	flashCards: Card[] | null,
 	rank?: Rank
-): { top: number; left: number; zIndex: number; rotation: number } {
+): TLZR {
 	switch (fixture) {
 		case 'deck':
 			// it's really hard to get to peek this

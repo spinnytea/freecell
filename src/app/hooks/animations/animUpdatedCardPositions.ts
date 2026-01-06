@@ -7,7 +7,7 @@ import {
 	SELECT_ROTATION_DURATION,
 	TOTAL_DEFAULT_MOVEMENT_DURATION,
 } from '@/app/animation_constants';
-import { TLZR } from '@/app/components/element/domUtils';
+import { TLZR } from '@/app/animation_interfaces';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';
 import { calcCardId } from '@/game/card/card';
 

@@ -1,5 +1,5 @@
 import { gsap } from 'gsap/all';
-import { TLZR } from '@/app/components/element/domUtils';
+import { TLZR } from '@/app/animation_interfaces';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';
 import { spyOnGsap } from '@/app/testUtils';

@@ -6,8 +6,9 @@ import {
 	MAX_ANIMATION_OVERLAP,
 	TOTAL_DEFAULT_MOVEMENT_DURATION,
 } from '@/app/animation_constants';
+import { TLZR } from '@/app/animation_interfaces';
 import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
-import { domUtils, TLZR } from '@/app/components/element/domUtils';
+import { domUtils } from '@/app/components/element/domUtils';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
 import { DropTarget } from '@/app/hooks/controls/useDragAndDropControls';
 import { calcCardId, calcPilemarkerId } from '@/game/card/card';
@@ -34,11 +35,7 @@ export function animDragSequence({
 		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 		// do not animate zIndex, it causes bugs
 		// needs a double boost for foundation
-		// clear rotation, in case a cell is selected or something
-		gsap.set(cardIdSelector, {
-			zIndex: BOTTOM_OF_CASCADE + BOTTOM_OF_CASCADE + index,
-			rotation: 0,
-		});
+		gsap.set(cardIdSelector, { zIndex: BOTTOM_OF_CASCADE + BOTTOM_OF_CASCADE + index });
 		if (index === 0) {
 			transform = gsap.getProperty(cardIdSelector, 'transform');
 		} else {
@@ -140,7 +137,7 @@ export function animDragSequencePivot({
 			top: tlzr.top,
 			left: tlzr.left,
 			zIndex: tlzr.zIndex,
-			rotation: tlzr.rotation, // should be zero
+			rotation: tlzr.rotation, // should just be zero
 			transform: '', // 'translate3d(0px, 0px, 0px)',
 		});
 	});
@@ -157,7 +154,7 @@ export function animDragOverlap({
 		if (dropTarget.shorthand) {
 			const cardId = calcCardId(dropTarget.shorthand, gameBoardIdRef?.current);
 			const cardIdSelector = '#' + cardId;
-			// BUG (animation) (controls) mobile does not rotate drop targets
+			// BUG (animation) (controls) (drag-and-drop) mobile does not rotate drop targets
 			const rotation = dropTarget.isOverlapping ? -5 : 0;
 			gsap.set(cardIdSelector, { rotation });
 		} else {

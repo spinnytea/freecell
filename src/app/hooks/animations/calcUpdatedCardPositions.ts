@@ -1,4 +1,4 @@
-import { TLZR } from '@/app/components/element/domUtils';
+import { TLZR } from '@/app/animation_interfaces';
 import { Card, Fixture, getRankForCompare, shorthandCard, Suit } from '@/game/card/card';
 import {
 	getCardsFromInvalid,
@@ -78,7 +78,7 @@ export function calcUpdatedCardPositions({
 			!prev ||
 			prev.top !== top ||
 			prev.left !== left ||
-			// prev.zIndex !== zIndex || // REVIEW (animation) this breaks shuffle
+			// prev.zIndex !== zIndex || // zIndex is a by-product of top/left, not a position in-and-of-itself
 			prev.rotation !== rotation
 		) {
 			updateCardPositions.push(updateCardPosition);

@@ -1,11 +1,5 @@
 import { SyntheticEvent } from 'react';
-
-export interface TLZR {
-	top: number;
-	left: number;
-	zIndex: number;
-	rotation: number;
-}
+import { TLZR } from '@/app/animation_interfaces';
 
 export const domUtils = {
 	/** @deprecated this is used by some unit tests when there is no DOM */
@@ -29,7 +23,6 @@ export const domUtils = {
 		return undefined;
 	},
 
-	/** useful for testing */
 	setDomAttributes(cardId: string, { top, left, zIndex, rotation }: TLZR) {
 		const cardEl = document.getElementById(cardId);
 		if (cardEl) {

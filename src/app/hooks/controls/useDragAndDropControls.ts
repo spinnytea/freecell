@@ -327,6 +327,7 @@ export function _overlappingAvailableMove(
 		}
 	}
 
+	// BUG (animation) (controls) (drag-and-drop) mobile does not rotate drop targets
 	if (closestDropTarget && closestDist2 !== null) {
 		// mark the single overlapping
 		closestDropTarget.isOverlapping = true;

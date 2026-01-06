@@ -2,8 +2,9 @@ import { MutableRefObject, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
 import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
+import { TLZR } from '@/app/animation_interfaces';
 import { ControlSchemes } from '@/app/components/cards/constants';
-import { domUtils, TLZR } from '@/app/components/element/domUtils';
+import { domUtils } from '@/app/components/element/domUtils';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
 import { animShuffleCards } from '@/app/hooks/animations/animShuffleCards';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
@@ -41,6 +42,11 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 	*/
 	const previousTimeline = useRef<gsap.core.Timeline | null>(null);
 
+	/**
+		simplified interface/wrapper around calcTopLeftZ
+		simplifies args to calcUpdatedCardPositions
+		fixtureSizes, selection, and flashCards are only needed for this
+	*/
 	const calcTLZRForCardRef = useRefCurrent(function calcTLZRForCard(card: Card): TLZR {
 		return calcTopLeftZ(fixtureSizes, card.location, selection, flashCards, card.rank);
 	});
@@ -59,10 +65,6 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 			}
 
 			// REVIEW (techdebt) we need to call domUtils.setDomAttributes for any cards that have moved
-			// REVIEW (techdebt) previousTLZR / nextTLZR is a source of bugs and initialization problems
-			//  - if we haven't moved a card yet, then the animations are all weird
-			//  - i.e. click-to-move a sequence of cards after refreshing the page
-			// REVIEW (techdebt) is there a better way to merge react and gsap, to include drag-and-drop?
 			const previousTLZR = new Map<string, TLZR>();
 			cards.forEach((card) => {
 				const shorthand = shorthandCard(card);

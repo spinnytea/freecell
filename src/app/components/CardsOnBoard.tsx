@@ -58,7 +58,6 @@ function CardOnBoard({
 	useDragAndDropControls(cardRef, location, gameBoardIdRef);
 
 	useGSAP(() => {
-		// REVIEW (animation) is this what resets the positions of the cards, requiring "fromTo" animations?
 		// set the initial position, once on load
 		gsap.set(cardRef.current, { top, left, zIndex, rotation });
 	});
