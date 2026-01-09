@@ -173,6 +173,54 @@ describe('game.autoFoundationAll', () => {
 					' auto-foundation 466684567 AC,2C,3D,4S,3C,4D,4C,5D,6D'
 			);
 		});
+
+		// XXX (settings) this makes me grumpy, this is why i want opp+2
+		test('opp+1 4233, opp+2 KKKK', () => {
+			const game = FreeCell.parse(
+				'' +
+					'             3D 2H 3S    \n' +
+					' KC    2C KH KD>   KS 3H \n' +
+					' QH       QS QC    QD 4C \n' +
+					' JC       JD JH    JS AC \n' +
+					' TH       TS TC    TD 9H \n' +
+					' 9C          9D    9S 8S \n' +
+					' 8H          8C    8D 7H \n' +
+					' 7S          7D    7C 6C \n' +
+					' 6H          6S    6D 5H \n' +
+					' 5C          5D    5S 4S \n' +
+					' 4H                4D    \n' +
+					'                   3C    \n' +
+					' move 65 8C-7D-6S-5D→9D'
+			);
+			expect(game.moveByShorthand('86').print()).toBe(
+				'' +
+					'             4D 2H 3S 3C \n' +
+					' KC       KH KD>9H KS 3H \n' +
+					' QH       QS QC 8S QD 4C \n' +
+					' JC       JD JH 7H JS    \n' +
+					' TH       TS TC 6C TD    \n' +
+					' 9C          9D 5H 9S    \n' +
+					' 8H          8C 4S 8D    \n' +
+					' 7S          7D    7C    \n' +
+					' 6H          6S    6D    \n' +
+					' 5C          5D    5S    \n' +
+					' 4H                      \n' +
+					' move 86 9H-8S-7H-6C-5H-4S→cascade (auto-foundation 8377 AC,2C,3C,4D)'
+			);
+			expect(
+				game
+					.moveByShorthand('86', { autoFoundation: false })
+					.autoFoundationAll({ limit: 'opp+2' })
+					.print()
+			).toBe(
+				'' +
+					'            >KD KH KS KC \n' +
+					'                         \n' +
+					':    Y O U   W I N !    :\n' +
+					'                         \n' +
+					' flourish 68377858771515661177665517176454171754551714 4S,AC,2C,3C,4D,4C,5D,3H,5S,6D,4H,6S,5C,7D,5H,6C,6H,7S,7C,8D,7H,8S,8C,9D,8H,9S,9C,TD,9H,TS,TC,JD,TH,JS,JC,QD,JH,QS,QC,KD,QH,KS,KC,KH'
+			);
+		});
 	});
 
 	describe('scenarios', () => {

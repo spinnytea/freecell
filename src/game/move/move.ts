@@ -27,7 +27,7 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 // IDEA (controls) only single -> foundation if opp+2 or no other option
 //  - put it last in the list, or IFF do it first
 // IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
-// TODO (2-priority) (controls) Prioritize moving cards to a completed sequence
+// TODO (2-priority) (controls) (click-to-move) Prioritize moving cards to a completed sequence
 //  - when between 2 cards of different suit
 //  - when the root of it is at the top of a column (to sequence that starts at a pile)
 //  - i.e. select by column and see if it's `data: [c, 0]`
@@ -99,10 +99,10 @@ export interface AvailableMove {
 		if we are going to visualize them debug mode, we need to have it precomputed
 		we really only need high|low for this
 
-		TODO (controls) (gameplay) (motivation) Reverse order of cell -> cascade
+		TODO (controls) (click-to-move) (gameplay) (motivation) Reverse order of cell -> cascade
 		 - kings should prioritize the right side under the foundation
 		 - I guess all cards can? Kings in particular
-		TODO (controls) (gameplay) (motivation) When queen is home and king clicktomove, it should prioritize foundation
+		TODO (controls) (click-to-move) (gameplay) (motivation) When queen is home and king clicktomove, it should prioritize foundation
 	*/
 	priority: number;
 }

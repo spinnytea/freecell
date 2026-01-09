@@ -276,7 +276,8 @@ export function useDragAndDropControls(
 }
 
 /**
-	TODO (drop-target-size) sometimes it's really hard to drop on your intended target, piles?
+	BUG (2-priority) (drag-and-drop) (drop-target-size) (mobile) sometimes it's really hard to drop on your intended target, piles?
+	BUG (2-priority) (drag-and-drop) (drop-target-size) (mobile) drop targets do not rotate
 	@modifies `dropTargets.isOverlapping`
 */
 export function _overlappingAvailableMove(
