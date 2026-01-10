@@ -167,9 +167,30 @@ describe('prioritizeAvailableMoves', () => {
 			game = game.touch();
 			expect(game.previousAction.text).toBe('select 3 KS');
 			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+				['1', 1],
+				['2', 2],
+				['4', 4],
+				['5', 5],
+			]);
+			game = game.autoMove({ autoFoundation: false }).touch();
+			expect(game.previousAction.text).toBe('select 5 KS');
+			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
 				['1', 5],
-				['2', 7],
-				['4', 8],
+				['2', 4],
+				['4', 2],
+			]);
+			game = game.autoMove({ autoFoundation: false }).touch();
+			expect(game.previousAction.text).toBe('select 1 KS');
+			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+				['2', 9],
+				['4', 7],
+				['5', 6],
+			]);
+			game = game.autoMove({ autoFoundation: false }).touch();
+			expect(game.previousAction.text).toBe('select 2 KS');
+			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+				['1', 5],
+				['4', 7],
 				['5', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
@@ -217,43 +238,11 @@ describe('prioritizeAvailableMoves', () => {
 					'                   2S    \n' +
 					' move 68 QD-JS-TD-9S-8D-7S-6D-5S-4D-3S→KS'
 			).touch({ autoMove: false });
-
 			expect(game.previousAction).toEqual({
 				text: 'select 6 KC',
 				type: 'select',
 			});
-			expect(game.availableMoves).toEqual([
-				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
-				{
-					location: { fixture: 'foundation', data: [1] },
-					moveDestinationType: 'foundation',
-					priority: 3,
-				},
-				{
-					location: { fixture: 'cascade', data: [1, 0] },
-					moveDestinationType: 'cascade:empty',
-					priority: -1,
-				},
-				{
-					location: { fixture: 'cascade', data: [2, 0] },
-					moveDestinationType: 'cascade:empty',
-					priority: -1,
-				},
-				{
-					location: { fixture: 'cascade', data: [3, 0] },
-					moveDestinationType: 'cascade:empty',
-					priority: -1,
-				},
-				{
-					location: { fixture: 'cascade', data: [4, 0] },
-					moveDestinationType: 'cascade:empty',
-					priority: -1,
-				},
-			]);
-
+			expect(shorthandPositionPriority(game.availableMoves)).toEqual([['h', 3]]);
 			expect(game.autoMove().print()).toBe(
 				'' +
 					'             QH>KC 2D    \n' +
@@ -272,6 +261,211 @@ describe('prioritizeAvailableMoves', () => {
 					' move 6h KC→QC'
 			);
 			expect(game.autoMove().print()).toBe(game.clearSelection().$touchAndMove().print());
+		});
+
+		describe('king→cascade:empty linearPriorityMode', () => {
+			describe('MoveSourceType', () => {
+				test('deck', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'             KC KD TH KS \n' +
+							'          JH             \n' +
+							'          QH             \n' +
+							':d>KH|\n' +
+							' hand-jammed'
+					);
+					expect(game.selection).toEqual({
+						location: { fixture: 'deck', data: [0] },
+						cards: [{ rank: 'king', suit: 'hearts', location: { fixture: 'deck', data: [0] } }],
+						peekOnly: true,
+					});
+					// cannot move from the deck
+					expect(shorthandPositionPriority(game.availableMoves)).toEqual([]);
+					expect(game.clearSelection().$touchAndMove().print()).toBe(
+						'' + //
+							'             KC KD TH KS \n' +
+							'          JH             \n' +
+							'          QH             \n' +
+							':d>KH|\n' +
+							' select KH'
+					);
+					// unless we use a game function
+					expect(
+						game.clearSelection().moveByShorthand('k1', { gameFunction: 'recall-or-bury' }).print()
+					).toBe(
+						'' + //
+							'             KC KD TH KS \n' +
+							'>KH       JH             \n' +
+							'          QH             \n' +
+							' invalid move k1 KH→cascade'
+					);
+				});
+
+				test('cell', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'>KH|         KC KD TH KS \n' +
+							'          JH             \n' +
+							'          QH             \n' +
+							' hand-jammed'
+					);
+					expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+						['1', 1],
+						['2', 2],
+						['3', 3],
+						['5', 5],
+						['6', 6],
+						['7', 7],
+						['8', 8],
+					]);
+					expect(game.clearSelection().$touchAndMove().print()).toBe(
+						'' + //
+							'             KC KD TH KS \n' +
+							'          JH         >KH \n' +
+							'          QH             \n' +
+							' move a8 KH→cascade'
+					);
+				});
+
+				test('foundation', () => {
+					const game = FreeCell.parse(
+						'' + //
+							' KH         >KC|KD TH KS \n' +
+							'          JH             \n' +
+							'          QH             \n' +
+							' hand-jammed'
+					);
+					expect(game.selection).toEqual({
+						location: { fixture: 'foundation', data: [0] },
+						cards: [
+							{ rank: 'king', suit: 'clubs', location: { fixture: 'foundation', data: [0] } },
+						],
+						peekOnly: true,
+					});
+					// cannot move off the foundation
+					expect(shorthandPositionPriority(game.availableMoves)).toEqual([]);
+					// cannot select the foundation
+					expect(game.clearSelection().$touchAndMove().print()).toBe(
+						'' + //
+							' KH         >KC KD TH KS \n' +
+							'          JH             \n' +
+							'          QH             \n' +
+							' touch stop'
+					);
+					// unless we have a special flag
+					expect(game.clearSelection().touch({ allowSelectFoundation: true }).print()).toBe(
+						'' + //
+							' KH         >KC|KD TH KS \n' +
+							'          JH             \n' +
+							'          QH             \n' +
+							' select KC'
+					);
+				});
+
+				test('cascade:single (∈ cascade:empty)', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'             KC KD TH KS \n' +
+							'>KH|      JH             \n' +
+							'          QH             \n' +
+							' hand-jammed'
+					);
+					// no (king already on root)
+					expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+						['2', 15],
+						['3', 14],
+						['5', 12],
+						['6', 11],
+						['7', 10],
+						['8', 9],
+					]);
+					expect(game.clearSelection().$touchAndMove().print()).toBe(
+						'' + //
+							'             KC KD TH KS \n' +
+							'   >KH    JH             \n' +
+							'          QH             \n' +
+							' move 12 KH→cascade'
+					);
+				});
+
+				test('cascade:single (∈ cascade:sequence)', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'             KC KD TH KS \n' +
+							'          JH             \n' +
+							'          QH             \n' +
+							'         >KH|            \n' +
+							' hand-jammed'
+					);
+					expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+						['1', 1],
+						['2', 2],
+						['3', 3],
+						['5', 5],
+						['6', 6],
+						['7', 7],
+						['8', 8],
+					]);
+					expect(game.clearSelection().$touchAndMove().print()).toBe(
+						'' + //
+							'             KC KD TH KS \n' +
+							'          JH         >KH \n' +
+							'          QH             \n' +
+							' move 48 KH→cascade'
+					);
+				});
+
+				test('cascade:sequence (∈ cascade:empty)', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'             KC KD TH JS \n' +
+							'   >KH|   JH KS          \n' +
+							'   |QS|   QH             \n' +
+							' hand-jammed'
+					);
+					// no (king already on root)
+					expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+						['1', 8],
+						['3', 14],
+						['6', 11],
+						['7', 10],
+						['8', 9],
+					]);
+					expect(game.clearSelection().$touchAndMove().print()).toBe(
+						'' + //
+							'             KC KD TH JS \n' +
+							'      >KH JH KS          \n' +
+							'       QS QH             \n' +
+							' move 23 KH-QS→cascade'
+					);
+				});
+
+				test('cascade:sequence (∈ cascade:sequence)', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'             KC KD TH JS \n' +
+							'          JH KS          \n' +
+							'          QH>KH|         \n' +
+							'            |QS|         \n' +
+							' hand-jammed'
+					);
+					expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+						['1', 1],
+						['2', 2],
+						['3', 3],
+						['6', 6],
+						['7', 7],
+						['8', 8],
+					]);
+					expect(game.clearSelection().$touchAndMove().print()).toBe(
+						'' + //
+							'             KC KD TH JS \n' +
+							'          JH KS      >KH \n' +
+							'          QH          QS \n' +
+							' move 58 KH-QS→cascade'
+					);
+				});
+			});
 		});
 	});
 });

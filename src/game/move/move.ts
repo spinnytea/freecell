@@ -22,28 +22,51 @@ import { FreeCell } from '@/game/game';
 /* DEFINITIONS */
 /* *********** */
 
+/**
+	- `deck` is shorthand for `deck:single` (can only move single cards from the deck)
+	- `cell` is shorthand for `cell:single` (cells only have one card)
+	- `foundation` is shorthand for `foundation:single` (¿can only move single cards from a foundation?)
+
+	---
+
+	- TODO (techdebt) remove `foundation` from MoveSourceType or add `deck` to MoveDestinationType
+	  - now that it's more advanced, `GameFunction` seems like a much better way to handle foundation→any
+	- TODO (techdebt) remove `deck` from MoveSourceType?
+
+	Moving cards to the deck isn't a standard move.
+	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveDestinationType.
+*/
 export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
+
+/**
+	- `cell` is shorthand for `cell:empty` (can only move cards to an empty cell)
+	- `foundation` is shorthand for `foundation:sequence`
+	  (caveat: ace is `foundation:empty`, {@link canStackFoundation} is a cleaner approach to being more specific)
+
+	Moving cards to the deck isn't a standard move.
+	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveDestinationType.
+*/
 export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cascade:sequence';
-// FIXME (controls) only single -> foundation if opp+2 or no other option
-//  - put it last in the list, or IFF do it first
-// IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
-// FIXME (2-priority) (controls) (click-to-move) Prioritize moving cards to a completed sequence
-//  - when between 2 cards of different suit
-//  - when the root of it is at the top of a column (to sequence that starts at a pile)
-//  - i.e. select by column and see if it's `data: [c, 0]`
-//  - ¿unless we are breaking a sequence?
 
 /**
 	higher priorities take precidence
 
-	TODO (controls) (settings) multiple MoveDestinationTypePriorities
-	 - grow cascades vs empty cascades
-	 - these priorities favor "growing cascades", my preference
-	 - another play enjoys "getting the cards off the board"
-	 - make another set of MoveDestinationTypePriorities with a different goal in mind
-	 - e.g. "empty cascades" would favor
-	   - cell → foundation
-		- cascade:single → foundation
+	- TODO (controls) (settings) multiple MoveDestinationTypePriorities
+	  - grow cascades vs empty cascades
+	  - these priorities favor "growing cascades", my preference
+	  - another play enjoys "getting the cards off the board"
+	  - make another set of MoveDestinationTypePriorities with a different goal in mind
+	  - e.g. "empty cascades" would favor
+	    - cell → foundation
+	    - cascade:single → foundation
+	- FIXME (controls) only single -> foundation if opp+2 or no other option
+	    - put it last in the list, or IFF do it first
+	- IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
+	- FIXME (2-priority) (controls) (click-to-move) Prioritize moving cards to a completed sequence
+	    - when between 2 cards of different suit
+	    - when the root of it is at the top of a column (to sequence that starts at a pile)
+	    - i.e. select by column and see if it's `data: [c, 0]`
+	    - ¿unless we are breaking a sequence?
 */
 export const MoveDestinationTypePriorities: {
 	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
@@ -99,9 +122,10 @@ function calcMoveDestinationTypePriority(
 	let MoveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
 
 	if (moveSourceType === 'cascade:single' && selection.cards.length === 1) {
-		if (selection.cards[0].rank === 'king') {
+		const moving_card = selection.cards[0];
+		if (moving_card.rank === 'king') {
 			const isQueenInFoundation = game.foundations.some(
-				(c) => c?.rank === 'queen' && c.suit === selection.cards[0].suit
+				(c) => c?.rank === 'queen' && c.suit === moving_card.suit
 			);
 			if (!isQueenInFoundation) {
 				MoveDestinationTypePriority = {
@@ -109,7 +133,7 @@ function calcMoveDestinationTypePriority(
 					'cascade:empty': MoveDestinationTypePriority['cascade:empty'] + 4,
 				};
 			}
-		} else if (selection.cards[0].rank === 'ace') {
+		} else if (moving_card.rank === 'ace') {
 			// aces always go to the foundation
 			MoveDestinationTypePriority = {
 				...MoveDestinationTypePriority,
@@ -117,6 +141,19 @@ function calcMoveDestinationTypePriority(
 			};
 		}
 	}
+
+	// FIXME (controls) prioritize single -> foundation if opp+2
+	// if (selection.cards.length === 1) {
+	// 	const moving_card = selection.cards[0];
+	// 	const selectionIdx = game.foundations.findIndex((c) => c?.suit === moving_card.suit);
+	// 	if (foundationCanAcceptCards(game, selectionIdx, 'opp+2')) {
+	// 		MoveDestinationTypePriority = {
+	// 			...MoveDestinationTypePriority,
+	// 			foundation: MoveDestinationTypePriority.foundation + 4,
+	// 		};
+	// 	}
+	// }
+
 	return MoveDestinationTypePriority;
 }
 
@@ -136,10 +173,6 @@ export interface AvailableMove {
 
 		if we are going to visualize them debug mode, we need to have it precomputed
 		we really only need high|low for this
-
-		FIXME (controls) (click-to-move) (gameplay) (motivation) Reverse order of cell -> cascade
-		 - kings should prioritize the right side under the foundation
-		 - I guess all cards can? Kings in particular
 	*/
 	priority: number;
 }
@@ -426,14 +459,14 @@ function prioritizeAvailableMoves(
 
 		case 'cascade:empty':
 		case 'cascade:sequence': {
-			const moveSDType: MoveDestinationType =
+			const moving_card = selection.cards[0];
+			const moveFromAsDestType: MoveDestinationType =
 				selection.location.data[1] === 0 ? 'cascade:empty' : 'cascade:sequence';
 			// if we are moving from/to the same type, then use linear
 			// if we are moving to a different type, then use closest
-			let useLinear = moveSDType === moveDestinationType;
+			let useLinear = moveFromAsDestType === moveDestinationType;
 			// if we are moving from an invalid spot (we can't move back here), then use closest
-			if (moveSDType === 'cascade:sequence' && selection.location.fixture === 'cascade') {
-				const moving_card = selection.cards[0];
+			if (moveFromAsDestType === 'cascade:sequence' && selection.location.fixture === 'cascade') {
 				const [d0, d1] = moving_card.location.data;
 				const tail_card = game.tableau[d0][d1 - 1];
 				if (!canStackCascade(tail_card, moving_card)) {
@@ -446,8 +479,23 @@ function prioritizeAvailableMoves(
 					? sourceD0
 					: undefined;
 
+			const useRightJustify =
+				// kings
+				moving_card.rank === 'king' &&
+				// going to an empty cascade
+				moveDestinationType === 'cascade:empty' &&
+				// from "not the cascades" (cell, foundation, deck)
+				// from the cascades, but not already at the root
+				(moving_card.location.data.at(1) === undefined || moving_card.location.data.at(1) !== 0);
+
 			availableMoves.forEach((availableMove) => {
-				if (useLinear) {
+				if (useRightJustify) {
+					availableMove.priority = rightJustifyAvailableMovesPriority(
+						game.tableau.length,
+						availableMove.location.data[0],
+						sourceD0OrNah
+					);
+				} else if (useLinear) {
 					availableMove.priority = linearAvailableMovesPriority(
 						game.tableau.length,
 						availableMove.location.data[0],
@@ -495,6 +543,17 @@ export function linearAvailableMovesPriority(
 		}
 	}
 	return priority;
+}
+
+export function rightJustifyAvailableMovesPriority(
+	cascadeCount: number,
+	d0: number,
+	sourceD0?: number
+): number {
+	if (sourceD0 !== undefined && d0 === sourceD0) {
+		return 0;
+	}
+	return d0 + 1;
 }
 
 /**

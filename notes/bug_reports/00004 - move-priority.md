@@ -4,7 +4,7 @@ This collapses correctly, but it should go there first (undo, then move again)
 
 ## Labels
 
-TODO (controls)
+FIXME (controls)
 
 ### Game State
 

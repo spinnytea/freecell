@@ -4,7 +4,7 @@ Change priorities to build on cascade on pile, rather than jumbled cards
 
 ## Labels
 
-TODO (gameplay)
+FIXME (gameplay)
 
 ### Game State 1
 

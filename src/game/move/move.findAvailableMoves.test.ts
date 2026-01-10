@@ -1,5 +1,9 @@
 import { FreeCell } from '@/game/game';
-import { closestAvailableMovesPriority, linearAvailableMovesPriority } from '@/game/move/move';
+import {
+	closestAvailableMovesPriority,
+	linearAvailableMovesPriority,
+	rightJustifyAvailableMovesPriority,
+} from '@/game/move/move';
 
 describe('game/move.findAvailableMoves', () => {
 	let game: FreeCell;
@@ -335,86 +339,166 @@ describe('game/move.findAvailableMoves', () => {
 				}
 			);
 		});
+	});
 
-		//** closest: what it does */
-		describe('closestAvailableMovesPriority', () => {
-			describe('1 count', () => {
-				const positions = [0];
-				test.each`
-					sourceD0     | priorities
-					${undefined} | ${[2]}
-					${0}         | ${[0]}
-				`(
-					'sourceD0: $sourceD0',
-					({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
-						expect(positions.map((d0) => closestAvailableMovesPriority(1, d0, sourceD0))).toEqual(
-							priorities
-						);
-					}
-				);
-			});
+	describe('rightJustifyAvailableMovesPriority', () => {
+		describe('1 count', () => {
+			const positions = [0];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[1]}
+				${0}         | ${[0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(
+						positions.map((d0) => rightJustifyAvailableMovesPriority(1, d0, sourceD0))
+					).toEqual(priorities);
+				}
+			);
+		});
 
-			describe('4 count', () => {
-				const positions = [0, 1, 2, 3];
-				test.each`
-					sourceD0     | priorities
-					${undefined} | ${[8, 6, 4, 2]}
-					${0}         | ${[0, 6, 4, 2]}
-					${1}         | ${[5, 0, 6, 4]}
-					${2}         | ${[3, 5, 0, 6]}
-					${3}         | ${[1, 3, 5, 0]}
-				`(
-					'sourceD0: $sourceD0',
-					({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
-						expect(positions.map((d0) => closestAvailableMovesPriority(4, d0, sourceD0))).toEqual(
-							priorities
-						);
-					}
-				);
-			});
+		describe('4 count', () => {
+			const positions = [0, 1, 2, 3];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[1, 2, 3, 4]}
+				${0}         | ${[0, 2, 3, 4]}
+				${1}         | ${[1, 0, 3, 4]}
+				${2}         | ${[1, 2, 0, 4]}
+				${3}         | ${[1, 2, 3, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(
+						positions.map((d0) => rightJustifyAvailableMovesPriority(4, d0, sourceD0))
+					).toEqual(priorities);
+				}
+			);
+		});
 
-			describe('8 count', () => {
-				const positions = [0, 1, 2, 3, 4, 5, 6, 7];
-				test.each`
-					sourceD0     | priorities
-					${undefined} | ${[16, 14, 12, 10, 8, 6, 4, 2]}
-					${0}         | ${[0, 14, 12, 10, 8, 6, 4, 2]}
-					${1}         | ${[13, 0, 14, 12, 10, 8, 6, 4]}
-					${2}         | ${[11, 13, 0, 14, 12, 10, 8, 6]}
-					${3}         | ${[9, 11, 13, 0, 14, 12, 10, 8]}
-					${4}         | ${[7, 9, 11, 13, 0, 14, 12, 10]}
-					${5}         | ${[5, 7, 9, 11, 13, 0, 14, 12]}
-					${6}         | ${[3, 5, 7, 9, 11, 13, 0, 14]}
-					${7}         | ${[1, 3, 5, 7, 9, 11, 13, 0]}
-				`(
-					'sourceD0: $sourceD0',
-					({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
-						expect(positions.map((d0) => closestAvailableMovesPriority(8, d0, sourceD0))).toEqual(
-							priorities
-						);
-					}
-				);
-			});
+		describe('8 count', () => {
+			const positions = [0, 1, 2, 3, 4, 5, 6, 7];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[1, 2, 3, 4, 5, 6, 7, 8]}
+				${0}         | ${[0, 2, 3, 4, 5, 6, 7, 8]}
+				${1}         | ${[1, 0, 3, 4, 5, 6, 7, 8]}
+				${2}         | ${[1, 2, 0, 4, 5, 6, 7, 8]}
+				${3}         | ${[1, 2, 3, 0, 5, 6, 7, 8]}
+				${4}         | ${[1, 2, 3, 4, 0, 6, 7, 8]}
+				${5}         | ${[1, 2, 3, 4, 5, 0, 7, 8]}
+				${6}         | ${[1, 2, 3, 4, 5, 6, 0, 8]}
+				${7}         | ${[1, 2, 3, 4, 5, 6, 7, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(
+						positions.map((d0) => rightJustifyAvailableMovesPriority(8, d0, sourceD0))
+					).toEqual(priorities);
+				}
+			);
+		});
 
-			describe('10 count', () => {
-				const positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-				test.each`
-					sourceD0     | priorities
-					${undefined} | ${[20, 18, 16, 14, 12, 10, 8, 6, 4, 2]}
-					${0}         | ${[0, 18, 16, 14, 12, 10, 8, 6, 4, 2]}
-					${1}         | ${[17, 0, 18, 16, 14, 12, 10, 8, 6, 4]}
-					${5}         | ${[9, 11, 13, 15, 17, 0, 18, 16, 14, 12]}
-					${8}         | ${[3, 5, 7, 9, 11, 13, 15, 17, 0, 18]}
-					${9}         | ${[1, 3, 5, 7, 9, 11, 13, 15, 17, 0]}
-				`(
-					'sourceD0: $sourceD0',
-					({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
-						expect(positions.map((d0) => closestAvailableMovesPriority(10, d0, sourceD0))).toEqual(
-							priorities
-						);
-					}
-				);
-			});
+		describe('10 count', () => {
+			const positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+				${0}         | ${[0, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+				${1}         | ${[1, 0, 3, 4, 5, 6, 7, 8, 9, 10]}
+				${5}         | ${[1, 2, 3, 4, 5, 0, 7, 8, 9, 10]}
+				${8}         | ${[1, 2, 3, 4, 5, 6, 7, 8, 0, 10]}
+				${9}         | ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(
+						positions.map((d0) => rightJustifyAvailableMovesPriority(10, d0, sourceD0))
+					).toEqual(priorities);
+				}
+			);
+		});
+	});
+
+	//** closest: what it does */
+	describe('closestAvailableMovesPriority', () => {
+		describe('1 count', () => {
+			const positions = [0];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[2]}
+				${0}         | ${[0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => closestAvailableMovesPriority(1, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+
+		describe('4 count', () => {
+			const positions = [0, 1, 2, 3];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[8, 6, 4, 2]}
+				${0}         | ${[0, 6, 4, 2]}
+				${1}         | ${[5, 0, 6, 4]}
+				${2}         | ${[3, 5, 0, 6]}
+				${3}         | ${[1, 3, 5, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => closestAvailableMovesPriority(4, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+
+		describe('8 count', () => {
+			const positions = [0, 1, 2, 3, 4, 5, 6, 7];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[16, 14, 12, 10, 8, 6, 4, 2]}
+				${0}         | ${[0, 14, 12, 10, 8, 6, 4, 2]}
+				${1}         | ${[13, 0, 14, 12, 10, 8, 6, 4]}
+				${2}         | ${[11, 13, 0, 14, 12, 10, 8, 6]}
+				${3}         | ${[9, 11, 13, 0, 14, 12, 10, 8]}
+				${4}         | ${[7, 9, 11, 13, 0, 14, 12, 10]}
+				${5}         | ${[5, 7, 9, 11, 13, 0, 14, 12]}
+				${6}         | ${[3, 5, 7, 9, 11, 13, 0, 14]}
+				${7}         | ${[1, 3, 5, 7, 9, 11, 13, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => closestAvailableMovesPriority(8, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+
+		describe('10 count', () => {
+			const positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[20, 18, 16, 14, 12, 10, 8, 6, 4, 2]}
+				${0}         | ${[0, 18, 16, 14, 12, 10, 8, 6, 4, 2]}
+				${1}         | ${[17, 0, 18, 16, 14, 12, 10, 8, 6, 4]}
+				${5}         | ${[9, 11, 13, 15, 17, 0, 18, 16, 14, 12]}
+				${8}         | ${[3, 5, 7, 9, 11, 13, 15, 17, 0, 18]}
+				${9}         | ${[1, 3, 5, 7, 9, 11, 13, 15, 17, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => closestAvailableMovesPriority(10, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
 		});
 	});
 });

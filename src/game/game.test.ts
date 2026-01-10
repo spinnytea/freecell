@@ -720,7 +720,7 @@ describe('game', () => {
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' move 56 KS→cascade (auto-foundation 1521216 JD,JS,QD,QS,KC,KD,KS)'
+					' move 58 KS→cascade (auto-foundation 1521218 JD,JS,QD,QS,KC,KD,KS)'
 			);
 			game = game.touch();
 			expect(game.print()).toBe(
