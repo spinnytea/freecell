@@ -15,6 +15,9 @@ export const MAX_ANIMATION_OVERLAP = 0.06;
 /** when multiple moves are played back to back (second move before previous is finished), we speed up the animations */
 export const MULTI_ANIMATION_TIMESCALE = 2;
 
+/** some actions we want to be just a bit snappier, so this is how we do it for now */
+export const SNAPPY_ACTION_TIMESCALE = 1.2;
+
 /** when we select a card, and it needs to rotate to show it's selected, this is how long that takes */
 export const SELECT_ROTATION_DURATION = 0.1;
 

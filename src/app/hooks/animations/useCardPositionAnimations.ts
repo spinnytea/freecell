@@ -1,7 +1,7 @@
 import { MutableRefObject, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap/all';
-import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
+import { MULTI_ANIMATION_TIMESCALE, SNAPPY_ACTION_TIMESCALE } from '@/app/animation_constants';
 import { TLZR } from '@/app/animation_interfaces';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
@@ -17,7 +17,6 @@ import { useRefCurrent } from '@/app/hooks/useRefCurrent';
 import { useRefPrevious } from '@/app/hooks/useRefPrevious';
 import { calcCardId, Card, shorthandCard } from '@/game/card/card';
 
-// IDEA (animation) faster "select-to-peek" animation - when the cards are shifting to peek the selected card
 export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<string>) {
 	const { cards, selection, flashCards, previousAction } = useGame();
 	const fixtureSizes = useFixtureSizes();
@@ -135,6 +134,11 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
 					domUtils.setDomAttributes(cardId, { top, left, zIndex, rotation });
 				});
+
+				if (previousAction.type === 'select' || previousAction.type === 'deselect') {
+					// faster select, deselect, select-to-peek
+					previousTimeline.current.timeScale(SNAPPY_ACTION_TIMESCALE);
+				}
 			}
 
 			if (!updateCardPositions.length && previousAction.type === 'shuffle') {

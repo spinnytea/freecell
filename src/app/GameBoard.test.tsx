@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { gsap } from 'gsap/all';
+import { MULTI_ANIMATION_TIMESCALE, SNAPPY_ACTION_TIMESCALE } from '@/app/animation_constants';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import GameBoard from '@/app/GameBoard';
@@ -76,6 +77,7 @@ describe('GameBoard', () => {
 	let toSpy: jest.SpyInstance;
 	let setSpy: jest.SpyInstance;
 	let addLabelSpy: jest.SpyInstance;
+	let timeScaleSpy: jest.SpyInstance;
 	let consoleDebugSpy: jest.SpyInstance;
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
@@ -87,6 +89,7 @@ describe('GameBoard', () => {
 			toSpy,
 			setSpy,
 			addLabelSpy,
+			timeScaleSpy,
 			consoleDebugSpy,
 			mockReset,
 			mockCallTimes,
@@ -753,7 +756,7 @@ describe('GameBoard', () => {
 			toSpy: 77,
 			setSpy: 65,
 			addLabelSpy: 5,
-			timeScaleSpy: 1,
+			timeScaleSpy: 2,
 			consoleDebugSpy: 1,
 		});
 		expect(getPropertiesFromSpy(gsapFromSpy)).toEqual({
@@ -786,6 +789,10 @@ describe('GameBoard', () => {
 			rotation: 65,
 			transform: 65,
 		});
+		expect(timeScaleSpy.mock.calls).toEqual([
+			[SNAPPY_ACTION_TIMESCALE],
+			[MULTI_ANIMATION_TIMESCALE],
+		]);
 		expect(consoleDebugSpy.mock.calls).toEqual([
 			['speedup updateCardPositions', 'move-foundation'],
 		]);
