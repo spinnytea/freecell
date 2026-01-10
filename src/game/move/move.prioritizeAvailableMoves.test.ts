@@ -123,7 +123,7 @@ describe('prioritizeAvailableMoves', () => {
 		test('across empty from empty', () => {
 			let game = FreeCell.parse(
 				'' + //
-					'    KC KD KH QS \n' +
+					' QS KC KD KH JS \n' +
 					'      >KS       \n' +
 					' hand-jammed'
 			);
@@ -147,7 +147,7 @@ describe('prioritizeAvailableMoves', () => {
 			]);
 			expect(game.print()).toBe(
 				'' + //
-					'    KC KD KH QS \n' +
+					' QS KC KD KH JS \n' +
 					'         >KS|   \n' +
 					' select 4 KS'
 			);
@@ -157,7 +157,7 @@ describe('prioritizeAvailableMoves', () => {
 		test('across empty from invalid', () => {
 			let game = FreeCell.parse(
 				'' + //
-					'    KC KD QH QS \n' +
+					' QS KC KD QH JS \n' +
 					'       KH       \n' +
 					'      >KS       \n' +
 					' hand-jammed'
@@ -188,7 +188,7 @@ describe('prioritizeAvailableMoves', () => {
 			]);
 			expect(game.print()).toBe(
 				'' + //
-					'    KC KD QH QS \n' +
+					' QS KC KD QH JS \n' +
 					'       KH   >KS|\n' +
 					' select 5 KS'
 			);
@@ -196,5 +196,82 @@ describe('prioritizeAvailableMoves', () => {
 
 		// TODO (joker) moving a 3S, there is 4D,4H,JD,JH
 		test.todo('across joker sequences');
+	});
+
+	describe('some actual cases', () => {
+		test('king to foundation', () => {
+			const game = FreeCell.parse(
+				'' +
+					'             QH QC 2D    \n' +
+					' AS            >KC KH KS \n' +
+					' KD                QS QD \n' +
+					'                   JD JS \n' +
+					'                   TS TD \n' +
+					'                   9D 9S \n' +
+					'                   8S 8D \n' +
+					'                   7D 7S \n' +
+					'                   6S 6D \n' +
+					'                   5D 5S \n' +
+					'                   4S 4D \n' +
+					'                   3D 3S \n' +
+					'                   2S    \n' +
+					' move 68 QD-JS-TD-9S-8D-7S-6D-5S-4D-3S→KS'
+			).touch({ autoMove: false });
+
+			expect(game.previousAction).toEqual({
+				text: 'select 6 KC',
+				type: 'select',
+			});
+			expect(game.availableMoves).toEqual([
+				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+				{
+					location: { fixture: 'foundation', data: [1] },
+					moveDestinationType: 'foundation',
+					priority: 3,
+				},
+				{
+					location: { fixture: 'cascade', data: [1, 0] },
+					moveDestinationType: 'cascade:empty',
+					priority: -1,
+				},
+				{
+					location: { fixture: 'cascade', data: [2, 0] },
+					moveDestinationType: 'cascade:empty',
+					priority: -1,
+				},
+				{
+					location: { fixture: 'cascade', data: [3, 0] },
+					moveDestinationType: 'cascade:empty',
+					priority: -1,
+				},
+				{
+					location: { fixture: 'cascade', data: [4, 0] },
+					moveDestinationType: 'cascade:empty',
+					priority: -1,
+				},
+			]);
+
+			expect(game.autoMove().print()).toBe(
+				'' +
+					'             QH>KC 2D    \n' +
+					' AS                KH KS \n' +
+					' KD                QS QD \n' +
+					'                   JD JS \n' +
+					'                   TS TD \n' +
+					'                   9D 9S \n' +
+					'                   8S 8D \n' +
+					'                   7D 7S \n' +
+					'                   6S 6D \n' +
+					'                   5D 5S \n' +
+					'                   4S 4D \n' +
+					'                   3D 3S \n' +
+					'                   2S    \n' +
+					' move 6h KC→QC'
+			);
+			expect(game.autoMove().print()).toBe(game.clearSelection().$touchAndMove().print());
+		});
 	});
 });

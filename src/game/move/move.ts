@@ -24,10 +24,10 @@ import { FreeCell } from '@/game/game';
 
 export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
 export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cascade:sequence';
-// IDEA (controls) only single -> foundation if opp+2 or no other option
+// FIXME (controls) only single -> foundation if opp+2 or no other option
 //  - put it last in the list, or IFF do it first
 // IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
-// TODO (2-priority) (controls) (click-to-move) Prioritize moving cards to a completed sequence
+// FIXME (2-priority) (controls) (click-to-move) Prioritize moving cards to a completed sequence
 //  - when between 2 cards of different suit
 //  - when the root of it is at the top of a column (to sequence that starts at a pile)
 //  - i.e. select by column and see if it's `data: [c, 0]`
@@ -82,6 +82,44 @@ export const MoveDestinationTypePriorities: {
 	},
 };
 
+/**
+	{@link MoveDestinationTypePriorities} is good as a general rule of thumb,
+	but in some special/edge cases, we want to deviate
+
+	we aren't hair-splicing the {@link AvailableMove.priority},
+	we are picking which {@link MoveDestinationType} is best
+
+	this is simple, in concept, but gnarly to look at
+*/
+function calcMoveDestinationTypePriority(
+	game: FreeCell,
+	selection: CardSequence,
+	moveSourceType: MoveSourceType
+) {
+	let MoveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
+
+	if (moveSourceType === 'cascade:single' && selection.cards.length === 1) {
+		if (selection.cards[0].rank === 'king') {
+			const isQueenInFoundation = game.foundations.some(
+				(c) => c?.rank === 'queen' && c.suit === selection.cards[0].suit
+			);
+			if (!isQueenInFoundation) {
+				MoveDestinationTypePriority = {
+					...MoveDestinationTypePriority,
+					'cascade:empty': MoveDestinationTypePriority['cascade:empty'] + 4,
+				};
+			}
+		} else if (selection.cards[0].rank === 'ace') {
+			// aces always go to the foundation
+			MoveDestinationTypePriority = {
+				...MoveDestinationTypePriority,
+				foundation: MoveDestinationTypePriority.foundation + 4,
+			};
+		}
+	}
+	return MoveDestinationTypePriority;
+}
+
 export interface AvailableMove {
 	/** where we could move the selection */
 	location: CardLocation;
@@ -99,10 +137,9 @@ export interface AvailableMove {
 		if we are going to visualize them debug mode, we need to have it precomputed
 		we really only need high|low for this
 
-		TODO (controls) (click-to-move) (gameplay) (motivation) Reverse order of cell -> cascade
+		FIXME (controls) (click-to-move) (gameplay) (motivation) Reverse order of cell -> cascade
 		 - kings should prioritize the right side under the foundation
 		 - I guess all cards can? Kings in particular
-		TODO (controls) (click-to-move) (gameplay) (motivation) When queen is home and king clicktomove, it should prioritize foundation
 	*/
 	priority: number;
 }
@@ -345,22 +382,11 @@ function prioritizeAvailableMoves(
 
 	const moveSourceType = getMoveSourceType(selection);
 	const sourceD0 = selection.location.data[0];
-	let MoveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
-
-	if (moveSourceType === 'cascade:single' && selection.cards.length === 1) {
-		// REVIEW (techdebt) can we clean this up? it's fine the way it is
-		if (selection.cards[0].rank === 'king') {
-			MoveDestinationTypePriority = {
-				...MoveDestinationTypePriority,
-				'cascade:empty': MoveDestinationTypePriority['cascade:empty'] + 4,
-			};
-		} else if (selection.cards[0].rank === 'ace') {
-			MoveDestinationTypePriority = {
-				...MoveDestinationTypePriority,
-				foundation: MoveDestinationTypePriority.foundation + 4,
-			};
-		}
-	}
+	const MoveDestinationTypePriority = calcMoveDestinationTypePriority(
+		game,
+		selection,
+		moveSourceType
+	);
 
 	// pick our favorite destination type
 	const moveDestinationType = availableMoves.reduce((ret, { moveDestinationType: next }) => {
