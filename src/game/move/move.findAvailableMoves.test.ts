@@ -1,3 +1,4 @@
+import { availableMovesMinimized } from '@/app/testUtils';
 import { FreeCell } from '@/game/game';
 import {
 	closestAvailableMovesPriority,
@@ -55,16 +56,12 @@ describe('game/move.findAvailableMoves', () => {
 				peekOnly: false,
 			});
 			expect(game.cells[0]).toBe(null);
-			expect(game.availableMoves).toEqual([
-				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
-				{
-					location: { fixture: 'cascade', data: [6, 5] },
-					moveDestinationType: 'cascade:sequence',
-					priority: 10,
-				},
+			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+				['a', 'cell', -1],
+				['b', 'cell', -1],
+				['c', 'cell', -1],
+				['d', 'cell', -1],
+				['7⡅', 'cascade:sequence', 10],
 			]);
 		});
 
@@ -78,7 +75,7 @@ describe('game/move.findAvailableMoves', () => {
 				cards: [{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 4] } }],
 				peekOnly: false,
 			});
-			expect(game.availableMoves).toEqual([]);
+			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([]);
 		});
 	});
 
@@ -94,16 +91,12 @@ describe('game/move.findAvailableMoves', () => {
 				peekOnly: false,
 			});
 			expect(game.foundations[0]).toBe(null);
-			expect(game.availableMoves).toEqual([
-				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
-				{
-					location: { fixture: 'cascade', data: [6, 5] },
-					moveDestinationType: 'cascade:sequence',
-					priority: 4,
-				},
+			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+				['a', 'cell', -1],
+				['b', 'cell', -1],
+				['c', 'cell', -1],
+				['d', 'cell', -1],
+				['7⡅', 'cascade:sequence', 4],
 			]);
 		});
 
@@ -118,47 +111,15 @@ describe('game/move.findAvailableMoves', () => {
 				peekOnly: false,
 			});
 			// XXX (techdebt) unsure if we should prefer foundation or cells
-			expect(game.availableMoves).toEqual([
-				{
-					location: { fixture: 'cell', data: [0] },
-					moveDestinationType: 'cell',
-					priority: expect.any(Number) as number,
-				},
-				{
-					location: { fixture: 'cell', data: [1] },
-					moveDestinationType: 'cell',
-					priority: expect.any(Number) as number,
-				},
-				{
-					location: { fixture: 'cell', data: [2] },
-					moveDestinationType: 'cell',
-					priority: expect.any(Number) as number,
-				},
-				{
-					location: { fixture: 'cell', data: [3] },
-					moveDestinationType: 'cell',
-					priority: expect.any(Number) as number,
-				},
-				{
-					location: { fixture: 'foundation', data: [0] },
-					moveDestinationType: 'foundation',
-					priority: expect.any(Number) as number,
-				},
-				{
-					location: { fixture: 'foundation', data: [1] },
-					moveDestinationType: 'foundation',
-					priority: expect.any(Number) as number,
-				},
-				{
-					location: { fixture: 'foundation', data: [2] },
-					moveDestinationType: 'foundation',
-					priority: expect.any(Number) as number,
-				},
-				{
-					location: { fixture: 'foundation', data: [3] },
-					moveDestinationType: 'foundation',
-					priority: expect.any(Number) as number,
-				},
+			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+				['a', 'cell', -1],
+				['b', 'cell', -1],
+				['c', 'cell', -1],
+				['d', 'cell', -1],
+				['h⡀', 'foundation', 4],
+				['h⡁', 'foundation', 3],
+				['h⡂', 'foundation', 2],
+				['h⡃', 'foundation', 1],
 			]);
 		});
 
@@ -177,7 +138,7 @@ describe('game/move.findAvailableMoves', () => {
 				suit: 'clubs',
 				location: { fixture: 'foundation', data: [0] },
 			});
-			expect(game.availableMoves).toEqual([]);
+			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([]);
 		});
 
 		test('adjacent yes', () => {
@@ -195,17 +156,9 @@ describe('game/move.findAvailableMoves', () => {
 				suit: 'spades',
 				location: { fixture: 'foundation', data: [2] },
 			});
-			expect(game.availableMoves).toEqual([
-				{
-					location: { fixture: 'foundation', data: [2] },
-					moveDestinationType: 'foundation',
-					priority: -1,
-				},
-				{
-					location: { fixture: 'cascade', data: [4, 4] },
-					moveDestinationType: 'cascade:sequence',
-					priority: 4,
-				},
+			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+				['h⡂', 'foundation', -1],
+				['5⡄', 'cascade:sequence', 4],
 			]);
 		});
 	});
@@ -232,16 +185,12 @@ describe('game/move.findAvailableMoves', () => {
 				suit: 'hearts',
 				location: { fixture: 'cascade', data: [6, 5] },
 			});
-			expect(game.availableMoves).toEqual([
-				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
-				{
-					location: { fixture: 'cascade', data: [6, 5] },
-					moveDestinationType: 'cascade:sequence',
-					priority: 4,
-				},
+			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+				['a', 'cell', -1],
+				['b', 'cell', -1],
+				['c', 'cell', -1],
+				['d', 'cell', -1],
+				['7⡅', 'cascade:sequence', 4],
 			]);
 		});
 
@@ -257,7 +206,7 @@ describe('game/move.findAvailableMoves', () => {
 				cards: [{ rank: '7', suit: 'clubs', location: { fixture: 'cascade', data: [0, 5] } }],
 				peekOnly: false,
 			});
-			expect(game.availableMoves).toEqual([]);
+			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([]);
 		});
 	});
 

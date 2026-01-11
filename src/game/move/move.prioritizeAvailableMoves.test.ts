@@ -1,13 +1,5 @@
-import { shorthandPosition } from '@/game/card/card';
+import { availableMovesMinimized } from '@/app/testUtils';
 import { FreeCell } from '@/game/game';
-import { AvailableMove } from '@/game/move/move';
-
-function shorthandPositionPriority(availableMoves: AvailableMove[] | null) {
-	if (!availableMoves) return [];
-	return availableMoves
-		.filter(({ priority }) => priority > 0)
-		.map(({ location, priority }) => [shorthandPosition(location), priority]);
-}
 
 describe('prioritizeAvailableMoves', () => {
 	//** closest: when to use it */
@@ -23,19 +15,32 @@ describe('prioritizeAvailableMoves', () => {
 			);
 			game = game.touch();
 			expect(game.previousAction.text).toBe('select 4 JS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
-				['3', 13],
-				['6', 12],
+			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+				['a', 'cell', -1],
+				['b', 'cell', -1],
+				['c', 'cell', -1],
+				['d', 'cell', -1],
+				['h⡃', 'foundation', -1],
+				['1', 'cascade:empty', -1],
+				['2', 'cascade:empty', -1],
+				['3⡁', 'cascade:sequence', 13],
+				['5', 'cascade:empty', -1],
+				['6⡀', 'cascade:sequence', 12],
+				['8', 'cascade:empty', -1],
+			]);
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
+				['3⡁', 13],
+				['6⡀', 12],
 			]);
 			game = game.autoMove({ autoFoundation: false });
 			// if we don't move down, we select the sequence, we want to move the solo card for now
 			expect(game.touch().previousAction.text).toBe('select 3 QD-JS');
 			game = game.moveCursor('down').touch();
 			expect(game.previousAction.text).toBe('select 3 JS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([['6', 11]]);
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([['6⡀', 11]]);
 			game = game.autoMove({ autoFoundation: false }).moveCursor('down').touch();
 			expect(game.previousAction.text).toBe('select 6 JS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([['3', 6]]);
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([['3⡁', 6]]);
 			expect(game.print()).toBe(
 				'' + //
 					'             KC JD JH TS \n' +
@@ -57,19 +62,19 @@ describe('prioritizeAvailableMoves', () => {
 			);
 			game = game.touch();
 			expect(game.previousAction.text).toBe('select 7 JS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
-				['3', 7],
-				['6', 13],
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
+				['3⡁', 7],
+				['6⡀', 13],
 			]);
 			game = game.autoMove({ autoFoundation: false });
 			// if we don't move down, we select the sequence, we want to move the solo card for now
 			expect(game.touch().previousAction.text).toBe('select 6 QH-JS');
 			game = game.moveCursor('down').touch();
 			expect(game.previousAction.text).toBe('select 6 JS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([['3', 6]]);
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([['3⡁', 6]]);
 			game = game.autoMove({ autoFoundation: false }).moveCursor('down').touch();
 			expect(game.previousAction.text).toBe('select 3 JS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([['6', 11]]);
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([['6⡀', 11]]);
 			expect(game.print()).toBe(
 				'' + //
 					'             KC JD JH TS \n' +
@@ -93,22 +98,22 @@ describe('prioritizeAvailableMoves', () => {
 			);
 			game = game.touch();
 			expect(game.previousAction.text).toBe('select 4 QD-JS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([['3', 13]]);
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([['3⡀', 13]]);
 			game = game.autoMove({ autoFoundation: false });
 			// if we don't move down, we select the larger sequence
 			expect(game.touch().previousAction.text).toBe('select 3 KS-QD-JS');
 			game = game.moveCursor('down').touch();
 			expect(game.previousAction.text).toBe('select 3 QD-JS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
-				['1', 11],
-				['2', 13],
-				['4', 14],
-				['5', 12],
-				['8', 6],
+			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+				['1', 'cascade:empty', 11],
+				['2', 'cascade:empty', 13],
+				['4', 'cascade:empty', 14],
+				['5', 'cascade:empty', 12],
+				['8', 'cascade:empty', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
 			expect(game.previousAction.text).toBe('select 4 QD-JS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([['3', 13]]);
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([['3⡀', 13]]);
 			expect(game.print()).toBe(
 				'' + //
 					'             KC JD JH TS \n' +
@@ -131,7 +136,7 @@ describe('prioritizeAvailableMoves', () => {
 			expect(game.tableau.length).toBe(5);
 			game = game.touch();
 			expect(game.previousAction.text).toBe('select 3 KS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['2', 4],
 				['4', 7],
@@ -139,7 +144,7 @@ describe('prioritizeAvailableMoves', () => {
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
 			expect(game.previousAction.text).toBe('select 4 KS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['2', 4],
 				['3', 3],
@@ -166,7 +171,7 @@ describe('prioritizeAvailableMoves', () => {
 			expect(game.tableau.length).toBe(5);
 			game = game.touch();
 			expect(game.previousAction.text).toBe('select 3 KS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 1],
 				['2', 2],
 				['4', 4],
@@ -174,35 +179,35 @@ describe('prioritizeAvailableMoves', () => {
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
 			expect(game.previousAction.text).toBe('select 5 KS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['2', 4],
 				['4', 2],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
 			expect(game.previousAction.text).toBe('select 1 KS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['2', 9],
 				['4', 7],
 				['5', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
 			expect(game.previousAction.text).toBe('select 2 KS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['4', 7],
 				['5', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
 			expect(game.previousAction.text).toBe('select 4 KS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['2', 4],
 				['5', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
 			expect(game.previousAction.text).toBe('select 5 KS');
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['2', 4],
 				['4', 2],
@@ -242,7 +247,7 @@ describe('prioritizeAvailableMoves', () => {
 				text: 'select 6 KC',
 				type: 'select',
 			});
-			expect(shorthandPositionPriority(game.availableMoves)).toEqual([['h', 3]]);
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([['h⡁', 3]]);
 			expect(game.autoMove().print()).toBe(
 				'' +
 					'             QH>KC 2D    \n' +
@@ -280,7 +285,7 @@ describe('prioritizeAvailableMoves', () => {
 						peekOnly: true,
 					});
 					// cannot move from the deck
-					expect(shorthandPositionPriority(game.availableMoves)).toEqual([]);
+					expect(availableMovesMinimized(game.availableMoves)).toEqual([]);
 					expect(game.clearSelection().$touchAndMove().print()).toBe(
 						'' + //
 							'             KC KD TH KS \n' +
@@ -309,7 +314,7 @@ describe('prioritizeAvailableMoves', () => {
 							'          QH             \n' +
 							' hand-jammed'
 					);
-					expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+					expect(availableMovesMinimized(game.availableMoves)).toEqual([
 						['1', 1],
 						['2', 2],
 						['3', 3],
@@ -343,7 +348,7 @@ describe('prioritizeAvailableMoves', () => {
 						peekOnly: true,
 					});
 					// cannot move off the foundation
-					expect(shorthandPositionPriority(game.availableMoves)).toEqual([]);
+					expect(availableMovesMinimized(game.availableMoves)).toEqual([]);
 					// cannot select the foundation
 					expect(game.clearSelection().$touchAndMove().print()).toBe(
 						'' + //
@@ -371,7 +376,7 @@ describe('prioritizeAvailableMoves', () => {
 							' hand-jammed'
 					);
 					// no (king already on root)
-					expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+					expect(availableMovesMinimized(game.availableMoves)).toEqual([
 						['2', 15],
 						['3', 14],
 						['5', 12],
@@ -397,7 +402,7 @@ describe('prioritizeAvailableMoves', () => {
 							'         >KH|            \n' +
 							' hand-jammed'
 					);
-					expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+					expect(availableMovesMinimized(game.availableMoves)).toEqual([
 						['1', 1],
 						['2', 2],
 						['3', 3],
@@ -424,7 +429,7 @@ describe('prioritizeAvailableMoves', () => {
 							' hand-jammed'
 					);
 					// no (king already on root)
-					expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+					expect(availableMovesMinimized(game.availableMoves)).toEqual([
 						['1', 8],
 						['3', 14],
 						['6', 11],
@@ -449,7 +454,7 @@ describe('prioritizeAvailableMoves', () => {
 							'            |QS|         \n' +
 							' hand-jammed'
 					);
-					expect(shorthandPositionPriority(game.availableMoves)).toEqual([
+					expect(availableMovesMinimized(game.availableMoves)).toEqual([
 						['1', 1],
 						['2', 2],
 						['3', 3],

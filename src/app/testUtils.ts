@@ -1,4 +1,6 @@
 import { gsap } from 'gsap/all';
+import { shorthandPosition } from '@/game/card/card';
+import { AvailableMove } from '@/game/move/move';
 
 export function spyOnGsap(_gsap: typeof gsap) {
 	const gsapToSpy = jest.spyOn(_gsap, 'to');
@@ -125,4 +127,19 @@ function accumulateGsapTweenVars(list: gsap.TweenVars[]): Record<string, number>
 	delete counts.duration;
 	delete counts.ease;
 	return counts;
+}
+
+export function availableMovesMinimized(availableMoves: AvailableMove[] | null, all = false) {
+	if (!availableMoves) return null;
+	if (!availableMoves.length) return [];
+	return availableMoves
+		.filter(({ priority }) => all || priority > 0)
+		.map(({ location, moveDestinationType, priority }) => [
+			shorthandPosition(
+				location,
+				moveDestinationType === 'foundation' || moveDestinationType === 'cascade:sequence'
+			),
+			...(all ? [moveDestinationType] : []),
+			priority,
+		]);
 }

@@ -1,3 +1,4 @@
+import { availableMovesMinimized } from '@/app/testUtils';
 import { FreeCell } from '@/game/game';
 import { AvailableMove, MoveDestinationType } from '@/game/move/move';
 
@@ -36,10 +37,10 @@ describe('game.autoMove', () => {
 
 				game = game.touch();
 
-				expect(game.availableMoves).toEqual([
-					{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: 7 },
-					{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: 6 },
-					{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: 5 },
+				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+					['b', 'cell', 7],
+					['c', 'cell', 6],
+					['d', 'cell', 5],
 				]);
 
 				game = game.autoMove({ autoFoundation: false });
@@ -54,10 +55,10 @@ describe('game.autoMove', () => {
 
 				game = game.touch();
 
-				expect(game.availableMoves).toEqual([
-					{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: 4 },
-					{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: 6 },
-					{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: 5 },
+				expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					['a', 4],
+					['c', 6],
+					['d', 5],
 				]);
 
 				game = game.autoMove({ autoFoundation: false });
@@ -72,10 +73,10 @@ describe('game.autoMove', () => {
 
 				game = game.touch();
 
-				expect(game.availableMoves).toEqual([
-					{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: 4 },
-					{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: 3 },
-					{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: 5 },
+				expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					['a', 4],
+					['b', 3],
+					['d', 5],
 				]);
 
 				game = game.autoMove({ autoFoundation: false });
@@ -90,10 +91,10 @@ describe('game.autoMove', () => {
 
 				game = game.touch();
 
-				expect(game.availableMoves).toEqual([
-					{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: 4 },
-					{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: 3 },
-					{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: 2 },
+				expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					['a', 4],
+					['b', 3],
+					['c', 2],
 				]);
 
 				game = game.autoMove({ autoFoundation: false });
@@ -136,22 +137,10 @@ describe('game.autoMove', () => {
 
 				game = game.touch();
 
-				expect(game.availableMoves).toEqual([
-					{
-						location: { fixture: 'cascade', data: [1, 0] },
-						moveDestinationType: 'cascade:empty',
-						priority: 7,
-					},
-					{
-						location: { fixture: 'cascade', data: [2, 0] },
-						moveDestinationType: 'cascade:empty',
-						priority: 6,
-					},
-					{
-						location: { fixture: 'cascade', data: [3, 0] },
-						moveDestinationType: 'cascade:empty',
-						priority: 5,
-					},
+				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+					['2', 'cascade:empty', 7],
+					['3', 'cascade:empty', 6],
+					['4', 'cascade:empty', 5],
 				]);
 
 				game = game.autoMove({ autoFoundation: false });
@@ -165,22 +154,10 @@ describe('game.autoMove', () => {
 
 				game = game.touch().autoMove({ autoFoundation: false }).touch();
 
-				expect(game.availableMoves).toEqual([
-					{
-						location: { fixture: 'cascade', data: [0, 0] },
-						moveDestinationType: 'cascade:empty',
-						priority: 4,
-					},
-					{
-						location: { fixture: 'cascade', data: [1, 0] },
-						moveDestinationType: 'cascade:empty',
-						priority: 3,
-					},
-					{
-						location: { fixture: 'cascade', data: [3, 0] },
-						moveDestinationType: 'cascade:empty',
-						priority: 5,
-					},
+				expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					['1', 4],
+					['2', 3],
+					['4', 5],
 				]);
 
 				game = game.autoMove({ autoFoundation: false });
@@ -311,57 +288,17 @@ describe('game.autoMove', () => {
 							' hand-jammed'
 					).touch();
 
-					expect(game.availableMoves).toEqual([
-						{
-							location: { fixture: 'cell', data: [0] },
-							moveDestinationType: 'cell',
-							priority: -1,
-						},
-						{
-							location: { fixture: 'cell', data: [1] },
-							moveDestinationType: 'cell',
-							priority: -1,
-						},
-						{
-							location: { fixture: 'cell', data: [2] },
-							moveDestinationType: 'cell',
-							priority: -1,
-						},
-						{
-							location: { fixture: 'cell', data: [3] },
-							moveDestinationType: 'cell',
-							priority: -1,
-						},
-						{
-							location: { fixture: 'cascade', data: [2, 0] },
-							moveDestinationType: 'cascade:empty',
-							priority: -1,
-						},
-						{
-							location: { fixture: 'cascade', data: [3, 0] },
-							moveDestinationType: 'cascade:empty',
-							priority: -1,
-						},
-						{
-							location: { fixture: 'cascade', data: [4, 0] },
-							moveDestinationType: 'cascade:sequence',
-							priority: 12,
-						},
-						{
-							location: { fixture: 'cascade', data: [5, 0] },
-							moveDestinationType: 'cascade:empty',
-							priority: -1,
-						},
-						{
-							location: { fixture: 'cascade', data: [6, 0] },
-							moveDestinationType: 'cascade:empty',
-							priority: -1,
-						},
-						{
-							location: { fixture: 'cascade', data: [7, 0] },
-							moveDestinationType: 'cascade:empty',
-							priority: -1,
-						},
+					expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+						['a', 'cell', -1],
+						['b', 'cell', -1],
+						['c', 'cell', -1],
+						['d', 'cell', -1],
+						['3', 'cascade:empty', -1],
+						['4', 'cascade:empty', -1],
+						['5⡀', 'cascade:sequence', 12],
+						['6', 'cascade:empty', -1],
+						['7', 'cascade:empty', -1],
+						['8', 'cascade:empty', -1],
 					]);
 
 					expect(collectUniquePriorities(game.availableMoves)).toEqual({
@@ -525,36 +462,16 @@ describe('game.autoMove', () => {
 							' copy-pasta'
 					).touch();
 
-					expect(game.availableMoves).toEqual([
-						{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
-						{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
-						{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
-						{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
-						{
-							location: { fixture: 'foundation', data: [0] },
-							moveDestinationType: 'foundation',
-							priority: 4,
-						},
-						{
-							location: { fixture: 'foundation', data: [1] },
-							moveDestinationType: 'foundation',
-							priority: 3,
-						},
-						{
-							location: { fixture: 'foundation', data: [2] },
-							moveDestinationType: 'foundation',
-							priority: 2,
-						},
-						{
-							location: { fixture: 'foundation', data: [3] },
-							moveDestinationType: 'foundation',
-							priority: 1,
-						},
-						{
-							location: { fixture: 'cascade', data: [1, 6] },
-							moveDestinationType: 'cascade:sequence',
-							priority: -1,
-						},
+					expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+						['a', 'cell', -1],
+						['b', 'cell', -1],
+						['c', 'cell', -1],
+						['d', 'cell', -1],
+						['h⡀', 'foundation', 4],
+						['h⡁', 'foundation', 3],
+						['h⡂', 'foundation', 2],
+						['h⡃', 'foundation', 1],
+						['2⡆', 'cascade:sequence', -1],
 					]);
 
 					expect(game.autoMove({ autoFoundation: false }).print()).toBe(

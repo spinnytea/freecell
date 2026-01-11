@@ -59,10 +59,10 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 	  - e.g. "empty cascades" would favor
 	    - cell → foundation
 	    - cascade:single → foundation
-	- FIXME (controls) only single -> foundation if opp+2 or no other option
+	- FIXME WIP-opp (controls) only single -> foundation if opp+2 or no other option
 	    - put it last in the list, or IFF do it first
 	- IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
-	- FIXME (2-priority) (controls) (click-to-move) Prioritize moving cards to a completed sequence
+	- FIXME WIP-pile (2-priority) (controls) (click-to-move) Prioritize moving cards to a completed sequence
 	    - when between 2 cards of different suit
 	    - when the root of it is at the top of a column (to sequence that starts at a pile)
 	    - i.e. select by column and see if it's `data: [c, 0]`
@@ -142,7 +142,7 @@ function calcMoveDestinationTypePriority(
 		}
 	}
 
-	// FIXME (controls) prioritize single -> foundation if opp+2
+	// FIXME WIP-opp (controls) prioritize single -> foundation if opp+2
 	// if (selection.cards.length === 1) {
 	// 	const moving_card = selection.cards[0];
 	// 	const selectionIdx = game.foundations.findIndex((c) => c?.suit === moving_card.suit);

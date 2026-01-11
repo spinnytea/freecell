@@ -1085,8 +1085,8 @@ describe('game.undo (+ history)', () => {
 					'flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS',
 				]);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
-				expect(game.selection).toEqual(null);
-				expect(game.availableMoves).toEqual(null);
+				expect(game.selection).toBe(null);
+				expect(game.availableMoves).toBe(null);
 				expect(game.win).toBe(true);
 				expect(game.winIsFlourish).toBe(true);
 				expect(game.winIsFlourish52).toBe(false);
@@ -1107,8 +1107,8 @@ describe('game.undo (+ history)', () => {
 				});
 				expect(game.history).toEqual(['hand-jammed', 'move 78 AS→cascade']);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 0] });
-				expect(game.selection).toEqual(null);
-				expect(game.availableMoves).toEqual(null);
+				expect(game.selection).toBe(null);
+				expect(game.availableMoves).toBe(null);
 
 				game = game.undo();
 				expect(game.print({ includeHistory: true })).toEqual(
@@ -1125,8 +1125,8 @@ describe('game.undo (+ history)', () => {
 				});
 				expect(game.history).toEqual(['hand-jammed']);
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
-				expect(game.selection).toEqual(null);
-				expect(game.availableMoves).toEqual(null);
+				expect(game.selection).toBe(null);
+				expect(game.availableMoves).toBe(null);
 			});
 
 			test('52-card flourish', () => {
@@ -1230,8 +1230,8 @@ describe('game.undo (+ history)', () => {
 					'move 53 6H→7C (auto-foundation 2 AD)',
 				]);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
-				expect(game.selection).toEqual(null);
-				expect(game.availableMoves).toEqual(null);
+				expect(game.selection).toBe(null);
+				expect(game.availableMoves).toBe(null);
 
 				game = game.undo();
 				expect(game.print({ includeHistory: true })).toBe(

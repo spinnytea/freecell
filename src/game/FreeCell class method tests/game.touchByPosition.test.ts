@@ -1,4 +1,5 @@
 import { omit as _omit } from 'lodash';
+import { availableMovesMinimized } from '@/app/testUtils';
 import { Position } from '@/game/card/card';
 import { getMoves } from '@/game/catalog/solutions-catalog';
 import { FreeCell } from '@/game/game';
@@ -52,7 +53,7 @@ describe('game.touchByPosition', () => {
 					cards: [{ rank: '6', suit: 'hearts', location: { fixture: 'deck', data: [7] } }],
 					peekOnly: true,
 				});
-				expect(game.availableMoves).toEqual([]);
+				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([]);
 			});
 		});
 
@@ -78,14 +79,10 @@ describe('game.touchByPosition', () => {
 					cards: [{ rank: '10', suit: 'hearts', location: { fixture: 'cell', data: [1] } }],
 					peekOnly: false,
 				});
-				expect(game.availableMoves).toEqual([
-					{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
-					{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
-					{
-						location: { fixture: 'cascade', data: [4, 0] },
-						moveDestinationType: 'cascade:empty',
-						priority: 8,
-					},
+				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+					['a', 'cell', -1],
+					['d', 'cell', -1],
+					['5', 'cascade:empty', 8],
 				]);
 			});
 		});
@@ -134,22 +131,10 @@ describe('game.touchByPosition', () => {
 					cards: [{ rank: '10', suit: 'hearts', location: { fixture: 'cascade', data: [4, 0] } }],
 					peekOnly: false,
 				});
-				expect(game.availableMoves).toEqual([
-					{
-						location: { fixture: 'cell', data: [0] },
-						moveDestinationType: 'cell',
-						priority: 4,
-					},
-					{
-						location: { fixture: 'cell', data: [1] },
-						moveDestinationType: 'cell',
-						priority: 3,
-					},
-					{
-						location: { fixture: 'cell', data: [3] },
-						moveDestinationType: 'cell',
-						priority: 1,
-					},
+				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+					['a', 'cell', 4],
+					['b', 'cell', 3],
+					['d', 'cell', 1],
 				]);
 			});
 
@@ -167,12 +152,8 @@ describe('game.touchByPosition', () => {
 					],
 					peekOnly: false,
 				});
-				expect(game.availableMoves).toEqual([
-					{
-						location: { fixture: 'cascade', data: [4, 0] },
-						moveDestinationType: 'cascade:empty',
-						priority: 10,
-					},
+				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
+					['5', 'cascade:empty', 10],
 				]);
 			});
 
@@ -199,7 +180,7 @@ describe('game.touchByPosition', () => {
 					],
 					peekOnly: false,
 				});
-				expect(game.availableMoves).toEqual([]);
+				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([]);
 			});
 
 			test('tanget: can then go on to other tasks', () => {
