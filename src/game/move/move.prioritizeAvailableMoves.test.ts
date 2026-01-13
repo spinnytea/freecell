@@ -172,10 +172,17 @@ describe('prioritizeAvailableMoves', () => {
 			game = game.touch();
 			expect(game.previousAction.text).toBe('select 3 KS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
-				['1', 1],
-				['2', 2],
-				['4', 4],
-				['5', 5],
+				['1', 5],
+				['2', 7],
+				['4', 8],
+				['5', 6],
+			]);
+			game = game.autoMove({ autoFoundation: false }).touch();
+			expect(game.previousAction.text).toBe('select 4 KS');
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
+				['1', 5],
+				['2', 4],
+				['5', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
 			expect(game.previousAction.text).toBe('select 5 KS');
@@ -184,6 +191,7 @@ describe('prioritizeAvailableMoves', () => {
 				['2', 4],
 				['4', 2],
 			]);
+			// …do an extra lap because of deprecated king→cascade:empty rightJustifyAvailableMovesPriority
 			game = game.autoMove({ autoFoundation: false }).touch();
 			expect(game.previousAction.text).toBe('select 1 KS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
@@ -268,7 +276,27 @@ describe('prioritizeAvailableMoves', () => {
 			expect(game.autoMove().print()).toBe(game.clearSelection().$touchAndMove().print());
 		});
 
-		describe('king→cascade:empty linearPriorityMode', () => {
+		/**
+			the situations where this is useful is vanishing small
+			it may be where we want the cards (roughly, for some styles of play)
+			more often than not it feels wrong or jarring
+			we collapse consecutive moves, so it's not like it impacts history
+			the implemenation is easy, but it's not trivial
+			all in all, it's just not with it
+
+			const useRightJustify =
+				// kings
+				moving_card.rank === 'king' &&
+				// going to an empty cascade
+				moveDestinationType === 'cascade:empty' &&
+				// from "not the cascades" (cell, foundation, deck)
+				// from the cascades, but not already at the root
+				(moving_card.location.data.at(1) === undefined || moving_card.location.data.at(1) !== 0);
+
+			@see linearAvailableMovesPriority
+			@see closestAvailableMovesPriority
+		 */
+		describe('deprecated king→cascade:empty rightJustifyAvailableMovesPriority', () => {
 			describe('MoveSourceType', () => {
 				test('deck', () => {
 					const game = FreeCell.parse(
@@ -314,7 +342,9 @@ describe('prioritizeAvailableMoves', () => {
 							'          QH             \n' +
 							' hand-jammed'
 					);
-					expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					// this is what it would be if we were to implement it
+					// (this is what it was when did for a hot second)
+					expect(availableMovesMinimized(game.availableMoves)).not.toEqual([
 						['1', 1],
 						['2', 2],
 						['3', 3],
@@ -323,12 +353,29 @@ describe('prioritizeAvailableMoves', () => {
 						['7', 7],
 						['8', 8],
 					]);
-					expect(game.clearSelection().$touchAndMove().print()).toBe(
+					expect(game.clearSelection().$touchAndMove().print()).not.toBe(
 						'' + //
 							'             KC KD TH KS \n' +
 							'          JH         >KH \n' +
 							'          QH             \n' +
 							' move a8 KH→cascade'
+					);
+					// instead, just keep the status quo
+					expect(availableMovesMinimized(game.availableMoves)).toEqual([
+						['1', 16],
+						['2', 14],
+						['3', 12],
+						['5', 8],
+						['6', 6],
+						['7', 4],
+						['8', 2],
+					]);
+					expect(game.clearSelection().$touchAndMove().print()).toBe(
+						'' + //
+							'             KC KD TH KS \n' +
+							'>KH       JH             \n' +
+							'          QH             \n' +
+							' move a1 KH→cascade'
 					);
 				});
 
@@ -402,7 +449,9 @@ describe('prioritizeAvailableMoves', () => {
 							'         >KH|            \n' +
 							' hand-jammed'
 					);
-					expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					// this is what it would be if we were to implement it
+					// (this is what it was when did for a hot second)
+					expect(availableMovesMinimized(game.availableMoves)).not.toEqual([
 						['1', 1],
 						['2', 2],
 						['3', 3],
@@ -411,12 +460,29 @@ describe('prioritizeAvailableMoves', () => {
 						['7', 7],
 						['8', 8],
 					]);
-					expect(game.clearSelection().$touchAndMove().print()).toBe(
+					expect(game.clearSelection().$touchAndMove().print()).not.toBe(
 						'' + //
 							'             KC KD TH KS \n' +
 							'          JH         >KH \n' +
 							'          QH             \n' +
 							' move 48 KH→cascade'
+					);
+					// instead, just keep the status quo
+					expect(availableMovesMinimized(game.availableMoves)).toEqual([
+						['1', 9],
+						['2', 11],
+						['3', 13],
+						['5', 14],
+						['6', 12],
+						['7', 10],
+						['8', 8],
+					]);
+					expect(game.clearSelection().$touchAndMove().print()).toBe(
+						'' + //
+							'             KC KD TH KS \n' +
+							'          JH>KH          \n' +
+							'          QH             \n' +
+							' move 45 KH→cascade'
 					);
 				});
 
@@ -454,7 +520,9 @@ describe('prioritizeAvailableMoves', () => {
 							'            |QS|         \n' +
 							' hand-jammed'
 					);
-					expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					// this is what it would be if we were to implement it
+					// (this is what it was when did for a hot second)
+					expect(availableMovesMinimized(game.availableMoves)).not.toEqual([
 						['1', 1],
 						['2', 2],
 						['3', 3],
@@ -462,12 +530,28 @@ describe('prioritizeAvailableMoves', () => {
 						['7', 7],
 						['8', 8],
 					]);
-					expect(game.clearSelection().$touchAndMove().print()).toBe(
+					expect(game.clearSelection().$touchAndMove().print()).not.toBe(
 						'' + //
 							'             KC KD TH JS \n' +
 							'          JH KS      >KH \n' +
 							'          QH          QS \n' +
 							' move 58 KH-QS→cascade'
+					);
+					// instad, just keep the status quo
+					expect(availableMovesMinimized(game.availableMoves)).toEqual([
+						['1', 7],
+						['2', 9],
+						['3', 11],
+						['6', 14],
+						['7', 12],
+						['8', 10],
+					]);
+					expect(game.clearSelection().$touchAndMove().print()).toBe(
+						'' + //
+							'             KC KD TH JS \n' +
+							'          JH KS>KH       \n' +
+							'          QH    QS       \n' +
+							' move 56 KH-QS→cascade'
 					);
 				});
 			});

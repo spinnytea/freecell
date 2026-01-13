@@ -99,7 +99,7 @@ export const MoveDestinationTypePriorities: {
 	},
 	'cascade:sequence': {
 		'cell': 1,
-		'foundation': 2,
+		'foundation': 2, // FIXME test cascade:sequence→foundation
 		'cascade:empty': 3,
 		'cascade:sequence': 4,
 	},
@@ -119,40 +119,39 @@ function calcMoveDestinationTypePriority(
 	selection: CardSequence,
 	moveSourceType: MoveSourceType
 ) {
-	let MoveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
+	const MoveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
 
-	if (moveSourceType === 'cascade:single' && selection.cards.length === 1) {
+	if (selection.cards.length === 1) {
 		const moving_card = selection.cards[0];
-		if (moving_card.rank === 'king') {
-			const isQueenInFoundation = game.foundations.some(
-				(c) => c?.rank === 'queen' && c.suit === moving_card.suit
-			);
-			if (!isQueenInFoundation) {
-				MoveDestinationTypePriority = {
+		if (moveSourceType === 'cascade:single') {
+			if (moving_card.rank === 'king') {
+				const isQueenInFoundation = game.foundations.some(
+					(c) => c?.rank === 'queen' && c.suit === moving_card.suit
+				);
+				if (!isQueenInFoundation) {
+					return {
+						...MoveDestinationTypePriority,
+						'cascade:empty': MoveDestinationTypePriority['cascade:empty'] + 4,
+					};
+				}
+			} else if (moving_card.rank === 'ace') {
+				// aces always go to the foundation
+				return {
 					...MoveDestinationTypePriority,
-					'cascade:empty': MoveDestinationTypePriority['cascade:empty'] + 4,
+					foundation: MoveDestinationTypePriority.foundation + 4,
 				};
 			}
-		} else if (moving_card.rank === 'ace') {
-			// aces always go to the foundation
-			MoveDestinationTypePriority = {
-				...MoveDestinationTypePriority,
-				foundation: MoveDestinationTypePriority.foundation + 4,
-			};
 		}
-	}
 
-	// FIXME WIP-opp (controls) prioritize single -> foundation if opp+2
-	// if (selection.cards.length === 1) {
-	// 	const moving_card = selection.cards[0];
-	// 	const selectionIdx = game.foundations.findIndex((c) => c?.suit === moving_card.suit);
-	// 	if (foundationCanAcceptCards(game, selectionIdx, 'opp+2')) {
-	// 		MoveDestinationTypePriority = {
-	// 			...MoveDestinationTypePriority,
-	// 			foundation: MoveDestinationTypePriority.foundation + 4,
-	// 		};
-	// 	}
-	// }
+		// FIXME WIP-opp (controls) prioritize *:single→foundation if opp+2
+		// const selectionIdx = game.foundations.findIndex((c) => c?.suit === moving_card.suit);
+		// if (foundationCanAcceptCards(game, selectionIdx, 'opp+2')) {
+		// 	return {
+		// 		...MoveDestinationTypePriority,
+		// 		foundation: MoveDestinationTypePriority.foundation + 4,
+		// 	};
+		// }
+	}
 
 	return MoveDestinationTypePriority;
 }
@@ -479,23 +478,8 @@ function prioritizeAvailableMoves(
 					? sourceD0
 					: undefined;
 
-			const useRightJustify =
-				// kings
-				moving_card.rank === 'king' &&
-				// going to an empty cascade
-				moveDestinationType === 'cascade:empty' &&
-				// from "not the cascades" (cell, foundation, deck)
-				// from the cascades, but not already at the root
-				(moving_card.location.data.at(1) === undefined || moving_card.location.data.at(1) !== 0);
-
 			availableMoves.forEach((availableMove) => {
-				if (useRightJustify) {
-					availableMove.priority = rightJustifyAvailableMovesPriority(
-						game.tableau.length,
-						availableMove.location.data[0],
-						sourceD0OrNah
-					);
-				} else if (useLinear) {
+				if (useLinear) {
 					availableMove.priority = linearAvailableMovesPriority(
 						game.tableau.length,
 						availableMove.location.data[0],
