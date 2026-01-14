@@ -59,8 +59,6 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 	  - e.g. "empty cascades" would favor
 	    - cell → foundation
 	    - cascade:single → foundation
-	- FIXME WIP-opp (controls) only single -> foundation if opp+2 or no other option
-	    - put it last in the list, or IFF do it first
 	- IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
 	- FIXME WIP-pile (2-priority) (controls) (click-to-move) Prioritize moving cards to a completed sequence
 	    - when between 2 cards of different suit
@@ -99,7 +97,7 @@ export const MoveDestinationTypePriorities: {
 	},
 	'cascade:sequence': {
 		'cell': 1,
-		'foundation': 2, // FIXME test cascade:sequence→foundation
+		'foundation': 2,
 		'cascade:empty': 3,
 		'cascade:sequence': 4,
 	},
@@ -141,16 +139,17 @@ function calcMoveDestinationTypePriority(
 					foundation: MoveDestinationTypePriority.foundation + 4,
 				};
 			}
-		}
 
-		// FIXME WIP-opp (controls) prioritize *:single→foundation if opp+2
-		// const selectionIdx = game.foundations.findIndex((c) => c?.suit === moving_card.suit);
-		// if (foundationCanAcceptCards(game, selectionIdx, 'opp+2')) {
-		// 	return {
-		// 		...MoveDestinationTypePriority,
-		// 		foundation: MoveDestinationTypePriority.foundation + 4,
-		// 	};
-		// }
+			// prioritize *:single→foundation, if opp+2 would auto-foundation
+			// XXX (settings) skip this if game settings are opp+2 or none
+			const selectionIdx = game.foundations.findIndex((c) => c?.suit === moving_card.suit);
+			if (foundationCanAcceptCards(game, selectionIdx, 'opp+2')) {
+				return {
+					...MoveDestinationTypePriority,
+					foundation: MoveDestinationTypePriority.foundation + 4,
+				};
+			}
+		}
 	}
 
 	return MoveDestinationTypePriority;
@@ -171,29 +170,26 @@ export interface AvailableMove {
 		helps pick the best move for "auto-foundation"
 
 		if we are going to visualize them debug mode, we need to have it precomputed
-		we really only need high|low for this
+
+		we really only need a boolean for "best" since auto-move will only pick the one,
+		having the numbers is better for testing
 	*/
 	priority: number;
 }
 
 // TODO (settings) these _exist_, but we need to be able to pick them
-// XXX (gameplay) If Q is in foundation, then K can go too
-//  - esp if "click to move"
-//  - maybe I'm butthurt about auto foundation rules
 export type AutoFoundationLimit =
 	// move all cards that can go up
 	// i.e. 3KKK
 	| 'none'
 
-	// if we have black 3,5
-	// we can put up all the red 5s
-	// i.e. since we know all the black 4s can go up
+	// 3s are set, all 4s can go up so all red 5s do, black 7 can go up since red 6s can
+	// i.e. 3575
 	// (the best we can safely do)
 	| 'opp+2'
 
 	// 3s are set, all the 4s and 5s, red 6s IFF black 5s are up
-	// i.e. 3565, 0342
-	// all not needed for developing sequences, opp rank + 1
+	// i.e. 3565
 	// (this is standard gameplay)
 	| 'opp+1'
 
