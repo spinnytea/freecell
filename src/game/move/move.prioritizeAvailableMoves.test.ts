@@ -9,8 +9,8 @@ describe('prioritizeAvailableMoves', () => {
 			let game = FreeCell.parse(
 				'' + //
 					'             KC 8D 8H TS \n' +
-					'       KS>JS    QH KH    \n' +
-					'       QD                \n' +
+					'    KS QD>JS    QH KH    \n' +
+					'                         \n' +
 					' hand-jammed'
 			);
 			game = game.touch();
@@ -22,14 +22,13 @@ describe('prioritizeAvailableMoves', () => {
 				['d', 'cell', -1],
 				['h⡃', 'foundation', -1],
 				['1', 'cascade:empty', -1],
-				['2', 'cascade:empty', -1],
-				['3⡁', 'cascade:sequence', 13],
+				['3⡀', 'cascade:sequence', 13],
 				['5', 'cascade:empty', -1],
 				['6⡀', 'cascade:sequence', 12],
 				['8', 'cascade:empty', -1],
 			]);
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
-				['3⡁', 13],
+				['3⡀', 13],
 				['6⡀', 12],
 			]);
 			game = game.autoMove({ autoFoundation: false });
@@ -40,12 +39,12 @@ describe('prioritizeAvailableMoves', () => {
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([['6⡀', 11]]);
 			game = game.autoMove({ autoFoundation: false }).moveCursor('down').touch();
 			expect(game.previousAction.text).toBe('select 6 JS');
-			expect(availableMovesMinimized(game.availableMoves)).toEqual([['3⡁', 6]]);
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([['3⡀', 6]]);
 			expect(game.print()).toBe(
 				'' + //
 					'             KC 8D 8H TS \n' +
-					'       KS       QH KH    \n' +
-					'       QD      >JS|      \n' +
+					'    KS QD       QH KH    \n' +
+					'               >JS|      \n' +
 					':d KD QS JH JD TH TD 9H 9D \n' +
 					' select 6 JS'
 			);
@@ -56,14 +55,14 @@ describe('prioritizeAvailableMoves', () => {
 			let game = FreeCell.parse(
 				'' + //
 					'             KC 8D 8H TS \n' +
-					'       KS       QH KH    \n' +
-					'       QD         >JS    \n' +
+					'    KS QD       QH KH    \n' +
+					'                  >JS    \n' +
 					' hand-jammed'
 			);
 			game = game.touch();
 			expect(game.previousAction.text).toBe('select 7 JS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
-				['3⡁', 7],
+				['3⡀', 7],
 				['6⡀', 13],
 			]);
 			game = game.autoMove({ autoFoundation: false });
@@ -71,15 +70,14 @@ describe('prioritizeAvailableMoves', () => {
 			expect(game.touch().previousAction.text).toBe('select 6 QH-JS');
 			game = game.moveCursor('down').touch();
 			expect(game.previousAction.text).toBe('select 6 JS');
-			expect(availableMovesMinimized(game.availableMoves)).toEqual([['3⡁', 6]]);
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([['3⡀', 6]]);
 			game = game.autoMove({ autoFoundation: false }).moveCursor('down').touch();
 			expect(game.previousAction.text).toBe('select 3 JS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([['6⡀', 11]]);
 			expect(game.print()).toBe(
 				'' + //
 					'             KC 8D 8H TS \n' +
-					'       KS       QH KH    \n' +
-					'       QD                \n' +
+					'    KS QD       QH KH    \n' +
 					'      >JS|               \n' +
 					':d KD QS JH JD TH TD 9H 9D \n' +
 					' select 3 JS'
@@ -273,6 +271,297 @@ describe('prioritizeAvailableMoves', () => {
 				' move 6h KC→QC'
 		);
 		expect(game.autoMove().print()).toBe(game.clearSelection().$touchAndMove().print());
+	});
+
+	describe('prioritize moving cards to a completed sequence', () => {
+		describe('prioritize longer if both are royal piles', () => {
+			test('previous test a', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'             KC 8D 8H TS \n' +
+						'       KS>JS    QH KH    \n' +
+						'       QD                \n' +
+						' hand-jammed'
+				).touch();
+				expect(game.previousAction).toEqual({
+					text: 'select 4 JS',
+					type: 'select',
+				});
+				expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					['3⡁', 2],
+					['6⡀', 1],
+				]);
+				expect(game.autoMove().previousAction.text).toBe('move 43 JS→QD');
+				// move again, uses other option, collapses move
+				expect(game.autoMove().$selectCard('JS').autoMove().previousAction.text).toBe(
+					'move 46 JS→QH'
+				);
+			});
+
+			test('previous test b', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'             KC 8D 8H TS \n' +
+						'       KS       QH KH    \n' +
+						'       QD         >JS    \n' +
+						' hand-jammed'
+				).touch();
+				expect(game.previousAction).toEqual({
+					text: 'select 7 JS',
+					type: 'select',
+				});
+				expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					['3⡁', 2],
+					['6⡀', 1],
+				]);
+				expect(game.autoMove().previousAction.text).toBe('move 73 JS→QD');
+				// move again, uses other option, collapses move
+				expect(game.autoMove().$selectCard('JS').autoMove().previousAction.text).toBe(
+					'move 76 JS→QH'
+				);
+			});
+		});
+
+		describe('traced #1', () => {
+			test('cursor set 7 JH', () => {
+				const game = FreeCell.parse(
+					'' +
+						'    3D       2C AS       \n' +
+						' JD 2D QS JC 5D 7H 7C TC \n' +
+						' KD KC    5S AD QC KH 9H \n' +
+						' 2S KS    QD JS    AH 8S \n' +
+						' 4C 5C    QH 4H    4D 7D \n' +
+						' 3S TD    TH 3C   >JH 6C \n' +
+						' 6D 9C    9S 2H    TS 5H \n' +
+						' 6S 8D    8H       9D 4S \n' +
+						'    7S             8C 3H \n' +
+						'    6H                   \n' +
+						' cursor set 7 JH'
+				).touch();
+				expect(game.previousAction).toEqual({
+					text: 'select 7 JH-TS-9D-8C',
+					type: 'select',
+				});
+				expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					['3⡀', 2],
+					['6⡁', 1],
+				]);
+				expect(game.autoMove().previousAction.text).toBe('move 73 JH-TS-9D-8C→QS');
+				// move again, uses other option, collapses move
+				expect(game.autoMove().$selectCard('JH').autoMove().previousAction.text).toBe(
+					'move 76 JH-TS-9D-8C→QC'
+				);
+			});
+		});
+
+		describe('traced #617', () => {
+			test('cursor set d 3D', () => {
+				// this one isn't building on a king (or queen/jack)
+				// so we shouldn't use this type of priority
+				const game = FreeCell.parse(
+					'' +
+						' KS 4D 6D>3D 3C 2S       \n' +
+						' 7D AD 5C 6S 9D 8C JD AH \n' +
+						' TD 7S QD 5D 8S 8H    KH \n' +
+						' TH QC 3H 4S 7H 8D    TC \n' +
+						' KD 5H 9S    6C 7C    JS \n' +
+						' 4C QS 9C       6H       \n' +
+						'    JH 2H       5S       \n' +
+						'    TS KC       4H       \n' +
+						'    9H QH       3S       \n' +
+						'       JC       2D       \n' +
+						' cursor set d 3D'
+				).touch();
+				expect(game.previousAction).toEqual({
+					text: 'select d 3D',
+					type: 'select',
+				});
+				expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					['1⡄', 8],
+					['4⡂', 5],
+				]);
+				expect(game.autoMove().previousAction.text).toBe('move d1 3D→4C');
+				// move again, uses other option, collapses move
+				expect(game.autoMove().$selectCard('3D').autoMove().previousAction.text).toBe(
+					'move d4 3D→4S'
+				);
+			});
+		});
+
+		describe('traced #23190', () => {
+			test('cursor set 1 JH', () => {
+				const game = FreeCell.parse(
+					'' +
+						'       QD KS             \n' +
+						' TS 6C AC 3C KD 2C KC 4H \n' +
+						' JD AH AD 6S QC 4S QH 6D \n' +
+						' 2D 3D AS TC    5S JS TD \n' +
+						'>JH 8D 8S JC    9C TH 9H \n' +
+						'    7S 7H 5D    KH 9S 8C \n' +
+						'    5H    2H    QS 8H 9D \n' +
+						'    4C    7D       7C    \n' +
+						'    3H             6H    \n' +
+						'    2S             5C    \n' +
+						'                   4D    \n' +
+						'                   3S    \n' +
+						' cursor set 1 JH'
+				).touch();
+				expect(game.previousAction).toEqual({
+					text: 'select 1 JH',
+					type: 'select',
+				});
+				expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					['5⡁', 2],
+					['6⡅', 1],
+				]);
+				expect(game.autoMove().previousAction.text).toBe('move 15 JH→QC');
+				// move again, uses other option, collapses move
+				expect(game.autoMove().$selectCard('JH').autoMove().previousAction.text).toBe(
+					'move 16 JH→QS'
+				);
+			});
+
+			test('cursor set 1 TS', () => {
+				const game = FreeCell.parse(
+					'' +
+						'       QD KS             \n' +
+						'>TS 6C AC 3C KD 2C KC 4H \n' +
+						'    AH AD 6S QC 4S QH 6D \n' +
+						'    3D AS TC JH 5S JS TD \n' +
+						'    8D 8S JC    9C TH 9H \n' +
+						'    7S 7H 5D    KH 9S 8C \n' +
+						'    5H    2H    QS 8H 9D \n' +
+						'    4C    7D    JD 7C    \n' +
+						'    3H             6H    \n' +
+						'    2S             5C    \n' +
+						'                   4D    \n' +
+						'                   3S    \n' +
+						'                   2D    \n' +
+						' cursor set 1 TS'
+				).touch();
+				expect(game.previousAction).toEqual({
+					text: 'select 1 TS',
+					type: 'select',
+				});
+				expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					['5⡂', 2],
+					['6⡆', 1],
+				]);
+				expect(game.autoMove().previousAction.text).toBe('move 15 TS→JH');
+				// move again, uses other option, collapses move
+				expect(game.autoMove().$selectCard('TS').autoMove().previousAction.text).toBe(
+					'move 16 TS→JD'
+				);
+			});
+
+			test('cursor set 4 6S', () => {
+				const game = FreeCell.parse(
+					'' +
+						'       5D 2H             \n' +
+						' KS 6C AC 3C KD 2C KC 4H \n' +
+						' QD AH AD>6S QC 4S QH 6D \n' +
+						' JC 3D AS    JH 5S JS TD \n' +
+						'    8D 8S    TS 9C TH 9H \n' +
+						'    7S 7H    9D KH 9S    \n' +
+						'    5H       8C QS 8H    \n' +
+						'    4C       7D JD 7C    \n' +
+						'    3H          TC 6H    \n' +
+						'    2S             5C    \n' +
+						'                   4D    \n' +
+						'                   3S    \n' +
+						'                   2D    \n' +
+						' cursor set 4 6S'
+				).touch();
+				expect(game.previousAction).toEqual({
+					text: 'select 4 6S',
+					type: 'select',
+				});
+				expect(availableMovesMinimized(game.availableMoves)).toEqual([
+					['3⡄', 1],
+					['5⡆', 2],
+				]);
+				expect(game.autoMove().previousAction.text).toBe('move 45 6S→7D');
+				// move again, uses other option, collapses move
+				expect(game.autoMove().$selectCard('6S').autoMove().previousAction.text).toBe(
+					'move 43 6S→7H'
+				);
+			});
+		});
+
+		test('freeplay #26359', () => {
+			const game = FreeCell.parse(
+				'' +
+					'    KD KH    AS          \n' +
+					' JC 9H 6S 7D KS 3C 4S 5H \n' +
+					' 3H 5D QS 2S QH AH KC 2H \n' +
+					' AD 4C 5S 7H JS 6C 5C 8D \n' +
+					' 3S 9D JD AC TH TC QC 8S \n' +
+					' QD    2D 7C 9S 2C 8C 7S \n' +
+					'       6D 6H    3D 4H 4D \n' +
+					'       TD JH             \n' +
+					'       9C TS             \n' +
+					'       8H                \n' +
+					' move 23 8H→9C\n' +
+					':h shuffle32 26359\n' +
+					' 24 53 5a 52 52 5b 5c a5 \n' +
+					' 25 15 23 '
+			)
+				.undo()
+				.touchByPosition('2');
+			expect(game.history.length).toBe(12);
+			expect(game.previousAction).toEqual({
+				text: 'select 2 8H',
+				type: 'select',
+			});
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
+				['3⡇', 1], // this is what happened, move 23 8H→9C
+				['5⡄', 2], // this is preferred, move 25 8H→9S
+			]);
+			expect(game.autoMove().previousAction.text).toBe('move 25 8H→9S');
+			// move again, uses other option, collapses move
+			expect(game.autoMove().$selectCard('8H').autoMove().previousAction.text).toBe(
+				'move 23 8H→9C'
+			);
+		});
+
+		test('freeplay #29327', () => {
+			const game = FreeCell.parse(
+				'' +
+					' 2C                      \n' +
+					' 3C TD 3H KC 7S AC QH 6H \n' +
+					' AH 8C 5S    TH 6S TS KD \n' +
+					' 8D 9S QC    2D 4C 9D AS \n' +
+					' 5H 4H KS    JH KH 7D AD \n' +
+					' 4S 3S QD    TC QS JS JC \n' +
+					' 3D 2H       9H JD    9C \n' +
+					' 2S          8S       8H \n' +
+					'             7H       7C \n' +
+					'             6C       6D \n' +
+					'             5D       5C \n' +
+					'                      4D \n' +
+					' move b3 QD→KS\n' +
+					':h shuffle32 29327\n' +
+					' 56 58 4a 48 37 4b 43 24 \n' +
+					' 12 41 24 27 17 68 6c 46 \n' +
+					' 35 32 12 71 75 c4 b3 '
+			)
+				.undo()
+				.touchByPosition('b');
+			expect(game.history.length).toBe(24);
+			expect(game.previousAction).toEqual({
+				text: 'select b QD',
+				type: 'select',
+			});
+			expect(availableMovesMinimized(game.availableMoves)).toEqual([
+				['3⡃', 1], // this is what happened, move 23 8H→9C
+				['4⡀', 2], // this is preferred, move 25 8H→9S
+			]);
+			expect(game.autoMove().previousAction.text).toBe('move b4 QD→KC');
+			// move again, uses other option, collapses move
+			expect(game.autoMove().$selectCard('QD').autoMove().previousAction.text).toBe(
+				'move b3 QD→KS'
+			);
+		});
 	});
 
 	describe('*:single→foundation, if opp+2 would auto-foundation', () => {

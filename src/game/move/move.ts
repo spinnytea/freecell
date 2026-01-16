@@ -60,11 +60,6 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 	    - cell → foundation
 	    - cascade:single → foundation
 	- IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
-	- FIXME WIP-pile (2-priority) (controls) (click-to-move) Prioritize moving cards to a completed sequence
-	    - when between 2 cards of different suit
-	    - when the root of it is at the top of a column (to sequence that starts at a pile)
-	    - i.e. select by column and see if it's `data: [c, 0]`
-	    - ¿unless we are breaking a sequence?
 */
 export const MoveDestinationTypePriorities: {
 	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
@@ -452,8 +447,33 @@ function prioritizeAvailableMoves(
 			break;
 		}
 
-		case 'cascade:empty':
 		case 'cascade:sequence': {
+			if (availableMoves.length === 2) {
+				const one = availableMoveIsRoyalPile(game, availableMoves[0]);
+				const two = availableMoveIsRoyalPile(game, availableMoves[1]);
+				if (one.isPile && !two.isPile) {
+					availableMoves[0].priority = 2;
+					availableMoves[1].priority = 1;
+					break;
+				} else if (!one.isPile && two.isPile) {
+					availableMoves[0].priority = 1;
+					availableMoves[1].priority = 2;
+					break;
+				} else if (one.isPile && two.isPile) {
+					if (one.length > two.length) {
+						availableMoves[0].priority = 2;
+						availableMoves[1].priority = 1;
+						break;
+					} else if (one.length < two.length) {
+						availableMoves[0].priority = 1;
+						availableMoves[1].priority = 2;
+						break;
+					}
+				}
+			}
+		}
+		// eslint-disable-next-line no-fallthrough
+		case 'cascade:empty': {
 			const moving_card = selection.cards[0];
 			const moveFromAsDestType: MoveDestinationType =
 				selection.location.data[1] === 0 ? 'cascade:empty' : 'cascade:sequence';
@@ -503,6 +523,20 @@ function getMoveSourceType(selection: CardSequence): MoveSourceType {
 		case 'cascade':
 			return selection.cards.length === 1 ? 'cascade:single' : 'cascade:sequence';
 	}
+}
+
+function availableMoveIsRoyalPile(game: FreeCell, availableMove: AvailableMove) {
+	const sequence = getSequenceAt(game, {
+		fixture: 'cascade',
+		data: [availableMove.location.data[0], 0],
+	});
+	const isRoyal =
+		sequence.cards[0].rank === 'king' ||
+		sequence.cards[0].rank === 'queen' ||
+		sequence.cards[0].rank === 'jack';
+	const isPile = sequence.cards.length === game.tableau[availableMove.location.data[0]].length;
+
+	return { isPile: isRoyal && isPile, length: sequence.cards.length };
 }
 
 /**
