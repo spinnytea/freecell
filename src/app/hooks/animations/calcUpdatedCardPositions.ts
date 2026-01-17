@@ -27,7 +27,6 @@ export interface InvalidMoveCardType {
 	This categorizes "which" cards to move.
 
 	- TODO (techdebt) (combine-move-auto-foundation) unit test
-	- TODO (motivation) (animation) optimize
 	- IDEA (animation) animations by move type
 		- first check all the cards that did move (updateCardPositions)
 		- then check all the cards we expected to move based on actionText
@@ -136,6 +135,10 @@ export function calcUpdatedCardPositions({
 			});
 
 			// filter items from updateCardPositions if they are in A and have exactly the same position
+			// if secondMustComeAfter, that means the second animation must start after the first has entirely finished
+			// if not, they can overlap a little
+			// (e.g. do we wait for the auto-foundation animation to start AFTER the move animation, or in the middle of it)
+			// the overlap feels nice when we can do it, so this is worth the complexity
 			let secondMustComeAfter = false;
 			const b = updateCardPositions.filter(({ shorthand, top, left }) => {
 				const found = a.find((_a) => _a?.shorthand === shorthand);

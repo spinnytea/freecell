@@ -117,11 +117,6 @@ export interface PreviousAction {
 	gameFunction?: GameFunction;
 }
 
-// REVIEW (animation) do we need a parser for every type?
-//  - i.e. do we need to understand them all to animate them?
-//  - i.e. PREVIOUS_ACTION_TYPE_IN_HISTORY
-//  - if so, should we just _store_ that parsed info?
-//  - that said, having a regex/parser is needed for, say, parsing a history string and validation/testing
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish|flourish52) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
@@ -668,7 +663,7 @@ export function getCardsFromInvalid(
 	if (toShorthand.length === 2) {
 		to.push(findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1])));
 	} else {
-		// TODO (motivation) (animation) animate piles
+		// TODO (2-priority) (motivation) (animation) animate piles
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
 	}
 	return { from, to };

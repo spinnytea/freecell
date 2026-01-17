@@ -277,7 +277,6 @@ export function calcTopLeftZ(
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.foundationLeft[data[0]],
 				// zIndex + BOTTOM_OF_CASCADE so it's above the cell/cascade
-				// REVIEW (animation) cards in flight
 				zIndex: (rank ? getRankForCompare(rank) : 0) + BOTTOM_OF_CASCADE,
 				rotation:
 					selection?.location.fixture === 'foundation' && selection.location.data[0] === data[0]

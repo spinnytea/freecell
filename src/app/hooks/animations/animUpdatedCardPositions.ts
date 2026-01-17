@@ -46,7 +46,6 @@ export function animUpdatedCardPositions({
 	list.forEach(({ shorthand, top, left, zIndex, rotation }, index) => {
 		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 		const prevTLZR = nextTLZR.get(shorthand);
-		// TODO (3-priority) (motivation) (animation) when flourish, translate X and Y at different rates to make a curving effect, e.g. power1.out vs power1.in
 		nextTLZR.set(shorthand, { top, left, zIndex, rotation });
 		if (prevTLZR) {
 			if (!pause) {

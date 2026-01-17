@@ -22,9 +22,6 @@ export default function SettingsDialog() {
 	//  - Warning: Prop `disabled` did not match. Server: "" Client: "false"
 	//  - this error appears on refresh when not at the start of the game
 
-	// TODO (settings) (animation) two options for restart:
-	//  - as is: jump to init and do a single animation
-	//  - animate every undo step until back to the beginning
 	function handleRestart() {
 		// domUtils.consumeDomEvent(event);
 		setGame((game) => game.restart().$checkCanFlourish());

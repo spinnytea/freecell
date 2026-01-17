@@ -1698,7 +1698,7 @@ describe('game.undo (+ history)', () => {
 			TODO (collapse) (history) verify that game state is identical no matter how you get there
 			 - verify popping history is the same as original
 
-			TODO (animation) (collapse) (history) verify animations
+			TODO (3-priority) (animation) (collapse) (history) verify animations
 			 - it's fine now, animations are simple. But just in case...
 			 - like, just unit test this wild example
 		*/

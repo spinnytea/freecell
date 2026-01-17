@@ -39,6 +39,15 @@
   - card drag animation (drag waggles the sequence)
   - auto-foundation each card
   - win -> init
+- IDEA (motivation) (animation) animations by move type (same as previous)
+  - first check all the cards that did move (updateCardPositions)
+  - then check all the cards we expected to move based on actionText
+  - then pick an animation based on PreviousActionType/actionText
+    there's nuance to some of the PreviousActionType (e.g. variations on init/select)
+  - if there's a mismatch, run the default animation
+  - most actionTypes can use the default, esp at first
+  ***
+  - we are informally doing this for `move-foundation`
 - TODO (motivation) (animation) (gsap) learn to use [greensock](https://css-tricks.com/how-to-animate-on-the-web-with-greensock/)
 - TODO (techdebt) (animation) The first animation after loading a page is still janky
   - it does the whole thing at once
@@ -71,14 +80,7 @@
   - Some games require no free cells :D - so make a 0 cells version restricted to these games
   - Same with a list for solvable 1-cell games
 - IDEA (settings) option to dis/enable auto-foundation until all cascades are in order (all are a single sequence, or all are ascending)
-- IDEA (animation) auto-foundation gets faster the longer it runs
-- TODO (animation) animations after/during win state (celbration)
-- IDEA (settings) toggle for: move sequence as one vs animate in-between steps (sequence moves vs each card moves)
-- IDEA (motivation) (animation) instant replay after game is over
-- IDEA (motivation) implement War? just so it's flexible?
-  - what is "it", the UI? the controls?
-- IDEA (motivation) implement Spider Solitaire, that could be fun
-- TODO (controls) mouse column mode (like keyboard hotkeys)
+- TODO (animation) animations after/during win state (celbration, like fireworks or card explosions)
 - TODO (deployment) UI render for all options, hidden options, controls (keyboard, keyboard+selection, keyboard hotkeys, mouse click, mouse drag) w/ (settings) to enable/disable
 - TODO (settings) disable "select-to-peek card" i.e. selecting cards that cannot move
   - could this simply be "autoMove().clear selection()"? (feels hacky)
@@ -123,3 +125,11 @@
 - preferred foundation suits? (HSDC) - render these?
   - i.e. instead of allowing any suit in any foundation spot, suits go in designated spots
   - this kind of goes against the whole flexible design
+- getting fancy with the flourish animation was just BAD
+  - if you slow it down, then you have to wait for it
+  - it's already a hectic splash on the foundation, adding variation to top/left (sine.in vs sine.out) just adds chaos
+  - same goes for things like "auto instant replay" at the end of the game. No. just click for new game please.
+- restart animation as successive steps (like if you hold undo)
+  - animation timing and game state is hard enough
+  - i GUESS we could go through the trouble of doing it as one dirty great animation
+  - but then you have to WAIT, you could just hold undo, but you opened the menu to go fast

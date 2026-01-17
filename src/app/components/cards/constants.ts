@@ -47,9 +47,9 @@ export enum ControlSchemes {
 	Hotkeys = 'keyboard hotkeys',
 
 	/*
-		IDEA (animation) (flash-rank) (hud) can we do like "peek all"
+		IDEA (animation) (flash-rank) (hud) set flashCards to all cards of a rank (e.g. all 8s)
 
-		The biggest problem is HHHoowwoowwwWWa
+		The biggest problem is HHHoowwoowwwWWa do we do the controls
 		 - touch = wheel select?
 		 - keyboard = Ctrl key, prolly
 		 - mouse = Ctrl + Click?

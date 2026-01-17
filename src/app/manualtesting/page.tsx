@@ -138,7 +138,7 @@ const DEFAULT_DISPLAY_OPTIONS: GameBoardDisplayOptions = {
 	TODO (animation) animate invalid move animation
 	TODO (animation) animate moving a sequence
 	TODO (animation) animate cursorBox movement
-	TODO (animation) animate flourish
+	TODO (animation) animate flourish (not just flourish52)
 
 	TODO (hud) fixture sizes: narrow
 	TODO (hud) fixture sizes: wide
