@@ -1,7 +1,169 @@
 import { availableMovesMinimized } from '@/app/testUtils';
 import { FreeCell } from '@/game/game';
+import { closestAvailableMovesPriority, linearAvailableMovesPriority } from '@/game/move/move';
 
 describe('prioritizeAvailableMoves', () => {
+	describe('linearAvailableMovesPriority', () => {
+		describe('1 count', () => {
+			const positions = [0];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[1]}
+				${0}         | ${[0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => linearAvailableMovesPriority(1, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+
+		describe('4 count', () => {
+			const positions = [0, 1, 2, 3];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[4, 3, 2, 1]}
+				${0}         | ${[0, 7, 6, 5]}
+				${1}         | ${[4, 0, 6, 5]}
+				${2}         | ${[4, 3, 0, 5]}
+				${3}         | ${[4, 3, 2, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => linearAvailableMovesPriority(4, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+
+		describe('8 count', () => {
+			const positions = [0, 1, 2, 3, 4, 5, 6, 7];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[8, 7, 6, 5, 4, 3, 2, 1]}
+				${0}         | ${[0, 15, 14, 13, 12, 11, 10, 9]}
+				${1}         | ${[8, 0, 14, 13, 12, 11, 10, 9]}
+				${2}         | ${[8, 7, 0, 13, 12, 11, 10, 9]}
+				${3}         | ${[8, 7, 6, 0, 12, 11, 10, 9]}
+				${4}         | ${[8, 7, 6, 5, 0, 11, 10, 9]}
+				${5}         | ${[8, 7, 6, 5, 4, 0, 10, 9]}
+				${6}         | ${[8, 7, 6, 5, 4, 3, 0, 9]}
+				${7}         | ${[8, 7, 6, 5, 4, 3, 2, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => linearAvailableMovesPriority(8, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+
+		describe('10 count', () => {
+			const positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[10, 9, 8, 7, 6, 5, 4, 3, 2, 1]}
+				${0}         | ${[0, 19, 18, 17, 16, 15, 14, 13, 12, 11]}
+				${1}         | ${[10, 0, 18, 17, 16, 15, 14, 13, 12, 11]}
+				${5}         | ${[10, 9, 8, 7, 6, 0, 14, 13, 12, 11]}
+				${8}         | ${[10, 9, 8, 7, 6, 5, 4, 3, 0, 11]}
+				${9}         | ${[10, 9, 8, 7, 6, 5, 4, 3, 2, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => linearAvailableMovesPriority(10, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+	});
+
+	//** closest: what it does */
+	describe('closestAvailableMovesPriority', () => {
+		describe('1 count', () => {
+			const positions = [0];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[2]}
+				${0}         | ${[0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => closestAvailableMovesPriority(1, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+
+		describe('4 count', () => {
+			const positions = [0, 1, 2, 3];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[8, 6, 4, 2]}
+				${0}         | ${[0, 6, 4, 2]}
+				${1}         | ${[5, 0, 6, 4]}
+				${2}         | ${[3, 5, 0, 6]}
+				${3}         | ${[1, 3, 5, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => closestAvailableMovesPriority(4, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+
+		describe('8 count', () => {
+			const positions = [0, 1, 2, 3, 4, 5, 6, 7];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[16, 14, 12, 10, 8, 6, 4, 2]}
+				${0}         | ${[0, 14, 12, 10, 8, 6, 4, 2]}
+				${1}         | ${[13, 0, 14, 12, 10, 8, 6, 4]}
+				${2}         | ${[11, 13, 0, 14, 12, 10, 8, 6]}
+				${3}         | ${[9, 11, 13, 0, 14, 12, 10, 8]}
+				${4}         | ${[7, 9, 11, 13, 0, 14, 12, 10]}
+				${5}         | ${[5, 7, 9, 11, 13, 0, 14, 12]}
+				${6}         | ${[3, 5, 7, 9, 11, 13, 0, 14]}
+				${7}         | ${[1, 3, 5, 7, 9, 11, 13, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => closestAvailableMovesPriority(8, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+
+		describe('10 count', () => {
+			const positions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+			test.each`
+				sourceD0     | priorities
+				${undefined} | ${[20, 18, 16, 14, 12, 10, 8, 6, 4, 2]}
+				${0}         | ${[0, 18, 16, 14, 12, 10, 8, 6, 4, 2]}
+				${1}         | ${[17, 0, 18, 16, 14, 12, 10, 8, 6, 4]}
+				${5}         | ${[9, 11, 13, 15, 17, 0, 18, 16, 14, 12]}
+				${8}         | ${[3, 5, 7, 9, 11, 13, 15, 17, 0, 18]}
+				${9}         | ${[1, 3, 5, 7, 9, 11, 13, 15, 17, 0]}
+			`(
+				'sourceD0: $sourceD0',
+				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+					expect(positions.map((d0) => closestAvailableMovesPriority(10, d0, sourceD0))).toEqual(
+						priorities
+					);
+				}
+			);
+		});
+	});
+
 	//** closest: when to use it */
 	describe('linear vs closest', () => {
 		// start at 0, move to stacked, move to another sequence (3S -> 4D,4H)
@@ -644,25 +806,25 @@ describe('prioritizeAvailableMoves', () => {
 	});
 
 	/**
-			the situations where this is useful is vanishing small
-			it may be where we want the cards (roughly, for some styles of play)
-			more often than not it feels wrong or jarring
-			we collapse consecutive moves, so it's not like it impacts history
-			the implemenation is easy, but it's not trivial
-			all in all, it's just not with it
+		the situations where this is useful is vanishing small
+		it may be where we want the cards (roughly, for some styles of play)
+		more often than not it feels wrong or jarring
+		we collapse consecutive moves, so it's not like it impacts history
+		the implemenation is easy, but it's not trivial
+		all in all, it's just not with it
 
-			const useRightJustify =
-				// kings
-				moving_card.rank === 'king' &&
-				// going to an empty cascade
-				moveDestinationType === 'cascade:empty' &&
-				// from "not the cascades" (cell, foundation, deck)
-				// from the cascades, but not already at the root
-				(moving_card.location.data.at(1) === undefined || moving_card.location.data.at(1) !== 0);
+		const useRightJustify =
+			// kings
+			moving_card.rank === 'king' &&
+			// going to an empty cascade
+			moveDestinationType === 'cascade:empty' &&
+			// from "not the cascades" (cell, foundation, deck)
+			// from the cascades, but not already at the root
+			(moving_card.location.data.at(1) === undefined || moving_card.location.data.at(1) !== 0);
 
-			@see linearAvailableMovesPriority
-			@see closestAvailableMovesPriority
-		 */
+		@see linearAvailableMovesPriority
+		@see closestAvailableMovesPriority
+	*/
 	describe('deprecated king→cascade:empty rightJustifyAvailableMovesPriority', () => {
 		describe('MoveSourceType', () => {
 			test('deck', () => {
