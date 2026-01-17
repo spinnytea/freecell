@@ -1,6 +1,7 @@
 import { MutableRefObject } from 'react';
 import { render } from '@testing-library/react';
 import { gsap } from 'gsap/all';
+import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositionAnimations';
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
@@ -288,6 +289,7 @@ describe('useCardPositionAnimations', () => {
 				{ top: 341.6, left: 14.035, duration: 0.3, ease: 'power1.out' },
 				'<0.006',
 			]);
+			expect(timeScaleSpy.mock.calls).toEqual([[MULTI_ANIMATION_TIMESCALE]]);
 			expect(consoleDebugSpy.mock.calls).toEqual([['speedup updateCardPositions', 'deal']]);
 		});
 
@@ -599,7 +601,7 @@ describe('useCardPositionAnimations', () => {
 						timeScaleSpy: 1,
 						consoleDebugSpy: 1,
 					});
-					expect(timeScaleSpy.mock.calls).toEqual([[2]]);
+					expect(timeScaleSpy.mock.calls).toEqual([[MULTI_ANIMATION_TIMESCALE]]);
 					expect(consoleDebugSpy.mock.calls).toEqual([['speedup invalidMoveCards', 'invalid']]);
 				});
 

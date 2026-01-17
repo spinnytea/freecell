@@ -22,7 +22,6 @@ export function WinMessage() {
 	useGSAP(
 		() => {
 			if (win) {
-				// TODO (settings) (reduced-motion) - only animate scale (not X, not Y, not color)
 				const prop = gsap.utils.random(['scale', 'scaleX', 'scaleY']);
 				gsap.from(elementRef.current, {
 					[prop]: 0,

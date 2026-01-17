@@ -2203,12 +2203,12 @@ describe('game.touch', () => {
 							{
 								location: { fixture: 'cascade', data: [3, 2] },
 								moveDestinationType: 'cascade:sequence',
-								priority: 12,
+								priority: 2,
 							},
 							{
 								location: { fixture: 'cascade', data: [4, 0] },
 								moveDestinationType: 'cascade:sequence',
-								priority: 10,
+								priority: 1,
 							},
 							{
 								location: { fixture: 'cascade', data: [5, 0] },
@@ -2283,12 +2283,12 @@ describe('game.touch', () => {
 								{
 									location: { fixture: 'cascade', data: [3, 2] },
 									moveDestinationType: 'cascade:sequence',
-									priority: 12,
+									priority: 2,
 								},
 								{
 									location: { fixture: 'cascade', data: [4, 0] },
 									moveDestinationType: 'cascade:sequence',
-									priority: 10,
+									priority: 1,
 								},
 								{
 									location: { fixture: 'cascade', data: [5, 0] },
@@ -2361,12 +2361,12 @@ describe('game.touch', () => {
 							{
 								location: { fixture: 'cascade', data: [3, 2] },
 								moveDestinationType: 'cascade:sequence',
-								priority: 12,
+								priority: 2,
 							},
 							{
 								location: { fixture: 'cascade', data: [4, 0] },
 								moveDestinationType: 'cascade:sequence',
-								priority: 10,
+								priority: 1,
 							},
 							{
 								location: { fixture: 'cascade', data: [5, 0] },

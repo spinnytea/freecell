@@ -1548,6 +1548,9 @@ export class FreeCell {
 			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
 			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
 			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
+			// TODO (2-priority) (motivation) (parse-history) (undo) invalid history or no history should should still be able to undo the move from game.print()
+			//  - try it with a valid move (success)
+			//  - try it with an invalid move (noop)
 			// TODO (techdebt) (parse-history) 'deal 1 cards'
 			// TODO (techdebt) (parse-history) 'deal 2 cards'
 			// TODO (techdebt) (parse-history) 'deal 44 cards'
