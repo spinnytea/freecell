@@ -1476,7 +1476,7 @@ export class FreeCell {
 			}
 		} else if (popped.startsWith(':h')) {
 			const matchSeed = /:h shuffle32 (\d+)/.exec(popped);
-			// TODO (techdebt) (parse-history) ¿'init with unsupported history'? no need to explode
+			// TODO (2-priority) (techdebt) (parse-history) ¿'init with unsupported history'? no need to explode
 			if (!matchSeed) throw new Error('unsupported shuffle');
 			const seed = parseInt(matchSeed[1], 10);
 
@@ -1510,7 +1510,9 @@ export class FreeCell {
 				movesSeed.seed === seed &&
 				_isEqual(movesSeed.moves, moves) &&
 				// re-print the our game, confirm it matches the input
-				// REVIEW (techdebt) compare.trim() ? it keeps messing me up, the last history item without a space...
+				// REVIEW (3-priority) (techdebt) compare.trim() ? i keep messing up, i forget the space after the last history item…
+				//  - what about triming each line
+				//  - maybe at least log a warning or error (looks like it should match, but it's missing X trailing spaces)
 				replayGameForHistroy.print({ includeHistory: true }) === print;
 
 			// console.log('valid', valid);

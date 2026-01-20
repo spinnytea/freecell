@@ -1701,6 +1701,8 @@ describe('game.undo (+ history)', () => {
 			TODO (3-priority) (animation) (collapse) (history) verify animations
 			 - it's fine now, animations are simple. But just in case...
 			 - like, just unit test this wild example
+			 - make it a unit test
+			 - make it a manual test
 		*/
 		test('a wild example', () => {
 			let game = FreeCell.parse(

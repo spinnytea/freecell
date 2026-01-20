@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`GameBoard Game #5 (tutorial) 1`] = `
+exports[`GameBoard completed games Game #5 (tutorial) 1`] = `
 <div>
   <main
     class="none common"
@@ -1189,7 +1189,7 @@ exports[`GameBoard Game #5 (tutorial) 1`] = `
 </div>
 `;
 
-exports[`GameBoard Game #5 (tutorial) 2`] = `
+exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
 <div>
   <main
     class="none common"
@@ -2378,7 +2378,7 @@ exports[`GameBoard Game #5 (tutorial) 2`] = `
 </div>
 `;
 
-exports[`GameBoard Game #5 (tutorial) 3`] = `
+exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
 <div>
   <main
     class="none common"
@@ -3567,7 +3567,7 @@ exports[`GameBoard Game #5 (tutorial) 3`] = `
 </div>
 `;
 
-exports[`GameBoard Game #5 (tutorial) 4`] = `
+exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
 <div>
   <main
     class="none common"
@@ -4756,7 +4756,7 @@ exports[`GameBoard Game #5 (tutorial) 4`] = `
 </div>
 `;
 
-exports[`GameBoard Game #5 (tutorial) 5`] = `
+exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
 <div>
   <main
     class="none common"
@@ -5945,7 +5945,7 @@ exports[`GameBoard Game #5 (tutorial) 5`] = `
 </div>
 `;
 
-exports[`GameBoard Game #5 (tutorial) 6`] = `
+exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
 <div>
   <main
     class="none common"
@@ -7134,7 +7134,7 @@ exports[`GameBoard Game #5 (tutorial) 6`] = `
 </div>
 `;
 
-exports[`GameBoard Game #5 (tutorial) 7`] = `
+exports[`GameBoard completed games Game #5 (tutorial) 7`] = `
 <div>
   <main
     class="none common"
@@ -8329,7 +8329,7 @@ exports[`GameBoard Game #5 (tutorial) 7`] = `
 </div>
 `;
 
-exports[`GameBoard Game #5 (tutorial) 8`] = `
+exports[`GameBoard completed games Game #5 (tutorial) 8`] = `
 <div>
   <main
     class="none common"

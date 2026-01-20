@@ -736,7 +736,7 @@ describe('game', () => {
 		});
 	});
 
-	// TODO (3-priority) (techdebt) (animation) For all these completed games, also make an "animation" version
+	/** @see GameBoard.test.tsx */
 	describe('complete games', () => {
 		test('Game #1', () => {
 			let game = new FreeCell().shuffle32(1).dealAll();
