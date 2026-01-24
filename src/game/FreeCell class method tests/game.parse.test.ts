@@ -153,18 +153,40 @@ describe('game.parse', () => {
 		});
 
 		describe('history', () => {
-			test('unsupported shuffle', () => {
-				expect(() =>
-					FreeCell.parse(
-						'' + //
-							'         >   KC KS KH KD \n' +
-							'                         \n' +
-							':    Y O U   W I N !    :\n' +
-							'                         \n' +
-							' cursro right\n' +
-							':h banana'
-					)
-				).toThrow('unsupported shuffle');
+			test('invalid shuffle', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'         >   KC KS KH KD \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' cursor right\n' +
+						':h shuffle4 4294967295'
+				);
+				expect(game.history).toEqual(['init with invalid history shuffle', 'cursor right']);
+				expect(game.undo().previousAction).toEqual({
+					text: 'init with invalid history shuffle',
+					type: 'init', // this needs to be init, not invalid
+					gameFunction: 'undo',
+				});
+			});
+
+			test('invalid seed', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'         >   KC KS KH KD \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' cursor right\n' +
+						':h shuffle32 4294967295'
+				);
+				expect(game.history).toEqual(['init with invalid history seed', 'cursor right']);
+				expect(game.undo().previousAction).toEqual({
+					text: 'init with invalid history seed',
+					type: 'init', // this needs to be init, not invalid
+					gameFunction: 'undo',
+				});
 			});
 		});
 	});
@@ -583,7 +605,7 @@ describe('game.parse', () => {
 						' 9S    7C TS JS    JH    \n' +
 						'       6H          TC    \n' +
 						' move 67 9H→TC\n' +
-						' init with invalid history'
+						' init with invalid history replay'
 				);
 				expect(game.print()).toBe(
 					'' + //
@@ -598,7 +620,7 @@ describe('game.parse', () => {
 						'       6H         >TC    \n' +
 						' move 67 9H→TC'
 				);
-				expect(game.history).toEqual(['init with invalid history', 'move 67 9H→TC']);
+				expect(game.history).toEqual(['init with invalid history replay', 'move 67 9H→TC']);
 			});
 
 			test('invalid actionText', () => {
@@ -632,7 +654,7 @@ describe('game.parse', () => {
 						'       6H          TC    \n' +
 						'                   9H    \n' +
 						' move 27 9H→TC\n' +
-						' init with invalid history'
+						' init with invalid history replay'
 				);
 				expect(game.print()).toBe(
 					'' + //
@@ -705,7 +727,7 @@ describe('game.parse', () => {
 						'       6H          TC    \n' +
 						'                   9H    \n' +
 						' move 67 9H→TC\n' +
-						' init with invalid history'
+						' init with invalid history replay'
 				);
 				expect(game.print()).toBe(
 					'' + //
@@ -728,373 +750,390 @@ describe('game.parse', () => {
 		});
 	});
 
-	test('history with selection', () => {
-		const game = FreeCell.parse(
-			'' + //
-				' TD       TC AH 2S       \n' +
-				' QD AC AD 5D 9H JH 4H 6S \n' +
-				' 2H 4C QS KD 8C 5C>6D|QH \n' +
-				' 3D 8H 3S 2D 3H 8D|5S|JS \n' +
-				' JD 4S 2C KC 7C JC|4D|TS \n' +
-				' 7S 9D 6H 7D    QC|3C|7H \n' +
-				' 9S TH    6C    KS    9C \n' +
-				' 8S KH    5H             \n' +
-				' move 54 6C-5H→7D\n' +
-				':h shuffle32 27571\n' +
-				' 34 4d d4 4d d4 5d 75 74 \n' +
-				' 47 4a 54 '
-		);
+	describe('selection', () => {
+		test('history with selection', () => {
+			const game = FreeCell.parse(
+				'' + //
+					' TD       TC AH 2S       \n' +
+					' QD AC AD 5D 9H JH 4H 6S \n' +
+					' 2H 4C QS KD 8C 5C>6D|QH \n' +
+					' 3D 8H 3S 2D 3H 8D|5S|JS \n' +
+					' JD 4S 2C KC 7C JC|4D|TS \n' +
+					' 7S 9D 6H 7D    QC|3C|7H \n' +
+					' 9S TH    6C    KS    9C \n' +
+					' 8S KH    5H             \n' +
+					' move 54 6C-5H→7D\n' +
+					':h shuffle32 27571\n' +
+					' 34 4d d4 4d d4 5d 75 74 \n' +
+					' 47 4a 54 '
+			);
 
-		expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 1] });
-		expect(game.selection).toEqual({
-			location: { fixture: 'cascade', data: [6, 1] },
-			cards: [
-				{ rank: '6', suit: 'diamonds', location: { fixture: 'cascade', data: [6, 1] } },
-				{ rank: '5', suit: 'spades', location: { fixture: 'cascade', data: [6, 2] } },
-				{ rank: '4', suit: 'diamonds', location: { fixture: 'cascade', data: [6, 3] } },
-				{ rank: '3', suit: 'clubs', location: { fixture: 'cascade', data: [6, 4] } },
-			],
-			peekOnly: false,
-		});
-		expect(game.availableMoves).toEqual([]);
-	});
-
-	describe('selection next to cursor', () => {
-		describe('home', () => {
-			test('cell 0', () => {
-				const game = FreeCell.parse(
-					'' + //
-						'>KC|KD|KH KS QC QD QH QS \n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
-				expect(game.selection).toEqual({
-					location: { fixture: 'cell', data: [1] },
-					cards: [{ rank: 'king', suit: 'diamonds', location: { fixture: 'cell', data: [1] } }],
-					peekOnly: false,
-				});
-				expect(game.print()).toBe(
-					'' + //
-						'>KC|KD|KH KS QC QD QH QS \n' +
-						'                         \n' +
-						' hand-jammed'
-				);
+			expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 1] });
+			expect(game.selection).toEqual({
+				location: { fixture: 'cascade', data: [6, 1] },
+				cards: [
+					{ rank: '6', suit: 'diamonds', location: { fixture: 'cascade', data: [6, 1] } },
+					{ rank: '5', suit: 'spades', location: { fixture: 'cascade', data: [6, 2] } },
+					{ rank: '4', suit: 'diamonds', location: { fixture: 'cascade', data: [6, 3] } },
+					{ rank: '3', suit: 'clubs', location: { fixture: 'cascade', data: [6, 4] } },
+				],
+				peekOnly: false,
 			});
-
-			test('cell 1', () => {
-				const game = FreeCell.parse(
-					'' + //
-						' KC>KD|KH|KS QC QD QH QS \n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-				expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
-				expect(game.selection).toEqual({
-					location: { fixture: 'cell', data: [2] },
-					cards: [{ rank: 'king', suit: 'hearts', location: { fixture: 'cell', data: [2] } }],
-					peekOnly: false,
-				});
-				expect(game.print()).toBe(
-					'' + //
-						' KC>KD|KH|KS QC QD QH QS \n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-			});
-
-			test('cell 2', () => {
-				const game = FreeCell.parse(
-					'' + //
-						' KC KD>KH|KS|QC QD QH QS \n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-				expect(game.cursor).toEqual({ fixture: 'cell', data: [2] });
-				expect(game.selection).toEqual({
-					location: { fixture: 'cell', data: [3] },
-					cards: [{ rank: 'king', suit: 'spades', location: { fixture: 'cell', data: [3] } }],
-					peekOnly: false,
-				});
-				expect(game.print()).toBe(
-					'' + //
-						' KC KD>KH|KS|QC QD QH QS \n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-			});
-
-			test('cell 3', () => {
-				const game = FreeCell.parse(
-					'' + //
-						' KC KD KH>KS|QC|QD QH QS \n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-				expect(game.cursor).toEqual({ fixture: 'cell', data: [3] });
-				expect(game.selection).toEqual({
-					location: { fixture: 'foundation', data: [0] },
-					cards: [{ rank: 'queen', suit: 'clubs', location: { fixture: 'foundation', data: [0] } }],
-					peekOnly: true,
-				});
-				expect(game.print()).toBe(
-					'' + //
-						' KC KD KH>KS|QC|QD QH QS \n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-			});
-
-			test('foundation 0', () => {
-				const game = FreeCell.parse(
-					'' + //
-						' KC KD KH KS>QC|QD|QH QS \n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
-				expect(game.selection).toEqual({
-					location: { fixture: 'foundation', data: [1] },
-					cards: [
-						{ rank: 'queen', suit: 'diamonds', location: { fixture: 'foundation', data: [1] } },
-					],
-					peekOnly: true,
-				});
-				expect(game.print()).toBe(
-					'' + //
-						' KC KD KH KS>QC|QD|QH QS \n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-			});
-
-			test('foundation 1', () => {
-				const game = FreeCell.parse(
-					'' + //
-						' KC KD KH KS QC>QD|QH|QS \n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-				expect(game.cursor).toEqual({ fixture: 'foundation', data: [1] });
-				expect(game.selection).toEqual({
-					location: { fixture: 'foundation', data: [2] },
-					cards: [
-						{ rank: 'queen', suit: 'hearts', location: { fixture: 'foundation', data: [2] } },
-					],
-					peekOnly: true,
-				});
-				expect(game.print()).toBe(
-					'' + //
-						' KC KD KH KS QC>QD|QH|QS \n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-			});
-
-			test('foundation 2', () => {
-				const game = FreeCell.parse(
-					'' + //
-						' KC KD KH KS QC QD>QH|QS|\n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-				expect(game.cursor).toEqual({ fixture: 'foundation', data: [2] });
-				expect(game.selection).toEqual({
-					location: { fixture: 'foundation', data: [3] },
-					cards: [
-						{ rank: 'queen', suit: 'spades', location: { fixture: 'foundation', data: [3] } },
-					],
-					peekOnly: true,
-				});
-				expect(game.print()).toBe(
-					'' + //
-						' KC KD KH KS QC QD>QH|QS|\n' +
-						'                         \n' +
-						' hand-jammed'
-				);
-			});
+			expect(game.availableMoves).toEqual([]);
 		});
 
-		describe('cascade', () => {
-			test('0,0 full + 1,0 selected', () => {
-				const game = FreeCell.parse(
-					'' + //
-						'             TC 8D KH KS \n' +
-						'>9D|TD|KC KD             \n' +
-						'       QD QC             \n' +
-						'       JC JD             \n' +
-						' hand-jammed'
-				);
-				expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 0] });
-				expect(game.selection).toEqual({
-					location: { fixture: 'cascade', data: [1, 0] },
-					cards: [{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } }],
-					peekOnly: false,
+		describe('selection next to cursor', () => {
+			describe('home', () => {
+				test('cell 0', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'>KC|KD|KH KS QC QD QH QS \n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+					expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
+					expect(game.selection).toEqual({
+						location: { fixture: 'cell', data: [1] },
+						cards: [{ rank: 'king', suit: 'diamonds', location: { fixture: 'cell', data: [1] } }],
+						peekOnly: false,
+					});
+					expect(game.print()).toBe(
+						'' + //
+							'>KC|KD|KH KS QC QD QH QS \n' +
+							'                         \n' +
+							' hand-jammed'
+					);
 				});
-				expect(game.print()).toBe(
-					'' + //
-						'             TC 8D KH KS \n' +
-						'>9D|TD|KC KD             \n' +
-						'       QD QC             \n' +
-						'       JC JD             \n' +
-						' hand-jammed'
-				);
+
+				test('cell 1', () => {
+					const game = FreeCell.parse(
+						'' + //
+							' KC>KD|KH|KS QC QD QH QS \n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+					expect(game.cursor).toEqual({ fixture: 'cell', data: [1] });
+					expect(game.selection).toEqual({
+						location: { fixture: 'cell', data: [2] },
+						cards: [{ rank: 'king', suit: 'hearts', location: { fixture: 'cell', data: [2] } }],
+						peekOnly: false,
+					});
+					expect(game.print()).toBe(
+						'' + //
+							' KC>KD|KH|KS QC QD QH QS \n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+				});
+
+				test('cell 2', () => {
+					const game = FreeCell.parse(
+						'' + //
+							' KC KD>KH|KS|QC QD QH QS \n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+					expect(game.cursor).toEqual({ fixture: 'cell', data: [2] });
+					expect(game.selection).toEqual({
+						location: { fixture: 'cell', data: [3] },
+						cards: [{ rank: 'king', suit: 'spades', location: { fixture: 'cell', data: [3] } }],
+						peekOnly: false,
+					});
+					expect(game.print()).toBe(
+						'' + //
+							' KC KD>KH|KS|QC QD QH QS \n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+				});
+
+				test('cell 3', () => {
+					const game = FreeCell.parse(
+						'' + //
+							' KC KD KH>KS|QC|QD QH QS \n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+					expect(game.cursor).toEqual({ fixture: 'cell', data: [3] });
+					expect(game.selection).toEqual({
+						location: { fixture: 'foundation', data: [0] },
+						cards: [
+							{ rank: 'queen', suit: 'clubs', location: { fixture: 'foundation', data: [0] } },
+						],
+						peekOnly: true,
+					});
+					expect(game.print()).toBe(
+						'' + //
+							' KC KD KH>KS|QC|QD QH QS \n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+				});
+
+				test('foundation 0', () => {
+					const game = FreeCell.parse(
+						'' + //
+							' KC KD KH KS>QC|QD|QH QS \n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+					expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
+					expect(game.selection).toEqual({
+						location: { fixture: 'foundation', data: [1] },
+						cards: [
+							{ rank: 'queen', suit: 'diamonds', location: { fixture: 'foundation', data: [1] } },
+						],
+						peekOnly: true,
+					});
+					expect(game.print()).toBe(
+						'' + //
+							' KC KD KH KS>QC|QD|QH QS \n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+				});
+
+				test('foundation 1', () => {
+					const game = FreeCell.parse(
+						'' + //
+							' KC KD KH KS QC>QD|QH|QS \n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+					expect(game.cursor).toEqual({ fixture: 'foundation', data: [1] });
+					expect(game.selection).toEqual({
+						location: { fixture: 'foundation', data: [2] },
+						cards: [
+							{ rank: 'queen', suit: 'hearts', location: { fixture: 'foundation', data: [2] } },
+						],
+						peekOnly: true,
+					});
+					expect(game.print()).toBe(
+						'' + //
+							' KC KD KH KS QC>QD|QH|QS \n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+				});
+
+				test('foundation 2', () => {
+					const game = FreeCell.parse(
+						'' + //
+							' KC KD KH KS QC QD>QH|QS|\n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+					expect(game.cursor).toEqual({ fixture: 'foundation', data: [2] });
+					expect(game.selection).toEqual({
+						location: { fixture: 'foundation', data: [3] },
+						cards: [
+							{ rank: 'queen', suit: 'spades', location: { fixture: 'foundation', data: [3] } },
+						],
+						peekOnly: true,
+					});
+					expect(game.print()).toBe(
+						'' + //
+							' KC KD KH KS QC QD>QH|QS|\n' +
+							'                         \n' +
+							' hand-jammed'
+					);
+				});
 			});
 
-			test('0,0 empty + 1,0 selected', () => {
-				const game = FreeCell.parse(
-					'' + //
-						'             TC 8D KH KS \n' +
-						'>  |TD|KC KD    9D       \n' +
-						'       QD QC             \n' +
-						'       JC JD             \n' +
-						' hand-jammed'
-				);
-				expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 0] });
-				expect(game.selection).toEqual({
-					location: { fixture: 'cascade', data: [1, 0] },
-					cards: [{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } }],
-					peekOnly: false,
+			describe('cascade', () => {
+				test('0,0 full + 1,0 selected', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'             TC 8D KH KS \n' +
+							'>9D|TD|KC KD             \n' +
+							'       QD QC             \n' +
+							'       JC JD             \n' +
+							' hand-jammed'
+					);
+					expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 0] });
+					expect(game.selection).toEqual({
+						location: { fixture: 'cascade', data: [1, 0] },
+						cards: [
+							{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } },
+						],
+						peekOnly: false,
+					});
+					expect(game.print()).toBe(
+						'' + //
+							'             TC 8D KH KS \n' +
+							'>9D|TD|KC KD             \n' +
+							'       QD QC             \n' +
+							'       JC JD             \n' +
+							' hand-jammed'
+					);
 				});
-				expect(game.print()).toBe(
-					'' + //
-						'             TC 8D KH KS \n' +
-						'>  |TD|KC KD    9D       \n' +
-						'       QD QC             \n' +
-						'       JC JD             \n' +
-						' hand-jammed'
-				);
-			});
 
-			test('0,1 empty + 1,1 selected', () => {
-				const game = FreeCell.parse(
-					'' + //
-						'             JC TD KH KS \n' +
-						' KC KD                   \n' +
-						'>QD|QC|                  \n' +
-						'   |JD|                  \n' +
-						' hand-jammed'
-				);
-				expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 1] });
-				expect(game.selection).toEqual({
-					location: { fixture: 'cascade', data: [1, 1] },
-					cards: [
-						{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [1, 1] } },
-						{ rank: 'jack', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 2] } },
-					],
-					peekOnly: false,
+				test('0,0 empty + 1,0 selected', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'             TC 8D KH KS \n' +
+							'>  |TD|KC KD    9D       \n' +
+							'       QD QC             \n' +
+							'       JC JD             \n' +
+							' hand-jammed'
+					);
+					expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 0] });
+					expect(game.selection).toEqual({
+						location: { fixture: 'cascade', data: [1, 0] },
+						cards: [
+							{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } },
+						],
+						peekOnly: false,
+					});
+					expect(game.print()).toBe(
+						'' + //
+							'             TC 8D KH KS \n' +
+							'>  |TD|KC KD    9D       \n' +
+							'       QD QC             \n' +
+							'       JC JD             \n' +
+							' hand-jammed'
+					);
 				});
-				expect(game.print()).toBe(
-					'' + //
-						'             JC TD KH KS \n' +
-						' KC KD                   \n' +
-						'>QD|QC|                  \n' +
-						'   |JD|                  \n' +
-						' hand-jammed'
-				);
-			});
 
-			test('2,1 empty + 2,1 selected', () => {
-				const game = FreeCell.parse(
-					'' + //
-						'             JC 8D KH KS \n' +
-						'    TD KC KD    9D       \n' +
-						'      >  |QC|   QD       \n' +
-						'         |JD|            \n' +
-						' hand-jammed'
-				);
-				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] }); // cursor moves up to valid card
-				expect(game.selection).toEqual({
-					location: { fixture: 'cascade', data: [3, 1] },
-					cards: [
-						{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [3, 1] } },
-						{ rank: 'jack', suit: 'diamonds', location: { fixture: 'cascade', data: [3, 2] } },
-					],
-					peekOnly: false,
+				test('0,1 empty + 1,1 selected', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'             JC TD KH KS \n' +
+							' KC KD                   \n' +
+							'>QD|QC|                  \n' +
+							'   |JD|                  \n' +
+							' hand-jammed'
+					);
+					expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 1] });
+					expect(game.selection).toEqual({
+						location: { fixture: 'cascade', data: [1, 1] },
+						cards: [
+							{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [1, 1] } },
+							{ rank: 'jack', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 2] } },
+						],
+						peekOnly: false,
+					});
+					expect(game.print()).toBe(
+						'' + //
+							'             JC TD KH KS \n' +
+							' KC KD                   \n' +
+							'>QD|QC|                  \n' +
+							'   |JD|                  \n' +
+							' hand-jammed'
+					);
 				});
-				expect(game.print()).toBe(
-					'' + //
-						'             JC 8D KH KS \n' +
-						'    TD>KC KD    9D       \n' +
-						'         |QC|   QD       \n' +
-						'         |JD|            \n' +
-						' hand-jammed'
-				);
+
+				test('2,1 empty + 2,1 selected', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'             JC 8D KH KS \n' +
+							'    TD KC KD    9D       \n' +
+							'      >  |QC|   QD       \n' +
+							'         |JD|            \n' +
+							' hand-jammed'
+					);
+					expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 0] }); // cursor moves up to valid card
+					expect(game.selection).toEqual({
+						location: { fixture: 'cascade', data: [3, 1] },
+						cards: [
+							{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [3, 1] } },
+							{ rank: 'jack', suit: 'diamonds', location: { fixture: 'cascade', data: [3, 2] } },
+						],
+						peekOnly: false,
+					});
+					expect(game.print()).toBe(
+						'' + //
+							'             JC 8D KH KS \n' +
+							'    TD>KC KD    9D       \n' +
+							'         |QC|   QD       \n' +
+							'         |JD|            \n' +
+							' hand-jammed'
+					);
+				});
 			});
 		});
-	});
 
-	describe('just a bunch of selections', () => {
-		const game = FreeCell.parse(
-			'' + //
-				'>9C 9D 9H 9S 8C 8D 8H 8S \n' +
-				' JC JD JH JS TC TD TH TS \n' +
-				' KC KD KH KS QC QD QH QS \n' +
-				' hand-jammed'
-		);
-		const cursor_locations = [
-			'{ "fixture": "cell", "data": [0] }',
-			'{ "fixture": "cell", "data": [1] }',
-			'{ "fixture": "cell", "data": [2] }',
-			'{ "fixture": "cell", "data": [3] }',
-			'{ "fixture": "foundation", "data": [0] }',
-			'{ "fixture": "foundation", "data": [1] }',
-			'{ "fixture": "foundation", "data": [2] }',
-			'{ "fixture": "foundation", "data": [3] }',
-			'{ "fixture": "cascade", "data": [0, 0] }',
-			'{ "fixture": "cascade", "data": [1, 0] }',
-			'{ "fixture": "cascade", "data": [2, 0] }',
-			'{ "fixture": "cascade", "data": [3, 0] }',
-			'{ "fixture": "cascade", "data": [4, 0] }',
-			'{ "fixture": "cascade", "data": [5, 0] }',
-			'{ "fixture": "cascade", "data": [6, 0] }',
-			'{ "fixture": "cascade", "data": [7, 0] }',
-			'{ "fixture": "cascade", "data": [0, 1] }',
-			'{ "fixture": "cascade", "data": [1, 1] }',
-			'{ "fixture": "cascade", "data": [2, 1] }',
-			'{ "fixture": "cascade", "data": [3, 1] }',
-			'{ "fixture": "cascade", "data": [4, 1] }',
-			'{ "fixture": "cascade", "data": [5, 1] }',
-			'{ "fixture": "cascade", "data": [6, 1] }',
-			'{ "fixture": "cascade", "data": [7, 1] }',
-		];
-		const selection_locations = cursor_locations.filter((l) => !l.includes('foundation'));
+		describe('just a bunch of selections', () => {
+			const game = FreeCell.parse(
+				'' + //
+					'>9C 9D 9H 9S 8C 8D 8H 8S \n' +
+					' JC JD JH JS TC TD TH TS \n' +
+					' KC KD KH KS QC QD QH QS \n' +
+					' hand-jammed'
+			);
+			const cursor_locations = [
+				'{ "fixture": "cell", "data": [0] }',
+				'{ "fixture": "cell", "data": [1] }',
+				'{ "fixture": "cell", "data": [2] }',
+				'{ "fixture": "cell", "data": [3] }',
+				'{ "fixture": "foundation", "data": [0] }',
+				'{ "fixture": "foundation", "data": [1] }',
+				'{ "fixture": "foundation", "data": [2] }',
+				'{ "fixture": "foundation", "data": [3] }',
+				'{ "fixture": "cascade", "data": [0, 0] }',
+				'{ "fixture": "cascade", "data": [1, 0] }',
+				'{ "fixture": "cascade", "data": [2, 0] }',
+				'{ "fixture": "cascade", "data": [3, 0] }',
+				'{ "fixture": "cascade", "data": [4, 0] }',
+				'{ "fixture": "cascade", "data": [5, 0] }',
+				'{ "fixture": "cascade", "data": [6, 0] }',
+				'{ "fixture": "cascade", "data": [7, 0] }',
+				'{ "fixture": "cascade", "data": [0, 1] }',
+				'{ "fixture": "cascade", "data": [1, 1] }',
+				'{ "fixture": "cascade", "data": [2, 1] }',
+				'{ "fixture": "cascade", "data": [3, 1] }',
+				'{ "fixture": "cascade", "data": [4, 1] }',
+				'{ "fixture": "cascade", "data": [5, 1] }',
+				'{ "fixture": "cascade", "data": [6, 1] }',
+				'{ "fixture": "cascade", "data": [7, 1] }',
+			];
+			const selection_locations = cursor_locations.filter((l) => !l.includes('foundation'));
 
-		describe.each(selection_locations)('selection %s', (s) => {
-			test.each(cursor_locations)('cursor %s', (c) => {
-				const selection_location = JSON.parse(s) as CardLocation;
-				const cursor_location = JSON.parse(c) as CardLocation;
+			describe.each(selection_locations)('selection %s', (s) => {
+				test.each(cursor_locations)('cursor %s', (c) => {
+					const selection_location = JSON.parse(s) as CardLocation;
+					const cursor_location = JSON.parse(c) as CardLocation;
 
-				const g2 = game.setCursor(selection_location).touch().setCursor(cursor_location);
-				expect(g2.cursor).toEqual(cursor_location);
-				expect(g2.selection?.location).toEqual(selection_location);
+					const g2 = game.setCursor(selection_location).touch().setCursor(cursor_location);
+					expect(g2.cursor).toEqual(cursor_location);
+					expect(g2.selection?.location).toEqual(selection_location);
 
-				const g2Print = g2.print();
-				expect(g2Print).toBe(FreeCell.parse(g2.print()).print());
+					const g2Print = g2.print();
+					expect(g2Print).toBe(FreeCell.parse(g2.print()).print());
 
-				// there is always 1 cursor
-				expect((g2Print.match(/>/g) ?? []).length).toBe(1);
+					// there is always 1 cursor
+					expect((g2Print.match(/>/g) ?? []).length).toBe(1);
 
-				// there is always 2 selection bars (in these cases, no squences), unless...
-				let selCount = 2;
-				// the cursor and selection are the same (overlaps left)
-				if (c === s) selCount = 1;
-				// the curror is immediatly after the selection (overlaps right)
-				if (
-					cursor_location.fixture === selection_location.fixture &&
-					cursor_location.data[0] === selection_location.data[0] + 1 &&
-					cursor_location.data[1] === selection_location.data[1]
-				)
-					selCount = 1;
-				// special case for curror is immediatly after the selection (straddles home row, overlaps right)
-				// (no special case for left, because they would be the same position)
-				if (
-					c === '{ "fixture": "foundation", "data": [0] }' &&
-					s === '{ "fixture": "cell", "data": [3] }'
-				)
-					selCount = 1;
-				expect((g2Print.match(/\|/g) ?? []).length).toBe(selCount);
+					// there is always 2 selection bars (in these cases, no squences), unless...
+					let selCount = 2;
+					// the cursor and selection are the same (overlaps left)
+					if (c === s) selCount = 1;
+					// the curror is immediatly after the selection (overlaps right)
+					if (
+						cursor_location.fixture === selection_location.fixture &&
+						cursor_location.data[0] === selection_location.data[0] + 1 &&
+						cursor_location.data[1] === selection_location.data[1]
+					)
+						selCount = 1;
+					// special case for curror is immediatly after the selection (straddles home row, overlaps right)
+					// (no special case for left, because they would be the same position)
+					if (
+						c === '{ "fixture": "foundation", "data": [0] }' &&
+						s === '{ "fixture": "cell", "data": [3] }'
+					)
+						selCount = 1;
+					expect((g2Print.match(/\|/g) ?? []).length).toBe(selCount);
+				});
 			});
+		});
+
+		// FIXME test.todo
+		describe('invalid selections', () => {
+			test.todo('selected whole column');
+
+			test.todo('multiple selections');
+
+			test.todo('just a bunch of vertical pipes');
 		});
 	});
 
@@ -1119,13 +1158,5 @@ describe('game.parse', () => {
 					' move 42 JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)'
 			);
 		});
-	});
-
-	describe('ignore availableMoves', () => {
-		test.todo('valid moves');
-
-		test.todo('invalid moves');
-
-		test.todo('just some random asterisks');
 	});
 });

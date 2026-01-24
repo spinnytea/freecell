@@ -739,12 +739,12 @@ export class FreeCell {
 	*/
 	shuffle32(seed?: number): FreeCell | this {
 		// if we pass the seed in directly (and it's valid), then use it
-		if (seed === undefined || seed < 1 || seed > 32000) {
+		if (seed === undefined || isNaN(seed) || seed < 1 || seed > 32000) {
 			// if we do not pass the seed in directly, then randomize it
 			// do not allow the impossible seed
-			while (seed === undefined || seed < 1 || seed > 32000 || seed === IMPOSSIBLE_SEED) {
+			do {
 				seed = utils.randomInteger(32000);
-			}
+			} while (seed === IMPOSSIBLE_SEED);
 		}
 
 		const actionText = `shuffle deck (${seed.toString(10)})`;
@@ -1475,66 +1475,79 @@ export class FreeCell {
 				}
 			}
 		} else if (popped.startsWith(':h')) {
+			// FIXME clean up this errorMessage nesting pattern
+			let errorMessage = '';
+			let replayGameForHistroy = new FreeCell({ cellCount, cascadeCount });
 			const matchSeed = /:h shuffle32 (\d+)/.exec(popped);
-			// FIXME (2-priority) (techdebt) (parse-history) ¿'init with unsupported history'? no need to explode
-			if (!matchSeed) throw new Error('unsupported shuffle');
-			const seed = parseInt(matchSeed[1], 10);
-
-			// REVIEW (techdebt) (joker) (settings) settings for new game?
-			let replayGameForHistroy = new FreeCell({ cellCount, cascadeCount }).shuffle32(seed);
-			if (deckLength === 0) {
-				replayGameForHistroy = replayGameForHistroy.dealAll();
-			}
-
-			// split will return [''] instead of []
-			const moves = lines.length ? lines.reverse().join('').trim().split(/\s+/) : [];
-			if (moves.length) {
-				moves.forEach((move) => {
-					replayGameForHistroy = replayGameForHistroy.moveByShorthand(move);
-				});
-			}
-
-			// FIXME (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
-			// verify all args to `new FreeCell`
-			const movesSeed = parseMovesFromHistory(replayGameForHistroy.history);
-			const valid =
-				// replayGameForHistroy.cells.length === cellCount &&
-				// replayGameForHistroy.tableau.length === cascadeCount &&
-				_isEqual(replayGameForHistroy.cards, cards) &&
-				// if (cannot verify cursor with running the code below to find it) vv
-				// replayGameForHistroy.selection === null &&
-				// replayGameForHistroy.availableMoves === null &&
-				replayGameForHistroy.previousAction.text === actionText &&
-				!!movesSeed &&
-				movesSeed.seed === seed &&
-				_isEqual(movesSeed.moves, moves) &&
-				// re-print the our game, confirm it matches the input
-				// REVIEW (3-priority) (techdebt) compare.trim() ? i keep messing up, i forget the space after the last history item…
-				//  - what about triming each line
-				//  - maybe at least log a warning or error (looks like it should match, but it's missing X trailing spaces)
-				replayGameForHistroy.print({ includeHistory: true }) === print;
-
-			// console.log('valid', valid);
-			// console.log('cellCount', replayGameForHistroy.cells.length === cellCount);
-			// console.log('cascadeCount', replayGameForHistroy.tableau.length === cascadeCount);
-			// console.log('cards', _isEqual(replayGameForHistroy.cards, cards));
-			// console.log('selection', replayGameForHistroy.selection === null);
-			// console.log('availableMoves', replayGameForHistroy.availableMoves === null);
-			// console.log('actionText', replayGameForHistroy.previousAction.text === actionText);
-			// console.log('movesSeed', !!movesSeed);
-			// console.log('movesSeed.seed', movesSeed?.seed === seed);
-			// console.log('movesSeed.moves', _isEqual(movesSeed?.moves, moves), moves);
-			// console.log('print', replayGameForHistroy.print({ includeHistory: true }) === print);
-			// console.log('print includeHistory\n', replayGameForHistroy.print({ includeHistory: true }));
-
-			if (valid) {
-				// we have the whole game, so we can simply return it now
-				return replayGameForHistroy;
-				// although, we don't have to...
-
-				Array.prototype.push.apply(history, replayGameForHistroy.history);
+			if (!matchSeed) {
+				errorMessage = 'init with invalid history shuffle';
 			} else {
-				history.push('init with invalid history');
+				const seed = parseInt(matchSeed[1], 10);
+
+				if (isNaN(seed) || seed < 1 || seed > 32000) {
+					errorMessage = 'init with invalid history seed';
+				} else {
+					replayGameForHistroy = replayGameForHistroy.shuffle32(seed);
+					if (deckLength === 0) {
+						replayGameForHistroy = replayGameForHistroy.dealAll();
+					}
+
+					// split will return [''] instead of []
+					const moves = lines.length ? lines.reverse().join('').trim().split(/\s+/) : [];
+					if (moves.length) {
+						moves.forEach((move) => {
+							replayGameForHistroy = replayGameForHistroy.moveByShorthand(move);
+						});
+					}
+
+					// FIXME (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
+					// verify all args to `new FreeCell`
+					const movesSeed = parseMovesFromHistory(replayGameForHistroy.history);
+					const valid =
+						// replayGameForHistroy.cells.length === cellCount &&
+						// replayGameForHistroy.tableau.length === cascadeCount &&
+						_isEqual(replayGameForHistroy.cards, cards) &&
+						// if (cannot verify cursor with running the code below to find it) vv
+						// replayGameForHistroy.selection === null &&
+						// replayGameForHistroy.availableMoves === null &&
+						replayGameForHistroy.previousAction.text === actionText &&
+						!!movesSeed &&
+						movesSeed.seed === seed &&
+						_isEqual(movesSeed.moves, moves) &&
+						// re-print the our game, confirm it matches the input
+						// REVIEW (3-priority) (techdebt) compare.trim() ? i keep messing up, i forget the space after the last history item…
+						//  - what about triming each line
+						//  - maybe at least log a warning or error (looks like it should match, but it's missing X trailing spaces)
+						replayGameForHistroy.print({ includeHistory: true }) === print;
+
+					// console.log('valid', valid);
+					// console.log('cellCount', replayGameForHistroy.cells.length === cellCount);
+					// console.log('cascadeCount', replayGameForHistroy.tableau.length === cascadeCount);
+					// console.log('cards', _isEqual(replayGameForHistroy.cards, cards));
+					// console.log('selection', replayGameForHistroy.selection === null);
+					// console.log('availableMoves', replayGameForHistroy.availableMoves === null);
+					// console.log('actionText', replayGameForHistroy.previousAction.text === actionText);
+					// console.log('movesSeed', !!movesSeed);
+					// console.log('movesSeed.seed', movesSeed?.seed === seed);
+					// console.log('movesSeed.moves', _isEqual(movesSeed?.moves, moves), moves);
+					// console.log('print', replayGameForHistroy.print({ includeHistory: true }) === print);
+					// console.log('print includeHistory\n', replayGameForHistroy.print({ includeHistory: true }));
+
+					if (!valid) errorMessage = 'init with invalid history replay';
+				}
+			}
+
+			if (!errorMessage) {
+				// we have the whole game, so we can simply return it now
+				// (we have all the info we need)
+				return replayGameForHistroy;
+
+				// although, we don't have to…
+				// we can stash the history and move on
+				// but we don't have any other information to glean from the print
+				// Array.prototype.push.apply(history, replayGameForHistroy.history);
+			} else {
+				history.push(errorMessage);
 				history.push(actionText);
 			}
 		} else {
@@ -1666,11 +1679,12 @@ export class FreeCell {
 			const reprint = game.print({ includeHistory: print.includes(':h') });
 			if (reprint !== print) {
 				// XXX (techdebt) sometimes unit tests don't include the "you win" message in the setup
-				if (!reprint.includes('Y O U   W I N !') && !reprint.includes('YOU WIN !')) {
+				if (!reprint.includes('Y O U   W I N !') && !reprint.includes('YOU WIN !') && !reprint.includes('A M A Z I N G !') && !reprint.includes('AMAZING !')) {
 					// print with non-empty deck doesn't match (weird game setup for testing)
 					// some games have invalid history (on purpose or otherwise)
 					if (!reprint.includes(':d') && !reprint.includes('init with invalid history')) {
 						// cursor is in the wrong place sometimes
+						// FIXME handle flash (e.g. game.$checkCanFlourish.test.ts `juice flash AH,AS`)
 						const rpc = reprint.replace('>', ' ');
 						const pc = print.replace('>', ' ');
 						if (rpc !== pc) {
