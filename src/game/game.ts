@@ -1462,8 +1462,8 @@ export class FreeCell {
 		if (!popped) {
 			const previousActionType = parsePreviousActionType(actionText).type;
 			if (previousActionType === 'init') {
-				// XXX (techdebt) (parse-history) does 'init' belong in the history?
-				//  - so far, it's been omitted, but like, sometimes we have 'init with invalid history'
+				// init is implied
+				// we only have it in the history if there's an anomaly
 				if (actionText && actionText !== 'init') {
 					history.push(actionText);
 				}
@@ -1476,7 +1476,7 @@ export class FreeCell {
 			}
 		} else if (popped.startsWith(':h')) {
 			const matchSeed = /:h shuffle32 (\d+)/.exec(popped);
-			// TODO (2-priority) (techdebt) (parse-history) ¿'init with unsupported history'? no need to explode
+			// FIXME (2-priority) (techdebt) (parse-history) ¿'init with unsupported history'? no need to explode
 			if (!matchSeed) throw new Error('unsupported shuffle');
 			const seed = parseInt(matchSeed[1], 10);
 
@@ -1485,8 +1485,6 @@ export class FreeCell {
 			if (deckLength === 0) {
 				replayGameForHistroy = replayGameForHistroy.dealAll();
 			}
-			// TODO (techdebt) (parse-history) 'deal all cards'
-			// TODO (techdebt) (parse-history) 'deal 44 cards'
 
 			// split will return [''] instead of []
 			const moves = lines.length ? lines.reverse().join('').trim().split(/\s+/) : [];
@@ -1496,6 +1494,7 @@ export class FreeCell {
 				});
 			}
 
+			// FIXME (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
 			// verify all args to `new FreeCell`
 			const movesSeed = parseMovesFromHistory(replayGameForHistroy.history);
 			const valid =
@@ -1545,22 +1544,19 @@ export class FreeCell {
 			);
 			history.push(popped.trim());
 			history.push(actionText);
-			// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
+			// FIXME (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
 			//  - text we can use what history is valid; ['init partial history', ..., actionText]
 			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
 			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
-			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
-			// TODO (2-priority) (motivation) (parse-history) (undo) invalid history or no history should should still be able to undo the move from game.print()
+			// FIXME (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
+			// FIXME (2-priority) (motivation) (parse-history) (undo) invalid history or no history should still be able to undo the move from game.print()
 			//  - try it with a valid move (success)
 			//  - try it with an invalid move (noop)
-			// TODO (techdebt) (parse-history) 'deal 1 cards'
-			// TODO (techdebt) (parse-history) 'deal 2 cards'
-			// TODO (techdebt) (parse-history) 'deal 44 cards'
-			// TODO (techdebt) (parse-history) 'deal all cards'
+			//  - try it with a valid move, then print/parse
 		}
 
 		// sus out the cursor/selection locations
-		// TODO (techdebt) is there any way to simplify this?
+		// FIXME (techdebt) is there any way to simplify this?
 		let cursor: CardLocation | undefined = undefined;
 		let selection_location: CardLocation | undefined = undefined;
 		const home_cursor_index = home_spaces.indexOf('>');

@@ -351,7 +351,7 @@ describe('game.parse', () => {
 				expect(gameNoHist.previousAction).toEqual({
 					text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 					type: 'move-foundation',
-					// TODO (techdebt) (parse-history) tweenCards is present but doesn't have a value? that's weird
+					// FIXME (techdebt) (parse-history) tweenCards is present but doesn't have a value? that's weird
 					//  - ['init without history', 'move 2a 4S→cell (auto-foundation 56 AH,2H)']
 					tweenCards: [],
 				});
