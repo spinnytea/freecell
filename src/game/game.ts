@@ -1475,7 +1475,7 @@ export class FreeCell {
 				}
 			}
 		} else if (popped.startsWith(':h')) {
-			// FIXME clean up this errorMessage nesting pattern
+			// FIXME clean up this errorMessage nesting pattern (the code flow is weird)
 			let errorMessage = '';
 			let replayGameForHistroy = new FreeCell({ cellCount, cascadeCount });
 			const matchSeed = /:h shuffle32 (\d+)/.exec(popped);
