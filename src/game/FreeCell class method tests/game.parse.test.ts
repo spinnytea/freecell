@@ -245,14 +245,13 @@ describe('game.parse', () => {
 				expect(gameWithHist).toEqual(game);
 
 				const gameNoHist = FreeCell.parse(game.print());
-				expect(gameNoHist.history).toEqual([]);
+				expect(gameNoHist.history).toEqual(['shuffle deck (1)']);
 				expect(gameNoHist.previousAction).toEqual({
 					text: 'shuffle deck (1)',
 					type: 'shuffle',
 				});
 				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [0] });
-				expect(gameNoHist).not.toEqual(game);
-				expect(_omit(gameNoHist, 'history')).toEqual(_omit(game, 'history'));
+				expect(gameNoHist).toEqual(game);
 			});
 
 			test('shuffle + deal', () => {
@@ -369,13 +368,14 @@ describe('game.parse', () => {
 				expect(gameWithHist).toEqual(game);
 
 				const gameNoHist = FreeCell.parse(game.print());
-				expect(gameNoHist.history).toEqual([]);
+				expect(gameNoHist.history).toEqual([
+					'init with incomplete history',
+					'move 2a 4S→cell (auto-foundation 56 AH,2H)',
+				]);
 				expect(gameNoHist.previousAction).toEqual({
 					text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 					type: 'move-foundation',
-					// FIXME (techdebt) (parse-history) tweenCards is present but doesn't have a value? that's weird
-					//  - ['init without history', 'move 2a 4S→cell (auto-foundation 56 AH,2H)']
-					tweenCards: [],
+					tweenCards: [{ rank: '4', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
 				});
 				expect(gameNoHist.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(gameNoHist).not.toEqual(game);
@@ -449,22 +449,21 @@ describe('game.parse', () => {
 				);
 
 				// at this point, we can recover the entire game using the history
-				expect(
-					FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
-				).toBe(game.print({ includeHistory: true }));
-				expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
+				let gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
+				let gameNoHist = FreeCell.parse(game.print());
+				expect(gameWithHist.print({ includeHistory: true })).toBe(
+					game.print({ includeHistory: true })
+				);
+				expect(gameWithHist).toEqual(game);
 				// but the whole game isn't exactly the same
 				// if write/read a game, we can recover the state, but not the history
-				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
-				expect(
-					_omit(FreeCell.parse(game.print()), ['history', 'previousAction.tweenCards'])
-				).toEqual(_omit(game, ['history', 'previousAction.tweenCards']));
+				expect(gameNoHist.print()).toBe(game.print());
+				expect(_omit(gameNoHist, ['history'])).toEqual(_omit(game, ['history']));
 				expect(game.history.length).toBe(71);
-				expect(FreeCell.parse(game.print()).history.length).toBe(0);
-				expect(game.previousAction.tweenCards).toEqual([
-					{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 0] } },
+				expect(gameNoHist.history).toEqual([
+					'init with incomplete history',
+					'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
 				]);
-				expect(FreeCell.parse(game.print()).previousAction.tweenCards).toEqual([]);
 
 				game = game.moveCursor('right');
 				expect(game.print()).toBe(
@@ -495,16 +494,18 @@ describe('game.parse', () => {
 				);
 
 				// if write/read a game, we can recover the state, but not the history
-				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
-				expect(_omit(FreeCell.parse(game.print()), 'history')).toEqual(_omit(game, 'history'));
+				gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
+				gameNoHist = FreeCell.parse(game.print());
+				expect(gameNoHist.print()).toBe(game.print());
+				expect(_omit(gameNoHist, 'history')).toEqual(_omit(game, 'history'));
 				expect(game.history.length).toBe(71);
-				expect(FreeCell.parse(game.print()).history.length).toBe(0);
-				expect(
-					FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
-				).toBe(game.print({ includeHistory: true }));
-				expect(
-					_omit(FreeCell.parse(game.print({ includeHistory: true })), ['previousAction', 'cursor'])
-				).toEqual(_omit(game, ['previousAction', 'cursor']));
+				expect(gameNoHist.history.length).toBe(0);
+				expect(gameWithHist.print({ includeHistory: true })).toBe(
+					game.print({ includeHistory: true })
+				);
+				expect(_omit(gameWithHist, ['previousAction', 'cursor'])).toEqual(
+					_omit(game, ['previousAction', 'cursor'])
+				);
 				expect(game.previousAction).toEqual({
 					text: 'cursor right',
 					type: 'cursor',
@@ -513,7 +514,7 @@ describe('game.parse', () => {
 					fixture: 'foundation',
 					data: [1],
 				});
-				expect(FreeCell.parse(game.print({ includeHistory: true })).previousAction).toEqual({
+				expect(gameWithHist.previousAction).toEqual({
 					text: 'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
 					type: 'move-foundation',
 					tweenCards: [
@@ -1109,7 +1110,7 @@ describe('game.parse', () => {
 			});
 		});
 
-		describe('just a bunch of selections', () => {
+		describe('various valid selections', () => {
 			const game = FreeCell.parse(
 				'' + //
 					'>9C 9D 9H 9S 8C 8D 8H 8S \n' +

@@ -28,6 +28,7 @@ import {
 	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
 	parsePreviousActionType,
+	PREVIOUS_ACTION_TYPE_IN_HISTORY,
 	PREVIOUS_ACTION_TYPE_IS_MOVE,
 	PREVIOUS_ACTION_TYPE_IS_START_OF_GAME,
 	PreviousAction,
@@ -1455,12 +1456,13 @@ export class FreeCell {
 
 		line.pop();
 		const actionText = line.slice(0).reverse().join('') || 'init';
+		const previousAction = parsePreviousActionType(actionText);
 
 		// attempt to parse the history
 		const history: string[] = [];
 		const popped = lines.pop();
 		if (!popped) {
-			const previousActionType = parsePreviousActionType(actionText).type;
+			const previousActionType = previousAction.type;
 			if (previousActionType === 'init') {
 				// init is implied
 				// we only have it in the history if there's an anomaly
@@ -1568,6 +1570,15 @@ export class FreeCell {
 			//  - try it with a valid move, then print/parse
 		}
 
+		if (!history.length && previousAction.type !== 'init') {
+			if (previousAction.type === 'shuffle') {
+				history.push(actionText);
+			} else if (PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type)) {
+				history.push('init with incomplete history');
+				history.push(actionText);
+			}
+		}
+
 		// sus out the cursor/selection locations
 		// FIXME (techdebt) is there any way to simplify this?
 		let cursor: CardLocation | undefined = undefined;
@@ -1650,7 +1661,7 @@ export class FreeCell {
 
 		// REVIEW (techdebt) (joker) (settings) settings for new game?
 		const game = new FreeCell({
-			action: parsePreviousActionType(actionText),
+			action: previousAction,
 			cellCount,
 			cascadeCount,
 			cards,
@@ -1663,7 +1674,11 @@ export class FreeCell {
 		}
 
 		// TODO (techdebt) copy-pasta, same as `undo`
-		if (game.previousAction.type === 'move-foundation' && !game.previousAction.tweenCards) {
+		if (
+			game.previousAction.type === 'move-foundation' &&
+			!game.previousAction.tweenCards &&
+			history.length
+		) {
 			const secondUndo = game.undo({ skipActionPrev: true });
 			const { from, to } = parseActionTextMove(game.previousAction.text);
 			game.previousAction.tweenCards = getCardsThatMoved(
