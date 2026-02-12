@@ -18,6 +18,7 @@ import {
 	SuitList,
 } from '@/game/card/card';
 import { IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
+import { printDeck, printHistory, printHome, printTableau, printWin } from '@/game/io/print';
 import {
 	appendActionToHistory,
 	GameFunction,
@@ -1018,213 +1019,25 @@ export class FreeCell {
 	}
 
 	/**
-		print the home row of the game board
-
+		print the deck (row) of the game \
 		split out logic from {@link FreeCell.print}
 
-		XXX (techdebt) optimize
-	*/
-	__printHome(cursor = this.cursor, selection = this.selection): string {
-		let str = '';
-		if (
-			cursor.fixture === 'cell' ||
-			selection?.location.fixture === 'cell' ||
-			cursor.fixture === 'foundation' ||
-			selection?.location.fixture === 'foundation'
-		) {
-			// cells
-			// prettier-ignore
-			str += this.cells
-				.map((card, idx) => `${getPrintSeparator({ fixture: 'cell', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-				.join('');
-
-			// collapsed col between
-			if (isLocationEqual(cursor, { fixture: 'foundation', data: [0] })) {
-				str += '>';
-			} else if (
-				selection &&
-				isLocationEqual(selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
-			) {
-				str += '|';
-			} else if (
-				selection &&
-				isLocationEqual(selection.location, { fixture: 'foundation', data: [0] })
-			) {
-				str += '|';
-			} else {
-				str += ' ';
-			}
-
-			// foundation (minus first col)
-			// prettier-ignore
-			str += this.foundations
-				.map((card, idx) => `${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-				.join('');
-
-			// last col
-			if (
-				selection &&
-				isLocationEqual(selection.location, {
-					fixture: 'foundation',
-					data: [this.foundations.length - 1],
-				})
-			) {
-				str += '|';
-			} else {
-				str += ' ';
-			}
-		} else {
-			// if no cursor/selection in home row
-			str += ' ' + this.cells.map((card) => shorthandCard(card)).join(' ');
-			str += ' ' + this.foundations.map((card) => shorthandCard(card)).join(' ');
-			str += ' ';
-		}
-		return str;
-	}
-
-	/**
-		print the tableau of the game board
-
-		split out logic from {@link FreeCell.print}
-
-		XXX (techdebt) optimize
-	*/
-	__printTableau(
-		cursor = this.cursor,
-		selection = this.selection,
-		flashCards = this.flashCards
-	): string {
-		let str = '';
-		const max = Math.max(...this.tableau.map((cascade) => cascade.length));
-		const hasSelection =
-			cursor.fixture === 'cascade' ||
-			selection?.location.fixture === 'cascade' ||
-			flashCards?.some((card) => card.location.fixture === 'cascade');
-		for (let i = 0; i === 0 || i < max; i++) {
-			if (hasSelection) {
-				str +=
-					'\n' +
-					this.tableau
-						.map((cascade, idx) => {
-							const c = getPrintSeparator(
-								{ fixture: 'cascade', data: [idx, i] },
-								cursor,
-								selection,
-								flashCards
-							);
-							return c + shorthandCard(cascade[i]);
-						})
-						.join('') +
-					getPrintSeparator(
-						{ fixture: 'cascade', data: [this.tableau.length, i] },
-						null,
-						selection,
-						flashCards
-					);
-			} else {
-				// if no cursor/selection in this row
-				str += '\n ' + this.tableau.map((cascade) => shorthandCard(cascade[i])).join(' ') + ' ';
-			}
-		}
-		return str;
-	}
-
-	__printWin(): string {
-		if (this.win) {
-			// XXX (hud) different messages depending on how you win
-			const msg = this.winIsFlourish52
-				? this.tableau.length > 6
-					? 'A M A Z I N G !'
-					: 'AMAZING !'
-				: this.tableau.length > 6
-					? 'Y O U   W I N !'
-					: 'YOU WIN !';
-
-			const lineLength = this.tableau.length * 3 + 1;
-			const paddingLength = (lineLength - msg.length - 2) / 2;
-			const spaces = '                               '; // enough spaces for 10 cascadeCount
-			const padding = '                            '.substring(0, paddingLength);
-			return (
-				'\n:' +
-				padding +
-				msg +
-				padding +
-				(paddingLength === padding.length ? '' : ' ') +
-				':' +
-				'\n' +
-				spaces.substring(0, lineLength)
-			);
-		}
-		return '';
-	}
-
-	/**
-		print the deck (row) of the game
-
-		split out logic from {@link FreeCell.print}
-
-		XXX (techdebt) optimize
+		TODO (refactor) remove - used in lots of tests
+		@see {@link printDeck}
 	*/
 	__printDeck(cursor = this.cursor, selection = this.selection): string {
-		if (this.deck.length) {
-			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
-				// prettier-ignore
-				const deckStr = this.deck
-					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-					.reverse()
-					.join('');
-				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
-				const offDeckPrefix = cursor.data[0] === this.deck.length ? '>  ' : '';
-				return `${offDeckPrefix}${deckStr}${lastCol}`;
-			} else {
-				// if no cursor/selection in deck
-				const deckStr = this.deck
-					.map((card) => shorthandCard(card))
-					.reverse()
-					.join(' ');
-				return ` ${deckStr} `;
-			}
-		} else if (cursor.fixture === 'deck') {
-			return `>   `;
-		} else {
-			return '';
-		}
+		return printDeck(this, cursor, selection);
 	}
 
 	/**
-		print the history (block) of the game
-
+		print the history (block) of the game \
 		split out logic from {@link FreeCell.print}
 
-		- BUG (history) (shorthandMove) standard move notation can only be used when `limit = 'opp+1'` for all moves
-			- e.g. if (movesSeed && isStandardRuleset)
-		- REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
-			- e.g. if (movesSeed && isStandardGameplay)
-		- XXX (techdebt) optimize
+		TODO (refactor) remove - used in lots of tests
+		@see {@link printHistory}
 	*/
 	__printHistory(skipLastHist = false): string {
-		let str = '';
-		const movesSeed = parseMovesFromHistory(this.history);
-		if (movesSeed) {
-			// print the last valid action, _not_ previousAction.text
-			// the previous action could be a cursor movement, or a canceled touch action (touch stop)
-			// TODO (history) (print) remove the last action - not needed for save/reload
-			if (!skipLastHist) str += `\n ${new String(this.history.at(-1)).toString()}`;
-			str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
-			while (movesSeed.moves.length) {
-				str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
-			}
-		} else {
-			// if we don't know where we started or shorthand is otherwise invalid,
-			// we can still print out all the actions we do know about
-			this.history
-				.slice(0)
-				.reverse()
-				.forEach((actionText) => {
-					str += '\n ' + actionText;
-				});
-		}
-		return str;
+		return printHistory(this, skipLastHist);
 	}
 
 	/**
@@ -1262,23 +1075,22 @@ export class FreeCell {
 		const flashCards = !includeHistory ? this.flashCards : null;
 
 		let str =
-			this.__printHome(cursor, selection) + //
-			this.__printTableau(cursor, selection, flashCards);
+			printHome(this, cursor, selection) + //
+			printTableau(this, cursor, selection, flashCards);
 
 		// REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
 		if (this.win) {
-			str += this.__printWin();
+			str += printWin(this);
 		}
 
 		if (this.deck.length || cursor.fixture === 'deck' || verbose) {
-			const printDeck = this.__printDeck(cursor, selection);
-			str += `\n:d${printDeck}`;
+			str += `\n:d${printDeck(this, cursor, selection)}`;
 		}
 
 		// TODO (print) (settings) have a dedicated line for house rules, e.g. "with jokers", "auto-foundation opp+2", etc.
 
 		if (includeHistory) {
-			str += this.__printHistory();
+			str += printHistory(this);
 		} else {
 			str += '\n ' + this.previousAction.text;
 		}
@@ -1712,56 +1524,4 @@ export class FreeCell {
 		// */
 		return game;
 	}
-}
-
-export function getPrintSeparator(
-	location: CardLocation,
-	cursor: CardLocation | null,
-	selection: CardSequence | null,
-	flashCards: Card[] | null = null
-) {
-	if (cursor && isLocationEqual(location, cursor)) {
-		return '>';
-	}
-	if (selection) {
-		if (isLocationEqual(location, selection.location)) {
-			return '|';
-		}
-		if (location.fixture !== 'cascade') {
-			const shift = location.fixture === 'deck' ? 1 : -1;
-			if (
-				isLocationEqual(
-					{ fixture: location.fixture, data: [location.data[0] + shift] },
-					selection.location
-				)
-			) {
-				return '|';
-			}
-		} else {
-			if (
-				location.data[0] === selection.location.data[0] ||
-				location.data[0] - 1 === selection.location.data[0]
-			) {
-				if (
-					location.data[1] >= selection.location.data[1] &&
-					location.data[1] < selection.location.data[1] + selection.cards.length
-				) {
-					return '|';
-				}
-			}
-		}
-	}
-	if (flashCards?.length) {
-		if (flashCards.some((card) => isLocationEqual(location, card.location))) {
-			return '*';
-		}
-		const shifted: CardLocation = {
-			fixture: 'cascade',
-			data: [location.data[0] - 1, location.data[1]],
-		};
-		if (flashCards.some((card) => isLocationEqual(shifted, card.location))) {
-			return '*';
-		}
-	}
-	return ' ';
 }
