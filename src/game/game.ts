@@ -17,7 +17,7 @@ import {
 	SuitList,
 } from '@/game/card/card';
 import { IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
-import { parseHistory } from '@/game/io/parse';
+import { parseHistoryShorthand } from '@/game/io/parse';
 import { printDeck, printHistory, printHome, printTableau, printWin } from '@/game/io/print';
 import {
 	appendActionToHistory,
@@ -1030,7 +1030,7 @@ export class FreeCell {
 	}
 
 	/**
-		print the history (block) of the game \
+		print the history of the game \
 		split out logic from {@link FreeCell.print}
 
 		TODO (refactor) remove - used in lots of tests
@@ -1289,7 +1289,8 @@ export class FreeCell {
 				}
 			}
 		} else if (popped.startsWith(':h')) {
-			const { errorMessage, replayGameForHistroy } = parseHistory(print, lines, popped, {
+			// parse the history (shorthand) of the game
+			const { errorMessage, replayGameForHistroy } = parseHistoryShorthand(print, lines, popped, {
 				cards,
 				cellCount,
 				cascadeCount,
@@ -1307,10 +1308,11 @@ export class FreeCell {
 				// but we don't have any other information to glean from the print
 				// Array.prototype.push.apply(history, replayGameForHistroy.history);
 			} else {
-				history.push(errorMessage ?? 'init with invalid history');
+				history.push(errorMessage ?? 'init with invalid history error');
 				history.push(actionText);
 			}
 		} else {
+			// parse the history (lines) of the game
 			Array.prototype.push.apply(
 				history,
 				lines.map((l) => l.trim())

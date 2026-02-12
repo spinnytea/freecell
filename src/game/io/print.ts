@@ -188,7 +188,7 @@ export function printDeck(
 }
 
 /**
-	print the history (block) of the game \
+	print the history of the game \
 	split out logic from {@link FreeCell.print}
 
 	- BUG (history) (shorthandMove) standard move notation can only be used when `limit = 'opp+1'` for all moves
@@ -201,6 +201,8 @@ export function printHistory(game: FreeCell, skipLasgamet = false): string {
 	let str = '';
 	const movesSeed = parseMovesFromHistory(game.history);
 	if (movesSeed) {
+		// print the history (shorthand) of the game
+		// ---
 		// print the last valid action, _not_ previousAction.text
 		// the previous action could be a cursor movement, or a canceled touch action (touch stop)
 		// TODO (history) (print) remove the last action - not needed for save/reload
@@ -210,6 +212,8 @@ export function printHistory(game: FreeCell, skipLasgamet = false): string {
 			str += '\n ' + movesSeed.moves.splice(0, game.tableau.length).join(' ') + ' ';
 		}
 	} else {
+		// print the history (lines) of the game
+		// ---
 		// if we don't know where we started or shorthand is otherwise invalid,
 		// we can still print out all the actions we do know about
 		game.history

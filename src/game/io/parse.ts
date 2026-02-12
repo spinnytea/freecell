@@ -9,10 +9,12 @@ import { parseMovesFromHistory } from '@/game/move/history';
 // TODO (refactor) parseDeck
 
 /**
-	parse the history of the game \
+	parse the history (shorthand) of the game \
 	split out logic from {@link FreeCell.parse}
+
+	FIXME (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
 */
-export function parseHistory(
+export function parseHistoryShorthand(
 	print: string,
 	lines: string[],
 	popped: string,
@@ -54,9 +56,10 @@ export function parseHistory(
 		});
 	}
 
-	// FIXME (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
 	// verify all args to `new FreeCell`
 	const movesSeed = parseMovesFromHistory(replayGameForHistroy.history);
+
+	// FIXME split up this monolithic block into individual error messages
 	const valid =
 		// replayGameForHistroy.cells.length === cellCount &&
 		// replayGameForHistroy.tableau.length === cascadeCount &&
@@ -69,7 +72,7 @@ export function parseHistory(
 		movesSeed.seed === seed &&
 		_isEqual(movesSeed.moves, moves) &&
 		// re-print the our game, confirm it matches the input
-		// REVIEW (3-priority) (techdebt) compare.trim() ? i keep messing up, i forget the space after the last history item…
+		// FIXME (3-priority) (techdebt) compare.trim() ? i keep messing up, i forget the space after the last history item…
 		//  - what about triming each line
 		//  - maybe at least log a warning or error (looks like it should match, but it's missing X trailing spaces)
 		replayGameForHistroy.print({ includeHistory: true }) === print;
