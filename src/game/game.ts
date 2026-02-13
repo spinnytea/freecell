@@ -1410,6 +1410,11 @@ export class FreeCell {
 		}
 
 		if (!cursor) {
+			// XXX (optional) (complexity) we could just use the actionText
+			//  - there is a unit test that shows why the loop is desireable
+			//  - from before we had move-foundation, when it was separately move + auto-foundation
+			// cursor = parseCursorFromPreviousActionText(actionText, cards);
+
 			// try to figure out the location of the cursor based on the previous move
 			for (let i = history.length - 1; !cursor && i >= 0; i--) {
 				cursor = parseCursorFromPreviousActionText(history[i], cards);

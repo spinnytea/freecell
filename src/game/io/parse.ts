@@ -81,22 +81,22 @@ export function parseHistoryShorthand(
 		return { errorMessage: 'init with invalid history replay cards' };
 	}
 
-	// FIXME (refactor) (parse-history) parseHistoryShorthand either:
-	//  a) (complexity) move parseHistoryShorthand down, so we can verify the cursor, selection, and availableMoves
-	//   ↪ save the history lines until the end of FreeCell.parse
-	//  b) (simplify) move parseHistoryShorthand up, and simply verify print, which includes the entire state of the game
-	//   ↪ check if `:h` is in the print, if so, skip to that
-	//  c) (both!) cut out the history lines, if preset, use a flag to determine when we verify the history
-	//   ↪ the default should be to do it up front, we can exit early/do less work
-	//   ↪ but we can sometimes verify it after with unit tests, to like, make sure the rest of the parse logic is sound?
-	//  d) do option a, because, "if we pass in the history, we want to check it", and this helps verify the standard parsing when there is no history
-	//     and really, complixity is _fine_, but we only want _one way_ to do things
-
-	// FIXME (refactor) (parse-history) verify cursor
+	// XXX (optional) (complexity) verify cursor
 	//  - we parse the history before the cursor
+	//  - we would need to do that before parseHistoryShorthand
+	//  - we could simply use the actionText to recover the cursor,
+	//    but there is a separate optional complexity that uses the history to recover it more completely
+	//  - (maybe we need to compromise and do both? verify the cursor if we have it, which will be most of the time)
 
-	// FIXME (refactor) (parse-history) verify selection, availableMoves
-	//  - we parse the history before the selection and availableMoves
+	// XXX (optional) (complexity) verify selection, availableMoves
+	//  - we don't try to create the selection or availableMoves until after we've created a `game = new FreeCell`
+	//  - … we would also need to _print_ the selection and availableMoves when we print the history
+	// if (replayGameForHistroy.selection !== null) {
+	// 	return { errorMessage: 'init with invalid history replay selection' };
+	// }
+	// if (replayGameForHistroy.availableMoves !== null) {
+	// 	return { errorMessage: 'init with invalid history replay availableMoves' };
+	// }
 
 	// we've already parsed the action text, we are verifying that the moves produce the same result
 	if (replayGameForHistroy.previousAction.text !== actionText) {
