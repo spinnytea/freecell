@@ -746,8 +746,59 @@ describe('game.parse', () => {
 				);
 			});
 
-			// no idea how we can get this far
-			test.todo('different print');
+			describe('different print', () => {
+				test('trailing whitespace', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'             KC KS KH KD \n' +
+							'                         \n' +
+							':    Y O U   W I N !    :\n' +
+							'                         \n' +
+							' move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)\n' +
+							':h shuffle32 1\n' +
+							' 3a 32 7b 3c 37 37 b7 8b \n' +
+							' 87 48 82 a8 4a 34 57 54 \n' +
+							' 85 8d 87 c7 d7 b8 38 23 \n' +
+							' 28 32 6b 6c 78 a3 73 7a \n' +
+							' 7c 74 c7 67 63 56 8h b8 \n' +
+							' 5b 51 b5 24 25 6h 6h 24 \n' +
+							' 26 a4 37 2a 8h 4h 1h 17 \n' +
+							' 1h 1b 8h 4h 4b 4c 4d a2 \n' +
+							' 42 46 3h 7h 13' // missing last space; which I do _aaaallllllll_ the time
+					);
+					expect(game.history).toEqual([
+						'init with invalid history trailing whitespace',
+						'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
+					]);
+				});
+
+				test('any line trimmed whitespace', () => {
+					// this doesn't happen as often because it tends to break a lot of other things
+					// (the parser needs the leading whitespace or we don't get this far)
+					const game = FreeCell.parse(
+						'' + //
+							'             KC KS KH KD \n' +
+							'                         \n' +
+							':    Y O U   W I N !    :\n' +
+							'                         \n' +
+							' move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)\n' +
+							':h shuffle32 1\n' +
+							' 3a 32 7b 3c 37 37 b7 8b\n' + // missing trailing spaces on all history lines
+							' 87 48 82 a8 4a 34 57 54\n' +
+							' 85 8d 87 c7 d7 b8 38 23\n' +
+							' 28 32 6b 6c 78 a3 73 7a\n' +
+							' 7c 74 c7 67 63 56 8h b8\n' +
+							' 5b 51 b5 24 25 6h 6h 24\n' +
+							' 26 a4 37 2a 8h 4h 1h 17\n' +
+							' 1h 1b 8h 4h 4b 4c 4d a2\n' +
+							' 42 46 3h 7h 13'
+					);
+					expect(game.history).toEqual([
+						'init with invalid history whitespace lines',
+						'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
+					]);
+				});
+			});
 		});
 	});
 

@@ -114,10 +114,17 @@ export function parseHistoryShorthand(
 	}
 
 	// re-print the our game, confirm it matches the input
-	// FIXME (3-priority) (techdebt) compare.trim() ? i keep messing up, i forget the space after the last history item…
-	//  - what about triming each line
-	//  - maybe at least log a warning or error (looks like it should match, but it's missing X trailing spaces)
-	if (replayGameForHistroy.print({ includeHistory: true }) !== print) {
+	const reprint = replayGameForHistroy.print({ includeHistory: true });
+	if (reprint !== print) {
+		if (reprint.trim() === print.trim()) {
+			return { errorMessage: 'init with invalid history trailing whitespace' };
+		}
+		// prettier-ignore
+		const trimLines = (str: string) => str.split('\n').map((line) => line.trimEnd()).join('\n');
+		if (trimLines(reprint) === trimLines(print)) {
+			return { errorMessage: 'init with invalid history whitespace lines' };
+		}
+
 		return { errorMessage: 'init with invalid history replay reprint' };
 	}
 
