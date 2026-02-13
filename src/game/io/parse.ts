@@ -44,6 +44,9 @@ export function parseHistoryShorthand(
 	replayGameForHistroy = replayGameForHistroy.shuffle32(seed);
 	if (deckLength === 0) {
 		replayGameForHistroy = replayGameForHistroy.dealAll();
+	} else if (deckLength !== cards.length) {
+		// XXX (optional) (complexity) not valid gameplay, but like, we _do_ this in the tests, and accounting for this is fun
+		replayGameForHistroy = replayGameForHistroy.dealAll({ demo: true, keepDeck: true });
 	}
 
 	// split will return [''] instead of []
@@ -67,6 +70,10 @@ export function parseHistoryShorthand(
 	// 	return { errorMessage: 'init with invalid history replay cascade count' };
 	// }
 
+	if (replayGameForHistroy.deck.length !== deckLength) {
+		return { errorMessage: 'init with invalid history replay deck length' };
+	}
+
 	// the order of the cards should be redundant, but if the cards don't match, lots of things will break
 	// this also check "the complete current game state" (where all of the cards are)
 	// (we've already parsed where all the cards should be, we are verifying that the moves produce the same result)
@@ -74,9 +81,22 @@ export function parseHistoryShorthand(
 		return { errorMessage: 'init with invalid history replay cards' };
 	}
 
-	// FIXME verify cursor
-	// FIXME verify selection
-	// FIXME verify availableMoves
+	// FIXME (refactor) (parse-history) parseHistoryShorthand either:
+	//  a) (complexity) move parseHistoryShorthand down, so we can verify the cursor, selection, and availableMoves
+	//   ↪ save the history lines until the end of FreeCell.parse
+	//  b) (simplify) move parseHistoryShorthand up, and simply verify print, which includes the entire state of the game
+	//   ↪ check if `:h` is in the print, if so, skip to that
+	//  c) (both!) cut out the history lines, if preset, use a flag to determine when we verify the history
+	//   ↪ the default should be to do it up front, we can exit early/do less work
+	//   ↪ but we can sometimes verify it after with unit tests, to like, make sure the rest of the parse logic is sound?
+	//  d) do option a, because, "if we pass in the history, we want to check it", and this helps verify the standard parsing when there is no history
+	//     and really, complixity is _fine_, but we only want _one way_ to do things
+
+	// FIXME (refactor) (parse-history) verify cursor
+	//  - we parse the history before the cursor
+
+	// FIXME (refactor) (parse-history) verify selection, availableMoves
+	//  - we parse the history before the selection and availableMoves
 
 	// we've already parsed the action text, we are verifying that the moves produce the same result
 	if (replayGameForHistroy.previousAction.text !== actionText) {
