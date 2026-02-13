@@ -11,8 +11,6 @@ import { parseMovesFromHistory } from '@/game/move/history';
 /**
 	parse the history (shorthand) of the game \
 	split out logic from {@link FreeCell.parse}
-
-	FIXME (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
 */
 export function parseHistoryShorthand(
 	print: string,
@@ -59,38 +57,49 @@ export function parseHistoryShorthand(
 	// verify all args to `new FreeCell`
 	const movesSeed = parseMovesFromHistory(replayGameForHistroy.history);
 
-	// FIXME split up this monolithic block into individual error messages
-	const valid =
-		// replayGameForHistroy.cells.length === cellCount &&
-		// replayGameForHistroy.tableau.length === cascadeCount &&
-		_isEqual(replayGameForHistroy.cards, cards) &&
-		// if (cannot verify cursor with running the code below to find it) vv
-		// replayGameForHistroy.selection === null &&
-		// replayGameForHistroy.availableMoves === null &&
-		replayGameForHistroy.previousAction.text === actionText &&
-		!!movesSeed &&
-		movesSeed.seed === seed &&
-		_isEqual(movesSeed.moves, moves) &&
-		// re-print the our game, confirm it matches the input
-		// FIXME (3-priority) (techdebt) compare.trim() ? i keep messing up, i forget the space after the last history item…
-		//  - what about triming each line
-		//  - maybe at least log a warning or error (looks like it should match, but it's missing X trailing spaces)
-		replayGameForHistroy.print({ includeHistory: true }) === print;
+	// we just set this with an argument, it _cannot_ happen
+	// if (replayGameForHistroy.cells.length !== cellCount) {
+	// 	return { errorMessage: 'init with invalid history replay cell count' };
+	// }
 
-	// console.log('valid', valid);
-	// console.log('cellCount', replayGameForHistroy.cells.length === cellCount);
-	// console.log('cascadeCount', replayGameForHistroy.tableau.length === cascadeCount);
-	// console.log('cards', _isEqual(replayGameForHistroy.cards, cards));
-	// console.log('selection', replayGameForHistroy.selection === null);
-	// console.log('availableMoves', replayGameForHistroy.availableMoves === null);
-	// console.log('actionText', replayGameForHistroy.previousAction.text === actionText);
-	// console.log('movesSeed', !!movesSeed);
-	// console.log('movesSeed.seed', movesSeed?.seed === seed);
-	// console.log('movesSeed.moves', _isEqual(movesSeed?.moves, moves), moves);
-	// console.log('print', replayGameForHistroy.print({ includeHistory: true }) === print);
-	// console.log('print includeHistory\n', replayGameForHistroy.print({ includeHistory: true }));
+	// we just set this with an argument, it _cannot_ happen
+	// if (replayGameForHistroy.tableau.length !== cascadeCount) {
+	// 	return { errorMessage: 'init with invalid history replay cascade count' };
+	// }
 
-	if (!valid) return { errorMessage: 'init with invalid history replay' };
+	// the order of the cards should be redundant, but if the cards don't match, lots of things will break
+	// this also check "the complete current game state" (where all of the cards are)
+	// (we've already parsed where all the cards should be, we are verifying that the moves produce the same result)
+	if (!_isEqual(replayGameForHistroy.cards, cards)) {
+		return { errorMessage: 'init with invalid history replay cards' };
+	}
+
+	// FIXME verify cursor
+	// FIXME verify selection
+	// FIXME verify availableMoves
+
+	// we've already parsed the action text, we are verifying that the moves produce the same result
+	if (replayGameForHistroy.previousAction.text !== actionText) {
+		return { errorMessage: 'init with invalid history replay action text' };
+	}
+
+	// we just set this with an argument, it _cannot_ happen
+	if (!movesSeed || movesSeed.seed !== seed) {
+		return { errorMessage: 'init with invalid history replay seed' };
+	}
+
+	// we just replayed these moves, but if something broke along the way, they might be skipped
+	if (!_isEqual(movesSeed.moves, moves)) {
+		return { errorMessage: 'init with invalid history replay moves' };
+	}
+
+	// re-print the our game, confirm it matches the input
+	// FIXME (3-priority) (techdebt) compare.trim() ? i keep messing up, i forget the space after the last history item…
+	//  - what about triming each line
+	//  - maybe at least log a warning or error (looks like it should match, but it's missing X trailing spaces)
+	if (replayGameForHistroy.print({ includeHistory: true }) !== print) {
+		return { errorMessage: 'init with invalid history replay reprint' };
+	}
 
 	return { replayGameForHistroy };
 }

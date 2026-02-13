@@ -48,11 +48,11 @@ describe('game.undo (+ history)', () => {
 						//53 6a 65 67 85 a8 68 27 // clipped most of the action
 						' 67 '
 				);
-				expect(game.history).toEqual(['init with invalid history replay', 'move 67 9H→TC']);
+				expect(game.history).toEqual(['init with invalid history replay cards', 'move 67 9H→TC']);
 				game = game.undo();
-				expect(game.history).toEqual(['init with invalid history replay']);
+				expect(game.history).toEqual(['init with invalid history replay cards']);
 				expect(game.previousAction).toEqual({
-					text: 'init with invalid history replay',
+					text: 'init with invalid history replay cards',
 					type: 'init',
 					gameFunction: 'undo',
 				});
@@ -1401,7 +1401,10 @@ describe('game.undo (+ history)', () => {
 					text: 'touch stop',
 					type: 'invalid',
 				});
-				expect(game.history).toEqual(['init with invalid history replay', 'touch stop']);
+				expect(game.history).toEqual([
+					'init with invalid history replay action text',
+					'touch stop',
+				]);
 				expect(() => game.undo()).not.toThrow();
 				expect(game.undo()).toBe(game);
 			});
@@ -1901,7 +1904,7 @@ describe('game.undo (+ history)', () => {
 					' 53 6a 65 67 85 a8 68 27 \n' +
 					' 67 '
 			);
-			expect(game.history).toEqual(['init with invalid history replay', 'move 67 9H→TC']);
+			expect(game.history).toEqual(['init with invalid history replay cards', 'move 67 9H→TC']);
 			// REVIEW (more-undo) should this throw an error?
 			//  - should it just "cancel" the undo?
 			//  - it's totally fine to console.error the entire game state or something

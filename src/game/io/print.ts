@@ -121,6 +121,8 @@ export function printTableau(
 /**
 	print the win message, if applicable \
 	split out logic from {@link FreeCell.print}
+
+	REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
 */
 export function printWin(game: FreeCell): string {
 	if (game.win) {

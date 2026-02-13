@@ -369,7 +369,7 @@ describe('game.parse', () => {
 
 				const gameNoHist = FreeCell.parse(game.print());
 				expect(gameNoHist.history).toEqual([
-					'init with incomplete history',
+					'init without history',
 					'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 				]);
 				expect(gameNoHist.previousAction).toEqual({
@@ -461,7 +461,7 @@ describe('game.parse', () => {
 				expect(_omit(gameNoHist, ['history'])).toEqual(_omit(game, ['history']));
 				expect(game.history.length).toBe(71);
 				expect(gameNoHist.history).toEqual([
-					'init with incomplete history',
+					'init without history',
 					'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
 				]);
 
@@ -606,7 +606,7 @@ describe('game.parse', () => {
 						' 9S    7C TS JS    JH    \n' +
 						'       6H          TC    \n' +
 						' move 67 9H→TC\n' +
-						' init with invalid history replay'
+						' init with invalid history replay cards'
 				);
 				expect(game.print()).toBe(
 					'' + //
@@ -621,7 +621,7 @@ describe('game.parse', () => {
 						'       6H         >TC    \n' +
 						' move 67 9H→TC'
 				);
-				expect(game.history).toEqual(['init with invalid history replay', 'move 67 9H→TC']);
+				expect(game.history).toEqual(['init with invalid history replay cards', 'move 67 9H→TC']);
 			});
 
 			test('invalid actionText', () => {
@@ -655,7 +655,7 @@ describe('game.parse', () => {
 						'       6H          TC    \n' +
 						'                   9H    \n' +
 						' move 27 9H→TC\n' +
-						' init with invalid history replay'
+						' init with invalid history replay action text'
 				);
 				expect(game.print()).toBe(
 					'' + //
@@ -728,7 +728,7 @@ describe('game.parse', () => {
 						'       6H          TC    \n' +
 						'                   9H    \n' +
 						' move 67 9H→TC\n' +
-						' init with invalid history replay'
+						' init with invalid history replay cards'
 				);
 				expect(game.print()).toBe(
 					'' + //

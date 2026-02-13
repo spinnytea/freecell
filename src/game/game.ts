@@ -1078,10 +1078,7 @@ export class FreeCell {
 			printHome(this, cursor, selection) + //
 			printTableau(this, cursor, selection, flashCards);
 
-		// REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
-		if (this.win) {
-			str += printWin(this);
-		}
+		str += printWin(this);
 
 		if (this.deck.length || cursor.fixture === 'deck' || verbose) {
 			str += `\n:d${printDeck(this, cursor, selection)}`;
@@ -1323,18 +1320,18 @@ export class FreeCell {
 			//  - text we can use what history is valid; ['init partial history', ..., actionText]
 			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
 			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
-			// FIXME (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
 			// FIXME (2-priority) (motivation) (parse-history) (undo) invalid history or no history should still be able to undo the move from game.print()
 			//  - try it with a valid move (success)
 			//  - try it with an invalid move (noop)
 			//  - try it with a valid move, then print/parse
+			//  - we already use it to recover tweenCards :D
 		}
 
 		if (!history.length && previousAction.type !== 'init') {
 			if (previousAction.type === 'shuffle') {
 				history.push(actionText);
 			} else if (PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type)) {
-				history.push('init with incomplete history');
+				history.push('init without history');
 				history.push(actionText);
 			}
 		}
