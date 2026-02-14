@@ -1905,10 +1905,21 @@ describe('game.undo (+ history)', () => {
 					' 67 '
 			);
 			expect(game.history).toEqual(['init with invalid history replay cards', 'move 67 9H→TC']);
-			// REVIEW (more-undo) should this throw an error?
+			// REVIEW (techdebt) (refactor) (more-undo) should this throw an error?
 			//  - should it just "cancel" the undo?
 			//  - it's totally fine to console.error the entire game state or something
-			expect(() => game.undo()).toThrow('invalid first card position: move 67 9H→TC; 6 !== 7');
+			// expect(() => game.undo()).toThrow('invalid first card position: move 67 9H→TC; 6 !== 7');
+			const gameUndid = game.undo();
+			expect(gameUndid.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+			expect(gameUndid.previousAction).toEqual({
+				text: 'invalid move 67 9H→TC',
+				type: 'invalid',
+			});
+
+			// undoing again should just return the same game, since we can't undo past the invalid move
+			// but it's naïve and returns a new game with a new invalid action
+			expect(gameUndid.undo()).not.toBe(gameUndid);
+			expect(gameUndid.undo()).toEqual(gameUndid);
 		});
 
 		test('undo to init (hand-jammed)', () => {

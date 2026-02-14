@@ -517,52 +517,62 @@ export class FreeCell {
 		const moveToUndo = history.pop();
 		if (!moveToUndo) return this;
 
-		const cards = parseAndUndoPreviousActionText(this, moveToUndo);
-		if (!cards) return this;
+		try {
+			const cards = parseAndUndoPreviousActionText(this, moveToUndo);
+			if (!cards) return this;
 
-		// TODO (techdebt) test init partial
-		const action = parsePreviousActionType(history.pop() ?? 'init partial');
-		action.gameFunction = 'undo';
+			// TODO (techdebt) test init partial
+			const action = parsePreviousActionType(history.pop() ?? 'init partial');
+			action.gameFunction = 'undo';
 
-		const cursor = toggleCursor
-			? parseAltCursorFromPreviousActionText(action.text, cards)
-			: parseCursorFromPreviousActionText(action.text, cards);
+			const cursor = toggleCursor
+				? parseAltCursorFromPreviousActionText(action.text, cards)
+				: parseCursorFromPreviousActionText(action.text, cards);
 
-		// we _need_ an action in __clone
-		// __clone will add it back to the history
-		const didUndo = this.__clone({
-			action,
-			cards,
-			cursor,
-			selection: null,
-			availableMoves: null,
-			history,
-		});
+			// we _need_ an action in __clone
+			// __clone will add it back to the history
+			const didUndo = this.__clone({
+				action,
+				cards,
+				cursor,
+				selection: null,
+				availableMoves: null,
+				history,
+			});
 
-		// HACK (techdebt) (history) because new game history is not ['init']
-		if (
-			action.type === 'init' &&
-			action.text === 'init partial' &&
-			(moveToUndo.startsWith('shuffle') || moveToUndo.startsWith('deal'))
-		) {
-			didUndo.history.pop();
-			didUndo.previousAction.text = 'init';
+			// HACK (techdebt) (history) because new game history is not ['init']
+			if (
+				action.type === 'init' &&
+				action.text === 'init partial' &&
+				(moveToUndo.startsWith('shuffle') || moveToUndo.startsWith('deal'))
+			) {
+				didUndo.history.pop();
+				didUndo.previousAction.text = 'init';
+			}
+
+			// redo single move
+			if (
+				!skipActionPrev &&
+				didUndo.previousAction.type === 'move-foundation' &&
+				!didUndo.previousAction.tweenCards
+			) {
+				const secondUndo = didUndo.undo({ skipActionPrev: true });
+				const { from, to } = parseActionTextMove(didUndo.previousAction.text);
+				didUndo.previousAction.tweenCards = getCardsThatMoved(
+					secondUndo.moveByShorthand(from + to, { autoFoundation: false })
+				);
+			}
+
+			return didUndo;
+		} catch (e) {
+			// TODO (techdebt) (refactor) let's not throw errors during gameplay
+			//  - this is a very programmer centric thing
+			//  - do we need to wrap all of the FreeCell function? I don't like that idea
+			//  - search for all `throw new Error`, include `src/game`, exclude `catalog, .test.ts`
+			// throw e;
+			const action: PreviousAction = { text: 'invalid ' + moveToUndo, type: 'invalid' };
+			return this.__clone({ action, selection: null, availableMoves: null });
 		}
-
-		// redo single move
-		if (
-			!skipActionPrev &&
-			didUndo.previousAction.type === 'move-foundation' &&
-			!didUndo.previousAction.tweenCards
-		) {
-			const secondUndo = didUndo.undo({ skipActionPrev: true });
-			const { from, to } = parseActionTextMove(didUndo.previousAction.text);
-			didUndo.previousAction.tweenCards = getCardsThatMoved(
-				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
-			);
-		}
-
-		return didUndo;
 	}
 
 	/**

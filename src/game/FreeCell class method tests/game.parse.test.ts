@@ -908,7 +908,7 @@ describe('game.parse', () => {
 				);
 			});
 
-			test('invalid move (parse throws exception)', () => {
+			test('invalid move (produces invalid action)', () => {
 				const game = FreeCell.parse(
 					'' + //
 						'             AD 2C       \n' +
@@ -924,10 +924,15 @@ describe('game.parse', () => {
 						' move ab 9H→TC' // this is wrong (cursor is on '7 TC', ab are cells)
 				);
 				expect(game.history).toEqual(['init without history', 'move ab 9H→TC']);
-				// FIXME this is a very programmer centric thing
-				//  - let's not throw errors during gameplay
-				//  - maybe previous action text: 'invalid move ab 9H→TC'
-				expect(() => game.undo()).toThrow('invalid first card position: move ab 9H→TC; 7 !== b');
+				// expect(() => game.undo()).toThrow('invalid first card position: move ab 9H→TC; 7 !== b');
+				const gameUndid = game.undo();
+				expect(gameUndid.print({ includeHistory: true })).toBe(
+					game.print({ includeHistory: true })
+				);
+				expect(gameUndid.previousAction).toEqual({
+					text: 'invalid move ab 9H→TC',
+					type: 'invalid',
+				});
 			});
 		});
 	});
