@@ -3,10 +3,10 @@ import { Card } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { parseMovesFromHistory } from '@/game/move/history';
 
-// TODO (refactor) parseHome
-// TODO (refactor) parseTableau
-// TODO (refactor) parseWin
-// TODO (refactor) parseDeck
+// XXX (refactor) parseHome
+// XXX (refactor) parseTableau
+// XXX (refactor) parseWin
+// XXX (refactor) parseDeck
 
 /**
 	parse the history (shorthand) of the game \
@@ -125,6 +125,8 @@ export function parseHistoryShorthand(
 			return { errorMessage: 'init with invalid history whitespace lines' };
 		}
 
+		// not really sure how we could get this far…
+		// …if I did, I'd check for that too and still have this unknown situation
 		return { errorMessage: 'init with invalid history replay reprint' };
 	}
 

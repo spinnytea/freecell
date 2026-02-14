@@ -153,6 +153,19 @@ describe('game.parse', () => {
 		});
 
 		describe('history', () => {
+			test('unsupported shuffle', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'         >   KC KS KH KD \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						' cursor right\n' +
+						':h banana'
+				);
+				expect(game.history).toEqual(['init with invalid history shuffle', 'cursor right']);
+			});
+
 			test('invalid shuffle', () => {
 				const game = FreeCell.parse(
 					'' + //

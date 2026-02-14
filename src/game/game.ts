@@ -1088,7 +1088,9 @@ export class FreeCell {
 			printHome(this, cursor, selection) + //
 			printTableau(this, cursor, selection, flashCards);
 
-		str += printWin(this);
+		if (this.win) {
+			str += printWin(this);
+		}
 
 		if (this.deck.length || cursor.fixture === 'deck' || verbose) {
 			str += `\n:d${printDeck(this, cursor, selection)}`;
