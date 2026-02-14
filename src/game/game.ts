@@ -1,4 +1,3 @@
-import { isEqual as _isEqual } from 'lodash';
 import {
 	Card,
 	CardLocation,
@@ -18,6 +17,8 @@ import {
 	SuitList,
 } from '@/game/card/card';
 import { IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
+import { parseHistoryShorthand } from '@/game/io/parse';
+import { printDeck, printHistory, printHome, printTableau, printWin } from '@/game/io/print';
 import {
 	appendActionToHistory,
 	GameFunction,
@@ -28,6 +29,7 @@ import {
 	parseCursorFromPreviousActionText,
 	parseMovesFromHistory,
 	parsePreviousActionType,
+	PREVIOUS_ACTION_TYPE_IN_HISTORY,
 	PREVIOUS_ACTION_TYPE_IS_MOVE,
 	PREVIOUS_ACTION_TYPE_IS_START_OF_GAME,
 	PreviousAction,
@@ -515,52 +517,62 @@ export class FreeCell {
 		const moveToUndo = history.pop();
 		if (!moveToUndo) return this;
 
-		const cards = parseAndUndoPreviousActionText(this, moveToUndo);
-		if (!cards) return this;
+		try {
+			const cards = parseAndUndoPreviousActionText(this, moveToUndo);
+			if (!cards) return this;
 
-		// TODO (techdebt) test init partial
-		const action = parsePreviousActionType(history.pop() ?? 'init partial');
-		action.gameFunction = 'undo';
+			// TODO (techdebt) test init partial
+			const action = parsePreviousActionType(history.pop() ?? 'init partial');
+			action.gameFunction = 'undo';
 
-		const cursor = toggleCursor
-			? parseAltCursorFromPreviousActionText(action.text, cards)
-			: parseCursorFromPreviousActionText(action.text, cards);
+			const cursor = toggleCursor
+				? parseAltCursorFromPreviousActionText(action.text, cards)
+				: parseCursorFromPreviousActionText(action.text, cards);
 
-		// we _need_ an action in __clone
-		// __clone will add it back to the history
-		const didUndo = this.__clone({
-			action,
-			cards,
-			cursor,
-			selection: null,
-			availableMoves: null,
-			history,
-		});
+			// we _need_ an action in __clone
+			// __clone will add it back to the history
+			const didUndo = this.__clone({
+				action,
+				cards,
+				cursor,
+				selection: null,
+				availableMoves: null,
+				history,
+			});
 
-		// HACK (techdebt) (history) because new game history is not ['init']
-		if (
-			action.type === 'init' &&
-			action.text === 'init partial' &&
-			(moveToUndo.startsWith('shuffle') || moveToUndo.startsWith('deal'))
-		) {
-			didUndo.history.pop();
-			didUndo.previousAction.text = 'init';
+			// HACK (techdebt) (history) because new game history is not ['init']
+			if (
+				action.type === 'init' &&
+				action.text === 'init partial' &&
+				(moveToUndo.startsWith('shuffle') || moveToUndo.startsWith('deal'))
+			) {
+				didUndo.history.pop();
+				didUndo.previousAction.text = 'init';
+			}
+
+			// redo single move
+			if (
+				!skipActionPrev &&
+				didUndo.previousAction.type === 'move-foundation' &&
+				!didUndo.previousAction.tweenCards
+			) {
+				const secondUndo = didUndo.undo({ skipActionPrev: true });
+				const { from, to } = parseActionTextMove(didUndo.previousAction.text);
+				didUndo.previousAction.tweenCards = getCardsThatMoved(
+					secondUndo.moveByShorthand(from + to, { autoFoundation: false })
+				);
+			}
+
+			return didUndo;
+		} catch (e) {
+			// TODO (techdebt) (refactor) let's not throw errors during gameplay
+			//  - this is a very programmer centric thing
+			//  - do we need to wrap all of the FreeCell function? I don't like that idea
+			//  - search for all `throw new Error`, include `src/game`, exclude `catalog, .test.ts`
+			// throw e;
+			const action: PreviousAction = { text: 'invalid ' + moveToUndo, type: 'invalid' };
+			return this.__clone({ action, selection: null, availableMoves: null });
 		}
-
-		// redo single move
-		if (
-			!skipActionPrev &&
-			didUndo.previousAction.type === 'move-foundation' &&
-			!didUndo.previousAction.tweenCards
-		) {
-			const secondUndo = didUndo.undo({ skipActionPrev: true });
-			const { from, to } = parseActionTextMove(didUndo.previousAction.text);
-			didUndo.previousAction.tweenCards = getCardsThatMoved(
-				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
-			);
-		}
-
-		return didUndo;
 	}
 
 	/**
@@ -739,12 +751,12 @@ export class FreeCell {
 	*/
 	shuffle32(seed?: number): FreeCell | this {
 		// if we pass the seed in directly (and it's valid), then use it
-		if (seed === undefined || seed < 1 || seed > 32000) {
+		if (seed === undefined || isNaN(seed) || seed < 1 || seed > 32000) {
 			// if we do not pass the seed in directly, then randomize it
 			// do not allow the impossible seed
-			while (seed === undefined || seed < 1 || seed > 32000 || seed === IMPOSSIBLE_SEED) {
+			do {
 				seed = utils.randomInteger(32000);
-			}
+			} while (seed === IMPOSSIBLE_SEED);
 		}
 
 		const actionText = `shuffle deck (${seed.toString(10)})`;
@@ -1017,213 +1029,25 @@ export class FreeCell {
 	}
 
 	/**
-		print the home row of the game board
-
+		print the deck (row) of the game \
 		split out logic from {@link FreeCell.print}
 
-		XXX (techdebt) optimize
-	*/
-	__printHome(cursor = this.cursor, selection = this.selection): string {
-		let str = '';
-		if (
-			cursor.fixture === 'cell' ||
-			selection?.location.fixture === 'cell' ||
-			cursor.fixture === 'foundation' ||
-			selection?.location.fixture === 'foundation'
-		) {
-			// cells
-			// prettier-ignore
-			str += this.cells
-				.map((card, idx) => `${getPrintSeparator({ fixture: 'cell', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-				.join('');
-
-			// collapsed col between
-			if (isLocationEqual(cursor, { fixture: 'foundation', data: [0] })) {
-				str += '>';
-			} else if (
-				selection &&
-				isLocationEqual(selection.location, { fixture: 'cell', data: [this.cells.length - 1] })
-			) {
-				str += '|';
-			} else if (
-				selection &&
-				isLocationEqual(selection.location, { fixture: 'foundation', data: [0] })
-			) {
-				str += '|';
-			} else {
-				str += ' ';
-			}
-
-			// foundation (minus first col)
-			// prettier-ignore
-			str += this.foundations
-				.map((card, idx) => `${idx === 0 ? '' : getPrintSeparator({ fixture: 'foundation', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-				.join('');
-
-			// last col
-			if (
-				selection &&
-				isLocationEqual(selection.location, {
-					fixture: 'foundation',
-					data: [this.foundations.length - 1],
-				})
-			) {
-				str += '|';
-			} else {
-				str += ' ';
-			}
-		} else {
-			// if no cursor/selection in home row
-			str += ' ' + this.cells.map((card) => shorthandCard(card)).join(' ');
-			str += ' ' + this.foundations.map((card) => shorthandCard(card)).join(' ');
-			str += ' ';
-		}
-		return str;
-	}
-
-	/**
-		print the tableau of the game board
-
-		split out logic from {@link FreeCell.print}
-
-		XXX (techdebt) optimize
-	*/
-	__printTableau(
-		cursor = this.cursor,
-		selection = this.selection,
-		flashCards = this.flashCards
-	): string {
-		let str = '';
-		const max = Math.max(...this.tableau.map((cascade) => cascade.length));
-		const hasSelection =
-			cursor.fixture === 'cascade' ||
-			selection?.location.fixture === 'cascade' ||
-			flashCards?.some((card) => card.location.fixture === 'cascade');
-		for (let i = 0; i === 0 || i < max; i++) {
-			if (hasSelection) {
-				str +=
-					'\n' +
-					this.tableau
-						.map((cascade, idx) => {
-							const c = getPrintSeparator(
-								{ fixture: 'cascade', data: [idx, i] },
-								cursor,
-								selection,
-								flashCards
-							);
-							return c + shorthandCard(cascade[i]);
-						})
-						.join('') +
-					getPrintSeparator(
-						{ fixture: 'cascade', data: [this.tableau.length, i] },
-						null,
-						selection,
-						flashCards
-					);
-			} else {
-				// if no cursor/selection in this row
-				str += '\n ' + this.tableau.map((cascade) => shorthandCard(cascade[i])).join(' ') + ' ';
-			}
-		}
-		return str;
-	}
-
-	__printWin(): string {
-		if (this.win) {
-			// XXX (hud) different messages depending on how you win
-			const msg = this.winIsFlourish52
-				? this.tableau.length > 6
-					? 'A M A Z I N G !'
-					: 'AMAZING !'
-				: this.tableau.length > 6
-					? 'Y O U   W I N !'
-					: 'YOU WIN !';
-
-			const lineLength = this.tableau.length * 3 + 1;
-			const paddingLength = (lineLength - msg.length - 2) / 2;
-			const spaces = '                               '; // enough spaces for 10 cascadeCount
-			const padding = '                            '.substring(0, paddingLength);
-			return (
-				'\n:' +
-				padding +
-				msg +
-				padding +
-				(paddingLength === padding.length ? '' : ' ') +
-				':' +
-				'\n' +
-				spaces.substring(0, lineLength)
-			);
-		}
-		return '';
-	}
-
-	/**
-		print the deck (row) of the game
-
-		split out logic from {@link FreeCell.print}
-
-		XXX (techdebt) optimize
+		TODO (refactor) remove - used in lots of tests
+		@see {@link printDeck}
 	*/
 	__printDeck(cursor = this.cursor, selection = this.selection): string {
-		if (this.deck.length) {
-			if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
-				// prettier-ignore
-				const deckStr = this.deck
-					.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-					.reverse()
-					.join('');
-				const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
-				const offDeckPrefix = cursor.data[0] === this.deck.length ? '>  ' : '';
-				return `${offDeckPrefix}${deckStr}${lastCol}`;
-			} else {
-				// if no cursor/selection in deck
-				const deckStr = this.deck
-					.map((card) => shorthandCard(card))
-					.reverse()
-					.join(' ');
-				return ` ${deckStr} `;
-			}
-		} else if (cursor.fixture === 'deck') {
-			return `>   `;
-		} else {
-			return '';
-		}
+		return printDeck(this, cursor, selection);
 	}
 
 	/**
-		print the history (block) of the game
-
+		print the history of the game \
 		split out logic from {@link FreeCell.print}
 
-		- BUG (history) (shorthandMove) standard move notation can only be used when `limit = 'opp+1'` for all moves
-			- e.g. if (movesSeed && isStandardRuleset)
-		- REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
-			- e.g. if (movesSeed && isStandardGameplay)
-		- XXX (techdebt) optimize
+		TODO (refactor) remove - used in lots of tests
+		@see {@link printHistory}
 	*/
 	__printHistory(skipLastHist = false): string {
-		let str = '';
-		const movesSeed = parseMovesFromHistory(this.history);
-		if (movesSeed) {
-			// print the last valid action, _not_ previousAction.text
-			// the previous action could be a cursor movement, or a canceled touch action (touch stop)
-			// TODO (history) (print) remove the last action - not needed for save/reload
-			if (!skipLastHist) str += `\n ${new String(this.history.at(-1)).toString()}`;
-			str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
-			while (movesSeed.moves.length) {
-				str += '\n ' + movesSeed.moves.splice(0, this.tableau.length).join(' ') + ' ';
-			}
-		} else {
-			// if we don't know where we started or shorthand is otherwise invalid,
-			// we can still print out all the actions we do know about
-			this.history
-				.slice(0)
-				.reverse()
-				.forEach((actionText) => {
-					str += '\n ' + actionText;
-				});
-		}
-		return str;
+		return printHistory(this, skipLastHist);
 	}
 
 	/**
@@ -1261,23 +1085,21 @@ export class FreeCell {
 		const flashCards = !includeHistory ? this.flashCards : null;
 
 		let str =
-			this.__printHome(cursor, selection) + //
-			this.__printTableau(cursor, selection, flashCards);
+			printHome(this, cursor, selection) + //
+			printTableau(this, cursor, selection, flashCards);
 
-		// REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
 		if (this.win) {
-			str += this.__printWin();
+			str += printWin(this);
 		}
 
 		if (this.deck.length || cursor.fixture === 'deck' || verbose) {
-			const printDeck = this.__printDeck(cursor, selection);
-			str += `\n:d${printDeck}`;
+			str += `\n:d${printDeck(this, cursor, selection)}`;
 		}
 
 		// TODO (print) (settings) have a dedicated line for house rules, e.g. "with jokers", "auto-foundation opp+2", etc.
 
 		if (includeHistory) {
-			str += this.__printHistory();
+			str += printHistory(this);
 		} else {
 			str += '\n ' + this.previousAction.text;
 		}
@@ -1455,15 +1277,16 @@ export class FreeCell {
 
 		line.pop();
 		const actionText = line.slice(0).reverse().join('') || 'init';
+		const previousAction = parsePreviousActionType(actionText);
 
 		// attempt to parse the history
 		const history: string[] = [];
 		const popped = lines.pop();
 		if (!popped) {
-			const previousActionType = parsePreviousActionType(actionText).type;
+			const previousActionType = previousAction.type;
 			if (previousActionType === 'init') {
-				// XXX (techdebt) (parse-history) does 'init' belong in the history?
-				//  - so far, it's been omitted, but like, sometimes we have 'init with invalid history'
+				// init is implied
+				// we only have it in the history if there's an anomaly
 				if (actionText && actionText !== 'init') {
 					history.push(actionText);
 				}
@@ -1475,92 +1298,56 @@ export class FreeCell {
 				}
 			}
 		} else if (popped.startsWith(':h')) {
-			const matchSeed = /:h shuffle32 (\d+)/.exec(popped);
-			// TODO (2-priority) (techdebt) (parse-history) ¿'init with unsupported history'? no need to explode
-			if (!matchSeed) throw new Error('unsupported shuffle');
-			const seed = parseInt(matchSeed[1], 10);
+			// parse the history (shorthand) of the game
+			const { errorMessage, replayGameForHistroy } = parseHistoryShorthand(print, lines, popped, {
+				cards,
+				cellCount,
+				cascadeCount,
+				deckLength,
+				actionText,
+			});
 
-			// REVIEW (techdebt) (joker) (settings) settings for new game?
-			let replayGameForHistroy = new FreeCell({ cellCount, cascadeCount }).shuffle32(seed);
-			if (deckLength === 0) {
-				replayGameForHistroy = replayGameForHistroy.dealAll();
-			}
-			// TODO (techdebt) (parse-history) 'deal all cards'
-			// TODO (techdebt) (parse-history) 'deal 44 cards'
-
-			// split will return [''] instead of []
-			const moves = lines.length ? lines.reverse().join('').trim().split(/\s+/) : [];
-			if (moves.length) {
-				moves.forEach((move) => {
-					replayGameForHistroy = replayGameForHistroy.moveByShorthand(move);
-				});
-			}
-
-			// verify all args to `new FreeCell`
-			const movesSeed = parseMovesFromHistory(replayGameForHistroy.history);
-			const valid =
-				// replayGameForHistroy.cells.length === cellCount &&
-				// replayGameForHistroy.tableau.length === cascadeCount &&
-				_isEqual(replayGameForHistroy.cards, cards) &&
-				// if (cannot verify cursor with running the code below to find it) vv
-				// replayGameForHistroy.selection === null &&
-				// replayGameForHistroy.availableMoves === null &&
-				replayGameForHistroy.previousAction.text === actionText &&
-				!!movesSeed &&
-				movesSeed.seed === seed &&
-				_isEqual(movesSeed.moves, moves) &&
-				// re-print the our game, confirm it matches the input
-				// REVIEW (3-priority) (techdebt) compare.trim() ? i keep messing up, i forget the space after the last history item…
-				//  - what about triming each line
-				//  - maybe at least log a warning or error (looks like it should match, but it's missing X trailing spaces)
-				replayGameForHistroy.print({ includeHistory: true }) === print;
-
-			// console.log('valid', valid);
-			// console.log('cellCount', replayGameForHistroy.cells.length === cellCount);
-			// console.log('cascadeCount', replayGameForHistroy.tableau.length === cascadeCount);
-			// console.log('cards', _isEqual(replayGameForHistroy.cards, cards));
-			// console.log('selection', replayGameForHistroy.selection === null);
-			// console.log('availableMoves', replayGameForHistroy.availableMoves === null);
-			// console.log('actionText', replayGameForHistroy.previousAction.text === actionText);
-			// console.log('movesSeed', !!movesSeed);
-			// console.log('movesSeed.seed', movesSeed?.seed === seed);
-			// console.log('movesSeed.moves', _isEqual(movesSeed?.moves, moves), moves);
-			// console.log('print', replayGameForHistroy.print({ includeHistory: true }) === print);
-			// console.log('print includeHistory\n', replayGameForHistroy.print({ includeHistory: true }));
-
-			if (valid) {
+			if (!errorMessage && replayGameForHistroy) {
 				// we have the whole game, so we can simply return it now
+				// (we have all the info we need)
 				return replayGameForHistroy;
-				// although, we don't have to...
 
-				Array.prototype.push.apply(history, replayGameForHistroy.history);
+				// although, we don't have to…
+				// we can stash the history and move on
+				// but we don't have any other information to glean from the print
+				// Array.prototype.push.apply(history, replayGameForHistroy.history);
 			} else {
-				history.push('init with invalid history');
+				history.push(errorMessage ?? 'init with invalid history error');
 				history.push(actionText);
 			}
 		} else {
+			// parse the history (lines) of the game
+			//
+			// this history is a failsafe, but it is invalid
+			// there's no point in trying to verify it
+			// we could, separately, try to analyze what failed,
+			// but that's not something we need to do during parse
+			// ∴ just recreate the game state with what we have available
+			// (also, the unit tests do this _aallll_ the time with `hand-jammed` starting points)
 			Array.prototype.push.apply(
 				history,
 				lines.map((l) => l.trim())
 			);
 			history.push(popped.trim());
 			history.push(actionText);
-			// TODO (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
-			//  - text we can use what history is valid; ['init partial history', ..., actionText]
-			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
-			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
-			// TODO (parse-history) 'init with invalid history' vs 'init with incomplete history' vs 'init without history' vs 'init partial'
-			// TODO (2-priority) (motivation) (parse-history) (undo) invalid history or no history should should still be able to undo the move from game.print()
-			//  - try it with a valid move (success)
-			//  - try it with an invalid move (noop)
-			// TODO (techdebt) (parse-history) 'deal 1 cards'
-			// TODO (techdebt) (parse-history) 'deal 2 cards'
-			// TODO (techdebt) (parse-history) 'deal 44 cards'
-			// TODO (techdebt) (parse-history) 'deal all cards'
+		}
+
+		if (!history.length && previousAction.type !== 'init') {
+			if (previousAction.type === 'shuffle') {
+				history.push(actionText);
+			} else if (PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type)) {
+				history.push('init without history');
+				history.push(actionText);
+			}
 		}
 
 		// sus out the cursor/selection locations
-		// TODO (techdebt) is there any way to simplify this?
+		// XXX (techdebt) is there any way to simplify this?
 		let cursor: CardLocation | undefined = undefined;
 		let selection_location: CardLocation | undefined = undefined;
 		const home_cursor_index = home_spaces.indexOf('>');
@@ -1633,6 +1420,11 @@ export class FreeCell {
 		}
 
 		if (!cursor) {
+			// XXX (optional) (complexity) we could just use the actionText
+			//  - there is a unit test that shows why the loop is desireable
+			//  - from before we had move-foundation, when it was separately move + auto-foundation
+			// cursor = parseCursorFromPreviousActionText(actionText, cards);
+
 			// try to figure out the location of the cursor based on the previous move
 			for (let i = history.length - 1; !cursor && i >= 0; i--) {
 				cursor = parseCursorFromPreviousActionText(history[i], cards);
@@ -1641,7 +1433,7 @@ export class FreeCell {
 
 		// REVIEW (techdebt) (joker) (settings) settings for new game?
 		const game = new FreeCell({
-			action: parsePreviousActionType(actionText),
+			action: previousAction,
 			cellCount,
 			cascadeCount,
 			cards,
@@ -1654,7 +1446,11 @@ export class FreeCell {
 		}
 
 		// TODO (techdebt) copy-pasta, same as `undo`
-		if (game.previousAction.type === 'move-foundation' && !game.previousAction.tweenCards) {
+		if (
+			game.previousAction.type === 'move-foundation' &&
+			!game.previousAction.tweenCards &&
+			history.length
+		) {
 			const secondUndo = game.undo({ skipActionPrev: true });
 			const { from, to } = parseActionTextMove(game.previousAction.text);
 			game.previousAction.tweenCards = getCardsThatMoved(
@@ -1670,11 +1466,12 @@ export class FreeCell {
 			const reprint = game.print({ includeHistory: print.includes(':h') });
 			if (reprint !== print) {
 				// XXX (techdebt) sometimes unit tests don't include the "you win" message in the setup
-				if (!reprint.includes('Y O U   W I N !') && !reprint.includes('YOU WIN !')) {
+				if (!reprint.includes('Y O U   W I N !') && !reprint.includes('YOU WIN !') && !reprint.includes('A M A Z I N G !') && !reprint.includes('AMAZING !')) {
 					// print with non-empty deck doesn't match (weird game setup for testing)
 					// some games have invalid history (on purpose or otherwise)
 					if (!reprint.includes(':d') && !reprint.includes('init with invalid history')) {
 						// cursor is in the wrong place sometimes
+						// TODO (juice) (parse-history) (print) handle flash (e.g. game.$checkCanFlourish.test.ts `juice flash AH,AS`)
 						const rpc = reprint.replace('>', ' ');
 						const pc = print.replace('>', ' ');
 						if (rpc !== pc) {
@@ -1687,56 +1484,4 @@ export class FreeCell {
 		// */
 		return game;
 	}
-}
-
-export function getPrintSeparator(
-	location: CardLocation,
-	cursor: CardLocation | null,
-	selection: CardSequence | null,
-	flashCards: Card[] | null = null
-) {
-	if (cursor && isLocationEqual(location, cursor)) {
-		return '>';
-	}
-	if (selection) {
-		if (isLocationEqual(location, selection.location)) {
-			return '|';
-		}
-		if (location.fixture !== 'cascade') {
-			const shift = location.fixture === 'deck' ? 1 : -1;
-			if (
-				isLocationEqual(
-					{ fixture: location.fixture, data: [location.data[0] + shift] },
-					selection.location
-				)
-			) {
-				return '|';
-			}
-		} else {
-			if (
-				location.data[0] === selection.location.data[0] ||
-				location.data[0] - 1 === selection.location.data[0]
-			) {
-				if (
-					location.data[1] >= selection.location.data[1] &&
-					location.data[1] < selection.location.data[1] + selection.cards.length
-				) {
-					return '|';
-				}
-			}
-		}
-	}
-	if (flashCards?.length) {
-		if (flashCards.some((card) => isLocationEqual(location, card.location))) {
-			return '*';
-		}
-		const shifted: CardLocation = {
-			fixture: 'cascade',
-			data: [location.data[0] - 1, location.data[1]],
-		};
-		if (flashCards.some((card) => isLocationEqual(shifted, card.location))) {
-			return '*';
-		}
-	}
-	return ' ';
 }

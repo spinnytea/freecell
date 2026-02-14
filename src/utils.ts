@@ -30,7 +30,8 @@ function sortedDiff<T>(a: T[], b: T[]) {
 
 /** @return a number 1 <= result <= max */
 function randomInteger(max = Number.MAX_SAFE_INTEGER): number {
-	return Math.min(Math.max(1, Math.floor(Math.random() * max) + 1), max);
+	const val = Math.floor(Math.random() * max) + 1;
+	return Math.min(Math.max(1, val), max);
 }
 
 export const utils = {

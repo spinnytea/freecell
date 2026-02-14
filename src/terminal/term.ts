@@ -1,5 +1,6 @@
 import { Position } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
+import { printDeck, printHome, printTableau, printWin } from '@/game/io/print';
 import readline from 'readline';
 
 // TODO (terminal) (gameplay) save/load game
@@ -67,13 +68,13 @@ const Hotkeys = [
 function printGame() {
 	console.clear();
 
-	const home = game.__printHome();
-	const tableau = game.__printTableau();
-	const win = game.__printWin();
+	const home = printHome(game);
+	const tableau = printTableau(game);
+	const win = printWin(game);
 	// XXX (print) all these caveats... in print and here
-	const deck = ((s) => (s ? '\n:d ' + s : ''))(game.__printDeck());
+	const deck = ((s) => (s ? '\n:d ' + s : ''))(printDeck(game));
 	// XXX (print) all these caveats... in print and here
-	const history = '\n ' + game.previousAction.text; // game.__printHistory();
+	const history = '\n ' + game.previousAction.text; // printHistory(game);
 
 	// XXX (print) how much do we care if game.print() and terminal do not match
 	//  - i mean, the point of game.print is _for_ the terminal
