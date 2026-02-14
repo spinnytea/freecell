@@ -1310,21 +1310,19 @@ export class FreeCell {
 			}
 		} else {
 			// parse the history (lines) of the game
+			//
+			// this history is a failsafe, but it is invalid
+			// there's no point in trying to verify it
+			// we could, separately, try to analyze what failed,
+			// but that's not something we need to do during parse
+			// ∴ just recreate the game state with what we have available
+			// (also, the unit tests do this _aallll_ the time with `hand-jammed` starting points)
 			Array.prototype.push.apply(
 				history,
 				lines.map((l) => l.trim())
 			);
 			history.push(popped.trim());
 			history.push(actionText);
-			// FIXME (parse-history) verify history (if you didn't want to verify it, don't pass it in?)
-			//  - text we can use what history is valid; ['init partial history', ..., actionText]
-			//  - run undo back to the beginning, or as long as they make sense (clip at an invalid undo)
-			//  - the history shorthand lets us replay forwards; this digest lets us replay backwards
-			// FIXME (2-priority) (motivation) (parse-history) (undo) invalid history or no history should still be able to undo the move from game.print()
-			//  - try it with a valid move (success)
-			//  - try it with an invalid move (noop)
-			//  - try it with a valid move, then print/parse
-			//  - we already use it to recover tweenCards :D
 		}
 
 		if (!history.length && previousAction.type !== 'init') {
@@ -1337,7 +1335,7 @@ export class FreeCell {
 		}
 
 		// sus out the cursor/selection locations
-		// FIXME (techdebt) is there any way to simplify this?
+		// XXX (techdebt) is there any way to simplify this?
 		let cursor: CardLocation | undefined = undefined;
 		let selection_location: CardLocation | undefined = undefined;
 		const home_cursor_index = home_spaces.indexOf('>');
@@ -1461,7 +1459,7 @@ export class FreeCell {
 					// some games have invalid history (on purpose or otherwise)
 					if (!reprint.includes(':d') && !reprint.includes('init with invalid history')) {
 						// cursor is in the wrong place sometimes
-						// FIXME handle flash (e.g. game.$checkCanFlourish.test.ts `juice flash AH,AS`)
+						// TODO (juice) (parse-history) (print) handle flash (e.g. game.$checkCanFlourish.test.ts `juice flash AH,AS`)
 						const rpc = reprint.replace('>', ' ');
 						const pc = print.replace('>', ' ');
 						if (rpc !== pc) {

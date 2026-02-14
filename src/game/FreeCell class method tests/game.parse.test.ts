@@ -802,6 +802,136 @@ describe('game.parse', () => {
 		});
 	});
 
+	describe('no history, just previous', () => {
+		describe('undo the one move', () => {
+			test('valid move (success)', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C    2S 3D \n' +
+						' 5C AS 9C KH 4D    3C 4S \n' +
+						' 3S 5D KC 3H KD    6S 8D \n' +
+						' TD 7S JD 7H 8H    JC 7D \n' +
+						' 5S QH 8C 9D KS    4H 6C \n' +
+						' 2H    TH 6D QD    QC 5H \n' +
+						' 9S    7C TS JS    JH    \n' +
+						'       6H         >TC    \n' +
+						'                   9H    \n' +
+						' move 67 9H→TC'
+				);
+				expect(game.history).toEqual(['init without history', 'move 67 9H→TC']);
+				const gameUndid = game.undo();
+				// REVIEW (cursor) (parse-history) is this the right place for the cursor?
+				//  - init should be at the deck, sure
+				//  - but init with history errors, when the game is under way?
+				//  - or i guess, init when the deck is empty?
+				expect(gameUndid.print()).toBe(
+					'' + //
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C AS 9C KH 4D    3C 4S \n' +
+						' 3S 5D KC 3H KD    6S 8D \n' +
+						' TD 7S JD 7H 8H    JC 7D \n' +
+						' 5S QH 8C 9D KS    4H 6C \n' +
+						' 2H    TH 6D QD    QC 5H \n' +
+						' 9S    7C TS JS    JH    \n' +
+						'       6H          TC    \n' +
+						':d>   \n' +
+						' init without history'
+				);
+
+				// and if we replay that one move, we get back to where we started
+				expect(gameUndid.moveByShorthand('67')).toEqual(game);
+
+				const gameUndidReparsed = FreeCell.parse(gameUndid.print());
+				expect(gameUndid.previousAction).toEqual({
+					text: 'init without history',
+					type: 'init',
+					gameFunction: 'undo',
+				});
+				expect(gameUndidReparsed.previousAction).toEqual({
+					text: 'init without history',
+					type: 'init',
+				});
+				expect(_omit(gameUndidReparsed, ['previousAction'])).toEqual(
+					_omit(gameUndid, ['previousAction'])
+				);
+			});
+
+			test('invalid move (illegal move)', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C    2S 3D \n' +
+						' 5C>AS 9C KH 4D    3C 4S \n' +
+						' 3S 5D KC 3H KD    6S 8D \n' +
+						' TD 7S JD 7H 8H    JC 7D \n' +
+						' 5S QH 8C 9D KS    4H 6C \n' +
+						' 2H    TH 6D QD    QC 5H \n' +
+						' 9S    7C TS JS    JH    \n' +
+						'       6H          TC    \n' +
+						'                   9H    \n' +
+						' move 65 KS-QD-JS→8H' // this is an illegal move
+				);
+				expect(game.history).toEqual(['init without history', 'move 65 KS-QD-JS→8H']);
+				const gameUndid = game.undo();
+				expect(gameUndid.print()).toBe(
+					'' + //
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C KS 2S 3D \n' +
+						' 5C AS 9C KH 4D QD 3C 4S \n' +
+						' 3S 5D KC 3H KD JS 6S 8D \n' +
+						' TD 7S JD 7H 8H    JC 7D \n' +
+						' 5S QH 8C 9D       4H 6C \n' +
+						' 2H    TH 6D       QC 5H \n' +
+						' 9S    7C TS       JH    \n' +
+						'       6H          TC    \n' +
+						'                   9H    \n' +
+						':d>   \n' +
+						' init without history'
+				);
+				// XXX (optional) (complexity) (undo) uhm, should we bother blocking that undo? we can't replay it
+				//  - prevent undo a move that was invalid in the first place?
+				expect(gameUndid.moveByShorthand('65').print()).toBe(
+					'' + //
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C|KS|2S 3D \n' +
+						' 5C AS 9C KH 4D|QD|3C 4S \n' +
+						' 3S 5D KC 3H KD|JS|6S 8D \n' +
+						' TD 7S JD 7H>8H    JC 7D \n' +
+						' 5S QH 8C 9D       4H 6C \n' +
+						' 2H    TH 6D       QC 5H \n' +
+						' 9S    7C TS       JH    \n' +
+						'       6H          TC    \n' +
+						'                   9H    \n' +
+						' invalid move 65 KS-QD-JS→8H'
+				);
+			});
+
+			test('invalid move (parse throws exception)', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C    2S 3D \n' +
+						' 5C AS 9C KH 4D    3C 4S \n' +
+						' 3S 5D KC 3H KD    6S 8D \n' +
+						' TD 7S JD 7H 8H    JC 7D \n' +
+						' 5S QH 8C 9D KS    4H 6C \n' +
+						' 2H    TH 6D QD    QC 5H \n' +
+						' 9S    7C TS JS    JH    \n' +
+						'       6H         >TC    \n' +
+						'                   9H    \n' +
+						' move ab 9H→TC' // this is wrong (cursor is on '7 TC', ab are cells)
+				);
+				expect(game.history).toEqual(['init without history', 'move ab 9H→TC']);
+				// FIXME this is a very programmer centric thing
+				//  - let's not throw errors during gameplay
+				//  - maybe previous action text: 'invalid move ab 9H→TC'
+				expect(() => game.undo()).toThrow('invalid first card position: move ab 9H→TC; 7 !== b');
+			});
+		});
+	});
+
 	describe('selection', () => {
 		test('history with selection', () => {
 			const game = FreeCell.parse(
@@ -1235,7 +1365,6 @@ describe('game.parse', () => {
 			});
 		});
 
-		// FIXME test.todo
 		describe('invalid selections', () => {
 			test.todo('selected whole column');
 
