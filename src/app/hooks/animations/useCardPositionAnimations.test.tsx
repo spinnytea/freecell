@@ -278,7 +278,7 @@ describe('useCardPositionAnimations', () => {
 				});
 				expect(toSpy.mock.calls).toEqual([
 					['#c6H', { zIndex: 7, duration: 0.15, ease: 'none' }, '<'],
-					['#cAD', { zIndex: 99, duration: 0.15, ease: 'none' }, '<'],
+					['#cAD', { zIndex: 101, duration: 0.15, ease: 'none' }, '<'],
 				]);
 				expect(fromToSpy.mock.calls).toEqual([
 					['#c6H', { top: 317.2, left: 407.018 }, { top: 366, left: 210.526, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -338,19 +338,19 @@ describe('useCardPositionAnimations', () => {
 					// ['#cJS', { zIndex: 2, duration: 0.15, ease: 'none' }, '<'],
 					// and then
 					['#cJD', { top: 36.6, left: 519.298, duration: 0.3, ease: 'power1.out' }, '>0.043'],
-					['#cJD', { zIndex: 109, duration: 0.15, ease: 'none' }, '<'],
+					['#cJD', { zIndex: 111, duration: 0.15, ease: 'none' }, '<'],
 					['#cJS', { top: 36.6, left: 701.754, duration: 0.3, ease: 'power1.out' }, '<0.043'],
-					['#cJS', { zIndex: 109, duration: 0.15, ease: 'none' }, '<'],
+					['#cJS', { zIndex: 111, duration: 0.15, ease: 'none' }, '<'],
 					['#cQD', { top: 36.6, left: 519.298, duration: 0.3, ease: 'power1.out' }, '<0.043'],
-					['#cQD', { zIndex: 110, duration: 0.15, ease: 'none' }, '<'],
+					['#cQD', { zIndex: 112, duration: 0.15, ease: 'none' }, '<'],
 					['#cQS', { top: 36.6, left: 701.754, duration: 0.3, ease: 'power1.out' }, '<0.043'],
-					['#cQS', { zIndex: 110, duration: 0.15, ease: 'none' }, '<'],
+					['#cQS', { zIndex: 112, duration: 0.15, ease: 'none' }, '<'],
 					['#cKC', { top: 36.6, left: 428.07, duration: 0.3, ease: 'power1.out' }, '<0.043'],
-					['#cKC', { zIndex: 111, duration: 0.15, ease: 'none' }, '<'],
+					['#cKC', { zIndex: 113, duration: 0.15, ease: 'none' }, '<'],
 					['#cKD', { top: 36.6, left: 519.298, duration: 0.3, ease: 'power1.out' }, '<0.043'],
-					['#cKD', { zIndex: 111, duration: 0.15, ease: 'none' }, '<'],
+					['#cKD', { zIndex: 113, duration: 0.15, ease: 'none' }, '<'],
 					['#cKS', { top: 36.6, left: 701.754, duration: 0.3, ease: 'power1.out' }, '<0.043'],
-					['#cKS', { zIndex: 111, duration: 0.15, ease: 'none' }, '<'],
+					['#cKS', { zIndex: 113, duration: 0.15, ease: 'none' }, '<'],
 				]);
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cQD', { top: 213.5, left: 112.281 }, { top: 219.6, left: 407.018, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -763,9 +763,9 @@ describe('useCardPositionAnimations', () => {
 								['#c4C', { top: 414.8, left: 308.772 }, { top: 36.6, left: 428.07, duration: 0.3, ease: 'power1.out' }, '>0'],
 							]);
 							expect(toSpy.mock.calls).toEqual([
-								['#c3D', { zIndex: 101, duration: 0.15, ease: 'none' }, '<'],
+								['#c3D', { zIndex: 103, duration: 0.15, ease: 'none' }, '<'],
 								['#c3D', { rotation: 0, duration: 0.1, ease: 'power1.inOut' }, '<'],
-								['#c4C', { zIndex: 102, duration: 0.15, ease: 'none' }, '<'],
+								['#c4C', { zIndex: 104, duration: 0.15, ease: 'none' }, '<'],
 							]);
 							const setSpyIds = getCardIdsFromSpy(setSpy);
 							expect(setSpyIds.length).toBe(50);
@@ -821,8 +821,8 @@ describe('useCardPositionAnimations', () => {
 							]);
 							expect(toSpy.mock.calls).toEqual([
 								['#cKC', { zIndex: 0, duration: 0.15, ease: 'none' }, '<'],
-								['#c2H', { zIndex: 100, duration: 0.15, ease: 'none' }, '<'],
-								['#c3C', { zIndex: 101, duration: 0.15, ease: 'none' }, '<'],
+								['#c2H', { zIndex: 102, duration: 0.15, ease: 'none' }, '<'],
+								['#c3C', { zIndex: 103, duration: 0.15, ease: 'none' }, '<'],
 							]);
 							const setSpyIds = getCardIdsFromSpy(setSpy);
 							expect(setSpyIds.length).toBe(49);

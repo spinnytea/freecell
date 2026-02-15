@@ -1618,7 +1618,7 @@ describe('game.undo (+ history)', () => {
 			);
 		});
 
-		/*
+		/**
 			move card a
 			move card b
 			move card c around a bit
@@ -1632,14 +1632,9 @@ describe('game.undo (+ history)', () => {
 			move card a back
 			(no moves anymore, just shuffle and deal)
 
-			TODO (collapse) (history) verify that game state is identical no matter how you get there
-			 - verify popping history is the same as original
+			TODO (collapse) (undo) this doesn't actually call undo
 
-			TODO (3-priority) (animation) (collapse) (history) verify animations
-			 - it's fine now, animations are simple. But just in case...
-			 - like, just unit test this wild example
-			 - make it a unit test
-			 - make it a manual test
+			@see GameBoard.test.tsx
 		*/
 		test('a wild example', () => {
 			let game = FreeCell.parse(

@@ -3,6 +3,7 @@ import { TLZR } from '@/app/animation_interfaces';
 import {
 	BOTTOM_OF_CASCADE,
 	CARD_FACE_CUTOFF,
+	FOUNDATION_BASE_Z_INDEX,
 	scale_height,
 } from '@/app/components/cards/constants';
 import { CursorType } from '@/app/components/DebugCursors';
@@ -266,7 +267,7 @@ export function calcTopLeftZ(
 			return {
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.cellLeft[data[0]],
-				zIndex: data[0],
+				zIndex: BOTTOM_OF_CASCADE,
 				rotation:
 					selection?.location.fixture === 'cell' && selection.location.data[0] === data[0]
 						? SELECT_ROTATION_ANGLE
@@ -277,7 +278,7 @@ export function calcTopLeftZ(
 				top: fixtureSizes.home.top,
 				left: fixtureSizes.home.foundationLeft[data[0]],
 				// zIndex + BOTTOM_OF_CASCADE so it's above the cell/cascade
-				zIndex: (rank ? getRankForCompare(rank) : 0) + BOTTOM_OF_CASCADE,
+				zIndex: (rank ? getRankForCompare(rank) : 0) + FOUNDATION_BASE_Z_INDEX,
 				rotation:
 					selection?.location.fixture === 'foundation' && selection.location.data[0] === data[0]
 						? SELECT_ROTATION_ANGLE
@@ -287,6 +288,7 @@ export function calcTopLeftZ(
 			const ret = {
 				top: fixtureSizes.tableau.top + fixtureSizes.tableau.offsetTop * data[1],
 				left: fixtureSizes.tableau.cascadeLeft[data[0]],
+				// REVIEW (animation) why did we put this here?
 				zIndex: data[1], // we don't really need to make one cascade strictly above another
 				rotation: 0,
 			};

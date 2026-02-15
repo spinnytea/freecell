@@ -21,6 +21,9 @@ export const ASSET_FOLDER = process.env.BASE_PATH ?? '';
 */
 export const BOTTOM_OF_CASCADE = 99;
 
+/** @see {@link BOTTOM_OF_CASCADE}, except aces start at "1" so a 2 is "102" */
+export const FOUNDATION_BASE_Z_INDEX = 101;
+
 export type CardFaces = 'SVGCards13' | 'SmolCards';
 export const CARD_FACE_CUTOFF = 60;
 
