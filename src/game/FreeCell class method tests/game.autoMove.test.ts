@@ -214,11 +214,7 @@ describe('game.autoMove', () => {
 						' move 16 KC→cascade'
 				);
 
-				game = game
-					.touch()
-					.autoMove({ autoFoundation: false })
-					.touch()
-					.autoMove({ autoFoundation: false });
+				game = game.touch().autoMove({ autoFoundation: false }).touch().autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -512,11 +508,7 @@ describe('game.autoMove', () => {
 						' move 23 KC-QD-JS→cascade'
 				);
 
-				game = game
-					.touch()
-					.autoMove({ autoFoundation: false })
-					.touch()
-					.autoMove({ autoFoundation: false });
+				game = game.touch().autoMove({ autoFoundation: false }).touch().autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -527,13 +519,7 @@ describe('game.autoMove', () => {
 						' move 26 KC-QD-JS→cascade'
 				);
 
-				game = game
-					.touch()
-					.autoMove({ autoFoundation: false })
-					.touch()
-					.autoMove({ autoFoundation: false })
-					.touch()
-					.autoMove({ autoFoundation: false });
+				game = game.touch().autoMove({ autoFoundation: false }).touch().autoMove({ autoFoundation: false }).touch().autoMove({ autoFoundation: false });
 
 				expect(game.print()).toBe(
 					'' + //
@@ -620,9 +606,7 @@ describe('game.autoMove', () => {
 			});
 			expect(game.history).toEqual(['hand-jammed', 'move 25 QD→KS']);
 
-			expect(
-				FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
-			).toBe(game.print({ includeHistory: true }));
+			expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 		});
 
@@ -653,14 +637,9 @@ describe('game.autoMove', () => {
 					{ rank: 'jack', suit: 'spades', location: { fixture: 'cascade', data: [4, 2] } },
 				],
 			});
-			expect(game.history).toEqual([
-				'hand-jammed',
-				'move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)',
-			]);
+			expect(game.history).toEqual(['hand-jammed', 'move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)']);
 
-			expect(
-				FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
-			).toBe(game.print({ includeHistory: true }));
+			expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 		});
 
@@ -688,15 +667,9 @@ describe('game.autoMove', () => {
 				text: 'auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS',
 				type: 'auto-foundation',
 			});
-			expect(game.history).toEqual([
-				'hand-jammed',
-				'move 25 QD-JS→KS',
-				'auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS',
-			]);
+			expect(game.history).toEqual(['hand-jammed', 'move 25 QD-JS→KS', 'auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS']);
 
-			expect(
-				FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
-			).toBe(game.print({ includeHistory: true }));
+			expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 		});
 	});

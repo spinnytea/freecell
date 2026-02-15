@@ -301,9 +301,7 @@ describe('game.moveByShorthand', () => {
 
 		// cascade is imprecise (both the move (which cards) and summary (which cascasde) are imprecise)
 		expect(game.moveByShorthand('45').previousAction.text).toBe('move 45 9C-8D-7C→cascade');
-		expect(game.$moveCardToPosition('9C', '5').previousAction.text).toBe(
-			'move 45 9C-8D-7C→cascade'
-		);
+		expect(game.$moveCardToPosition('9C', '5').previousAction.text).toBe('move 45 9C-8D-7C→cascade');
 		expect(game.$moveCardToPosition('8D', '5').previousAction.text).toBe('move 45 8D-7C→cascade');
 		expect(game.$moveCardToPosition('7C', '5').previousAction.text).toBe('move 45 7C→cascade');
 
@@ -341,12 +339,8 @@ describe('game.moveByShorthand', () => {
 			' 84 1c 71 16 1d 14 d1 ';
 
 		const worldOne = FreeCell.parse(gamePrint).moveByShorthand('37').moveByShorthand('38');
-		const worldTwo = FreeCell.parse(gamePrint)
-			.$moveCardToPosition('5S', '7')
-			.$moveCardToPosition('7C', '8');
-		const worldThree = FreeCell.parse(gamePrint)
-			.$moveCardToPosition('3S', '7')
-			.$moveCardToPosition('5S', '8');
+		const worldTwo = FreeCell.parse(gamePrint).$moveCardToPosition('5S', '7').$moveCardToPosition('7C', '8');
+		const worldThree = FreeCell.parse(gamePrint).$moveCardToPosition('3S', '7').$moveCardToPosition('5S', '8');
 
 		expect(worldOne.print({ includeHistory: true })).toBe(
 			'' + //

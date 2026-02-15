@@ -156,15 +156,11 @@ describe('game.$touchAndMove', () => {
 		// we can select this, but we can't actually move it
 		expect(game.$touchAndMove('5C').previousAction.text).toBe('select 4 5C-4H-3S');
 		// but since this _could_ move if there was a valid target, we can still select it
-		expect(game.$touchAndMove('5C', { allowPeekOnly: false }).previousAction.text).toBe(
-			'select 4 5C-4H-3S'
-		);
+		expect(game.$touchAndMove('5C', { allowPeekOnly: false }).previousAction.text).toBe('select 4 5C-4H-3S');
 
 		// this is buried, so it's peekOnly
 		expect(game.$touchAndMove('QC').previousAction.text).toBe('select QC');
 		// so if we disallow this
-		expect(game.$touchAndMove('QC', { allowPeekOnly: false }).previousAction.text).toBe(
-			'touch stop'
-		);
+		expect(game.$touchAndMove('QC', { allowPeekOnly: false }).previousAction.text).toBe('touch stop');
 	});
 });

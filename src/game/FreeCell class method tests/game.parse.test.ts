@@ -57,26 +57,18 @@ describe('game.parse', () => {
 
 		describe('home', () => {
 			test('cell length', () => {
-				expect(() => FreeCell.parse('ab')).toThrow(
-					'Invalid cell line length (2); expected "1 + count ⨉ 3" -- "ab"'
-				);
+				expect(() => FreeCell.parse('ab')).toThrow('Invalid cell line length (2); expected "1 + count ⨉ 3" -- "ab"');
 			});
 
 			test('too few cells', () => {
 				// takes foundations first
-				expect(() => FreeCell.parse(' ')).toThrow(
-					'Must have between 1 and 6 cells; requested "-4".'
-				);
+				expect(() => FreeCell.parse(' ')).toThrow('Must have between 1 and 6 cells; requested "-4".');
 				// 4 foundations, 0 cells
-				expect(() => FreeCell.parse('             ')).toThrow(
-					'Must have between 1 and 6 cells; requested "0".'
-				);
+				expect(() => FreeCell.parse('             ')).toThrow('Must have between 1 and 6 cells; requested "0".');
 			});
 
 			test('too many cells', () => {
-				expect(() => FreeCell.parse('                                  \n')).toThrow(
-					'Must have between 1 and 6 cells; requested "7".'
-				);
+				expect(() => FreeCell.parse('                                  \n')).toThrow('Must have between 1 and 6 cells; requested "7".');
 			});
 		});
 
@@ -86,15 +78,11 @@ describe('game.parse', () => {
 			});
 
 			test('length', () => {
-				expect(() => FreeCell.parse('                \n abc ')).toThrow(
-					'Invalid cascade line length (5); expected "1 + count ⨉ 3" -- " abc "'
-				);
+				expect(() => FreeCell.parse('                \n abc ')).toThrow('Invalid cascade line length (5); expected "1 + count ⨉ 3" -- " abc "');
 			});
 
 			test('count', () => {
-				expect(() => FreeCell.parse('                \n 1_ 2_ ')).toThrow(
-					'Must have at least as many cascades as foundations (4); requested "2".'
-				);
+				expect(() => FreeCell.parse('                \n 1_ 2_ ')).toThrow('Must have at least as many cascades as foundations (4); requested "2".');
 			});
 		});
 
@@ -354,11 +342,7 @@ describe('game.parse', () => {
 
 			test('first move', () => {
 				const game = new FreeCell().shuffle32(3).dealAll().moveByShorthand('2a');
-				expect(game.history).toEqual([
-					'shuffle deck (3)',
-					'deal all cards',
-					'move 2a 4S→cell (auto-foundation 56 AH,2H)',
-				]);
+				expect(game.history).toEqual(['shuffle deck (3)', 'deal all cards', 'move 2a 4S→cell (auto-foundation 56 AH,2H)']);
 				expect(game.previousAction).toEqual({
 					text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 					type: 'move-foundation',
@@ -367,11 +351,7 @@ describe('game.parse', () => {
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 
 				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
-				expect(gameWithHist.history).toEqual([
-					'shuffle deck (3)',
-					'deal all cards',
-					'move 2a 4S→cell (auto-foundation 56 AH,2H)',
-				]);
+				expect(gameWithHist.history).toEqual(['shuffle deck (3)', 'deal all cards', 'move 2a 4S→cell (auto-foundation 56 AH,2H)']);
 				expect(gameWithHist.previousAction).toEqual({
 					text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 					type: 'move-foundation',
@@ -381,10 +361,7 @@ describe('game.parse', () => {
 				expect(gameWithHist).toEqual(game);
 
 				const gameNoHist = FreeCell.parse(game.print());
-				expect(gameNoHist.history).toEqual([
-					'init without history',
-					'move 2a 4S→cell (auto-foundation 56 AH,2H)',
-				]);
+				expect(gameNoHist.history).toEqual(['init without history', 'move 2a 4S→cell (auto-foundation 56 AH,2H)']);
 				expect(gameNoHist.previousAction).toEqual({
 					text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 					type: 'move-foundation',
@@ -392,9 +369,7 @@ describe('game.parse', () => {
 				});
 				expect(gameNoHist.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(gameNoHist).not.toEqual(game);
-				expect(_omit(gameNoHist, ['history', 'previousAction'])).toEqual(
-					_omit(game, ['history', 'previousAction'])
-				);
+				expect(_omit(gameNoHist, ['history', 'previousAction'])).toEqual(_omit(game, ['history', 'previousAction']));
 			});
 
 			test('not dealt', () => {
@@ -464,19 +439,14 @@ describe('game.parse', () => {
 				// at this point, we can recover the entire game using the history
 				let gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
 				let gameNoHist = FreeCell.parse(game.print());
-				expect(gameWithHist.print({ includeHistory: true })).toBe(
-					game.print({ includeHistory: true })
-				);
+				expect(gameWithHist.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 				expect(gameWithHist).toEqual(game);
 				// but the whole game isn't exactly the same
 				// if write/read a game, we can recover the state, but not the history
 				expect(gameNoHist.print()).toBe(game.print());
 				expect(_omit(gameNoHist, ['history'])).toEqual(_omit(game, ['history']));
 				expect(game.history.length).toBe(71);
-				expect(gameNoHist.history).toEqual([
-					'init without history',
-					'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
-				]);
+				expect(gameNoHist.history).toEqual(['init without history', 'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)']);
 
 				game = game.moveCursor('right');
 				expect(game.print()).toBe(
@@ -513,12 +483,8 @@ describe('game.parse', () => {
 				expect(_omit(gameNoHist, 'history')).toEqual(_omit(game, 'history'));
 				expect(game.history.length).toBe(71);
 				expect(gameNoHist.history.length).toBe(0);
-				expect(gameWithHist.print({ includeHistory: true })).toBe(
-					game.print({ includeHistory: true })
-				);
-				expect(_omit(gameWithHist, ['previousAction', 'cursor'])).toEqual(
-					_omit(game, ['previousAction', 'cursor'])
-				);
+				expect(gameWithHist.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+				expect(_omit(gameWithHist, ['previousAction', 'cursor'])).toEqual(_omit(game, ['previousAction', 'cursor']));
 				expect(game.previousAction).toEqual({
 					text: 'cursor right',
 					type: 'cursor',
@@ -530,9 +496,7 @@ describe('game.parse', () => {
 				expect(gameWithHist.previousAction).toEqual({
 					text: 'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
 					type: 'move-foundation',
-					tweenCards: [
-						{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 0] } },
-					],
+					tweenCards: [{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 0] } }],
 				});
 			});
 		});
@@ -705,9 +669,7 @@ describe('game.parse', () => {
 							' 53 6a 65 67 85 a8 68 27 \n' +
 							' 67 '
 					)
-				).toThrow(
-					'invalid move actionText cascade "move 23 9H→TC" for cards w/ {"rank":"10","suit":"clubs","location":{"fixture":"cascade","data":[6,7]}}'
-				);
+				).toThrow('invalid move actionText cascade "move 23 9H→TC" for cards w/ {"rank":"10","suit":"clubs","location":{"fixture":"cascade","data":[6,7]}}');
 			});
 
 			test('invalid moves', () => {
@@ -779,10 +741,7 @@ describe('game.parse', () => {
 							' 1h 1b 8h 4h 4b 4c 4d a2 \n' +
 							' 42 46 3h 7h 13' // missing last space; which I do _aaaallllllll_ the time
 					);
-					expect(game.history).toEqual([
-						'init with invalid history trailing whitespace',
-						'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
-					]);
+					expect(game.history).toEqual(['init with invalid history trailing whitespace', 'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)']);
 				});
 
 				test('any line trimmed whitespace', () => {
@@ -806,10 +765,7 @@ describe('game.parse', () => {
 							' 1h 1b 8h 4h 4b 4c 4d a2\n' +
 							' 42 46 3h 7h 13'
 					);
-					expect(game.history).toEqual([
-						'init with invalid history whitespace lines',
-						'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
-					]);
+					expect(game.history).toEqual(['init with invalid history whitespace lines', 'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)']);
 				});
 			});
 		});
@@ -866,9 +822,7 @@ describe('game.parse', () => {
 					text: 'init without history',
 					type: 'init',
 				});
-				expect(_omit(gameUndidReparsed, ['previousAction'])).toEqual(
-					_omit(gameUndid, ['previousAction'])
-				);
+				expect(_omit(gameUndidReparsed, ['previousAction'])).toEqual(_omit(gameUndid, ['previousAction']));
 			});
 
 			test('invalid move (illegal move)', () => {
@@ -939,9 +893,7 @@ describe('game.parse', () => {
 				expect(game.history).toEqual(['init without history', 'move ab 9H→TC']);
 				// expect(() => game.undo()).toThrow('invalid first card position: move ab 9H→TC; 7 !== b');
 				const gameUndid = game.undo();
-				expect(gameUndid.print({ includeHistory: true })).toBe(
-					game.print({ includeHistory: true })
-				);
+				expect(gameUndid.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 				expect(gameUndid.previousAction).toEqual({
 					text: 'invalid move ab 9H→TC',
 					type: 'invalid',
@@ -1113,9 +1065,7 @@ describe('game.parse', () => {
 					expect(game.cursor).toEqual({ fixture: 'cell', data: [3] });
 					expect(game.selection).toEqual({
 						location: { fixture: 'foundation', data: [0] },
-						cards: [
-							{ rank: 'queen', suit: 'clubs', location: { fixture: 'foundation', data: [0] } },
-						],
+						cards: [{ rank: 'queen', suit: 'clubs', location: { fixture: 'foundation', data: [0] } }],
 						peekOnly: true,
 					});
 					expect(game.print()).toBe(
@@ -1136,9 +1086,7 @@ describe('game.parse', () => {
 					expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 					expect(game.selection).toEqual({
 						location: { fixture: 'foundation', data: [1] },
-						cards: [
-							{ rank: 'queen', suit: 'diamonds', location: { fixture: 'foundation', data: [1] } },
-						],
+						cards: [{ rank: 'queen', suit: 'diamonds', location: { fixture: 'foundation', data: [1] } }],
 						peekOnly: true,
 					});
 					expect(game.print()).toBe(
@@ -1159,9 +1107,7 @@ describe('game.parse', () => {
 					expect(game.cursor).toEqual({ fixture: 'foundation', data: [1] });
 					expect(game.selection).toEqual({
 						location: { fixture: 'foundation', data: [2] },
-						cards: [
-							{ rank: 'queen', suit: 'hearts', location: { fixture: 'foundation', data: [2] } },
-						],
+						cards: [{ rank: 'queen', suit: 'hearts', location: { fixture: 'foundation', data: [2] } }],
 						peekOnly: true,
 					});
 					expect(game.print()).toBe(
@@ -1182,9 +1128,7 @@ describe('game.parse', () => {
 					expect(game.cursor).toEqual({ fixture: 'foundation', data: [2] });
 					expect(game.selection).toEqual({
 						location: { fixture: 'foundation', data: [3] },
-						cards: [
-							{ rank: 'queen', suit: 'spades', location: { fixture: 'foundation', data: [3] } },
-						],
+						cards: [{ rank: 'queen', suit: 'spades', location: { fixture: 'foundation', data: [3] } }],
 						peekOnly: true,
 					});
 					expect(game.print()).toBe(
@@ -1209,9 +1153,7 @@ describe('game.parse', () => {
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 0] });
 					expect(game.selection).toEqual({
 						location: { fixture: 'cascade', data: [1, 0] },
-						cards: [
-							{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } },
-						],
+						cards: [{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } }],
 						peekOnly: false,
 					});
 					expect(game.print()).toBe(
@@ -1236,9 +1178,7 @@ describe('game.parse', () => {
 					expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 0] });
 					expect(game.selection).toEqual({
 						location: { fixture: 'cascade', data: [1, 0] },
-						cards: [
-							{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } },
-						],
+						cards: [{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } }],
 						peekOnly: false,
 					});
 					expect(game.print()).toBe(
@@ -1373,11 +1313,7 @@ describe('game.parse', () => {
 						selCount = 1;
 					// special case for curror is immediatly after the selection (straddles home row, overlaps right)
 					// (no special case for left, because they would be the same position)
-					if (
-						c === '{ "fixture": "foundation", "data": [0] }' &&
-						s === '{ "fixture": "cell", "data": [3] }'
-					)
-						selCount = 1;
+					if (c === '{ "fixture": "foundation", "data": [0] }' && s === '{ "fixture": "cell", "data": [3] }') selCount = 1;
 					expect((g2Print.match(/\|/g) ?? []).length).toBe(selCount);
 				});
 			});

@@ -29,9 +29,7 @@ describe('animUpdatedCardPositions', () => {
 				previousTop: 0, // prev?.top ?? top,
 			},
 		];
-		const nextTLZR = new Map<string, TLZR>([
-			['KH', { top: 100, left: 100, zIndex: 10, rotation: -5 }],
-		]);
+		const nextTLZR = new Map<string, TLZR>([['KH', { top: 100, left: 100, zIndex: 10, rotation: -5 }]]);
 		const fixtureSizesChanged = false;
 
 		animUpdatedCardPositions({

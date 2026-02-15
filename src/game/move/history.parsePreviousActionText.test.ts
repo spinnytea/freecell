@@ -1,8 +1,4 @@
-import {
-	ACTION_TEXT_EXAMPLES,
-	FIFTY_TWO_CARD_FLOURISH,
-	pullActionTextExamples,
-} from '@/game/catalog/actionText-examples';
+import { ACTION_TEXT_EXAMPLES, FIFTY_TWO_CARD_FLOURISH, pullActionTextExamples } from '@/game/catalog/actionText-examples';
 import { parsePreviousActionType, PreviousAction } from '@/game/move/history';
 
 describe('game/history.parsePreviousActionType', () => {
@@ -68,13 +64,10 @@ describe('game/history.parsePreviousActionType', () => {
 			${'flourish 56 KD,KS'}                        | ${{ text: 'flourish 56 KD,KS', type: 'auto-foundation' }}
 			${'invalid move 86 7D→9C'}                    | ${{ text: 'invalid move 86 7D→9C', type: 'invalid' }}
 			${'invalid move 75 6D-5S-4D-3C→7C'}           | ${{ text: 'invalid move 75 6D-5S-4D-3C→7C', type: 'invalid' }}
-		`(
-			'$actionText',
-			({ actionText, previousAction }: { actionText: string; previousAction: PreviousAction }) => {
-				pullActionTextExamples(actionTextExamples, actionText);
-				expect(parsePreviousActionType(actionText)).toEqual(previousAction);
-			}
-		);
+		`('$actionText', ({ actionText, previousAction }: { actionText: string; previousAction: PreviousAction }) => {
+			pullActionTextExamples(actionTextExamples, actionText);
+			expect(parsePreviousActionType(actionText)).toEqual(previousAction);
+		});
 	});
 
 	describe('other cases', () => {
@@ -85,11 +78,8 @@ describe('game/history.parsePreviousActionType', () => {
 			${'invalid undo tween'}      | ${{ text: 'invalid undo tween', type: 'invalid', gameFunction: 'undo' }}
 			${'juice flash AH,AS'}       | ${{ text: 'juice flash AH,AS', type: 'juice', gameFunction: 'check-can-flourish' }}
 			${'juice flash *AS*'}        | ${{ text: 'juice flash *AS*', type: 'juice', gameFunction: 'check-can-flourish52' }}
-		`(
-			'$actionText',
-			({ actionText, previousAction }: { actionText: string; previousAction: PreviousAction }) => {
-				expect(parsePreviousActionType(actionText)).toEqual(previousAction);
-			}
-		);
+		`('$actionText', ({ actionText, previousAction }: { actionText: string; previousAction: PreviousAction }) => {
+			expect(parsePreviousActionType(actionText)).toEqual(previousAction);
+		});
 	});
 });

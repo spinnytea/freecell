@@ -207,12 +207,7 @@ describe('game.autoFoundationAll', () => {
 					' 4H                      \n' +
 					' move 86 9H-8S-7H-6C-5H-4S→cascade (auto-foundation 8377 AC,2C,3C,4D)'
 			);
-			expect(
-				game
-					.moveByShorthand('86', { autoFoundation: false })
-					.autoFoundationAll({ limit: 'opp+2' })
-					.print()
-			).toBe(
+			expect(game.moveByShorthand('86', { autoFoundation: false }).autoFoundationAll({ limit: 'opp+2' }).print()).toBe(
 				'' +
 					'            >KD KH KS KC \n' +
 					'                         \n' +
@@ -234,18 +229,13 @@ describe('game.autoFoundationAll', () => {
 			${'cannot move selected cell card'}     | ${'|2D|AD         >   \n             \n hand-jammed'} | ${'|2D|   AD      >   \n             \n '} | ${'auto-foundation b AD'}
 			${'cannot move selected cascade card'}  | ${'               >   \n|2D|AD       \n hand-jammed'} | ${'       AD      >   \n|2D|         \n '} | ${'auto-foundation 2 AD'}
 			${'cannot move to selected foundation'} | ${' 3H 3S AH|AS|AD>AC \n 2H 2S 2D 2C \n hand-jammed'} | ${'    3S 3H|AS|2D>2C \n    2S       \n '} | ${'auto-foundation 134a 2H,2D,2C,3H'}
-		`(
-			'$name',
-			({ before, after, actionText }: { before: string; after: string; actionText: string }) => {
-				const game = FreeCell.parse(before).autoFoundationAll({ limit: 'none', anytime: true });
-				expect(game.history).toEqual(
-					actionText === 'hand-jammed' ? ['hand-jammed'] : ['hand-jammed', actionText]
-				);
-				expect(
-					game.print().replace(/\n:d[^\n]+\n/, '\n') // clip the deck
-				).toBe(after + actionText);
-			}
-		);
+		`('$name', ({ before, after, actionText }: { before: string; after: string; actionText: string }) => {
+			const game = FreeCell.parse(before).autoFoundationAll({ limit: 'none', anytime: true });
+			expect(game.history).toEqual(actionText === 'hand-jammed' ? ['hand-jammed'] : ['hand-jammed', actionText]);
+			expect(
+				game.print().replace(/\n:d[^\n]+\n/, '\n') // clip the deck
+			).toBe(after + actionText);
+		});
 
 		describe('cannot move whole selection sequence', () => {
 			/*
@@ -273,46 +263,35 @@ describe('game.autoFoundationAll', () => {
 				${'opp+1'}  | ${'346132142134213421342134213421342134213421342bdac'} | ${'2H,2S,AD,2C,3H,2D,3C,3S,3D,4C,4H,4S,4D,5C,5H,5S,5D,6C,6H,6S,6D,7C,7H,7S,7D,8C,8H,8S,8D,9C,9H,9S,9D,TC,TH,TS,TD,JC,JH,JS,JD,QC,QH,QS,QD,KC,KH,KS,KD'}
 				${'rank+1'} | ${'34613421342134213421342134213421342134213421da2bc'} | ${'2H,2S,AD,2C,3H,3S,2D,3C,4H,4S,3D,4C,5H,5S,4D,5C,6H,6S,5D,6C,7H,7S,6D,7C,8H,8S,7D,8C,9H,9S,8D,9C,TH,TS,9D,TC,JH,JS,TD,JC,QH,QS,JD,QC,KH,KS,QD,KC,KD'}
 				${'rank'}   | ${'613421342134213421342134213421342134213421342bdac'} | ${'AD,2C,2H,2S,2D,3C,3H,3S,3D,4C,4H,4S,4D,5C,5H,5S,5D,6C,6H,6S,6D,7C,7H,7S,7D,8C,8H,8S,8D,9C,9H,9S,9D,TC,TH,TS,TD,JC,JH,JS,JD,QC,QH,QS,QD,KC,KH,KS,KD'}
-			`(
-				'$limit',
-				({
-					limit,
-					movedPositionsStr,
-					movedCardsStr,
-				}: {
-					limit: AutoFoundationLimit;
-					movedPositionsStr: string;
-					movedCardsStr: string;
-				}) => {
-					expect(
-						FreeCell.parse(
-							'' + //
-								'>KS KC KD KH AH AS    AC \n' +
-								' QC QD QH QS    AD       \n' +
-								' JC JD JH JS             \n' +
-								' TC TD TH TS             \n' +
-								' 9C 9D 9H 9S             \n' +
-								' 8C 8D 8H 8S             \n' +
-								' 7C 7D 7H 7S             \n' +
-								' 6C 6D 6H 6S             \n' +
-								' 5C 5D 5H 5S             \n' +
-								' 4C 4D 4H 4S             \n' +
-								' 3C 3D 3H 3S             \n' +
-								' 2C 2D 2H 2S             \n' +
-								' hand-jammed'
-						)
-							.autoFoundationAll({ limit, anytime: true })
-							.print()
-					).toBe(
+			`('$limit', ({ limit, movedPositionsStr, movedCardsStr }: { limit: AutoFoundationLimit; movedPositionsStr: string; movedCardsStr: string }) => {
+				expect(
+					FreeCell.parse(
 						'' + //
-							'            >KH KS KD KC \n' +
-							'                         \n' +
-							':    Y O U   W I N !    :\n' +
-							'                         \n' +
-							` flourish ${movedPositionsStr} ${movedCardsStr}`
-					);
-				}
-			);
+							'>KS KC KD KH AH AS    AC \n' +
+							' QC QD QH QS    AD       \n' +
+							' JC JD JH JS             \n' +
+							' TC TD TH TS             \n' +
+							' 9C 9D 9H 9S             \n' +
+							' 8C 8D 8H 8S             \n' +
+							' 7C 7D 7H 7S             \n' +
+							' 6C 6D 6H 6S             \n' +
+							' 5C 5D 5H 5S             \n' +
+							' 4C 4D 4H 4S             \n' +
+							' 3C 3D 3H 3S             \n' +
+							' 2C 2D 2H 2S             \n' +
+							' hand-jammed'
+					)
+						.autoFoundationAll({ limit, anytime: true })
+						.print()
+				).toBe(
+					'' + //
+						'            >KH KS KD KC \n' +
+						'                         \n' +
+						':    Y O U   W I N !    :\n' +
+						'                         \n' +
+						` flourish ${movedPositionsStr} ${movedCardsStr}`
+				);
+			});
 		});
 	});
 
@@ -345,9 +324,7 @@ describe('game.autoFoundationAll', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move 54 8S→9D (flourish 56638136186381366813863468438436436836846843 AS,2S,3D,3S,4H,4C,4D,4S,5H,5C,5D,5S,6H,6C,6D,6S,7H,7C,7D,7S,8H,8C,8D,8S,9H,9C,9D,9S,TH,TC,TD,TS,JH,JC,JD,JS,QH,QC,QD,QS,KH,KC,KD,KS)',
 					type: 'move-foundation',
-					tweenCards: [
-						{ rank: '8', suit: 'spades', location: { fixture: 'cascade', data: [3, 5] } },
-					],
+					tweenCards: [{ rank: '8', suit: 'spades', location: { fixture: 'cascade', data: [3, 5] } }],
 				});
 				expect(game.win).toBe(true);
 				expect(game.winIsFlourish).toBe(true);
@@ -401,9 +378,7 @@ describe('game.autoFoundationAll', () => {
 				expect(game.previousAction).toEqual({
 					text: 'move 38 8S→9H (flourish52 33357d226765475665745627157a815775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)',
 					type: 'move-foundation',
-					tweenCards: [
-						{ rank: '8', suit: 'spades', location: { fixture: 'cascade', data: [7, 5] } },
-					],
+					tweenCards: [{ rank: '8', suit: 'spades', location: { fixture: 'cascade', data: [7, 5] } }],
 				});
 				expect(game.win).toBe(true);
 				expect(game.winIsFlourish).toBe(true);

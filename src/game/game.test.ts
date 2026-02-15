@@ -124,27 +124,19 @@ describe('game', () => {
 		});
 
 		test('0 cells', () => {
-			expect(() => new FreeCell({ cellCount: 0 })).toThrow(
-				'Must have between 1 and 6 cells; requested "0".'
-			);
+			expect(() => new FreeCell({ cellCount: 0 })).toThrow('Must have between 1 and 6 cells; requested "0".');
 		});
 
 		test('7 cells', () => {
-			expect(() => new FreeCell({ cellCount: 7 })).toThrow(
-				'Must have between 1 and 6 cells; requested "7".'
-			);
+			expect(() => new FreeCell({ cellCount: 7 })).toThrow('Must have between 1 and 6 cells; requested "7".');
 		});
 
 		test('3 cascades', () => {
-			expect(() => new FreeCell({ cascadeCount: 3 })).toThrow(
-				'Must have at least as many cascades as foundations (4); requested "3".'
-			);
+			expect(() => new FreeCell({ cascadeCount: 3 })).toThrow('Must have at least as many cascades as foundations (4); requested "3".');
 		});
 
 		test('11 cascades', () => {
-			expect(() => new FreeCell({ cascadeCount: 11 })).toThrow(
-				'Cannot have more then 10 cascades; requested "11".'
-			);
+			expect(() => new FreeCell({ cascadeCount: 11 })).toThrow('Cannot have more then 10 cascades; requested "11".');
 		});
 	});
 
@@ -480,26 +472,15 @@ describe('game', () => {
 					${49}   | ${5}  | ${' 2S 2H>2D 2C AS AH AD AC '}
 					${50}   | ${6}  | ${' 2S>2H 2D 2C AS AH AD AC '}
 					${51}   | ${7}  | ${'>2S 2H 2D 2C AS AH AD AC '}
-				`(
-					'cursor at $startD0',
-					({
-						startD0,
-						endD0,
-						printDeck,
-					}: {
-						startD0: number;
-						endD0: number;
-						printDeck: string;
-					}) => {
-						let game = new FreeCell();
-						game = game.setCursor({ fixture: 'deck', data: [startD0] });
-						expect(game.cursor).toEqual({ fixture: 'deck', data: [startD0] });
-						game = game.dealAll({ demo: true, keepDeck: true });
-						expect(game.cursor).toEqual({ fixture: 'deck', data: [endD0] });
-						expect(game.deck.length).toBe(8);
-						expect(game.__printDeck()).toBe(printDeck);
-					}
-				);
+				`('cursor at $startD0', ({ startD0, endD0, printDeck }: { startD0: number; endD0: number; printDeck: string }) => {
+					let game = new FreeCell();
+					game = game.setCursor({ fixture: 'deck', data: [startD0] });
+					expect(game.cursor).toEqual({ fixture: 'deck', data: [startD0] });
+					game = game.dealAll({ demo: true, keepDeck: true });
+					expect(game.cursor).toEqual({ fixture: 'deck', data: [endD0] });
+					expect(game.deck.length).toBe(8);
+					expect(game.__printDeck()).toBe(printDeck);
+				});
 			});
 		});
 	});
@@ -542,9 +523,7 @@ describe('game', () => {
 				' 4H                      \n' +
 				' 2S                      \n';
 			expect(FreeCell.parse(gamePrint + ' hand-jammed').print()).toBe(
-				gamePrint +
-					':d KS KC QH QC JS JC TS TH TC 9S 9H 9C 8S 8H 7S 7H 6S 6H 5H 4S 3S 3H 2H AS AH \n' +
-					' hand-jammed'
+				gamePrint + ':d KS KC QH QC JS JC TS TH TC 9S 9H 9C 8S 8H 7S 7H 6S 6H 5H 4S 3S 3H 2H AS AH \n' + ' hand-jammed'
 			);
 		});
 
@@ -596,28 +575,17 @@ describe('game', () => {
 					${8}         | ${'                         '}       | ${':    Y O U   W I N !    :'}
 					${9}         | ${'                            '}    | ${':     Y O U   W I N !      :'}
 					${10}        | ${'                               '} | ${':       Y O U   W I N !       :'}
-				`(
-					'$cascadeCount cascades',
-					({
-						cascadeCount,
-						emptyLine,
-						winLine,
-					}: {
-						cascadeCount: number;
-						emptyLine: string;
-						winLine: string;
-					}) => {
-						expect(emptyLine.length).toBe(cascadeCount * 3 + 1);
-						const game = FreeCell.parse(`>            KC KD KH KS \n${emptyLine}\n hand-jammed`);
-						expect(game.tableau.length).toBe(cascadeCount);
-						expect(game.win).toBe(true);
-						expect(game.winIsFlourish).toBe(false);
-						expect(game.winIsFlourish52).toBe(false);
-						expect(game.print().replaceAll(' ', '·')).toMatchSnapshot();
-						expect(FreeCell.parse(game.print()).print()).toBe(game.print());
-						expect(game.print().split('\n')[2]).toBe(winLine);
-					}
-				);
+				`('$cascadeCount cascades', ({ cascadeCount, emptyLine, winLine }: { cascadeCount: number; emptyLine: string; winLine: string }) => {
+					expect(emptyLine.length).toBe(cascadeCount * 3 + 1);
+					const game = FreeCell.parse(`>            KC KD KH KS \n${emptyLine}\n hand-jammed`);
+					expect(game.tableau.length).toBe(cascadeCount);
+					expect(game.win).toBe(true);
+					expect(game.winIsFlourish).toBe(false);
+					expect(game.winIsFlourish52).toBe(false);
+					expect(game.print().replaceAll(' ', '·')).toMatchSnapshot();
+					expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+					expect(game.print().split('\n')[2]).toBe(winLine);
+				});
 			});
 
 			describe('flourish', () => {
@@ -630,30 +598,17 @@ describe('game', () => {
 					${8}         | ${'                         '}       | ${':    Y O U   W I N !    :'}
 					${9}         | ${'                            '}    | ${':     Y O U   W I N !      :'}
 					${10}        | ${'                               '} | ${':       Y O U   W I N !       :'}
-				`(
-					'$cascadeCount cascades',
-					({
-						cascadeCount,
-						emptyLine,
-						winLine,
-					}: {
-						cascadeCount: number;
-						emptyLine: string;
-						winLine: string;
-					}) => {
-						expect(emptyLine.length).toBe(cascadeCount * 3 + 1);
-						const game = FreeCell.parse(
-							`>            KC KD KH KS \n${emptyLine}\n hand-jammed flourish`
-						);
-						expect(game.tableau.length).toBe(cascadeCount);
-						expect(game.win).toBe(true);
-						expect(game.winIsFlourish).toBe(true);
-						expect(game.winIsFlourish52).toBe(false);
-						expect(game.print().replaceAll(' ', '·')).toMatchSnapshot();
-						expect(FreeCell.parse(game.print()).print()).toBe(game.print());
-						expect(game.print().split('\n')[2]).toBe(winLine);
-					}
-				);
+				`('$cascadeCount cascades', ({ cascadeCount, emptyLine, winLine }: { cascadeCount: number; emptyLine: string; winLine: string }) => {
+					expect(emptyLine.length).toBe(cascadeCount * 3 + 1);
+					const game = FreeCell.parse(`>            KC KD KH KS \n${emptyLine}\n hand-jammed flourish`);
+					expect(game.tableau.length).toBe(cascadeCount);
+					expect(game.win).toBe(true);
+					expect(game.winIsFlourish).toBe(true);
+					expect(game.winIsFlourish52).toBe(false);
+					expect(game.print().replaceAll(' ', '·')).toMatchSnapshot();
+					expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+					expect(game.print().split('\n')[2]).toBe(winLine);
+				});
 			});
 
 			describe('flourish52', () => {
@@ -666,30 +621,17 @@ describe('game', () => {
 					${8}         | ${'                         '}       | ${':    A M A Z I N G !    :'}
 					${9}         | ${'                            '}    | ${':     A M A Z I N G !      :'}
 					${10}        | ${'                               '} | ${':       A M A Z I N G !       :'}
-				`(
-					'$cascadeCount cascades',
-					({
-						cascadeCount,
-						emptyLine,
-						winLine,
-					}: {
-						cascadeCount: number;
-						emptyLine: string;
-						winLine: string;
-					}) => {
-						expect(emptyLine.length).toBe(cascadeCount * 3 + 1);
-						const game = FreeCell.parse(
-							`>            KC KD KH KS \n${emptyLine}\n hand-jammed flourish52`
-						);
-						expect(game.tableau.length).toBe(cascadeCount);
-						expect(game.win).toBe(true);
-						expect(game.winIsFlourish).toBe(true);
-						expect(game.winIsFlourish52).toBe(true);
-						expect(game.print().replaceAll(' ', '·')).toMatchSnapshot();
-						expect(FreeCell.parse(game.print()).print()).toBe(game.print());
-						expect(game.print().split('\n')[2]).toBe(winLine);
-					}
-				);
+				`('$cascadeCount cascades', ({ cascadeCount, emptyLine, winLine }: { cascadeCount: number; emptyLine: string; winLine: string }) => {
+					expect(emptyLine.length).toBe(cascadeCount * 3 + 1);
+					const game = FreeCell.parse(`>            KC KD KH KS \n${emptyLine}\n hand-jammed flourish52`);
+					expect(game.tableau.length).toBe(cascadeCount);
+					expect(game.win).toBe(true);
+					expect(game.winIsFlourish).toBe(true);
+					expect(game.winIsFlourish52).toBe(true);
+					expect(game.print().replaceAll(' ', '·')).toMatchSnapshot();
+					expect(FreeCell.parse(game.print()).print()).toBe(game.print());
+					expect(game.print().split('\n')[2]).toBe(winLine);
+				});
 			});
 		});
 	});
@@ -1238,9 +1180,7 @@ describe('game', () => {
 			expect(game.winIsFlourish).toBe(false);
 			expect(game.winIsFlourish52).toBe(false);
 
-			expect(
-				FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
-			).toBe(game.print({ includeHistory: true }));
+			expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 		});
 

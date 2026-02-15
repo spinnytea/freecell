@@ -3,13 +3,7 @@ import { FreeCell } from '@/game/game';
 describe('game.$toggleCursor', () => {
 	describe('examples', () => {
 		test('one', () => {
-			let game = new FreeCell()
-				.shuffle32(7852)
-				.dealAll()
-				.moveCursor('left')
-				.moveCursor('down')
-				.moveCursor('left')
-				.$touchAndMove(); // space bar
+			let game = new FreeCell().shuffle32(7852).dealAll().moveCursor('left').moveCursor('down').moveCursor('left').$touchAndMove(); // space bar
 			expect(game.print()).toBe(
 				'' + //
 					'                         \n' +
@@ -26,12 +20,8 @@ describe('game.$toggleCursor', () => {
 
 			expect(game.$toggleCursor().previousAction.text).toBe('cursor set 7 6C');
 			expect(game.$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set 4 5S');
-			expect(game.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toBe(
-				'cursor set 7 6C'
-			);
-			expect(
-				game.$toggleCursor().$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text
-			).toBe('cursor set 4 5S');
+			expect(game.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set 7 6C');
+			expect(game.$toggleCursor().$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set 4 5S');
 
 			// okay, moving on
 			// see how much easier this iw with toggleCursor
@@ -53,13 +43,7 @@ describe('game.$toggleCursor', () => {
 
 		test('two', () => {
 			// same setup as one, but different moves
-			let game = new FreeCell()
-				.shuffle32(7852)
-				.dealAll()
-				.moveCursor('left')
-				.moveCursor('down')
-				.moveCursor('left')
-				.$touchAndMove(); // space bar
+			let game = new FreeCell().shuffle32(7852).dealAll().moveCursor('left').moveCursor('down').moveCursor('left').$touchAndMove(); // space bar
 			expect(game.print()).toBe(
 				'' + //
 					'                         \n' +
@@ -115,13 +99,7 @@ describe('game.$toggleCursor', () => {
 			game = game.$toggleCursor().moveCursor('right').$touchAndMove();
 			expect(game.previousAction.text).toBe('move b7 5D→6C');
 			// okay, this last one is a little far
-			game = game
-				.moveCursor('right')
-				.moveCursor('down')
-				.moveCursor('down')
-				.moveCursor('down')
-				.moveCursor('down')
-				.$touchAndMove();
+			game = game.moveCursor('right').moveCursor('down').moveCursor('down').moveCursor('down').moveCursor('down').$touchAndMove();
 			expect(game.previousAction.text).toBe('move 87 4S-3H→5D');
 
 			expect(game.print({ includeHistory: true })).toBe(
@@ -158,9 +136,6 @@ describe('game.$toggleCursor', () => {
 		expect(gameAllCards.$toggleCursor().cursor.fixture).toEqual('cell');
 		expect(gameAllCards.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('cell');
 		expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).cursor.fixture).toEqual('deck');
-		expect(
-			gameAllCards.$toggleCursor({ allowEmptyDeck: true }).$toggleCursor({ allowEmptyDeck: true })
-				.cursor.fixture
-		).toEqual('cell');
+		expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).$toggleCursor({ allowEmptyDeck: true }).cursor.fixture).toEqual('cell');
 	});
 });

@@ -1,12 +1,7 @@
 import { findCard, parseShorthandCard } from '@/game/card/card';
 import { getSeedsByTag } from '@/game/catalog/difficulty-catalog';
 import { FreeCell } from '@/game/game';
-import {
-	_organizeCardsExcept,
-	_collectCardsTillAceToDeck,
-	_collectCellsToDeck,
-	juice,
-} from '@/game/move/juice';
+import { _organizeCardsExcept, _collectCardsTillAceToDeck, _collectCellsToDeck, juice } from '@/game/move/juice';
 
 // TODO (techdebt) (flourish-anim) test coverage (exit early, sort, etc)
 describe('move.juice', () => {
@@ -30,9 +25,7 @@ describe('move.juice', () => {
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [6, 3] } },
 					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 1] } },
 				]);
-				expect(juice.canFlourish52(game)).toEqual([
-					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [6, 3] } },
-				]);
+				expect(juice.canFlourish52(game)).toEqual([{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [6, 3] } }]);
 			});
 
 			test('Game #16508', () => {
@@ -53,9 +46,7 @@ describe('move.juice', () => {
 					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 2] } },
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [5, 3] } },
 				]);
-				expect(juice.canFlourish52(game)).toEqual([
-					{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 2] } },
-				]);
+				expect(juice.canFlourish52(game)).toEqual([{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [3, 2] } }]);
 			});
 
 			test('Game #18492', () => {
@@ -72,12 +63,8 @@ describe('move.juice', () => {
 						' 3H 4H KD 6C             \n' +
 						' deal all cards'
 				);
-				expect(juice.canFlourish(game)).toEqual([
-					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [5, 3] } },
-				]);
-				expect(juice.canFlourish52(game)).toEqual([
-					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [5, 3] } },
-				]);
+				expect(juice.canFlourish(game)).toEqual([{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [5, 3] } }]);
+				expect(juice.canFlourish52(game)).toEqual([{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [5, 3] } }]);
 			});
 
 			test('Game #22574', () => {
@@ -98,9 +85,7 @@ describe('move.juice', () => {
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [3, 2] } },
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 0] } },
 				]);
-				expect(juice.canFlourish52(game)).toEqual([
-					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [3, 2] } },
-				]);
+				expect(juice.canFlourish52(game)).toEqual([{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [3, 2] } }]);
 			});
 
 			test('Game #23190', () => {
@@ -121,9 +106,7 @@ describe('move.juice', () => {
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 1] } },
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } },
 				]);
-				expect(juice.canFlourish52(game)).toEqual([
-					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } },
-				]);
+				expect(juice.canFlourish52(game)).toEqual([{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } }]);
 			});
 
 			test('Game #23190 last move', () => {
@@ -148,9 +131,7 @@ describe('move.juice', () => {
 					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [1, 1] } },
 					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } },
 				]);
-				expect(juice.canFlourish52(game)).toEqual([
-					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } },
-				]);
+				expect(juice.canFlourish52(game)).toEqual([{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } }]);
 			});
 
 			test('not shuffled', () => {
@@ -194,9 +175,7 @@ describe('move.juice', () => {
 						' 3S AH AD AC             \n' +
 						' deal all cards'
 				);
-				expect(juice.canFlourish(game)).toEqual([
-					{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 5] } },
-				]);
+				expect(juice.canFlourish(game)).toEqual([{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 5] } }]);
 				// BUG (techdebt) (motivation) technically we can flourish 52 with one card
 				expect(juice.canFlourish52(game)).toEqual([
 					// { rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 5] } },
@@ -219,9 +198,7 @@ describe('move.juice', () => {
 						' JS 4S AC AS             \n' +
 						' deal all cards'
 				);
-				expect(juice.canFlourish(game)).toEqual([
-					{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 1] } },
-				]);
+				expect(juice.canFlourish(game)).toEqual([{ rank: 'ace', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 1] } }]);
 				expect(juice.canFlourish52(game)).toEqual([]);
 			});
 
@@ -281,9 +258,7 @@ describe('move.juice', () => {
 						' 4H TH AD 6C             \n' +
 						' deal all cards'
 				);
-				expect(juice.canFlourish(game)).toEqual([
-					{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [3, 1] } },
-				]);
+				expect(juice.canFlourish(game)).toEqual([{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [3, 1] } }]);
 				expect(juice.canFlourish52(game)).toEqual([]);
 			});
 

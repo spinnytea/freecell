@@ -48,9 +48,7 @@ describe('game/move.findAvailableMoves', () => {
 					.touch();
 				expect(game.selection).toEqual({
 					location: { fixture: 'cascade', data: [4, 5] },
-					cards: [
-						{ rank: 'queen', suit: 'spades', location: { fixture: 'cascade', data: [4, 5] } },
-					],
+					cards: [{ rank: 'queen', suit: 'spades', location: { fixture: 'cascade', data: [4, 5] } }],
 					peekOnly: false,
 				});
 				expect(game.cells[0]).toBe(null);
@@ -70,9 +68,7 @@ describe('game/move.findAvailableMoves', () => {
 					.touch();
 				expect(game.selection).toEqual({
 					location: { fixture: 'cascade', data: [4, 4] },
-					cards: [
-						{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 4] } },
-					],
+					cards: [{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 4] } }],
 					peekOnly: false,
 				});
 				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([]);
@@ -130,9 +126,7 @@ describe('game/move.findAvailableMoves', () => {
 					.touch();
 				expect(game.selection).toEqual({
 					location: { fixture: 'cascade', data: [4, 4] },
-					cards: [
-						{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 4] } },
-					],
+					cards: [{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 4] } }],
 					peekOnly: false,
 				});
 				expect(game.foundations[0]).toEqual({
@@ -262,12 +256,7 @@ describe('game/move.findAvailableMoves', () => {
 				cards: [{ rank: '4', suit: 'diamonds', location: { fixture: 'foundation', data: [3] } }],
 				peekOnly: true,
 			});
-			expect(
-				availableMovesMinimized(
-					game.$selectCard('4D', { allowSelectFoundation: true }).availableMoves,
-					true
-				)
-			).toEqual([]);
+			expect(availableMovesMinimized(game.$selectCard('4D', { allowSelectFoundation: true }).availableMoves, true)).toEqual([]);
 
 			// in our current implementation, this is how it is
 			expect(game.$touchAndMove('4D').previousAction).toEqual({
@@ -315,9 +304,7 @@ describe('game/move.findAvailableMoves', () => {
 				['h⡀', 'foundation', 4], // we pick this one as the best option (fair)
 			]);
 			// if we move it specifically, this is the resulting text (a bit redundant of a test)
-			expect(gameUndid.moveByShorthand('1c').previousAction.text).toBe(
-				'move 1c 3H→cell (auto-foundation 133 AD,2D,3C)'
-			);
+			expect(gameUndid.moveByShorthand('1c').previousAction.text).toBe('move 1c 3H→cell (auto-foundation 133 AD,2D,3C)');
 
 			// now this would just be asking for too much
 			expect(game.$touchAndMove('3H').previousAction).not.toEqual({

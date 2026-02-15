@@ -26,9 +26,7 @@ describe('animShakeCard', () => {
 
 			expect(mockCallTimes()).toEqual({});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
-			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
-				'timeline.add'
-			);
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
 		});
 
@@ -46,9 +44,7 @@ describe('animShakeCard', () => {
 				toSpy: 3,
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
-			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
-				'timeline.add'
-			);
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
 		});
 
@@ -66,9 +62,7 @@ describe('animShakeCard', () => {
 				toSpy: 6,
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
-			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
-				'timeline.add'
-			);
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
 		});
 
@@ -86,9 +80,7 @@ describe('animShakeCard', () => {
 				toSpy: 9,
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
-			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
-				'timeline.add'
-			);
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
 		});
 	});
@@ -127,9 +119,7 @@ describe('animShakeCard', () => {
 				toSpy: 6,
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
-			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
-				'timeline.add'
-			);
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
 		});
 
@@ -147,9 +137,7 @@ describe('animShakeCard', () => {
 				toSpy: 6,
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
-			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
-				'timeline.add'
-			);
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKECARD_MOCK_CALL]);
 		});
 	});

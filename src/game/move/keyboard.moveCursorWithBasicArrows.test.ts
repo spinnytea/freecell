@@ -37,9 +37,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 			});
 
 			test.each([0, 1])('cell %d', (d0: number) => {
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cell', data: [d0] }), 'down')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cell', data: [d0] }), 'down')).toEqual({
 					action: { text: 'cursor down wrap', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [d0, 99] },
 				});
@@ -54,9 +52,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 			});
 
 			test.each([0, 1, 2, 3])('cell %d', (d0: number) => {
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cell', data: [d0] }), 'down')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cell', data: [d0] }), 'down')).toEqual({
 					action: { text: 'cursor down wrap', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [d0, 99] },
 				});
@@ -72,9 +68,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 			});
 
 			test.each([0, 1, 2, 3, 4, 5])('cell %d', (d0: number) => {
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cell', data: [d0] }), 'down')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cell', data: [d0] }), 'down')).toEqual({
 					action: { text: 'cursor down wrap', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [d0, 99] },
 				});
@@ -123,12 +117,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 				${2}    | ${8}
 				${3}    | ${9}
 			`('foundation $startD0', ({ startD0, endD0 }: { startD0: number; endD0: number }) => {
-				expect(
-					moveCursorWithBasicArrows(
-						game.setCursor({ fixture: 'foundation', data: [startD0] }),
-						'down'
-					)
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'foundation', data: [startD0] }), 'down')).toEqual({
 					action: { text: 'cursor down wrap', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [endD0, 99] },
 				});
@@ -149,12 +138,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 				${2}    | ${3}
 				${3}    | ${4}
 			`('foundation $startD0', ({ startD0, endD0 }: { startD0: number; endD0: number }) => {
-				expect(
-					moveCursorWithBasicArrows(
-						game.setCursor({ fixture: 'foundation', data: [startD0] }),
-						'down'
-					)
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'foundation', data: [startD0] }), 'down')).toEqual({
 					action: { text: 'cursor down wrap', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [endD0, 99] },
 				});
@@ -167,58 +151,42 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 			test('single', () => {
 				const game = new FreeCell().dealAll().setCursor({ fixture: 'cascade', data: [0, 2] });
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [0, 2] }), 'right')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [0, 2] }), 'right')).toEqual({
 					action: { text: 'cursor right', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [1, 2] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [1, 2] }), 'right')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [1, 2] }), 'right')).toEqual({
 					action: { text: 'cursor right', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [2, 2] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [5, 2] }), 'right')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [5, 2] }), 'right')).toEqual({
 					action: { text: 'cursor right', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [6, 2] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [6, 2] }), 'right')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [6, 2] }), 'right')).toEqual({
 					action: { text: 'cursor right', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [7, 2] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [7, 2] }), 'left')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [7, 2] }), 'left')).toEqual({
 					action: { text: 'cursor left', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [6, 2] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [6, 2] }), 'left')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [6, 2] }), 'left')).toEqual({
 					action: { text: 'cursor left', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [5, 2] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [2, 2] }), 'left')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [2, 2] }), 'left')).toEqual({
 					action: { text: 'cursor left', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [1, 2] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [1, 2] }), 'left')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [1, 2] }), 'left')).toEqual({
 					action: { text: 'cursor left', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [0, 2] },
 				});
@@ -227,58 +195,42 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 			test('empty', () => {
 				const game = new FreeCell().setCursor({ fixture: 'cascade', data: [0, 2] });
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [0, 2] }), 'right')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [0, 2] }), 'right')).toEqual({
 					action: { text: 'cursor right', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [1, 0] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [1, 2] }), 'right')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [1, 2] }), 'right')).toEqual({
 					action: { text: 'cursor right', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [2, 0] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [5, 2] }), 'right')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [5, 2] }), 'right')).toEqual({
 					action: { text: 'cursor right', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [6, 0] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [6, 2] }), 'right')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [6, 2] }), 'right')).toEqual({
 					action: { text: 'cursor right', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [7, 0] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [7, 2] }), 'left')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [7, 2] }), 'left')).toEqual({
 					action: { text: 'cursor left', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [6, 0] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [6, 2] }), 'left')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [6, 2] }), 'left')).toEqual({
 					action: { text: 'cursor left', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [5, 0] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [2, 2] }), 'left')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [2, 2] }), 'left')).toEqual({
 					action: { text: 'cursor left', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [1, 0] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [1, 2] }), 'left')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [1, 2] }), 'left')).toEqual({
 					action: { text: 'cursor left', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [0, 0] },
 				});
@@ -289,9 +241,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 				expect(game.tableau[3].length).toBe(7);
 				expect(game.tableau[4].length).toBe(6);
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [3, 6] }), 'right')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'cascade', data: [3, 6] }), 'right')).toEqual({
 					action: { text: 'cursor right', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [4, 6] },
 				});
@@ -300,12 +250,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 
 		describe('going off-top', () => {
 			test('moves to cell', () => {
-				expect(
-					moveCursorWithBasicArrows(
-						new FreeCell().dealAll().setCursor({ fixture: 'cascade', data: [2, 0] }),
-						'up'
-					)
-				).toEqual({
+				expect(moveCursorWithBasicArrows(new FreeCell().dealAll().setCursor({ fixture: 'cascade', data: [2, 0] }), 'up')).toEqual({
 					action: { text: 'cursor up wrap', type: 'cursor' },
 					cursor: { fixture: 'cell', data: [2] },
 				});
@@ -314,12 +259,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 			test('moves to foundation', () => {
 				// 0 1 2 3 0 1 2 3
 				// 0 1 2 3 4 5 6 7
-				expect(
-					moveCursorWithBasicArrows(
-						new FreeCell().dealAll().setCursor({ fixture: 'cascade', data: [5, 0] }),
-						'up'
-					)
-				).toEqual({
+				expect(moveCursorWithBasicArrows(new FreeCell().dealAll().setCursor({ fixture: 'cascade', data: [5, 0] }), 'up')).toEqual({
 					action: { text: 'cursor up wrap', type: 'cursor' },
 					cursor: { fixture: 'foundation', data: [1] },
 				});
@@ -327,12 +267,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 				// 0 1 2 3 4 5 0 1 2 3
 				// 0 1 2 3 4 5 6 7 8 9
 				expect(
-					moveCursorWithBasicArrows(
-						new FreeCell({ cellCount: 6, cascadeCount: 10 })
-							.dealAll()
-							.setCursor({ fixture: 'cascade', data: [8, 0] }),
-						'up'
-					)
+					moveCursorWithBasicArrows(new FreeCell({ cellCount: 6, cascadeCount: 10 }).dealAll().setCursor({ fixture: 'cascade', data: [8, 0] }), 'up')
 				).toEqual({
 					action: { text: 'cursor up wrap', type: 'cursor' },
 					cursor: { fixture: 'foundation', data: [2] },
@@ -354,30 +289,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 					${7} | ${{ fixture: 'foundation', data: [1] }} | ${'cursor up wrap'}
 					${8} | ${{ fixture: 'foundation', data: [2] }} | ${'cursor up wrap'}
 					${9} | ${{ fixture: 'foundation', data: [3] }} | ${'cursor up wrap'}
-				`(
-					'col $col',
-					({
-						col,
-						location,
-						actionText,
-					}: {
-						col: number;
-						location: CardLocation;
-						actionText: string;
-					}) => {
-						expect(
-							moveCursorWithBasicArrows(
-								new FreeCell({ cellCount: 2, cascadeCount: 10 })
-									.dealAll()
-									.setCursor({ fixture: 'cascade', data: [col, 0] }),
-								'up'
-							)
-						).toEqual({
-							action: { text: actionText, type: 'cursor' },
-							cursor: location,
-						});
-					}
-				);
+				`('col $col', ({ col, location, actionText }: { col: number; location: CardLocation; actionText: string }) => {
+					expect(
+						moveCursorWithBasicArrows(new FreeCell({ cellCount: 2, cascadeCount: 10 }).dealAll().setCursor({ fixture: 'cascade', data: [col, 0] }), 'up')
+					).toEqual({
+						action: { text: actionText, type: 'cursor' },
+						cursor: location,
+					});
+				});
 			});
 
 			test.todo('size mismatch: cell + foundation > tableau');
@@ -454,15 +373,11 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 					cursor: { fixture: 'cascade', data: [36, 99] },
 				});
 
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'deck', data: [51] }), 'up')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'deck', data: [51] }), 'up')).toEqual({
 					action: { text: 'cursor up wrap', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [0, 99] },
 				});
-				expect(
-					moveCursorWithBasicArrows(game.setCursor({ fixture: 'deck', data: [0] }), 'up')
-				).toEqual({
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'deck', data: [0] }), 'up')).toEqual({
 					action: { text: 'cursor up wrap', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [51, 99] },
 				});
@@ -501,25 +416,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [13] }}      | ${'cursor left'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [2] }}       | ${'cursor left'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [1] }}       | ${'cursor left'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'left')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'left')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('right', () => {
@@ -549,25 +453,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [11] }}      | ${'cursor right'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [0] }}       | ${'cursor right'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [51] }}      | ${'cursor right wrap'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'right')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'right')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('up', () => {
@@ -597,25 +490,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'cascade', data: [39, 99] }} | ${'cursor up wrap'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'cascade', data: [50, 99] }} | ${'cursor up wrap'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'cascade', data: [51, 99] }} | ${'cursor up wrap'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'up')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'up')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('down', () => {
@@ -645,25 +527,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [12] }}       | ${'cursor stop k⡌ 4C'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [1] }}        | ${'cursor stop k⡁ AD'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop k⡀ AC'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'down')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'down')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 			});
 
@@ -697,25 +568,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'cascade', data: [6, 5] }} | ${{ fixture: 'cascade', data: [5, 5] }} | ${'cursor left'}
 						${{ fixture: 'cascade', data: [7, 5] }} | ${{ fixture: 'cascade', data: [6, 5] }} | ${'cursor left'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}       | ${'cursor left wrap'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'left')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'left')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('right', () => {
@@ -746,25 +606,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'cascade', data: [6, 5] }} | ${{ fixture: 'cascade', data: [7, 5] }} | ${'cursor right'}
 						${{ fixture: 'cascade', data: [7, 5] }} | ${{ fixture: 'cascade', data: [0, 5] }} | ${'cursor right wrap'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}       | ${'cursor right wrap'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'right')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'right')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('up', () => {
@@ -795,25 +644,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'cascade', data: [6, 5] }} | ${{ fixture: 'cascade', data: [6, 4] }}  | ${'cursor up'}
 						${{ fixture: 'cascade', data: [7, 5] }} | ${{ fixture: 'cascade', data: [7, 4] }}  | ${'cursor up'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'cascade', data: [0, 99] }} | ${'cursor up wrap'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'up')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'up')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('down', () => {
@@ -844,25 +682,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'cascade', data: [6, 5] }} | ${{ fixture: 'cascade', data: [6, 5] }}  | ${'cursor stop 7 2D'}
 						${{ fixture: 'cascade', data: [7, 5] }} | ${{ fixture: 'cascade', data: [7, 5] }}  | ${'cursor stop 8 2C'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop k⡀ deck'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'down')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'down')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 			});
 		});
@@ -896,25 +723,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [13] }}      | ${'cursor left'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [2] }}       | ${'cursor left'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [1] }}       | ${'cursor left'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'left')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'left')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('right', () => {
@@ -943,25 +759,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [11] }}      | ${'cursor right'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [0] }}       | ${'cursor right'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [51] }}      | ${'cursor right wrap'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'right')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'right')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('up', () => {
@@ -990,25 +795,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'cascade', data: [39, 99] }} | ${'cursor up wrap'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'cascade', data: [50, 99] }} | ${'cursor up wrap'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'cascade', data: [51, 99] }} | ${'cursor up wrap'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'up')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'up')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('down', () => {
@@ -1037,25 +831,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [12] }}       | ${'cursor stop k⡌ 4C'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [1] }}        | ${'cursor stop k⡁ AD'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop k⡀ AC'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'down')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'down')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 			});
 
@@ -1088,25 +871,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [13] }}      | ${'cursor left'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [2] }}       | ${'cursor left'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [1] }}       | ${'cursor left'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'left')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'left')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('right', () => {
@@ -1132,25 +904,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [11] }}      | ${'cursor right'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [0] }}       | ${'cursor right'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [51] }}      | ${'cursor right wrap'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'right')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'right')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('up', () => {
@@ -1176,25 +937,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'cascade', data: [39, 99] }} | ${'cursor up wrap'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'cascade', data: [50, 99] }} | ${'cursor up wrap'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'cascade', data: [51, 99] }} | ${'cursor up wrap'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'up')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'up')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('down', () => {
@@ -1220,25 +970,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [12] }}       | ${'cursor stop k⡌ 4C'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [1] }}        | ${'cursor stop k⡁ AD'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop k⡀ AC'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'down')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'down')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 			});
 
@@ -1274,25 +1013,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [13] }}      | ${'cursor left'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [2] }}       | ${'cursor left'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [1] }}       | ${'cursor left'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'left')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'left')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('right', () => {
@@ -1320,25 +1048,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [11] }}      | ${'cursor right'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [0] }}       | ${'cursor right'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [51] }}      | ${'cursor right wrap'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'right')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'right')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('up', () => {
@@ -1366,25 +1083,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'cascade', data: [39, 99] }} | ${'cursor up wrap'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'cascade', data: [50, 99] }} | ${'cursor up wrap'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'cascade', data: [51, 99] }} | ${'cursor up wrap'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'up')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'up')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 
 				describe('down', () => {
@@ -1412,25 +1118,14 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'deck', data: [12] }}      | ${{ fixture: 'deck', data: [12] }}       | ${'cursor stop k⡌ 4C'}
 						${{ fixture: 'deck', data: [1] }}       | ${{ fixture: 'deck', data: [1] }}        | ${'cursor stop k⡁ AD'}
 						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop k⡀ AC'}
-					`(
-						'$start.fixture $start.data',
-						({
-							start,
-							end,
-							actionText,
-						}: {
-							start: CardLocation;
-							end: CardLocation;
-							actionText: string;
-						}) => {
-							const g = game.setCursor(start);
-							expect(g.cursor).toEqual(start);
-							expect(moveCursorWithBasicArrows(g, 'down')).toEqual({
-								action: { text: actionText, type: 'cursor' },
-								cursor: end,
-							});
-						}
-					);
+					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
+						const g = game.setCursor(start);
+						expect(g.cursor).toEqual(start);
+						expect(moveCursorWithBasicArrows(g, 'down')).toEqual({
+							action: { text: actionText, type: 'cursor' },
+							cursor: end,
+						});
+					});
 				});
 			});
 

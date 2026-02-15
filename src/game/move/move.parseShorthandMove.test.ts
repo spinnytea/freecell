@@ -62,14 +62,8 @@ describe('move.parseShorthandMove', () => {
 			${'8'}   | ${{ fixture: 'cascade', data: [7, 5] }}
 			${'9'}   | ${{ fixture: 'cascade', data: [7, 5] }}
 			${'0'}   | ${{ fixture: 'cascade', data: [7, 5] }}
-		`(
-			'$position 5',
-			({ position, from_location }: { position: Position; from_location: CardLocation }) => {
-				expect(parseShorthandMove(game, `${position}5`)).toEqual([
-					from_location,
-					{ fixture: 'cascade', data: [4, 0] },
-				]);
-			}
-		);
+		`('$position 5', ({ position, from_location }: { position: Position; from_location: CardLocation }) => {
+			expect(parseShorthandMove(game, `${position}5`)).toEqual([from_location, { fixture: 'cascade', data: [4, 0] }]);
+		});
 	});
 });

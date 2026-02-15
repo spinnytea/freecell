@@ -1,9 +1,5 @@
 import { Card, CardLocation } from '@/game/card/card';
-import {
-	ACTION_TEXT_EXAMPLES,
-	FIFTY_TWO_CARD_FLOURISH,
-	pullActionTextExamples,
-} from '@/game/catalog/actionText-examples';
+import { ACTION_TEXT_EXAMPLES, FIFTY_TWO_CARD_FLOURISH, pullActionTextExamples } from '@/game/catalog/actionText-examples';
 import {
 	parseAltCursorFromPreviousActionText,
 	parseCursorFromPreviousActionText,
@@ -99,17 +95,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'invalid move 75 6D-5S-4D-3C→7C'}           | ${someCards_2} | ${{ fixture: 'cascade', data: [4, 0] }}  | ${{ fixture: 'cascade', data: [6, 99] }}
 		`(
 			'$actionText',
-			({
-				actionText,
-				cards,
-				after,
-				before,
-			}: {
-				actionText: string;
-				cards: Card[];
-				after: CardLocation | undefined;
-				before: CardLocation | undefined;
-			}) => {
+			({ actionText, cards, after, before }: { actionText: string; cards: Card[]; after: CardLocation | undefined; before: CardLocation | undefined }) => {
 				pullActionTextExamples(actionTextExamples, actionText);
 				expect(parseCursorFromPreviousActionText(actionText, cards)).toEqual(after);
 				expect(parseAltCursorFromPreviousActionText(actionText, cards)).toEqual(before);
@@ -136,17 +122,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'juice flash *AS*'}               | ${[]} | ${{ fixture: 'cell', data: [0] }} | ${{ fixture: 'cell', data: [0] }}
 		`(
 			'$actionText',
-			({
-				actionText,
-				cards,
-				after,
-				before,
-			}: {
-				actionText: string;
-				cards: Card[];
-				after: CardLocation | undefined;
-				before: CardLocation | undefined;
-			}) => {
+			({ actionText, cards, after, before }: { actionText: string; cards: Card[]; after: CardLocation | undefined; before: CardLocation | undefined }) => {
 				expect(parseCursorFromPreviousActionText(actionText, cards)).toEqual(after);
 				expect(parseAltCursorFromPreviousActionText(actionText, cards)).toEqual(before);
 
