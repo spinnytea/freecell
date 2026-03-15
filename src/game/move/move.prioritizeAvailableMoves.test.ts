@@ -10,14 +10,9 @@ describe('prioritizeAvailableMoves', () => {
 				sourceD0     | priorities
 				${undefined} | ${[1]}
 				${0}         | ${[0]}
-			`(
-				'sourceD0: $sourceD0',
-				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
-					expect(positions.map((d0) => linearAvailableMovesPriority(1, d0, sourceD0))).toEqual(
-						priorities
-					);
-				}
-			);
+			`('sourceD0: $sourceD0', ({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+				expect(positions.map((d0) => linearAvailableMovesPriority(1, d0, sourceD0))).toEqual(priorities);
+			});
 		});
 
 		describe('4 count', () => {
@@ -29,14 +24,9 @@ describe('prioritizeAvailableMoves', () => {
 				${1}         | ${[4, 0, 6, 5]}
 				${2}         | ${[4, 3, 0, 5]}
 				${3}         | ${[4, 3, 2, 0]}
-			`(
-				'sourceD0: $sourceD0',
-				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
-					expect(positions.map((d0) => linearAvailableMovesPriority(4, d0, sourceD0))).toEqual(
-						priorities
-					);
-				}
-			);
+			`('sourceD0: $sourceD0', ({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+				expect(positions.map((d0) => linearAvailableMovesPriority(4, d0, sourceD0))).toEqual(priorities);
+			});
 		});
 
 		describe('8 count', () => {
@@ -52,14 +42,9 @@ describe('prioritizeAvailableMoves', () => {
 				${5}         | ${[8, 7, 6, 5, 4, 0, 10, 9]}
 				${6}         | ${[8, 7, 6, 5, 4, 3, 0, 9]}
 				${7}         | ${[8, 7, 6, 5, 4, 3, 2, 0]}
-			`(
-				'sourceD0: $sourceD0',
-				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
-					expect(positions.map((d0) => linearAvailableMovesPriority(8, d0, sourceD0))).toEqual(
-						priorities
-					);
-				}
-			);
+			`('sourceD0: $sourceD0', ({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+				expect(positions.map((d0) => linearAvailableMovesPriority(8, d0, sourceD0))).toEqual(priorities);
+			});
 		});
 
 		describe('10 count', () => {
@@ -72,14 +57,9 @@ describe('prioritizeAvailableMoves', () => {
 				${5}         | ${[10, 9, 8, 7, 6, 0, 14, 13, 12, 11]}
 				${8}         | ${[10, 9, 8, 7, 6, 5, 4, 3, 0, 11]}
 				${9}         | ${[10, 9, 8, 7, 6, 5, 4, 3, 2, 0]}
-			`(
-				'sourceD0: $sourceD0',
-				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
-					expect(positions.map((d0) => linearAvailableMovesPriority(10, d0, sourceD0))).toEqual(
-						priorities
-					);
-				}
-			);
+			`('sourceD0: $sourceD0', ({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+				expect(positions.map((d0) => linearAvailableMovesPriority(10, d0, sourceD0))).toEqual(priorities);
+			});
 		});
 	});
 
@@ -91,14 +71,9 @@ describe('prioritizeAvailableMoves', () => {
 				sourceD0     | priorities
 				${undefined} | ${[2]}
 				${0}         | ${[0]}
-			`(
-				'sourceD0: $sourceD0',
-				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
-					expect(positions.map((d0) => closestAvailableMovesPriority(1, d0, sourceD0))).toEqual(
-						priorities
-					);
-				}
-			);
+			`('sourceD0: $sourceD0', ({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+				expect(positions.map((d0) => closestAvailableMovesPriority(1, d0, sourceD0))).toEqual(priorities);
+			});
 		});
 
 		describe('4 count', () => {
@@ -110,14 +85,9 @@ describe('prioritizeAvailableMoves', () => {
 				${1}         | ${[5, 0, 6, 4]}
 				${2}         | ${[3, 5, 0, 6]}
 				${3}         | ${[1, 3, 5, 0]}
-			`(
-				'sourceD0: $sourceD0',
-				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
-					expect(positions.map((d0) => closestAvailableMovesPriority(4, d0, sourceD0))).toEqual(
-						priorities
-					);
-				}
-			);
+			`('sourceD0: $sourceD0', ({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+				expect(positions.map((d0) => closestAvailableMovesPriority(4, d0, sourceD0))).toEqual(priorities);
+			});
 		});
 
 		describe('8 count', () => {
@@ -133,14 +103,9 @@ describe('prioritizeAvailableMoves', () => {
 				${5}         | ${[5, 7, 9, 11, 13, 0, 14, 12]}
 				${6}         | ${[3, 5, 7, 9, 11, 13, 0, 14]}
 				${7}         | ${[1, 3, 5, 7, 9, 11, 13, 0]}
-			`(
-				'sourceD0: $sourceD0',
-				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
-					expect(positions.map((d0) => closestAvailableMovesPriority(8, d0, sourceD0))).toEqual(
-						priorities
-					);
-				}
-			);
+			`('sourceD0: $sourceD0', ({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+				expect(positions.map((d0) => closestAvailableMovesPriority(8, d0, sourceD0))).toEqual(priorities);
+			});
 		});
 
 		describe('10 count', () => {
@@ -153,14 +118,9 @@ describe('prioritizeAvailableMoves', () => {
 				${5}         | ${[9, 11, 13, 15, 17, 0, 18, 16, 14, 12]}
 				${8}         | ${[3, 5, 7, 9, 11, 13, 15, 17, 0, 18]}
 				${9}         | ${[1, 3, 5, 7, 9, 11, 13, 15, 17, 0]}
-			`(
-				'sourceD0: $sourceD0',
-				({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
-					expect(positions.map((d0) => closestAvailableMovesPriority(10, d0, sourceD0))).toEqual(
-						priorities
-					);
-				}
-			);
+			`('sourceD0: $sourceD0', ({ sourceD0, priorities }: { sourceD0: number | undefined; priorities: number[] }) => {
+				expect(positions.map((d0) => closestAvailableMovesPriority(10, d0, sourceD0))).toEqual(priorities);
+			});
 		});
 	});
 
@@ -455,9 +415,7 @@ describe('prioritizeAvailableMoves', () => {
 				]);
 				expect(game.autoMove().previousAction.text).toBe('move 43 JS→QD');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('JS').autoMove().previousAction.text).toBe(
-					'move 46 JS→QH'
-				);
+				expect(game.autoMove().$selectCard('JS').autoMove().previousAction.text).toBe('move 46 JS→QH');
 			});
 
 			test('previous test b', () => {
@@ -478,9 +436,7 @@ describe('prioritizeAvailableMoves', () => {
 				]);
 				expect(game.autoMove().previousAction.text).toBe('move 73 JS→QD');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('JS').autoMove().previousAction.text).toBe(
-					'move 76 JS→QH'
-				);
+				expect(game.autoMove().$selectCard('JS').autoMove().previousAction.text).toBe('move 76 JS→QH');
 			});
 		});
 
@@ -510,9 +466,7 @@ describe('prioritizeAvailableMoves', () => {
 				]);
 				expect(game.autoMove().previousAction.text).toBe('move 73 JH-TS-9D-8C→QS');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('JH').autoMove().previousAction.text).toBe(
-					'move 76 JH-TS-9D-8C→QC'
-				);
+				expect(game.autoMove().$selectCard('JH').autoMove().previousAction.text).toBe('move 76 JH-TS-9D-8C→QC');
 			});
 		});
 
@@ -544,9 +498,7 @@ describe('prioritizeAvailableMoves', () => {
 				]);
 				expect(game.autoMove().previousAction.text).toBe('move d1 3D→4C');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('3D').autoMove().previousAction.text).toBe(
-					'move d4 3D→4S'
-				);
+				expect(game.autoMove().$selectCard('3D').autoMove().previousAction.text).toBe('move d4 3D→4S');
 			});
 		});
 
@@ -578,9 +530,7 @@ describe('prioritizeAvailableMoves', () => {
 				]);
 				expect(game.autoMove().previousAction.text).toBe('move 15 JH→QC');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('JH').autoMove().previousAction.text).toBe(
-					'move 16 JH→QS'
-				);
+				expect(game.autoMove().$selectCard('JH').autoMove().previousAction.text).toBe('move 16 JH→QS');
 			});
 
 			test('cursor set 1 TS', () => {
@@ -611,9 +561,7 @@ describe('prioritizeAvailableMoves', () => {
 				]);
 				expect(game.autoMove().previousAction.text).toBe('move 15 TS→JH');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('TS').autoMove().previousAction.text).toBe(
-					'move 16 TS→JD'
-				);
+				expect(game.autoMove().$selectCard('TS').autoMove().previousAction.text).toBe('move 16 TS→JD');
 			});
 
 			test('cursor set 4 6S', () => {
@@ -644,9 +592,7 @@ describe('prioritizeAvailableMoves', () => {
 				]);
 				expect(game.autoMove().previousAction.text).toBe('move 45 6S→7D');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('6S').autoMove().previousAction.text).toBe(
-					'move 43 6S→7H'
-				);
+				expect(game.autoMove().$selectCard('6S').autoMove().previousAction.text).toBe('move 43 6S→7H');
 			});
 		});
 
@@ -681,9 +627,7 @@ describe('prioritizeAvailableMoves', () => {
 			]);
 			expect(game.autoMove().previousAction.text).toBe('move 25 8H→9S');
 			// move again, uses other option, collapses move
-			expect(game.autoMove().$selectCard('8H').autoMove().previousAction.text).toBe(
-				'move 23 8H→9C'
-			);
+			expect(game.autoMove().$selectCard('8H').autoMove().previousAction.text).toBe('move 23 8H→9C');
 		});
 
 		test('freeplay #29327', () => {
@@ -720,9 +664,7 @@ describe('prioritizeAvailableMoves', () => {
 			]);
 			expect(game.autoMove().previousAction.text).toBe('move b4 QD→KC');
 			// move again, uses other option, collapses move
-			expect(game.autoMove().$selectCard('QD').autoMove().previousAction.text).toBe(
-				'move b3 QD→KS'
-			);
+			expect(game.autoMove().$selectCard('QD').autoMove().previousAction.text).toBe('move b3 QD→KS');
 		});
 	});
 
@@ -852,9 +794,7 @@ describe('prioritizeAvailableMoves', () => {
 						' select KH'
 				);
 				// unless we use a game function
-				expect(
-					game.clearSelection().moveByShorthand('k1', { gameFunction: 'recall-or-bury' }).print()
-				).toBe(
+				expect(game.clearSelection().moveByShorthand('k1', { gameFunction: 'recall-or-bury' }).print()).toBe(
 					'' + //
 						'             KC KD TH KS \n' +
 						'>KH       JH             \n' +

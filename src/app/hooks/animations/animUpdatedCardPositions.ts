@@ -67,7 +67,7 @@ export function animUpdatedCardPositions({
 					index === 0 ? `>${overlap.toFixed(3)}` : `<${overlap.toFixed(3)}`
 				);
 			}
-			// REVIEW (animation) zIndex boost while in flight?
+			// REVIEW (animation) (fixture-sizes) zIndex boost while in flight?
 			//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
 			//  - as soon as it finishes animating, set it to the correct value
 			// timeline.fromTo(cardIdSelector, { zIndex: zIndex + 100 }, { zIndex, duration, ease: 'power4.out' }, `<`);

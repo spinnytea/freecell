@@ -276,14 +276,9 @@ describe('game.shuffle32', () => {
 		expect(a.history).toEqual(['shuffle deck (5)']);
 		expect(b.history).toEqual(['shuffle deck (5)', 'shuffle deck (5)']);
 		expect(a.dealAll().__printHistory(true)).toBe('\n:h shuffle32 5');
-		expect(b.dealAll().__printHistory(true)).toBe(
-			'\n deal all cards\n shuffle deck (5)\n shuffle deck (5)'
-		);
+		expect(b.dealAll().__printHistory(true)).toBe('\n deal all cards\n shuffle deck (5)\n shuffle deck (5)');
 		expect(FreeCell.parse(a.print({ includeHistory: true })).history).toEqual(['shuffle deck (5)']);
-		expect(FreeCell.parse(b.print({ includeHistory: true })).history).toEqual([
-			'shuffle deck (5)',
-			'shuffle deck (5)',
-		]);
+		expect(FreeCell.parse(b.print({ includeHistory: true })).history).toEqual(['shuffle deck (5)', 'shuffle deck (5)']);
 
 		a = new FreeCell().shuffle32(1);
 		b = new FreeCell().shuffle32(5).shuffle32(1);
@@ -291,14 +286,9 @@ describe('game.shuffle32', () => {
 		expect(a.history).toEqual(['shuffle deck (1)']);
 		expect(b.history).toEqual(['shuffle deck (5)', 'shuffle deck (1)']);
 		expect(a.dealAll().__printHistory(true)).toBe('\n:h shuffle32 1');
-		expect(b.dealAll().__printHistory(true)).toBe(
-			'\n deal all cards\n shuffle deck (1)\n shuffle deck (5)'
-		);
+		expect(b.dealAll().__printHistory(true)).toBe('\n deal all cards\n shuffle deck (1)\n shuffle deck (5)');
 		expect(FreeCell.parse(a.print({ includeHistory: true })).history).toEqual(['shuffle deck (1)']);
-		expect(FreeCell.parse(b.print({ includeHistory: true })).history).toEqual([
-			'shuffle deck (5)',
-			'shuffle deck (1)',
-		]);
+		expect(FreeCell.parse(b.print({ includeHistory: true })).history).toEqual(['shuffle deck (5)', 'shuffle deck (1)']);
 	});
 
 	// BUG (techdebt) (history) this actionText seed, parse is wrong
@@ -319,28 +309,14 @@ describe('game.shuffle32', () => {
 		);
 		expect(game.history).toEqual(['shuffle deck (5)', 'deal 44 cards']);
 		expect(game.__printDeck()).toEqual(' 6H 6C QC JS 9S AD 7C>TS ');
-		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual([
-			'shuffle deck (5)',
-			'deal 44 cards',
-		]);
+		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual(['shuffle deck (5)', 'deal 44 cards']);
 		game = game.shuffle32(6);
 		expect(game.history).toEqual(['shuffle deck (5)', 'deal 44 cards', 'shuffle deck (6)']);
 		expect(game.__printDeck()).toEqual(' AD 6H QC TS 6C JS 9S>7C ');
-		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual([
-			'init with invalid history replay cards',
-			'shuffle deck (6)',
-		]);
+		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual(['init with invalid history replay cards', 'shuffle deck (6)']);
 		game = game.dealAll();
-		expect(game.history).toEqual([
-			'shuffle deck (5)',
-			'deal 44 cards',
-			'shuffle deck (6)',
-			'deal all cards',
-		]);
-		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual([
-			'init with invalid history replay cards',
-			'deal all cards',
-		]);
+		expect(game.history).toEqual(['shuffle deck (5)', 'deal 44 cards', 'shuffle deck (6)', 'deal all cards']);
+		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual(['init with invalid history replay cards', 'deal all cards']);
 		expect(game.print()).toBe(
 			'' +
 				'>                        \n' +

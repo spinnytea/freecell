@@ -40,12 +40,9 @@ describe('game/card', () => {
 			${'10'}    | ${'jack'}  | ${true}
 			${'jack'}  | ${'queen'} | ${true}
 			${'queen'} | ${'king'}  | ${true}
-		`(
-			'spot check $min → $max',
-			({ min, max, adjacent }: { min: Rank; max: Rank; adjacent: boolean }) => {
-				expect(isAdjacent({ min, max })).toBe(adjacent);
-			}
-		);
+		`('spot check $min → $max', ({ min, max, adjacent }: { min: Rank; max: Rank; adjacent: boolean }) => {
+			expect(isAdjacent({ min, max })).toBe(adjacent);
+		});
 	});
 
 	describe('sort', () => {
@@ -144,13 +141,9 @@ describe('game/card', () => {
 
 		test('parseShorthandCard throw', () => {
 			expect(() => parseShorthandCard(' ', undefined)).toThrow('invalid rank shorthand: " "');
-			expect(() => parseShorthandCard(undefined, undefined)).toThrow(
-				'invalid rank shorthand: "undefined"'
-			);
+			expect(() => parseShorthandCard(undefined, undefined)).toThrow('invalid rank shorthand: "undefined"');
 			expect(() => parseShorthandCard('8', ' ')).toThrow('invalid suit shorthand: " "');
-			expect(() => parseShorthandCard('8', undefined)).toThrow(
-				'invalid suit shorthand: "undefined"'
-			);
+			expect(() => parseShorthandCard('8', undefined)).toThrow('invalid suit shorthand: "undefined"');
 		});
 	});
 
@@ -178,21 +171,10 @@ describe('game/card', () => {
 				${50} | ${'k'}    | ${'k⡲'}
 				${51} | ${'k'}    | ${'k⡳'}
 				${55} | ${'k'}    | ${'k⡷'}
-			`(
-				'$d0',
-				({
-					d0,
-					shorthand,
-					shorthandD0,
-				}: {
-					d0: number;
-					shorthand: string;
-					shorthandD0: string;
-				}) => {
-					expect(shorthandPosition({ fixture: 'deck', data: [d0] })).toBe(shorthand);
-					expect(shorthandPosition({ fixture: 'deck', data: [d0] }, true)).toBe(shorthandD0);
-				}
-			);
+			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: string; shorthandD0: string }) => {
+				expect(shorthandPosition({ fixture: 'deck', data: [d0] })).toBe(shorthand);
+				expect(shorthandPosition({ fixture: 'deck', data: [d0] }, true)).toBe(shorthandD0);
+			});
 		});
 
 		describe('cell', () => {
@@ -233,21 +215,10 @@ describe('game/card', () => {
 				${5}  | ${'h'}    | ${'h⡅'}
 				${6}  | ${'h'}    | ${'h⡆'}
 				${7}  | ${'h'}    | ${'h⡇'}
-			`(
-				'$d0',
-				({
-					d0,
-					shorthand,
-					shorthandD0,
-				}: {
-					d0: number;
-					shorthand: string;
-					shorthandD0: string;
-				}) => {
-					expect(shorthandPosition({ fixture: 'foundation', data: [d0] })).toBe(shorthand);
-					expect(shorthandPosition({ fixture: 'foundation', data: [d0] }, true)).toBe(shorthandD0);
-				}
-			);
+			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: string; shorthandD0: string }) => {
+				expect(shorthandPosition({ fixture: 'foundation', data: [d0] })).toBe(shorthand);
+				expect(shorthandPosition({ fixture: 'foundation', data: [d0] }, true)).toBe(shorthandD0);
+			});
 		});
 
 		describe('cascade', () => {
@@ -285,9 +256,7 @@ describe('game/card', () => {
 					${55} | ${'⡷'}
 				`('$d1', ({ d1, braille }: { d1: number; braille: string }) => {
 					expect(shorthandPosition({ fixture: 'cascade', data: [d0, d1] })).toBe(shorthand);
-					expect(shorthandPosition({ fixture: 'cascade', data: [d0, d1] }, true)).toBe(
-						shorthand + braille
-					);
+					expect(shorthandPosition({ fixture: 'cascade', data: [d0, d1] }, true)).toBe(shorthand + braille);
 				});
 			});
 		});

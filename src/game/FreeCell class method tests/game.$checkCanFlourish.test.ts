@@ -160,11 +160,7 @@ describe('game.$checkCanFlourish', () => {
 
 		describe('does not impact game', () => {
 			test('move w/w/o', () => {
-				const withJuice = new FreeCell()
-					.shuffle32(5)
-					.dealAll()
-					.$checkCanFlourish()
-					.moveByShorthand('53');
+				const withJuice = new FreeCell().shuffle32(5).dealAll().$checkCanFlourish().moveByShorthand('53');
 				const withoutJuice = new FreeCell()
 					.shuffle32(5)
 					.dealAll()
@@ -187,12 +183,7 @@ describe('game.$checkCanFlourish', () => {
 			});
 
 			test('undo after move', () => {
-				const withJuice = new FreeCell()
-					.shuffle32(5)
-					.dealAll()
-					.$checkCanFlourish()
-					.moveByShorthand('53')
-					.undo();
+				const withJuice = new FreeCell().shuffle32(5).dealAll().$checkCanFlourish().moveByShorthand('53').undo();
 				const withoutJuice = new FreeCell()
 					.shuffle32(5)
 					.dealAll()
@@ -295,9 +286,7 @@ describe('game.$checkCanFlourish', () => {
 				type: 'juice',
 				gameFunction: 'check-can-flourish52',
 			});
-			expect(copy.flashCards).toEqual([
-				{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } },
-			]);
+			expect(copy.flashCards).toEqual([{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } }]);
 			expect(copy.previousAction).toEqual({
 				text: 'juice flash *AS*',
 				type: 'juice',
@@ -318,9 +307,7 @@ describe('game.$checkCanFlourish', () => {
 				text: 'deal all cards',
 				type: 'deal',
 			});
-			expect(copy.flashCards).toEqual([
-				{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } },
-			]);
+			expect(copy.flashCards).toEqual([{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } }]);
 			expect(copy.previousAction).toEqual({
 				text: 'juice flash *AS*',
 				type: 'juice',

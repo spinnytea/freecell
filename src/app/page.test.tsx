@@ -39,10 +39,7 @@ describe('page', () => {
 		mockReset(true);
 		fireEvent.click(screen.getAllByAltText('card back')[0]);
 
-		expect(addLabelSpy.mock.calls).toEqual([
-			['gameFunction check-can-flourish'],
-			['updateCardPositions'],
-		]);
+		expect(addLabelSpy.mock.calls).toEqual([['gameFunction check-can-flourish'], ['updateCardPositions']]);
 		expect(mockCallTimes()).toEqual({
 			fromToSpy: 52,
 			toSpy: 53,

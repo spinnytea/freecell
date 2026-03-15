@@ -65,10 +65,7 @@ describe('game.print', () => {
 		describe('availableMoves', () => {
 			let game: FreeCell;
 			beforeAll(() => {
-				game = new FreeCell()
-					.dealAll()
-					.$moveCardToPosition('AS', 'c', { autoFoundation: false })
-					.$selectCard('AH');
+				game = new FreeCell().dealAll().$moveCardToPosition('AS', 'c', { autoFoundation: false }).$selectCard('AH');
 			});
 
 			test.todo('omitted from standard');

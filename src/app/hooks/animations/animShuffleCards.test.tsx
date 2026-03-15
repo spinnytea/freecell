@@ -24,9 +24,7 @@ describe('animShuffleCards', () => {
 			expect(mockCallTimes()).toEqual({});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
 			expect(setSpy.mock.calls).toMatchSnapshot('timeline.set');
-			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
-				'timeline.add'
-			);
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 		});
 
 		test('one', () => {
@@ -44,9 +42,7 @@ describe('animShuffleCards', () => {
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
 			expect(setSpy.mock.calls).toMatchSnapshot('timeline.set');
-			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
-				'timeline.add'
-			);
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 		});
 
 		test('two', () => {
@@ -67,9 +63,7 @@ describe('animShuffleCards', () => {
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
 			expect(setSpy.mock.calls).toMatchSnapshot('timeline.set');
-			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
-				'timeline.add'
-			);
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 		});
 
 		test('three', () => {
@@ -91,9 +85,7 @@ describe('animShuffleCards', () => {
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
 			expect(setSpy.mock.calls).toMatchSnapshot('timeline.set');
-			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
-				'timeline.add'
-			);
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 		});
 
 		test('four', () => {
@@ -116,9 +108,7 @@ describe('animShuffleCards', () => {
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
 			expect(setSpy.mock.calls).toMatchSnapshot('timeline.set');
-			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot(
-				'timeline.add'
-			);
+			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 		});
 	});
 

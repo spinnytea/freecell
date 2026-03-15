@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { FixtureSizesContext } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContext';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
@@ -13,7 +13,9 @@ export function StaticFixtureSizesContextProvider({
 	const foundationCount = foundations.length;
 	const cascadeCount = tableau.length;
 
-	const fixtureSizes = calcStaticFixtureSizes(cellCount, foundationCount, cascadeCount);
+	const [fixtureSizes] = useState(() =>
+		calcStaticFixtureSizes(cellCount, foundationCount, cascadeCount)
+	);
 
 	return (
 		<FixtureSizesContext.Provider value={fixtureSizes}>{children}</FixtureSizesContext.Provider>
