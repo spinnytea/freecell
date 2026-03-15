@@ -12,7 +12,7 @@ import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Setti
 import { Settings } from '@/app/hooks/contexts/Settings/Settings';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
-import { getPropertiesFromFromToSpy, getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';
+import { getCardIdsFromSpy, getPropertiesFromFromToSpy, getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';
 import { calcCardId, CardLocation, CardSH, parseShorthandCard, Position, RankList, shorthandCard, shorthandPosition, SuitList } from '@/game/card/card';
 import { getMoves } from '@/game/catalog/solutions-catalog';
 import { FreeCell } from '@/game/game';
@@ -172,7 +172,7 @@ describe('GameBoard', () => {
 	/** @see game.test.ts */
 	describe('completed games', () => {
 		/** https://www.solitairelaboratory.com/tutorial.html */
-		test.only('Game #5 (tutorial)', () => {
+		test('Game #5 (tutorial)', () => {
 			const gameBoardId = 'GameBoard.test-#5';
 			gsapUtilsRandom.mockReturnValueOnce('scale'); // for WinMessage
 			const { container } = render(<MockGamePage game={new FreeCell().shuffle32(5)} gameBoardId={gameBoardId} />);
@@ -227,13 +227,10 @@ describe('GameBoard', () => {
 				['updateCardPositionsPrev'],
 				['updateCardPositions'],
 			]);
-			// FIXME WIP (animation) (test) why are all of the float timings `<0.000`
-			//  - it's probably on purpose, but I don't remember
-			//  - `overlap` is always 0?
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cAH-GameBoard.test-#5', { top: 20, left: 10 }, { top: 20, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#cAS-GameBoard.test-#5', { top: 21, left: 20 }, { top: 21, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c6H-GameBoard.test-#5', { top: 25, left: 50 }, { top: 25.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#cAS-GameBoard.test-#5', { top: 21, left: 20 }, { top: 21, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c6H-GameBoard.test-#5', { top: 25, left: 50 }, { top: 25.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 				['#c6H-GameBoard.test-#5', { top: 25.5, left: 50 }, { top: 27, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cAD-GameBoard.test-#5', { top: 26, left: 20 }, { top: 5, left: 50, duration: 0.3, ease: 'power1.out' }, '>0'],
 			]);
@@ -572,7 +569,7 @@ describe('GameBoard', () => {
 				['#c5C-GameBoard.test-#5', { top: 21, left: 10 }, { top: 21.5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c5C-GameBoard.test-#5', { top: 21.5, left: 10 }, { top: 5, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cAH-GameBoard.test-#5', { top: 20, left: 10 }, { top: 5, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#c2H-GameBoard.test-#5', { top: 5, left: 20 }, { top: 5, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#c2H-GameBoard.test-#5', { top: 5, left: 20 }, { top: 5, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 			]);
 			expect(toSpy.mock.calls).toEqual([
 				['#c3S-GameBoard.test-#5', { zIndex: 99, duration: 0.15, ease: 'none' }, '<'],
@@ -601,11 +598,11 @@ describe('GameBoard', () => {
 			expect(addLabelSpy.mock.calls).toEqual([['select 8 7D-6C-5H'], ['updateCardPositions'], ['move 86 7D-6C-5H→cascade'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c7D-GameBoard.test-#5', { top: 23, left: 80 }, { top: 22.75, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#c6C-GameBoard.test-#5', { top: 24, left: 80 }, { top: 24.5, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c5H-GameBoard.test-#5', { top: 25, left: 80 }, { top: 25.5, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#c6C-GameBoard.test-#5', { top: 24, left: 80 }, { top: 24.5, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c5H-GameBoard.test-#5', { top: 25, left: 80 }, { top: 25.5, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 				['#c7D-GameBoard.test-#5', { top: 22.75, left: 80 }, { top: 20, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#c6C-GameBoard.test-#5', { top: 24.5, left: 80 }, { top: 21, left: 60, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c5H-GameBoard.test-#5', { top: 25.5, left: 80 }, { top: 22, left: 60, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#c6C-GameBoard.test-#5', { top: 24.5, left: 80 }, { top: 21, left: 60, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c5H-GameBoard.test-#5', { top: 25.5, left: 80 }, { top: 22, left: 60, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 			]);
 			expect(toSpy.mock.calls).toEqual([
 				['#c7D-GameBoard.test-#5', { zIndex: 0, duration: 0.15, ease: 'none' }, '<'],
@@ -947,15 +944,15 @@ describe('GameBoard', () => {
 			expect(addLabelSpy.mock.calls).toEqual([['select 7 JH-TC-9H-8S-7H'], ['updateCardPositions'], ['move 78 JH-TC-9H-8S-7H→QS'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cJH-GameBoard.test-#5', { top: 26, left: 70 }, { top: 25.75, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#cTC-GameBoard.test-#5', { top: 27, left: 70 }, { top: 27.5, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c9H-GameBoard.test-#5', { top: 28, left: 70 }, { top: 28.5, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c8S-GameBoard.test-#5', { top: 29, left: 70 }, { top: 29.5, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c7H-GameBoard.test-#5', { top: 30, left: 70 }, { top: 30.5, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#cTC-GameBoard.test-#5', { top: 27, left: 70 }, { top: 27.5, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c9H-GameBoard.test-#5', { top: 28, left: 70 }, { top: 28.5, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c8S-GameBoard.test-#5', { top: 29, left: 70 }, { top: 29.5, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c7H-GameBoard.test-#5', { top: 30, left: 70 }, { top: 30.5, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 				['#cJH-GameBoard.test-#5', { top: 25.75, left: 70 }, { top: 22, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#cTC-GameBoard.test-#5', { top: 27.5, left: 70 }, { top: 23, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c9H-GameBoard.test-#5', { top: 28.5, left: 70 }, { top: 24, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c8S-GameBoard.test-#5', { top: 29.5, left: 70 }, { top: 25, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c7H-GameBoard.test-#5', { top: 30.5, left: 70 }, { top: 26, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#cTC-GameBoard.test-#5', { top: 27.5, left: 70 }, { top: 23, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c9H-GameBoard.test-#5', { top: 28.5, left: 70 }, { top: 24, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c8S-GameBoard.test-#5', { top: 29.5, left: 70 }, { top: 25, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c7H-GameBoard.test-#5', { top: 30.5, left: 70 }, { top: 26, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 			]);
 			expect(toSpy.mock.calls).toEqual([
 				['#cJH-GameBoard.test-#5', { zIndex: 2, duration: 0.15, ease: 'none' }, '<'],
@@ -1142,11 +1139,11 @@ describe('GameBoard', () => {
 			expect(addLabelSpy.mock.calls).toEqual([['select 3 7C-6H-5S'], ['updateCardPositions'], ['move 34 7C-6H-5S→cascade'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c7C-GameBoard.test-#5', { top: 26, left: 30 }, { top: 25.75, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#c6H-GameBoard.test-#5', { top: 27, left: 30 }, { top: 27.5, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c5S-GameBoard.test-#5', { top: 28, left: 30 }, { top: 28.5, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#c6H-GameBoard.test-#5', { top: 27, left: 30 }, { top: 27.5, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c5S-GameBoard.test-#5', { top: 28, left: 30 }, { top: 28.5, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 				['#c7C-GameBoard.test-#5', { top: 25.75, left: 30 }, { top: 20, left: 40, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#c6H-GameBoard.test-#5', { top: 27.5, left: 30 }, { top: 21, left: 40, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c5S-GameBoard.test-#5', { top: 28.5, left: 30 }, { top: 22, left: 40, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#c6H-GameBoard.test-#5', { top: 27.5, left: 30 }, { top: 21, left: 40, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c5S-GameBoard.test-#5', { top: 28.5, left: 30 }, { top: 22, left: 40, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 			]);
 			expect(toSpy.mock.calls).toEqual([
 				['#c7C-GameBoard.test-#5', { zIndex: 0, duration: 0.15, ease: 'none' }, '<'],
@@ -1283,8 +1280,8 @@ describe('GameBoard', () => {
 				['#c9C-GameBoard.test-#5', { top: 21, left: 30 }, { top: 21.5, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c9C-GameBoard.test-#5', { top: 21.5, left: 30 }, { top: 23, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c2D-GameBoard.test-#5', { top: 20, left: 30 }, { top: 5, left: 50, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#c3D-GameBoard.test-#5', { top: 24, left: 60 }, { top: 5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c4S-GameBoard.test-#5', { top: 23, left: 60 }, { top: 5, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#c3D-GameBoard.test-#5', { top: 24, left: 60 }, { top: 5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c4S-GameBoard.test-#5', { top: 23, left: 60 }, { top: 5, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 			]);
 			expect(toSpy.mock.calls).toEqual([
 				['#c9C-GameBoard.test-#5', { zIndex: 3, duration: 0.15, ease: 'none' }, '<'],
@@ -1334,12 +1331,12 @@ describe('GameBoard', () => {
 			expect(fromToSpy.mock.calls).toEqual([
 				// no stabilizing force for QH, since it doesn't move
 				['#cJC-GameBoard.test-#5', { top: 21, left: 10 }, { top: 21.5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#cTH-GameBoard.test-#5', { top: 22, left: 10 }, { top: 22.5, left: 10, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c9C-GameBoard.test-#5', { top: 23, left: 10 }, { top: 23.5, left: 10, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#cTH-GameBoard.test-#5', { top: 22, left: 10 }, { top: 22.5, left: 10, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c9C-GameBoard.test-#5', { top: 23, left: 10 }, { top: 23.5, left: 10, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 				['#cQH-GameBoard.test-#5', { top: 20, left: 10 }, { top: 21, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#cJC-GameBoard.test-#5', { top: 21.5, left: 10 }, { top: 22, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#cTH-GameBoard.test-#5', { top: 22.5, left: 10 }, { top: 23, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c9C-GameBoard.test-#5', { top: 23.5, left: 10 }, { top: 24, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#cJC-GameBoard.test-#5', { top: 21.5, left: 10 }, { top: 22, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#cTH-GameBoard.test-#5', { top: 22.5, left: 10 }, { top: 23, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c9C-GameBoard.test-#5', { top: 23.5, left: 10 }, { top: 24, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 			]);
 			expect(toSpy.mock.calls).toEqual([
 				['#cQH-GameBoard.test-#5', { zIndex: 1, duration: 0.15, ease: 'none' }, '<'],
@@ -1365,10 +1362,10 @@ describe('GameBoard', () => {
 			expect(fromToSpy.mock.calls).toEqual([
 				// no stabilizing force for TS, since it doesn't move
 				['#c9D-GameBoard.test-#5', { top: 21, left: 20 }, { top: 21.5, left: 20, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#c8C-GameBoard.test-#5', { top: 22, left: 20 }, { top: 22.5, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#c8C-GameBoard.test-#5', { top: 22, left: 20 }, { top: 22.5, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 				['#cTS-GameBoard.test-#5', { top: 20, left: 20 }, { top: 22, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#c9D-GameBoard.test-#5', { top: 21.5, left: 20 }, { top: 23, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c8C-GameBoard.test-#5', { top: 22.5, left: 20 }, { top: 24, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#c9D-GameBoard.test-#5', { top: 21.5, left: 20 }, { top: 23, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c8C-GameBoard.test-#5', { top: 22.5, left: 20 }, { top: 24, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 			]);
 			expect(toSpy.mock.calls).toEqual([
 				['#cTS-GameBoard.test-#5', { zIndex: 2, duration: 0.15, ease: 'none' }, '<'],
@@ -1393,10 +1390,10 @@ describe('GameBoard', () => {
 			expect(fromToSpy.mock.calls).toEqual([
 				// no stabilizing force for 7D, since it doesn't move
 				['#c6C-GameBoard.test-#5', { top: 21, left: 60 }, { top: 21.5, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#c5H-GameBoard.test-#5', { top: 22, left: 60 }, { top: 22.5, left: 60, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#c5H-GameBoard.test-#5', { top: 22, left: 60 }, { top: 22.5, left: 60, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 				['#c7D-GameBoard.test-#5', { top: 20, left: 60 }, { top: 25, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#c6C-GameBoard.test-#5', { top: 21.5, left: 60 }, { top: 26, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c5H-GameBoard.test-#5', { top: 22.5, left: 60 }, { top: 27, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#c6C-GameBoard.test-#5', { top: 21.5, left: 60 }, { top: 26, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.060'],
+				['#c5H-GameBoard.test-#5', { top: 22.5, left: 60 }, { top: 27, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 			]);
 			expect(toSpy.mock.calls).toEqual([
 				['#c7D-GameBoard.test-#5', { zIndex: 5, duration: 0.15, ease: 'none' }, '<'],
@@ -1431,23 +1428,23 @@ describe('GameBoard', () => {
 			]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cKS-GameBoard.test-#5', { top: 24, left: 50 }, { top: 23.75, left: 50, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#cQD-GameBoard.test-#5', { top: 25, left: 50 }, { top: 25.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#cJS-GameBoard.test-#5', { top: 26, left: 50 }, { top: 26.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#cTD-GameBoard.test-#5', { top: 27, left: 50 }, { top: 27.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c9S-GameBoard.test-#5', { top: 28, left: 50 }, { top: 28.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c8D-GameBoard.test-#5', { top: 29, left: 50 }, { top: 29.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c7S-GameBoard.test-#5', { top: 30, left: 50 }, { top: 30.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c6D-GameBoard.test-#5', { top: 31, left: 50 }, { top: 31.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c5C-GameBoard.test-#5', { top: 32, left: 50 }, { top: 32.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#cQD-GameBoard.test-#5', { top: 25, left: 50 }, { top: 25.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#cJS-GameBoard.test-#5', { top: 26, left: 50 }, { top: 26.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#cTD-GameBoard.test-#5', { top: 27, left: 50 }, { top: 27.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#c9S-GameBoard.test-#5', { top: 28, left: 50 }, { top: 28.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#c8D-GameBoard.test-#5', { top: 29, left: 50 }, { top: 29.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#c7S-GameBoard.test-#5', { top: 30, left: 50 }, { top: 30.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#c6D-GameBoard.test-#5', { top: 31, left: 50 }, { top: 31.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#c5C-GameBoard.test-#5', { top: 32, left: 50 }, { top: 32.5, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.033'],
 				['#cKS-GameBoard.test-#5', { top: 23.75, left: 50 }, { top: 20, left: 20, duration: 0.3, ease: 'power1.out' }, '>0'],
-				['#cQD-GameBoard.test-#5', { top: 25.5, left: 50 }, { top: 21, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#cJS-GameBoard.test-#5', { top: 26.5, left: 50 }, { top: 22, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#cTD-GameBoard.test-#5', { top: 27.5, left: 50 }, { top: 23, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c9S-GameBoard.test-#5', { top: 28.5, left: 50 }, { top: 24, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c8D-GameBoard.test-#5', { top: 29.5, left: 50 }, { top: 25, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c7S-GameBoard.test-#5', { top: 30.5, left: 50 }, { top: 26, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c6D-GameBoard.test-#5', { top: 31.5, left: 50 }, { top: 27, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.000'],
-				['#c5C-GameBoard.test-#5', { top: 32.5, left: 50 }, { top: 28, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+				['#cQD-GameBoard.test-#5', { top: 25.5, left: 50 }, { top: 21, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#cJS-GameBoard.test-#5', { top: 26.5, left: 50 }, { top: 22, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#cTD-GameBoard.test-#5', { top: 27.5, left: 50 }, { top: 23, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#c9S-GameBoard.test-#5', { top: 28.5, left: 50 }, { top: 24, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#c8D-GameBoard.test-#5', { top: 29.5, left: 50 }, { top: 25, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#c7S-GameBoard.test-#5', { top: 30.5, left: 50 }, { top: 26, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#c6D-GameBoard.test-#5', { top: 31.5, left: 50 }, { top: 27, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.033'],
+				['#c5C-GameBoard.test-#5', { top: 32.5, left: 50 }, { top: 28, left: 20, duration: 0.3, ease: 'power1.out' }, '<0.033'],
 			]);
 			expect(toSpy.mock.calls).toEqual([
 				['#cKS-GameBoard.test-#5', { zIndex: 0, duration: 0.15, ease: 'none' }, '<'],
@@ -1509,21 +1506,17 @@ describe('GameBoard', () => {
 				['updateCardPositionsPrev'],
 				['updateCardPositions'],
 			]);
-			// FIXME WIP check gsapFromSpy - win message, yes?
-			expect(getPropertiesFromSpy(gsapFromSpy)).toEqual({
-				scale: 1,
-			});
+			expect(gsapFromSpy.mock.calls).toEqual([[expect.any(HTMLElement), { scale: 0, duration: 0.75, ease: 'power1.out' }]]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cKD-GameBoard.test-#5', { top: 22, left: 50 }, { top: 22.5, left: 50, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cKD-GameBoard.test-#5', { top: 22.5, left: 50 }, { top: 20, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
 			]);
-			// FIXME WIP which IDs are called in toSpy?
 			expect(getPropertiesFromSpy(toSpy)).toEqual({
 				top: 38,
 				left: 38,
 				zIndex: 39,
 			});
-			// FIXME WIP which IDs are called in setSpy?
+			expect(getCardIdsFromSpy(toSpy)).toMatchSnapshot();
 			expect(getPropertiesFromSpy(setSpy)).toEqual({
 				top: 65,
 				left: 65,
@@ -1531,6 +1524,7 @@ describe('GameBoard', () => {
 				rotation: 65,
 				transform: 65,
 			});
+			expect(getCardIdsFromSpy(setSpy)).toMatchSnapshot();
 			expect(timeScaleSpy.mock.calls).toEqual([[SNAPPY_ACTION_TIMESCALE], [MULTI_ANIMATION_TIMESCALE]]);
 			expect(consoleDebugSpy.mock.calls).toEqual([['speedup updateCardPositions', 'move-foundation']]);
 			mockReset();
@@ -1710,7 +1704,7 @@ describe('GameBoard', () => {
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cJC-collapse-wild', { top: 21, left: 10 }, { top: 21.5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
 					['#cQH-collapse-wild', { top: 20, left: 10 }, { top: 24, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
-					['#cJC-collapse-wild', { top: 21.5, left: 10 }, { top: 25, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+					['#cJC-collapse-wild', { top: 21.5, left: 10 }, { top: 25, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 				]);
 				expect(toSpy.mock.calls).toEqual([
 					['#cQH-collapse-wild', { zIndex: 4, duration: 0.15, ease: 'none' }, '<'],
@@ -1733,9 +1727,9 @@ describe('GameBoard', () => {
 				expect(addLabelSpy.mock.calls).toEqual([['select 8 QH-JC'], ['updateCardPositions'], ['move 13 QH-JC→cascade'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cQH-collapse-wild', { top: 24, left: 80 }, { top: 23.75, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
-					['#cJC-collapse-wild', { top: 25, left: 80 }, { top: 25.5, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+					['#cJC-collapse-wild', { top: 25, left: 80 }, { top: 25.5, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 					['#cQH-collapse-wild', { top: 23.75, left: 80 }, { top: 20, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
-					['#cJC-collapse-wild', { top: 25.5, left: 80 }, { top: 21, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+					['#cJC-collapse-wild', { top: 25.5, left: 80 }, { top: 21, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 				]);
 				expect(toSpy.mock.calls).toEqual([
 					['#cQH-collapse-wild', { zIndex: 0, duration: 0.15, ease: 'none' }, '<'],
@@ -1759,7 +1753,7 @@ describe('GameBoard', () => {
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cJC-collapse-wild', { top: 21, left: 30 }, { top: 21.5, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
 					['#cQH-collapse-wild', { top: 20, left: 30 }, { top: 20, left: 50, duration: 0.3, ease: 'power1.out' }, '>0'],
-					['#cJC-collapse-wild', { top: 21.5, left: 30 }, { top: 21, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+					['#cJC-collapse-wild', { top: 21.5, left: 30 }, { top: 21, left: 50, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 				]);
 				mockReset();
 				expect(cribGame().print()).toBe(
@@ -1858,7 +1852,7 @@ describe('GameBoard', () => {
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cJC-collapse-wild', { top: 21, left: 50 }, { top: 21.5, left: 50, duration: 0.3, ease: 'power1.out' }, '>0'],
 					['#cQH-collapse-wild', { top: 20, left: 50 }, { top: 20, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
-					['#cJC-collapse-wild', { top: 21.5, left: 50 }, { top: 21, left: 60, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+					['#cJC-collapse-wild', { top: 21.5, left: 50 }, { top: 21, left: 60, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 				]);
 				expect(consoleDebugSpy.mock.calls).toEqual([['speedup updateCardPositions', 'move']]);
 				mockReset();
@@ -1877,7 +1871,7 @@ describe('GameBoard', () => {
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cJC-collapse-wild', { top: 21, left: 60 }, { top: 21.5, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
 					['#cQH-collapse-wild', { top: 20, left: 60 }, { top: 20, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
-					['#cJC-collapse-wild', { top: 21.5, left: 60 }, { top: 21, left: 10, duration: 0.3, ease: 'power1.out' }, '<0.000'],
+					['#cJC-collapse-wild', { top: 21.5, left: 60 }, { top: 21, left: 10, duration: 0.3, ease: 'power1.out' }, '<0.060'],
 				]);
 				expect(consoleDebugSpy.mock.calls).toEqual([['speedup updateCardPositions', 'move']]);
 				mockReset();
