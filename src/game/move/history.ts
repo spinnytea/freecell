@@ -663,8 +663,13 @@ export function getCardsFromInvalid(
 	if (toShorthand.length === 2) {
 		to.push(findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1])));
 	} else {
-		// TODO (2-priority) (motivation) (animation) animate piles
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
+		// TODO (4-priority) (motivation) (animation) animate piles (maybe animShakeCard… animShakePile?)
+		//  - add these to ACTION_TEXT_EXAMPLES:
+		//  - invalid move xx xx-xx→deck
+		//  - invalid move xx xx-xx→cascade
+		//  - invalid move 1h 9C→foundation
+		//  - invalid move tableau→deck
 	}
 	return { from, to };
 }
