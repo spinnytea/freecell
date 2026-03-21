@@ -50,7 +50,12 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'deselect 4D-3S-2D': '',
 	'deselect 6 2D': '',
 	'deselect 6 4D-3S-2D': '',
-	'touch stop': '',
+	'touch stop':
+		'             QC TD KH 9S \n' +
+		' QS KC       TS          \n' +
+		' JD QD       KS          \n' +
+		' KD JS                   \n' +
+		' hand-jammed',
 	'move 3a KC→cell':
 		'             AD 3C 4H 3S \n' +
 		' QH TS 2D 7C 4C 7D QC KH \n' +
@@ -180,7 +185,16 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' b8 48 24 21 3a ',
 	'auto-foundation 56 KD,KS': '',
 	'flourish 56 KD,KS': '',
-	'invalid move 86 7D→9C': '',
+	'invalid move 86 7D→9C':
+		' TD       TC AH 2S       \n' +
+		' QD AC AD 5D 9H JH 4H 6S \n' +
+		' 2H 4C QS KD 8C 5C 6D QH \n' +
+		' 3D 8H 3S 2D 3H 8D 5S JS \n' +
+		' JD 4S 2C KC 7C JC 4D TS \n' +
+		' 7S 9D 6H 9C 6C QC 3C 7H \n' +
+		' 9S TH       5H KS   >7D \n' +
+		' 8S KH                   \n' +
+		' move 35 6C-5H→7C',
 	'invalid move 75 6D-5S-4D-3C→7C':
 		' TD       TC AH 2S       \n' +
 		' QD AC AD 5D 9H JH 4H 6S \n' +

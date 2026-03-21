@@ -664,7 +664,7 @@ export function getCardsFromInvalid(
 		to.push(findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1])));
 	} else {
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
-		// TODO (4-priority) (motivation) (animation) animate piles (maybe animShakeCard… animShakePile?)
+		// FIXME (4-priority) (motivation) (animation) animate piles (maybe animShakeCard… animShakePile?)
 		//  - add these to ACTION_TEXT_EXAMPLES:
 		//  - invalid move xx xx-xx→deck
 		//  - invalid move xx xx-xx→cascade
