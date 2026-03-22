@@ -3,10 +3,12 @@ import {
 	CardLocation,
 	cloneCards,
 	findCard,
+	FixtureList,
 	getSequenceAt,
 	initializeDeck,
 	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
+	Position,
 	shorthandPosition,
 	shorthandSequence,
 	sortCardsOG,
@@ -117,6 +119,7 @@ export interface PreviousAction {
 	gameFunction?: GameFunction;
 }
 
+// FIXME should we verify Position, Shorthand, Fixture when we parse with these regex values?
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish|flourish52) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
@@ -666,12 +669,15 @@ export function getCardsThatMoved(game: FreeCell): Card[] {
 	return fromShorthand.split('-').map((sh) => findCard(game.cards, parseShorthandCard(sh)));
 }
 
-// FIXME yes "shorthand" is a string, but we should still make it a "type"
 export function getCardsFromInvalid(previousAction: PreviousAction): {
 	fromShorthands: string[];
 	toShorthands: string[];
+	pileShorthands?: Position[];
 } {
 	if (previousAction.text === 'touch stop') {
+		return { fromShorthands: [], toShorthands: [] };
+	}
+	if (previousAction.text === 'invalid move tableau→deck') {
 		return { fromShorthands: [], toShorthands: [] };
 	}
 	const { fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
@@ -680,11 +686,14 @@ export function getCardsFromInvalid(previousAction: PreviousAction): {
 		// TODO (motivation) (animation) if attempting to stack onto a sequence, shake the whole sequence
 		//  - should we add the whole sequence to the actionText, instead of just the one target card?
 		return { fromShorthands, toShorthands: toShorthand.split('-') };
-	} else {
+	} else if (FixtureList.includes(toShorthand)) {
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
 		// FIXME (4-priority) (motivation) (animation) animate piles (maybe animShakeCard… animShakePile?)
-		return { fromShorthands, toShorthands: [] };
+		// FIXME can we remove FixtureList? this is the only place that needs it
+		return { fromShorthands, toShorthands: [], pileShorthands: [] };
 	}
+	// super invalid, e.g. 'invalid move 12 asdf→asdf'
+	return { fromShorthands, toShorthands: [toShorthand] };
 }
 
 /**

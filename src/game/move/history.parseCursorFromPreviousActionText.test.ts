@@ -115,7 +115,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 		);
 	});
 
-	// TOOD (tech-debt) should we also add these to ACTION_TEXT_EXAMPLES to a supplemental "invalid tweens"
+	// TOOD (techdebt) should we also add these to ACTION_TEXT_EXAMPLES to a supplemental "invalid tweens"
 	describe('other cases', () => {
 		test.each`
 			actionText                     | cards | after                             | before

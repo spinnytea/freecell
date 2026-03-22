@@ -2,7 +2,7 @@ import {
 	Card,
 	CardLocation,
 	CardSequence,
-	CardSH,
+	CardShorthand,
 	cloneCards,
 	findCard,
 	getSequenceAt,
@@ -960,7 +960,7 @@ export class FreeCell {
 		sugar/helper controls
 	*/
 	$selectCard(
-		shorthand: CardSH | string | null,
+		shorthand: CardShorthand | string | null,
 		{ allowSelectFoundation }: OptionsNonstandardGameplay = {}
 	): FreeCell {
 		if (typeof shorthand === 'string') shorthand = parseShorthandCard(shorthand);
@@ -1141,7 +1141,7 @@ export class FreeCell {
 		const tableau_spaces: (string | undefined)[] = [];
 		const deck_spaces: (string | undefined)[] = [];
 
-		const getCard = ({ rank, suit }: CardSH) => {
+		const getCard = ({ rank, suit }: CardShorthand) => {
 			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
 			// XXX (print) (joker) test with a jokers available in game
 			if (!card) {

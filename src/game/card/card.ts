@@ -7,6 +7,9 @@ import { FreeCell } from '@/game/game';
 
 export type Suit = 'clubs' | 'diamonds' | 'hearts' | 'spades';
 export const SuitList: Suit[] = ['clubs', 'diamonds', 'hearts', 'spades'];
+// XXX (techdebt) consider this type definition: (it might make it overly restrictive for parsing)
+// export const SuitList = ['clubs', 'diamonds', 'hearts', 'spades'] as const;
+// export type Suit = typeof SuitList[number];
 export const isRed = (suit: Suit) => suit === 'diamonds' || suit === 'hearts';
 
 export type Rank =
@@ -44,11 +47,13 @@ export const getSuitForCompare = (suit: Suit): number => SuitList.indexOf(suit);
 export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	getRankForCompare(min) === getRankForCompare(max) - 1;
 
-// XXX (techdebt) is "fixture" the right name?
+// XXX (techdebt) (refactor) (rename) is "fixture" the right name?
 //  - cell -> freecell
 //  - foundation -> homecell
 //  - cascade -> column
 export type Fixture = 'deck' | 'cell' | 'foundation' | 'cascade';
+/** @deprecated FIXME do we really need FixtureList for getCardsFromInvalid / the history regexes allow these values, but do not verify them */
+export const FixtureList = ['deck', 'cell', 'foundation', 'cascade'];
 export interface CardLocation {
 	readonly fixture: Fixture;
 	readonly data: number[];
@@ -59,21 +64,7 @@ export interface CardLocation {
 	cells: a - d
 	cascades: 1 - 9, t (1-8, but we allow 9 and 10 columns)
 
-	XXX (motivation) I really super want to have a shorthand for the deck
-	 - maybe (joker) can go to the deck because lolwhynot
-	 - not that it's a valid move, not that it will be part of gameplay
-	 - it just keeps feeling like a gap
-	 - maybe i'm thinking a bit to much like manually moving cards, where, in meatspace,
-	   - you reset the game from 'h' to 'deck', and
-		- you deal from 'deck' to '1234567890'
-	 - which isn't standard gameplay, and which is all one action, so it's not like `$moveCardToPosition` makes sense there
-	---
-	 - it's just, every time I use `shorthandMove`, i have to remember two cavates:
-	   - there is no 'deck' Position
-		- 'h' cannot cannot be a `from`, it can only be a `to`
-	 - and while that's true for gameplay, i want to enable that from behind a flag
-	 - maybe that helps document "look, this is wrong, it's nonstandard gameplay to do this, look at my debug flag"
-	 - but maybe it's just me trying to be way to super feature complete
+	// FIXME (techdebt) (refactor) (rename) rename `Position` to `PileSH`
 
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */
@@ -96,6 +87,7 @@ export type Position =
 	| '8'
 	| '9'
 	| '0';
+/** @deprecated FIXME do we really need PositionList for solveGame / the history regexes allow these values, but do not verify them */
 export const PositionList: Position[] = [
 	'a',
 	'b',
@@ -117,12 +109,19 @@ export const PositionList: Position[] = [
 	'0',
 ];
 
-// REVIEW (optimize) should CardSH include `sh/rs = shorthandCard(this)`?
-export interface CardSH {
+type SuitSH = 'C' | 'D' | 'H' | 'S';
+type RankSH = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'W';
+/** rank shorthand + suit shorthand @example 'KH' */
+type RS = `${RankSH}${SuitSH}`; // XXX (techdebt) use type RS everywhere it makes sense
+// FIXME use type RS everywhere it's easy (first pass)
+
+export interface CardShorthand {
 	readonly rank: Rank;
 	readonly suit: Suit;
+	// REVIEW (optimize) should CardShorthand include `sh/rs = shorthandCard(this)`?
+	// readonly rs: RS;
 }
-export interface Card extends CardSH {
+export interface Card extends CardShorthand {
 	location: CardLocation;
 }
 
@@ -257,18 +256,18 @@ export function calcPilemarkerId(location: CardLocation, gameBoardId?: string) {
 	we need to duplicate cards to detect when it changes
 	cards need to remain in consitent order for react[key=""] to work
 */
-export function cloneCards(cards: Card[]) {
+export function cloneCards(cards: Card[]): Card[] {
 	return cards.map((card) => ({ ...card }));
 }
 
-export function findCard(cards: Card[], card: CardSH | null | undefined): Card {
+export function findCard(cards: Card[], card: CardShorthand | null | undefined): Card {
 	if (!card) throw new Error('no card provided');
 	const found = cards.find((c) => c.suit === card.suit && c.rank === card.rank);
 	if (!found) throw new Error('missing card ' + shorthandCard(card));
 	return found;
 }
 
-export function isLocationEqual(a: CardLocation, b: CardLocation) {
+export function isLocationEqual(a: CardLocation, b: CardLocation): boolean {
 	return a.fixture === b.fixture && a.data[0] === b.data[0] && a.data[1] === b.data[1];
 }
 
@@ -370,15 +369,17 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 /* PRINT / PARSE */
 /* ************* */
 
-export function shorthandCard(card: CardSH | null | undefined) {
+// FIXME (techdebt) (refactor) (rename) rename `shorthandCard` to `shorthandRS`
+// FIXME (techdebt) (refactor) (rename) rename `shorthand` to `rs` (when it is of type RS)
+export function shorthandCard(card: CardShorthand | null | undefined): RS | '  ' {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
 	const s = card.suit[0];
-	return (r + s).toUpperCase();
+	return (r + s).toUpperCase() as RS;
 }
 
 /** TODO (techdebt) (refactor) change `rs` to single string since that's how it's _always_ called */
-export function parseShorthandCard(r: string | undefined, s?: string): CardSH | null {
+export function parseShorthandCard(r: string | undefined, s?: string): CardShorthand | null {
 	if (!s && r?.length === 2) {
 		s = r[1];
 		r = r[0];
