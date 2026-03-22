@@ -650,18 +650,20 @@ export function getCardsThatMoved(game: FreeCell): Card[] {
 	return fromShorthand.split('-').map((sh) => findCard(game.cards, parseShorthandCard(sh)));
 }
 
-export function getCardsFromInvalid(
-	previousAction: PreviousAction,
-	cards: Card[]
-): { from: Card[]; to: Card[] } {
+// FIXME yes "shorthand" is a string, but we should still make it a "type"
+export function getCardsFromInvalid(previousAction: PreviousAction): {
+	fromShorthands: string[];
+	toShorthands: string[];
+} {
 	if (previousAction.text === 'touch stop') {
-		return { from: [], to: [] };
+		return { fromShorthands: [], toShorthands: [] };
 	}
 	const { fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
-	const from = fromShorthand.split('-').map((sh) => findCard(cards, parseShorthandCard(sh)));
-	const to = [];
-	if (toShorthand.length === 2) {
-		to.push(findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1])));
+	const fromShorthands = fromShorthand.split('-');
+	if (toShorthand.length === 2 || toShorthand.includes('-')) {
+		// TODO (motivation) (animation) if attempting to stack onto a sequence, shake the whole sequence
+		//  - should we add the whole sequence to the actionText, instead of just the one target card?
+		return { fromShorthands, toShorthands: toShorthand.split('-') };
 	} else {
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
 		// FIXME (4-priority) (motivation) (animation) animate piles (maybe animShakeCard… animShakePile?)
@@ -670,8 +672,8 @@ export function getCardsFromInvalid(
 		//  - invalid move xx xx-xx→cascade
 		//  - invalid move 1h 9C→foundation
 		//  - invalid move tableau→deck
+		return { fromShorthands, toShorthands: [] };
 	}
-	return { from, to };
 }
 
 /**

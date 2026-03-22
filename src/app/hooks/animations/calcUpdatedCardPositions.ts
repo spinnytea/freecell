@@ -89,11 +89,8 @@ export function calcUpdatedCardPositions({
 
 	// IFF the action is an invalid move
 	if (previousAction?.type === 'invalid') {
-		const { from, to } = getCardsFromInvalid(previousAction, cards);
-		const invalidMoveCards: InvalidMoveCardType = {
-			fromShorthands: from.map((card) => shorthandCard(card)),
-			toShorthands: to.map((card) => shorthandCard(card)),
-		};
+		const { fromShorthands, toShorthands } = getCardsFromInvalid(previousAction);
+		const invalidMoveCards: InvalidMoveCardType = { fromShorthands, toShorthands };
 		return { updateCardPositions, unmovedCards, invalidMoveCards };
 	}
 

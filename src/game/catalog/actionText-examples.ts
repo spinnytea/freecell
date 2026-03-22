@@ -185,16 +185,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' b8 48 24 21 3a ',
 	'auto-foundation 56 KD,KS': '',
 	'flourish 56 KD,KS': '',
-	'invalid move 86 7D→9C':
-		' TD       TC AH 2S       \n' +
-		' QD AC AD 5D 9H JH 4H 6S \n' +
-		' 2H 4C QS KD 8C 5C 6D QH \n' +
-		' 3D 8H 3S 2D 3H 8D 5S JS \n' +
-		' JD 4S 2C KC 7C JC 4D TS \n' +
-		' 7S 9D 6H 9C 6C QC 3C 7H \n' +
-		' 9S TH       5H KS   >7D \n' +
-		' 8S KH                   \n' +
-		' move 35 6C-5H→7C',
+	'invalid move 86 7D→9C': '',
 	'invalid move 75 6D-5S-4D-3C→7C':
 		' TD       TC AH 2S       \n' +
 		' QD AC AD 5D 9H JH 4H 6S \n' +
@@ -205,9 +196,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' 9S TH    6C    KS    9C \n' +
 		' 8S KH    5H             \n' +
 		' move 54 6C-5H→7D\n' +
-		':h shuffle32 27571\n' +
-		' 34 4d d4 4d d4 5d 75 74 \n' +
-		' 47 4a 54 ',
+		' hand-jammed',
 };
 
 export function pullActionTextExamples(actionTextExamples: string[], actionText: string) {
