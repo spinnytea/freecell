@@ -255,6 +255,12 @@ export function parseCursorFromPreviousActionText(
 			return card.location;
 		}
 		case 'invalid':
+			if (actionText === 'invalid undo tween') {
+				return undefined;
+			}
+			if (actionText === 'invalid move tableau→deck') {
+				return { fixture: 'deck', data: [0] };
+			}
 			if (actionText.startsWith('invalid')) {
 				return parseCursorFromPreviousActionText(actionText.substring(8), cards);
 			}
@@ -277,6 +283,8 @@ export function parseCursorFromPreviousActionText(
 		case 'juice':
 			return { fixture: 'cell', data: [0] };
 	}
+	// throw new Error(`invalid actionText '${actionText}' or 'invalid ${actionText}'`);
+	return undefined;
 }
 
 /**
@@ -326,6 +334,12 @@ export function parseAltCursorFromPreviousActionText(
 			return card.location;
 		}
 		case 'invalid':
+			if (actionText === 'invalid undo tween') {
+				return undefined;
+			}
+			if (actionText === 'invalid move tableau→deck') {
+				return undefined;
+			}
 			if (actionText.startsWith('invalid')) {
 				return parseAltCursorFromPreviousActionText(actionText.substring(8), cards, allowEmptyDeck);
 			}
@@ -336,6 +350,8 @@ export function parseAltCursorFromPreviousActionText(
 		case 'juice':
 			return { fixture: 'cell', data: [0] };
 	}
+	// throw new Error(`invalid actionText '${actionText}' or 'invalid ${actionText}'`);
+	return undefined;
 }
 
 export function parseActionTextMove(actionText: string) {
@@ -579,7 +595,7 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 	const action: PreviousAction = { text: actionText, type: firstWord as PreviousActionType };
 
 	if (firstWord === 'invalid') {
-		if (/^invalid move (\wk|k\w) /.test(actionText)) {
+		if (/^invalid move (\wk|k\w) /.test(actionText) || actionText === 'invalid move tableau→deck') {
 			action.gameFunction = 'recall-or-bury';
 		} else if (actionText.startsWith('invalid undo')) {
 			// should not appear in print
@@ -667,11 +683,6 @@ export function getCardsFromInvalid(previousAction: PreviousAction): {
 	} else {
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
 		// FIXME (4-priority) (motivation) (animation) animate piles (maybe animShakeCard… animShakePile?)
-		//  - add these to ACTION_TEXT_EXAMPLES:
-		//  - invalid move xx xx-xx→deck
-		//  - invalid move xx xx-xx→cascade
-		//  - invalid move 1h 9C→foundation
-		//  - invalid move tableau→deck
 		return { fromShorthands, toShorthands: [] };
 	}
 }

@@ -64,6 +64,10 @@ describe('game/history.parsePreviousActionType', () => {
 			${'flourish 56 KD,KS'}                        | ${{ text: 'flourish 56 KD,KS', type: 'auto-foundation' }}
 			${'invalid move 86 7D→9C'}                    | ${{ text: 'invalid move 86 7D→9C', type: 'invalid' }}
 			${'invalid move 75 6D-5S-4D-3C→7C'}           | ${{ text: 'invalid move 75 6D-5S-4D-3C→7C', type: 'invalid' }}
+			${'invalid move bk 6C→deck'}                  | ${{ text: 'invalid move bk 6C→deck', type: 'invalid', gameFunction: 'recall-or-bury' }}
+			${'invalid move hk TD→deck'}                  | ${{ text: 'invalid move hk TD→deck', type: 'invalid', gameFunction: 'recall-or-bury' }}
+			${'invalid move 4k 6D→deck'}                  | ${{ text: 'invalid move 4k 6D→deck', type: 'invalid', gameFunction: 'recall-or-bury' }}
+			${'invalid move 2k TC-9D-8C→deck'}            | ${{ text: 'invalid move 2k TC-9D-8C→deck', type: 'invalid', gameFunction: 'recall-or-bury' }}
 		`('$actionText', ({ actionText, previousAction }: { actionText: string; previousAction: PreviousAction }) => {
 			pullActionTextExamples(actionTextExamples, actionText);
 			expect(parsePreviousActionType(actionText)).toEqual(previousAction);
@@ -72,12 +76,11 @@ describe('game/history.parsePreviousActionType', () => {
 
 	describe('other cases', () => {
 		test.each`
-			actionText                   | previousAction
-			${'invalid move bk 6C→deck'} | ${{ text: 'invalid move bk 6C→deck', type: 'invalid', gameFunction: 'recall-or-bury' }}
-			${'invalid move 4k 6D→6H'}   | ${{ text: 'invalid move 4k 6D→6H', type: 'invalid', gameFunction: 'recall-or-bury' }}
-			${'invalid undo tween'}      | ${{ text: 'invalid undo tween', type: 'invalid', gameFunction: 'undo' }}
-			${'juice flash AH,AS'}       | ${{ text: 'juice flash AH,AS', type: 'juice', gameFunction: 'check-can-flourish' }}
-			${'juice flash *AS*'}        | ${{ text: 'juice flash *AS*', type: 'juice', gameFunction: 'check-can-flourish52' }}
+			actionText                     | previousAction
+			${'invalid undo tween'}        | ${{ text: 'invalid undo tween', type: 'invalid', gameFunction: 'undo' }}
+			${'invalid move tableau→deck'} | ${{ text: 'invalid move tableau→deck', type: 'invalid', gameFunction: 'recall-or-bury' }}
+			${'juice flash AH,AS'}         | ${{ text: 'juice flash AH,AS', type: 'juice', gameFunction: 'check-can-flourish' }}
+			${'juice flash *AS*'}          | ${{ text: 'juice flash *AS*', type: 'juice', gameFunction: 'check-can-flourish52' }}
 		`('$actionText', ({ actionText, previousAction }: { actionText: string; previousAction: PreviousAction }) => {
 			expect(parsePreviousActionType(actionText)).toEqual(previousAction);
 		});

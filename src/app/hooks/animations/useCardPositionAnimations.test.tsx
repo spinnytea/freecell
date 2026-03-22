@@ -65,6 +65,7 @@ function MockGameBoard() {
 	return null;
 }
 
+// TODO (3-priority) (animation) (test) rewrite these with the rigour of GameBoard > Game #5 (tutorial)
 describe('useCardPositionAnimations', () => {
 	// we can use this for a lot of tests, so we don't need to keep remaking it
 	const newGameState = new FreeCell();
