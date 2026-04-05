@@ -17,9 +17,8 @@
 				"name": "next"
 			}
 		],
-		"baseUrl": "./src",
 		"paths": {
-			"@/*": ["./*"]
+			"@/*": ["./src/*"]
 		},
 		"forceConsistentCasingInFileNames": true,
 		"target": "ES2017"
