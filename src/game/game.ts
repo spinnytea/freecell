@@ -53,7 +53,7 @@ import {
 import { utils } from '@/utils';
 
 const DEFAULT_NUMBER_OF_CELLS = 4;
-const NUMBER_OF_FOUNDATIONS = SuitList.length;
+export const NUMBER_OF_FOUNDATIONS = SuitList.length;
 const DEFAULT_NUMBER_OF_CASCADES = 8;
 const MIN_CELL_COUNT = 1;
 const MAX_CELL_COUNT = 6;

@@ -3,17 +3,17 @@ import {
 	CardLocation,
 	cloneCards,
 	findCard,
-	FixtureList,
 	getSequenceAt,
 	initializeDeck,
+	isFixture,
+	isPileSH,
 	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
-	Position,
 	shorthandPosition,
 	shorthandSequence,
 	sortCardsOG,
 } from '@/game/card/card';
-import { FreeCell } from '@/game/game';
+import { FreeCell, NUMBER_OF_FOUNDATIONS } from '@/game/game';
 import { moveCards } from '@/game/move/move';
 
 export type PreviousActionType =
@@ -209,20 +209,50 @@ export function parseCursorFromPreviousActionText(
 			const cursor = parseShorthandPosition_INCOMPLETE(to);
 			switch (cursor.fixture) {
 				case 'deck':
-					// XXX (deck) (gameplay) can we, in theory, move a card to the deck? but we don't
+					// we don't move cards to the deck in practice
+					// moving to `k` is enough for now (no need to look for toShorthand within the deck)
 					break;
 				case 'cell':
 					// each cell identifies it's own d0
 					break;
 				case 'foundation': {
-					const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
-					const card = findCard(cards, shorthand);
-					if (cursor.fixture !== card.location.fixture) {
-						throw new Error(
-							`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
-						);
+					// XXX (techdebt) (test) parseCursorFromPreviousActionText needs _way_ more exhaustive testing
+					//  - RS→foundation, RS→RS
+					//  - for arbitrary ace positions and collisions
+					//  - where the source suit may or may not be in the foundation
+					//  - where the source suit may or may not match the target suit
+					// ---
+					// TODO (2-priority) (refactor) when we use braille to make history accurate™️, all this testing will be moot
+
+					if (toShorthand === 'foundation') {
+						const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+						const foundation_d0 = [];
+						while (foundation_d0.length < NUMBER_OF_FOUNDATIONS)
+							foundation_d0.push(foundation_d0.length);
+						let foundation_match: Card | undefined = undefined;
+						for (const card of cards) {
+							if (card.location.fixture === 'foundation') {
+								if (card.suit === shorthand?.suit) foundation_match = card;
+								const idx = foundation_d0.indexOf(card.location.data[0]);
+								if (idx > -1) foundation_d0.splice(idx, 1);
+							}
+						}
+
+						if (foundation_match) {
+							cursor.data[0] = foundation_match.location.data[0];
+						} else {
+							cursor.data[0] = foundation_d0[0];
+						}
+					} else {
+						const shorthand = parseShorthandCard(toShorthand[0], toShorthand[1]);
+						const card = findCard(cards, shorthand);
+						if (cursor.fixture !== card.location.fixture) {
+							throw new Error(
+								`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
+							);
+						}
+						cursor.data[0] = card.location.data[0];
 					}
-					cursor.data[0] = card.location.data[0];
 					break;
 				}
 				case 'cascade':
@@ -321,10 +351,11 @@ export function parseAltCursorFromPreviousActionText(
 		case 'move': {
 			const { from } = parseActionTextMove(actionText);
 			const cursor = parseShorthandPosition_INCOMPLETE(from);
-			// XXX (deck) (gameplay) deck isn't standard gameplay (so 0 is fine, if we see it)
+			// deck isn't standard gameplay (so `data: [0]` is fine, if we see it)
 			// cell is already accurate
-			// foundation can't be `from` in an move (so 0 is fine, if we see it)
+			// foundation can't be `from` in an move (so `data: [0]` is fine, if we see it)
 			// cascade needs to be "the last card" (since we can only move from the bottom)
+			//  - so `data: [x, 99]` is fine
 			return cursor;
 		}
 		case 'select':
@@ -676,10 +707,14 @@ export function getCardsThatMoved(game: FreeCell): Card[] {
 	return fromShorthand.split('-').map((sh) => findCard(game.cards, parseShorthandCard(sh)));
 }
 
-export function getCardsFromInvalid(previousAction: PreviousAction): {
+export function getCardsFromInvalid(
+	previousAction: PreviousAction,
+	/** @deprecated HACK (2-priority) (refactor) due to incomplete information */
+	cursor: CardLocation | null
+): {
 	fromShorthands: string[];
 	toShorthands: string[];
-	pileShorthands?: Position[];
+	pileShorthands?: CardLocation[];
 } {
 	if (previousAction.text === 'touch stop') {
 		return { fromShorthands: [], toShorthands: [] };
@@ -687,19 +722,30 @@ export function getCardsFromInvalid(previousAction: PreviousAction): {
 	if (previousAction.text === 'invalid move tableau→deck') {
 		return { fromShorthands: [], toShorthands: [] };
 	}
-	const { fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
+	const { to, fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
 	const fromShorthands = fromShorthand.split('-');
 	if (toShorthand.length === 2 || toShorthand.includes('-')) {
 		// TODO (motivation) (animation) if attempting to stack onto a sequence, shake the whole sequence
 		//  - should we add the whole sequence to the actionText, instead of just the one target card?
 		return { fromShorthands, toShorthands: toShorthand.split('-') };
-	} else if (FixtureList.includes(toShorthand)) {
+	} else if (isFixture(toShorthand) && isPileSH(to)) {
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
 
-		// FIXME WIP turn Fixture into Position (turn "cell" into a,b,c,d)
+		const to_location = parseShorthandPosition_INCOMPLETE(to);
+		if (to_location.fixture !== 'foundation') {
+			return { fromShorthands, toShorthands: [], pileShorthands: [to_location] };
+		}
 
-		// FIXME (4-priority) (motivation) (animation) animate piles (maybe animShakeCard… animShakePile?)
-		// FIXME (review) can we remove FixtureList? this is the only place that needs it
+		// TODO (2-priority) (techdebt) (motivation) (review) braille if the move text had more precision, we wouldn't need to recompute it
+		//  - drag and drop can use any foundation, we can "touch" any foundation
+		//  - parseCursorFromPreviousActionText? (needs cards)
+		//  - game.parseShorthandMove? (needs game)
+		//  - the pileSH simply does not have enough information
+		// TODO (2-priority) (refactor) use braille (at least for h), remove the curosr arg
+		if (cursor !== null && shorthandPosition(cursor) === to) {
+			return { fromShorthands, toShorthands: [], pileShorthands: [cursor] };
+		}
+
 		return { fromShorthands, toShorthands: [], pileShorthands: [] };
 	}
 	// super invalid, e.g. 'invalid move 12 asdf→asdf'

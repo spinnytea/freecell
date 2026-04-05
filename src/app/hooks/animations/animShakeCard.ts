@@ -20,6 +20,8 @@ export function animShakeCard({
 
 	list.forEach((shorthand, index) => {
 		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
+		// FIXME remove proof of concept:
+		// const cardIdSelector = '#' + calcPilemarkerId({ fixture: 'cell', data: [0] }, gameBoardIdRef?.current);
 		const tl = gsap.timeline();
 		// offset left
 		tl.to(cardIdSelector, {

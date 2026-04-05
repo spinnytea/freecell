@@ -47,17 +47,17 @@ export const getSuitForCompare = (suit: Suit): number => SuitList.indexOf(suit);
 export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	getRankForCompare(min) === getRankForCompare(max) - 1;
 
-// TODO (5-priority) (refactor) (types) redo type def like suit - it might make it overly restrictive for parsing
-// XXX (techdebt) (refactor) (rename) is "fixture" the right name?
-//  - cell -> freecell
-//  - foundation -> homecell
-//  - cascade -> column
-export type Fixture = 'deck' | 'cell' | 'foundation' | 'cascade';
-/** @deprecated FIXME (review) do we really need FixtureList for getCardsFromInvalid / the history regexes allow these values, but do not verify them */
-export const FixtureList = ['deck', 'cell', 'foundation', 'cascade'];
-export interface CardLocation {
-	readonly fixture: Fixture;
-	readonly data: number[];
+const FixtureList = ['deck', 'cell', 'foundation', 'cascade'] as const;
+
+/**
+	XXX (techdebt) (refactor) (rename) is "fixture" the right name?
+	 - cell -> freecell
+	 - foundation -> homecell
+	 - cascade -> column
+*/
+export type Fixture = (typeof FixtureList)[number];
+export function isFixture(val: string): val is Fixture {
+	return (FixtureList as readonly string[]).includes(val);
 }
 
 export const PileSHList = [
@@ -87,17 +87,32 @@ export const PileSHList = [
 	cascades: 1 - 9, t (1-8, but we allow 9 and 10 columns)
 	deck: k
 
-	// TODO (5-priority) (refactor) (types) rename `Position` to `PileSH`
+	TODO (5-priority) (refactor) (types) rename `Position` to `PileSH`
 
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */
 export type Position = (typeof PileSHList)[number];
+export function isPileSH(val: string): val is Position {
+	return (PileSHList as readonly string[]).includes(val);
+}
 
 type SuitSH = 'C' | 'D' | 'H' | 'S';
 type RankSH = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'W';
-/** rank shorthand + suit shorthand @example 'KH' */
-type RS = `${RankSH}${SuitSH}`; // XXX (techdebt) use type RS everywhere it makes sense
-// TODO (5-priority) (refactor) (types) use type RS everywhere it's easy (first pass)
+
+/**
+	rank shorthand + suit shorthand
+
+	- TODO (5-priority) (refactor) (types) use type RS everywhere it's easy (first pass)
+	- XXX (techdebt) use type RS everywhere it makes sense
+
+	@example 'KH'
+*/
+type RS = `${RankSH}${SuitSH}`;
+
+export interface CardLocation {
+	readonly fixture: Fixture;
+	readonly data: number[];
+}
 
 export interface CardShorthand {
 	readonly rank: Rank;
@@ -226,7 +241,7 @@ export function calcCardId(shorthand: string, gameBoardId?: string) {
 
 /**
 	shorthandPosition for foundation is all the same
-	XXX (techdebt) i suppose we could just target _all_ of them every time
+	XXX (techdebt) i suppose we could just target _all_ foundations every time
 */
 export function calcPilemarkerId(location: CardLocation, gameBoardId?: string) {
 	let pileId = `pilemarker-${shorthandPosition(location)}-${(location.data[0] + 1).toString(10)}`;
@@ -474,6 +489,11 @@ export function shorthandSequenceWithPosition(sequence: CardSequence) {
 
 	notice also that this function only accepts the single character, it does not accept a game
 	so which d1 do we use for a cascade? this will return an invalid value (too high), which will be clamped if used directly
+
+	@deprecated TODO (2-priority) (refactor) use braille for all ambiguous positions, no more INCOMPLETE
+	 - origuess, print history shorthand must not have braille :( but the history list must have braille
+	 - which is fine, because we can transpose across foundations
+	 - it's just that replays might mix up the final foundations (unavoidable)
 */
 export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLocation {
 	if (!p) throw new Error(`invalid position shorthand: "undefined"`);

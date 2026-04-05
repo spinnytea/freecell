@@ -30,6 +30,14 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 		{ rank: '2', suit: 'diamonds', location: { fixture: 'cascade', data: [5, 3] } },
 	];
 
+	const someCards_h: Card[] = [
+		{ rank: 'ace', suit: 'clubs', location: { fixture: 'foundation', data: [1] } },
+		{ rank: 'ace', suit: 'diamonds', location: { fixture: 'foundation', data: [0] } },
+		{ rank: '3', suit: 'clubs', location: { fixture: 'cell', data: [0] } },
+		{ rank: '9', suit: 'clubs', location: { fixture: 'cascade', data: [0, 0] } },
+		{ rank: '10', suit: 'hearts', location: { fixture: 'cascade', data: [1, 0] } },
+	];
+
 	describe('specific cases', () => {
 		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES);
 		afterAll(() => {
@@ -93,6 +101,14 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'flourish 56 KD,KS'}                        | ${someCards_1} | ${undefined}                             | ${undefined}
 			${'invalid move 86 7D→9C'}                    | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 0] }}  | ${{ fixture: 'cascade', data: [7, 99] }}
 			${'invalid move 75 6D-5S-4D-3C→7C'}           | ${someCards_2} | ${{ fixture: 'cascade', data: [4, 0] }}  | ${{ fixture: 'cascade', data: [6, 99] }}
+			${'invalid move hc AC→cell'}                  | ${[]}          | ${{ fixture: 'cell', data: [2] }}        | ${{ fixture: 'foundation', data: [0] }}
+			${'invalid move 1c KC-QD-JC→cell'}            | ${[]}          | ${{ fixture: 'cell', data: [2] }}        | ${{ fixture: 'cascade', data: [0, 99] }}
+			${'invalid move kb 6H→cell'}                  | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'invalid move ah 3C→foundation'}            | ${someCards_h} | ${{ fixture: 'foundation', data: [1] }}  | ${{ fixture: 'cell', data: [0] }}
+			${'invalid move 1h 9C→foundation'}            | ${someCards_h} | ${{ fixture: 'foundation', data: [1] }}  | ${{ fixture: 'cascade', data: [0, 99] }}
+			${'invalid move 2h TH→AC'}                    | ${someCards_h} | ${{ fixture: 'foundation', data: [1] }}  | ${{ fixture: 'cascade', data: [1, 99] }}
+			${'invalid move 13 KC-QD-JC→cascade'}         | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${{ fixture: 'cascade', data: [0, 99] }}
+			${'invalid move k1 KH→cascade'}               | ${[]}          | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'deck', data: [0] }}
 			${'invalid move bk 6C→deck'}                  | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cell', data: [1] }}
 			${'invalid move hk TD→deck'}                  | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'foundation', data: [0] }}
 			${'invalid move 4k 6D→deck'}                  | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cascade', data: [3, 99] }}

@@ -64,6 +64,14 @@ describe('game/history.parsePreviousActionType', () => {
 			${'flourish 56 KD,KS'}                        | ${{ text: 'flourish 56 KD,KS', type: 'auto-foundation' }}
 			${'invalid move 86 7D→9C'}                    | ${{ text: 'invalid move 86 7D→9C', type: 'invalid' }}
 			${'invalid move 75 6D-5S-4D-3C→7C'}           | ${{ text: 'invalid move 75 6D-5S-4D-3C→7C', type: 'invalid' }}
+			${'invalid move hc AC→cell'}                  | ${{ text: 'invalid move hc AC→cell', type: 'invalid' }}
+			${'invalid move 1c KC-QD-JC→cell'}            | ${{ text: 'invalid move 1c KC-QD-JC→cell', type: 'invalid' }}
+			${'invalid move kb 6H→cell'}                  | ${{ text: 'invalid move kb 6H→cell', type: 'invalid', gameFunction: 'recall-or-bury' }}
+			${'invalid move ah 3C→foundation'}            | ${{ text: 'invalid move ah 3C→foundation', type: 'invalid' }}
+			${'invalid move 1h 9C→foundation'}            | ${{ text: 'invalid move 1h 9C→foundation', type: 'invalid' }}
+			${'invalid move 2h TH→AC'}                    | ${{ text: 'invalid move 2h TH→AC', type: 'invalid' }}
+			${'invalid move 13 KC-QD-JC→cascade'}         | ${{ text: 'invalid move 13 KC-QD-JC→cascade', type: 'invalid' }}
+			${'invalid move k1 KH→cascade'}               | ${{ text: 'invalid move k1 KH→cascade', type: 'invalid', gameFunction: 'recall-or-bury' }}
 			${'invalid move bk 6C→deck'}                  | ${{ text: 'invalid move bk 6C→deck', type: 'invalid', gameFunction: 'recall-or-bury' }}
 			${'invalid move hk TD→deck'}                  | ${{ text: 'invalid move hk TD→deck', type: 'invalid', gameFunction: 'recall-or-bury' }}
 			${'invalid move 4k 6D→deck'}                  | ${{ text: 'invalid move 4k 6D→deck', type: 'invalid', gameFunction: 'recall-or-bury' }}

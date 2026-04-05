@@ -197,6 +197,14 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' 8S KH    5H             \n' +
 		' move 54 6C-5H→7D\n' +
 		' hand-jammed',
+	'invalid move hc AC→cell': '',
+	'invalid move 1c KC-QD-JC→cell': '',
+	'invalid move kb 6H→cell': '',
+	'invalid move ah 3C→foundation': '',
+	'invalid move 1h 9C→foundation': '',
+	'invalid move 2h TH→AC': '',
+	'invalid move 13 KC-QD-JC→cascade': '',
+	'invalid move k1 KH→cascade': '',
 	'invalid move bk 6C→deck':
 		' 6H|6C|QC JS 9S AD 7C TS \n' +
 		' AH 8S 2D QS 4C 9H 2S 3D \n' +
