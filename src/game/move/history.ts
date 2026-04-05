@@ -119,7 +119,14 @@ export interface PreviousAction {
 	gameFunction?: GameFunction;
 }
 
-// FIXME should we verify Position, Shorthand, Fixture when we parse with these regex values?
+// FIXME (review) should we verify Position, Shorthand, Fixture when we parse with these regex values?
+//  - do we need to up our i/o game and handle parsing garbage?
+//  - red team: is it possible to make a game explode?
+//  - is this just "better error messages earlier?"
+//  - should we enable "more comprehensive errors" during `FreeCell.parse`, but not during, say, `undo`
+//  - we treat this text as a structured "source of truth" that human readable (it could have been a json object)
+//  - "move_regex" is basically a "decode" action
+//  - every actionText is an "encode" action (e.g. `calcMoveActionText`, but literally every `ACTION_TEXT_EXAMPLES`)
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish|flourish52) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
@@ -688,8 +695,11 @@ export function getCardsFromInvalid(previousAction: PreviousAction): {
 		return { fromShorthands, toShorthands: toShorthand.split('-') };
 	} else if (FixtureList.includes(toShorthand)) {
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
+
+		// FIXME WIP turn Fixture into Position (turn "cell" into a,b,c,d)
+
 		// FIXME (4-priority) (motivation) (animation) animate piles (maybe animShakeCard… animShakePile?)
-		// FIXME can we remove FixtureList? this is the only place that needs it
+		// FIXME (review) can we remove FixtureList? this is the only place that needs it
 		return { fromShorthands, toShorthands: [], pileShorthands: [] };
 	}
 	// super invalid, e.g. 'invalid move 12 asdf→asdf'

@@ -5,13 +5,13 @@ import { FreeCell } from '@/game/game';
 /* DEFINITIONS */
 /* *********** */
 
-export type Suit = 'clubs' | 'diamonds' | 'hearts' | 'spades';
-export const SuitList: Suit[] = ['clubs', 'diamonds', 'hearts', 'spades'];
-// XXX (techdebt) consider this type definition: (it might make it overly restrictive for parsing)
-// export const SuitList = ['clubs', 'diamonds', 'hearts', 'spades'] as const;
-// export type Suit = typeof SuitList[number];
+export const SuitList = ['clubs', 'diamonds', 'hearts', 'spades'] as const;
+export type Suit = (typeof SuitList)[number];
 export const isRed = (suit: Suit) => suit === 'diamonds' || suit === 'hearts';
 
+// TODO (5-priority) (refactor) (types) redo type def like suit
+//  - but Rank and List have different values
+//  - so we need to have/stub the "include joker flag"
 export type Rank =
 	| 'ace'
 	| '2'
@@ -47,48 +47,20 @@ export const getSuitForCompare = (suit: Suit): number => SuitList.indexOf(suit);
 export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	getRankForCompare(min) === getRankForCompare(max) - 1;
 
+// TODO (5-priority) (refactor) (types) redo type def like suit - it might make it overly restrictive for parsing
 // XXX (techdebt) (refactor) (rename) is "fixture" the right name?
 //  - cell -> freecell
 //  - foundation -> homecell
 //  - cascade -> column
 export type Fixture = 'deck' | 'cell' | 'foundation' | 'cascade';
-/** @deprecated FIXME do we really need FixtureList for getCardsFromInvalid / the history regexes allow these values, but do not verify them */
+/** @deprecated FIXME (review) do we really need FixtureList for getCardsFromInvalid / the history regexes allow these values, but do not verify them */
 export const FixtureList = ['deck', 'cell', 'foundation', 'cascade'];
 export interface CardLocation {
 	readonly fixture: Fixture;
 	readonly data: number[];
 }
 
-/**
-	foundation: h
-	cells: a - d
-	cascades: 1 - 9, t (1-8, but we allow 9 and 10 columns)
-
-	// FIXME (techdebt) (refactor) (rename) rename `Position` to `PileSH`
-
-	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
-*/
-export type Position =
-	| 'a'
-	| 'b'
-	| 'c'
-	| 'd'
-	| 'e'
-	| 'f'
-	| 'h'
-	| 'k' // deck
-	| '1'
-	| '2'
-	| '3'
-	| '4'
-	| '5'
-	| '6'
-	| '7'
-	| '8'
-	| '9'
-	| '0';
-/** @deprecated FIXME do we really need PositionList for solveGame / the history regexes allow these values, but do not verify them */
-export const PositionList: Position[] = [
+export const PileSHList = [
 	'a',
 	'b',
 	'c',
@@ -107,13 +79,25 @@ export const PositionList: Position[] = [
 	'8',
 	'9',
 	'0',
-];
+] as const;
+
+/**
+	foundation: h
+	cells: a - d
+	cascades: 1 - 9, t (1-8, but we allow 9 and 10 columns)
+	deck: k
+
+	// TODO (5-priority) (refactor) (types) rename `Position` to `PileSH`
+
+	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
+*/
+export type Position = (typeof PileSHList)[number];
 
 type SuitSH = 'C' | 'D' | 'H' | 'S';
 type RankSH = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'W';
 /** rank shorthand + suit shorthand @example 'KH' */
 type RS = `${RankSH}${SuitSH}`; // XXX (techdebt) use type RS everywhere it makes sense
-// FIXME use type RS everywhere it's easy (first pass)
+// TODO (5-priority) (refactor) (types) use type RS everywhere it's easy (first pass)
 
 export interface CardShorthand {
 	readonly rank: Rank;
@@ -369,8 +353,8 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 /* PRINT / PARSE */
 /* ************* */
 
-// FIXME (techdebt) (refactor) (rename) rename `shorthandCard` to `shorthandRS`
-// FIXME (techdebt) (refactor) (rename) rename `shorthand` to `rs` (when it is of type RS)
+// TODO (5-priority) (refactor) (rename) (types) rename `shorthandCard` to `shorthandRS`
+// TODO (5-priority) (refactor) (rename) (types) rename `shorthand` to `rs` (when it is of type RS)
 export function shorthandCard(card: CardShorthand | null | undefined): RS | '  ' {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
