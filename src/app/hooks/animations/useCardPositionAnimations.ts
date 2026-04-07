@@ -6,6 +6,7 @@ import { TLZR } from '@/app/animation_interfaces';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
+import { animShakePile } from '@/app/hooks/animations/animShakePile';
 import { animShuffleCards } from '@/app/hooks/animations/animShuffleCards';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
 import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCardPositions';
@@ -179,7 +180,11 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				}
 
 				if (invalidMoveCards.pileShorthands?.length) {
-					// FIXME animate piles (maybe animShakeCard… animShakePile?)
+					animShakePile({
+						timeline,
+						list: invalidMoveCards.pileShorthands,
+						gameBoardIdRef,
+					});
 				}
 			}
 

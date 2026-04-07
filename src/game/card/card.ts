@@ -103,9 +103,12 @@ type RankSH = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 
 	rank shorthand + suit shorthand
 
 	- TODO (5-priority) (refactor) (types) use type RS everywhere it's easy (first pass)
+	  - this is not the "move shorthand" which will have the braille
+	  - this is the name of the card
 	- XXX (techdebt) use type RS everywhere it makes sense
 
 	@example 'KH'
+	@example 'AS'
 */
 type RS = `${RankSH}${SuitSH}`;
 

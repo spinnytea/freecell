@@ -472,3 +472,35 @@ exports[`useCardPositionAnimations game (each PreviousActionType) init undefined
   ],
 ]
 `;
+
+exports[`useCardPositionAnimations game (each PreviousActionType) invalid MoveDestinationType cascade empty: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+]
+`;
+
+exports[`useCardPositionAnimations game (each PreviousActionType) invalid MoveDestinationType cell empty: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+]
+`;
+
+exports[`useCardPositionAnimations game (each PreviousActionType) invalid MoveDestinationType foundation empty: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+]
+`;
+
+exports[`useCardPositionAnimations game (each PreviousActionType) invalid MoveSourceType foundation: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+]
+`;

@@ -119,7 +119,7 @@ export interface PreviousAction {
 	gameFunction?: GameFunction;
 }
 
-// FIXME (review) should we verify Position, Shorthand, Fixture when we parse with these regex values?
+// TODO (techdebt) should we verify Position, Shorthand, Fixture when we parse with these regex values?
 //  - do we need to up our i/o game and handle parsing garbage?
 //  - red team: is it possible to make a game explode?
 //  - is this just "better error messages earlier?"
@@ -736,7 +736,7 @@ export function getCardsFromInvalid(
 			return { fromShorthands, toShorthands: [], pileShorthands: [to_location] };
 		}
 
-		// TODO (2-priority) (techdebt) (motivation) (review) braille if the move text had more precision, we wouldn't need to recompute it
+		// TODO (2-priority) (techdebt) (motivation) (refactor) braille if the move text had more precision, we wouldn't need to recompute it
 		//  - drag and drop can use any foundation, we can "touch" any foundation
 		//  - parseCursorFromPreviousActionText? (needs cards)
 		//  - game.parseShorthandMove? (needs game)

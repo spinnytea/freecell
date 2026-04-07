@@ -1,15 +1,16 @@
 import { MutableRefObject } from 'react';
 import { gsap } from 'gsap/all';
 import { INVALID_SHAKE_MAGNITUDE, INVALID_SHAKE_PORTION } from '@/app/animation_constants';
-import { calcCardId } from '@/game/card/card';
+import { calcPilemarkerId, CardLocation } from '@/game/card/card';
 
-export function animShakeCard({
+// TODO (modivation) (animation) make this distince from `animShakeCard`
+export function animShakePile({
 	timeline,
 	list,
 	gameBoardIdRef,
 }: {
 	timeline: gsap.core.Timeline;
-	list: string[];
+	list: CardLocation[];
 	gameBoardIdRef?: MutableRefObject<string>;
 }) {
 	// sometimes we start left, sometimes we start right
@@ -18,17 +19,17 @@ export function animShakeCard({
 	const signStart = start ? '-' : '+';
 	const signYoyo = start ? '+' : '-';
 
-	list.forEach((shorthand, index) => {
-		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
+	list.forEach((location, index) => {
+		const pileId = '#' + calcPilemarkerId(location, gameBoardIdRef?.current);
 		const tl = gsap.timeline();
 		// offset left
-		tl.to(cardIdSelector, {
+		tl.to(pileId, {
 			x: `${signStart}=${INVALID_SHAKE_MAGNITUDE.toFixed(3)}`,
 			duration: 0.1,
 			ease: 'sine.in',
 		});
 		// yoyo
-		tl.to(cardIdSelector, {
+		tl.to(pileId, {
 			x: `${signYoyo}=${(INVALID_SHAKE_MAGNITUDE * 2).toFixed(3)}`,
 			duration: INVALID_SHAKE_PORTION,
 			ease: 'sine.inOut',
@@ -36,7 +37,7 @@ export function animShakeCard({
 			repeat: 2,
 		});
 		// back to center
-		tl.to(cardIdSelector, { x: '0', duration: INVALID_SHAKE_PORTION / 2, ease: 'sine.out' });
+		tl.to(pileId, { x: '0', duration: INVALID_SHAKE_PORTION / 2, ease: 'sine.out' });
 
 		timeline.add(
 			tl,
