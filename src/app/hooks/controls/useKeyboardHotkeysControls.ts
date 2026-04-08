@@ -3,7 +3,7 @@ import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
-import { Position } from '@/game/card/card';
+import { isPileSH } from '@/game/card/card';
 
 /**
 	REVIEW (techdebt) (controls) "integration" test
@@ -19,44 +19,20 @@ export function useKeyboardHotkeysControls() {
 		function handleKey(event: KeyboardEvent) {
 			const { key } = event;
 			let consumed = false;
-			switch (key) {
-				case 'a':
-				case 'A':
-				case 'b':
-				case 'B':
-				case 'c':
-				case 'C':
-				case 'd':
-				case 'D':
-				case 'e':
-				case 'E':
-				case 'f':
-				case 'F':
-				case 'h':
-				case 'H':
-				case '1':
-				case '2':
-				case '3':
-				case '4':
-				case '5':
-				case '6':
-				case '7':
-				case '8':
-				case '9':
-				case '0':
-					// REVIEW (controls) use Hotkeys 'h' to start a new game
-					//  - doesn't shuffle
-					//  - probably because it's using touch's new game
-					// REVIEW (controls) use Hotkeys to deal… you have to use space or enter or something
-					//  - there's no key because there's no Position
-					//    because there's no shorthand
-					//    because there's no valid move
-					//    time to adddd it, and haaanndle it
-					//    (we can just ignore the key in mosts contexts? or how does 'h' do it)
-					//    (touch stop (return invalid) vs ignore key altogether (return this / set cursor?))
-					consumed = true;
-					setGame((g) => g.touchByPosition(key.toLowerCase() as Position));
-					break;
+			const pKeyL = key.toLowerCase();
+			if (isPileSH(pKeyL) && pKeyL !== 'k') {
+				// REVIEW (controls) use Hotkeys 'h' to start a new game
+				//  - doesn't shuffle
+				//  - probably because it's using touch's new game
+				// REVIEW (controls) use Hotkeys to deal… you have to use space or enter or something
+				//  - there's no key because there's no Position
+				//    because there's no shorthand
+				//    because there's no valid move
+				//    time to adddd it, and haaanndle it
+				//    (we can just ignore the key in mosts contexts? or how does 'h' do it)
+				//    (touch stop (return invalid) vs ignore key altogether (return this / set cursor?))
+				consumed = true;
+				setGame((g) => g.touchByPile(pKeyL));
 			}
 			if (consumed) {
 				domUtils.consumeDomEvent(event);

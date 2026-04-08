@@ -788,7 +788,7 @@ describe('useCardPositionAnimations', () => {
 									' 4D 4S    4C             \n' +
 									' select a 3D'
 							);
-							const gameStateTwo = gameStateOne.touchByPosition('h');
+							const gameStateTwo = gameStateOne.touchByPile('h');
 							expect(gameStateTwo.previousAction.text).not.toBe('deselect 3D');
 							expect(gameStateTwo.previousAction.text).toBe('move ah 3D→2D (auto-foundation 4 4C)');
 
@@ -1234,7 +1234,7 @@ describe('useCardPositionAnimations', () => {
 
 			test('· invalid move ah 3C→foundation', () => {
 				const gameStateOne = FreeCell.parse(ACTION_TEXT_EXAMPLES['invalid move ah 3C→foundation']);
-				const gameStateTwo = gameStateOne.$selectCard('3C').touchByPosition('h');
+				const gameStateTwo = gameStateOne.$selectCard('3C').touchByPile('h');
 				expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→foundation');
 
 				gsapUtilsRandom.mockReturnValueOnce(true); // animShakePile

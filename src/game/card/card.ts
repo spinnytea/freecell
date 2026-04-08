@@ -8,6 +8,7 @@ import { FreeCell } from '@/game/game';
 export const SuitList = ['clubs', 'diamonds', 'hearts', 'spades'] as const;
 export type Suit = (typeof SuitList)[number];
 export const isRed = (suit: Suit) => suit === 'diamonds' || suit === 'hearts';
+type SuitSH = 'C' | 'D' | 'H' | 'S';
 
 // FIXME (5-priority) (refactor) (types) redo type def like suit
 //  - but Rank and List have different values
@@ -42,19 +43,15 @@ export const RankList: Rank[] = [
 	'queen',
 	'king',
 ];
-export const getRankForCompare = (rank: Rank): number => RankList.indexOf(rank);
+type RankSH = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'W';
+
 export const getSuitForCompare = (suit: Suit): number => SuitList.indexOf(suit);
+export const getRankForCompare = (rank: Rank): number => RankList.indexOf(rank);
 export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	getRankForCompare(min) === getRankForCompare(max) - 1;
 
 const FixtureList = ['deck', 'cell', 'foundation', 'cascade'] as const;
 
-/**
-	XXX (techdebt) (refactor) (rename) is "fixture" the right name?
-	 - cell -> freecell
-	 - foundation -> homecell
-	 - cascade -> column
-*/
 export type Fixture = (typeof FixtureList)[number];
 export function isFixture(val: string): val is Fixture {
 	return (FixtureList as readonly string[]).includes(val);
@@ -84,20 +81,22 @@ export const PileSHList = [
 /**
 	foundation: h
 	cells: a - d
-	cascades: 1 - 9, t (1-8, but we allow 9 and 10 columns)
+	cascades: 1 - 9, 0 (1-8, but we allow 9 and 10 columns)
 	deck: k
 
-	FIXME (5-priority) (refactor) (types) rename `Position` to `PileSH`
+	FIXME (review) every use of `position`
+	FIXME (review) every use of `shorthand`, `sh`
 
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */
-export type Position = (typeof PileSHList)[number];
-export function isPileSH(val: string): val is Position {
+export type PileSH = (typeof PileSHList)[number];
+export function isPileSH(val: string): val is PileSH {
 	return (PileSHList as readonly string[]).includes(val);
 }
 
-type SuitSH = 'C' | 'D' | 'H' | 'S';
-type RankSH = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'W';
+// TODO (2-priority) (refactor) review every use of `as PileSH`
+// TODO (2-priority) (refactor) use braille (at least for h), remove the curosr arg
+//  - Position = PileSH + braille (coord)
 
 /**
 	rank shorthand + suit shorthand
@@ -114,7 +113,7 @@ type RS = `${RankSH}${SuitSH}`;
 
 export interface CardLocation {
 	readonly fixture: Fixture;
-	// XXX (techdebt) (rename) location.data → location.coords, d0/d1 → c0/c1
+	// TODO (2-priority) (techdebt) (refactor) (rename) location.data → location.coords, d0/d1 → c0/c1
 	readonly data: number[];
 }
 
@@ -455,30 +454,30 @@ export function shorthandSequence(sequence: CardSequence) {
 	return sequence.cards.map((card) => shorthandCard(card)).join('-');
 }
 
-export function shorthandPosition(location: CardLocation, includeD0 = false): Position {
+export function shorthandPosition(location: CardLocation, includeD0 = false): PileSH {
 	const d0 = location.data[0];
 	switch (location.fixture) {
 		case 'deck': {
 			const braille = includeD0 && d0 >= 0 ? countToBraille(d0) : '';
-			return ('k' + braille) as Position;
+			return ('k' + braille) as PileSH;
 		}
 		case 'cell': {
 			if (d0 >= 0 && d0 < 6) {
-				return (d0 + 10).toString(16) as Position;
+				return (d0 + 10).toString(16) as PileSH;
 			}
 			break;
 		}
 		case 'foundation': {
 			const braille = includeD0 && d0 >= 0 ? countToBraille(d0) : '';
-			return ('h' + braille) as Position;
+			return ('h' + braille) as PileSH;
 		}
 		case 'cascade': {
 			const d1 = location.data[1];
 			const braille = includeD0 && d1 >= 0 ? countToBraille(d1) : '';
 			if (d0 === 9) {
-				return ('0' + braille) as Position;
+				return ('0' + braille) as PileSH;
 			} else if (d0 >= 0 && d0 < 9) {
-				return ((d0 + 1).toString(10) + braille) as Position;
+				return ((d0 + 1).toString(10) + braille) as PileSH;
 			}
 			break;
 		}

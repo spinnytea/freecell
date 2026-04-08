@@ -9,7 +9,7 @@ import {
 	initializeDeck,
 	isLocationEqual,
 	parseShorthandCard,
-	Position,
+	PileSH,
 	RankList,
 	shorthandCard,
 	shorthandPosition,
@@ -675,23 +675,23 @@ export class FreeCell {
 		similar to {@link moveByShorthand},
 		but meant for gameplay (not replay history)
 	*/
-	touchByPosition(
-		position: Position,
+	touchByPile(
+		pileSh: PileSH,
 		{ autoFoundation, stopWithInvalid = false, gameFunction }: OptionsNonstandardGameplay = {}
 	): FreeCell | this {
 		if (!this.selection) {
-			const from_location = parseShorthandPositionForSelect(this, position);
+			const from_location = parseShorthandPositionForSelect(this, pileSh);
 			if (!from_location) return this;
 			return this.setCursor(from_location).touch({ autoFoundation });
 		}
 
 		// clear selection if touching the same position
-		if (position === shorthandPosition(this.selection.location)) {
+		if (pileSh === shorthandPosition(this.selection.location)) {
 			return this.clearSelection();
 		}
 
 		// try this move as selected
-		const to_location = parseShorthandPositionForMove(this, position);
+		const to_location = parseShorthandPositionForMove(this, pileSh);
 		if (!to_location) return this;
 		const game = this.setCursor(to_location, { gameFunction }).touch({
 			autoFoundation,
@@ -701,7 +701,7 @@ export class FreeCell {
 		if (game.previousAction.type !== 'invalid') return game;
 
 		// try to move by shorthand
-		let g = this.moveByShorthand(`${shorthandPosition(this.selection.location)}${position}`, {
+		let g = this.moveByShorthand(`${shorthandPosition(this.selection.location)}${pileSh}`, {
 			autoFoundation,
 		});
 		if (g.previousAction.type !== 'invalid') return g;
@@ -709,7 +709,7 @@ export class FreeCell {
 		if (stopWithInvalid) return game;
 
 		// clear selection and touchByPosition (like touch)
-		g = this.clearSelection().touchByPosition(position, { autoFoundation, stopWithInvalid });
+		g = this.clearSelection().touchByPile(pileSh, { autoFoundation, stopWithInvalid });
 		if (g.previousAction.type !== 'invalid') return g;
 
 		return game;
@@ -982,14 +982,14 @@ export class FreeCell {
 	*/
 	$moveCardToPosition(
 		shorthand: string,
-		position: Position,
+		pileSh: PileSH,
 		{ autoFoundation }: OptionsNonstandardGameplay = {}
 	): FreeCell {
 		const g = this.$selectCard(shorthand);
 		if (!g.selection || !g.availableMoves) return g;
 		if (g.selection.peekOnly) return this; // XXX (techdebt) (controls) should we move the cursor?
 		// HACK (techdebt) (controls) using parseShorthandMove just to come up with `to` is a bit overkill
-		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${position}`, g.cursor);
+		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${pileSh}`, g.cursor);
 		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
 	}
 
@@ -1009,11 +1009,11 @@ export class FreeCell {
 		if (!aces.length) {
 			return this;
 		}
-		const sh = aces.map((card) => shorthandCard(card)).join(',');
+		const rs = aces.map((card) => shorthandCard(card)).join(',');
 		const mod = gameFunction === 'check-can-flourish52' ? '*' : '';
 		return this.__clone({
 			action: {
-				text: `juice flash ${mod}${sh}${mod}`,
+				text: `juice flash ${mod}${rs}${mod}`,
 				type: 'juice',
 				gameFunction,
 			},

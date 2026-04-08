@@ -615,7 +615,7 @@ describe('prioritizeAvailableMoves', () => {
 					' 25 15 23 '
 			)
 				.undo()
-				.touchByPosition('2');
+				.touchByPile('2');
 			expect(game.history.length).toBe(12);
 			expect(game.previousAction).toEqual({
 				text: 'select 2 8H',
@@ -652,7 +652,7 @@ describe('prioritizeAvailableMoves', () => {
 					' 35 32 12 71 75 c4 b3 '
 			)
 				.undo()
-				.touchByPosition('b');
+				.touchByPile('b');
 			expect(game.history.length).toBe(24);
 			expect(game.previousAction).toEqual({
 				text: 'select b QD',
@@ -729,14 +729,14 @@ describe('prioritizeAvailableMoves', () => {
 					'    QS QD TH             \n' +
 					' hand-jammed'
 			);
-			expect(game.touch().touchByPosition('h', { autoFoundation: false }).print()).toBe(
+			expect(game.touch().touchByPile('h', { autoFoundation: false }).print()).toBe(
 				'' + //
 					'             KC JD>TH TS \n' +
 					' JH KD KS JS    QH KH    \n' +
 					'    QS QD                \n' +
 					' move 4h TH→9H'
 			);
-			expect(game.touch().touchByPosition('h').print()).toBe(
+			expect(game.touch().touchByPile('h').print()).toBe(
 				'' + //
 					'             KC KD>KH KS \n' +
 					'                         \n' +

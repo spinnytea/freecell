@@ -704,7 +704,7 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 export function getCardsThatMoved(game: FreeCell): Card[] {
 	if (game.previousAction.type !== 'move') return [];
 	const { fromShorthand } = parseActionTextMove(game.previousAction.text);
-	return fromShorthand.split('-').map((sh) => findCard(game.cards, parseShorthandCard(sh)));
+	return fromShorthand.split('-').map((rs) => findCard(game.cards, parseShorthandCard(rs)));
 }
 
 export function getCardsFromInvalid(
