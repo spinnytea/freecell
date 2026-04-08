@@ -6,6 +6,7 @@ import { TLZR } from '@/app/animation_interfaces';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
+import { animShakePile } from '@/app/hooks/animations/animShakePile';
 import { animShuffleCards } from '@/app/hooks/animations/animShuffleCards';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
 import { calcUpdatedCardPositions } from '@/app/hooks/animations/calcUpdatedCardPositions';
@@ -18,7 +19,7 @@ import { useRefPrevious } from '@/app/hooks/useRefPrevious';
 import { calcCardId, Card, shorthandCard } from '@/game/card/card';
 
 export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<string>) {
-	const { cards, selection, flashCards, previousAction } = useGame();
+	const { cards, cursor, selection, flashCards, previousAction } = useGame();
 	const fixtureSizes = useFixtureSizes();
 	const prevFixtureSizesRef = useRefPrevious(fixtureSizes);
 	const { enabledControlSchemes } = useSettings();
@@ -83,6 +84,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				invalidMoveCards,
 			} = calcUpdatedCardPositions({
 				cards,
+				cursor,
 				previousAction,
 				previousTLZR,
 				calcTLZRForCard: calcTLZRForCardRef.current,
@@ -176,6 +178,14 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 						gameBoardIdRef,
 					});
 				}
+
+				if (invalidMoveCards.pileShorthands?.length) {
+					animShakePile({
+						timeline,
+						list: invalidMoveCards.pileShorthands,
+						gameBoardIdRef,
+					});
+				}
 			}
 
 			if (updateCardPositions.length || enableDragAndDrop) {
@@ -202,6 +212,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 			dependencies: [
 				// used within useGSAP
 				cards,
+				cursor,
 				previousAction,
 				calcTLZRForCardRef,
 				enableDragAndDrop,

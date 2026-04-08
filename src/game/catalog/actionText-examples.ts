@@ -50,7 +50,12 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'deselect 4D-3S-2D': '',
 	'deselect 6 2D': '',
 	'deselect 6 4D-3S-2D': '',
-	'touch stop': '',
+	'touch stop':
+		'             QC TD KH 9S \n' +
+		' QS KC       TS          \n' +
+		' JD QD       KS          \n' +
+		' KD JS                   \n' +
+		' hand-jammed',
 	'move 3a KC→cell':
 		'             AD 3C 4H 3S \n' +
 		' QH TS 2D 7C 4C 7D QC KH \n' +
@@ -191,9 +196,59 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' 9S TH    6C    KS    9C \n' +
 		' 8S KH    5H             \n' +
 		' move 54 6C-5H→7D\n' +
-		':h shuffle32 27571\n' +
-		' 34 4d d4 4d d4 5d 75 74 \n' +
-		' 47 4a 54 ',
+		' hand-jammed',
+	'invalid move hc AC→cell': '',
+	'invalid move 1c KC-QD-JC→cell': '',
+	'invalid move kb 6H→cell': '',
+	'invalid move ah 3C→foundation':
+		'' + //
+		' 3C          AD AH       \n' +
+		' 9C TH                   \n' +
+		' hand-jammed',
+	'invalid move 1h 9C→foundation':
+		'' + //
+		' 3C          AD AH       \n' +
+		' 9C TH                   \n' +
+		' hand-jammed',
+	'invalid move 2h TH→AH':
+		'' + //
+		' 3C          AD AH       \n' +
+		' 9C TH                   \n' +
+		' hand-jammed',
+	'invalid move 13 KC-QD-JC→cascade': '',
+	'invalid move k1 KH→cascade': '',
+	'invalid move bk 6C→deck':
+		' 6H|6C|QC JS 9S AD 7C TS \n' +
+		' AH 8S 2D QS 4C 9H 2S 3D \n' +
+		' 5C AS 9C KH 4D 2C 3C 4S \n' +
+		' 3S 5D KC 3H KD 5H 6S 8D \n' +
+		' TD 7S JD 7H 8H JH JC 7D \n' +
+		' 5S QH 8C 9D KS QD 4H AC \n' +
+		' 2H TC TH 6D             \n' +
+		':d>   \n' +
+		' invalid move bk 6C→deck',
+	'invalid move hk TD→deck':
+		' QC QD QH QS TC 9D TH TS \n' +
+		' KC       KS JC JD JH JS \n' +
+		':d>TD KH KD \n' +
+		' invalid move hk TD→deck',
+	'invalid move 4k 6D→deck':
+		'                         \n' +
+		' AH 8S 2D QS 4C 9H 2S 3D \n' +
+		' 5C AS 9C KH 4D 2C 3C 4S \n' +
+		' 3S 5D KC 3H KD 5H 6S 8D \n' +
+		' TD 7S JD 7H 8H JH JC 7D \n' +
+		' 5S QH 8C 9D KS QD 4H AC \n' +
+		' 2H TC TH                \n' +
+		':d>6D 6H 6C QC JS 9S AD 7C TS \n' +
+		' invalid move 4k 6D→deck',
+	'invalid move 2k TC-9D-8C→deck':
+		'             7C 8D TH KS \n' +
+		'          KD JH 9C QD KH \n' +
+		'          QC       JC KC \n' +
+		'          JD       TD QH \n' +
+		':d TC 9D>8C \n' +
+		' invalid move 2k TC-9D-8C→deck',
 };
 
 export function pullActionTextExamples(actionTextExamples: string[], actionText: string) {

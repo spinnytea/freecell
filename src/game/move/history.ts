@@ -5,13 +5,15 @@ import {
 	findCard,
 	getSequenceAt,
 	initializeDeck,
+	isFixture,
+	isPileSH,
 	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
 	shorthandPosition,
 	shorthandSequence,
 	sortCardsOG,
 } from '@/game/card/card';
-import { FreeCell } from '@/game/game';
+import { FreeCell, NUMBER_OF_FOUNDATIONS } from '@/game/game';
 import { moveCards } from '@/game/move/move';
 
 export type PreviousActionType =
@@ -117,6 +119,14 @@ export interface PreviousAction {
 	gameFunction?: GameFunction;
 }
 
+// TODO (techdebt) should we verify Position, Shorthand, Fixture when we parse with these regex values?
+//  - do we need to up our i/o game and handle parsing garbage?
+//  - red team: is it possible to make a game explode?
+//  - is this just "better error messages earlier?"
+//  - should we enable "more comprehensive errors" during `FreeCell.parse`, but not during, say, `undo`
+//  - we treat this text as a structured "source of truth" that human readable (it could have been a json object)
+//  - "move_regex" is basically a "decode" action
+//  - every actionText is an "encode" action (e.g. `calcMoveActionText`, but literally every `ACTION_TEXT_EXAMPLES`)
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish|flourish52) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
@@ -199,20 +209,50 @@ export function parseCursorFromPreviousActionText(
 			const cursor = parseShorthandPosition_INCOMPLETE(to);
 			switch (cursor.fixture) {
 				case 'deck':
-					// XXX (deck) (gameplay) can we, in theory, move a card to the deck? but we don't
+					// we don't move cards to the deck in practice
+					// moving to `k` is enough for now (no need to look for toShorthand within the deck)
 					break;
 				case 'cell':
 					// each cell identifies it's own d0
 					break;
 				case 'foundation': {
-					const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
-					const card = findCard(cards, shorthand);
-					if (cursor.fixture !== card.location.fixture) {
-						throw new Error(
-							`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
-						);
+					// XXX (techdebt) (test) parseCursorFromPreviousActionText needs _way_ more exhaustive testing
+					//  - RS→foundation, RS→RS
+					//  - for arbitrary ace positions and collisions
+					//  - where the source suit may or may not be in the foundation
+					//  - where the source suit may or may not match the target suit
+					// ---
+					// TODO (2-priority) (refactor) when we use braille to make history accurate™️, all this testing will be moot
+
+					if (toShorthand === 'foundation') {
+						const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+						const foundation_d0 = [];
+						while (foundation_d0.length < NUMBER_OF_FOUNDATIONS)
+							foundation_d0.push(foundation_d0.length);
+						let foundation_match: Card | undefined = undefined;
+						for (const card of cards) {
+							if (card.location.fixture === 'foundation') {
+								if (card.suit === shorthand?.suit) foundation_match = card;
+								const idx = foundation_d0.indexOf(card.location.data[0]);
+								if (idx > -1) foundation_d0.splice(idx, 1);
+							}
+						}
+
+						if (foundation_match) {
+							cursor.data[0] = foundation_match.location.data[0];
+						} else {
+							cursor.data[0] = foundation_d0[0];
+						}
+					} else {
+						const shorthand = parseShorthandCard(toShorthand[0], toShorthand[1]);
+						const card = findCard(cards, shorthand);
+						if (cursor.fixture !== card.location.fixture) {
+							throw new Error(
+								`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
+							);
+						}
+						cursor.data[0] = card.location.data[0];
 					}
-					cursor.data[0] = card.location.data[0];
 					break;
 				}
 				case 'cascade':
@@ -255,6 +295,12 @@ export function parseCursorFromPreviousActionText(
 			return card.location;
 		}
 		case 'invalid':
+			if (actionText === 'invalid undo tween') {
+				return undefined;
+			}
+			if (actionText === 'invalid move tableau→deck') {
+				return { fixture: 'deck', data: [0] };
+			}
 			if (actionText.startsWith('invalid')) {
 				return parseCursorFromPreviousActionText(actionText.substring(8), cards);
 			}
@@ -277,6 +323,8 @@ export function parseCursorFromPreviousActionText(
 		case 'juice':
 			return { fixture: 'cell', data: [0] };
 	}
+	// throw new Error(`invalid actionText '${actionText}' or 'invalid ${actionText}'`);
+	return undefined;
 }
 
 /**
@@ -303,10 +351,11 @@ export function parseAltCursorFromPreviousActionText(
 		case 'move': {
 			const { from } = parseActionTextMove(actionText);
 			const cursor = parseShorthandPosition_INCOMPLETE(from);
-			// XXX (deck) (gameplay) deck isn't standard gameplay (so 0 is fine, if we see it)
+			// deck isn't standard gameplay (so `data: [0]` is fine, if we see it)
 			// cell is already accurate
-			// foundation can't be `from` in an move (so 0 is fine, if we see it)
+			// foundation can't be `from` in an move (so `data: [0]` is fine, if we see it)
 			// cascade needs to be "the last card" (since we can only move from the bottom)
+			//  - so `data: [x, 99]` is fine
 			return cursor;
 		}
 		case 'select':
@@ -326,6 +375,12 @@ export function parseAltCursorFromPreviousActionText(
 			return card.location;
 		}
 		case 'invalid':
+			if (actionText === 'invalid undo tween') {
+				return undefined;
+			}
+			if (actionText === 'invalid move tableau→deck') {
+				return undefined;
+			}
 			if (actionText.startsWith('invalid')) {
 				return parseAltCursorFromPreviousActionText(actionText.substring(8), cards, allowEmptyDeck);
 			}
@@ -336,6 +391,8 @@ export function parseAltCursorFromPreviousActionText(
 		case 'juice':
 			return { fixture: 'cell', data: [0] };
 	}
+	// throw new Error(`invalid actionText '${actionText}' or 'invalid ${actionText}'`);
+	return undefined;
 }
 
 export function parseActionTextMove(actionText: string) {
@@ -579,7 +636,7 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 	const action: PreviousAction = { text: actionText, type: firstWord as PreviousActionType };
 
 	if (firstWord === 'invalid') {
-		if (/^invalid move (\wk|k\w) /.test(actionText)) {
+		if (/^invalid move (\S*k\S*) /.test(actionText) || actionText === 'invalid move tableau→deck') {
 			action.gameFunction = 'recall-or-bury';
 		} else if (actionText.startsWith('invalid undo')) {
 			// should not appear in print
@@ -652,21 +709,47 @@ export function getCardsThatMoved(game: FreeCell): Card[] {
 
 export function getCardsFromInvalid(
 	previousAction: PreviousAction,
-	cards: Card[]
-): { from: Card[]; to: Card[] } {
+	/** @deprecated HACK (2-priority) (refactor) due to incomplete information */
+	cursor: CardLocation | null
+): {
+	fromShorthands: string[];
+	toShorthands: string[];
+	pileShorthands?: CardLocation[];
+} {
 	if (previousAction.text === 'touch stop') {
-		return { from: [], to: [] };
+		return { fromShorthands: [], toShorthands: [] };
 	}
-	const { fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
-	const from = fromShorthand.split('-').map((sh) => findCard(cards, parseShorthandCard(sh)));
-	const to = [];
-	if (toShorthand.length === 2) {
-		to.push(findCard(cards, parseShorthandCard(toShorthand[0], toShorthand[1])));
-	} else {
-		// TODO (2-priority) (motivation) (animation) animate piles
+	if (previousAction.text === 'invalid move tableau→deck') {
+		return { fromShorthands: [], toShorthands: [] };
+	}
+	const { to, fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
+	const fromShorthands = fromShorthand.split('-');
+	if (toShorthand.length === 2 || toShorthand.includes('-')) {
+		// TODO (motivation) (animation) if attempting to stack onto a sequence, shake the whole sequence
+		//  - should we add the whole sequence to the actionText, instead of just the one target card?
+		return { fromShorthands, toShorthands: toShorthand.split('-') };
+	} else if (isFixture(toShorthand) && isPileSH(to)) {
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
+
+		const to_location = parseShorthandPosition_INCOMPLETE(to);
+		if (to_location.fixture !== 'foundation') {
+			return { fromShorthands, toShorthands: [], pileShorthands: [to_location] };
+		}
+
+		// TODO (2-priority) (techdebt) (motivation) (refactor) braille if the move text had more precision, we wouldn't need to recompute it
+		//  - drag and drop can use any foundation, we can "touch" any foundation
+		//  - parseCursorFromPreviousActionText? (needs cards)
+		//  - game.parseShorthandMove? (needs game)
+		//  - the pileSH simply does not have enough information
+		// TODO (2-priority) (refactor) use braille (at least for h), remove the curosr arg
+		if (cursor !== null && shorthandPosition(cursor) === to) {
+			return { fromShorthands, toShorthands: [], pileShorthands: [cursor] };
+		}
+
+		return { fromShorthands, toShorthands: [], pileShorthands: [] };
 	}
-	return { from, to };
+	// super invalid, e.g. 'invalid move 12 asdf→asdf'
+	return { fromShorthands, toShorthands: [toShorthand] };
 }
 
 /**

@@ -1,0 +1,413 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`animShakePile gameBoardId: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+  [
+    "<+0.050",
+  ],
+]
+`;
+
+exports[`animShakePile gameBoardId: timeline.to 1`] = `
+[
+  [
+    "#pilemarker-a-1-1",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#pilemarker-a-1-1",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#pilemarker-a-1-1",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+  [
+    "#pilemarker-h-2-1",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#pilemarker-h-2-1",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#pilemarker-h-2-1",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShakePile gsap.utils.random false: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+  [
+    "<+0.050",
+  ],
+]
+`;
+
+exports[`animShakePile gsap.utils.random false: timeline.to 1`] = `
+[
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "+=3.000",
+    },
+  ],
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "-=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+  [
+    "#pilemarker-h-2",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "+=3.000",
+    },
+  ],
+  [
+    "#pilemarker-h-2",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "-=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#pilemarker-h-2",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShakePile gsap.utils.random true: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+  [
+    "<+0.050",
+  ],
+]
+`;
+
+exports[`animShakePile gsap.utils.random true: timeline.to 1`] = `
+[
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+  [
+    "#pilemarker-h-2",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#pilemarker-h-2",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#pilemarker-h-2",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShakePile list one: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+]
+`;
+
+exports[`animShakePile list one: timeline.to 1`] = `
+[
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShakePile list three: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+  [
+    "<+0.050",
+  ],
+  [
+    "<+0.050",
+  ],
+]
+`;
+
+exports[`animShakePile list three: timeline.to 1`] = `
+[
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+  [
+    "#pilemarker-h-2",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#pilemarker-h-2",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#pilemarker-h-2",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+  [
+    "#pilemarker-3-3",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#pilemarker-3-3",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#pilemarker-3-3",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShakePile list two: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+  [
+    "<+0.050",
+  ],
+]
+`;
+
+exports[`animShakePile list two: timeline.to 1`] = `
+[
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#pilemarker-a-1",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+  [
+    "#pilemarker-h-2",
+    {
+      "duration": 0.1,
+      "ease": "sine.in",
+      "x": "-=3.000",
+    },
+  ],
+  [
+    "#pilemarker-h-2",
+    {
+      "duration": 0.05,
+      "ease": "sine.inOut",
+      "repeat": 2,
+      "x": "+=6.000",
+      "yoyo": true,
+    },
+  ],
+  [
+    "#pilemarker-h-2",
+    {
+      "duration": 0.025,
+      "ease": "sine.out",
+      "x": "0",
+    },
+  ],
+]
+`;
+
+exports[`animShakePile list zero: timeline.add 1`] = `[]`;
+
+exports[`animShakePile list zero: timeline.to 1`] = `[]`;

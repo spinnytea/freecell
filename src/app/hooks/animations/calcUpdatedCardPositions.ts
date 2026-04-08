@@ -1,5 +1,12 @@
 import { TLZR } from '@/app/animation_interfaces';
-import { Card, Fixture, getRankForCompare, shorthandCard, Suit } from '@/game/card/card';
+import {
+	Card,
+	CardLocation,
+	Fixture,
+	getRankForCompare,
+	shorthandCard,
+	Suit,
+} from '@/game/card/card';
 import {
 	getCardsFromInvalid,
 	parsePreviousActionMoveShorthands,
@@ -21,6 +28,7 @@ export interface UpdateCardPositionsType extends TLZR {
 export interface InvalidMoveCardType {
 	fromShorthands: string[];
 	toShorthands: string[];
+	pileShorthands?: CardLocation[];
 }
 
 /**
@@ -39,11 +47,14 @@ export interface InvalidMoveCardType {
 */
 export function calcUpdatedCardPositions({
 	cards,
+	cursor,
 	previousAction,
 	previousTLZR,
 	calcTLZRForCard,
 }: {
 	cards: Card[];
+	/** @deprecated HACK (2-priority) (refactor) due to incomplete information */
+	cursor: CardLocation;
 	previousAction?: PreviousAction;
 	previousTLZR: Map<string, TLZR>;
 	calcTLZRForCard: (card: Card) => TLZR;
@@ -89,11 +100,11 @@ export function calcUpdatedCardPositions({
 
 	// IFF the action is an invalid move
 	if (previousAction?.type === 'invalid') {
-		const { from, to } = getCardsFromInvalid(previousAction, cards);
-		const invalidMoveCards: InvalidMoveCardType = {
-			fromShorthands: from.map((card) => shorthandCard(card)),
-			toShorthands: to.map((card) => shorthandCard(card)),
-		};
+		const { fromShorthands, toShorthands, pileShorthands } = getCardsFromInvalid(
+			previousAction,
+			cursor
+		);
+		const invalidMoveCards: InvalidMoveCardType = { fromShorthands, toShorthands, pileShorthands };
 		return { updateCardPositions, unmovedCards, invalidMoveCards };
 	}
 
@@ -124,6 +135,7 @@ export function calcUpdatedCardPositions({
 			const { updateCardPositions: prevUpdateCardPositions } = calcUpdatedCardPositions({
 				previousTLZR,
 				cards: previousAction.tweenCards,
+				cursor,
 				calcTLZRForCard,
 			});
 

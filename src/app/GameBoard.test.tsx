@@ -13,7 +13,7 @@ import { Settings } from '@/app/hooks/contexts/Settings/Settings';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
 import { getCardIdsFromSpy, getPropertiesFromFromToSpy, getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';
-import { calcCardId, CardLocation, CardSH, parseShorthandCard, Position, RankList, shorthandCard, shorthandPosition, SuitList } from '@/game/card/card';
+import { calcCardId, CardLocation, CardShorthand, parseShorthandCard, Position, RankList, shorthandCard, shorthandPosition, SuitList } from '@/game/card/card';
 import { getMoves } from '@/game/catalog/solutions-catalog';
 import { FreeCell } from '@/game/game';
 import { parseShorthandMove } from '@/game/move/move';
@@ -61,7 +61,7 @@ function CribTheGame() {
 	return null;
 }
 
-function clickCard(shorthand: CardSH | string | null) {
+function clickCard(shorthand: CardShorthand | string | null) {
 	if (typeof shorthand === 'string') shorthand = parseShorthandCard(shorthand);
 	if (shorthand) {
 		fireEvent.click(screen.getByAltText(`${shorthand.rank} of ${shorthand.suit}`));

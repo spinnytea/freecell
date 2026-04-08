@@ -5,10 +5,13 @@ import { FreeCell } from '@/game/game';
 /* DEFINITIONS */
 /* *********** */
 
-export type Suit = 'clubs' | 'diamonds' | 'hearts' | 'spades';
-export const SuitList: Suit[] = ['clubs', 'diamonds', 'hearts', 'spades'];
+export const SuitList = ['clubs', 'diamonds', 'hearts', 'spades'] as const;
+export type Suit = (typeof SuitList)[number];
 export const isRed = (suit: Suit) => suit === 'diamonds' || suit === 'hearts';
 
+// TODO (5-priority) (refactor) (types) redo type def like suit
+//  - but Rank and List have different values
+//  - so we need to have/stub the "include joker flag"
 export type Rank =
 	| 'ace'
 	| '2'
@@ -44,59 +47,20 @@ export const getSuitForCompare = (suit: Suit): number => SuitList.indexOf(suit);
 export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	getRankForCompare(min) === getRankForCompare(max) - 1;
 
-// XXX (techdebt) is "fixture" the right name?
-//  - cell -> freecell
-//  - foundation -> homecell
-//  - cascade -> column
-export type Fixture = 'deck' | 'cell' | 'foundation' | 'cascade';
-export interface CardLocation {
-	readonly fixture: Fixture;
-	readonly data: number[];
-}
+const FixtureList = ['deck', 'cell', 'foundation', 'cascade'] as const;
 
 /**
-	foundation: h
-	cells: a - d
-	cascades: 1 - 9, t (1-8, but we allow 9 and 10 columns)
-
-	XXX (motivation) I really super want to have a shorthand for the deck
-	 - maybe (joker) can go to the deck because lolwhynot
-	 - not that it's a valid move, not that it will be part of gameplay
-	 - it just keeps feeling like a gap
-	 - maybe i'm thinking a bit to much like manually moving cards, where, in meatspace,
-	   - you reset the game from 'h' to 'deck', and
-		- you deal from 'deck' to '1234567890'
-	 - which isn't standard gameplay, and which is all one action, so it's not like `$moveCardToPosition` makes sense there
-	---
-	 - it's just, every time I use `shorthandMove`, i have to remember two cavates:
-	   - there is no 'deck' Position
-		- 'h' cannot cannot be a `from`, it can only be a `to`
-	 - and while that's true for gameplay, i want to enable that from behind a flag
-	 - maybe that helps document "look, this is wrong, it's nonstandard gameplay to do this, look at my debug flag"
-	 - but maybe it's just me trying to be way to super feature complete
-
-	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
+	XXX (techdebt) (refactor) (rename) is "fixture" the right name?
+	 - cell -> freecell
+	 - foundation -> homecell
+	 - cascade -> column
 */
-export type Position =
-	| 'a'
-	| 'b'
-	| 'c'
-	| 'd'
-	| 'e'
-	| 'f'
-	| 'h'
-	| 'k' // deck
-	| '1'
-	| '2'
-	| '3'
-	| '4'
-	| '5'
-	| '6'
-	| '7'
-	| '8'
-	| '9'
-	| '0';
-export const PositionList: Position[] = [
+export type Fixture = (typeof FixtureList)[number];
+export function isFixture(val: string): val is Fixture {
+	return (FixtureList as readonly string[]).includes(val);
+}
+
+export const PileSHList = [
 	'a',
 	'b',
 	'c',
@@ -115,14 +79,51 @@ export const PositionList: Position[] = [
 	'8',
 	'9',
 	'0',
-];
+] as const;
 
-// REVIEW (optimize) should CardSH include `sh/rs = shorthandCard(this)`?
-export interface CardSH {
+/**
+	foundation: h
+	cells: a - d
+	cascades: 1 - 9, t (1-8, but we allow 9 and 10 columns)
+	deck: k
+
+	TODO (5-priority) (refactor) (types) rename `Position` to `PileSH`
+
+	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
+*/
+export type Position = (typeof PileSHList)[number];
+export function isPileSH(val: string): val is Position {
+	return (PileSHList as readonly string[]).includes(val);
+}
+
+type SuitSH = 'C' | 'D' | 'H' | 'S';
+type RankSH = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'W';
+
+/**
+	rank shorthand + suit shorthand
+
+	- TODO (5-priority) (refactor) (types) use type RS everywhere it's easy (first pass)
+	  - this is not the "move shorthand" which will have the braille
+	  - this is the name of the card
+	- XXX (techdebt) use type RS everywhere it makes sense
+
+	@example 'KH'
+	@example 'AS'
+*/
+type RS = `${RankSH}${SuitSH}`;
+
+export interface CardLocation {
+	readonly fixture: Fixture;
+	readonly data: number[];
+}
+
+export interface CardShorthand {
 	readonly rank: Rank;
 	readonly suit: Suit;
+	// REVIEW (optimize) should CardShorthand include `sh/rs = shorthandCard(this)`?
+	// readonly rs: RS;
 }
-export interface Card extends CardSH {
+export interface Card extends CardShorthand {
 	location: CardLocation;
 }
 
@@ -169,6 +170,11 @@ export function initializeDeck(): Card[] {
 			deck.push(card);
 		});
 	});
+
+	// some arbitrary technical limit, see BOTTOM_OF_CASCADE docs for details
+	if (deck.length > BOTTOM_OF_CASCADE) {
+		throw new Error('there are too many cards for the system to handle');
+	}
 
 	return deck;
 }
@@ -243,7 +249,7 @@ export function calcCardId(shorthand: string, gameBoardId?: string) {
 
 /**
 	shorthandPosition for foundation is all the same
-	XXX (techdebt) i suppose we could just target _all_ of them every time
+	XXX (techdebt) i suppose we could just target _all_ foundations every time
 */
 export function calcPilemarkerId(location: CardLocation, gameBoardId?: string) {
 	let pileId = `pilemarker-${shorthandPosition(location)}-${(location.data[0] + 1).toString(10)}`;
@@ -257,18 +263,18 @@ export function calcPilemarkerId(location: CardLocation, gameBoardId?: string) {
 	we need to duplicate cards to detect when it changes
 	cards need to remain in consitent order for react[key=""] to work
 */
-export function cloneCards(cards: Card[]) {
+export function cloneCards(cards: Card[]): Card[] {
 	return cards.map((card) => ({ ...card }));
 }
 
-export function findCard(cards: Card[], card: CardSH | null | undefined): Card {
+export function findCard(cards: Card[], card: CardShorthand | null | undefined): Card {
 	if (!card) throw new Error('no card provided');
 	const found = cards.find((c) => c.suit === card.suit && c.rank === card.rank);
 	if (!found) throw new Error('missing card ' + shorthandCard(card));
 	return found;
 }
 
-export function isLocationEqual(a: CardLocation, b: CardLocation) {
+export function isLocationEqual(a: CardLocation, b: CardLocation): boolean {
 	return a.fixture === b.fixture && a.data[0] === b.data[0] && a.data[1] === b.data[1];
 }
 
@@ -370,15 +376,17 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 /* PRINT / PARSE */
 /* ************* */
 
-export function shorthandCard(card: CardSH | null | undefined) {
+// TODO (5-priority) (refactor) (rename) (types) rename `shorthandCard` to `shorthandRS`
+// TODO (5-priority) (refactor) (rename) (types) rename `shorthand` to `rs` (when it is of type RS)
+export function shorthandCard(card: CardShorthand | null | undefined): RS | '  ' {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
 	const s = card.suit[0];
-	return (r + s).toUpperCase();
+	return (r + s).toUpperCase() as RS;
 }
 
 /** TODO (techdebt) (refactor) change `rs` to single string since that's how it's _always_ called */
-export function parseShorthandCard(r: string | undefined, s?: string): CardSH | null {
+export function parseShorthandCard(r: string | undefined, s?: string): CardShorthand | null {
 	if (!s && r?.length === 2) {
 		s = r[1];
 		r = r[0];
@@ -489,6 +497,11 @@ export function shorthandSequenceWithPosition(sequence: CardSequence) {
 
 	notice also that this function only accepts the single character, it does not accept a game
 	so which d1 do we use for a cascade? this will return an invalid value (too high), which will be clamped if used directly
+
+	@deprecated TODO (2-priority) (refactor) use braille for all ambiguous positions, no more INCOMPLETE
+	 - origuess, print history shorthand must not have braille :( but the history list must have braille
+	 - which is fine, because we can transpose across foundations
+	 - it's just that replays might mix up the final foundations (unavoidable)
 */
 export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLocation {
 	if (!p) throw new Error(`invalid position shorthand: "undefined"`);

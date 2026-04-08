@@ -2,7 +2,7 @@ import {
 	Card,
 	CardLocation,
 	CardSequence,
-	CardSH,
+	CardShorthand,
 	cloneCards,
 	findCard,
 	getSequenceAt,
@@ -53,7 +53,7 @@ import {
 import { utils } from '@/utils';
 
 const DEFAULT_NUMBER_OF_CELLS = 4;
-const NUMBER_OF_FOUNDATIONS = SuitList.length;
+export const NUMBER_OF_FOUNDATIONS = SuitList.length;
 const DEFAULT_NUMBER_OF_CASCADES = 8;
 const MIN_CELL_COUNT = 1;
 const MAX_CELL_COUNT = 6;
@@ -960,7 +960,7 @@ export class FreeCell {
 		sugar/helper controls
 	*/
 	$selectCard(
-		shorthand: CardSH | string | null,
+		shorthand: CardShorthand | string | null,
 		{ allowSelectFoundation }: OptionsNonstandardGameplay = {}
 	): FreeCell {
 		if (typeof shorthand === 'string') shorthand = parseShorthandCard(shorthand);
@@ -1141,7 +1141,7 @@ export class FreeCell {
 		const tableau_spaces: (string | undefined)[] = [];
 		const deck_spaces: (string | undefined)[] = [];
 
-		const getCard = ({ rank, suit }: CardSH) => {
+		const getCard = ({ rank, suit }: CardShorthand) => {
 			const card = remaining.find((card) => card.rank === rank && card.suit === suit);
 			// XXX (print) (joker) test with a jokers available in game
 			if (!card) {

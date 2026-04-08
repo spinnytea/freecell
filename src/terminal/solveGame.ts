@@ -1,4 +1,4 @@
-import { PositionList, shorthandCard } from '@/game/card/card';
+import { PileSHList, shorthandCard } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { countCardsInFoundations, countEmptyCells } from '@/game/move/move';
 import { writeFileSync } from 'node:fs';
@@ -106,7 +106,7 @@ function expandNextGames(game: FreeCell): Promise<FreeCell[]> {
 	const next: FreeCell[] = [];
 
 	// for every possible position
-	PositionList.forEach((position) => {
+	PileSHList.forEach((position) => {
 		const g = game.touchByPosition(position);
 		// if we can select it
 		if (g.availableMoves?.length) {

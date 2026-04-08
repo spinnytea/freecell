@@ -18,7 +18,7 @@
     - `next/link`
     - `Metadata`
 - REVIEW (deployment) [next.config.js Options](https://nextjs.org/docs/app/api-reference/next-config-js)
-- REVIEW (techdebt) rename 'foundation' to 'home', 'auto-foundation' to …
+- REVIEW (techdebt) (refactor) (rename) rename 'foundation' to 'home', 'auto-foundation' to …
   - I mistakenly used "home row" to mean cells + foundation
   - home is supposed to be where all the cards go to in the end "Home Cells"
   - foundation isn't a thing
