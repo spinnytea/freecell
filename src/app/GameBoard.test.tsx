@@ -46,7 +46,7 @@ function CribTheGame() {
 			clickCard(card);
 		} else if ([0, -1, undefined].includes(location.data[1])) {
 			// pilemarker
-			const position = shorthandPosition(location);
+			const position = shorthandPosition(location)[0] as PileSH;
 			if (position !== 'h') {
 				clickPile(position);
 			} else {

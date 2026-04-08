@@ -84,8 +84,7 @@ export const PileSHList = [
 	cascades: 1 - 9, 0 (1-8, but we allow 9 and 10 columns)
 	deck: k
 
-	FIXME (review) every use of `position`
-	FIXME (review) every use of `shorthand`, `sh`
+	TODO (5-priority) (review) (coords) every use of `position`, `Position`
 
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */
@@ -94,8 +93,8 @@ export function isPileSH(val: string): val is PileSH {
 	return (PileSHList as readonly string[]).includes(val);
 }
 
-// TODO (2-priority) (refactor) review every use of `as PileSH`
-// TODO (2-priority) (refactor) use braille (at least for h), remove the curosr arg
+// TODO (5-priority) (refactor) (coords) review every use of `as PileSH`
+// TODO (5-priority) (refactor) (coords) use braille (at least for h), remove the curosr arg
 //  - Position = PileSH + braille (coord)
 
 /**
@@ -109,13 +108,14 @@ export function isPileSH(val: string): val is PileSH {
 	@example 'KH'
 	@example 'AS'
 */
-type RS = `${RankSH}${SuitSH}`;
+type rsSH = `${RankSH}${SuitSH}`;
 
 export interface CardLocation {
 	readonly fixture: Fixture;
-	// TODO (2-priority) (techdebt) (refactor) (rename) location.data → location.coords, d0/d1 → c0/c1
+	// FIXME (5-priority) (techdebt) (refactor) (rename) (coords) location.data → location.coords, d0/d1 → c0/c1
 	readonly data: number[];
 }
+type LocationSH = `${PileSH}${string}`;
 
 export interface CardShorthand {
 	readonly rank: Rank;
@@ -245,10 +245,6 @@ export function calcCardId(shorthand: string, gameBoardId?: string) {
 	return cardId;
 }
 
-/**
-	shorthandPosition for foundation is all the same
-	XXX (techdebt) i suppose we could just target _all_ foundations every time
-*/
 export function calcPilemarkerId(location: CardLocation, gameBoardId?: string) {
 	let pileId = `pilemarker-${shorthandPosition(location)}-${(location.data[0] + 1).toString(10)}`;
 	if (gameBoardId) {
@@ -376,15 +372,22 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 
 // FIXME (5-priority) (refactor) (rename) (types) rename `shorthandCard` to `shorthandRS`
 // FIXME (5-priority) (refactor) (rename) (types) rename `shorthand` to `rs` (when it is of type RS)
-// FIXME (review) what does 'shorthand' even mean?
+// FIXME (techdebt) (review) what does 'shorthand' even mean?
 //  - rank/suit/card/sequence
 //  - pile/position/move/history
 //  - parseShorthandMove, parseShorthandPositionForMove, parseShorthandPositionForSelect
-export function shorthandCard(card: CardShorthand | null | undefined): RS | '  ' {
+//  - review every use of `shorthand`, `sh`, "Shorthand"
+//  - ---
+//  - "sh" just means "the text representation"
+//  - `Pile` is the "code" and `PileSH` is how we represent it in print/parse
+//  - so this is just an encode/decode process between JSON and string
+//  - maybe we stop using "shorthand" altogether and start using "text"
+//  - maybe we stick with "SH" suffix matching the analogous object
+export function shorthandCard(card: CardShorthand | null | undefined): rsSH | '  ' {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
 	const s = card.suit[0];
-	return (r + s).toUpperCase() as RS;
+	return (r + s).toUpperCase() as rsSH;
 }
 
 /** TODO (techdebt) (refactor) change `rs` to single string since that's how it's _always_ called */
@@ -454,7 +457,10 @@ export function shorthandSequence(sequence: CardSequence) {
 	return sequence.cards.map((card) => shorthandCard(card)).join('-');
 }
 
-export function shorthandPosition(location: CardLocation, includeD0 = false): PileSH {
+// TODO (5-priority) (refactor) (coords) remove `includeD0` and make 2 separate methods
+//  - locationToPosition
+//  - locationToSh
+export function shorthandPosition(location: CardLocation, includeD0 = false): PileSH | LocationSH {
 	const d0 = location.data[0];
 	switch (location.fixture) {
 		case 'deck': {
@@ -500,7 +506,7 @@ export function shorthandSequenceWithPosition(sequence: CardSequence) {
 	notice also that this function only accepts the single character, it does not accept a game
 	so which d1 do we use for a cascade? this will return an invalid value (too high), which will be clamped if used directly
 
-	@deprecated TODO (2-priority) (refactor) use braille for all ambiguous positions, no more INCOMPLETE
+	@deprecated TODO (5-priority) (refactor) (coords) use braille for all ambiguous positions, no more INCOMPLETE
 	 - origuess, print history shorthand must not have braille :( but the history list must have braille
 	 - which is fine, because we can transpose across foundations
 	 - it's just that replays might mix up the final foundations (unavoidable)

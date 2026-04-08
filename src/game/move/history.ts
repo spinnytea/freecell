@@ -222,7 +222,7 @@ export function parseCursorFromPreviousActionText(
 					//  - where the source suit may or may not be in the foundation
 					//  - where the source suit may or may not match the target suit
 					// ---
-					// TODO (2-priority) (refactor) when we use braille to make history accurate™️, all this testing will be moot
+					// TODO (5-priority) (refactor) (coords) when we use braille to make history accurate™️, all this testing will be moot
 
 					if (toShorthand === 'foundation') {
 						const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
@@ -709,7 +709,7 @@ export function getCardsThatMoved(game: FreeCell): Card[] {
 
 export function getCardsFromInvalid(
 	previousAction: PreviousAction,
-	/** @deprecated HACK (2-priority) (refactor) due to incomplete information */
+	/** @deprecated HACK (5-priority) (refactor) (coords) due to incomplete information */
 	cursor: CardLocation | null
 ): {
 	fromShorthands: string[];
@@ -736,12 +736,12 @@ export function getCardsFromInvalid(
 			return { fromShorthands, toShorthands: [], pileShorthands: [to_location] };
 		}
 
-		// TODO (2-priority) (techdebt) (motivation) (refactor) braille if the move text had more precision, we wouldn't need to recompute it
+		// TODO (5-priority) (techdebt) (motivation) (refactor) (coords) braille if the move text had more precision, we wouldn't need to recompute it
 		//  - drag and drop can use any foundation, we can "touch" any foundation
 		//  - parseCursorFromPreviousActionText? (needs cards)
 		//  - game.parseShorthandMove? (needs game)
 		//  - the pileSH simply does not have enough information
-		// TODO (2-priority) (refactor) use braille (at least for h), remove the curosr arg
+		// TODO (5-priority) (refactor) (coords) use braille (at least for h), remove the curosr arg
 		if (cursor !== null && shorthandPosition(cursor) === to) {
 			return { fromShorthands, toShorthands: [], pileShorthands: [cursor] };
 		}
