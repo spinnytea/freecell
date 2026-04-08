@@ -9,7 +9,7 @@ export const SuitList = ['clubs', 'diamonds', 'hearts', 'spades'] as const;
 export type Suit = (typeof SuitList)[number];
 export const isRed = (suit: Suit) => suit === 'diamonds' || suit === 'hearts';
 
-// TODO (5-priority) (refactor) (types) redo type def like suit
+// FIXME (5-priority) (refactor) (types) redo type def like suit
 //  - but Rank and List have different values
 //  - so we need to have/stub the "include joker flag"
 export type Rank =
@@ -87,7 +87,7 @@ export const PileSHList = [
 	cascades: 1 - 9, t (1-8, but we allow 9 and 10 columns)
 	deck: k
 
-	TODO (5-priority) (refactor) (types) rename `Position` to `PileSH`
+	FIXME (5-priority) (refactor) (types) rename `Position` to `PileSH`
 
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */
@@ -102,7 +102,7 @@ type RankSH = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 
 /**
 	rank shorthand + suit shorthand
 
-	- TODO (5-priority) (refactor) (types) use type RS everywhere it's easy (first pass)
+	- FIXME (5-priority) (refactor) (types) use type RS everywhere it's easy (first pass)
 	  - this is not the "move shorthand" which will have the braille
 	  - this is the name of the card
 	- XXX (techdebt) use type RS everywhere it makes sense
@@ -114,14 +114,13 @@ type RS = `${RankSH}${SuitSH}`;
 
 export interface CardLocation {
 	readonly fixture: Fixture;
+	// XXX (techdebt) (rename) location.data → location.coords, d0/d1 → c0/c1
 	readonly data: number[];
 }
 
 export interface CardShorthand {
 	readonly rank: Rank;
 	readonly suit: Suit;
-	// REVIEW (optimize) should CardShorthand include `sh/rs = shorthandCard(this)`?
-	// readonly rs: RS;
 }
 export interface Card extends CardShorthand {
 	location: CardLocation;
@@ -376,8 +375,12 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 /* PRINT / PARSE */
 /* ************* */
 
-// TODO (5-priority) (refactor) (rename) (types) rename `shorthandCard` to `shorthandRS`
-// TODO (5-priority) (refactor) (rename) (types) rename `shorthand` to `rs` (when it is of type RS)
+// FIXME (5-priority) (refactor) (rename) (types) rename `shorthandCard` to `shorthandRS`
+// FIXME (5-priority) (refactor) (rename) (types) rename `shorthand` to `rs` (when it is of type RS)
+// FIXME (review) what does 'shorthand' even mean?
+//  - rank/suit/card/sequence
+//  - pile/position/move/history
+//  - parseShorthandMove, parseShorthandPositionForMove, parseShorthandPositionForSelect
 export function shorthandCard(card: CardShorthand | null | undefined): RS | '  ' {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
