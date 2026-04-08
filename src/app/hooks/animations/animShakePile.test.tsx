@@ -3,7 +3,7 @@ import { animShakePile } from '@/app/hooks/animations/animShakePile';
 import { spyOnGsap } from '@/app/testUtils';
 
 const gsapUtilsRandom = gsap.utils.random as jest.Mock;
-const animShakePile_MOCK_CALL = [[true, false]];
+const ANIMSHAKEPILE_MOCK_CALL = [[true, false]];
 
 describe('animShakePile', () => {
 	let toSpy: jest.SpyInstance;
@@ -27,7 +27,7 @@ describe('animShakePile', () => {
 			expect(mockCallTimes()).toEqual({});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
 			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
-			expect(gsapUtilsRandom.mock.calls).toEqual([animShakePile_MOCK_CALL]);
+			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKEPILE_MOCK_CALL]);
 		});
 
 		test('one', () => {
@@ -45,7 +45,7 @@ describe('animShakePile', () => {
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
 			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
-			expect(gsapUtilsRandom.mock.calls).toEqual([animShakePile_MOCK_CALL]);
+			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKEPILE_MOCK_CALL]);
 		});
 
 		test('two', () => {
@@ -66,7 +66,7 @@ describe('animShakePile', () => {
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
 			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
-			expect(gsapUtilsRandom.mock.calls).toEqual([animShakePile_MOCK_CALL]);
+			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKEPILE_MOCK_CALL]);
 		});
 
 		test('three', () => {
@@ -88,7 +88,7 @@ describe('animShakePile', () => {
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
 			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
-			expect(gsapUtilsRandom.mock.calls).toEqual([animShakePile_MOCK_CALL]);
+			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKEPILE_MOCK_CALL]);
 		});
 	});
 
@@ -111,7 +111,7 @@ describe('animShakePile', () => {
 		});
 		expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
 		expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
-		expect(gsapUtilsRandom.mock.calls).toEqual([animShakePile_MOCK_CALL]);
+		expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKEPILE_MOCK_CALL]);
 	});
 
 	describe('gsap.utils.random', () => {
@@ -133,7 +133,7 @@ describe('animShakePile', () => {
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
 			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
-			expect(gsapUtilsRandom.mock.calls).toEqual([animShakePile_MOCK_CALL]);
+			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKEPILE_MOCK_CALL]);
 		});
 
 		test('false', () => {
@@ -154,7 +154,7 @@ describe('animShakePile', () => {
 			});
 			expect(toSpy.mock.calls).toMatchSnapshot('timeline.to');
 			expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
-			expect(gsapUtilsRandom.mock.calls).toEqual([animShakePile_MOCK_CALL]);
+			expect(gsapUtilsRandom.mock.calls).toEqual([ANIMSHAKEPILE_MOCK_CALL]);
 		});
 	});
 });

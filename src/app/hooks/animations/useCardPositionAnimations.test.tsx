@@ -51,6 +51,7 @@ jest.mock('@/app/hooks/animations/animShuffleCards.ts', () => {
 });
 
 function MockGamePage({ games }: { games: (FreeCell | string)[] }) {
+	// TODO (techdebt) use StaticFixtureSizesContextProvider
 	return (
 		<StaticGameContextProvider games={games}>
 			<FixtureSizesContextProvider gameBoardRef={{ current: null }} fixtureLayout="portrait">
@@ -1229,6 +1230,40 @@ describe('useCardPositionAnimations', () => {
 				expect(mockCallTimes()).toEqual({
 					addLabelSpy: 5,
 				});
+			});
+
+			test('· invalid move ah 3C→foundation', () => {
+				const gameStateOne = FreeCell.parse(ACTION_TEXT_EXAMPLES['invalid move ah 3C→foundation']);
+				const gameStateTwo = gameStateOne.$selectCard('3C').touchByPosition('h');
+				expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→foundation');
+
+				gsapUtilsRandom.mockReturnValueOnce(true); // animShakePile
+
+				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+				mockReset();
+				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
+
+				expect(addLabelSpy.mock.calls).toEqual([
+					['invalid move ah 3C→foundation'],
+					['updateCardPositions'],
+					['invalidMoveCards.fromShorthands'],
+					['mock animShakeCard 3C'],
+				]);
+				expect(mockCallTimes()).toEqual({
+					fromToSpy: 1,
+					toSpy: 4,
+					setSpy: 51,
+					addLabelSpy: 4,
+					addSpy: 1,
+				});
+				expect(fromToSpy.mock.calls).toEqual([['#c3C', { top: 36.6, left: 14.035 }, { top: 36.6, left: 14.035, duration: 0.3, ease: 'power1.out' }, '>0']]);
+				expect(toSpy.mock.calls).toEqual([
+					['#c3C', { rotation: 10, duration: 0.1, ease: 'power1.inOut' }, '<'],
+					['#pilemarker-h-4', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
+					['#pilemarker-h-4', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
+					['#pilemarker-h-4', { x: '0', duration: 0.025, ease: 'sine.out' }],
+				]);
+				expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 			});
 		});
 

@@ -171,6 +171,11 @@ export function initializeDeck(): Card[] {
 		});
 	});
 
+	// some arbitrary technical limit, see BOTTOM_OF_CASCADE docs for details
+	if (deck.length > BOTTOM_OF_CASCADE) {
+		throw new Error('there are too many cards for the system to handle');
+	}
+
 	return deck;
 }
 

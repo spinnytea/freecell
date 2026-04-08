@@ -636,7 +636,7 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 	const action: PreviousAction = { text: actionText, type: firstWord as PreviousActionType };
 
 	if (firstWord === 'invalid') {
-		if (/^invalid move (\wk|k\w) /.test(actionText) || actionText === 'invalid move tableau→deck') {
+		if (/^invalid move (\S*k\S*) /.test(actionText) || actionText === 'invalid move tableau→deck') {
 			action.gameFunction = 'recall-or-bury';
 		} else if (actionText.startsWith('invalid undo')) {
 			// should not appear in print

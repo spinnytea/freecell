@@ -200,9 +200,21 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'invalid move hc AC→cell': '',
 	'invalid move 1c KC-QD-JC→cell': '',
 	'invalid move kb 6H→cell': '',
-	'invalid move ah 3C→foundation': '',
-	'invalid move 1h 9C→foundation': '',
-	'invalid move 2h TH→AC': '',
+	'invalid move ah 3C→foundation':
+		'' + //
+		' 3C          AD AH       \n' +
+		' 9C TH                   \n' +
+		' hand-jammed',
+	'invalid move 1h 9C→foundation':
+		'' + //
+		' 3C          AD AH       \n' +
+		' 9C TH                   \n' +
+		' hand-jammed',
+	'invalid move 2h TH→AH':
+		'' + //
+		' 3C          AD AH       \n' +
+		' 9C TH                   \n' +
+		' hand-jammed',
 	'invalid move 13 KC-QD-JC→cascade': '',
 	'invalid move k1 KH→cascade': '',
 	'invalid move bk 6C→deck':

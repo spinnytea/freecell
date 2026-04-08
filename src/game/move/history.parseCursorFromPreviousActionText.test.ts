@@ -31,7 +31,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 	];
 
 	const someCards_h: Card[] = [
-		{ rank: 'ace', suit: 'clubs', location: { fixture: 'foundation', data: [1] } },
+		{ rank: 'ace', suit: 'hearts', location: { fixture: 'foundation', data: [1] } },
 		{ rank: 'ace', suit: 'diamonds', location: { fixture: 'foundation', data: [0] } },
 		{ rank: '3', suit: 'clubs', location: { fixture: 'cell', data: [0] } },
 		{ rank: '9', suit: 'clubs', location: { fixture: 'cascade', data: [0, 0] } },
@@ -104,9 +104,9 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'invalid move hc AC→cell'}                  | ${[]}          | ${{ fixture: 'cell', data: [2] }}        | ${{ fixture: 'foundation', data: [0] }}
 			${'invalid move 1c KC-QD-JC→cell'}            | ${[]}          | ${{ fixture: 'cell', data: [2] }}        | ${{ fixture: 'cascade', data: [0, 99] }}
 			${'invalid move kb 6H→cell'}                  | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'invalid move ah 3C→foundation'}            | ${someCards_h} | ${{ fixture: 'foundation', data: [1] }}  | ${{ fixture: 'cell', data: [0] }}
-			${'invalid move 1h 9C→foundation'}            | ${someCards_h} | ${{ fixture: 'foundation', data: [1] }}  | ${{ fixture: 'cascade', data: [0, 99] }}
-			${'invalid move 2h TH→AC'}                    | ${someCards_h} | ${{ fixture: 'foundation', data: [1] }}  | ${{ fixture: 'cascade', data: [1, 99] }}
+			${'invalid move ah 3C→foundation'}            | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cell', data: [0] }}
+			${'invalid move 1h 9C→foundation'}            | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cascade', data: [0, 99] }}
+			${'invalid move 2h TH→AH'}                    | ${someCards_h} | ${{ fixture: 'foundation', data: [1] }}  | ${{ fixture: 'cascade', data: [1, 99] }}
 			${'invalid move 13 KC-QD-JC→cascade'}         | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${{ fixture: 'cascade', data: [0, 99] }}
 			${'invalid move k1 KH→cascade'}               | ${[]}          | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'deck', data: [0] }}
 			${'invalid move bk 6C→deck'}                  | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cell', data: [1] }}

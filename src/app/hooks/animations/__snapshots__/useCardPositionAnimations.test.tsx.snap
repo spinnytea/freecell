@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`useCardPositionAnimations actionText examples animate · invalid move ah 3C→foundation: timeline.add 1`] = `
+[
+  [
+    "invalidMoveCards.fromShorthands",
+  ],
+]
+`;
+
 exports[`useCardPositionAnimations game (each PreviousActionType) init undefined -> init: timeline.set 1`] = `
 [
   [
