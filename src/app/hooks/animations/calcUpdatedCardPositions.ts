@@ -53,7 +53,7 @@ export function calcUpdatedCardPositions({
 	calcTLZRForCard,
 }: {
 	cards: Card[];
-	/** @deprecated HACK (5-priority) (refactor) (coords) due to incomplete information */
+	/** @deprecated FIXME (5-priority) (refactor) (coords) due to incomplete information */
 	cursor: CardLocation;
 	previousAction?: PreviousAction;
 	previousTLZR: Map<string, TLZR>;

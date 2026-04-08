@@ -78,7 +78,7 @@ export const PileSHList = [
 	cascades: 1 - 9, 0 (1-8, but we allow 9 and 10 columns)
 	deck: k
 
-	TODO (5-priority) (review) (coords) every use of `position`, `Position`; use {@link PileSH} and {@link LocationSH} as appropriate
+	FIXME (5-priority) (review) (coords) every use of `position`, `Position`; use {@link PileSH} and {@link LocationSH} as appropriate
 
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */
@@ -87,8 +87,8 @@ export function isPileSH(val: string): val is PileSH {
 	return (PileSHList as readonly string[]).includes(val);
 }
 
-// TODO (5-priority) (refactor) (coords) review every use of `as PileSH`
-// TODO (5-priority) (refactor) (coords) use braille (at least for h), remove the curosr arg
+// FIXME (5-priority) (refactor) (coords) review every use of `as PileSH`
+// FIXME (5-priority) (refactor) (coords) use braille (at least for h), remove the curosr arg
 //  - Position = PileSH + braille (coord)
 
 export interface CardLocation {
@@ -441,9 +441,13 @@ export function shorthandSequence(sequence: CardSequence) {
 	return sequence.cards.map((card) => shorthandCard(card)).join('-');
 }
 
-// TODO (5-priority) (refactor) (coords) remove `includeD0` and make 2 separate methods
+// FIXME (5-priority) (refactor) (coords) remove `includeD0` and make 2 separate methods
 //  - locationToPosition
 //  - locationToSh
+// FIXME always use braille for position
+//  - exception: pile for cell, cascade; (needed pile for deck, foundation)
+//  - exception: game.print({ includeHistory: true })
+//  - (maybe it's easier to just start with: always use braille in the history)
 export function shorthandPosition(location: CardLocation, includeD0 = false): PileSH | LocationSH {
 	const d0 = location.data[0];
 	switch (location.fixture) {
@@ -490,7 +494,7 @@ export function shorthandSequenceWithPosition(sequence: CardSequence) {
 	notice also that this function only accepts the single character, it does not accept a game
 	so which d1 do we use for a cascade? this will return an invalid value (too high), which will be clamped if used directly
 
-	@deprecated TODO (5-priority) (refactor) (coords) use braille for all ambiguous positions, no more INCOMPLETE
+	@deprecated FIXME (5-priority) (refactor) (coords) use braille for all ambiguous positions, no more INCOMPLETE
 	 - origuess, print history shorthand must not have braille :( but the history list must have braille
 	 - which is fine, because we can transpose across foundations
 	 - it's just that replays might mix up the final foundations (unavoidable)
