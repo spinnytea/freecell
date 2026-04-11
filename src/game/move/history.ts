@@ -461,6 +461,7 @@ export function appendActionToHistory(action: PreviousAction, history: string[])
 	return { action, history: [...history, action.text] };
 }
 
+/** collapse history */
 function collapseHistory(action: PreviousAction, history: string[]): PaH | undefined {
 	const previousText = history.at(-1);
 	if (previousText && action.type === 'move') {

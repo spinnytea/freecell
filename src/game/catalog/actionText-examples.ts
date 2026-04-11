@@ -42,6 +42,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'cursor stop h AD': '',
 	'cursor stop 6 2D': '',
 	'cursor stop 3': '',
+	// FIXME every `(de)?select \w` should be replaced
 	'select QS': '',
 	'select 4D-3S-2D': '',
 	'select 8 7C': '',
