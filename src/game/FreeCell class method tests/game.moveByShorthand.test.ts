@@ -90,7 +90,7 @@ describe('game.moveByShorthand', () => {
 					' 5S QH 8C 9D KS QD 4H AC \n' +
 					' 2H TC TH 6D             \n' +
 					':d 6C QC JS 9S AD 7C TS \n' +
-					' invalid move kb 6H→cell\n' +
+					' invalid move k⡇b 6H→cell\n' +
 					' deal 44 cards\n' +
 					' shuffle deck (5)'
 			);
@@ -176,7 +176,7 @@ describe('game.moveByShorthand', () => {
 						' 5S QH 8C 9D KS QD 4H AC \n' +
 						' 2H TC TH                \n' +
 						':d 6D \n' +
-						' invalid move 4k 6D→deck\n' +
+						' invalid move 4⡅k 6D→deck\n' +
 						' deal all cards\n' +
 						' shuffle deck (5)'
 				);
@@ -225,7 +225,7 @@ describe('game.moveByShorthand', () => {
 						' 5S QH 8C 9D KS QD 4H AC \n' +
 						' 2H TC TH                \n' +
 						':d 6D 6H 6C QC JS 9S AD 7C TS \n' +
-						' invalid move 4k 6D→deck\n' +
+						' invalid move 4⡅k 6D→deck\n' +
 						' deal 44 cards\n' +
 						' shuffle deck (5)'
 				);

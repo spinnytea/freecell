@@ -138,4 +138,9 @@ describe('game.$toggleCursor', () => {
 		expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).cursor.fixture).toEqual('deck');
 		expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).$toggleCursor({ allowEmptyDeck: true }).cursor.fixture).toEqual('cell');
 	});
+
+	// FIXME test.todo
+	test.todo('fixture with card');
+
+	test.todo('fixture w/o card');
 });

@@ -135,6 +135,11 @@ const CURSOR_REGEX =
 	/^cursor (set|up|left|down|right|stop)( wrap)?( [a-z0-9].?)?( [A-Z0-9][A-Z])?$/;
 const SELECT_REGEX = /^(de)?select( (\w)(.?))? ([\w-]+)$/;
 
+/** @deprecated FIXME use or remove */
+export function spotRegexMoveInHistory(shorthandMove: string) {
+	return new RegExp(`^move ${shorthandMove[0]}.?${shorthandMove[1]}.?`);
+}
+
 /**
 	read {@link PreviousAction.text} which has the full context of what was moved
 	we can use this text to replaying a move, or (more importantly) undoing a move
@@ -471,8 +476,8 @@ function collapseHistory(action: PreviousAction, history: string[]): PaH | undef
 			// action.type should parse, the condition is just a formality
 			const a = _parseActionTextMove(action.text);
 			if (a) {
-				const { from: pf, to: pt, fromShorthand: pfs } = p;
-				const { from: af, to: at, fromShorthand: afs, toShorthand: ats } = a;
+				const { from: pf, fb, to: pt, fromShorthand: pfs } = p;
+				const { from: af, to: at, tb, fromShorthand: afs, toShorthand: ats } = a;
 				if (pt === af && pfs === afs) {
 					// move 34 KH→cascade
 					// move 43 KH→cascade
@@ -487,7 +492,7 @@ function collapseHistory(action: PreviousAction, history: string[]): PaH | undef
 
 					// move 34 KH→cascade
 					// move 35 KH→cascade
-					const actionText = `move ${pf}${at} ${pfs}→${ats}`;
+					const actionText = `move ${pf}${fb}${at}${tb} ${pfs}→${ats}`;
 					const nextAction: PreviousAction = { text: actionText, type: 'move' };
 					if (action.gameFunction) nextAction.gameFunction = action.gameFunction; // preserve drag-drop
 					return {

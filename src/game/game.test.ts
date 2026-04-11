@@ -319,12 +319,12 @@ describe('game', () => {
 					' 9S    7C TS JS    JH    \n' +
 					'       6H          TC    \n' +
 					'                   9H    \n' +
-					' move 67 9H→TC\n' +
-					' move 27 TC→JH\n' +
-					' move 68 5H→6C (auto-foundation 6 2C)\n' +
-					' move a8 6C→7D\n' +
-					' move 85 JS→QD (auto-foundation 8 AC)\n' +
-					' move 67 JH→QC'
+					' move 6⡀7⡇ 9H→TC\n' +
+					' move 2⡅7⡆ TC→JH\n' +
+					' move 6⡂8⡄ 5H→6C (auto-foundation 6 2C)\n' +
+					' move a8⡃ 6C→7D\n' +
+					' move 8⡅5⡅ JS→QD (auto-foundation 8 AC)\n' +
+					' move 6⡃7⡅ JH→QC'
 			);
 
 			// so we can only go back as far as possible

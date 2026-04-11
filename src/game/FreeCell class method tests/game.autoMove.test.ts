@@ -604,7 +604,7 @@ describe('game.autoMove', () => {
 				text: 'move 25 QD→KS',
 				type: 'move',
 			});
-			expect(game.history).toEqual(['hand-jammed', 'move 25 QD→KS']);
+			expect(game.history).toEqual(['hand-jammed', 'move 2⡁5⡀ QD→KS']);
 
 			expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
@@ -637,7 +637,7 @@ describe('game.autoMove', () => {
 					{ rank: 'jack', suit: 'spades', location: { fixture: 'cascade', data: [4, 2] } },
 				],
 			});
-			expect(game.history).toEqual(['hand-jammed', 'move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)']);
+			expect(game.history).toEqual(['hand-jammed', 'move 2⡁5⡀ QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)']);
 
 			expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
@@ -667,7 +667,7 @@ describe('game.autoMove', () => {
 				text: 'auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS',
 				type: 'auto-foundation',
 			});
-			expect(game.history).toEqual(['hand-jammed', 'move 25 QD-JS→KS', 'auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS']);
+			expect(game.history).toEqual(['hand-jammed', 'move 2⡁5⡀ QD-JS→KS', 'auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS']);
 
 			expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);

@@ -729,9 +729,7 @@ export function calcMoveActionText(from: CardSequence, to: CardSequence): string
 	const from_location = from.cards[0].location;
 	const to_card: Card | undefined = to.cards.at(to.cards.length - 1);
 	const to_location = to_card?.location ?? to.location;
-	// FIXME this is the thing to do; 200 test failures
-	// const shorthandMove = `${shorthandPosition(from_location, true)}${shorthandPosition(to_location, !!to_card)}`;
-	const shorthandMove = `${shorthandPosition(from_location)}${shorthandPosition(to_location)}`;
+	const shorthandMove = `${shorthandPosition(from_location, true)}${shorthandPosition(to_location, !!to_card || to_location.fixture === 'foundation')}`;
 	return `move ${shorthandMove} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`;
 }
 

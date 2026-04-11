@@ -342,7 +342,7 @@ describe('game.parse', () => {
 
 			test('first move', () => {
 				const game = new FreeCell().shuffle32(3).dealAll().moveByShorthand('2a');
-				expect(game.history).toEqual(['shuffle deck (3)', 'deal all cards', 'move 2a 4S→cell (auto-foundation 56 AH,2H)']);
+				expect(game.history).toEqual(['shuffle deck (3)', 'deal all cards', 'move 2⡆a 4S→cell (auto-foundation 56 AH,2H)']);
 				expect(game.previousAction).toEqual({
 					text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 					type: 'move-foundation',
@@ -351,7 +351,7 @@ describe('game.parse', () => {
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 
 				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
-				expect(gameWithHist.history).toEqual(['shuffle deck (3)', 'deal all cards', 'move 2a 4S→cell (auto-foundation 56 AH,2H)']);
+				expect(gameWithHist.history).toEqual(['shuffle deck (3)', 'deal all cards', 'move 2⡆a 4S→cell (auto-foundation 56 AH,2H)']);
 				expect(gameWithHist.previousAction).toEqual({
 					text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
 					type: 'move-foundation',
@@ -810,7 +810,12 @@ describe('game.parse', () => {
 				);
 
 				// and if we replay that one move, we get back to where we started
-				expect(gameUndid.moveByShorthand('67')).toEqual(game);
+				const gameRedid = gameUndid.moveByShorthand('67');
+				// if the game was invlid, we can't get an accurate move from the history
+				// FIXME (review) make sure "init invalid history" doesn't cause things to explode - awkward behavior is fine
+				expect(gameRedid.history).toEqual(['init without history', 'move 6⡀7⡇ 9H→TC']);
+				expect(game.history).toEqual(['init without history', 'move 67 9H→TC']);
+				expect(_omit(gameRedid, ['history'])).toEqual(_omit(game, ['history']));
 
 				const gameUndidReparsed = FreeCell.parse(gameUndid.print());
 				expect(gameUndid.previousAction).toEqual({

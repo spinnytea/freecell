@@ -1642,7 +1642,7 @@ describe('GameBoard', () => {
 				expect(fromToSpy.mock.calls).toEqual([['#cKS-collapse-wild', { top: 20, left: 30 }, { top: 20.5, left: 30, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				mockReset();
 				clickPile('4');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 1,
 					setSpy: 51,
@@ -1665,7 +1665,7 @@ describe('GameBoard', () => {
 				expect(toSpy.mock.calls).toEqual([['#cQD-collapse-wild', { rotation: 10, duration: 0.1, ease: 'power1.inOut' }, '<']]);
 				mockReset();
 				clickCard('KS');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 1,
 					toSpy: 2,
@@ -1692,7 +1692,7 @@ describe('GameBoard', () => {
 				// move card c around a bit
 				clickCard('QH');
 				clickCard('KC');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 18 QH-JC→KC']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀8⡃ QH-JC→KC']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 3,
 					toSpy: 2,
@@ -1716,7 +1716,7 @@ describe('GameBoard', () => {
 
 				clickCard('QH');
 				clickPile('3');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 13 QH-JC→cascade']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀3 QH-JC→cascade']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 4,
 					toSpy: 2,
@@ -1741,7 +1741,7 @@ describe('GameBoard', () => {
 
 				clickCard('QH');
 				clickPile('5');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀5 QH-JC→cascade']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 3,
 					setSpy: 101,
@@ -1778,7 +1778,7 @@ describe('GameBoard', () => {
 				mockReset();
 
 				clickCard('KH');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade', 'move 23 KH→cascade']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀5 QH-JC→cascade', 'move 2⡀3 KH→cascade']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 1,
 					setSpy: 51,
@@ -1788,7 +1788,7 @@ describe('GameBoard', () => {
 				expect(fromToSpy.mock.calls).toEqual([['#cKH-collapse-wild', { top: 20, left: 20 }, { top: 20, left: 30, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				mockReset();
 				clickCard('KH');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade', 'move 26 KH→cascade']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀5 QH-JC→cascade', 'move 2⡀6 KH→cascade']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 1,
 					setSpy: 51,
@@ -1798,7 +1798,7 @@ describe('GameBoard', () => {
 				expect(fromToSpy.mock.calls).toEqual([['#cKH-collapse-wild', { top: 20, left: 30 }, { top: 20, left: 60, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				mockReset();
 				clickCard('KH');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade', 'move 21 KH→cascade']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀5 QH-JC→cascade', 'move 2⡀1 KH→cascade']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 1,
 					setSpy: 51,
@@ -1808,7 +1808,7 @@ describe('GameBoard', () => {
 				expect(fromToSpy.mock.calls).toEqual([['#cKH-collapse-wild', { top: 20, left: 60 }, { top: 20, left: 10, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				mockReset();
 				clickCard('KH'); // this is when we remove the move from the history
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀5 QH-JC→cascade']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 1,
 					setSpy: 51,
@@ -1841,7 +1841,7 @@ describe('GameBoard', () => {
 
 				clickCard('QH');
 				clickPile('6');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 16 QH-JC→cascade']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀6 QH-JC→cascade']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 3,
 					setSpy: 101,
@@ -1860,7 +1860,7 @@ describe('GameBoard', () => {
 
 				clickCard('QH');
 				clickPile('1');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 3,
 					setSpy: 101,
@@ -1879,7 +1879,7 @@ describe('GameBoard', () => {
 
 				clickCard('QD');
 				clickPile('a');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 2,
 					setSpy: 102,
@@ -1908,7 +1908,7 @@ describe('GameBoard', () => {
 				mockReset();
 
 				clickCard('KS');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 35 KS→cascade']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀5 KS→cascade']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 1,
 					setSpy: 51,
@@ -1919,7 +1919,7 @@ describe('GameBoard', () => {
 				mockReset();
 
 				clickCard('KS');
-				expect(cribGame().history).toEqual(['hand-jammed', 'move 36 KS→cascade']);
+				expect(cribGame().history).toEqual(['hand-jammed', 'move 3⡀6 KS→cascade']);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 1,
 					setSpy: 51,

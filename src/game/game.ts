@@ -11,6 +11,7 @@ import {
 	parseShorthandCard,
 	PileSH,
 	RankList,
+	removeBraille,
 	shorthandCard,
 	shorthandPosition,
 	shorthandSequenceWithPosition,
@@ -269,6 +270,7 @@ export class FreeCell {
 		this.flashCards = flashCards ?? null;
 
 		this.previousAction = action;
+		this.previousAction.text = removeBraille(action.text);
 		this.history = history ?? [];
 	}
 

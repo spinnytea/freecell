@@ -1097,7 +1097,7 @@ describe('game.touch', () => {
 							' QC QD QH QS TC 9D TH TS \n' +
 							' KC KD KH KS JC JD JH JS \n' +
 							':d TD \n' +
-							' invalid move hk TD→deck\n' +
+							' invalid move h⡁k TD→deck\n' +
 							' hand-jammed'
 					);
 					expect(burried.previousAction).toEqual({
@@ -1148,7 +1148,7 @@ describe('game.touch', () => {
 								' QC QD QH QS TC 9D TH TS \n' +
 								' KC       KS JC JD JH JS \n' +
 								':d TD KH KD \n' +
-								' invalid move hk TD→deck\n' +
+								' invalid move h⡁k TD→deck\n' +
 								' hand-jammed'
 						);
 						expect(burried.previousAction).toEqual({
@@ -1234,7 +1234,7 @@ describe('game.touch', () => {
 								' 5S QH 8C 9D KS QD 4H AC \n' +
 								' 2H TC TH                \n' +
 								':d 6D \n' +
-								' invalid move 4k 6D→deck\n' +
+								' invalid move 4⡅k 6D→deck\n' +
 								' deal all cards\n' +
 								' shuffle deck (5)'
 						);
@@ -1287,7 +1287,7 @@ describe('game.touch', () => {
 									' 5S QH 8C 9D KS QD 4H AC \n' +
 									' 2H TC TH                \n' +
 									':d 6D 6H 6C QC JS 9S AD 7C TS \n' +
-									' invalid move 4k 6D→deck\n' +
+									' invalid move 4⡅k 6D→deck\n' +
 									' deal 44 cards\n' +
 									' shuffle deck (5)'
 							);
@@ -1335,7 +1335,7 @@ describe('game.touch', () => {
 									' 5S QH 8C 9D KS QD 4H AC \n' +
 									' 2H TC TH                \n' +
 									':d 6H 6D 6C QC JS 9S AD 7C TS \n' +
-									' invalid move 4k 6D→6H\n' +
+									' invalid move 4⡅k⡇ 6D→6H\n' +
 									' deal 44 cards\n' +
 									' shuffle deck (5)'
 							);
@@ -1383,7 +1383,7 @@ describe('game.touch', () => {
 									' 5S QH 8C 9D KS QD 4H AC \n' +
 									' 2H TC TH                \n' +
 									':d 6H 6C QC JS 9S 6D AD 7C TS \n' +
-									' invalid move 4k 6D→9S\n' +
+									' invalid move 4⡅k⡃ 6D→9S\n' +
 									' deal 44 cards\n' +
 									' shuffle deck (5)'
 							);
@@ -1431,7 +1431,7 @@ describe('game.touch', () => {
 									' 5S QH 8C 9D KS QD 4H AC \n' +
 									' 2H TC TH                \n' +
 									':d 6H 6C QC JS 9S AD 7C TS 6D \n' +
-									' invalid move 4k 6D→TS\n' +
+									' invalid move 4⡅k⡀ 6D→TS\n' +
 									' deal 44 cards\n' +
 									' shuffle deck (5)'
 							);
@@ -1885,7 +1885,7 @@ describe('game.touch', () => {
 								'          QC       JC KC \n' +
 								'          JD       TD QH \n' +
 								':d TC 9D 8C \n' +
-								' invalid move 2k TC-9D-8C→deck\n' +
+								' invalid move 2⡀k TC-9D-8C→deck\n' +
 								' hand-jammed'
 						);
 					});
@@ -1919,7 +1919,7 @@ describe('game.touch', () => {
 									'          QC             \n' +
 									'          JD             \n' +
 									':d TC 9D 8C KH KC QH QD JC TD 9C \n' +
-									' invalid move 2k TC-9D-8C→deck\n' +
+									' invalid move 2⡀k TC-9D-8C→deck\n' +
 									' hand-jammed'
 							);
 						});
@@ -1955,7 +1955,7 @@ describe('game.touch', () => {
 									'          QC             \n' +
 									'          JD             \n' +
 									':d KH TC 9D 8C KC QH QD JC TD 9C \n' +
-									' invalid move 2k TC-9D-8C→KH\n' +
+									' invalid move 2⡀k⡆ TC-9D-8C→KH\n' +
 									' hand-jammed'
 							);
 						});
@@ -1988,7 +1988,7 @@ describe('game.touch', () => {
 									'          QC             \n' +
 									'          JD             \n' +
 									':d KH KC QH QD JC TC 9D 8C TD 9C \n' +
-									' invalid move 2k TC-9D-8C→JC\n' +
+									' invalid move 2⡀k⡂ TC-9D-8C→JC\n' +
 									' hand-jammed'
 							);
 						});
@@ -2021,7 +2021,7 @@ describe('game.touch', () => {
 									'          QC             \n' +
 									'          JD             \n' +
 									':d KH KC QH QD JC TD 9C TC 9D 8C \n' +
-									' invalid move 2k TC-9D-8C→9C\n' +
+									' invalid move 2⡀k⡀ TC-9D-8C→9C\n' +
 									' hand-jammed'
 							);
 						});
@@ -2372,7 +2372,7 @@ describe('game.touch', () => {
 					type: 'move-foundation',
 					tweenCards: [{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } }],
 				});
-				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards', 'move 53 6H→7C (auto-foundation 2 AD)']);
+				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards', 'move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)']);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
 				expect(game.selection).toEqual(null);
 				expect(game.availableMoves).toEqual(null);
@@ -2428,7 +2428,7 @@ describe('game.touch', () => {
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +
-						' move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)\n' +
+						' move 7⡀8 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)\n' +
 						' hand-jammed'
 				);
 				expect(game.previousAction).toEqual({
@@ -2436,7 +2436,7 @@ describe('game.touch', () => {
 					type: 'move-foundation',
 					tweenCards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [7, 0] } }],
 				});
-				expect(game.history).toEqual(['hand-jammed', 'move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)']);
+				expect(game.history).toEqual(['hand-jammed', 'move 7⡀8 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)']);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 				expect(game.selection).toEqual(null);
 				expect(game.availableMoves).toEqual(null);
@@ -2466,7 +2466,7 @@ describe('game.touch', () => {
 						'                         \n' +
 						':    A M A Z I N G !    :\n' +
 						'                         \n' +
-						' move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)\n' +
+						' move 4⡆6⡅ AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)\n' +
 						' deal all cards'
 				);
 				expect(game.previousAction).toEqual({
@@ -2476,7 +2476,7 @@ describe('game.touch', () => {
 				});
 				expect(game.history).toEqual([
 					'deal all cards',
-					'move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
+					'move 4⡆6⡅ AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
 				]);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 				expect(game.selection).toEqual(null);

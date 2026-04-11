@@ -447,10 +447,10 @@ describe('game.undo (+ history)', () => {
 								'                         \n' +
 								':    Y O U   W I N !    :\n' +
 								'                         \n' +
-								' move ah KC→QC\n' +
+								' move ah⡀ KC→QC\n' +
 								' hand-jammed'
 						);
-						expect(game.history).toEqual(['hand-jammed', 'move ah KC→QC']);
+						expect(game.history).toEqual(['hand-jammed', 'move ah⡀ KC→QC']);
 						expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 						expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
@@ -480,10 +480,10 @@ describe('game.undo (+ history)', () => {
 								'             AC KD KH KS \n' +
 								'                         \n' +
 								':d KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C \n' +
-								' move ah AC→foundation\n' +
+								' move ah⡀ AC→foundation\n' +
 								' hand-jammed'
 						);
-						expect(game.history).toEqual(['hand-jammed', 'move ah AC→foundation']);
+						expect(game.history).toEqual(['hand-jammed', 'move ah⡀ AC→foundation']);
 						expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 						expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
@@ -514,10 +514,10 @@ describe('game.undo (+ history)', () => {
 								' KC          JC QD KH KS \n' +
 								'    KD                   \n' +
 								'    QC                   \n' +
-								' move b2 QC→KD\n' +
+								' move b2⡀ QC→KD\n' +
 								' hand-jammed'
 						);
-						expect(game.history).toEqual(['hand-jammed', 'move b2 QC→KD']);
+						expect(game.history).toEqual(['hand-jammed', 'move b2⡀ QC→KD']);
 						expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 						expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
@@ -526,6 +526,7 @@ describe('game.undo (+ history)', () => {
 
 					describe('sequence', () => {
 						test.todo('top');
+						// FIXME why is this commented out? there's no description
 						// t('top', () => {
 						// 	let game = FreeCell.parse(
 						// 		'' + //
@@ -607,10 +608,10 @@ describe('game.undo (+ history)', () => {
 									' QD QC                   \n' +
 									' JC JD                   \n' +
 									'    TC                   \n' +
-									' move b2 TC→JD\n' +
+									' move b2⡂ TC→JD\n' +
 									' hand-jammed'
 							);
-							expect(game.history).toEqual(['hand-jammed', 'move b2 TC→JD']);
+							expect(game.history).toEqual(['hand-jammed', 'move b2⡂ TC→JD']);
 							expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 							expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
@@ -659,6 +660,7 @@ describe('game.undo (+ history)', () => {
 
 				// but we (will) allow the player to fuss with Aces on the foundation
 				// so we need to undo that
+				// FIXME to foundation needs single/empty
 				test.todo('to: foundation');
 
 				describe('to: cascade', () => {
@@ -694,7 +696,7 @@ describe('game.undo (+ history)', () => {
 							'' + //
 								' KC QC       JC QD KH KS \n' +
 								'    KD                   \n' +
-								' move 1b QC→cell\n' +
+								' move 1⡀b QC→cell\n' +
 								' hand-jammed'
 						);
 						expect(game.undo().print()).toBe(
@@ -717,7 +719,7 @@ describe('game.undo (+ history)', () => {
 							'' + //
 								' KC          QC QD KH KS \n' +
 								'    KD                   \n' +
-								' move 1h QC→JC\n' +
+								' move 1⡀h⡀ QC→JC\n' +
 								' hand-jammed'
 						);
 						expect(game.undo().print()).toBe(
@@ -752,7 +754,7 @@ describe('game.undo (+ history)', () => {
 									' KC          JC QD KH KS \n' +
 									'    KD                   \n' +
 									'    QC                   \n' +
-									' move 12 QC→KD\n' +
+									' move 1⡀2⡀ QC→KD\n' +
 									' hand-jammed'
 							);
 							expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
@@ -795,7 +797,7 @@ describe('game.undo (+ history)', () => {
 										'       QD QC             \n' +
 										'       JC JD             \n' +
 										'       TD                \n' +
-										' move 23 TD→JC\n' +
+										' move 2⡀3⡂ TD→JC\n' +
 										' hand-jammed'
 								);
 								game = game.undo();
@@ -1191,7 +1193,7 @@ describe('game.undo (+ history)', () => {
 					type: 'move-foundation',
 					tweenCards: [{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } }],
 				});
-				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards', 'move 53 6H→7C (auto-foundation 2 AD)']);
+				expect(game.history).toEqual(['shuffle deck (5)', 'deal all cards', 'move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)']);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 6] });
 				expect(game.selection).toBe(null);
 				expect(game.availableMoves).toBe(null);
@@ -1392,13 +1394,13 @@ describe('game.undo (+ history)', () => {
 			);
 			expect(game.history).toEqual(['hand-jammed']);
 			game = game.$touchAndMove({ fixture: 'cascade', data: [2, 0] });
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade']);
 			game = game.$touchAndMove({ fixture: 'cascade', data: [3, 0] });
-			expect(game.history).toEqual(['hand-jammed', 'move 35 KS→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀5 KS→cascade']);
 			game = game.$touchAndMove({ fixture: 'cascade', data: [4, 0] });
-			expect(game.history).toEqual(['hand-jammed', 'move 36 KS→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀6 KS→cascade']);
 			game = game.$touchAndMove({ fixture: 'cascade', data: [5, 0] });
-			expect(game.history).toEqual(['hand-jammed', 'move 37 KS→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀7 KS→cascade']);
 
 			expect(game.print()).toBe(
 				'' + //
@@ -1437,7 +1439,7 @@ describe('game.undo (+ history)', () => {
 				.setCursor({ fixture: 'cascade', data: [1, 6] })
 				.touch()
 				.autoMove({ autoFoundation: false });
-			expect(game.history).toEqual(['shuffle deck (6)', 'deal all cards', 'move 25 6C→7D']);
+			expect(game.history).toEqual(['shuffle deck (6)', 'deal all cards', 'move 2⡆5⡅ 6C→7D']);
 			game = game
 				.setCursor({ fixture: 'cascade', data: [4, 6] })
 				.touch()
@@ -1476,15 +1478,15 @@ describe('game.undo (+ history)', () => {
 						'             QC JD KH TS \n' +
 						' KD          JS KC       \n' +
 						' QS          KS QD       \n' +
-						' move 36 KC-QD→cascade\n' +
-						' move 23 KC-QD→cascade (auto-foundation 1 JD)\n' +
+						' move 3⡀6 KC-QD→cascade\n' +
+						' move 2⡀3 KC-QD→cascade (auto-foundation 1 JD)\n' +
 						' hand-jammed'
 				);
 
-				expect(game.history).toEqual(['hand-jammed', 'move 23 KC-QD→cascade (auto-foundation 1 JD)', 'move 36 KC-QD→cascade']);
+				expect(game.history).toEqual(['hand-jammed', 'move 2⡀3 KC-QD→cascade (auto-foundation 1 JD)', 'move 3⡀6 KC-QD→cascade']);
 
 				game = game.undo();
-				expect(game.history).toEqual(['hand-jammed', 'move 23 KC-QD→cascade (auto-foundation 1 JD)']);
+				expect(game.history).toEqual(['hand-jammed', 'move 2⡀3 KC-QD→cascade (auto-foundation 1 JD)']);
 				game = game.undo();
 				expect(game.history).toEqual(['hand-jammed']);
 			});
@@ -1511,18 +1513,18 @@ describe('game.undo (+ history)', () => {
 						'             QC JD KH TS \n' +
 						' KD          JS KC       \n' +
 						' QS          KS QD       \n' +
-						' move 36 KC-QD→cascade\n' +
+						' move 3⡀6 KC-QD→cascade\n' +
 						' auto-foundation 1 JD\n' +
-						' move 23 KC-QD→cascade\n' +
+						' move 2⡀3 KC-QD→cascade\n' +
 						' hand-jammed'
 				);
 
-				expect(game.history).toEqual(['hand-jammed', 'move 23 KC-QD→cascade', 'auto-foundation 1 JD', 'move 36 KC-QD→cascade']);
+				expect(game.history).toEqual(['hand-jammed', 'move 2⡀3 KC-QD→cascade', 'auto-foundation 1 JD', 'move 3⡀6 KC-QD→cascade']);
 
 				game = game.undo();
-				expect(game.history).toEqual(['hand-jammed', 'move 23 KC-QD→cascade', 'auto-foundation 1 JD']);
+				expect(game.history).toEqual(['hand-jammed', 'move 2⡀3 KC-QD→cascade', 'auto-foundation 1 JD']);
 				game = game.undo();
-				expect(game.history).toEqual(['hand-jammed', 'move 23 KC-QD→cascade']);
+				expect(game.history).toEqual(['hand-jammed', 'move 2⡀3 KC-QD→cascade']);
 				game = game.undo();
 				expect(game.history).toEqual(['hand-jammed']);
 			});
@@ -1540,17 +1542,17 @@ describe('game.undo (+ history)', () => {
 					' hand-jammed'
 			);
 			game = game.moveByShorthand('12');
-			expect(game.history).toEqual(['hand-jammed', 'move 12 JH→QS']);
+			expect(game.history).toEqual(['hand-jammed', 'move 1⡀2⡁ JH→QS']);
 			game = game.moveByShorthand('21');
-			expect(game.history).toEqual(['hand-jammed', 'move 12 JH→QS', 'move 21 KH-QS-JH→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 1⡀2⡁ JH→QS', 'move 2⡀1 KH-QS-JH→cascade']);
 			game = game.undo().undo().moveByShorthand('13');
-			expect(game.history).toEqual(['hand-jammed', 'move 13 JH→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 1⡀3 JH→cascade']);
 			game = game.moveByShorthand('34');
-			expect(game.history).toEqual(['hand-jammed', 'move 14 JH→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 1⡀4 JH→cascade']);
 			game = game.undo().moveByShorthand('12');
-			expect(game.history).toEqual(['hand-jammed', 'move 12 JH→QS']);
+			expect(game.history).toEqual(['hand-jammed', 'move 1⡀2⡁ JH→QS']);
 			game = game.$moveCardToPosition('JH', '3');
-			expect(game.history).toEqual(['hand-jammed', 'move 13 JH→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 1⡀3 JH→cascade']);
 		});
 
 		// similar to collapsing the moves into one
@@ -1649,9 +1651,9 @@ describe('game.undo (+ history)', () => {
 			// move card a
 			// move card b
 			game = game.$moveCardToPosition('KS', '4');
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade']);
 			game = game.$touchAndMove('QD');
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS']);
 			expect(game.print()).toBe(
 				'' + //
 					'             9C 9D TH JS \n' +
@@ -1665,13 +1667,13 @@ describe('game.undo (+ history)', () => {
 			// move card c around a bit
 			game = game.$touchAndMove('QH');
 			// prettier-ignore
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 18 QH-JC→KC']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀8⡂ QH-JC→KC']);
 			game = game.$moveCardToPosition('QH', '3');
 			// prettier-ignore
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 13 QH-JC→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀3 QH-JC→cascade']);
 			game = game.$moveCardToPosition('QH', '5');
 			// prettier-ignore
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀5 QH-JC→cascade']);
 			expect(game.print()).toBe(
 				'' + //
 					'             9C 9D TH JS \n' +
@@ -1685,16 +1687,16 @@ describe('game.undo (+ history)', () => {
 			// move card d a bit, and then back
 			game = game.$touchAndMove('KH');
 			// prettier-ignore
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade', 'move 23 KH→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀5 QH-JC→cascade', 'move 2⡀3 KH→cascade']);
 			game = game.$touchAndMove();
 			// prettier-ignore
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade', 'move 26 KH→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀5 QH-JC→cascade', 'move 2⡀6 KH→cascade']);
 			game = game.$touchAndMove();
 			// prettier-ignore
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade', 'move 21 KH→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀5 QH-JC→cascade', 'move 2⡀1 KH→cascade']);
 			game = game.$touchAndMove();
 			// prettier-ignore
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 15 QH-JC→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀5 QH-JC→cascade']);
 			expect(game.print()).toBe(
 				'' + //
 					'             9C 9D TH JS \n' +
@@ -1709,15 +1711,15 @@ describe('game.undo (+ history)', () => {
 			// move card b back
 			game = game.$moveCardToPosition('QH', '6');
 			// prettier-ignore
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS', 'move 16 QH-JC→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀6 QH-JC→cascade']);
 			game = game.$moveCardToPosition('QH', '1');
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade', 'move a4 QD→KS']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS']);
 			game = game.$moveCardToPosition('QD', 'a');
-			expect(game.history).toEqual(['hand-jammed', 'move 34 KS→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade']);
 			game = game.$touchAndMove('KS');
-			expect(game.history).toEqual(['hand-jammed', 'move 35 KS→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀5 KS→cascade']);
 			game = game.$touchAndMove();
-			expect(game.history).toEqual(['hand-jammed', 'move 36 KS→cascade']);
+			expect(game.history).toEqual(['hand-jammed', 'move 3⡀6 KS→cascade']);
 			// move card a back
 			// (no moves anymore, just shuffle and deal)
 			game = game.$touchAndMove();
@@ -1764,18 +1766,18 @@ describe('game.undo (+ history)', () => {
 		game.history.unshift('hand-jammed');
 		expect(game.history).toEqual([
 			'hand-jammed',
-			// 'move 7c QC→cell',
-			// 'move 7h 4H→3H',
-			// 'move 71 JC→QH',
-			// 'move 78 6S→7H',
-			'move 7h 3C→2C (auto-foundation 7 2S)',
-			'move ah 3S→2S',
-			'move b8 5D→6S',
-			'move 34 7C-6H-5S→cascade',
-			'move 31 TH→JC',
-			'move 32 8C→9D',
+			// 'move 7⡅c QC→cell',
+			// 'move 7⡄h⡂ 4H→3H',
+			// 'move 7⡃1⡀ JC→QH',
+			// 'move 7⡂8⡆ 6S→7H',
+			'move 7⡁h⡁ 3C→2C (auto-foundation 7 2S)',
+			'move ah⡃ 3S→2S',
+			'move b8⡇ 5D→6S',
+			'move 3⡆4 7C-6H-5S→cascade',
+			'move 3⡅1⡁ TH→JC',
+			'move 3⡄2⡁ 8C→9D',
 			'move c7 QC→cascade',
-			'move 37 JD→QC',
+			'move 3⡃7⡀ JD→QC',
 		]);
 		const gamePrintHist = game.print({ includeHistory: true });
 		expect(gamePrintHist).toBe(
@@ -1794,14 +1796,14 @@ describe('game.undo (+ history)', () => {
 				'             7S          \n' +
 				'             6D          \n' +
 				'             5C          \n' +
-				' move 37 JD→QC\n' +
+				' move 3⡃7⡀ JD→QC\n' +
 				' move c7 QC→cascade\n' +
-				' move 32 8C→9D\n' +
-				' move 31 TH→JC\n' +
-				' move 34 7C-6H-5S→cascade\n' +
-				' move b8 5D→6S\n' +
-				' move ah 3S→2S\n' +
-				' move 7h 3C→2C (auto-foundation 7 2S)\n' +
+				' move 3⡄2⡁ 8C→9D\n' +
+				' move 3⡅1⡁ TH→JC\n' +
+				' move 3⡆4 7C-6H-5S→cascade\n' +
+				' move b8⡇ 5D→6S\n' +
+				' move ah⡃ 3S→2S\n' +
+				' move 7⡁h⡁ 3C→2C (auto-foundation 7 2S)\n' +
 				' hand-jammed'
 		);
 

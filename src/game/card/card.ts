@@ -440,18 +440,21 @@ export function shorthandSequence(sequence: CardSequence) {
 	return sequence.cards.map((card) => shorthandCard(card)).join('-');
 }
 
-// FIXME (5-priority) (refactor) (coords) remove `includeD0` and make 2 separate methods
+// FIXME (5-priority) (refactor) (coords) remove `includeBraille` and make 2 separate methods
 //  - locationToPosition
 //  - locationToSh
 // FIXME always use braille for position
 //  - exception: pile for cell, cascade; (needed pile for deck, foundation)
 //  - exception: game.print({ includeHistory: true })
 //  - (maybe it's easier to just start with: always use braille in the history)
-export function shorthandPosition(location: CardLocation, includeD0 = false): PileSH | LocationSH {
+export function shorthandPosition(
+	location: CardLocation,
+	includeBraille = false
+): PileSH | LocationSH {
 	const d0 = location.data[0];
 	switch (location.fixture) {
 		case 'deck': {
-			const braille = includeD0 && d0 >= 0 ? countToBraille(d0) : '';
+			const braille = includeBraille && d0 >= 0 ? countToBraille(d0) : '';
 			return ('k' + braille) as PileSH;
 		}
 		case 'cell': {
@@ -461,12 +464,12 @@ export function shorthandPosition(location: CardLocation, includeD0 = false): Pi
 			break;
 		}
 		case 'foundation': {
-			const braille = includeD0 && d0 >= 0 ? countToBraille(d0) : '';
+			const braille = includeBraille && d0 >= 0 ? countToBraille(d0) : '';
 			return ('h' + braille) as PileSH;
 		}
 		case 'cascade': {
 			const d1 = location.data[1];
-			const braille = includeD0 && d1 >= 0 ? countToBraille(d1) : '';
+			const braille = includeBraille && d1 >= 0 ? countToBraille(d1) : '';
 			if (d0 === 9) {
 				return ('0' + braille) as PileSH;
 			} else if (d0 >= 0 && d0 < 9) {
@@ -481,7 +484,7 @@ export function shorthandPosition(location: CardLocation, includeD0 = false): Pi
 export function shorthandSequenceWithPosition(sequence: CardSequence) {
 	// but don't include the position if this is select-to-peek
 	if (sequence.peekOnly) return shorthandSequence(sequence);
-	return shorthandPosition(sequence.location) + ' ' + shorthandSequence(sequence);
+	return shorthandPosition(sequence.location, true) + ' ' + shorthandSequence(sequence);
 }
 
 /**
@@ -548,5 +551,17 @@ export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLo
 	we can use them to get an absolute position of a cursor (if we log a position in a cursor action).
 */
 const START_OF_8_DOT_BRAILLE = 0x2840;
+const end = START_OF_8_DOT_BRAILLE + 191;
 export const countToBraille = (count = 0) => String.fromCodePoint(START_OF_8_DOT_BRAILLE + count);
 export const brailleToCount = (char = '⡀') => char.charCodeAt(0) - START_OF_8_DOT_BRAILLE;
+/** FIXME @deprecated just for now? or toss it? */
+export function removeBraille(actionText: string | undefined): string {
+	if (!actionText) return '';
+	if (actionText.startsWith('cursor')) return actionText;
+	return [...actionText]
+		.filter((ch) => {
+			const code = ch.codePointAt(0);
+			return code === undefined || code < START_OF_8_DOT_BRAILLE || code > end;
+		})
+		.join('');
+}
