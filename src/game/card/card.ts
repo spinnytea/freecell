@@ -78,7 +78,7 @@ export const PileSHList = [
 	cascades: 1 - 9, 0 (1-8, but we allow 9 and 10 columns)
 	deck: k
 
-	TODO (5-priority) (review) (coords) every use of `position`, `Position`
+	TODO (5-priority) (review) (coords) every use of `position`, `Position`; use {@link PileSH} and {@link LocationSH} as appropriate
 
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */
@@ -355,19 +355,18 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 /* PRINT / PARSE */
 /* ************* */
 
-// FIXME (5-priority) (refactor) (rename) (types) rename `shorthandCard` to `shorthandRS`
-// FIXME (5-priority) (refactor) (rename) (types) rename `shorthand` to `rs` (when it is of type RS)
-// FIXME (techdebt) (review) what does 'shorthand' even mean?
-//  - rank/suit/card/sequence
-//  - pile/position/move/history
+// TODO (techdebt) (review) what does 'shorthand' even mean?
+//  - rank,suit/card/sequence
+//  - pile/location/move/history
 //  - parseShorthandMove, parseShorthandPositionForMove, parseShorthandPositionForSelect
 //  - review every use of `shorthand`, `sh`, "Shorthand"
 //  - ---
 //  - "sh" just means "the text representation"
-//  - `Pile` is the "code" and `PileSH` is how we represent it in print/parse
+//  - `Pile` is the code/json and `PileSH` is how we represent it in print/parse
 //  - so this is just an encode/decode process between JSON and string
-//  - maybe we stop using "shorthand" altogether and start using "text"
+//  - maybe we stop using "shorthand" altogether and start using "str"
 //  - maybe we stick with "SH" suffix matching the analogous object
+//  - PileStr, LocationStr, CardStr 🤔
 export function shorthandCard(card: CardShorthand | null | undefined): CardSH | '  ' {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
@@ -510,15 +509,21 @@ export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLo
 		case '9':
 			// this isn't a valid cursor position, it will need to be clamped
 			// cascades can have sequences, so you need to decide if you really want the "bottom"
-			return { fixture: 'cascade', data: [parseInt(p, 10) - 1, BOTTOM_OF_CASCADE] };
+			return {
+				fixture: 'cascade',
+				data: [parseInt(p, 10) - 1, p.length === 2 ? brailleToCount(p[1]) : BOTTOM_OF_CASCADE],
+			};
 		// ten
 		case '0':
-			return { fixture: 'cascade', data: [9, BOTTOM_OF_CASCADE] };
+			return {
+				fixture: 'cascade',
+				data: [9, p.length === 2 ? brailleToCount(p[1]) : BOTTOM_OF_CASCADE],
+			};
 		case 'h':
 			// h could refer to _any_ of the foundations; this needs to be verified
 			return { fixture: 'foundation', data: [p.length === 2 ? brailleToCount(p[1]) : 0] };
 		case 'k':
-			return { fixture: 'deck', data: [0] };
+			return { fixture: 'deck', data: [p.length === 2 ? brailleToCount(p[1]) : 0] };
 		case 'a':
 		case 'b':
 		case 'c':
