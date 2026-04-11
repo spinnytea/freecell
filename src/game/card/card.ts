@@ -35,7 +35,7 @@ export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	getRankForCompare(min) === getRankForCompare(max) - 1;
 
 /**
-	rank shorthand + suit shorthand
+	rank shorthand + suit shorthand, aka `rs`
 
 	XXX (techdebt) use type CardSH everywhere it makes sense
 
@@ -367,6 +367,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 //  - maybe we stop using "shorthand" altogether and start using "str"
 //  - maybe we stick with "SH" suffix matching the analogous object
 //  - PileStr, LocationStr, CardStr 🤔
+//  - rename to "printShorthandCard" to match "parseShorthandCard"
 export function shorthandCard(card: CardShorthand | null | undefined): CardSH | '  ' {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
@@ -374,13 +375,11 @@ export function shorthandCard(card: CardShorthand | null | undefined): CardSH | 
 	return (r + s).toUpperCase() as CardSH;
 }
 
-/** TODO (techdebt) (refactor) change `rs` to single string since that's how it's _always_ called */
-export function parseShorthandCard(r: string | undefined, s?: string): CardShorthand | null {
-	if (!s && r?.length === 2) {
-		s = r[1];
-		r = r[0];
-	}
-	if (r === ' ' && s === ' ') return null;
+export function parseShorthandCard(rs: string | undefined): CardShorthand | null {
+	if (!rs) return null;
+
+	const [r, s] = rs;
+	if (!r || r === ' ' || !s || s === ' ') return null;
 
 	let rank: Rank;
 	let suit: Suit;
@@ -414,7 +413,7 @@ export function parseShorthandCard(r: string | undefined, s?: string): CardShort
 			rank = 'joker';
 			break;
 		default:
-			throw new Error(`invalid rank shorthand: "${r ?? 'undefined'}"`);
+			throw new Error(`invalid rank shorthand: "${r}"`);
 	}
 
 	switch (s) {
@@ -431,7 +430,7 @@ export function parseShorthandCard(r: string | undefined, s?: string): CardShort
 			suit = 'spades';
 			break;
 		default:
-			throw new Error(`invalid suit shorthand: "${s ?? 'undefined'}"`);
+			throw new Error(`invalid suit shorthand: "${s}"`);
 	}
 
 	return { rank, suit };

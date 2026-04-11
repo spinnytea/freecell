@@ -1158,9 +1158,9 @@ export class FreeCell {
 		const nextCard = (spaces: (string | undefined)[]) => {
 			if (line.length < 3) throw new Error('not enough tokens');
 			spaces.push(line.pop());
-			const r = line.pop();
-			const s = line.pop();
-			const rs = parseShorthandCard(r, s);
+			const r = line.pop() ?? '';
+			const s = line.pop() ?? '';
+			const rs = parseShorthandCard(r + s);
 			if (!rs) return null;
 			return getCard(rs);
 		};

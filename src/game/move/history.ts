@@ -127,6 +127,7 @@ export interface PreviousAction {
 //  - we treat this text as a structured "source of truth" that human readable (it could have been a json object)
 //  - "move_regex" is basically a "decode" action
 //  - every actionText is an "encode" action (e.g. `calcMoveActionText`, but literally every `ACTION_TEXT_EXAMPLES`)
+// FIXME (5-priority) (refactor) (coords) MOVE_REGEX, MOVE_FOUNDATION_REGEX
 const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish|flourish52) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
@@ -225,7 +226,7 @@ export function parseCursorFromPreviousActionText(
 					// FIXME (5-priority) (refactor) (coords) when we use braille to make history accurate™️, all this testing will be moot
 
 					if (toShorthand === 'foundation') {
-						const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+						const shorthand = parseShorthandCard(fromShorthand);
 						const foundation_d0 = [];
 						while (foundation_d0.length < NUMBER_OF_FOUNDATIONS)
 							foundation_d0.push(foundation_d0.length);
@@ -244,7 +245,7 @@ export function parseCursorFromPreviousActionText(
 							cursor.data[0] = foundation_d0[0];
 						}
 					} else {
-						const shorthand = parseShorthandCard(toShorthand[0], toShorthand[1]);
+						const shorthand = parseShorthandCard(toShorthand);
 						const card = findCard(cards, shorthand);
 						if (cursor.fixture !== card.location.fixture) {
 							throw new Error(
@@ -259,7 +260,7 @@ export function parseCursorFromPreviousActionText(
 					if (toShorthand === 'cascade') {
 						cursor.data[1] = 0;
 					} else {
-						const shorthand = parseShorthandCard(toShorthand[0], toShorthand[1]);
+						const shorthand = parseShorthandCard(toShorthand);
 						const card = findCard(cards, shorthand);
 						if (card.location.fixture !== 'foundation') {
 							if (cursor.fixture !== card.location.fixture) {
@@ -281,7 +282,7 @@ export function parseCursorFromPreviousActionText(
 		case 'select':
 		case 'deselect': {
 			const { from, fromShorthand } = parseActionTextSelect(actionText);
-			const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+			const shorthand = parseShorthandCard(fromShorthand);
 			const card = findCard(cards, shorthand);
 			if (from) {
 				const cursor = parseShorthandPosition_INCOMPLETE(from);
@@ -361,7 +362,7 @@ export function parseAltCursorFromPreviousActionText(
 		case 'select':
 		case 'deselect': {
 			const { from, fromShorthand } = parseActionTextSelect(actionText);
-			const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+			const shorthand = parseShorthandCard(fromShorthand);
 			const card = findCard(cards, shorthand);
 			if (from) {
 				const cursor = parseShorthandPosition_INCOMPLETE(from);
@@ -511,7 +512,7 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 	// const firstFromShorthand = fromShorthands[0];
 	// if (!firstFromShorthand) throw new Error('no card to move: ' + actionText);
 
-	const firstCardSH = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+	const firstCardSH = parseShorthandCard(fromShorthand);
 	const firstCard = findCard(game.cards, firstCardSH);
 	if (shorthandPosition(firstCard.location) !== to)
 		throw new Error(

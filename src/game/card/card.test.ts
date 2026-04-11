@@ -136,14 +136,14 @@ describe('game/card', () => {
 		});
 
 		test('parseShorthandCard empty', () => {
-			expect(parseShorthandCard(' ', ' ')).toBe(null);
+			expect(parseShorthandCard('  ')).toBe(null);
 		});
 
-		test('parseShorthandCard throw', () => {
-			expect(() => parseShorthandCard(' ', undefined)).toThrow('invalid rank shorthand: " "');
-			expect(() => parseShorthandCard(undefined, undefined)).toThrow('invalid rank shorthand: "undefined"');
-			expect(() => parseShorthandCard('8', ' ')).toThrow('invalid suit shorthand: " "');
-			expect(() => parseShorthandCard('8', undefined)).toThrow('invalid suit shorthand: "undefined"');
+		test('parseShorthandCard invalid', () => {
+			expect(parseShorthandCard(' ')).toBe(null);
+			expect(parseShorthandCard(undefined)).toBe(null);
+			expect(parseShorthandCard('8 ')).toBe(null);
+			expect(parseShorthandCard('8')).toBe(null);
 		});
 	});
 
