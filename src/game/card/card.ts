@@ -50,6 +50,19 @@ export const getRankForCompare = (rank: Rank): number => RankList.indexOf(rank);
 export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	getRankForCompare(min) === getRankForCompare(max) - 1;
 
+/**
+	rank shorthand + suit shorthand
+
+	- FIXME (5-priority) (refactor) (types) use type CardSH everywhere it's easy (first pass)
+	  - this is not the "move shorthand" which will have the braille
+	  - this is the name of the card
+	- XXX (techdebt) use type CardSH everywhere it makes sense
+
+	@example 'KH'
+	@example 'AS'
+*/
+type CardSH = `${RankSH}${SuitSH}`;
+
 const FixtureList = ['deck', 'cell', 'foundation', 'cascade'] as const;
 
 export type Fixture = (typeof FixtureList)[number];
@@ -97,22 +110,9 @@ export function isPileSH(val: string): val is PileSH {
 // TODO (5-priority) (refactor) (coords) use braille (at least for h), remove the curosr arg
 //  - Position = PileSH + braille (coord)
 
-/**
-	rank shorthand + suit shorthand
-
-	- FIXME (5-priority) (refactor) (types) use type RS everywhere it's easy (first pass)
-	  - this is not the "move shorthand" which will have the braille
-	  - this is the name of the card
-	- XXX (techdebt) use type RS everywhere it makes sense
-
-	@example 'KH'
-	@example 'AS'
-*/
-type rsSH = `${RankSH}${SuitSH}`;
-
 export interface CardLocation {
 	readonly fixture: Fixture;
-	// FIXME (5-priority) (techdebt) (refactor) (rename) (coords) location.data → location.coords, d0/d1 → c0/c1
+	// XXX (5-priority) (techdebt) (refactor) (rename) (coords) location.data → location.coords, d0/d1 → c0/c1
 	readonly data: number[];
 }
 type LocationSH = `${PileSH}${string}`;
@@ -246,7 +246,10 @@ export function calcCardId(shorthand: string, gameBoardId?: string) {
 }
 
 export function calcPilemarkerId(location: CardLocation, gameBoardId?: string) {
-	let pileId = `pilemarker-${shorthandPosition(location)}-${(location.data[0] + 1).toString(10)}`;
+	let pileId = `pilemarker-${shorthandPosition(location)}`;
+	if (pileId === 'pilemarker-h') {
+		pileId += '-' + (location.data[0] + 1).toString(10);
+	}
 	if (gameBoardId) {
 		pileId += '-' + gameBoardId;
 	}
@@ -383,11 +386,11 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 //  - so this is just an encode/decode process between JSON and string
 //  - maybe we stop using "shorthand" altogether and start using "text"
 //  - maybe we stick with "SH" suffix matching the analogous object
-export function shorthandCard(card: CardShorthand | null | undefined): rsSH | '  ' {
+export function shorthandCard(card: CardShorthand | null | undefined): CardSH | '  ' {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
 	const s = card.suit[0];
-	return (r + s).toUpperCase() as rsSH;
+	return (r + s).toUpperCase() as CardSH;
 }
 
 /** TODO (techdebt) (refactor) change `rs` to single string since that's how it's _always_ called */

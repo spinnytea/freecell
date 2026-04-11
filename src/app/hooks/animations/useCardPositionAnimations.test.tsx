@@ -515,9 +515,9 @@ describe('useCardPositionAnimations', () => {
 						consoleDebugSpy: 1,
 					});
 					expect(toSpy.mock.calls).toEqual([
-						['#pilemarker-c-3', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
-						['#pilemarker-c-3', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
-						['#pilemarker-c-3', { x: '0', duration: 0.025, ease: 'sine.out' }],
+						['#pilemarker-c', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
+						['#pilemarker-c', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
+						['#pilemarker-c', { x: '0', duration: 0.025, ease: 'sine.out' }],
 					]);
 					expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 					expect(timeScaleSpy.mock.calls).toEqual([[MULTI_ANIMATION_TIMESCALE]]);
@@ -594,9 +594,9 @@ describe('useCardPositionAnimations', () => {
 							addSpy: 1,
 						});
 						expect(toSpy.mock.calls).toEqual([
-							['#pilemarker-c-3', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
-							['#pilemarker-c-3', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
-							['#pilemarker-c-3', { x: '0', duration: 0.025, ease: 'sine.out' }],
+							['#pilemarker-c', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
+							['#pilemarker-c', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
+							['#pilemarker-c', { x: '0', duration: 0.025, ease: 'sine.out' }],
 						]);
 						expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 					});
@@ -698,9 +698,9 @@ describe('useCardPositionAnimations', () => {
 							addSpy: 1,
 						});
 						expect(toSpy.mock.calls).toEqual([
-							['#pilemarker-3-3', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
-							['#pilemarker-3-3', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
-							['#pilemarker-3-3', { x: '0', duration: 0.025, ease: 'sine.out' }],
+							['#pilemarker-3', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
+							['#pilemarker-3', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
+							['#pilemarker-3', { x: '0', duration: 0.025, ease: 'sine.out' }],
 						]);
 						expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 					});
