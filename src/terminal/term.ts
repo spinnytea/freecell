@@ -1,4 +1,4 @@
-import { Position } from '@/game/card/card';
+import { isPileSH } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { printDeck, printHome, printTableau, printWin } from '@/game/io/print';
 import readline from 'readline';
@@ -37,33 +37,6 @@ type KeypressListener = (
 		  }
 		| undefined
 ) => void;
-
-const Hotkeys = [
-	'a',
-	'A',
-	'b',
-	'B',
-	'c',
-	'C',
-	'd',
-	'D',
-	'e',
-	'E',
-	'f',
-	'F',
-	'h',
-	'H',
-	'1',
-	'2',
-	'3',
-	'4',
-	'5',
-	'6',
-	'7',
-	'8',
-	'9',
-	'0',
-];
 
 function printGame() {
 	console.clear();
@@ -109,33 +82,34 @@ function printGame() {
 
 const listener: KeypressListener = (str = '<none>', key) => {
 	if (!key) return;
+	const keyNameLower = key.name.toLowerCase();
 	const before = game;
-	if (key.ctrl && key.name === 'c') {
+	if (key.ctrl && keyNameLower === 'c') {
 		console.log('Exiting...');
 		process.exit();
-	} else if (key.name === 'return' || key.name === 'space') {
+	} else if (keyNameLower === 'return' || keyNameLower === 'space') {
 		if (game.cursor.fixture === 'deck') {
 			game = game.$shuffleOrDealAll().$checkCanFlourish();
-		} else if (key.name === 'return') {
+		} else if (keyNameLower === 'return') {
 			game = game.touch();
 		} else {
 			game = game.$touchAndMove(game.cursor);
 		}
-	} else if (key.name === 'escape') {
+	} else if (keyNameLower === 'escape') {
 		game = game.clearSelection();
-	} else if (key.name === 'x') {
+	} else if (keyNameLower === 'x') {
 		game = game.$toggleCursor();
-	} else if (key.name === 'z') {
+	} else if (keyNameLower === 'z') {
 		game = game.$undoThenShuffle();
 	} else if (
-		key.name === 'up' ||
-		key.name === 'right' ||
-		key.name === 'left' ||
-		key.name === 'down'
+		keyNameLower === 'up' ||
+		keyNameLower === 'right' ||
+		keyNameLower === 'left' ||
+		keyNameLower === 'down'
 	) {
-		game = game.moveCursor(key.name);
-	} else if (Hotkeys.includes(key.name)) {
-		game = game.touchByPosition(key.name.toLowerCase() as Position);
+		game = game.moveCursor(keyNameLower);
+	} else if (isPileSH(keyNameLower)) {
+		game = game.touchByPile(keyNameLower);
 	} else {
 		void str;
 		// console.log(`You pressed: '${str}' (Key name: ${key.name})`);

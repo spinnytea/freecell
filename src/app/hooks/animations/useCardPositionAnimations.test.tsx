@@ -515,9 +515,9 @@ describe('useCardPositionAnimations', () => {
 						consoleDebugSpy: 1,
 					});
 					expect(toSpy.mock.calls).toEqual([
-						['#pilemarker-c-3', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
-						['#pilemarker-c-3', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
-						['#pilemarker-c-3', { x: '0', duration: 0.025, ease: 'sine.out' }],
+						['#pilemarker-c', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
+						['#pilemarker-c', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
+						['#pilemarker-c', { x: '0', duration: 0.025, ease: 'sine.out' }],
 					]);
 					expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 					expect(timeScaleSpy.mock.calls).toEqual([[MULTI_ANIMATION_TIMESCALE]]);
@@ -594,9 +594,9 @@ describe('useCardPositionAnimations', () => {
 							addSpy: 1,
 						});
 						expect(toSpy.mock.calls).toEqual([
-							['#pilemarker-c-3', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
-							['#pilemarker-c-3', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
-							['#pilemarker-c-3', { x: '0', duration: 0.025, ease: 'sine.out' }],
+							['#pilemarker-c', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
+							['#pilemarker-c', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
+							['#pilemarker-c', { x: '0', duration: 0.025, ease: 'sine.out' }],
 						]);
 						expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 					});
@@ -698,9 +698,9 @@ describe('useCardPositionAnimations', () => {
 							addSpy: 1,
 						});
 						expect(toSpy.mock.calls).toEqual([
-							['#pilemarker-3-3', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
-							['#pilemarker-3-3', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
-							['#pilemarker-3-3', { x: '0', duration: 0.025, ease: 'sine.out' }],
+							['#pilemarker-3', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
+							['#pilemarker-3', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
+							['#pilemarker-3', { x: '0', duration: 0.025, ease: 'sine.out' }],
 						]);
 						expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 					});
@@ -788,7 +788,7 @@ describe('useCardPositionAnimations', () => {
 									' 4D 4S    4C             \n' +
 									' select a 3D'
 							);
-							const gameStateTwo = gameStateOne.touchByPosition('h');
+							const gameStateTwo = gameStateOne.touchByPile('h');
 							expect(gameStateTwo.previousAction.text).not.toBe('deselect 3D');
 							expect(gameStateTwo.previousAction.text).toBe('move ah 3D→2D (auto-foundation 4 4C)');
 
@@ -1234,7 +1234,7 @@ describe('useCardPositionAnimations', () => {
 
 			test('· invalid move ah 3C→foundation', () => {
 				const gameStateOne = FreeCell.parse(ACTION_TEXT_EXAMPLES['invalid move ah 3C→foundation']);
-				const gameStateTwo = gameStateOne.$selectCard('3C').touchByPosition('h');
+				const gameStateTwo = gameStateOne.$selectCard('3C').touchByPile('h');
 				expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→foundation');
 
 				gsapUtilsRandom.mockReturnValueOnce(true); // animShakePile

@@ -17,7 +17,7 @@ describe('game.$checkCanFlourish', () => {
 	});
 
 	test('skips if selection', () => {
-		const game = new FreeCell().shuffle32(5).dealAll().touchByPosition('1').$checkCanFlourish();
+		const game = new FreeCell().shuffle32(5).dealAll().touchByPile('1').$checkCanFlourish();
 		expect(game.print()).toBe(
 			'' + //
 				'                         \n' +

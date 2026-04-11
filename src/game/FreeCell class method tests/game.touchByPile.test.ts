@@ -1,11 +1,11 @@
 import { omit as _omit } from 'lodash';
 import { availableMovesMinimized } from '@/app/testUtils';
-import { Position } from '@/game/card/card';
+import { isPileSH, PileSH } from '@/game/card/card';
 import { getMoves } from '@/game/catalog/solutions-catalog';
 import { FreeCell } from '@/game/game';
 import { PreviousAction } from '@/game/move/history';
 
-describe('game.touchByPosition', () => {
+describe('game.touchByPile', () => {
 	describe('no selection', () => {
 		const gamePrint =
 			'    TH 4H    2S 2H AC    \n' +
@@ -29,7 +29,7 @@ describe('game.touchByPosition', () => {
 
 		describe('deck', () => {
 			test('empty', () => {
-				const game = FreeCell.parse(gamePrint).touchByPosition('k');
+				const game = FreeCell.parse(gamePrint).touchByPile('k');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
 				expect(game.previousAction).toEqual({
 					text: 'touch stop',
@@ -42,7 +42,7 @@ describe('game.touchByPosition', () => {
 			test('not empty', () => {
 				let game = new FreeCell().shuffle32(5).dealAll({ demo: true, keepDeck: true });
 				expect(game.__printDeck()).toBe(' 6H 6C QC JS 9S AD 7C>TS ');
-				game = game.touchByPosition('k');
+				game = game.touchByPile('k');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [7] });
 				expect(game.previousAction).toEqual({
 					text: 'select 6H',
@@ -59,7 +59,7 @@ describe('game.touchByPosition', () => {
 
 		describe('cell', () => {
 			test('empty', () => {
-				const game = FreeCell.parse(gamePrint).touchByPosition('a');
+				const game = FreeCell.parse(gamePrint).touchByPile('a');
 				expect(game.previousAction).toEqual({
 					text: 'touch stop',
 					type: 'invalid',
@@ -69,7 +69,7 @@ describe('game.touchByPosition', () => {
 			});
 
 			test('single', () => {
-				const game = FreeCell.parse(gamePrint).touchByPosition('b');
+				const game = FreeCell.parse(gamePrint).touchByPile('b');
 				expect(game.previousAction).toEqual({
 					text: 'select b TH',
 					type: 'select',
@@ -90,7 +90,7 @@ describe('game.touchByPosition', () => {
 		describe('foundation', () => {
 			test('is a noop', () => {
 				const game = FreeCell.parse(gamePrint);
-				const g = game.touchByPosition('h');
+				const g = game.touchByPile('h');
 				expect(g.previousAction).toEqual({
 					text: 'touch stop',
 					type: 'invalid',
@@ -109,7 +109,7 @@ describe('game.touchByPosition', () => {
 
 		describe('cascade', () => {
 			test('empty', () => {
-				const game = FreeCell.parse(gamePrint).touchByPosition('5');
+				const game = FreeCell.parse(gamePrint).touchByPile('5');
 				expect(game.previousAction).toEqual({
 					text: 'touch stop',
 					type: 'invalid',
@@ -119,7 +119,7 @@ describe('game.touchByPosition', () => {
 			});
 
 			test('single', () => {
-				const game = FreeCell.parse(gamePrint).moveByShorthand('b5').touchByPosition('5');
+				const game = FreeCell.parse(gamePrint).moveByShorthand('b5').touchByPile('5');
 				expect(game.previousAction).toEqual({
 					text: 'select 5 TH',
 					type: 'select',
@@ -137,7 +137,7 @@ describe('game.touchByPosition', () => {
 			});
 
 			test('sequence', () => {
-				const game = FreeCell.parse(gamePrint).touchByPosition('2');
+				const game = FreeCell.parse(gamePrint).touchByPile('2');
 				expect(game.previousAction).toEqual({
 					text: 'select 2 4D-3C',
 					type: 'select',
@@ -158,7 +158,7 @@ describe('game.touchByPosition', () => {
 			// if we cannot move to the next place selected, we will try moveByShorthand, which will account for maxinim suze
 			// but maybe that's not the intent, this is just a first selection
 			test('picks the whole sequence even when we cannot move the whole thing', () => {
-				const game = FreeCell.parse(gamePrint).touchByPosition('4');
+				const game = FreeCell.parse(gamePrint).touchByPile('4');
 				expect(game.previousAction).toEqual({
 					text: 'select 4 KC-QD-JS-TD-9C-8D-7C',
 					type: 'select',
@@ -180,7 +180,7 @@ describe('game.touchByPosition', () => {
 			});
 
 			test('tanget: can then go on to other tasks', () => {
-				let game = FreeCell.parse(gamePrint).touchByPosition('4');
+				let game = FreeCell.parse(gamePrint).touchByPile('4');
 				expect(game.previousAction).toEqual({
 					text: 'select 4 KC-QD-JS-TD-9C-8D-7C',
 					type: 'select',
@@ -197,7 +197,7 @@ describe('game.touchByPosition', () => {
 				expect(game.availableMoves).toBeTruthy();
 
 				// 4 is already selected, this will clear it
-				game = game.touchByPosition('4');
+				game = game.touchByPile('4');
 				expect(game.previousAction).toEqual({
 					text: 'deselect 4 JS-TD-9C-8D-7C',
 					type: 'deselect',
@@ -207,81 +207,81 @@ describe('game.touchByPosition', () => {
 			});
 		});
 
-		describe('by position', () => {
+		describe('by pile', () => {
 			describe('4 cells, 8 cascades', () => {
 				test.each`
-					position | previousAction
-					${'a'}   | ${{ text: 'select a 2S', type: 'select' }}
-					${'b'}   | ${{ text: 'select b 2H', type: 'select' }}
-					${'c'}   | ${{ text: 'select c 2D', type: 'select' }}
-					${'d'}   | ${{ text: 'select d 2C', type: 'select' }}
-					${'e'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'f'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'h'}   | ${{ text: 'touch stop', type: 'invalid' }}
-					${'1'}   | ${{ text: 'select 1 3S', type: 'select' }}
-					${'2'}   | ${{ text: 'select 2 3H', type: 'select' }}
-					${'3'}   | ${{ text: 'select 3 3D', type: 'select' }}
-					${'4'}   | ${{ text: 'select 4 3C', type: 'select' }}
-					${'5'}   | ${{ text: 'select 5 4S', type: 'select' }}
-					${'6'}   | ${{ text: 'select 6 4H', type: 'select' }}
-					${'7'}   | ${{ text: 'select 7 4D', type: 'select' }}
-					${'8'}   | ${{ text: 'select 8 4C', type: 'select' }}
-					${'9'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'0'}   | ${{ text: 'deal all cards', type: 'deal' }}
-				`('select $position', ({ position, previousAction }: { position: Position; previousAction: PreviousAction }) => {
-					const game = new FreeCell({ cellCount: 4, cascadeCount: 8 }).dealAll({ demo: true }).touchByPosition(position);
+					pileSh | previousAction
+					${'a'} | ${{ text: 'select a 2S', type: 'select' }}
+					${'b'} | ${{ text: 'select b 2H', type: 'select' }}
+					${'c'} | ${{ text: 'select c 2D', type: 'select' }}
+					${'d'} | ${{ text: 'select d 2C', type: 'select' }}
+					${'e'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'f'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'h'} | ${{ text: 'touch stop', type: 'invalid' }}
+					${'1'} | ${{ text: 'select 1 3S', type: 'select' }}
+					${'2'} | ${{ text: 'select 2 3H', type: 'select' }}
+					${'3'} | ${{ text: 'select 3 3D', type: 'select' }}
+					${'4'} | ${{ text: 'select 4 3C', type: 'select' }}
+					${'5'} | ${{ text: 'select 5 4S', type: 'select' }}
+					${'6'} | ${{ text: 'select 6 4H', type: 'select' }}
+					${'7'} | ${{ text: 'select 7 4D', type: 'select' }}
+					${'8'} | ${{ text: 'select 8 4C', type: 'select' }}
+					${'9'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'0'} | ${{ text: 'deal all cards', type: 'deal' }}
+				`('select $pileSh', ({ pileSh, previousAction }: { pileSh: PileSH; previousAction: PreviousAction }) => {
+					const game = new FreeCell({ cellCount: 4, cascadeCount: 8 }).dealAll({ demo: true }).touchByPile(pileSh);
 					expect(game.previousAction).toEqual(previousAction);
 				});
 			});
 
 			describe('1 cells, 4 cascades', () => {
 				test.each`
-					position | previousAction
-					${'a'}   | ${{ text: 'select a 2C', type: 'select' }}
-					${'b'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'c'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'d'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'e'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'f'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'h'}   | ${{ text: 'touch stop', type: 'invalid' }}
-					${'1'}   | ${{ text: 'select 1 2S', type: 'select' }}
-					${'2'}   | ${{ text: 'select 2 2H', type: 'select' }}
-					${'3'}   | ${{ text: 'select 3 2D', type: 'select' }}
-					${'4'}   | ${{ text: 'select 4 3C', type: 'select' }}
-					${'5'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'6'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'7'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'8'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'9'}   | ${{ text: 'deal all cards', type: 'deal' }}
-					${'0'}   | ${{ text: 'deal all cards', type: 'deal' }}
-				`('select $position', ({ position, previousAction }: { position: Position; previousAction: PreviousAction }) => {
-					const game = new FreeCell({ cellCount: 1, cascadeCount: 4 }).dealAll({ demo: true }).touchByPosition(position);
+					pileSh | previousAction
+					${'a'} | ${{ text: 'select a 2C', type: 'select' }}
+					${'b'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'c'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'d'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'e'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'f'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'h'} | ${{ text: 'touch stop', type: 'invalid' }}
+					${'1'} | ${{ text: 'select 1 2S', type: 'select' }}
+					${'2'} | ${{ text: 'select 2 2H', type: 'select' }}
+					${'3'} | ${{ text: 'select 3 2D', type: 'select' }}
+					${'4'} | ${{ text: 'select 4 3C', type: 'select' }}
+					${'5'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'6'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'7'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'8'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'9'} | ${{ text: 'deal all cards', type: 'deal' }}
+					${'0'} | ${{ text: 'deal all cards', type: 'deal' }}
+				`('select $pileSh', ({ pileSh, previousAction }: { pileSh: PileSH; previousAction: PreviousAction }) => {
+					const game = new FreeCell({ cellCount: 1, cascadeCount: 4 }).dealAll({ demo: true }).touchByPile(pileSh);
 					expect(game.previousAction).toEqual(previousAction);
 				});
 			});
 
 			describe('6 cells, 10 cascades', () => {
 				test.each`
-					position | previousAction
-					${'a'}   | ${{ text: 'select a 3D', type: 'select' }}
-					${'b'}   | ${{ text: 'select b 3C', type: 'select' }}
-					${'c'}   | ${{ text: 'select c 2S', type: 'select' }}
-					${'d'}   | ${{ text: 'select d 2H', type: 'select' }}
-					${'e'}   | ${{ text: 'select e 2D', type: 'select' }}
-					${'f'}   | ${{ text: 'select f 2C', type: 'select' }}
-					${'h'}   | ${{ text: 'touch stop', type: 'invalid' }}
-					${'1'}   | ${{ text: 'select 1 3S', type: 'select' }}
-					${'2'}   | ${{ text: 'select 2 3H', type: 'select' }}
-					${'3'}   | ${{ text: 'select 3 5S', type: 'select' }}
-					${'4'}   | ${{ text: 'select 4 5H', type: 'select' }}
-					${'5'}   | ${{ text: 'select 5 5D', type: 'select' }}
-					${'6'}   | ${{ text: 'select 6 5C', type: 'select' }}
-					${'7'}   | ${{ text: 'select 7 4S', type: 'select' }}
-					${'8'}   | ${{ text: 'select 8 4H', type: 'select' }}
-					${'9'}   | ${{ text: 'select 9 4D', type: 'select' }}
-					${'0'}   | ${{ text: 'select 0 4C', type: 'select' }}
-				`('select $position', ({ position, previousAction }: { position: Position; previousAction: PreviousAction }) => {
-					const game = new FreeCell({ cellCount: 6, cascadeCount: 10 }).dealAll({ demo: true }).touchByPosition(position);
+					pileSh | previousAction
+					${'a'} | ${{ text: 'select a 3D', type: 'select' }}
+					${'b'} | ${{ text: 'select b 3C', type: 'select' }}
+					${'c'} | ${{ text: 'select c 2S', type: 'select' }}
+					${'d'} | ${{ text: 'select d 2H', type: 'select' }}
+					${'e'} | ${{ text: 'select e 2D', type: 'select' }}
+					${'f'} | ${{ text: 'select f 2C', type: 'select' }}
+					${'h'} | ${{ text: 'touch stop', type: 'invalid' }}
+					${'1'} | ${{ text: 'select 1 3S', type: 'select' }}
+					${'2'} | ${{ text: 'select 2 3H', type: 'select' }}
+					${'3'} | ${{ text: 'select 3 5S', type: 'select' }}
+					${'4'} | ${{ text: 'select 4 5H', type: 'select' }}
+					${'5'} | ${{ text: 'select 5 5D', type: 'select' }}
+					${'6'} | ${{ text: 'select 6 5C', type: 'select' }}
+					${'7'} | ${{ text: 'select 7 4S', type: 'select' }}
+					${'8'} | ${{ text: 'select 8 4H', type: 'select' }}
+					${'9'} | ${{ text: 'select 9 4D', type: 'select' }}
+					${'0'} | ${{ text: 'select 0 4C', type: 'select' }}
+				`('select $pileSh', ({ pileSh, previousAction }: { pileSh: PileSH; previousAction: PreviousAction }) => {
+					const game = new FreeCell({ cellCount: 6, cascadeCount: 10 }).dealAll({ demo: true }).touchByPile(pileSh);
 					expect(game.previousAction).toEqual(previousAction);
 				});
 			});
@@ -312,7 +312,7 @@ describe('game.touchByPosition', () => {
 		describe('deck', () => {
 			describe('standard', () => {
 				test('empty', () => {
-					const game = FreeCell.parse(gamePrint).$selectCard('3H').touchByPosition('k');
+					const game = FreeCell.parse(gamePrint).$selectCard('3H').touchByPile('k');
 					expect(game.previousAction).toEqual({
 						text: 'invalid move 3k 3H→deck',
 						type: 'invalid',
@@ -321,7 +321,7 @@ describe('game.touchByPosition', () => {
 				});
 
 				test('not empty', () => {
-					const game = new FreeCell().shuffle32(5).dealAll({ demo: true, keepDeck: true }).$selectCard('2H').touchByPosition('k');
+					const game = new FreeCell().shuffle32(5).dealAll({ demo: true, keepDeck: true }).$selectCard('2H').touchByPile('k');
 					expect(game.previousAction).toEqual({
 						text: 'select 6H',
 						type: 'select',
@@ -332,7 +332,7 @@ describe('game.touchByPosition', () => {
 
 			describe('gameFunction: recall-or-bury', () => {
 				test('empty', () => {
-					const game = FreeCell.parse(gamePrint).$selectCard('3H').touchByPosition('k', { gameFunction: 'recall-or-bury' });
+					const game = FreeCell.parse(gamePrint).$selectCard('3H').touchByPile('k', { gameFunction: 'recall-or-bury' });
 					expect(game.previousAction).toEqual({
 						text: 'invalid move 3k 3H→deck',
 						type: 'move',
@@ -346,7 +346,7 @@ describe('game.touchByPosition', () => {
 						.shuffle32(5)
 						.dealAll({ demo: true, keepDeck: true })
 						.$selectCard('2H')
-						.touchByPosition('k', { gameFunction: 'recall-or-bury' });
+						.touchByPile('k', { gameFunction: 'recall-or-bury' });
 					expect(game.previousAction).toEqual({
 						text: 'invalid move 1k 2H→deck',
 						type: 'move',
@@ -359,21 +359,21 @@ describe('game.touchByPosition', () => {
 
 		describe('cell', () => {
 			test('empty', () => {
-				expect(FreeCell.parse(gamePrint).$selectCard('3H').touchByPosition('a').previousAction).toEqual({
+				expect(FreeCell.parse(gamePrint).$selectCard('3H').touchByPile('a').previousAction).toEqual({
 					text: 'move 3a 3H→cell',
 					type: 'move',
 				});
 			});
 
 			test('single', () => {
-				expect(FreeCell.parse(gamePrint).$selectCard('3H').touchByPosition('b').previousAction).toEqual({
+				expect(FreeCell.parse(gamePrint).$selectCard('3H').touchByPile('b').previousAction).toEqual({
 					text: 'select b TH',
 					type: 'select',
 				});
 			});
 
 			test('selected', () => {
-				expect(FreeCell.parse(gamePrint).$selectCard('TH').touchByPosition('b').previousAction).toEqual({
+				expect(FreeCell.parse(gamePrint).$selectCard('TH').touchByPile('b').previousAction).toEqual({
 					text: 'deselect b TH',
 					type: 'deselect',
 				});
@@ -383,7 +383,7 @@ describe('game.touchByPosition', () => {
 		describe('foundation', () => {
 			describe('empty', () => {
 				test('can move', () => {
-					let game = new FreeCell().shuffle32(6).dealAll().touchByPosition('4');
+					let game = new FreeCell().shuffle32(6).dealAll().touchByPile('4');
 					expect(game.print()).toBe(
 						'' + //
 							'                         \n' +
@@ -396,7 +396,7 @@ describe('game.touchByPosition', () => {
 							' 9C 6C JH>AH|            \n' +
 							' select 4 AH'
 					);
-					game = game.touchByPosition('h');
+					game = game.touchByPile('h');
 					expect(game.previousAction).toEqual({
 						text: 'move 4h AH→foundation',
 						type: 'move',
@@ -405,7 +405,7 @@ describe('game.touchByPosition', () => {
 				});
 
 				test('invalid move', () => {
-					const game = new FreeCell().shuffle32(6).dealAll().touchByPosition('1').touchByPosition('h');
+					const game = new FreeCell().shuffle32(6).dealAll().touchByPile('1').touchByPile('h');
 					expect(game.previousAction).toEqual({
 						text: 'invalid move 1h 9C→foundation',
 						type: 'invalid',
@@ -416,14 +416,14 @@ describe('game.touchByPosition', () => {
 
 			describe('single', () => {
 				test('can move', () => {
-					expect(FreeCell.parse(gamePrint).$selectCard('3H').touchByPosition('h').previousAction).toEqual({
+					expect(FreeCell.parse(gamePrint).$selectCard('3H').touchByPile('h').previousAction).toEqual({
 						text: 'move 3h 3H→2H',
 						type: 'move',
 					});
 				});
 
 				test('invalid move', () => {
-					expect(FreeCell.parse(gamePrint).$selectCard('8C').touchByPosition('h').previousAction).toEqual({
+					expect(FreeCell.parse(gamePrint).$selectCard('8C').touchByPile('h').previousAction).toEqual({
 						text: 'invalid move 1h 8C→AC',
 						type: 'invalid',
 					});
@@ -447,7 +447,7 @@ describe('game.touchByPosition', () => {
 							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [0] });
-					game = game.touchByPosition('h');
+					game = game.touchByPile('h');
 					expect(game.previousAction).toEqual({
 						text: 'deselect AH',
 						type: 'deselect',
@@ -468,7 +468,7 @@ describe('game.touchByPosition', () => {
 							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [1] });
-					game = game.touchByPosition('h');
+					game = game.touchByPile('h');
 					expect(game.previousAction).toEqual({
 						text: 'deselect AH',
 						type: 'deselect',
@@ -489,7 +489,7 @@ describe('game.touchByPosition', () => {
 							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [2] });
-					game = game.touchByPosition('h');
+					game = game.touchByPile('h');
 					expect(game.previousAction).toEqual({
 						text: 'deselect AH',
 						type: 'deselect',
@@ -510,7 +510,7 @@ describe('game.touchByPosition', () => {
 							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [3] });
-					game = game.touchByPosition('h');
+					game = game.touchByPile('h');
 					expect(game.previousAction).toEqual({
 						text: 'deselect AH',
 						type: 'deselect',
@@ -532,7 +532,7 @@ describe('game.touchByPosition', () => {
 							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [0] });
-					game = game.touchByPosition('h');
+					game = game.touchByPile('h');
 					expect(game.previousAction).toEqual({
 						text: 'deselect AC',
 						type: 'deselect',
@@ -552,7 +552,7 @@ describe('game.touchByPosition', () => {
 							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [1] });
-					game = game.touchByPosition('h');
+					game = game.touchByPile('h');
 					expect(game.previousAction).toEqual({
 						text: 'deselect AD',
 						type: 'deselect',
@@ -572,7 +572,7 @@ describe('game.touchByPosition', () => {
 							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [2] });
-					game = game.touchByPosition('h');
+					game = game.touchByPile('h');
 					expect(game.previousAction).toEqual({
 						text: 'deselect AH',
 						type: 'deselect',
@@ -592,7 +592,7 @@ describe('game.touchByPosition', () => {
 							' hand-jammed'
 					);
 					expect(game.selection?.location).toEqual({ fixture: 'foundation', data: [3] });
-					game = game.touchByPosition('h');
+					game = game.touchByPile('h');
 					expect(game.previousAction).toEqual({
 						text: 'deselect AS',
 						type: 'deselect',
@@ -604,11 +604,11 @@ describe('game.touchByPosition', () => {
 		describe('cascade', () => {
 			test('valid move', () => {
 				const game = FreeCell.parse(gamePrint);
-				expect(game.$selectCard('7D').touchByPosition('1').previousAction).toEqual({
+				expect(game.$selectCard('7D').touchByPile('1').previousAction).toEqual({
 					text: 'move 71 7D-6S→8C',
 					type: 'move',
 				});
-				expect(game.$selectCard('4H').touchByPosition('5').previousAction).toEqual({
+				expect(game.$selectCard('4H').touchByPile('5').previousAction).toEqual({
 					text: 'move c5 4H→cascade',
 					type: 'move',
 				});
@@ -616,16 +616,16 @@ describe('game.touchByPosition', () => {
 
 			test('adjust move', () => {
 				const game = FreeCell.parse(gamePrint);
-				expect(game.$selectCard('QD').touchByPosition('5').previousAction).toEqual({
+				expect(game.$selectCard('QD').touchByPile('5').previousAction).toEqual({
 					text: 'move 45 9C-8D-7C→cascade',
 					type: 'move',
 				});
 				// this is because…
-				expect(game.touchByPosition('4').previousAction).toEqual({
+				expect(game.touchByPile('4').previousAction).toEqual({
 					text: 'select 4 KC-QD-JS-TD-9C-8D-7C',
 					type: 'select',
 				});
-				expect(game.touchByPosition('4').touchByPosition('5').previousAction).toEqual({
+				expect(game.touchByPile('4').touchByPile('5').previousAction).toEqual({
 					text: 'move 45 9C-8D-7C→cascade',
 					type: 'move',
 				});
@@ -634,11 +634,11 @@ describe('game.touchByPosition', () => {
 			// select second col instead (like how touch does it for convenience)
 			test('invalid move', () => {
 				const game = FreeCell.parse(gamePrint);
-				expect(game.$selectCard('3H').touchByPosition('6').previousAction).toEqual({
+				expect(game.$selectCard('3H').touchByPile('6').previousAction).toEqual({
 					text: 'select 6 3D',
 					type: 'select',
 				});
-				expect(game.$selectCard('3H').touchByPosition('6', { stopWithInvalid: true }).previousAction).toEqual({
+				expect(game.$selectCard('3H').touchByPile('6', { stopWithInvalid: true }).previousAction).toEqual({
 					text: 'invalid move 36 3H→3D',
 					type: 'invalid',
 				});
@@ -646,7 +646,7 @@ describe('game.touchByPosition', () => {
 
 			// prove that shorthand isn't perfect (find the other test that does this too)
 			test('col / shrink selection / move', () => {
-				let game = FreeCell.parse(gamePrint).touchByPosition('4');
+				let game = FreeCell.parse(gamePrint).touchByPile('4');
 				expect(game.previousAction).toEqual({
 					text: 'select 4 KC-QD-JS-TD-9C-8D-7C',
 					type: 'select',
@@ -658,7 +658,7 @@ describe('game.touchByPosition', () => {
 					type: 'select',
 				});
 
-				game = game.touchByPosition('5');
+				game = game.touchByPile('5');
 				expect(game.previousAction).toEqual({
 					text: 'move 45 9C-8D-7C→cascade',
 					type: 'move',
@@ -676,7 +676,7 @@ describe('game.touchByPosition', () => {
 					peekOnly: false,
 				});
 				expect(game.previousAction.text).toBe('select 2 4D-3C');
-				game = game.touchByPosition('2');
+				game = game.touchByPile('2');
 				expect(game.previousAction).toEqual({
 					text: 'deselect 2 4D-3C',
 					type: 'deselect',
@@ -691,7 +691,7 @@ describe('game.touchByPosition', () => {
 					peekOnly: true,
 				});
 				expect(game.previousAction.text).toBe('select 7H');
-				game = game.touchByPosition('2');
+				game = game.touchByPile('2');
 				expect(game.previousAction).toEqual({
 					text: 'deselect 7H',
 					type: 'deselect',
@@ -699,90 +699,84 @@ describe('game.touchByPosition', () => {
 			});
 		});
 
-		describe('by position', () => {
+		describe('by pile', () => {
 			describe('4 cells, 8 cascades', () => {
 				test.each`
-					position | previousAction
-					${'a'}   | ${{ text: 'select a 2S', type: 'select' }}
-					${'b'}   | ${{ text: 'select b 2H', type: 'select' }}
-					${'c'}   | ${{ text: 'select c 2D', type: 'select' }}
-					${'d'}   | ${{ text: 'select d 2C', type: 'select' }}
-					${'e'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'f'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'h'}   | ${{ text: 'invalid move 2h 5H→AH', type: 'invalid' }}
-					${'1'}   | ${{ text: 'select 1 3S', type: 'select' }}
-					${'2'}   | ${{ text: 'deselect 5H', type: 'deselect' }}
-					${'3'}   | ${{ text: 'select 3 3D', type: 'select' }}
-					${'4'}   | ${{ text: 'select 4 3C', type: 'select' }}
-					${'5'}   | ${{ text: 'select 5 4S', type: 'select' }}
-					${'6'}   | ${{ text: 'select 6 4H', type: 'select' }}
-					${'7'}   | ${{ text: 'select 7 4D', type: 'select' }}
-					${'8'}   | ${{ text: 'select 8 4C', type: 'select' }}
-					${'9'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'0'}   | ${{ text: 'select 5H', type: 'select' }}
-				`('select $position', ({ position, previousAction }: { position: Position; previousAction: PreviousAction }) => {
-					const game = new FreeCell({ cellCount: 4, cascadeCount: 8 })
-						.dealAll({ demo: true })
-						.$selectCard('5H')
-						.touchByPosition(position, { autoFoundation: false });
+					pileSh | previousAction
+					${'a'} | ${{ text: 'select a 2S', type: 'select' }}
+					${'b'} | ${{ text: 'select b 2H', type: 'select' }}
+					${'c'} | ${{ text: 'select c 2D', type: 'select' }}
+					${'d'} | ${{ text: 'select d 2C', type: 'select' }}
+					${'e'} | ${{ text: 'select 5H', type: 'select' }}
+					${'f'} | ${{ text: 'select 5H', type: 'select' }}
+					${'h'} | ${{ text: 'invalid move 2h 5H→AH', type: 'invalid' }}
+					${'1'} | ${{ text: 'select 1 3S', type: 'select' }}
+					${'2'} | ${{ text: 'deselect 5H', type: 'deselect' }}
+					${'3'} | ${{ text: 'select 3 3D', type: 'select' }}
+					${'4'} | ${{ text: 'select 4 3C', type: 'select' }}
+					${'5'} | ${{ text: 'select 5 4S', type: 'select' }}
+					${'6'} | ${{ text: 'select 6 4H', type: 'select' }}
+					${'7'} | ${{ text: 'select 7 4D', type: 'select' }}
+					${'8'} | ${{ text: 'select 8 4C', type: 'select' }}
+					${'9'} | ${{ text: 'select 5H', type: 'select' }}
+					${'0'} | ${{ text: 'select 5H', type: 'select' }}
+				`('select $pileSh', ({ pileSh, previousAction }: { pileSh: PileSH; previousAction: PreviousAction }) => {
+					const game = new FreeCell({ cellCount: 4, cascadeCount: 8 }).dealAll({ demo: true }).$selectCard('5H').touchByPile(pileSh, { autoFoundation: false });
 					expect(game.previousAction).toEqual(previousAction);
 				});
 			});
 
 			describe('1 cells, 4 cascades', () => {
 				test.each`
-					position | previousAction
-					${'a'}   | ${{ text: 'select a 2C', type: 'select' }}
-					${'b'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'c'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'d'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'e'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'f'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'h'}   | ${{ text: 'move 2h 2H→AH', type: 'move' }}
-					${'1'}   | ${{ text: 'select 1 2S', type: 'select' }}
-					${'2'}   | ${{ text: 'deselect 5H', type: 'deselect' }}
-					${'3'}   | ${{ text: 'select 3 2D', type: 'select' }}
-					${'4'}   | ${{ text: 'select 4 3C', type: 'select' }}
-					${'5'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'6'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'7'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'8'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'9'}   | ${{ text: 'select 5H', type: 'select' }}
-					${'0'}   | ${{ text: 'select 5H', type: 'select' }}
-				`('select $position', ({ position, previousAction }: { position: Position; previousAction: PreviousAction }) => {
-					const game = new FreeCell({ cellCount: 1, cascadeCount: 4 })
-						.dealAll({ demo: true })
-						.$selectCard('5H')
-						.touchByPosition(position, { autoFoundation: false });
+					pileSh | previousAction
+					${'a'} | ${{ text: 'select a 2C', type: 'select' }}
+					${'b'} | ${{ text: 'select 5H', type: 'select' }}
+					${'c'} | ${{ text: 'select 5H', type: 'select' }}
+					${'d'} | ${{ text: 'select 5H', type: 'select' }}
+					${'e'} | ${{ text: 'select 5H', type: 'select' }}
+					${'f'} | ${{ text: 'select 5H', type: 'select' }}
+					${'h'} | ${{ text: 'move 2h 2H→AH', type: 'move' }}
+					${'1'} | ${{ text: 'select 1 2S', type: 'select' }}
+					${'2'} | ${{ text: 'deselect 5H', type: 'deselect' }}
+					${'3'} | ${{ text: 'select 3 2D', type: 'select' }}
+					${'4'} | ${{ text: 'select 4 3C', type: 'select' }}
+					${'5'} | ${{ text: 'select 5H', type: 'select' }}
+					${'6'} | ${{ text: 'select 5H', type: 'select' }}
+					${'7'} | ${{ text: 'select 5H', type: 'select' }}
+					${'8'} | ${{ text: 'select 5H', type: 'select' }}
+					${'9'} | ${{ text: 'select 5H', type: 'select' }}
+					${'0'} | ${{ text: 'select 5H', type: 'select' }}
+				`('select $pileSh', ({ pileSh, previousAction }: { pileSh: PileSH; previousAction: PreviousAction }) => {
+					const game = new FreeCell({ cellCount: 1, cascadeCount: 4 }).dealAll({ demo: true }).$selectCard('5H').touchByPile(pileSh, { autoFoundation: false });
 					expect(game.previousAction).toEqual(previousAction);
 				});
 			});
 
 			describe('6 cells, 10 cascades', () => {
 				test.each`
-					position | previousAction
-					${'a'}   | ${{ text: 'select a 3D', type: 'select' }}
-					${'b'}   | ${{ text: 'select b 3C', type: 'select' }}
-					${'c'}   | ${{ text: 'select c 2S', type: 'select' }}
-					${'d'}   | ${{ text: 'select d 2H', type: 'select' }}
-					${'e'}   | ${{ text: 'select e 2D', type: 'select' }}
-					${'f'}   | ${{ text: 'select f 2C', type: 'select' }}
-					${'h'}   | ${{ text: 'invalid move 4h 5H→AH', type: 'invalid' }}
-					${'1'}   | ${{ text: 'select 1 3S', type: 'select' }}
-					${'2'}   | ${{ text: 'select 2 3H', type: 'select' }}
-					${'3'}   | ${{ text: 'select 3 5S', type: 'select' }}
-					${'4'}   | ${{ text: 'deselect 4 5H', type: 'deselect' }}
-					${'5'}   | ${{ text: 'select 5 5D', type: 'select' }}
-					${'6'}   | ${{ text: 'select 6 5C', type: 'select' }}
-					${'7'}   | ${{ text: 'select 7 4S', type: 'select' }}
-					${'8'}   | ${{ text: 'select 8 4H', type: 'select' }}
-					${'9'}   | ${{ text: 'select 9 4D', type: 'select' }}
-					${'0'}   | ${{ text: 'select 0 4C', type: 'select' }}
-				`('select $position', ({ position, previousAction }: { position: Position; previousAction: PreviousAction }) => {
+					pileSh | previousAction
+					${'a'} | ${{ text: 'select a 3D', type: 'select' }}
+					${'b'} | ${{ text: 'select b 3C', type: 'select' }}
+					${'c'} | ${{ text: 'select c 2S', type: 'select' }}
+					${'d'} | ${{ text: 'select d 2H', type: 'select' }}
+					${'e'} | ${{ text: 'select e 2D', type: 'select' }}
+					${'f'} | ${{ text: 'select f 2C', type: 'select' }}
+					${'h'} | ${{ text: 'invalid move 4h 5H→AH', type: 'invalid' }}
+					${'1'} | ${{ text: 'select 1 3S', type: 'select' }}
+					${'2'} | ${{ text: 'select 2 3H', type: 'select' }}
+					${'3'} | ${{ text: 'select 3 5S', type: 'select' }}
+					${'4'} | ${{ text: 'deselect 4 5H', type: 'deselect' }}
+					${'5'} | ${{ text: 'select 5 5D', type: 'select' }}
+					${'6'} | ${{ text: 'select 6 5C', type: 'select' }}
+					${'7'} | ${{ text: 'select 7 4S', type: 'select' }}
+					${'8'} | ${{ text: 'select 8 4H', type: 'select' }}
+					${'9'} | ${{ text: 'select 9 4D', type: 'select' }}
+					${'0'} | ${{ text: 'select 0 4C', type: 'select' }}
+				`('select $pileSh', ({ pileSh, previousAction }: { pileSh: PileSH; previousAction: PreviousAction }) => {
 					const game = new FreeCell({ cellCount: 6, cascadeCount: 10 })
 						.dealAll({ demo: true })
 						.$selectCard('5H')
-						.touchByPosition(position, { autoFoundation: false });
+						.touchByPile(pileSh, { autoFoundation: false });
 					expect(game.previousAction).toEqual(previousAction);
 				});
 			});
@@ -794,7 +788,12 @@ describe('game.touchByPosition', () => {
 		let game = new FreeCell().shuffle32(5).dealAll();
 		const moves = getMoves(5).join('').split('').reverse();
 		while (moves.length) {
-			game = game.touchByPosition(moves.pop() as Position);
+			const s = moves.pop();
+			if (s && isPileSH(s)) {
+				game = game.touchByPile(s);
+			} else {
+				throw new Error(`invalid move from stream: "${s ?? 'undefined'}"`);
+			}
 		}
 		expect(game.print()).toBe(
 			'' + //

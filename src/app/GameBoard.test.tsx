@@ -13,7 +13,7 @@ import { Settings } from '@/app/hooks/contexts/Settings/Settings';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
 import { getCardIdsFromSpy, getPropertiesFromFromToSpy, getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';
-import { calcCardId, CardLocation, CardShorthand, parseShorthandCard, Position, RankList, shorthandCard, shorthandPosition, SuitList } from '@/game/card/card';
+import { calcCardId, CardLocation, CardShorthand, parseShorthandCard, PileSH, RankList, shorthandCard, shorthandPosition, SuitList } from '@/game/card/card';
 import { getMoves } from '@/game/catalog/solutions-catalog';
 import { FreeCell } from '@/game/game';
 import { parseShorthandMove } from '@/game/move/move';
@@ -46,7 +46,7 @@ function CribTheGame() {
 			clickCard(card);
 		} else if ([0, -1, undefined].includes(location.data[1])) {
 			// pilemarker
-			const position = shorthandPosition(location);
+			const position = shorthandPosition(location)[0] as PileSH;
 			if (position !== 'h') {
 				clickPile(position);
 			} else {
@@ -67,8 +67,8 @@ function clickCard(shorthand: CardShorthand | string | null) {
 		fireEvent.click(screen.getByAltText(`${shorthand.rank} of ${shorthand.suit}`));
 	}
 }
-function clickPile(position: Position) {
-	fireEvent.click(screen.getByText(position));
+function clickPile(pileSh: PileSH) {
+	fireEvent.click(screen.getByText(pileSh));
 }
 
 function MockGamePage({
@@ -1535,8 +1535,9 @@ describe('GameBoard', () => {
 			SuitList.forEach((suit) => {
 				const aceTLZR = domUtils.getDomAttributes(calcCardId(shorthandCard({ rank: 'ace', suit }), gameBoardId));
 				if (!aceTLZR) throw new Error(`Card not found: ace of ${suit}`);
-
 				RankList.forEach((rank, idx) => {
+					if (rank === 'joker') return;
+
 					const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardId);
 					const tlzr = domUtils.getDomAttributes(cardId);
 					if (!tlzr) throw new Error(`Card not found: ${cardId}`);

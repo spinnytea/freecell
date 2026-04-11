@@ -14,7 +14,7 @@ exports[`animShakePile gameBoardId: timeline.add 1`] = `
 exports[`animShakePile gameBoardId: timeline.to 1`] = `
 [
   [
-    "#pilemarker-a-1-1",
+    "#pilemarker-a-1",
     {
       "duration": 0.1,
       "ease": "sine.in",
@@ -22,7 +22,7 @@ exports[`animShakePile gameBoardId: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-a-1-1",
+    "#pilemarker-a-1",
     {
       "duration": 0.05,
       "ease": "sine.inOut",
@@ -32,7 +32,7 @@ exports[`animShakePile gameBoardId: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-a-1-1",
+    "#pilemarker-a-1",
     {
       "duration": 0.025,
       "ease": "sine.out",
@@ -82,7 +82,7 @@ exports[`animShakePile gsap.utils.random false: timeline.add 1`] = `
 exports[`animShakePile gsap.utils.random false: timeline.to 1`] = `
 [
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.1,
       "ease": "sine.in",
@@ -90,7 +90,7 @@ exports[`animShakePile gsap.utils.random false: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.05,
       "ease": "sine.inOut",
@@ -100,7 +100,7 @@ exports[`animShakePile gsap.utils.random false: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.025,
       "ease": "sine.out",
@@ -150,7 +150,7 @@ exports[`animShakePile gsap.utils.random true: timeline.add 1`] = `
 exports[`animShakePile gsap.utils.random true: timeline.to 1`] = `
 [
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.1,
       "ease": "sine.in",
@@ -158,7 +158,7 @@ exports[`animShakePile gsap.utils.random true: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.05,
       "ease": "sine.inOut",
@@ -168,7 +168,7 @@ exports[`animShakePile gsap.utils.random true: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.025,
       "ease": "sine.out",
@@ -215,7 +215,7 @@ exports[`animShakePile list one: timeline.add 1`] = `
 exports[`animShakePile list one: timeline.to 1`] = `
 [
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.1,
       "ease": "sine.in",
@@ -223,7 +223,7 @@ exports[`animShakePile list one: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.05,
       "ease": "sine.inOut",
@@ -233,7 +233,7 @@ exports[`animShakePile list one: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.025,
       "ease": "sine.out",
@@ -260,7 +260,7 @@ exports[`animShakePile list three: timeline.add 1`] = `
 exports[`animShakePile list three: timeline.to 1`] = `
 [
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.1,
       "ease": "sine.in",
@@ -268,7 +268,7 @@ exports[`animShakePile list three: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.05,
       "ease": "sine.inOut",
@@ -278,7 +278,7 @@ exports[`animShakePile list three: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.025,
       "ease": "sine.out",
@@ -312,7 +312,7 @@ exports[`animShakePile list three: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-3-3",
+    "#pilemarker-3",
     {
       "duration": 0.1,
       "ease": "sine.in",
@@ -320,7 +320,7 @@ exports[`animShakePile list three: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-3-3",
+    "#pilemarker-3",
     {
       "duration": 0.05,
       "ease": "sine.inOut",
@@ -330,7 +330,7 @@ exports[`animShakePile list three: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-3-3",
+    "#pilemarker-3",
     {
       "duration": 0.025,
       "ease": "sine.out",
@@ -354,7 +354,7 @@ exports[`animShakePile list two: timeline.add 1`] = `
 exports[`animShakePile list two: timeline.to 1`] = `
 [
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.1,
       "ease": "sine.in",
@@ -362,7 +362,7 @@ exports[`animShakePile list two: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.05,
       "ease": "sine.inOut",
@@ -372,7 +372,7 @@ exports[`animShakePile list two: timeline.to 1`] = `
     },
   ],
   [
-    "#pilemarker-a-1",
+    "#pilemarker-a",
     {
       "duration": 0.025,
       "ease": "sine.out",

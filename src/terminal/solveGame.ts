@@ -106,8 +106,8 @@ function expandNextGames(game: FreeCell): Promise<FreeCell[]> {
 	const next: FreeCell[] = [];
 
 	// for every possible position
-	PileSHList.forEach((position) => {
-		const g = game.touchByPosition(position);
+	PileSHList.forEach((pileSh) => {
+		const g = game.touchByPile(pileSh);
 		// if we can select it
 		if (g.availableMoves?.length) {
 			// try every single available move

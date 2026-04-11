@@ -266,7 +266,7 @@ describe('game.touch', () => {
 			// need to already have a section
 			// the new place cannot be selected
 			// the new place needs to be an availableMoves
-			game = new FreeCell().dealAll().$selectCard('AS').touchByPosition('h', { autoFoundation: false });
+			game = new FreeCell().dealAll().$selectCard('AS').touchByPile('h', { autoFoundation: false });
 			// AS cannot be selected
 			expect(game.selection).toBe(null);
 			expect(game.$selectCard('AS').selection).toBe(null);

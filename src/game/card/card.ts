@@ -8,26 +8,9 @@ import { FreeCell } from '@/game/game';
 export const SuitList = ['clubs', 'diamonds', 'hearts', 'spades'] as const;
 export type Suit = (typeof SuitList)[number];
 export const isRed = (suit: Suit) => suit === 'diamonds' || suit === 'hearts';
+type SuitSH = 'C' | 'D' | 'H' | 'S';
 
-// TODO (5-priority) (refactor) (types) redo type def like suit
-//  - but Rank and List have different values
-//  - so we need to have/stub the "include joker flag"
-export type Rank =
-	| 'ace'
-	| '2'
-	| '3'
-	| '4'
-	| '5'
-	| '6'
-	| '7'
-	| '8'
-	| '9'
-	| '10'
-	| 'jack'
-	| 'queen'
-	| 'king'
-	| 'joker';
-export const RankList: Rank[] = [
+export const RankList = [
 	'ace',
 	'2',
 	'3',
@@ -41,20 +24,28 @@ export const RankList: Rank[] = [
 	'jack',
 	'queen',
 	'king',
-];
-export const getRankForCompare = (rank: Rank): number => RankList.indexOf(rank);
+	'joker',
+] as const;
+export type Rank = (typeof RankList)[number];
+type RankSH = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'W';
+
 export const getSuitForCompare = (suit: Suit): number => SuitList.indexOf(suit);
+export const getRankForCompare = (rank: Rank): number => RankList.indexOf(rank);
 export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	getRankForCompare(min) === getRankForCompare(max) - 1;
 
+/**
+	rank shorthand + suit shorthand
+
+	XXX (techdebt) use type CardSH everywhere it makes sense
+
+	@example 'KH'
+	@example 'AS'
+*/
+type CardSH = `${RankSH}${SuitSH}`;
+
 const FixtureList = ['deck', 'cell', 'foundation', 'cascade'] as const;
 
-/**
-	XXX (techdebt) (refactor) (rename) is "fixture" the right name?
-	 - cell -> freecell
-	 - foundation -> homecell
-	 - cascade -> column
-*/
 export type Fixture = (typeof FixtureList)[number];
 export function isFixture(val: string): val is Fixture {
 	return (FixtureList as readonly string[]).includes(val);
@@ -84,44 +75,32 @@ export const PileSHList = [
 /**
 	foundation: h
 	cells: a - d
-	cascades: 1 - 9, t (1-8, but we allow 9 and 10 columns)
+	cascades: 1 - 9, 0 (1-8, but we allow 9 and 10 columns)
 	deck: k
 
-	TODO (5-priority) (refactor) (types) rename `Position` to `PileSH`
+	TODO (5-priority) (review) (coords) every use of `position`, `Position`; use {@link PileSH} and {@link LocationSH} as appropriate
 
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */
-export type Position = (typeof PileSHList)[number];
-export function isPileSH(val: string): val is Position {
+export type PileSH = (typeof PileSHList)[number];
+export function isPileSH(val: string): val is PileSH {
 	return (PileSHList as readonly string[]).includes(val);
 }
 
-type SuitSH = 'C' | 'D' | 'H' | 'S';
-type RankSH = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'W';
-
-/**
-	rank shorthand + suit shorthand
-
-	- TODO (5-priority) (refactor) (types) use type RS everywhere it's easy (first pass)
-	  - this is not the "move shorthand" which will have the braille
-	  - this is the name of the card
-	- XXX (techdebt) use type RS everywhere it makes sense
-
-	@example 'KH'
-	@example 'AS'
-*/
-type RS = `${RankSH}${SuitSH}`;
+// TODO (5-priority) (refactor) (coords) review every use of `as PileSH`
+// TODO (5-priority) (refactor) (coords) use braille (at least for h), remove the curosr arg
+//  - Position = PileSH + braille (coord)
 
 export interface CardLocation {
 	readonly fixture: Fixture;
+	// XXX (5-priority) (techdebt) (refactor) (rename) (coords) location.data → location.coords, d0/d1 → c0/c1
 	readonly data: number[];
 }
+type LocationSH = `${PileSH}${string}`;
 
 export interface CardShorthand {
 	readonly rank: Rank;
 	readonly suit: Suit;
-	// REVIEW (optimize) should CardShorthand include `sh/rs = shorthandCard(this)`?
-	// readonly rs: RS;
 }
 export interface Card extends CardShorthand {
 	location: CardLocation;
@@ -156,11 +135,12 @@ export interface CardSequence {
 /* ************** */
 
 // XXX (joker) will need to add an argument
-export function initializeDeck(): Card[] {
+export function initializeDeck(includeJoker = false): Card[] {
 	const deck = new Array<Card>();
 
 	// initialize deck
 	RankList.forEach((rank) => {
+		if (rank === 'joker' && !includeJoker) return;
 		SuitList.forEach((suit) => {
 			const card: Card = {
 				rank,
@@ -247,12 +227,11 @@ export function calcCardId(shorthand: string, gameBoardId?: string) {
 	return cardId;
 }
 
-/**
-	shorthandPosition for foundation is all the same
-	XXX (techdebt) i suppose we could just target _all_ foundations every time
-*/
 export function calcPilemarkerId(location: CardLocation, gameBoardId?: string) {
-	let pileId = `pilemarker-${shorthandPosition(location)}-${(location.data[0] + 1).toString(10)}`;
+	let pileId = `pilemarker-${shorthandPosition(location)}`;
+	if (pileId === 'pilemarker-h') {
+		pileId += '-' + (location.data[0] + 1).toString(10);
+	}
 	if (gameBoardId) {
 		pileId += '-' + gameBoardId;
 	}
@@ -376,13 +355,23 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 /* PRINT / PARSE */
 /* ************* */
 
-// TODO (5-priority) (refactor) (rename) (types) rename `shorthandCard` to `shorthandRS`
-// TODO (5-priority) (refactor) (rename) (types) rename `shorthand` to `rs` (when it is of type RS)
-export function shorthandCard(card: CardShorthand | null | undefined): RS | '  ' {
+// TODO (techdebt) (review) what does 'shorthand' even mean?
+//  - rank,suit/card/sequence
+//  - pile/location/move/history
+//  - parseShorthandMove, parseShorthandPositionForMove, parseShorthandPositionForSelect
+//  - review every use of `shorthand`, `sh`, "Shorthand"
+//  - ---
+//  - "sh" just means "the text representation"
+//  - `Pile` is the code/json and `PileSH` is how we represent it in print/parse
+//  - so this is just an encode/decode process between JSON and string
+//  - maybe we stop using "shorthand" altogether and start using "str"
+//  - maybe we stick with "SH" suffix matching the analogous object
+//  - PileStr, LocationStr, CardStr 🤔
+export function shorthandCard(card: CardShorthand | null | undefined): CardSH | '  ' {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
 	const s = card.suit[0];
-	return (r + s).toUpperCase() as RS;
+	return (r + s).toUpperCase() as CardSH;
 }
 
 /** TODO (techdebt) (refactor) change `rs` to single string since that's how it's _always_ called */
@@ -452,30 +441,33 @@ export function shorthandSequence(sequence: CardSequence) {
 	return sequence.cards.map((card) => shorthandCard(card)).join('-');
 }
 
-export function shorthandPosition(location: CardLocation, includeD0 = false): Position {
+// TODO (5-priority) (refactor) (coords) remove `includeD0` and make 2 separate methods
+//  - locationToPosition
+//  - locationToSh
+export function shorthandPosition(location: CardLocation, includeD0 = false): PileSH | LocationSH {
 	const d0 = location.data[0];
 	switch (location.fixture) {
 		case 'deck': {
 			const braille = includeD0 && d0 >= 0 ? countToBraille(d0) : '';
-			return ('k' + braille) as Position;
+			return ('k' + braille) as PileSH;
 		}
 		case 'cell': {
 			if (d0 >= 0 && d0 < 6) {
-				return (d0 + 10).toString(16) as Position;
+				return (d0 + 10).toString(16) as PileSH;
 			}
 			break;
 		}
 		case 'foundation': {
 			const braille = includeD0 && d0 >= 0 ? countToBraille(d0) : '';
-			return ('h' + braille) as Position;
+			return ('h' + braille) as PileSH;
 		}
 		case 'cascade': {
 			const d1 = location.data[1];
 			const braille = includeD0 && d1 >= 0 ? countToBraille(d1) : '';
 			if (d0 === 9) {
-				return ('0' + braille) as Position;
+				return ('0' + braille) as PileSH;
 			} else if (d0 >= 0 && d0 < 9) {
-				return ((d0 + 1).toString(10) + braille) as Position;
+				return ((d0 + 1).toString(10) + braille) as PileSH;
 			}
 			break;
 		}
@@ -498,7 +490,7 @@ export function shorthandSequenceWithPosition(sequence: CardSequence) {
 	notice also that this function only accepts the single character, it does not accept a game
 	so which d1 do we use for a cascade? this will return an invalid value (too high), which will be clamped if used directly
 
-	@deprecated TODO (2-priority) (refactor) use braille for all ambiguous positions, no more INCOMPLETE
+	@deprecated TODO (5-priority) (refactor) (coords) use braille for all ambiguous positions, no more INCOMPLETE
 	 - origuess, print history shorthand must not have braille :( but the history list must have braille
 	 - which is fine, because we can transpose across foundations
 	 - it's just that replays might mix up the final foundations (unavoidable)
@@ -517,15 +509,21 @@ export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLo
 		case '9':
 			// this isn't a valid cursor position, it will need to be clamped
 			// cascades can have sequences, so you need to decide if you really want the "bottom"
-			return { fixture: 'cascade', data: [parseInt(p, 10) - 1, BOTTOM_OF_CASCADE] };
+			return {
+				fixture: 'cascade',
+				data: [parseInt(p, 10) - 1, p.length === 2 ? brailleToCount(p[1]) : BOTTOM_OF_CASCADE],
+			};
 		// ten
 		case '0':
-			return { fixture: 'cascade', data: [9, BOTTOM_OF_CASCADE] };
+			return {
+				fixture: 'cascade',
+				data: [9, p.length === 2 ? brailleToCount(p[1]) : BOTTOM_OF_CASCADE],
+			};
 		case 'h':
 			// h could refer to _any_ of the foundations; this needs to be verified
 			return { fixture: 'foundation', data: [p.length === 2 ? brailleToCount(p[1]) : 0] };
 		case 'k':
-			return { fixture: 'deck', data: [0] };
+			return { fixture: 'deck', data: [p.length === 2 ? brailleToCount(p[1]) : 0] };
 		case 'a':
 		case 'b':
 		case 'c':

@@ -49,7 +49,7 @@ function canFlourish(game: FreeCell): Card[] {
 	if (danglingAces.length) {
 		// if any aces exposed at start, then any of them will do
 		// (it doesn't matter which you move first, they _all_ auto-foundation immediately)
-		const g = game.$selectCard(danglingAces[0]).touchByPosition('h');
+		const g = game.$selectCard(danglingAces[0]).touchByPile('h');
 		if (g.win) {
 			return danglingAces.sort(_sortAces);
 		}
@@ -68,7 +68,7 @@ function canFlourish(game: FreeCell): Card[] {
 	const aces: Card[] = [];
 	allCascadeAces.forEach((card) => {
 		const g = _organizeCardsExcept(game, card);
-		if (g.$selectCard(card).touchByPosition('h').win) {
+		if (g.$selectCard(card).touchByPile('h').win) {
 			aces.push(card);
 
 			// exclude every other ace above it in the same column
@@ -126,7 +126,7 @@ function canFlourish52(game: FreeCell): Card[] {
 	if (danglingAces.length) {
 		// if any aces exposed at start, then any of them will do
 		// (it doesn't matter which you move first, they _all_ auto-foundation immediately)
-		if (game.$selectCard(danglingAces[0]).touchByPosition('h').win) {
+		if (game.$selectCard(danglingAces[0]).touchByPile('h').win) {
 			return danglingAces.sort(_sortAces);
 		} else {
 			return [];

@@ -10,7 +10,7 @@ import {
 	isAdjacent,
 	isRed,
 	parseShorthandPosition_INCOMPLETE,
-	Position,
+	PileSH,
 	shorthandCard,
 	shorthandPosition,
 	shorthandSequence,
@@ -898,9 +898,9 @@ export function parseShorthandMove(
 */
 export function parseShorthandPositionForSelect(
 	game: FreeCell,
-	position: Position
+	pileSh: PileSH
 ): CardLocation | null {
-	const from_location = parseShorthandPosition_INCOMPLETE(position);
+	const from_location = parseShorthandPosition_INCOMPLETE(pileSh);
 
 	// verify position wrt game - e.g. cellCount,cascadeCount
 	switch (from_location.fixture) {
@@ -958,13 +958,10 @@ export function parseShorthandPositionForSelect(
 	@see {@link parseShorthandMove}
 	@see {@link parseShorthandPositionForSelect}
 */
-export function parseShorthandPositionForMove(
-	game: FreeCell,
-	position: Position
-): CardLocation | null {
+export function parseShorthandPositionForMove(game: FreeCell, pileSh: PileSH): CardLocation | null {
 	if (!game.selection) return null;
 	// const from_location = game.selection.location;
-	const to_location = parseShorthandPosition_INCOMPLETE(position);
+	const to_location = parseShorthandPosition_INCOMPLETE(pileSh);
 
 	// verify position wrt game - e.g. cellCount,cascadeCount
 	switch (to_location.fixture) {
