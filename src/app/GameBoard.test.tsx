@@ -1535,8 +1535,9 @@ describe('GameBoard', () => {
 			SuitList.forEach((suit) => {
 				const aceTLZR = domUtils.getDomAttributes(calcCardId(shorthandCard({ rank: 'ace', suit }), gameBoardId));
 				if (!aceTLZR) throw new Error(`Card not found: ace of ${suit}`);
-
 				RankList.forEach((rank, idx) => {
+					if (rank === 'joker') return;
+
 					const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardId);
 					const tlzr = domUtils.getDomAttributes(cardId);
 					if (!tlzr) throw new Error(`Card not found: ${cardId}`);

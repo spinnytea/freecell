@@ -10,25 +10,7 @@ export type Suit = (typeof SuitList)[number];
 export const isRed = (suit: Suit) => suit === 'diamonds' || suit === 'hearts';
 type SuitSH = 'C' | 'D' | 'H' | 'S';
 
-// FIXME (5-priority) (refactor) (types) redo type def like suit
-//  - but Rank and List have different values
-//  - so we need to have/stub the "include joker flag"
-export type Rank =
-	| 'ace'
-	| '2'
-	| '3'
-	| '4'
-	| '5'
-	| '6'
-	| '7'
-	| '8'
-	| '9'
-	| '10'
-	| 'jack'
-	| 'queen'
-	| 'king'
-	| 'joker';
-export const RankList: Rank[] = [
+export const RankList = [
 	'ace',
 	'2',
 	'3',
@@ -42,7 +24,9 @@ export const RankList: Rank[] = [
 	'jack',
 	'queen',
 	'king',
-];
+	'joker',
+] as const;
+export type Rank = (typeof RankList)[number];
 type RankSH = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'W';
 
 export const getSuitForCompare = (suit: Suit): number => SuitList.indexOf(suit);
@@ -53,10 +37,7 @@ export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 /**
 	rank shorthand + suit shorthand
 
-	- FIXME (5-priority) (refactor) (types) use type CardSH everywhere it's easy (first pass)
-	  - this is not the "move shorthand" which will have the braille
-	  - this is the name of the card
-	- XXX (techdebt) use type CardSH everywhere it makes sense
+	XXX (techdebt) use type CardSH everywhere it makes sense
 
 	@example 'KH'
 	@example 'AS'
@@ -154,11 +135,12 @@ export interface CardSequence {
 /* ************** */
 
 // XXX (joker) will need to add an argument
-export function initializeDeck(): Card[] {
+export function initializeDeck(includeJoker = false): Card[] {
 	const deck = new Array<Card>();
 
 	// initialize deck
 	RankList.forEach((rank) => {
+		if (rank === 'joker' && !includeJoker) return;
 		SuitList.forEach((suit) => {
 			const card: Card = {
 				rank,

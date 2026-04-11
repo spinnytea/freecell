@@ -10,10 +10,6 @@ describe('SVGCards13', () => {
 				allNames.push(`${rank} of ${suit} → ${units.getFilename(rank, suit)}`);
 			});
 		});
-		SuitList.forEach((suit) => {
-			const rank = 'joker';
-			allNames.push(`${rank} of ${suit} → ${units.getFilename(rank, suit)}`);
-		});
 		// allNames.push(`card back → ${units.getFilename('ace', 'spades')}`);
 
 		expect(allNames).toMatchSnapshot();

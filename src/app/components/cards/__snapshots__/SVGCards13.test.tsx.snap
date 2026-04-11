@@ -15,6 +15,7 @@ exports[`SVGCards13 getFilename 1`] = `
   "jack of clubs → jack_of_clubs2.svg",
   "queen of clubs → queen_of_clubs2.svg",
   "king of clubs → king_of_clubs2.svg",
+  "joker of clubs → black_joker.svg",
   "ace of diamonds → ace_of_diamonds.svg",
   "2 of diamonds → 2_of_diamonds.svg",
   "3 of diamonds → 3_of_diamonds.svg",
@@ -28,6 +29,7 @@ exports[`SVGCards13 getFilename 1`] = `
   "jack of diamonds → jack_of_diamonds2.svg",
   "queen of diamonds → queen_of_diamonds2.svg",
   "king of diamonds → king_of_diamonds2.svg",
+  "joker of diamonds → red_joker.svg",
   "ace of hearts → ace_of_hearts.svg",
   "2 of hearts → 2_of_hearts.svg",
   "3 of hearts → 3_of_hearts.svg",
@@ -41,6 +43,7 @@ exports[`SVGCards13 getFilename 1`] = `
   "jack of hearts → jack_of_hearts2.svg",
   "queen of hearts → queen_of_hearts2.svg",
   "king of hearts → king_of_hearts2.svg",
+  "joker of hearts → red_joker.svg",
   "ace of spades → ace_of_spades.svg",
   "2 of spades → 2_of_spades.svg",
   "3 of spades → 3_of_spades.svg",
@@ -54,9 +57,6 @@ exports[`SVGCards13 getFilename 1`] = `
   "jack of spades → jack_of_spades2.svg",
   "queen of spades → queen_of_spades2.svg",
   "king of spades → king_of_spades2.svg",
-  "joker of clubs → black_joker.svg",
-  "joker of diamonds → red_joker.svg",
-  "joker of hearts → red_joker.svg",
   "joker of spades → black_joker.svg",
 ]
 `;
