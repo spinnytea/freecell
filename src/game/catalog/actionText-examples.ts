@@ -56,6 +56,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' JD QD       KS          \n' +
 		' KD JS                   \n' +
 		' hand-jammed',
+	// FIXME every `move \w\w` should be replaced, aallll 1,000 of them
 	'move 3a KC→cell':
 		'             AD 3C 4H 3S \n' +
 		' QH TS 2D 7C 4C 7D QC KH \n' +

@@ -127,24 +127,17 @@ export interface PreviousAction {
 //  - we treat this text as a structured "source of truth" that human readable (it could have been a json object)
 //  - "move_regex" is basically a "decode" action
 //  - every actionText is an "encode" action (e.g. `calcMoveActionText`, but literally every `ACTION_TEXT_EXAMPLES`)
-// FIXME (5-priority) (refactor) (coords) MOVE_REGEX, MOVE_FOUNDATION_REGEX
-const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
+const MOVE_REGEX = /^move (\w)(.?)(\w)(.?) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish|flourish52) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
-	/^move (\w)(\w) ([\w-]+)→(\S+) \((auto-foundation|flourish|flourish52) (\w+) (\S+)\)$/;
+	/^move (\w)(.?)(\w)(.?) ([\w-]+)→(\S+) \((auto-foundation|flourish|flourish52) (\w+) (\S+)\)$/;
 const CURSOR_REGEX =
 	/^cursor (set|up|left|down|right|stop)( wrap)?( [a-z0-9].?)?( [A-Z0-9][A-Z])?$/;
-const SELECT_REGEX = /^(de)?select( (\w))? ([\w-]+)$/;
+const SELECT_REGEX = /^(de)?select( (\w)(.?))? ([\w-]+)$/;
 
 /**
 	read {@link PreviousAction.text} which has the full context of what was moved
 	we can use this text to replaying a move, or (more importantly) undoing a move
-
-	XXX (techdebt) `parsePreviousActionText`, allow for both "undo" and "replay"
-	 - but like, that's not important for now
-	 - yes, i want to do this, but first i should focus on history
-	 - "replay" is already being done during {@link FreeCell.parse}
-	 - check out {@link parseMovesFromHistory}
 */
 export function parseAndUndoPreviousActionText(game: FreeCell, actionText: string): Card[] | null {
 	switch (parsePreviousActionType(actionText).type) {
@@ -406,8 +399,9 @@ export function parseActionTextMove(actionText: string) {
 function _parseActionTextMove(actionText: string) {
 	const match = MOVE_REGEX.exec(actionText);
 	if (match) {
-		const [, from, to, fromShorthand, toShorthand] = match;
-		return { from, to, fromShorthand, toShorthand };
+		// FIXME how can we use fb, tb?
+		const [, from, fb, to, tb, fromShorthand, toShorthand] = match;
+		return { from, fb, to, tb, fromShorthand, toShorthand };
 	}
 	return undefined;
 }
@@ -415,8 +409,9 @@ function _parseActionTextMove(actionText: string) {
 function _parseActionTextMoveFoundation(actionText: string) {
 	const match = MOVE_FOUNDATION_REGEX.exec(actionText);
 	if (match) {
-		const [, from, to, fromShorthand, toShorthand] = match;
-		return { from, to, fromShorthand, toShorthand };
+		// FIXME how can we use fb, tb?
+		const [, from, fb, to, tb, fromShorthand, toShorthand, , piles, autoShorthand] = match;
+		return { from, fb, to, tb, fromShorthand, toShorthand, piles, autoShorthand };
 	}
 	return undefined;
 }
@@ -433,8 +428,9 @@ function parseActionTextCursor(actionText: string) {
 function parseActionTextSelect(actionText: string) {
 	const match = SELECT_REGEX.exec(actionText);
 	if (match) {
-		const [, , , from, fromShorthand] = match;
-		return { from, fromShorthand };
+		// FIXME how can we use fb?
+		const [, , , from, fb, fromShorthand] = match;
+		return { from, fb, fromShorthand };
 	}
 	throw new Error('invalid de/select actionText: ' + actionText);
 }
@@ -540,7 +536,7 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 }
 
 function parseActionTextAutoFoundation(actionText: string) {
-	let match = AUTO_FOUNDATION_REGEX.exec(actionText);
+	const match = AUTO_FOUNDATION_REGEX.exec(actionText);
 	if (match) {
 		// match[1] === 'auto-foundation' || match[1] === 'flourish' || match[1] === 'flourish52'
 		const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
@@ -550,11 +546,12 @@ function parseActionTextAutoFoundation(actionText: string) {
 		return { froms, shorthands };
 	}
 
-	match = MOVE_FOUNDATION_REGEX.exec(actionText);
-	if (match) {
-		// match[5] === 'auto-foundation' || match[5] === 'flourish' || match[5] === 'flourish52'
-		const froms = match[6].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
-		const shorthands = match[7].split(',').map((s) => parseShorthandCard(s));
+	const match2 = _parseActionTextMoveFoundation(actionText);
+	if (match2) {
+		const { piles, autoShorthand } = match2;
+		// type === 'auto-foundation' || type === 'flourish' || type === 'flourish52'
+		const froms = piles.split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
+		const shorthands = autoShorthand.split(',').map((s) => parseShorthandCard(s));
 		if (froms.length !== shorthands.length)
 			throw new Error('invalid move actionText: ' + actionText);
 		return { froms, shorthands };
@@ -656,21 +653,20 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 
 /** XXX (techdebt) do we need to do any more type checking? I suppose we could just improve the regex */
 export function parsePreviousActionMoveShorthands(actionText: string) {
-	const match = MOVE_FOUNDATION_REGEX.exec(actionText);
+	const match = _parseActionTextMoveFoundation(actionText);
 
 	if (match) {
-		const moveShorthands = match[3].split('-');
-		const autoFoundationShorthands = match[7].split(',');
+		const { fromShorthand, autoShorthand } = match;
 		return {
-			moveShorthands,
-			autoFoundationShorthands,
+			moveShorthands: fromShorthand.split('-'),
+			autoFoundationShorthands: autoShorthand.split(','),
 		};
 	}
 
 	// we don't need special animations/shorthands for regular moves
 	// the default animations are already good enough
 	// (it's just one card or a sequence)
-	// match = MOVE_REGEX.exec(actionText);
+	// match = _parseActionTextMove(actionText);
 
 	return {};
 }
@@ -686,14 +682,14 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 		if (actionText.startsWith('invalid ')) {
 			return null;
 		}
-		let match = MOVE_REGEX.exec(actionText);
+		let match = _parseActionTextMove(actionText);
 		if (match) {
-			const [, from, to] = match;
+			const { from, to } = match;
 			moves.push(`${from}${to}`);
 		} else {
-			match = MOVE_FOUNDATION_REGEX.exec(actionText);
+			match = _parseActionTextMoveFoundation(actionText);
 			if (match) {
-				const [, from, to] = match;
+				const { from, to } = match;
 				moves.push(`${from}${to}`);
 			}
 		}
