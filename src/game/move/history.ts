@@ -221,7 +221,7 @@ export function parseCursorFromPreviousActionText(
 					//  - where the source suit may or may not be in the foundation
 					//  - where the source suit may or may not match the target suit
 					// ---
-					// FIXME (5-priority) (refactor) (coords) when we use braille to make history accurate™️, all this testing will be moot
+					// FIXME (review) (coords) when we use braille to make history accurate™️, all this testing will be moot
 
 					if (toShorthand === 'foundation') {
 						const shorthand = parseShorthandCard(fromShorthand);
@@ -404,7 +404,7 @@ export function parseActionTextMove(actionText: string) {
 function _parseActionTextMove(actionText: string) {
 	const match = MOVE_REGEX.exec(actionText);
 	if (match) {
-		// FIXME how can we use fb, tb?
+		// FIXME GOAL how can we use fb, tb?
 		const [, from, fb, to, tb, fromShorthand, toShorthand] = match;
 		return { from, fb, to, tb, fromShorthand, toShorthand };
 	}
@@ -414,7 +414,7 @@ function _parseActionTextMove(actionText: string) {
 function _parseActionTextMoveFoundation(actionText: string) {
 	const match = MOVE_FOUNDATION_REGEX.exec(actionText);
 	if (match) {
-		// FIXME how can we use fb, tb?
+		// FIXME GOAL how can we use fb, tb?
 		const [, from, fb, to, tb, fromShorthand, toShorthand, , piles, autoShorthand] = match;
 		return { from, fb, to, tb, fromShorthand, toShorthand, piles, autoShorthand };
 	}
@@ -433,7 +433,7 @@ function parseActionTextCursor(actionText: string) {
 function parseActionTextSelect(actionText: string) {
 	const match = SELECT_REGEX.exec(actionText);
 	if (match) {
-		// FIXME how can we use fb?
+		// FIXME GOAL how can we use fb?
 		const [, , , from, fb, fromShorthand] = match;
 		return { from, fb, fromShorthand };
 	}
@@ -712,7 +712,7 @@ export function getCardsThatMoved(game: FreeCell): Card[] {
 
 export function getCardsFromInvalid(
 	previousAction: PreviousAction,
-	/** @deprecated FIXME (5-priority) (refactor) (coords) due to incomplete information */
+	/** @deprecated FIXME GOAL (5-priority) (refactor) (coords) due to incomplete information */
 	cursor: CardLocation | null
 ): {
 	fromShorthands: string[];
@@ -739,12 +739,11 @@ export function getCardsFromInvalid(
 			return { fromShorthands, toShorthands: [], pileShorthands: [to_location] };
 		}
 
-		// FIXME (5-priority) (techdebt) (motivation) (refactor) (coords) braille if the move text had more precision, we wouldn't need to recompute it
+		// FIXME GOAL (5-priority) (techdebt) (motivation) (refactor) (coords) braille if the move text had more precision, we wouldn't need to recompute it
 		//  - drag and drop can use any foundation, we can "touch" any foundation
 		//  - parseCursorFromPreviousActionText? (needs cards)
 		//  - game.parseShorthandMove? (needs game)
 		//  - the pileSH simply does not have enough information
-		// FIXME (5-priority) (refactor) (coords) use braille (at least for h), remove the curosr arg
 		if (cursor !== null && shorthandPosition(cursor) === to) {
 			return { fromShorthands, toShorthands: [], pileShorthands: [cursor] };
 		}

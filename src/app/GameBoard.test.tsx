@@ -16,6 +16,7 @@ import { getCardIdsFromSpy, getPropertiesFromFromToSpy, getPropertiesFromSpy, sp
 import { calcCardId, CardLocation, CardShorthand, parseShorthandCard, PileSH, RankList, shorthandCard, shorthandPosition, SuitList } from '@/game/card/card';
 import { getMoves } from '@/game/catalog/solutions-catalog';
 import { FreeCell } from '@/game/game';
+import { spotRegexMoveInHistory } from '@/game/move/history';
 import { parseShorthandMove } from '@/game/move/move';
 
 const gsapUtilsRandom = gsap.utils.random as jest.Mock;
@@ -1591,7 +1592,7 @@ describe('GameBoard', () => {
 			moves.forEach((move, idx) => {
 				moveByShorthand(move);
 				try {
-					expect(cribGame().previousAction.text).toMatch(new RegExp(`^move ${move}`));
+					expect(cribGame().previousAction.text).toMatch(spotRegexMoveInHistory(move));
 				} catch (cause) {
 					console.error(cribGame().print({ includeHistory: true }));
 					throw new Error(`${name}, Move #${(idx + 1).toString(10)}, ${move} failed`, { cause });

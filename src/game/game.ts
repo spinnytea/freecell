@@ -270,7 +270,6 @@ export class FreeCell {
 		this.flashCards = flashCards ?? null;
 
 		this.previousAction = action;
-		this.previousAction.text = removeBraille(action.text);
 		this.history = history ?? [];
 	}
 
@@ -1103,7 +1102,7 @@ export class FreeCell {
 		if (includeHistory) {
 			str += printHistory(this);
 		} else {
-			str += '\n ' + this.previousAction.text;
+			str += '\n ' + removeBraille(this.previousAction.text);
 		}
 
 		return str;

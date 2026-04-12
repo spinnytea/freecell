@@ -18,6 +18,7 @@ describe('game.$toggleCursor', () => {
 					' move 74 4D→5S'
 			);
 
+			expect(game.previousAction.text).toBe('move 7⡅4⡆ 4D→5S');
 			expect(game.$toggleCursor().previousAction.text).toBe('cursor set 7 6C');
 			expect(game.$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set 4 5S');
 			expect(game.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set 7 6C');
@@ -26,13 +27,13 @@ describe('game.$toggleCursor', () => {
 			// okay, moving on
 			// see how much easier this iw with toggleCursor
 			game = game.$toggleCursor().$touchAndMove();
-			expect(game.previousAction.text).toBe('move 7a 6C→cell');
+			expect(game.previousAction.text).toBe('move 7⡄a 6C→cell');
 			game = game.$toggleCursor().$touchAndMove();
-			expect(game.previousAction.text).toBe('move 7b 5D→cell (auto-foundation 7 AS)');
+			expect(game.previousAction.text).toBe('move 7⡃b 5D→cell (auto-foundation 7 AS)');
 			game = game.moveCursor('left').$touchAndMove();
-			expect(game.previousAction.text).toBe('move a7 6C→7D');
+			expect(game.previousAction.text).toBe('move a7⡁ 6C→7D');
 			game = game.$toggleCursor().moveCursor('right').$touchAndMove();
-			expect(game.previousAction.text).toBe('move b7 5D→6C');
+			expect(game.previousAction.text).toBe('move b7⡂ 5D→6C');
 
 			expect(game.__printHistory(true)).toBe(
 				'\n' + //
@@ -59,13 +60,13 @@ describe('game.$toggleCursor', () => {
 			);
 
 			game = game.$toggleCursor().$touchAndMove();
-			expect(game.previousAction.text).toBe('move 7a 6C→cell');
+			expect(game.previousAction.text).toBe('move 7⡄a 6C→cell');
 			game = game.$toggleCursor().$touchAndMove();
-			expect(game.previousAction.text).toBe('move 7b 5D→cell (auto-foundation 7 AS)');
+			expect(game.previousAction.text).toBe('move 7⡃b 5D→cell (auto-foundation 7 AS)');
 			game = game.$toggleCursor().$touchAndMove();
-			expect(game.previousAction.text).toBe('move 7c 7D→cell');
+			expect(game.previousAction.text).toBe('move 7⡁c 7D→cell');
 			game = game.$toggleCursor().$touchAndMove();
-			expect(game.previousAction.text).toBe('move 78 3H→4S');
+			expect(game.previousAction.text).toBe('move 7⡀8⡅ 3H→4S');
 			expect(game.print()).toBe(
 				'' + //
 					' 6C 5D 7D    AS          \n' +
@@ -95,12 +96,12 @@ describe('game.$toggleCursor', () => {
 			expect(game.previousAction.text).toBe('move c7 7D→cascade');
 			// but now it's easy again
 			game = game.$toggleCursor().moveCursor('left').moveCursor('left').$touchAndMove();
-			expect(game.previousAction.text).toBe('move a7 6C→7D');
+			expect(game.previousAction.text).toBe('move a7⡀ 6C→7D');
 			game = game.$toggleCursor().moveCursor('right').$touchAndMove();
-			expect(game.previousAction.text).toBe('move b7 5D→6C');
+			expect(game.previousAction.text).toBe('move b7⡁ 5D→6C');
 			// okay, this last one is a little far
 			game = game.moveCursor('right').moveCursor('down').moveCursor('down').moveCursor('down').moveCursor('down').$touchAndMove();
-			expect(game.previousAction.text).toBe('move 87 4S-3H→5D');
+			expect(game.previousAction.text).toBe('move 8⡅7⡂ 4S-3H→5D');
 
 			expect(game.print({ includeHistory: true })).toBe(
 				'' + //
@@ -121,26 +122,60 @@ describe('game.$toggleCursor', () => {
 		});
 	});
 
-	test('deck / allowEmptyDeck', () => {
-		// deal 44 cards keeps the cursor in the deck (after)
-		const gameDealMost = new FreeCell().dealAll({ demo: true, keepDeck: true });
-		expect(gameDealMost.deck.length).toBe(8);
-		expect(gameDealMost.cursor.fixture).toEqual('deck');
-		expect(gameDealMost.$toggleCursor().cursor.fixture).toEqual('deck');
-		expect(gameDealMost.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('deck');
+	describe('deck', () => {
+		test('with cards', () => {
+			// deal 44 cards keeps the cursor in the deck (after)
+			const gameDealMost = new FreeCell().dealAll({ demo: true, keepDeck: true });
+			expect(gameDealMost.deck.length).toBe(8);
 
-		// dealing all cards moves the cursor to a cell
-		const gameAllCards = new FreeCell().dealAll();
-		expect(gameAllCards.deck.length).toBe(0);
-		expect(gameAllCards.cursor.fixture).toEqual('cell');
-		expect(gameAllCards.$toggleCursor().cursor.fixture).toEqual('cell');
-		expect(gameAllCards.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('cell');
-		expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).cursor.fixture).toEqual('deck');
-		expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).$toggleCursor({ allowEmptyDeck: true }).cursor.fixture).toEqual('cell');
+			expect(gameDealMost.cursor.fixture).toEqual('deck');
+			expect(gameDealMost.$toggleCursor().cursor.fixture).toEqual('deck');
+			expect(gameDealMost.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('deck');
+			expect(gameDealMost.$toggleCursor().$toggleCursor().$toggleCursor().cursor.fixture).toEqual('deck');
+
+			expect(gameDealMost.previousAction.text).toBe('deal 44 cards');
+			expect(gameDealMost.$toggleCursor().previousAction.text).toBe('cursor set k⡀ AC');
+			expect(gameDealMost.$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set k⡀ AC');
+			expect(gameDealMost.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set k⡀ AC');
+		});
+
+		test('allowEmptyDeck', () => {
+			// dealing all cards moves the cursor to a cell
+			const gameAllCards = new FreeCell().dealAll();
+			expect(gameAllCards.deck.length).toBe(0);
+
+			expect(gameAllCards.cursor.fixture).toEqual('cell');
+			expect(gameAllCards.$toggleCursor().cursor.fixture).toEqual('cell');
+			expect(gameAllCards.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('cell');
+			expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).cursor.fixture).toEqual('deck');
+			expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).$toggleCursor({ allowEmptyDeck: true }).cursor.fixture).toEqual('cell');
+
+			expect(gameAllCards.previousAction.text).toBe('deal all cards');
+			expect(gameAllCards.$toggleCursor().previousAction.text).toEqual('cursor set a');
+			expect(gameAllCards.$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set a');
+			expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).previousAction.text).toEqual('cursor set k⡀ deck');
+			expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).$toggleCursor({ allowEmptyDeck: true }).previousAction.text).toEqual('cursor set a');
+		});
 	});
 
-	// FIXME test.todo
-	test.todo('fixture with card');
+	// FIXME GOAL test.todo, review game.touch
+	describe('fixture', () => {
+		test.todo('manually move to empty');
 
-	test.todo('fixture w/o card');
+		test.todo('manually move to not empty');
+
+		describe('gameFunction: recall-or-bury', () => {
+			test.todo('foundation→deck');
+
+			test.todo('foundation→deck');
+		});
+
+		describe('unrelated', () => {
+			// foundation is incidental
+			test.todo('auto-foundation');
+
+			// not a move
+			test.todo('allowSelectFoundation');
+		});
+	});
 });

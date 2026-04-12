@@ -634,6 +634,7 @@ describe('game.touch', () => {
 
 			test.todo('to: cell');
 
+			// FIXME to foundation needs empty/not empty
 			test.todo('to: foundation');
 
 			describe('to: cascade', () => {
@@ -785,6 +786,7 @@ describe('game.touch', () => {
 				expect(game.availableMoves).toEqual(null);
 			});
 
+			// FIXME to foundation needs empty/not empty
 			test('to: foundation', () => {
 				game = FreeCell.parse(
 					'' + //
@@ -1514,6 +1516,7 @@ describe('game.touch', () => {
 					expect(game.availableMoves).toEqual(null);
 				});
 
+				// FIXME to foundation needs empty/not empty
 				test('to: foundation', () => {
 					game = game
 						.dealAll()
@@ -2028,6 +2031,7 @@ describe('game.touch', () => {
 					});
 				});
 
+				// FIXME to foundation needs empty/not empty
 				test('to: cell', () => {
 					const game = FreeCell.parse(
 						'' + //
@@ -2057,6 +2061,7 @@ describe('game.touch', () => {
 					);
 				});
 
+				// FIXME to foundation needs empty/not empty
 				test('to: foundation', () => {
 					const game = FreeCell.parse(
 						'' + //
