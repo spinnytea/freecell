@@ -275,17 +275,17 @@ describe('game.$moveCardToPosition', () => {
 			});
 			game = game.$moveCardToPosition('KC', '5');
 			expect(game.previousAction).toEqual({
-				text: 'invalid move 45 KC-QD-JS-TD-9C-8D-7C→cascade',
+				text: 'invalid move 4⡆5 KC-QD-JS-TD-9C-8D-7C→cascade',
 				type: 'invalid',
 			});
 			game = game.$moveCardToPosition('TD', '5');
 			expect(game.previousAction).toEqual({
-				text: 'invalid move 45 TD-9C-8D-7C→cascade',
+				text: 'invalid move 4⡉5 TD-9C-8D-7C→cascade',
 				type: 'invalid',
 			});
 			game = game.$moveCardToPosition('9C', '5');
 			expect(game.previousAction).toEqual({
-				text: 'move 45 9C-8D-7C→cascade',
+				text: 'move 4⡊5 9C-8D-7C→cascade',
 				type: 'move',
 			});
 		});

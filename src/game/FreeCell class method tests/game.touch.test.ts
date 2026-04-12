@@ -123,6 +123,12 @@ describe('game.touch', () => {
 					expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 				});
 			});
+
+			// FIXME test.todo
+			describe('check all coords', () => {
+				// spot check coords
+				test.todo('everything');
+			});
 		});
 
 		describe('cell', () => {
@@ -394,7 +400,7 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'cascade', data: [5, 4] }).touch();
 				expect(game.selection).toEqual(null);
-				expect(game.previousAction.text).toBe('deselect 6 2C');
+				expect(game.previousAction.text).toBe('deselect 6⡄ 2C');
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(game.print());
 			});
 
@@ -491,12 +497,12 @@ describe('game.touch', () => {
 
 				game = game.setCursor({ fixture: 'cascade', data: [0, 4] }).touch();
 				expect(game.selection).toEqual(null);
-				expect(game.previousAction.text).toBe('deselect 1 QH-JC');
+				expect(game.previousAction.text).toBe('deselect 1⡄ QH-JC');
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(game.print());
 
-				// side note: allowPeekOnly
-				expect(game.touch().previousAction.text).toBe('select 1 QH-JC');
-				expect(game.touch({ allowPeekOnly: false }).previousAction.text).toBe('select 1 QH-JC');
+				// semi-unrelated: allowPeekOnly
+				expect(game.touch().previousAction.text).toBe('select 1⡄ QH-JC');
+				expect(game.touch({ allowPeekOnly: false }).previousAction.text).toBe('select 1⡄ QH-JC');
 			});
 
 			test('sequence too tall', () => {
@@ -612,6 +618,12 @@ describe('game.touch', () => {
 		test.todo('select when current select can move'); // touch stop
 
 		test.todo('select when current select cannot move'); // select
+
+		// FIXME test.todo
+		describe('check all coords', () => {
+			// put the entire deck in the first cascade and spot check coords
+			test.todo('everything');
+		});
 	});
 
 	describe('move card', () => {
@@ -634,6 +646,7 @@ describe('game.touch', () => {
 
 			test.todo('to: cell');
 
+			// FIXME to foundation needs empty/not empty
 			test.todo('to: foundation');
 
 			describe('to: cascade', () => {
@@ -785,6 +798,7 @@ describe('game.touch', () => {
 				expect(game.availableMoves).toEqual(null);
 			});
 
+			// FIXME to foundation needs empty/not empty
 			test('to: foundation', () => {
 				game = FreeCell.parse(
 					'' + //
@@ -1082,7 +1096,7 @@ describe('game.touch', () => {
 					expect(blocked.history).toEqual(['hand-jammed']);
 					expect(blocked.previousAction).toEqual({
 						type: 'invalid',
-						text: 'invalid move hk TD→deck',
+						text: 'invalid move h⡁k TD→deck',
 					});
 					const burried = game.touch({ gameFunction: 'recall-or-bury' });
 					expect(burried.print()).toBe(
@@ -1102,7 +1116,7 @@ describe('game.touch', () => {
 					);
 					expect(burried.previousAction).toEqual({
 						type: 'move',
-						text: 'invalid move hk TD→deck',
+						text: 'invalid move h⡁k TD→deck',
 						gameFunction: 'recall-or-bury',
 					});
 				});
@@ -1153,7 +1167,7 @@ describe('game.touch', () => {
 						);
 						expect(burried.previousAction).toEqual({
 							type: 'move',
-							text: 'invalid move hk TD→deck',
+							text: 'invalid move h⡁k TD→deck',
 							gameFunction: 'recall-or-bury',
 						});
 					});
@@ -1240,7 +1254,7 @@ describe('game.touch', () => {
 						);
 						expect(burried.previousAction).toEqual({
 							type: 'move',
-							text: 'invalid move 4k 6D→deck',
+							text: 'invalid move 4⡅k 6D→deck',
 							gameFunction: 'recall-or-bury',
 						});
 					});
@@ -1293,7 +1307,7 @@ describe('game.touch', () => {
 							);
 							expect(burried.previousAction).toEqual({
 								type: 'move',
-								text: 'invalid move 4k 6D→deck',
+								text: 'invalid move 4⡅k 6D→deck',
 								gameFunction: 'recall-or-bury',
 							});
 						});
@@ -1341,7 +1355,7 @@ describe('game.touch', () => {
 							);
 							expect(burried.previousAction).toEqual({
 								type: 'move',
-								text: 'invalid move 4k 6D→6H',
+								text: 'invalid move 4⡅k⡇ 6D→6H',
 								gameFunction: 'recall-or-bury',
 							});
 						});
@@ -1389,7 +1403,7 @@ describe('game.touch', () => {
 							);
 							expect(burried.previousAction).toEqual({
 								type: 'move',
-								text: 'invalid move 4k 6D→9S',
+								text: 'invalid move 4⡅k⡃ 6D→9S',
 								gameFunction: 'recall-or-bury',
 							});
 						});
@@ -1437,7 +1451,7 @@ describe('game.touch', () => {
 							);
 							expect(burried.previousAction).toEqual({
 								type: 'move',
-								text: 'invalid move 4k 6D→TS',
+								text: 'invalid move 4⡅k⡀ 6D→TS',
 								gameFunction: 'recall-or-bury',
 							});
 						});
@@ -1514,6 +1528,7 @@ describe('game.touch', () => {
 					expect(game.availableMoves).toEqual(null);
 				});
 
+				// FIXME to foundation needs empty/not empty
 				test('to: foundation', () => {
 					game = game
 						.dealAll()
@@ -2028,6 +2043,7 @@ describe('game.touch', () => {
 					});
 				});
 
+				// FIXME to foundation needs empty/not empty
 				test('to: cell', () => {
 					const game = FreeCell.parse(
 						'' + //
@@ -2057,6 +2073,7 @@ describe('game.touch', () => {
 					);
 				});
 
+				// FIXME to foundation needs empty/not empty
 				test('to: foundation', () => {
 					const game = FreeCell.parse(
 						'' + //
@@ -2368,7 +2385,7 @@ describe('game.touch', () => {
 						' 53 '
 				);
 				expect(game.previousAction).toEqual({
-					text: 'move 53 6H→7C (auto-foundation 2 AD)',
+					text: 'move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } }],
 				});
@@ -2432,7 +2449,7 @@ describe('game.touch', () => {
 						' hand-jammed'
 				);
 				expect(game.previousAction).toEqual({
-					text: 'move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)',
+					text: 'move 7⡀8 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [7, 0] } }],
 				});
@@ -2470,7 +2487,7 @@ describe('game.touch', () => {
 						' deal all cards'
 				);
 				expect(game.previousAction).toEqual({
-					text: 'move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
+					text: 'move 4⡆6⡅ AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [5, 6] } }],
 				});
@@ -2573,48 +2590,48 @@ describe('game.touch', () => {
 		*/
 		test('re-select when move is invalid', () => {
 			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
-			expect(game.previousAction.text).toBe('select 1 JS');
+			expect(game.previousAction.text).toBe('select 1⡂ JS');
 
 			game = game.setCursor({ fixture: 'cascade', data: [1, 0] }).touch();
-			expect(game.previousAction.text).toBe('select 2 2C');
+			expect(game.previousAction.text).toBe('select 2⡀ 2C');
 			game = game.setCursor({ fixture: 'cascade', data: [2, 0] }).touch();
-			expect(game.previousAction.text).toBe('select 3 2D');
+			expect(game.previousAction.text).toBe('select 3⡀ 2D');
 			game = game.setCursor({ fixture: 'cascade', data: [4, 0] }).touch();
-			expect(game.previousAction.text).toBe('select 5 2S');
+			expect(game.previousAction.text).toBe('select 5⡀ 2S');
 			game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
-			expect(game.previousAction.text).toBe('select 1 KS-QH-JS');
+			expect(game.previousAction.text).toBe('select 1⡀ KS-QH-JS');
 
 			// semi-unrelated: no room to move to empty cascade
 			// we want to use this more expressive text (rather than simply 'touch stop')
 			game = game.setCursor({ fixture: 'cascade', data: [3, 0] }).touch();
-			expect(game.previousAction.text).toBe('invalid move 14 KS-QH-JS→cascade');
+			expect(game.previousAction.text).toBe('invalid move 1⡀4 KS-QH-JS→cascade');
 		});
 
 		test('allow "growing/shrinking sequence of current selection"', () => {
 			// march down
 			game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
-			expect(game.previousAction.text).toBe('select 1 KS-QH-JS');
+			expect(game.previousAction.text).toBe('select 1⡀ KS-QH-JS');
 			game = game.setCursor({ fixture: 'cascade', data: [0, 1] }).touch();
-			expect(game.previousAction.text).toBe('select 1 QH-JS');
+			expect(game.previousAction.text).toBe('select 1⡁ QH-JS');
 			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
-			expect(game.previousAction.text).toBe('select 1 JS');
+			expect(game.previousAction.text).toBe('select 1⡂ JS');
 
 			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
-			expect(game.previousAction.text).toBe('deselect 1 JS');
+			expect(game.previousAction.text).toBe('deselect 1⡂ JS');
 
 			// march up
 			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
-			expect(game.previousAction.text).toBe('select 1 JS');
+			expect(game.previousAction.text).toBe('select 1⡂ JS');
 			game = game.setCursor({ fixture: 'cascade', data: [0, 1] }).touch();
-			expect(game.previousAction.text).toBe('select 1 QH-JS');
+			expect(game.previousAction.text).toBe('select 1⡁ QH-JS');
 			game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
-			expect(game.previousAction.text).toBe('select 1 KS-QH-JS');
+			expect(game.previousAction.text).toBe('select 1⡀ KS-QH-JS');
 
 			// skip a few
 			game = game.setCursor({ fixture: 'cascade', data: [0, 2] }).touch();
-			expect(game.previousAction.text).toBe('select 1 JS');
+			expect(game.previousAction.text).toBe('select 1⡂ JS');
 			game = game.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
-			expect(game.previousAction.text).toBe('select 1 KS-QH-JS');
+			expect(game.previousAction.text).toBe('select 1⡀ KS-QH-JS');
 		});
 
 		test('allow moving selection from one cell to another cell', () => {

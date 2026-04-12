@@ -52,23 +52,31 @@ describe('game.$touchAndMove', () => {
 	/** when we've selected something that could move, _if it had any (╯°□°)╯ 🏆_ */
 	test('allow changing selection if !game.availableMoves?.length', () => {
 		game = game.$touchAndMove({ fixture: 'cascade', data: [3, 2] });
-		expect(game.previousAction.text).toBe('select 4 5C-4H-3S');
+		expect(game.previousAction.text).toBe('select 4⡂ 5C-4H-3S');
 		expect(game.availableMoves?.length).toBe(0);
 		game = game.$touchAndMove({ fixture: 'cascade', data: [4, 4] });
-		expect(game.previousAction.text).toBe('select 5 KC-QD-JC');
+		expect(game.previousAction.text).toBe('select 5⡄ KC-QD-JC');
 		expect(game.availableMoves?.length).toBe(0);
 		game = game.$touchAndMove({ fixture: 'cascade', data: [6, 5] });
-		expect(game.previousAction.text).toBe('select 7 8H-7C');
+		expect(game.previousAction.text).toBe('select 7⡅ 8H-7C');
 		expect(game.availableMoves?.length).toBe(0);
 
 		// semi-unrelated: we can move something valid
 		game = game.$touchAndMove({ fixture: 'cascade', data: [7, 4] });
-		expect(game.previousAction.text).toBe('move 8d 4C→cell');
+		expect(game.previousAction.text).toBe('move 8⡄d 4C→cell');
 		expect(game.availableMoves).toBe(null);
 	});
 
 	test('allow "growing/shrinking sequence of current selection"', () => {
-		// REVIEW (history) (shorthandMove) `select 3` isn't clear on it's own, see how it's the same for all of these?
+		// Note: `select 3` isn't clear on it's own, see how it's the same for all of these?
+		//  - which is why we added coords! :D i.e. `select 3⡅`
+		//  - i don't believe i've ever played the original freecell, but
+		//    i imaging this is why/contributes to the simplicity
+		//    or at least this text syntax is so simple because the allowable moves were simple
+		//    (only interact with the bottom of the cascade)
+		//    (not sure if you could pick between foundations, or the game picked for you)
+		//  - since our impl has more flexibility, coords show _which one_ in cases we need to replay afterwards
+		//    like how we implemented the GameBoard UI
 		game = game.$touchAndMove({ fixture: 'cascade', data: [2, 6] });
 		expect(game.print()).toBe(
 			'' + //
@@ -97,7 +105,7 @@ describe('game.$touchAndMove', () => {
 		});
 
 		game = game.$touchAndMove({ fixture: 'cascade', data: [2, 5] });
-		expect(game.previousAction.text).toBe('select 3 KD-QS-JH-TC-9D');
+		expect(game.previousAction.text).toBe('select 3⡅ KD-QS-JH-TC-9D');
 		expect(game.selection).toEqual({
 			location: { fixture: 'cascade', data: [2, 5] },
 			cards: [
@@ -111,7 +119,7 @@ describe('game.$touchAndMove', () => {
 		});
 
 		game = game.$touchAndMove({ fixture: 'cascade', data: [2, 7] });
-		expect(game.previousAction.text).toBe('select 3 JH-TC-9D');
+		expect(game.previousAction.text).toBe('select 3⡇ JH-TC-9D');
 		expect(game.selection).toEqual({
 			location: { fixture: 'cascade', data: [2, 7] },
 			cards: [
@@ -126,7 +134,7 @@ describe('game.$touchAndMove', () => {
 	test('allow moving selection from one cell to another cell', () => {
 		// setup to fill all cells
 		game = game.$touchAndMove({ fixture: 'cascade', data: [0, 4] });
-		expect(game.previousAction.text).toBe('move 1d 7H→cell');
+		expect(game.previousAction.text).toBe('move 1⡄d 7H→cell');
 		// select first
 		game = game.$touchAndMove({ fixture: 'cell', data: [0] });
 		expect(game.previousAction.text).toBe('select a 4S');
@@ -154,9 +162,9 @@ describe('game.$touchAndMove', () => {
 
 	test('allowPeekOnly', () => {
 		// we can select this, but we can't actually move it
-		expect(game.$touchAndMove('5C').previousAction.text).toBe('select 4 5C-4H-3S');
+		expect(game.$touchAndMove('5C').previousAction.text).toBe('select 4⡂ 5C-4H-3S');
 		// but since this _could_ move if there was a valid target, we can still select it
-		expect(game.$touchAndMove('5C', { allowPeekOnly: false }).previousAction.text).toBe('select 4 5C-4H-3S');
+		expect(game.$touchAndMove('5C', { allowPeekOnly: false }).previousAction.text).toBe('select 4⡂ 5C-4H-3S');
 
 		// this is buried, so it's peekOnly
 		expect(game.$touchAndMove('QC').previousAction.text).toBe('select QC');

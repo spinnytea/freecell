@@ -269,8 +269,8 @@ export class FreeCell {
 		this.availableMoves = availableMoves ?? null;
 		this.flashCards = flashCards ?? null;
 
+		// FIXME verify that every previousAction.text has braille as appropriate (i.e. shorthandPosition)
 		this.previousAction = action;
-		this.previousAction.text = removeBraille(action.text);
 		this.history = history ?? [];
 	}
 
@@ -916,7 +916,7 @@ export class FreeCell {
 		Flip-flop the cursor across the previous move.
 		This makes it easier to play with the arrow keys.
 
-		For Example: `move 23 KC-QD-JS→cascade`
+		For Example: `move 2⡀3 KC-QD-JS→cascade`
 		 - after: `KS` is in `3`
 		 - before: `KS` was in `2`
 
@@ -1103,7 +1103,7 @@ export class FreeCell {
 		if (includeHistory) {
 			str += printHistory(this);
 		} else {
-			str += '\n ' + this.previousAction.text;
+			str += '\n ' + removeBraille(this.previousAction.text);
 		}
 
 		return str;

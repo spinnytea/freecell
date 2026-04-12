@@ -99,7 +99,7 @@ export function parseHistoryShorthand(
 	// }
 
 	// we've already parsed the action text, we are verifying that the moves produce the same result
-	if (replayGameForHistroy.previousAction.text !== removeBraille(actionText)) {
+	if (removeBraille(replayGameForHistroy.previousAction.text) !== actionText) {
 		return { errorMessage: 'init with invalid history replay action text' };
 	}
 

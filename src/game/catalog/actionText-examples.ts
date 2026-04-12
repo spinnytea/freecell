@@ -1,11 +1,17 @@
 /** 52-card flourish */
 export const FIFTY_TWO_CARD_FLOURISH =
-	'move 3b 8S→cell (flourish52 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)';
+	'move 3⡃b 8S→cell (flourish52 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)';
 
 /**
 	these are <action> -> <state immediately before the action>
 
 	that is to say, here is a game state, where, we can apply this specific action
+
+	TODO (5-priority) (techdebt) (review) (test) compare {@link ACTION_TEXT_EXAMPLES} to test data
+	 - log every single `Freecell.action.text` that goes through the `Freecell.constructor`
+	 - log every action in `Freecell.history`
+	 - categorize them
+	 - ensure they are covered here
 */
 export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'init': '', // we cannot "take an action" to make an init
@@ -20,8 +26,8 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'deal 2 cards': '',
 	'deal 44 cards': '',
 	'deal all cards': '',
-	'cursor set': '', // deck
-	'cursor set KH': '', // deck
+	'cursor set': '', // FIXME k for deck
+	'cursor set KH': '', // FIXME k for deck
 	'cursor set b': '',
 	'cursor set h⡂': '', // home needs braille
 	'cursor set h AD': '', // unless we have a card
@@ -58,7 +64,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' KD JS                   \n' +
 		' hand-jammed',
 	// FIXME every `move \w\w` should be replaced, aallll 1,000 of them
-	'move 3a KC→cell':
+	'move 3⡂a KC→cell':
 		'             AD 3C 4H 3S \n' +
 		' QH TS 2D 7C 4C 7D QC KH \n' +
 		' JC 9D 9C 6H 4D 6C JD QS \n' +
@@ -83,13 +89,13 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' 34 31 32 c7 37 ',
 	'move 8h AD→foundation': '',
 	'move 57 KS→cascade': '',
-	'move 23 KC-QD-JS→cascade':
+	'move 2⡀3 KC-QD-JS→cascade':
 		'             QC TD KH 9S \n' +
 		' QS KC       TS          \n' +
 		' JD QD       KS          \n' +
 		' KD JS                   \n' +
 		' hand-jammed',
-	'move 15 TD→JS':
+	'move 1⡃5⡆ TD→JS':
 		' 9S 2H       AD 2C       \n' +
 		' AH 8S 2D QS 4C    2S 3D \n' +
 		' 5C AS 9C KH 4D    3C 4S \n' +
@@ -105,7 +111,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' 53 6a 65 67 85 a8 68 27 \n' +
 		' 67 1a 1b 13 ',
 	'move 78 JH-TC-9H-8S-7H→QS': '',
-	'move 53 6H→7C (auto-foundation 2 AD)':
+	'move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)':
 		'                         \n' +
 		' AH 8S 2D QS 4C 9H 2S 3D \n' +
 		' 5C AS 9C KH 4D 2C 3C 4S \n' +
@@ -116,7 +122,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' 9S AD 7C TS             \n' +
 		' deal all cards\n' +
 		':h shuffle32 5',
-	'move 14 2S→3D (auto-foundation 14 AS,2S)':
+	'move 1⡁4⡎ 2S→3D (auto-foundation 14 AS,2S)':
 		'    3H 8D 4D AC 2D AH    \n' +
 		' AS JC 9D 9C KD KC KS 5C \n' +
 		' 2S JD 8S 4C QS    QH 2H \n' +
@@ -138,7 +144,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' 64 62 6a 6b 3c 34 14 74 \n' +
 		' 34 38 3d 34 18 15 73 71 \n' +
 		' 73 57 53 57 54 13 a5 16 ',
-	'move 21 8H-7C→cascade':
+	'move 2⡆1 8H-7C→cascade':
 		'    3H 8D 4D AC 2D AH 2S \n' +
 		'    JC 9D 9C KD KC KS 5C \n' +
 		'    JD 8S 4C QS    QH 2H \n' +

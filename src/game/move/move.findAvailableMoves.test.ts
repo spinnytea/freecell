@@ -238,7 +238,7 @@ describe('game/move.findAvailableMoves', () => {
 				['h⡃', 'foundation', 1], // we pick this one as the best option (fair)
 			]);
 			// if we move it specifically, this is the resulting text (a bit redundant of a test)
-			expect(gameUndid.moveByShorthand('4d').previousAction.text).toBe('move 4d 4D→cell');
+			expect(gameUndid.moveByShorthand('4d').previousAction.text).toBe('move 4⡁d 4D→cell');
 
 			// now, we don't allow this card to be selected, so there are no available moves
 			expect(game.$selectCard('4D').selection).toBe(null);
@@ -304,7 +304,7 @@ describe('game/move.findAvailableMoves', () => {
 				['h⡀', 'foundation', 4], // we pick this one as the best option (fair)
 			]);
 			// if we move it specifically, this is the resulting text (a bit redundant of a test)
-			expect(gameUndid.moveByShorthand('1c').previousAction.text).toBe('move 1c 3H→cell (auto-foundation 133 AD,2D,3C)');
+			expect(gameUndid.moveByShorthand('1c').previousAction.text).toBe('move 1⡅c 3H→cell (auto-foundation 133 AD,2D,3C)');
 
 			// now this would just be asking for too much
 			expect(game.$touchAndMove('3H').previousAction).not.toEqual({

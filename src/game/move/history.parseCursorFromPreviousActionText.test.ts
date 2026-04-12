@@ -47,72 +47,72 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 
 		// XXX (techdebt) (cursor) we could detect the location of select/deselect
 		test.each`
-			actionText                                    | cards          | after                                    | before
-			${'init'}                                     | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'init with invalid history'}                | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cell', data: [0] }}
-			${'init partial'}                             | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'shuffle deck (1)'}                         | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'deal 1 card'}                              | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'deal 2 cards'}                             | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'deal 44 cards'}                            | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'deal all cards'}                           | ${someCards_1} | ${{ fixture: 'cell', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'cursor set'}                               | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor set KH'}                            | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${undefined}
-			${'cursor set b'}                             | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${undefined}
-			${'cursor set h⡂'}                            | ${[]}          | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
-			${'cursor set h AD'}                          | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
-			${'cursor set 6 2D'}                          | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 5] }}  | ${undefined}
-			${'cursor set 3'}                             | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${undefined}
-			${'cursor up'}                                | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor left'}                              | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor down'}                              | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor right'}                             | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor up wrap'}                           | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor left wrap'}                         | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor down wrap'}                         | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor right wrap'}                        | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor stop'}                              | ${[]}          | ${undefined}                             | ${undefined}
-			${'cursor stop KH'}                           | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${undefined}
-			${'cursor stop b'}                            | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${undefined}
-			${'cursor stop h⡂'}                           | ${[]}          | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
-			${'cursor stop h AD'}                         | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
-			${'cursor stop 6 2D'}                         | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 5] }}  | ${undefined}
-			${'cursor stop 3'}                            | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${undefined}
-			${'select QS'}                                | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 2] }}  | ${{ fixture: 'cascade', data: [7, 2] }}
-			${'select 4D-3S-2D'}                          | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 3] }}  | ${{ fixture: 'cascade', data: [7, 3] }}
-			${'select 8 7C'}                              | ${someCards_1} | ${{ fixture: 'cascade', data: [2, 5] }}  | ${{ fixture: 'cascade', data: [2, 5] }}
-			${'select 8 4D-3S-2D'}                        | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 3] }}  | ${{ fixture: 'cascade', data: [7, 3] }}
-			${'deselect AS'}                              | ${someCards_2} | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'cascade', data: [0, 0] }}
-			${'deselect 4D-3S-2D'}                        | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 1] }}  | ${{ fixture: 'cascade', data: [5, 1] }}
-			${'deselect 6 2D'}                            | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 3] }}  | ${{ fixture: 'cascade', data: [5, 3] }}
-			${'deselect 6 4D-3S-2D'}                      | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 1] }}  | ${{ fixture: 'cascade', data: [5, 1] }}
-			${'touch stop'}                               | ${[]}          | ${undefined}                             | ${undefined}
-			${'move 3a KC→cell'}                          | ${[]}          | ${{ fixture: 'cell', data: [0] }}        | ${{ fixture: 'cascade', data: [2, 99] }}
-			${'move 8h AD→foundation'}                    | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cascade', data: [7, 99] }}
-			${'move 57 KS→cascade'}                       | ${[]}          | ${{ fixture: 'cascade', data: [6, 0] }}  | ${{ fixture: 'cascade', data: [4, 99] }}
-			${'move 23 KC-QD-JS→cascade'}                 | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${{ fixture: 'cascade', data: [1, 99] }}
-			${'move 15 TD→JS'}                            | ${someCards_1} | ${{ fixture: 'cascade', data: [4, 12] }} | ${{ fixture: 'cascade', data: [0, 99] }}
-			${'move 78 JH-TC-9H-8S-7H→QS'}                | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 2] }}  | ${{ fixture: 'cascade', data: [6, 99] }}
-			${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${someCards_1} | ${{ fixture: 'cascade', data: [2, 5] }}  | ${{ fixture: 'cascade', data: [4, 99] }}
-			${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${someCards_2} | ${{ fixture: 'cascade', data: [3, 0] }}  | ${{ fixture: 'cascade', data: [0, 99] }}
-			${'move 21 8H-7C→cascade'}                    | ${[]}          | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'cascade', data: [1, 99] }}
-			${FIFTY_TWO_CARD_FLOURISH}                    | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${{ fixture: 'cascade', data: [2, 99] }}
-			${'auto-foundation 56 KD,KS'}                 | ${someCards_1} | ${undefined}                             | ${undefined}
-			${'flourish 56 KD,KS'}                        | ${someCards_1} | ${undefined}                             | ${undefined}
-			${'invalid move 86 7D→9C'}                    | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 0] }}  | ${{ fixture: 'cascade', data: [7, 99] }}
-			${'invalid move 75 6D-5S-4D-3C→7C'}           | ${someCards_2} | ${{ fixture: 'cascade', data: [4, 0] }}  | ${{ fixture: 'cascade', data: [6, 99] }}
-			${'invalid move hc AC→cell'}                  | ${[]}          | ${{ fixture: 'cell', data: [2] }}        | ${{ fixture: 'foundation', data: [0] }}
-			${'invalid move 1c KC-QD-JC→cell'}            | ${[]}          | ${{ fixture: 'cell', data: [2] }}        | ${{ fixture: 'cascade', data: [0, 99] }}
-			${'invalid move kb 6H→cell'}                  | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'invalid move ah 3C→foundation'}            | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cell', data: [0] }}
-			${'invalid move 1h 9C→foundation'}            | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cascade', data: [0, 99] }}
-			${'invalid move 2h TH→AH'}                    | ${someCards_h} | ${{ fixture: 'foundation', data: [1] }}  | ${{ fixture: 'cascade', data: [1, 99] }}
-			${'invalid move 13 KC-QD-JC→cascade'}         | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${{ fixture: 'cascade', data: [0, 99] }}
-			${'invalid move k1 KH→cascade'}               | ${[]}          | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'deck', data: [0] }}
-			${'invalid move bk 6C→deck'}                  | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cell', data: [1] }}
-			${'invalid move hk TD→deck'}                  | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'foundation', data: [0] }}
-			${'invalid move 4k 6D→deck'}                  | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cascade', data: [3, 99] }}
-			${'invalid move 2k TC-9D-8C→deck'}            | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cascade', data: [1, 99] }}
+			actionText                                      | cards          | after                                    | before
+			${'init'}                                       | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'init with invalid history'}                  | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cell', data: [0] }}
+			${'init partial'}                               | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'shuffle deck (1)'}                           | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'deal 1 card'}                                | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'deal 2 cards'}                               | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'deal 44 cards'}                              | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'deal all cards'}                             | ${someCards_1} | ${{ fixture: 'cell', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'cursor set'}                                 | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor set KH'}                              | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${undefined}
+			${'cursor set b'}                               | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${undefined}
+			${'cursor set h⡂'}                              | ${[]}          | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
+			${'cursor set h AD'}                            | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
+			${'cursor set 6 2D'}                            | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 5] }}  | ${undefined}
+			${'cursor set 3'}                               | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${undefined}
+			${'cursor up'}                                  | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor left'}                                | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor down'}                                | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor right'}                               | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor up wrap'}                             | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor left wrap'}                           | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor down wrap'}                           | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor right wrap'}                          | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor stop'}                                | ${[]}          | ${undefined}                             | ${undefined}
+			${'cursor stop KH'}                             | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${undefined}
+			${'cursor stop b'}                              | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${undefined}
+			${'cursor stop h⡂'}                             | ${[]}          | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
+			${'cursor stop h AD'}                           | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
+			${'cursor stop 6 2D'}                           | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 5] }}  | ${undefined}
+			${'cursor stop 3'}                              | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${undefined}
+			${'select QS'}                                  | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 2] }}  | ${{ fixture: 'cascade', data: [7, 2] }}
+			${'select 4D-3S-2D'}                            | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 3] }}  | ${{ fixture: 'cascade', data: [7, 3] }}
+			${'select 8 7C'}                                | ${someCards_1} | ${{ fixture: 'cascade', data: [2, 5] }}  | ${{ fixture: 'cascade', data: [2, 5] }}
+			${'select 8 4D-3S-2D'}                          | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 3] }}  | ${{ fixture: 'cascade', data: [7, 3] }}
+			${'deselect AS'}                                | ${someCards_2} | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'cascade', data: [0, 0] }}
+			${'deselect 4D-3S-2D'}                          | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 1] }}  | ${{ fixture: 'cascade', data: [5, 1] }}
+			${'deselect 6 2D'}                              | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 3] }}  | ${{ fixture: 'cascade', data: [5, 3] }}
+			${'deselect 6 4D-3S-2D'}                        | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 1] }}  | ${{ fixture: 'cascade', data: [5, 1] }}
+			${'touch stop'}                                 | ${[]}          | ${undefined}                             | ${undefined}
+			${'move 3⡂a KC→cell'}                           | ${[]}          | ${{ fixture: 'cell', data: [0] }}        | ${{ fixture: 'cascade', data: [2, 99] }}
+			${'move 8h AD→foundation'}                      | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cascade', data: [7, 99] }}
+			${'move 57 KS→cascade'}                         | ${[]}          | ${{ fixture: 'cascade', data: [6, 0] }}  | ${{ fixture: 'cascade', data: [4, 99] }}
+			${'move 2⡀3 KC-QD-JS→cascade'}                  | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${{ fixture: 'cascade', data: [1, 99] }}
+			${'move 1⡃5⡆ TD→JS'}                            | ${someCards_1} | ${{ fixture: 'cascade', data: [4, 12] }} | ${{ fixture: 'cascade', data: [0, 99] }}
+			${'move 78 JH-TC-9H-8S-7H→QS'}                  | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 2] }}  | ${{ fixture: 'cascade', data: [6, 99] }}
+			${'move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)'}     | ${someCards_1} | ${{ fixture: 'cascade', data: [2, 5] }}  | ${{ fixture: 'cascade', data: [4, 99] }}
+			${'move 1⡁4⡎ 2S→3D (auto-foundation 14 AS,2S)'} | ${someCards_2} | ${{ fixture: 'cascade', data: [3, 0] }}  | ${{ fixture: 'cascade', data: [0, 99] }}
+			${'move 2⡆1 8H-7C→cascade'}                     | ${[]}          | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'cascade', data: [1, 99] }}
+			${FIFTY_TWO_CARD_FLOURISH}                      | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${{ fixture: 'cascade', data: [2, 99] }}
+			${'auto-foundation 56 KD,KS'}                   | ${someCards_1} | ${undefined}                             | ${undefined}
+			${'flourish 56 KD,KS'}                          | ${someCards_1} | ${undefined}                             | ${undefined}
+			${'invalid move 86 7D→9C'}                      | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 0] }}  | ${{ fixture: 'cascade', data: [7, 99] }}
+			${'invalid move 75 6D-5S-4D-3C→7C'}             | ${someCards_2} | ${{ fixture: 'cascade', data: [4, 0] }}  | ${{ fixture: 'cascade', data: [6, 99] }}
+			${'invalid move hc AC→cell'}                    | ${[]}          | ${{ fixture: 'cell', data: [2] }}        | ${{ fixture: 'foundation', data: [0] }}
+			${'invalid move 1c KC-QD-JC→cell'}              | ${[]}          | ${{ fixture: 'cell', data: [2] }}        | ${{ fixture: 'cascade', data: [0, 99] }}
+			${'invalid move kb 6H→cell'}                    | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'invalid move ah 3C→foundation'}              | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cell', data: [0] }}
+			${'invalid move 1h 9C→foundation'}              | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cascade', data: [0, 99] }}
+			${'invalid move 2h TH→AH'}                      | ${someCards_h} | ${{ fixture: 'foundation', data: [1] }}  | ${{ fixture: 'cascade', data: [1, 99] }}
+			${'invalid move 13 KC-QD-JC→cascade'}           | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${{ fixture: 'cascade', data: [0, 99] }}
+			${'invalid move k1 KH→cascade'}                 | ${[]}          | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'deck', data: [0] }}
+			${'invalid move bk 6C→deck'}                    | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cell', data: [1] }}
+			${'invalid move hk TD→deck'}                    | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'foundation', data: [0] }}
+			${'invalid move 4k 6D→deck'}                    | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cascade', data: [3, 99] }}
+			${'invalid move 2k TC-9D-8C→deck'}              | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cascade', data: [1, 99] }}
 		`(
 			'$actionText',
 			({ actionText, cards, after, before }: { actionText: string; cards: Card[]; after: CardLocation | undefined; before: CardLocation | undefined }) => {

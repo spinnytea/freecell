@@ -1,6 +1,6 @@
 import { getMoves, SEED_SOLUTIONS_4x8, SEED_SOLUTIONS_6x10 } from '@/game/catalog/solutions-catalog';
 import { FreeCell } from '@/game/game';
-import { parseMovesFromHistory } from '@/game/move/history';
+import { parseMovesFromHistory, spotRegexMoveInHistory } from '@/game/move/history';
 
 function undoUntilStart(game: FreeCell): FreeCell {
 	let prev = game;
@@ -660,7 +660,6 @@ describe('game.undo (+ history)', () => {
 
 				// but we (will) allow the player to fuss with Aces on the foundation
 				// so we need to undo that
-				// FIXME to foundation needs single/empty
 				test.todo('to: foundation');
 
 				describe('to: cascade', () => {
@@ -1189,7 +1188,7 @@ describe('game.undo (+ history)', () => {
 						' 53 '
 				);
 				expect(game.previousAction).toEqual({
-					text: 'move 53 6H→7C (auto-foundation 2 AD)',
+					text: 'move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } }],
 				});
@@ -1934,7 +1933,7 @@ describe('game.undo (+ history)', () => {
 						const prevStateNH = game.print({ includeHistory: false });
 
 						game = game.moveByShorthand(move);
-						expect(game.previousAction.text).toMatch(new RegExp(`^move ${move}`));
+						expect(game.previousAction.text).toMatch(spotRegexMoveInHistory(move));
 
 						// undo a in a different "branch" so we can keep marking forward
 						const afterUndo = game.undo();

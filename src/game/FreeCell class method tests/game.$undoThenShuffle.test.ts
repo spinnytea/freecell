@@ -106,7 +106,7 @@ describe('game.$undoThenShuffle', () => {
 			const game = new FreeCell().shuffle32(3).dealAll().moveByShorthand('2a');
 			expect(game.history).toEqual(['shuffle deck (3)', 'deal all cards', 'move 2⡆a 4S→cell (auto-foundation 56 AH,2H)']);
 			expect(game.previousAction).toEqual({
-				text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
+				text: 'move 2⡆a 4S→cell (auto-foundation 56 AH,2H)',
 				type: 'move-foundation',
 				tweenCards: [{ rank: '4', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
 			});

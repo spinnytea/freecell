@@ -16,6 +16,7 @@ import { getCardIdsFromSpy, getPropertiesFromFromToSpy, getPropertiesFromSpy, sp
 import { calcCardId, CardLocation, CardShorthand, parseShorthandCard, PileSH, RankList, shorthandCard, shorthandPosition, SuitList } from '@/game/card/card';
 import { getMoves } from '@/game/catalog/solutions-catalog';
 import { FreeCell } from '@/game/game';
+import { spotRegexMoveInHistory } from '@/game/move/history';
 import { parseShorthandMove } from '@/game/move/move';
 
 const gsapUtilsRandom = gsap.utils.random as jest.Mock;
@@ -211,7 +212,7 @@ describe('GameBoard', () => {
 			// In game 5, you may begin by moving the six of hearts onto the seven of clubs.
 			// Note that the free ace of diamonds moves automatically to a homecell when you do this.
 			moveByShorthand('53');
-			expect(screen.getByRole('status').textContent).toBe('move 53 6H→7C (auto-foundation 2 AD)');
+			expect(screen.getByRole('status').textContent).toBe('move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 5,
 				toSpy: 4,
@@ -221,9 +222,9 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 1,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 5 6H'],
+				['select 5⡅ 6H'],
 				['updateCardPositions'],
-				['move 53 6H→7C (auto-foundation 2 AD)'],
+				['move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)'],
 				['updateCardPositionsPrev'],
 				['updateCardPositions'],
 			]);
@@ -244,7 +245,7 @@ describe('GameBoard', () => {
 			mockReset();
 			// the six of clubs to a freecell,
 			moveByShorthand('6a');
-			expect(screen.getByRole('status').textContent).toBe('move 6a 6C→cell');
+			expect(screen.getByRole('status').textContent).toBe('move 6⡅a 6C→cell');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -253,7 +254,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 6 6C'], ['updateCardPositions'], ['move 6a 6C→cell'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 6⡅ 6C'], ['updateCardPositions'], ['move 6⡅a 6C→cell'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c6C-GameBoard.test-#5', { top: 25, left: 60 }, { top: 25.5, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c6C-GameBoard.test-#5', { top: 25.5, left: 60 }, { top: 5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -263,7 +264,7 @@ describe('GameBoard', () => {
 			mockReset();
 			// the queen of diamonds onto the king of spades,
 			moveByShorthand('65');
-			expect(screen.getByRole('status').textContent).toBe('move 65 QD→KS');
+			expect(screen.getByRole('status').textContent).toBe('move 6⡄5⡄ QD→KS');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -272,7 +273,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 6 QD'], ['updateCardPositions'], ['move 65 QD→KS'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 6⡄ QD'], ['updateCardPositions'], ['move 6⡄5⡄ QD→KS'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cQD-GameBoard.test-#5', { top: 24, left: 60 }, { top: 24.5, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cQD-GameBoard.test-#5', { top: 24.5, left: 60 }, { top: 25, left: 50, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -282,7 +283,7 @@ describe('GameBoard', () => {
 			mockReset();
 			// the jack of hearts onto the queen of clubs,
 			moveByShorthand('67');
-			expect(screen.getByRole('status').textContent).toBe('move 67 JH→QC');
+			expect(screen.getByRole('status').textContent).toBe('move 6⡃7⡅ JH→QC');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -291,7 +292,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 6 JH'], ['updateCardPositions'], ['move 67 JH→QC'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 6⡃ JH'], ['updateCardPositions'], ['move 6⡃7⡅ JH→QC'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cJH-GameBoard.test-#5', { top: 23, left: 60 }, { top: 23.5, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cJH-GameBoard.test-#5', { top: 23.5, left: 60 }, { top: 26, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -302,7 +303,7 @@ describe('GameBoard', () => {
 			// the jack of spades onto the queen of diamonds
 			// (the free ace of clubs moves automatically to another homecell)
 			moveByShorthand('85');
-			expect(screen.getByRole('status').textContent).toBe('move 85 JS→QD (auto-foundation 8 AC)');
+			expect(screen.getByRole('status').textContent).toBe('move 8⡅5⡅ JS→QD (auto-foundation 8 AC)');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 3,
 				toSpy: 2,
@@ -312,9 +313,9 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 1,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 8 JS'],
+				['select 8⡅ JS'],
 				['updateCardPositions'],
-				['move 85 JS→QD (auto-foundation 8 AC)'],
+				['move 8⡅5⡅ JS→QD (auto-foundation 8 AC)'],
 				['updateCardPositionsPrev'],
 				['updateCardPositions'],
 			]);
@@ -332,7 +333,7 @@ describe('GameBoard', () => {
 
 			// Now move the six of clubs from its freecell onto the seven of diamonds,
 			moveByShorthand('a8');
-			expect(screen.getByRole('status').textContent).toBe('move a8 6C→7D');
+			expect(screen.getByRole('status').textContent).toBe('move a8⡃ 6C→7D');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 3,
@@ -341,7 +342,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select a 6C'], ['updateCardPositions'], ['move a8 6C→7D'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select a 6C'], ['updateCardPositions'], ['move a8⡃ 6C→7D'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c6C-GameBoard.test-#5', { top: 5, left: 10 }, { top: 5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c6C-GameBoard.test-#5', { top: 5, left: 10 }, { top: 24, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -358,7 +359,7 @@ describe('GameBoard', () => {
 			// and the five of hearts onto the six of clubs.
 			// The free two of clubs now moves automatically onto the club homecell.
 			moveByShorthand('68');
-			expect(screen.getByRole('status').textContent).toBe('move 68 5H→6C (auto-foundation 6 2C)');
+			expect(screen.getByRole('status').textContent).toBe('move 6⡂8⡄ 5H→6C (auto-foundation 6 2C)');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 3,
 				toSpy: 2,
@@ -368,9 +369,9 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 1,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 6 5H'],
+				['select 6⡂ 5H'],
 				['updateCardPositions'],
-				['move 68 5H→6C (auto-foundation 6 2C)'],
+				['move 6⡂8⡄ 5H→6C (auto-foundation 6 2C)'],
 				['updateCardPositionsPrev'],
 				['updateCardPositions'],
 			]);
@@ -389,7 +390,7 @@ describe('GameBoard', () => {
 
 			// Move the ten of clubs onto the jack of hearts,
 			moveByShorthand('27');
-			expect(screen.getByRole('status').textContent).toBe('move 27 TC→JH');
+			expect(screen.getByRole('status').textContent).toBe('move 2⡅7⡆ TC→JH');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -398,7 +399,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 2 TC'], ['updateCardPositions'], ['move 27 TC→JH'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 2⡅ TC'], ['updateCardPositions'], ['move 2⡅7⡆ TC→JH'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cTC-GameBoard.test-#5', { top: 25, left: 20 }, { top: 25.5, left: 20, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cTC-GameBoard.test-#5', { top: 25.5, left: 20 }, { top: 27, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -409,7 +410,7 @@ describe('GameBoard', () => {
 
 			// and the nine of hearts onto the ten of clubs.
 			moveByShorthand('67');
-			expect(screen.getByRole('status').textContent).toBe('move 67 9H→TC');
+			expect(screen.getByRole('status').textContent).toBe('move 6⡀7⡇ 9H→TC');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -418,7 +419,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 6 9H'], ['updateCardPositions'], ['move 67 9H→TC'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 6⡀ 9H'], ['updateCardPositions'], ['move 6⡀7⡇ 9H→TC'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c9H-GameBoard.test-#5', { top: 20, left: 60 }, { top: 20.5, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c9H-GameBoard.test-#5', { top: 20.5, left: 60 }, { top: 28, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -431,7 +432,7 @@ describe('GameBoard', () => {
 
 			// Move the nine of spades to a freecell
 			moveByShorthand('1a');
-			expect(screen.getByRole('status').textContent).toBe('move 1a 9S→cell');
+			expect(screen.getByRole('status').textContent).toBe('move 1⡆a 9S→cell');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -440,7 +441,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 1 9S'], ['updateCardPositions'], ['move 1a 9S→cell'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 1⡆ 9S'], ['updateCardPositions'], ['move 1⡆a 9S→cell'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c9S-GameBoard.test-#5', { top: 26, left: 10 }, { top: 26.5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c9S-GameBoard.test-#5', { top: 26.5, left: 10 }, { top: 5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -451,7 +452,7 @@ describe('GameBoard', () => {
 
 			// and the two of hearts to another freecell
 			moveByShorthand('1b');
-			expect(screen.getByRole('status').textContent).toBe('move 1b 2H→cell');
+			expect(screen.getByRole('status').textContent).toBe('move 1⡅b 2H→cell');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -460,7 +461,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 1 2H'], ['updateCardPositions'], ['move 1b 2H→cell'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 1⡅ 2H'], ['updateCardPositions'], ['move 1⡅b 2H→cell'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c2H-GameBoard.test-#5', { top: 25, left: 10 }, { top: 25.5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c2H-GameBoard.test-#5', { top: 25.5, left: 10 }, { top: 5, left: 20, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -471,7 +472,7 @@ describe('GameBoard', () => {
 
 			// Move the five of spades onto the six of hearts,
 			moveByShorthand('13');
-			expect(screen.getByRole('status').textContent).toBe('move 13 5S→6H');
+			expect(screen.getByRole('status').textContent).toBe('move 1⡄3⡇ 5S→6H');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -480,7 +481,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 1 5S'], ['updateCardPositions'], ['move 13 5S→6H'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 1⡄ 5S'], ['updateCardPositions'], ['move 1⡄3⡇ 5S→6H'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c5S-GameBoard.test-#5', { top: 24, left: 10 }, { top: 24.5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c5S-GameBoard.test-#5', { top: 24.5, left: 10 }, { top: 28, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -491,9 +492,9 @@ describe('GameBoard', () => {
 
 			// and the ten of diamonds (followed by the nine of spades) onto the jack of spades.
 			moveByShorthand('15');
-			expect(screen.getByRole('status').textContent).toBe('move 15 TD→JS');
+			expect(screen.getByRole('status').textContent).toBe('move 1⡃5⡆ TD→JS');
 			moveByShorthand('a5');
-			expect(screen.getByRole('status').textContent).toBe('move a5 9S→TD');
+			expect(screen.getByRole('status').textContent).toBe('move a5⡇ 9S→TD');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 4,
 				toSpy: 4,
@@ -503,13 +504,13 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 3,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 1 TD'],
+				['select 1⡃ TD'],
 				['updateCardPositions'],
-				['move 15 TD→JS'],
+				['move 1⡃5⡆ TD→JS'],
 				['updateCardPositions'],
 				['select a 9S'],
 				['updateCardPositions'],
-				['move a5 9S→TD'],
+				['move a5⡇ 9S→TD'],
 				['updateCardPositions'],
 			]);
 			// REVIEW (animation) (test) why does 9S fromTo the same spot (select cell rotates)? stabilizing force? just in case?
@@ -536,9 +537,9 @@ describe('GameBoard', () => {
 			// Now move the three of spades and the five of clubs each to a freecell,
 			// and the ace of hearts and two of hearts automatically move to a new homecell.
 			moveByShorthand('1a');
-			expect(screen.getByRole('status').textContent).toBe('move 1a 3S→cell');
+			expect(screen.getByRole('status').textContent).toBe('move 1⡂a 3S→cell');
 			moveByShorthand('1c');
-			expect(screen.getByRole('status').textContent).toBe('move 1c 5C→cell (auto-foundation 1b AH,2H)');
+			expect(screen.getByRole('status').textContent).toBe('move 1⡁c 5C→cell (auto-foundation 1b AH,2H)');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 6,
 				toSpy: 4,
@@ -548,13 +549,13 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 3,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 1 3S'],
+				['select 1⡂ 3S'],
 				['updateCardPositions'],
-				['move 1a 3S→cell'],
+				['move 1⡂a 3S→cell'],
 				['updateCardPositions'],
-				['select 1 5C'],
+				['select 1⡁ 5C'],
 				['updateCardPositions'],
-				['move 1c 5C→cell (auto-foundation 1b AH,2H)'],
+				['move 1⡁c 5C→cell (auto-foundation 1b AH,2H)'],
 				['updateCardPositionsPrev'],
 				['updateCardPositions'],
 			]);
@@ -586,7 +587,7 @@ describe('GameBoard', () => {
 
 			// Click on the five of hearts now to select it, then click on the empty sixth column.
 			moveByShorthand('86');
-			expect(screen.getByRole('status').textContent).toBe('move 86 7D-6C-5H→cascade');
+			expect(screen.getByRole('status').textContent).toBe('move 8⡃6 7D-6C-5H→cascade');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 6,
 				toSpy: 3,
@@ -595,7 +596,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 8 7D-6C-5H'], ['updateCardPositions'], ['move 86 7D-6C-5H→cascade'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 8⡃ 7D-6C-5H'], ['updateCardPositions'], ['move 8⡃6 7D-6C-5H→cascade'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c7D-GameBoard.test-#5', { top: 23, left: 80 }, { top: 22.75, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c6C-GameBoard.test-#5', { top: 24, left: 80 }, { top: 24.5, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.060'],
@@ -616,7 +617,7 @@ describe('GameBoard', () => {
 
 			// Next move the eight of diamonds onto the nine of spades,
 			moveByShorthand('85');
-			expect(screen.getByRole('status').textContent).toBe('move 85 8D→9S');
+			expect(screen.getByRole('status').textContent).toBe('move 8⡂5⡈ 8D→9S');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -625,7 +626,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 8 8D'], ['updateCardPositions'], ['move 85 8D→9S'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 8⡂ 8D'], ['updateCardPositions'], ['move 8⡂5⡈ 8D→9S'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c8D-GameBoard.test-#5', { top: 22, left: 80 }, { top: 22.5, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c8D-GameBoard.test-#5', { top: 22.5, left: 80 }, { top: 29, left: 50, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -636,9 +637,9 @@ describe('GameBoard', () => {
 
 			// and the four of spades and three of diamonds onto the five of hearts, clearing column eight.
 			moveByShorthand('86');
-			expect(screen.getByRole('status').textContent).toBe('move 86 4S→5H');
+			expect(screen.getByRole('status').textContent).toBe('move 8⡁6⡂ 4S→5H');
 			moveByShorthand('86');
-			expect(screen.getByRole('status').textContent).toBe('move 86 3D→4S');
+			expect(screen.getByRole('status').textContent).toBe('move 8⡀6⡃ 3D→4S');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 4,
 				toSpy: 2,
@@ -648,13 +649,13 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 3,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 8 4S'],
+				['select 8⡁ 4S'],
 				['updateCardPositions'],
-				['move 86 4S→5H'],
+				['move 8⡁6⡂ 4S→5H'],
 				['updateCardPositions'],
-				['select 8 3D'],
+				['select 8⡀ 3D'],
 				['updateCardPositions'],
-				['move 86 3D→4S'],
+				['move 8⡀6⡃ 3D→4S'],
 				['updateCardPositions'],
 			]);
 			expect(fromToSpy.mock.calls).toEqual([
@@ -676,7 +677,7 @@ describe('GameBoard', () => {
 
 			// Next move the queen of hearts into the empty first column
 			moveByShorthand('21');
-			expect(screen.getByRole('status').textContent).toBe('move 21 QH→cascade');
+			expect(screen.getByRole('status').textContent).toBe('move 2⡄1 QH→cascade');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -685,7 +686,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 2 QH'], ['updateCardPositions'], ['move 21 QH→cascade'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 2⡄ QH'], ['updateCardPositions'], ['move 2⡄1 QH→cascade'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cQH-GameBoard.test-#5', { top: 24, left: 20 }, { top: 24.5, left: 20, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cQH-GameBoard.test-#5', { top: 24.5, left: 20 }, { top: 20, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -696,7 +697,7 @@ describe('GameBoard', () => {
 
 			// Move the seven of spades onto the eight of diamonds,
 			moveByShorthand('25');
-			expect(screen.getByRole('status').textContent).toBe('move 25 7S→8D');
+			expect(screen.getByRole('status').textContent).toBe('move 2⡃5⡉ 7S→8D');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -705,7 +706,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 2 7S'], ['updateCardPositions'], ['move 25 7S→8D'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 2⡃ 7S'], ['updateCardPositions'], ['move 2⡃5⡉ 7S→8D'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c7S-GameBoard.test-#5', { top: 23, left: 20 }, { top: 23.5, left: 20, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c7S-GameBoard.test-#5', { top: 23.5, left: 20 }, { top: 30, left: 50, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -716,7 +717,7 @@ describe('GameBoard', () => {
 
 			// the five of diamonds to a freecell (sending the ace of spades home),
 			moveByShorthand('2b');
-			expect(screen.getByRole('status').textContent).toBe('move 2b 5D→cell (auto-foundation 2 AS)');
+			expect(screen.getByRole('status').textContent).toBe('move 2⡂b 5D→cell (auto-foundation 2 AS)');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 3,
 				toSpy: 2,
@@ -726,9 +727,9 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 1,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 2 5D'],
+				['select 2⡂ 5D'],
 				['updateCardPositions'],
-				['move 2b 5D→cell (auto-foundation 2 AS)'],
+				['move 2⡂b 5D→cell (auto-foundation 2 AS)'],
 				['updateCardPositionsPrev'],
 				['updateCardPositions'],
 			]);
@@ -746,7 +747,7 @@ describe('GameBoard', () => {
 
 			// and the eight of spades onto the nine of hearts.
 			moveByShorthand('27');
-			expect(screen.getByRole('status').textContent).toBe('move 27 8S→9H');
+			expect(screen.getByRole('status').textContent).toBe('move 2⡀7⡈ 8S→9H');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -755,7 +756,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 2 8S'], ['updateCardPositions'], ['move 27 8S→9H'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 2⡀ 8S'], ['updateCardPositions'], ['move 2⡀7⡈ 8S→9H'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c8S-GameBoard.test-#5', { top: 20, left: 20 }, { top: 20.5, left: 20, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c8S-GameBoard.test-#5', { top: 20.5, left: 20 }, { top: 29, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -766,7 +767,7 @@ describe('GameBoard', () => {
 
 			// Move the ten of spades into the empty second column,
 			moveByShorthand('42');
-			expect(screen.getByRole('status').textContent).toBe('move 42 TS→cascade');
+			expect(screen.getByRole('status').textContent).toBe('move 4⡆2 TS→cascade');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -775,7 +776,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 4 TS'], ['updateCardPositions'], ['move 42 TS→cascade'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 4⡆ TS'], ['updateCardPositions'], ['move 4⡆2 TS→cascade'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cTS-GameBoard.test-#5', { top: 26, left: 40 }, { top: 26.5, left: 40, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cTS-GameBoard.test-#5', { top: 26.5, left: 40 }, { top: 20, left: 20, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -786,9 +787,9 @@ describe('GameBoard', () => {
 
 			// the six of diamonds (followed by the five of clubs) onto the seven of spades,
 			moveByShorthand('45');
-			expect(screen.getByRole('status').textContent).toBe('move 45 6D→7S');
+			expect(screen.getByRole('status').textContent).toBe('move 4⡅5⡊ 6D→7S');
 			moveByShorthand('c5');
-			expect(screen.getByRole('status').textContent).toBe('move c5 5C→6D');
+			expect(screen.getByRole('status').textContent).toBe('move c5⡋ 5C→6D');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 4,
 				toSpy: 4,
@@ -798,13 +799,13 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 3,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 4 6D'],
+				['select 4⡅ 6D'],
 				['updateCardPositions'],
-				['move 45 6D→7S'],
+				['move 4⡅5⡊ 6D→7S'],
 				['updateCardPositions'],
 				['select c 5C'],
 				['updateCardPositions'],
-				['move c5 5C→6D'],
+				['move c5⡋ 5C→6D'],
 				['updateCardPositions'],
 			]);
 			expect(fromToSpy.mock.calls).toEqual([
@@ -828,7 +829,7 @@ describe('GameBoard', () => {
 
 			// the nine of diamonds onto the ten of spades,
 			moveByShorthand('42');
-			expect(screen.getByRole('status').textContent).toBe('move 42 9D→TS');
+			expect(screen.getByRole('status').textContent).toBe('move 4⡄2⡀ 9D→TS');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -837,7 +838,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 4 9D'], ['updateCardPositions'], ['move 42 9D→TS'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 4⡄ 9D'], ['updateCardPositions'], ['move 4⡄2⡀ 9D→TS'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c9D-GameBoard.test-#5', { top: 24, left: 40 }, { top: 24.5, left: 40, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c9D-GameBoard.test-#5', { top: 24.5, left: 40 }, { top: 21, left: 20, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -848,7 +849,7 @@ describe('GameBoard', () => {
 
 			// and the seven of hearts onto the eight of spades.
 			moveByShorthand('47');
-			expect(screen.getByRole('status').textContent).toBe('move 47 7H→8S');
+			expect(screen.getByRole('status').textContent).toBe('move 4⡃7⡉ 7H→8S');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -857,7 +858,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 4 7H'], ['updateCardPositions'], ['move 47 7H→8S'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 4⡃ 7H'], ['updateCardPositions'], ['move 4⡃7⡉ 7H→8S'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c7H-GameBoard.test-#5', { top: 23, left: 40 }, { top: 23.5, left: 40, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c7H-GameBoard.test-#5', { top: 23.5, left: 40 }, { top: 30, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -869,7 +870,7 @@ describe('GameBoard', () => {
 			// it is perfectly safe to move the three of hearts to its homecell,
 			// and you can do so yourself by selecting it, then clicking on the two of hearts.
 			moveByShorthand('4h');
-			expect(screen.getByRole('status').textContent).toBe('move 4h 3H→2H');
+			expect(screen.getByRole('status').textContent).toBe('move 4⡂h⡂ 3H→2H');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -878,7 +879,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 4 3H'], ['updateCardPositions'], ['move 4h 3H→2H'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 4⡂ 3H'], ['updateCardPositions'], ['move 4⡂h⡂ 3H→2H'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c3H-GameBoard.test-#5', { top: 22, left: 40 }, { top: 22.5, left: 40, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c3H-GameBoard.test-#5', { top: 22.5, left: 40 }, { top: 5, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -890,9 +891,9 @@ describe('GameBoard', () => {
 			// Now reverse the backwards sequence in the fourth column by moving the king of hearts,
 			// followed by the queen of spades, to the empty eighth column.
 			moveByShorthand('48');
-			expect(screen.getByRole('status').textContent).toBe('move 48 KH→cascade');
+			expect(screen.getByRole('status').textContent).toBe('move 4⡁8 KH→cascade');
 			moveByShorthand('48');
-			expect(screen.getByRole('status').textContent).toBe('move 48 QS→KH');
+			expect(screen.getByRole('status').textContent).toBe('move 4⡀8⡀ QS→KH');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 4,
 				toSpy: 2,
@@ -902,13 +903,13 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 3,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 4 KH'],
+				['select 4⡁ KH'],
 				['updateCardPositions'],
-				['move 48 KH→cascade'],
+				['move 4⡁8 KH→cascade'],
 				['updateCardPositions'],
-				['select 4 QS'],
+				['select 4⡀ QS'],
 				['updateCardPositions'],
-				['move 48 QS→KH'],
+				['move 4⡀8⡀ QS→KH'],
 				['updateCardPositions'],
 			]);
 			expect(fromToSpy.mock.calls).toEqual([
@@ -932,7 +933,7 @@ describe('GameBoard', () => {
 
 			// move five cards (up to the jack of hearts) from column seven onto the queen of spades in column eight.
 			moveByShorthand('78');
-			expect(screen.getByRole('status').textContent).toBe('move 78 JH-TC-9H-8S-7H→QS');
+			expect(screen.getByRole('status').textContent).toBe('move 7⡆8⡁ JH-TC-9H-8S-7H→QS');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 10,
 				toSpy: 5,
@@ -941,7 +942,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 7 JH-TC-9H-8S-7H'], ['updateCardPositions'], ['move 78 JH-TC-9H-8S-7H→QS'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 7⡆ JH-TC-9H-8S-7H'], ['updateCardPositions'], ['move 7⡆8⡁ JH-TC-9H-8S-7H→QS'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cJH-GameBoard.test-#5', { top: 26, left: 70 }, { top: 25.75, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cTC-GameBoard.test-#5', { top: 27, left: 70 }, { top: 27.5, left: 70, duration: 0.3, ease: 'power1.out' }, '<0.060'],
@@ -966,7 +967,7 @@ describe('GameBoard', () => {
 
 			// move the queen of clubs to a freecell,
 			moveByShorthand('7c');
-			expect(screen.getByRole('status').textContent).toBe('move 7c QC→cell');
+			expect(screen.getByRole('status').textContent).toBe('move 7⡅c QC→cell');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -975,7 +976,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 7 QC'], ['updateCardPositions'], ['move 7c QC→cell'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 7⡅ QC'], ['updateCardPositions'], ['move 7⡅c QC→cell'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cQC-GameBoard.test-#5', { top: 25, left: 70 }, { top: 25.5, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cQC-GameBoard.test-#5', { top: 25.5, left: 70 }, { top: 5, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -986,7 +987,7 @@ describe('GameBoard', () => {
 
 			// the four of hearts to its homecell
 			moveByShorthand('7h');
-			expect(screen.getByRole('status').textContent).toBe('move 7h 4H→3H');
+			expect(screen.getByRole('status').textContent).toBe('move 7⡄h⡂ 4H→3H');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -995,7 +996,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 7 4H'], ['updateCardPositions'], ['move 7h 4H→3H'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 7⡄ 4H'], ['updateCardPositions'], ['move 7⡄h⡂ 4H→3H'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c4H-GameBoard.test-#5', { top: 24, left: 70 }, { top: 24.5, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c4H-GameBoard.test-#5', { top: 24.5, left: 70 }, { top: 5, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1006,7 +1007,7 @@ describe('GameBoard', () => {
 
 			// move the jack of clubs onto the queen of hearts,
 			moveByShorthand('71');
-			expect(screen.getByRole('status').textContent).toBe('move 71 JC→QH');
+			expect(screen.getByRole('status').textContent).toBe('move 7⡃1⡀ JC→QH');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -1015,7 +1016,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 7 JC'], ['updateCardPositions'], ['move 71 JC→QH'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 7⡃ JC'], ['updateCardPositions'], ['move 7⡃1⡀ JC→QH'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cJC-GameBoard.test-#5', { top: 23, left: 70 }, { top: 23.5, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cJC-GameBoard.test-#5', { top: 23.5, left: 70 }, { top: 21, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1026,7 +1027,7 @@ describe('GameBoard', () => {
 
 			// and the six of spades onto the seven of hearts.
 			moveByShorthand('78');
-			expect(screen.getByRole('status').textContent).toBe('move 78 6S→7H');
+			expect(screen.getByRole('status').textContent).toBe('move 7⡂8⡆ 6S→7H');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -1035,7 +1036,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 7 6S'], ['updateCardPositions'], ['move 78 6S→7H'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 7⡂ 6S'], ['updateCardPositions'], ['move 7⡂8⡆ 6S→7H'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c6S-GameBoard.test-#5', { top: 22, left: 70 }, { top: 22.5, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c6S-GameBoard.test-#5', { top: 22.5, left: 70 }, { top: 27, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1047,7 +1048,7 @@ describe('GameBoard', () => {
 			// Move the three of clubs to its homecell
 			// The two of spades goes automatically, since both red aces are already home.
 			moveByShorthand('7h');
-			expect(screen.getByRole('status').textContent).toBe('move 7h 3C→2C (auto-foundation 7 2S)');
+			expect(screen.getByRole('status').textContent).toBe('move 7⡁h⡁ 3C→2C (auto-foundation 7 2S)');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 3,
 				toSpy: 2,
@@ -1057,9 +1058,9 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 1,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 7 3C'],
+				['select 7⡁ 3C'],
 				['updateCardPositions'],
-				['move 7h 3C→2C (auto-foundation 7 2S)'],
+				['move 7⡁h⡁ 3C→2C (auto-foundation 7 2S)'],
 				['updateCardPositionsPrev'],
 				['updateCardPositions'],
 			]);
@@ -1077,7 +1078,7 @@ describe('GameBoard', () => {
 
 			// Move the three of spades home
 			moveByShorthand('ah');
-			expect(screen.getByRole('status').textContent).toBe('move ah 3S→2S');
+			expect(screen.getByRole('status').textContent).toBe('move ah⡃ 3S→2S');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 3,
@@ -1086,7 +1087,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select a 3S'], ['updateCardPositions'], ['move ah 3S→2S'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select a 3S'], ['updateCardPositions'], ['move ah⡃ 3S→2S'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c3S-GameBoard.test-#5', { top: 5, left: 10 }, { top: 5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c3S-GameBoard.test-#5', { top: 5, left: 10 }, { top: 5, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1101,7 +1102,7 @@ describe('GameBoard', () => {
 
 			// and the five of diamonds onto the six of spades.
 			moveByShorthand('b8');
-			expect(screen.getByRole('status').textContent).toBe('move b8 5D→6S');
+			expect(screen.getByRole('status').textContent).toBe('move b8⡇ 5D→6S');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 3,
@@ -1110,7 +1111,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select b 5D'], ['updateCardPositions'], ['move b8 5D→6S'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select b 5D'], ['updateCardPositions'], ['move b8⡇ 5D→6S'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c5D-GameBoard.test-#5', { top: 5, left: 20 }, { top: 5, left: 20, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c5D-GameBoard.test-#5', { top: 5, left: 20 }, { top: 28, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1127,7 +1128,7 @@ describe('GameBoard', () => {
 
 			// Move the five of spades through seven of clubs from column three to column four,
 			moveByShorthand('34');
-			expect(screen.getByRole('status').textContent).toBe('move 34 7C-6H-5S→cascade');
+			expect(screen.getByRole('status').textContent).toBe('move 3⡆4 7C-6H-5S→cascade');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 6,
 				toSpy: 3,
@@ -1136,7 +1137,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 3 7C-6H-5S'], ['updateCardPositions'], ['move 34 7C-6H-5S→cascade'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 3⡆ 7C-6H-5S'], ['updateCardPositions'], ['move 3⡆4 7C-6H-5S→cascade'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c7C-GameBoard.test-#5', { top: 26, left: 30 }, { top: 25.75, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c6H-GameBoard.test-#5', { top: 27, left: 30 }, { top: 27.5, left: 30, duration: 0.3, ease: 'power1.out' }, '<0.060'],
@@ -1155,7 +1156,7 @@ describe('GameBoard', () => {
 
 			// the ten of hearts onto the jack of clubs,
 			moveByShorthand('31');
-			expect(screen.getByRole('status').textContent).toBe('move 31 TH→JC');
+			expect(screen.getByRole('status').textContent).toBe('move 3⡅1⡁ TH→JC');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -1164,7 +1165,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 3 TH'], ['updateCardPositions'], ['move 31 TH→JC'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 3⡅ TH'], ['updateCardPositions'], ['move 3⡅1⡁ TH→JC'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cTH-GameBoard.test-#5', { top: 25, left: 30 }, { top: 25.5, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cTH-GameBoard.test-#5', { top: 25.5, left: 30 }, { top: 22, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1175,7 +1176,7 @@ describe('GameBoard', () => {
 
 			// the eight of clubs onto the nine of diamonds,
 			moveByShorthand('32');
-			expect(screen.getByRole('status').textContent).toBe('move 32 8C→9D');
+			expect(screen.getByRole('status').textContent).toBe('move 3⡄2⡁ 8C→9D');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -1184,7 +1185,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 3 8C'], ['updateCardPositions'], ['move 32 8C→9D'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 3⡄ 8C'], ['updateCardPositions'], ['move 3⡄2⡁ 8C→9D'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c8C-GameBoard.test-#5', { top: 24, left: 30 }, { top: 24.5, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c8C-GameBoard.test-#5', { top: 24.5, left: 30 }, { top: 22, left: 20, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1219,7 +1220,7 @@ describe('GameBoard', () => {
 
 			// and the jack of diamonds onto it.
 			moveByShorthand('37');
-			expect(screen.getByRole('status').textContent).toBe('move 37 JD→QC');
+			expect(screen.getByRole('status').textContent).toBe('move 3⡃7⡀ JD→QC');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -1228,7 +1229,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 3 JD'], ['updateCardPositions'], ['move 37 JD→QC'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 3⡃ JD'], ['updateCardPositions'], ['move 3⡃7⡀ JD→QC'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cJD-GameBoard.test-#5', { top: 23, left: 30 }, { top: 23.5, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cJD-GameBoard.test-#5', { top: 23.5, left: 30 }, { top: 21, left: 70, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1239,7 +1240,7 @@ describe('GameBoard', () => {
 
 			// Move the king of clubs to a freecell,
 			moveByShorthand('3a');
-			expect(screen.getByRole('status').textContent).toBe('move 3a KC→cell');
+			expect(screen.getByRole('status').textContent).toBe('move 3⡂a KC→cell');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -1248,7 +1249,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 3 KC'], ['updateCardPositions'], ['move 3a KC→cell'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 3⡂ KC'], ['updateCardPositions'], ['move 3⡂a KC→cell'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#cKC-GameBoard.test-#5', { top: 22, left: 30 }, { top: 22.5, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#cKC-GameBoard.test-#5', { top: 22.5, left: 30 }, { top: 5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1260,7 +1261,7 @@ describe('GameBoard', () => {
 			// and the nine of clubs onto the ten of hearts
 			// (sending the two and three of diamonds and the four of spades home).
 			moveByShorthand('31');
-			expect(screen.getByRole('status').textContent).toBe('move 31 9C→TH (auto-foundation 366 2D,3D,4S)');
+			expect(screen.getByRole('status').textContent).toBe('move 3⡁1⡂ 9C→TH (auto-foundation 366 2D,3D,4S)');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 5,
 				toSpy: 4,
@@ -1270,9 +1271,9 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 1,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 3 9C'],
+				['select 3⡁ 9C'],
 				['updateCardPositions'],
-				['move 31 9C→TH (auto-foundation 366 2D,3D,4S)'],
+				['move 3⡁1⡂ 9C→TH (auto-foundation 366 2D,3D,4S)'],
 				['updateCardPositionsPrev'],
 				['updateCardPositions'],
 			]);
@@ -1318,7 +1319,7 @@ describe('GameBoard', () => {
 
 			// and the entire first column onto it.
 			moveByShorthand('13');
-			expect(screen.getByRole('status').textContent).toBe('move 13 QH-JC-TH-9C→KC');
+			expect(screen.getByRole('status').textContent).toBe('move 1⡀3⡀ QH-JC-TH-9C→KC');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 7,
 				toSpy: 4,
@@ -1327,7 +1328,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 1 QH-JC-TH-9C'], ['updateCardPositions'], ['move 13 QH-JC-TH-9C→KC'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 1⡀ QH-JC-TH-9C'], ['updateCardPositions'], ['move 1⡀3⡀ QH-JC-TH-9C→KC'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				// no stabilizing force for QH, since it doesn't move
 				['#cJC-GameBoard.test-#5', { top: 21, left: 10 }, { top: 21.5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1349,7 +1350,7 @@ describe('GameBoard', () => {
 
 			// Move the entire second column onto the seventh column,
 			moveByShorthand('27');
-			expect(screen.getByRole('status').textContent).toBe('move 27 TS-9D-8C→JD');
+			expect(screen.getByRole('status').textContent).toBe('move 2⡀7⡁ TS-9D-8C→JD');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 5,
 				toSpy: 3,
@@ -1358,7 +1359,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 2 TS-9D-8C'], ['updateCardPositions'], ['move 27 TS-9D-8C→JD'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 2⡀ TS-9D-8C'], ['updateCardPositions'], ['move 2⡀7⡁ TS-9D-8C→JD'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				// no stabilizing force for TS, since it doesn't move
 				['#c9D-GameBoard.test-#5', { top: 21, left: 20 }, { top: 21.5, left: 20, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1377,7 +1378,7 @@ describe('GameBoard', () => {
 
 			// then the sixth column onto the seventh column.
 			moveByShorthand('67');
-			expect(screen.getByRole('status').textContent).toBe('move 67 7D-6C-5H→8C');
+			expect(screen.getByRole('status').textContent).toBe('move 6⡀7⡄ 7D-6C-5H→8C');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 5,
 				toSpy: 3,
@@ -1386,7 +1387,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 6 7D-6C-5H'], ['updateCardPositions'], ['move 67 7D-6C-5H→8C'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 6⡀ 7D-6C-5H'], ['updateCardPositions'], ['move 6⡀7⡄ 7D-6C-5H→8C'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				// no stabilizing force for 7D, since it doesn't move
 				['#c6C-GameBoard.test-#5', { top: 21, left: 60 }, { top: 21.5, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1411,7 +1412,7 @@ describe('GameBoard', () => {
 			//  - essentially, the game asks to move move this in two parts
 			//  - but we are moving it one supermove
 			moveByShorthand('52');
-			expect(screen.getByRole('status').textContent).toBe('move 52 KS-QD-JS-TD-9S-8D-7S-6D-5C→cascade');
+			expect(screen.getByRole('status').textContent).toBe('move 5⡄2 KS-QD-JS-TD-9S-8D-7S-6D-5C→cascade');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 18,
 				toSpy: 9,
@@ -1421,9 +1422,9 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 1,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 5 KS-QD-JS-TD-9S-8D-7S-6D-5C'],
+				['select 5⡄ KS-QD-JS-TD-9S-8D-7S-6D-5C'],
 				['updateCardPositions'],
-				['move 52 KS-QD-JS-TD-9S-8D-7S-6D-5C→cascade'],
+				['move 5⡄2 KS-QD-JS-TD-9S-8D-7S-6D-5C→cascade'],
 				['updateCardPositions'],
 			]);
 			expect(fromToSpy.mock.calls).toEqual([
@@ -1462,7 +1463,7 @@ describe('GameBoard', () => {
 
 			// To finish the game, move the eight of hearts onto the nine of clubs,
 			moveByShorthand('53');
-			expect(screen.getByRole('status').textContent).toBe('move 53 8H→9C');
+			expect(screen.getByRole('status').textContent).toBe('move 5⡃3⡄ 8H→9C');
 			expect(mockCallTimes()).toEqual({
 				fromToSpy: 2,
 				toSpy: 1,
@@ -1471,7 +1472,7 @@ describe('GameBoard', () => {
 				timeScaleSpy: 2,
 				consoleDebugSpy: 1,
 			});
-			expect(addLabelSpy.mock.calls).toEqual([['select 5 8H'], ['updateCardPositions'], ['move 53 8H→9C'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['select 5⡃ 8H'], ['updateCardPositions'], ['move 5⡃3⡄ 8H→9C'], ['updateCardPositions']]);
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c8H-GameBoard.test-#5', { top: 23, left: 50 }, { top: 23.5, left: 50, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c8H-GameBoard.test-#5', { top: 23.5, left: 50 }, { top: 25, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1486,7 +1487,7 @@ describe('GameBoard', () => {
 			// winning the game.
 			moveByShorthand('56');
 			expect(screen.getByRole('status').textContent).toBe(
-				'move 56 KD→cascade (auto-foundation 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)'
+				'move 5⡂6 KD→cascade (auto-foundation 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)'
 			);
 			expect(mockCallTimes()).toEqual({
 				gsapFromSpy: 1, // animate win message
@@ -1498,10 +1499,10 @@ describe('GameBoard', () => {
 				consoleDebugSpy: 1,
 			});
 			expect(addLabelSpy.mock.calls).toEqual([
-				['select 5 KD'],
+				['select 5⡂ KD'],
 				['updateCardPositions'],
 				[
-					'move 56 KD→cascade (auto-foundation 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)',
+					'move 5⡂6 KD→cascade (auto-foundation 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)',
 				],
 				['updateCardPositionsPrev'],
 				['updateCardPositions'],
@@ -1573,11 +1574,11 @@ describe('GameBoard', () => {
 
 		test.each`
 			name             | seed     | winFoundations   | winActionText
-			${'Game #1'}     | ${1}     | ${'KC KS KH KD'} | ${'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)'}
-			${'Game #3'}     | ${3}     | ${'KH KC KS KD'} | ${'move 42 JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)'}
-			${'Game #617'}   | ${617}   | ${'KC KS KD KH'} | ${'move 1b TD→cell (auto-foundation 1866628353ba8483734784387 7D,8S,8D,8H,8C,9S,9D,9H,9C,TS,TD,TH,TC,JS,JD,JH,JC,QS,QD,QH,QC,KS,KD,KH,KC)'}
-			${'Game #7851'}  | ${7851}  | ${'KC KH KS KD'} | ${'move 56 3S→4D (flourish 51118225688246284d8251382c836b375873861738738a2838 AH,2H,AS,AD,2S,2D,3C,3H,3S,3D,4C,4H,4S,4D,5C,5H,5S,5D,6C,6H,6S,6D,7C,7H,7S,7D,8C,8H,8S,8D,9C,9H,9S,9D,TC,TH,TS,TD,JC,JH,JS,JD,QC,QH,QS,QD,KC,KH,KS,KD)'}
-			${'Game #23190'} | ${23190} | ${'KS KD KC KH'} | ${'move 3b 8S→cell (flourish52 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)'}
+			${'Game #1'}     | ${1}     | ${'KC KS KH KD'} | ${'move 1⡁3 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)'}
+			${'Game #3'}     | ${3}     | ${'KH KC KS KD'} | ${'move 4⡁2⡁ JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)'}
+			${'Game #617'}   | ${617}   | ${'KC KS KD KH'} | ${'move 1⡁b TD→cell (auto-foundation 1866628353ba8483734784387 7D,8S,8D,8H,8C,9S,9D,9H,9C,TS,TD,TH,TC,JS,JD,JH,JC,QS,QD,QH,QC,KS,KD,KH,KC)'}
+			${'Game #7851'}  | ${7851}  | ${'KC KH KS KD'} | ${'move 5⡄6⡂ 3S→4D (flourish 51118225688246284d8251382c836b375873861738738a2838 AH,2H,AS,AD,2S,2D,3C,3H,3S,3D,4C,4H,4S,4D,5C,5H,5S,5D,6C,6H,6S,6D,7C,7H,7S,7D,8C,8H,8S,8D,9C,9H,9S,9D,TC,TH,TS,TD,JC,JH,JS,JD,QC,QH,QS,QD,KC,KH,KS,KD)'}
+			${'Game #23190'} | ${23190} | ${'KS KD KC KH'} | ${'move 3⡃b 8S→cell (flourish52 33357d226765475665745627157ab15775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)'}
 		`('$name', ({ name, seed, winFoundations, winActionText }: { name: string; seed: number; winFoundations: string; winActionText: string }) => {
 			gsapUtilsRandom.mockReturnValueOnce('scale'); // for WinMessage
 
@@ -1591,7 +1592,7 @@ describe('GameBoard', () => {
 			moves.forEach((move, idx) => {
 				moveByShorthand(move);
 				try {
-					expect(cribGame().previousAction.text).toMatch(new RegExp(`^move ${move}`));
+					expect(cribGame().previousAction.text).toMatch(spotRegexMoveInHistory(move));
 				} catch (cause) {
 					console.error(cribGame().print({ includeHistory: true }));
 					throw new Error(`${name}, Move #${(idx + 1).toString(10)}, ${move} failed`, { cause });
@@ -1638,7 +1639,7 @@ describe('GameBoard', () => {
 					addLabelSpy: 2,
 					timeScaleSpy: 1,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['select 3 KS'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['select 3⡀ KS'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([['#cKS-collapse-wild', { top: 20, left: 30 }, { top: 20.5, left: 30, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				mockReset();
 				clickPile('4');
@@ -1648,7 +1649,7 @@ describe('GameBoard', () => {
 					setSpy: 51,
 					addLabelSpy: 2,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['move 34 KS→cascade'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['move 3⡀4 KS→cascade'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([['#cKS-collapse-wild', { top: 20.5, left: 30 }, { top: 20, left: 40, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				mockReset();
 
@@ -1672,7 +1673,7 @@ describe('GameBoard', () => {
 					setSpy: 51,
 					addLabelSpy: 2,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['move a4 QD→KS'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['move a4⡀ QD→KS'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([['#cQD-collapse-wild', { top: 5, left: 10 }, { top: 21, left: 40, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				expect(toSpy.mock.calls).toEqual([
 					['#cQD-collapse-wild', { zIndex: 1, duration: 0.15, ease: 'none' }, '<'],
@@ -1701,7 +1702,7 @@ describe('GameBoard', () => {
 					timeScaleSpy: 2,
 					consoleDebugSpy: 1,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['select 1 QH-JC'], ['updateCardPositions'], ['move 18 QH-JC→KC'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['select 1⡀ QH-JC'], ['updateCardPositions'], ['move 1⡀8⡃ QH-JC→KC'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cJC-collapse-wild', { top: 21, left: 10 }, { top: 21.5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
 					['#cQH-collapse-wild', { top: 20, left: 10 }, { top: 24, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1725,7 +1726,8 @@ describe('GameBoard', () => {
 					timeScaleSpy: 2,
 					consoleDebugSpy: 1,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['select 8 QH-JC'], ['updateCardPositions'], ['move 13 QH-JC→cascade'], ['updateCardPositions']]);
+				// FIXME why is "select 8" the precursor to "move 13"?
+				expect(addLabelSpy.mock.calls).toEqual([['select 8⡄ QH-JC'], ['updateCardPositions'], ['move 1⡀3 QH-JC→cascade'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cQH-collapse-wild', { top: 24, left: 80 }, { top: 23.75, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
 					['#cJC-collapse-wild', { top: 25, left: 80 }, { top: 25.5, left: 80, duration: 0.3, ease: 'power1.out' }, '<0.060'],
@@ -1749,7 +1751,8 @@ describe('GameBoard', () => {
 					timeScaleSpy: 2,
 					consoleDebugSpy: 1,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['select 3 QH-JC'], ['updateCardPositions'], ['move 15 QH-JC→cascade'], ['updateCardPositions']]);
+				// FIXME why is "select 3" the precursor to "move 15"?
+				expect(addLabelSpy.mock.calls).toEqual([['select 3⡀ QH-JC'], ['updateCardPositions'], ['move 1⡀5 QH-JC→cascade'], ['updateCardPositions']]);
 				expect(consoleDebugSpy.mock.calls).toEqual([['speedup updateCardPositions', 'move']]);
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cJC-collapse-wild', { top: 21, left: 30 }, { top: 21.5, left: 30, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1784,7 +1787,7 @@ describe('GameBoard', () => {
 					setSpy: 51,
 					addLabelSpy: 2,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['move 23 KH→cascade'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['move 2⡀3 KH→cascade'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([['#cKH-collapse-wild', { top: 20, left: 20 }, { top: 20, left: 30, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				mockReset();
 				clickCard('KH');
@@ -1794,7 +1797,7 @@ describe('GameBoard', () => {
 					setSpy: 51,
 					addLabelSpy: 2,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['move 26 KH→cascade'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['move 2⡀6 KH→cascade'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([['#cKH-collapse-wild', { top: 20, left: 30 }, { top: 20, left: 60, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				mockReset();
 				clickCard('KH');
@@ -1804,7 +1807,7 @@ describe('GameBoard', () => {
 					setSpy: 51,
 					addLabelSpy: 2,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['move 21 KH→cascade'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['move 2⡀1 KH→cascade'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([['#cKH-collapse-wild', { top: 20, left: 60 }, { top: 20, left: 10, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				mockReset();
 				clickCard('KH'); // this is when we remove the move from the history
@@ -1814,7 +1817,7 @@ describe('GameBoard', () => {
 					setSpy: 51,
 					addLabelSpy: 2,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['move 15 QH-JC→cascade'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['move 1⡀5 QH-JC→cascade'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([['#cKH-collapse-wild', { top: 20, left: 10 }, { top: 20, left: 20, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				mockReset();
 
@@ -1849,7 +1852,7 @@ describe('GameBoard', () => {
 					timeScaleSpy: 2,
 					consoleDebugSpy: 1,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['select 5 QH-JC'], ['updateCardPositions'], ['move 16 QH-JC→cascade'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['select 5⡀ QH-JC'], ['updateCardPositions'], ['move 1⡀6 QH-JC→cascade'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cJC-collapse-wild', { top: 21, left: 50 }, { top: 21.5, left: 50, duration: 0.3, ease: 'power1.out' }, '>0'],
 					['#cQH-collapse-wild', { top: 20, left: 50 }, { top: 20, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1868,7 +1871,7 @@ describe('GameBoard', () => {
 					timeScaleSpy: 2,
 					consoleDebugSpy: 1,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['select 6 QH-JC'], ['updateCardPositions'], ['move a4 QD→KS'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['select 6⡀ QH-JC'], ['updateCardPositions'], ['move a4⡀ QD→KS'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cJC-collapse-wild', { top: 21, left: 60 }, { top: 21.5, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
 					['#cQH-collapse-wild', { top: 20, left: 60 }, { top: 20, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1888,7 +1891,7 @@ describe('GameBoard', () => {
 					timeScaleSpy: 2,
 					consoleDebugSpy: 1,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['select 4 QD'], ['updateCardPositions'], ['move 34 KS→cascade'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['select 4⡁ QD'], ['updateCardPositions'], ['move 3⡀4 KS→cascade'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cQD-collapse-wild', { top: 21, left: 40 }, { top: 21.5, left: 40, duration: 0.3, ease: 'power1.out' }, '>0'],
 					['#cQD-collapse-wild', { top: 21.5, left: 40 }, { top: 5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1914,7 +1917,7 @@ describe('GameBoard', () => {
 					setSpy: 51,
 					addLabelSpy: 2,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['move 35 KS→cascade'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['move 3⡀5 KS→cascade'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([['#cKS-collapse-wild', { top: 20, left: 40 }, { top: 20, left: 50, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				mockReset();
 
@@ -1925,7 +1928,7 @@ describe('GameBoard', () => {
 					setSpy: 51,
 					addLabelSpy: 2,
 				});
-				expect(addLabelSpy.mock.calls).toEqual([['move 36 KS→cascade'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['move 3⡀6 KS→cascade'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([['#cKS-collapse-wild', { top: 20, left: 50 }, { top: 20, left: 60, duration: 0.3, ease: 'power1.out' }, '>0']]);
 				mockReset();
 
