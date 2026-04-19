@@ -26,13 +26,13 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'deal 2 cards': '',
 	'deal 44 cards': '',
 	'deal all cards': '',
-	'cursor set': '', // FIXME k for deck
-	'cursor set KH': '', // FIXME k for deck
+	'cursor set': '', // FIXME k for deck, forget peekOnly
+	'cursor set KH': '', // FIXME k for deck, forget peekOnly
 	'cursor set b': '',
-	'cursor set h⡂': '', // home needs braille
+	'cursor set h⡂': '', // home needs coords
 	'cursor set h AD': '', // unless we have a card
 	'cursor set 6 2D': '',
-	'cursor set 3': '', // a cascade without braille means it's 0 (no card, empty cascade)
+	'cursor set 3': '', // a cascade without coords means it's 0 (no card, empty cascade)
 	'cursor up': '',
 	'cursor left': '',
 	'cursor down': '',

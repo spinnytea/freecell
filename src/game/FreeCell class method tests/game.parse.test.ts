@@ -360,7 +360,7 @@ describe('game.parse', () => {
 				expect(gameWithHist.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(gameWithHist).toEqual(game);
 
-				// FIXME gameNoHist is missing braille - previousAction.text is copy from print
+				// FIXME gameNoHist is missing coords - previousAction.text is copy from print
 				const gameNoHist = FreeCell.parse(game.print());
 				expect(gameNoHist.history).toEqual(['init without history', 'move 2a 4S→cell (auto-foundation 56 AH,2H)']);
 				expect(gameNoHist.previousAction).toEqual({
@@ -408,7 +408,7 @@ describe('game.parse', () => {
 		});
 
 		describe('end of game', () => {
-			// FIXME test.skip - previousAction.text is copy from print, does not include braille
+			// FIXME test.skip - previousAction.text is copy from print, does not include coords
 			test.skip('previousAction.text', () => {
 				let game = FreeCell.parse(
 					'' + //
@@ -791,7 +791,7 @@ describe('game.parse', () => {
 						'                   9H    \n' +
 						' move 67 9H→TC'
 				);
-				// FIXME missing braille from invalid history - deduce the braille? or undo/redo?
+				// FIXME missing coords from invalid history - deduce the coords? or undo/redo?
 				expect(game.history).toEqual(['init without history', 'move 67 9H→TC']);
 				const gameUndid = game.undo();
 				// REVIEW (cursor) (parse-history) is this the right place for the cursor?

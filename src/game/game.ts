@@ -269,7 +269,7 @@ export class FreeCell {
 		this.availableMoves = availableMoves ?? null;
 		this.flashCards = flashCards ?? null;
 
-		// FIXME verify that every previousAction.text has braille as appropriate (i.e. shorthandPosition)
+		// FIXME verify that every previousAction.text has coords as appropriate (i.e. shorthandPosition)
 		this.previousAction = action;
 		this.history = history ?? [];
 	}
@@ -426,6 +426,8 @@ export class FreeCell {
 				!selectionNever
 			) {
 				return this.__clone({
+					// FIXME change verb instead of omitting position for peek
+					//  - select/peek/deselect
 					action: { text: 'select ' + shorthandSequenceWithPosition(selection), type: 'select' },
 					selection,
 					availableMoves: findAvailableMoves(this, selection),

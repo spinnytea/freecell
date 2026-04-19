@@ -9,7 +9,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 	const fromToSpy = jest.fn();
 	const toSpy = jest.fn();
 	const setSpy = jest.fn();
-	// FIXME verify that every addLabelSpy has braille as appropriate (i.e. shorthandPosition)
+	// FIXME verify that every addLabelSpy has coords as appropriate (i.e. shorthandPosition)
 	const addLabelSpy = jest.fn();
 	const addSpy = jest.fn();
 	const timeScaleSpy = jest.fn();

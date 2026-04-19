@@ -88,8 +88,8 @@ export function isPileSH(val: string): val is PileSH {
 }
 
 // FIXME (5-priority) (refactor) (coords) review every use of `as PileSH`
-// FIXME (5-priority) (refactor) (coords) use braille (at least for h), remove the curosr arg
-//  - Position = PileSH + braille (coord)
+// FIXME (5-priority) (refactor) (coords) use coords (at least for h), remove the curosr arg
+//  - Position = PileSH + coords
 
 export interface CardLocation {
 	readonly fixture: Fixture;
@@ -443,10 +443,10 @@ export function shorthandSequence(sequence: CardSequence) {
 // FIXME (5-priority) (refactor) (coords) remove `includeBraille` and make 2 separate methods
 //  - locationToPosition
 //  - locationToSh
-// FIXME always use braille for position
+// FIXME always use coords for position
 //  - exception: pile for cell, cascade; (needed pile for deck, foundation)
 //  - exception: game.print({ includeHistory: true })
-//  - (maybe it's easier to just start with: always use braille in the history)
+//  - (maybe it's easier to just start with: always use coords in the history)
 export function shorthandPosition(
 	location: CardLocation,
 	includeBraille = false
@@ -496,8 +496,8 @@ export function shorthandSequenceWithPosition(sequence: CardSequence) {
 	notice also that this function only accepts the single character, it does not accept a game
 	so which d1 do we use for a cascade? this will return an invalid value (too high), which will be clamped if used directly
 
-	@deprecated FIXME GOAL (5-priority) (refactor) (coords) use braille for all ambiguous positions, no more INCOMPLETE
-	 - origuess, print history shorthand must not have braille :( but the history list must have braille
+	@deprecated FIXME GOAL (5-priority) (refactor) (coords) use coords for all ambiguous positions, no more INCOMPLETE
+	 - origuess, print history shorthand must not have coords :( but the history list must have coords
 	 - which is fine, because we can transpose across foundations
 	 - it's just that replays might mix up the final foundations (unavoidable)
 */

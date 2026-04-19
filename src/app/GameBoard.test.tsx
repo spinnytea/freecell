@@ -1726,7 +1726,7 @@ describe('GameBoard', () => {
 					timeScaleSpy: 2,
 					consoleDebugSpy: 1,
 				});
-				// FIXME why is "select 8" the precursor to "move 13"?
+				// XXX (animation) collapsing  1→8→3 make "select 8" and "move 13", should we have a special animation? is it enough to "thse cards moved"
 				expect(addLabelSpy.mock.calls).toEqual([['select 8⡄ QH-JC'], ['updateCardPositions'], ['move 1⡀3 QH-JC→cascade'], ['updateCardPositions']]);
 				expect(fromToSpy.mock.calls).toEqual([
 					['#cQH-collapse-wild', { top: 24, left: 80 }, { top: 23.75, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -1751,7 +1751,6 @@ describe('GameBoard', () => {
 					timeScaleSpy: 2,
 					consoleDebugSpy: 1,
 				});
-				// FIXME why is "select 3" the precursor to "move 15"?
 				expect(addLabelSpy.mock.calls).toEqual([['select 3⡀ QH-JC'], ['updateCardPositions'], ['move 1⡀5 QH-JC→cascade'], ['updateCardPositions']]);
 				expect(consoleDebugSpy.mock.calls).toEqual([['speedup updateCardPositions', 'move']]);
 				expect(fromToSpy.mock.calls).toEqual([

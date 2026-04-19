@@ -221,7 +221,7 @@ export function parseCursorFromPreviousActionText(
 					//  - where the source suit may or may not be in the foundation
 					//  - where the source suit may or may not match the target suit
 					// ---
-					// FIXME (review) (coords) when we use braille to make history accurate™️, all this testing will be moot
+					// FIXME (review) (coords) when we use coords to make history accurate™️, all this testing will be moot
 
 					if (toShorthand === 'foundation') {
 						const shorthand = parseShorthandCard(fromShorthand);
@@ -739,7 +739,7 @@ export function getCardsFromInvalid(
 			return { fromShorthands, toShorthands: [], pileShorthands: [to_location] };
 		}
 
-		// FIXME GOAL (5-priority) (techdebt) (motivation) (refactor) (coords) braille if the move text had more precision, we wouldn't need to recompute it
+		// FIXME GOAL (5-priority) (techdebt) (motivation) (refactor) (coords) coords if the move text had more precision, we wouldn't need to recompute it
 		//  - drag and drop can use any foundation, we can "touch" any foundation
 		//  - parseCursorFromPreviousActionText? (needs cards)
 		//  - game.parseShorthandMove? (needs game)
