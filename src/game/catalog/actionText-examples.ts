@@ -14,6 +14,7 @@ export const FIFTY_TWO_CARD_FLOURISH =
 	 - log every action in `Freecell.history`
 	 - categorize them
 	 - ensure they are covered here
+	 - and vice-versa because some of these are outdate
 */
 export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'init': '', // we cannot "take an action" to make an init

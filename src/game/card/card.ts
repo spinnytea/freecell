@@ -582,6 +582,7 @@ export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLo
 	we can use them to get an absolute position of a cursor (if we log a position in a cursor action).
 */
 const START_OF_8_DOT_BRAILLE = 0x2840;
+// TODO (6-priority) (refactor) (coords) compare START_OF_8_DOT_BRAILLE and BOTTOM_OF_CASCADE
 const end = START_OF_8_DOT_BRAILLE + 191;
 export const countToBraille = (count = 0) => String.fromCodePoint(START_OF_8_DOT_BRAILLE + count);
 export const brailleToCount = (char = '⡀') => char.charCodeAt(0) - START_OF_8_DOT_BRAILLE;
