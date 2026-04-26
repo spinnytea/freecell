@@ -322,7 +322,7 @@ describe('game.autoFoundationAll', () => {
 			test('move-foundation', () => {
 				game = game.$selectCard('8S').touchByPile('4');
 				expect(game.previousAction).toEqual({
-					text: 'move 54 8S→9D (flourish 56638136186381366813863468438436436836846843 AS,2S,3D,3S,4H,4C,4D,4S,5H,5C,5D,5S,6H,6C,6D,6S,7H,7C,7D,7S,8H,8C,8D,8S,9H,9C,9D,9S,TH,TC,TD,TS,JH,JC,JD,JS,QH,QC,QD,QS,KH,KC,KD,KS)',
+					text: 'move 5⡁4⡄ 8S→9D (flourish 56638136186381366813863468438436436836846843 AS,2S,3D,3S,4H,4C,4D,4S,5H,5C,5D,5S,6H,6C,6D,6S,7H,7C,7D,7S,8H,8C,8D,8S,9H,9C,9D,9S,TH,TC,TD,TS,JH,JC,JD,JS,QH,QC,QD,QS,KH,KC,KD,KS)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: '8', suit: 'spades', location: { fixture: 'cascade', data: [3, 5] } }],
 				});
@@ -334,7 +334,7 @@ describe('game.autoFoundationAll', () => {
 			test('move + auto-foundation', () => {
 				game = game.$selectCard('8S').touchByPile('4', { autoFoundation: false });
 				expect(game.previousAction).toEqual({
-					text: 'move 54 8S→9D',
+					text: 'move 5⡁4⡄ 8S→9D',
 					type: 'move',
 				});
 				expect(game.win).toBe(false);
@@ -376,7 +376,7 @@ describe('game.autoFoundationAll', () => {
 			test('move-foundation', () => {
 				game = game.$selectCard('8S').touchByPile('8');
 				expect(game.previousAction).toEqual({
-					text: 'move 38 8S→9H (flourish52 33357d226765475665745627157a815775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)',
+					text: 'move 3⡃8⡄ 8S→9H (flourish52 33357d226765475665745627157a815775185187781581571578 AS,AD,AC,2S,2D,2C,3D,AH,2H,3S,3C,3H,4S,4D,4C,4H,5S,5D,5C,5H,6S,6D,6C,6H,7S,7D,7C,7H,8S,8D,8C,8H,9S,9D,9C,9H,TS,TD,TC,TH,JS,JD,JC,JH,QS,QD,QC,QH,KS,KD,KC,KH)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: '8', suit: 'spades', location: { fixture: 'cascade', data: [7, 5] } }],
 				});
@@ -388,7 +388,7 @@ describe('game.autoFoundationAll', () => {
 			test('move + auto-foundation', () => {
 				game = game.$selectCard('8S').touchByPile('8', { autoFoundation: false });
 				expect(game.previousAction).toEqual({
-					text: 'move 38 8S→9H',
+					text: 'move 3⡃8⡄ 8S→9H',
 					type: 'move',
 				});
 				expect(game.win).toBe(false);

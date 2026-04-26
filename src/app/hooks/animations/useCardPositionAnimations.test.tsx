@@ -265,7 +265,7 @@ describe('useCardPositionAnimations', () => {
 				const gameStateOne = new FreeCell().shuffle32(5).dealAll();
 				const gameStateTwo = gameStateOne.moveByShorthand('53');
 				expect(gameStateTwo.previousAction).toEqual({
-					text: 'move 53 6H→7C (auto-foundation 2 AD)',
+					text: 'move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } }],
 				});
@@ -274,7 +274,7 @@ describe('useCardPositionAnimations', () => {
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-				expect(addLabelSpy.mock.calls).toEqual([['move 53 6H→7C (auto-foundation 2 AD)'], ['updateCardPositionsPrev'], ['updateCardPositions']]);
+				expect(addLabelSpy.mock.calls).toEqual([['move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)'], ['updateCardPositionsPrev'], ['updateCardPositions']]);
 				expect(mockCallTimes()).toEqual({
 					fromToSpy: 2,
 					toSpy: 2,
@@ -314,7 +314,7 @@ describe('useCardPositionAnimations', () => {
 						' move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)'
 				);
 				expect(gameStateTwo.previousAction).toEqual({
-					text: 'move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)',
+					text: 'move 2⡁5⡀ QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)',
 					type: 'move-foundation',
 					tweenCards: [
 						{ rank: 'queen', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 1] } },
@@ -327,7 +327,7 @@ describe('useCardPositionAnimations', () => {
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 				expect(addLabelSpy.mock.calls).toEqual([
-					['move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)'],
+					['move 2⡁5⡀ QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)'],
 					['updateCardPositionsPrev'],
 					['updateCardPositions'],
 				]);
@@ -407,7 +407,7 @@ describe('useCardPositionAnimations', () => {
 					peekOnly: true,
 				});
 				const gameStateTwo = gameStateOne.$touchAndMove({ fixture: 'cascade', data: [6, 5] });
-				expect(gameStateTwo.previousAction.text).toBe('move 76 8H-7C→cascade (auto-foundation 77c AS,AD,2S)');
+				expect(gameStateTwo.previousAction.text).toBe('move 7⡅6 8H-7C→cascade (auto-foundation 77c AS,AD,2S)');
 
 				// BUG (techdebt) (animation) (gameplay) finish test
 				//  - yes we animate 8H-7C→cascade
@@ -419,7 +419,7 @@ describe('useCardPositionAnimations', () => {
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 				expect(addLabelSpy.mock.calls).toEqual([
-					['move 76 8H-7C→cascade (auto-foundation 77c AS,AD,2S)'],
+					['move 7⡅6 8H-7C→cascade (auto-foundation 77c AS,AD,2S)'],
 					['updateCardPositionsPrev'],
 					['updateCardPositions'],
 				]);
@@ -470,14 +470,14 @@ describe('useCardPositionAnimations', () => {
 					gameStateOne = gameStateOne.setCursor({ fixture: 'cell', data: [0] }).touch();
 					expect(gameStateOne.previousAction.text).toBe('select a 3C');
 					const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [1] }).touch();
-					expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→2D');
+					expect(gameStateTwo.previousAction.text).toBe('invalid move ah⡁ 3C→2D');
 
 					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 					mockReset();
 					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 					expect(addLabelSpy.mock.calls).toEqual([
-						['invalid move ah 3C→2D'],
+						['invalid move ah⡁ 3C→2D'],
 						['invalidMoveCards.fromShorthands'],
 						['mock animShakeCard 3C'],
 						['invalidMoveCards.toShorthands'],
@@ -497,7 +497,7 @@ describe('useCardPositionAnimations', () => {
 						peekOnly: true,
 					});
 					const gameStateTwo = gameStateOne.setCursor({ fixture: 'cell', data: [2] }).touch();
-					expect(gameStateTwo.previousAction.text).toBe('invalid move hc AC→cell');
+					expect(gameStateTwo.previousAction.text).toBe('invalid move h⡀c AC→cell');
 
 					gsapUtilsRandom.mockReturnValueOnce(true); // animShakePile
 
@@ -506,7 +506,7 @@ describe('useCardPositionAnimations', () => {
 					consoleDebugSpy.mockReturnValueOnce(undefined);
 					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-					expect(addLabelSpy.mock.calls).toEqual([['invalid move hc AC→cell'], ['invalidMoveCards.fromShorthands'], ['mock animShakeCard AC']]);
+					expect(addLabelSpy.mock.calls).toEqual([['invalid move h⡀c AC→cell'], ['invalidMoveCards.fromShorthands'], ['mock animShakeCard AC']]);
 					expect(mockCallTimes()).toEqual({
 						toSpy: 3,
 						addLabelSpy: 3,
@@ -526,16 +526,16 @@ describe('useCardPositionAnimations', () => {
 
 				test('cascade:single', () => {
 					gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [1, 0] }).touch();
-					expect(gameStateOne.previousAction.text).toBe('select 2 TH');
+					expect(gameStateOne.previousAction.text).toBe('select 2⡀ TH');
 					const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [0] }).touch();
-					expect(gameStateTwo.previousAction.text).toBe('invalid move 2h TH→AC');
+					expect(gameStateTwo.previousAction.text).toBe('invalid move 2⡀h⡀ TH→AC');
 
 					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 					mockReset();
 					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 					expect(addLabelSpy.mock.calls).toEqual([
-						['invalid move 2h TH→AC'],
+						['invalid move 2⡀h⡀ TH→AC'],
 						['invalidMoveCards.fromShorthands'],
 						['mock animShakeCard TH'],
 						['invalidMoveCards.toShorthands'],
@@ -548,16 +548,16 @@ describe('useCardPositionAnimations', () => {
 
 				test('cascade:sequence', () => {
 					gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
-					expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+					expect(gameStateOne.previousAction.text).toBe('select 1⡀ KC-QD-JC');
 					const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [1] }).touch();
-					expect(gameStateTwo.previousAction.text).toBe('invalid move 1h KC-QD-JC→2D');
+					expect(gameStateTwo.previousAction.text).toBe('invalid move 1⡀h⡁ KC-QD-JC→2D');
 
 					const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 					mockReset();
 					rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 					expect(addLabelSpy.mock.calls).toEqual([
-						['invalid move 1h KC-QD-JC→2D'],
+						['invalid move 1⡀h⡁ KC-QD-JC→2D'],
 						['invalidMoveCards.fromShorthands'],
 						['mock animShakeCard KC-QD-JC'],
 						['invalidMoveCards.toShorthands'],
@@ -577,9 +577,9 @@ describe('useCardPositionAnimations', () => {
 				describe('cell', () => {
 					test('empty', () => {
 						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
-						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						expect(gameStateOne.previousAction.text).toBe('select 1⡀ KC-QD-JC');
 						const gameStateTwo = gameStateOne.setCursor({ fixture: 'cell', data: [2] }).touch();
-						expect(gameStateTwo.previousAction.text).toBe('invalid move 1c KC-QD-JC→cell');
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 1⡀c KC-QD-JC→cell');
 
 						gsapUtilsRandom.mockReturnValueOnce(true); // animShakePile
 
@@ -587,7 +587,7 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-						expect(addLabelSpy.mock.calls).toEqual([['invalid move 1c KC-QD-JC→cell'], ['invalidMoveCards.fromShorthands'], ['mock animShakeCard KC-QD-JC']]);
+						expect(addLabelSpy.mock.calls).toEqual([['invalid move 1⡀c KC-QD-JC→cell'], ['invalidMoveCards.fromShorthands'], ['mock animShakeCard KC-QD-JC']]);
 						expect(mockCallTimes()).toEqual({
 							toSpy: 3,
 							addLabelSpy: 3,
@@ -603,16 +603,16 @@ describe('useCardPositionAnimations', () => {
 
 					test('single', () => {
 						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
-						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						expect(gameStateOne.previousAction.text).toBe('select 1⡀ KC-QD-JC');
 						const gameStateTwo = gameStateOne.setCursor({ fixture: 'cell', data: [1] }).touch({ stopWithInvalid: true });
-						expect(gameStateTwo.previousAction.text).toBe('invalid move 1b KC-QD-JC→4C');
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 1⡀b KC-QD-JC→4C');
 
 						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 						expect(addLabelSpy.mock.calls).toEqual([
-							['invalid move 1b KC-QD-JC→4C'],
+							['invalid move 1⡀b KC-QD-JC→4C'],
 							['invalidMoveCards.fromShorthands'],
 							['mock animShakeCard KC-QD-JC'],
 							['invalidMoveCards.toShorthands'],
@@ -629,7 +629,7 @@ describe('useCardPositionAnimations', () => {
 						gameStateOne = gameStateOne.setCursor({ fixture: 'cell', data: [0] }).touch();
 						expect(gameStateOne.previousAction.text).toBe('select a 3C');
 						const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [2] }).touch();
-						expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→foundation');
+						expect(gameStateTwo.previousAction.text).toBe('invalid move ah⡂ 3C→foundation');
 
 						gsapUtilsRandom.mockReturnValueOnce(true); // animShakePile
 
@@ -637,7 +637,7 @@ describe('useCardPositionAnimations', () => {
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-						expect(addLabelSpy.mock.calls).toEqual([['invalid move ah 3C→foundation'], ['invalidMoveCards.fromShorthands'], ['mock animShakeCard 3C']]);
+						expect(addLabelSpy.mock.calls).toEqual([['invalid move ah⡂ 3C→foundation'], ['invalidMoveCards.fromShorthands'], ['mock animShakeCard 3C']]);
 						expect(mockCallTimes()).toEqual({
 							toSpy: 3,
 							addLabelSpy: 3,
@@ -655,14 +655,14 @@ describe('useCardPositionAnimations', () => {
 						gameStateOne = gameStateOne.setCursor({ fixture: 'cell', data: [0] }).touch();
 						expect(gameStateOne.previousAction.text).toBe('select a 3C');
 						const gameStateTwo = gameStateOne.setCursor({ fixture: 'foundation', data: [1] }).touch();
-						expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→2D');
+						expect(gameStateTwo.previousAction.text).toBe('invalid move ah⡁ 3C→2D');
 
 						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 						expect(addLabelSpy.mock.calls).toEqual([
-							['invalid move ah 3C→2D'],
+							['invalid move ah⡁ 3C→2D'],
 							['invalidMoveCards.fromShorthands'],
 							['mock animShakeCard 3C'],
 							['invalidMoveCards.toShorthands'],
@@ -677,9 +677,9 @@ describe('useCardPositionAnimations', () => {
 				describe('cascade', () => {
 					test('empty', () => {
 						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
-						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						expect(gameStateOne.previousAction.text).toBe('select 1⡀ KC-QD-JC');
 						const gameStateTwo = gameStateOne.setCursor({ fixture: 'cascade', data: [2, 0] }).touch({ stopWithInvalid: true });
-						expect(gameStateTwo.previousAction.text).toBe('invalid move 13 KC-QD-JC→cascade');
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 1⡀3 KC-QD-JC→cascade');
 
 						gsapUtilsRandom.mockReturnValueOnce(true); // animShakePile
 
@@ -688,7 +688,7 @@ describe('useCardPositionAnimations', () => {
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 						expect(addLabelSpy.mock.calls).toEqual([
-							['invalid move 13 KC-QD-JC→cascade'],
+							['invalid move 1⡀3 KC-QD-JC→cascade'],
 							['invalidMoveCards.fromShorthands'],
 							['mock animShakeCard KC-QD-JC'],
 						]);
@@ -707,16 +707,16 @@ describe('useCardPositionAnimations', () => {
 
 					test('single', () => {
 						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
-						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						expect(gameStateOne.previousAction.text).toBe('select 1⡀ KC-QD-JC');
 						const gameStateTwo = gameStateOne.setCursor({ fixture: 'cascade', data: [1, 0] }).touch({ stopWithInvalid: true });
-						expect(gameStateTwo.previousAction.text).toBe('invalid move 12 KC-QD-JC→TH');
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 1⡀2⡀ KC-QD-JC→TH');
 
 						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 						expect(addLabelSpy.mock.calls).toEqual([
-							['invalid move 12 KC-QD-JC→TH'],
+							['invalid move 1⡀2⡀ KC-QD-JC→TH'],
 							['invalidMoveCards.fromShorthands'],
 							['mock animShakeCard KC-QD-JC'],
 							['invalidMoveCards.toShorthands'],
@@ -730,16 +730,16 @@ describe('useCardPositionAnimations', () => {
 					// REVIEW (animation) shake the whole sequence, not just the final card?
 					test('sequence', () => {
 						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
-						expect(gameStateOne.previousAction.text).toBe('select 1 KC-QD-JC');
+						expect(gameStateOne.previousAction.text).toBe('select 1⡀ KC-QD-JC');
 						const gameStateTwo = gameStateOne.setCursor({ fixture: 'cascade', data: [3, 0] }).touch({ stopWithInvalid: true });
-						expect(gameStateTwo.previousAction.text).toBe('invalid move 14 KC-QD-JC→QC');
+						expect(gameStateTwo.previousAction.text).toBe('invalid move 1⡀4⡁ KC-QD-JC→QC');
 
 						const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 						mockReset();
 						rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 						expect(addLabelSpy.mock.calls).toEqual([
-							['invalid move 14 KC-QD-JC→QC'],
+							['invalid move 1⡀4⡁ KC-QD-JC→QC'],
 							['invalidMoveCards.fromShorthands'],
 							['mock animShakeCard KC-QD-JC'],
 							['invalidMoveCards.toShorthands'],
@@ -790,13 +790,13 @@ describe('useCardPositionAnimations', () => {
 							);
 							const gameStateTwo = gameStateOne.touchByPile('h');
 							expect(gameStateTwo.previousAction.text).not.toBe('deselect 3D');
-							expect(gameStateTwo.previousAction.text).toBe('move ah 3D→2D (auto-foundation 4 4C)');
+							expect(gameStateTwo.previousAction.text).toBe('move ah⡂ 3D→2D (auto-foundation 4 4C)');
 
 							const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 							mockReset();
 							rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-							expect(addLabelSpy.mock.calls).toEqual([['move ah 3D→2D (auto-foundation 4 4C)'], ['updateCardPositionsPrev'], ['updateCardPositions']]);
+							expect(addLabelSpy.mock.calls).toEqual([['move ah⡂ 3D→2D (auto-foundation 4 4C)'], ['updateCardPositionsPrev'], ['updateCardPositions']]);
 							expect(mockCallTimes()).toEqual({
 								fromToSpy: 2,
 								toSpy: 3,
@@ -846,13 +846,17 @@ describe('useCardPositionAnimations', () => {
 							);
 							const gameStateTwo = gameStateOne.touch();
 							expect(gameStateTwo.previousAction.text).not.toBe('deselect KC');
-							expect(gameStateTwo.previousAction.text).toBe('move 21 KC→cascade (auto-foundation 28 2H,3C)');
+							expect(gameStateTwo.previousAction.text).toBe('move 2⡃1 KC→cascade (auto-foundation 28 2H,3C)');
 
 							const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 							mockReset();
 							rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-							expect(addLabelSpy.mock.calls).toEqual([['move 21 KC→cascade (auto-foundation 28 2H,3C)'], ['updateCardPositionsPrev'], ['updateCardPositions']]);
+							expect(addLabelSpy.mock.calls).toEqual([
+								['move 2⡃1 KC→cascade (auto-foundation 28 2H,3C)'],
+								['updateCardPositionsPrev'],
+								['updateCardPositions'],
+							]);
 							expect(mockCallTimes()).toEqual({
 								fromToSpy: 3,
 								toSpy: 3,
@@ -897,8 +901,8 @@ describe('useCardPositionAnimations', () => {
 		const skipThrow = true; // TODO (techdebt) remove after we finish all tests
 		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES);
 		afterAll(() => {
-			// eslint-disable-next-line jest/no-standalone-expect
-			// expect(actionTextExamples).toEqual([]);
+			// eslint-disable-next-line jest/no-standalone-expect, @typescript-eslint/no-unnecessary-condition
+			if (!skipThrow) expect(actionTextExamples).toEqual([]);
 		});
 		beforeEach(() => {
 			// eslint-disable-next-line jest/no-standalone-expect
@@ -1022,14 +1026,14 @@ describe('useCardPositionAnimations', () => {
 			});
 
 			describe.each`
-				actionText                                    | prevActionText                                | shorthandMove | toSpyIDs                                    | fromToSpyIDs                | setSpyLength | toSpyUndoIDs         | fromToSpyUndoIDs     | labels
-				${'move 3a KC→cell'}                          | ${undefined}                                  | ${'3a'}       | ${['#cKC']}                                 | ${['#cKC']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
-				${'move 15 TD→JS'}                            | ${undefined}                                  | ${'15'}       | ${['#cTD']}                                 | ${['#cTD']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
-				${'move 23 KC-QD-JS→cascade'}                 | ${undefined}                                  | ${'23'}       | ${[]}                                       | ${['#cKC', '#cQD', '#cJS']} | ${49}        | ${undefined}         | ${undefined}         | ${undefined}
-				${'move 53 6H→7C (auto-foundation 2 AD)'}     | ${undefined}                                  | ${'53'}       | ${['#c6H', '#cAD']}                         | ${['#c6H', '#cAD']}         | ${50}        | ${undefined}         | ${undefined}         | ${[['move 53 6H→7C (auto-foundation 2 AD)'], ['updateCardPositionsPrev'], ['updateCardPositions']]}
-				${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${undefined}                                  | ${'14'}       | ${['#c2S', '#cAS', '#cAS', '#c2S', '#c2S']} | ${['#c2S']}                 | ${50}        | ${['#cAS', '#c2S']}  | ${['#cAS', '#c2S']}  | ${[['move 14 2S→3D (auto-foundation 14 AS,2S)'], ['updateCardPositionsPrev'], ['updateCardPositions']]}
-				${'move 21 8H-7C→cascade'}                    | ${'move 14 2S→3D (auto-foundation 14 AS,2S)'} | ${'21'}       | ${['#c8H', '#c7C']}                         | ${['#c8H', '#c7C']}         | ${50}        | ${undefined}         | ${undefined}         | ${undefined}
-				${FIFTY_TWO_CARD_FLOURISH}                    | ${undefined}                                  | ${'3b'}       | ${ftcf_toSpyIDs}                            | ${['#c8S']}                 | ${0}         | ${ftcf_toSpyUndoIDs} | ${ftcf_toSpyUndoIDs} | ${[[FIFTY_TWO_CARD_FLOURISH], ['updateCardPositionsPrev'], ['updateCardPositions']]}
+				actionText                                      | prevActionText                                  | shorthandMove | toSpyIDs                                    | fromToSpyIDs                | setSpyLength | toSpyUndoIDs         | fromToSpyUndoIDs     | labels
+				${'move 3⡂a KC→cell'}                           | ${undefined}                                    | ${'3a'}       | ${['#cKC']}                                 | ${['#cKC']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 1⡃5⡆ TD→JS'}                            | ${undefined}                                    | ${'15'}       | ${['#cTD']}                                 | ${['#cTD']}                 | ${51}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 2⡀3 KC-QD-JS→cascade'}                  | ${undefined}                                    | ${'23'}       | ${[]}                                       | ${['#cKC', '#cQD', '#cJS']} | ${49}        | ${undefined}         | ${undefined}         | ${undefined}
+				${'move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)'}     | ${undefined}                                    | ${'53'}       | ${['#c6H', '#cAD']}                         | ${['#c6H', '#cAD']}         | ${50}        | ${undefined}         | ${undefined}         | ${[['move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)'], ['updateCardPositionsPrev'], ['updateCardPositions']]}
+				${'move 1⡁4⡎ 2S→3D (auto-foundation 14 AS,2S)'} | ${undefined}                                    | ${'14'}       | ${['#c2S', '#cAS', '#cAS', '#c2S', '#c2S']} | ${['#c2S']}                 | ${50}        | ${['#cAS', '#c2S']}  | ${['#cAS', '#c2S']}  | ${[['move 1⡁4⡎ 2S→3D (auto-foundation 14 AS,2S)'], ['updateCardPositionsPrev'], ['updateCardPositions']]}
+				${'move 2⡆1 8H-7C→cascade'}                     | ${'move 1⡁4⡎ 2S→3D (auto-foundation 14 AS,2S)'} | ${'21'}       | ${['#c8H', '#c7C']}                         | ${['#c8H', '#c7C']}         | ${50}        | ${undefined}         | ${undefined}         | ${undefined}
+				${FIFTY_TWO_CARD_FLOURISH}                      | ${undefined}                                    | ${'3b'}       | ${ftcf_toSpyIDs}                            | ${['#c8S']}                 | ${0}         | ${ftcf_toSpyUndoIDs} | ${ftcf_toSpyUndoIDs} | ${[[FIFTY_TWO_CARD_FLOURISH], ['updateCardPositionsPrev'], ['updateCardPositions']]}
 			`(
 				'$actionText',
 				({
@@ -1214,14 +1218,14 @@ describe('useCardPositionAnimations', () => {
 			test('· invalid move 75 6D-5S-4D-3C→7C', () => {
 				const gameStateOne = FreeCell.parse(ACTION_TEXT_EXAMPLES['invalid move 75 6D-5S-4D-3C→7C']);
 				const gameStateTwo = gameStateOne.$touchAndMove({ fixture: 'cascade', data: [4, 3] }, { stopWithInvalid: true });
-				expect(gameStateTwo.previousAction.text).toBe('invalid move 75 6D-5S-4D-3C→7C');
+				expect(gameStateTwo.previousAction.text).toBe('invalid move 7⡁5⡃ 6D-5S-4D-3C→7C');
 
 				const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 				mockReset();
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 				expect(addLabelSpy.mock.calls).toEqual([
-					['invalid move 75 6D-5S-4D-3C→7C'],
+					['invalid move 7⡁5⡃ 6D-5S-4D-3C→7C'],
 					['invalidMoveCards.fromShorthands'],
 					['mock animShakeCard 6D-5S-4D-3C'],
 					['invalidMoveCards.toShorthands'],
@@ -1235,7 +1239,7 @@ describe('useCardPositionAnimations', () => {
 			test('· invalid move ah 3C→foundation', () => {
 				const gameStateOne = FreeCell.parse(ACTION_TEXT_EXAMPLES['invalid move ah 3C→foundation']);
 				const gameStateTwo = gameStateOne.$selectCard('3C').touchByPile('h');
-				expect(gameStateTwo.previousAction.text).toBe('invalid move ah 3C→foundation');
+				expect(gameStateTwo.previousAction.text).toBe('invalid move ah⡃ 3C→foundation');
 
 				gsapUtilsRandom.mockReturnValueOnce(true); // animShakePile
 
@@ -1244,7 +1248,7 @@ describe('useCardPositionAnimations', () => {
 				rerender(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
 				expect(addLabelSpy.mock.calls).toEqual([
-					['invalid move ah 3C→foundation'],
+					['invalid move ah⡃ 3C→foundation'],
 					['updateCardPositions'],
 					['invalidMoveCards.fromShorthands'],
 					['mock animShakeCard 3C'],
@@ -1391,10 +1395,10 @@ describe('useCardPositionAnimations', () => {
 				' 34 38 3d 34 18 15 73 71 \n' +
 				' 73 57 53 57 54 13 a5 16 \n' +
 				' 14 ';
-			expect(gamePrint).toEqual(ACTION_TEXT_EXAMPLES['move 21 8H-7C→cascade']);
+			expect(gamePrint).toEqual(ACTION_TEXT_EXAMPLES['move 2⡆1 8H-7C→cascade']);
 			const gameStateOne = FreeCell.parse(gamePrint).moveByShorthand('21');
 			expect(gameStateOne.previousAction).toEqual({
-				text: 'move 21 8H-7C→cascade',
+				text: 'move 2⡆1 8H-7C→cascade',
 				type: 'move',
 			});
 			expect(gameStateOne.print({ includeHistory: true })).toBe(
@@ -1424,7 +1428,7 @@ describe('useCardPositionAnimations', () => {
 			);
 			const gameStateTwo = gameStateOne.undo();
 			expect(gameStateTwo.previousAction).toEqual({
-				text: 'move 14 2S→3D (auto-foundation 14 AS,2S)',
+				text: 'move 1⡁4⡎ 2S→3D (auto-foundation 14 AS,2S)',
 				type: 'move-foundation',
 				tweenCards: [{ rank: '2', suit: 'spades', location: { fixture: 'cascade', data: [3, 15] } }],
 				gameFunction: 'undo',
@@ -1525,7 +1529,7 @@ describe('useCardPositionAnimations', () => {
 
 			const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 
-			expect(addLabelSpy.mock.calls).toEqual([['move 7a 8H→cell (auto-foundation 77 AS,AD)'], ['updateCardPositions']]);
+			expect(addLabelSpy.mock.calls).toEqual([['move 7⡅a 8H→cell (auto-foundation 77 AS,AD)'], ['updateCardPositions']]);
 			expect(mockCallTimes()).toEqual({
 				setSpy: 52,
 				addLabelSpy: 2,

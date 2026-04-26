@@ -90,12 +90,12 @@ describe('game.moveByShorthand', () => {
 					' 5S QH 8C 9D KS QD 4H AC \n' +
 					' 2H TC TH 6D             \n' +
 					':d 6C QC JS 9S AD 7C TS \n' +
-					' invalid move kb 6H→cell\n' +
+					' invalid move k⡇b 6H→cell\n' +
 					' deal 44 cards\n' +
 					' shuffle deck (5)'
 			);
 			expect(burried.previousAction).toEqual({
-				text: 'invalid move kb 6H→cell',
+				text: 'invalid move k⡇b 6H→cell',
 				type: 'move',
 				gameFunction: 'recall-or-bury',
 			});
@@ -176,12 +176,12 @@ describe('game.moveByShorthand', () => {
 						' 5S QH 8C 9D KS QD 4H AC \n' +
 						' 2H TC TH                \n' +
 						':d 6D \n' +
-						' invalid move 4k 6D→deck\n' +
+						' invalid move 4⡅k 6D→deck\n' +
 						' deal all cards\n' +
 						' shuffle deck (5)'
 				);
 				expect(burried.previousAction).toEqual({
-					text: 'invalid move 4k 6D→deck',
+					text: 'invalid move 4⡅k 6D→deck',
 					type: 'move',
 					gameFunction: 'recall-or-bury',
 				});
@@ -225,12 +225,12 @@ describe('game.moveByShorthand', () => {
 						' 5S QH 8C 9D KS QD 4H AC \n' +
 						' 2H TC TH                \n' +
 						':d 6D 6H 6C QC JS 9S AD 7C TS \n' +
-						' invalid move 4k 6D→deck\n' +
+						' invalid move 4⡅k 6D→deck\n' +
 						' deal 44 cards\n' +
 						' shuffle deck (5)'
 				);
 				expect(burried.previousAction).toEqual({
-					text: 'invalid move 4k 6D→deck',
+					text: 'invalid move 4⡅k 6D→deck',
 					type: 'move',
 					gameFunction: 'recall-or-bury',
 				});
@@ -267,7 +267,7 @@ describe('game.moveByShorthand', () => {
 				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: 1 },
 			]);
 			expect(game.moveByShorthand('34').previousAction).toEqual({
-				text: 'invalid move 34 2H→6H',
+				text: 'invalid move 3⡆4⡆ 2H→6H',
 				type: 'invalid',
 			});
 		});
@@ -300,14 +300,14 @@ describe('game.moveByShorthand', () => {
 		);
 
 		// cascade is imprecise (both the move (which cards) and summary (which cascasde) are imprecise)
-		expect(game.moveByShorthand('45').previousAction.text).toBe('move 45 9C-8D-7C→cascade');
-		expect(game.$moveCardToPosition('9C', '5').previousAction.text).toBe('move 45 9C-8D-7C→cascade');
-		expect(game.$moveCardToPosition('8D', '5').previousAction.text).toBe('move 45 8D-7C→cascade');
-		expect(game.$moveCardToPosition('7C', '5').previousAction.text).toBe('move 45 7C→cascade');
+		expect(game.moveByShorthand('45').previousAction.text).toBe('move 4⡊5 9C-8D-7C→cascade');
+		expect(game.$moveCardToPosition('9C', '5').previousAction.text).toBe('move 4⡊5 9C-8D-7C→cascade');
+		expect(game.$moveCardToPosition('8D', '5').previousAction.text).toBe('move 4⡋5 8D-7C→cascade');
+		expect(game.$moveCardToPosition('7C', '5').previousAction.text).toBe('move 4⡌5 7C→cascade');
 
 		// cell is fine (move is specific, summary is imprecise)
-		expect(game.moveByShorthand('4a').previousAction.text).toBe('move 4a 7C→cell');
-		expect(game.moveByShorthand('4d').previousAction.text).toBe('move 4d 7C→cell');
+		expect(game.moveByShorthand('4a').previousAction.text).toBe('move 4⡌a 7C→cell');
+		expect(game.moveByShorthand('4d').previousAction.text).toBe('move 4⡌d 7C→cell');
 
 		// TODO (techdebt) (history) (shorthandMove) we can use brail dots :D
 		expect(countToBraille(game.$selectCard('9C').selection?.cards.length)).toBe('⡃');

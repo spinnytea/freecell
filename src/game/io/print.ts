@@ -1,4 +1,11 @@
-import { Card, CardLocation, CardSequence, isLocationEqual, shorthandCard } from '@/game/card/card';
+import {
+	Card,
+	CardLocation,
+	CardSequence,
+	isLocationEqual,
+	removeBraille,
+	shorthandCard,
+} from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { parseMovesFromHistory } from '@/game/move/history';
 
@@ -208,7 +215,7 @@ export function printHistory(game: FreeCell, skipLasgamet = false): string {
 		// print the last valid action, _not_ previousAction.text
 		// the previous action could be a cursor movement, or a canceled touch action (touch stop)
 		// TODO (history) (print) remove the last action - not needed for save/reload
-		if (!skipLasgamet) str += `\n ${new String(game.history.at(-1)).toString()}`;
+		if (!skipLasgamet) str += `\n ${removeBraille(game.history.at(-1))}`;
 		str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 		while (movesSeed.moves.length) {
 			str += '\n ' + movesSeed.moves.splice(0, game.tableau.length).join(' ') + ' ';

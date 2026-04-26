@@ -45,7 +45,7 @@ export enum ControlSchemes {
 	/**
 		set cursor + move
 
-		hotkeys for columns, shorthandPosition / Position directly
+		hotkeys for columns, PileSH directly
 	*/
 	Hotkeys = 'keyboard hotkeys',
 
@@ -69,7 +69,7 @@ export enum ControlSchemes {
 	// FlashRank = 'keyboard flash rank',
 
 	/*
-		set cursor + touch (click on columns (d0), not cards (d0, d1); shorthandPosition directly)
+		set cursor + touch (click on columns (d0), not cards (d0, d1); PileSH directly)
 
 		@deprecated TODO (controls) not yet implemented
 		 - touchByPosition but with the mouse

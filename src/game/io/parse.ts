@@ -1,5 +1,5 @@
 import { isEqual as _isEqual } from 'lodash';
-import { Card } from '@/game/card/card';
+import { Card, removeBraille } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { parseMovesFromHistory } from '@/game/move/history';
 
@@ -99,7 +99,7 @@ export function parseHistoryShorthand(
 	// }
 
 	// we've already parsed the action text, we are verifying that the moves produce the same result
-	if (replayGameForHistroy.previousAction.text !== actionText) {
+	if (removeBraille(replayGameForHistroy.previousAction.text) !== actionText) {
 		return { errorMessage: 'init with invalid history replay action text' };
 	}
 

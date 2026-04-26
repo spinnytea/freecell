@@ -26,7 +26,7 @@ import {
 	getCardAt,
 	isLocationEqual,
 	shorthandCard,
-	shorthandPosition,
+	shorthandPile,
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 
@@ -165,7 +165,7 @@ export function useDragAndDropControls(
 							//  - it it's just gsap/animDragOverlap, it seems the state isn't updated
 							if (gameStateRef.current.settings.showDebugInfo) {
 								if (overlapping) {
-									console.debug('onDrag overlapping', shorthandPosition(overlapping));
+									console.debug('onDrag overlapping', shorthandPile(overlapping));
 								}
 							}
 						} else {

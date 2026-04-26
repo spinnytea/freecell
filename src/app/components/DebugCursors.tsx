@@ -12,7 +12,7 @@ import {
 } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSizes';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
-import { CardLocation, CardSequence, shorthandPosition } from '@/game/card/card';
+import { CardLocation, CardSequence, shorthandPile } from '@/game/card/card';
 
 const OVERLAY_MARGINS = 4;
 
@@ -27,7 +27,7 @@ export function DebugCursors() {
 		<div id="cursors">
 			{availableMoves?.map(({ location, priority }) => (
 				<LocationBox
-					key={`available-${shorthandPosition(location)}-${location.data[0].toString(10)}`}
+					key={`available-${shorthandPile(location)}-${location.data[0].toString(10)}`}
 					type={`available-${priority < 0 ? 'low' : 'high'}`}
 					fixtureSizes={fixtureSizes}
 					location={location}

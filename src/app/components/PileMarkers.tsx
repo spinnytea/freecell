@@ -6,7 +6,7 @@ import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSiz
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { useSettings } from '@/app/hooks/contexts/Settings/useSettings';
 import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveControls';
-import { calcPilemarkerId, CardLocation, shorthandPosition } from '@/game/card/card';
+import { calcPilemarkerId, CardLocation, shorthandPile } from '@/game/card/card';
 
 export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObject<string> }) {
 	const { cursor } = useGame();
@@ -91,7 +91,7 @@ function Pile({
 			style={style}
 			onClick={handleClickToMove}
 		>
-			{shorthandPosition(location)}
+			{shorthandPile(location)}
 		</div>
 	);
 }

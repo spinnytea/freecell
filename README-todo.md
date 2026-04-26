@@ -4,11 +4,12 @@
 \b((F)IXME|BUG|HACK|TODO|XXX|REVIEW|IDEA)\b
 \b((F)IXME|BUG|HACK|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
 \b(BUG|HACK|TODO|XXX|REVIEW|IDEA)\b(\S|\s[^(])
-\([5432]-priority\)
+\([65432]-priority\)
 ```
 
 ## Top-Level TODOs
 
+- TODO (4-priority) (techdebt) replace @link with @linkcode
 - TODO (gsap) review how we use gsap, right now it feels like magic
 - TODO (techdebt) switch from nextjs to vite
   - https://vite.dev/guide/build.html#multi-page-app

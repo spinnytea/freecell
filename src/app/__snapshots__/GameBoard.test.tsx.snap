@@ -3549,7 +3549,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
         class="hiddenActionText"
         role="status"
       >
-        move 67 9H→TC
+        move 6⡀7⡇ 9H→TC
       </output>
       <span
         class="statusspacer"
@@ -4738,7 +4738,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
         class="hiddenActionText"
         role="status"
       >
-        move 86 7D-6C-5H→cascade
+        move 8⡃6 7D-6C-5H→cascade
       </output>
       <span
         class="statusspacer"
@@ -5927,7 +5927,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
         class="hiddenActionText"
         role="status"
       >
-        move 48 QS→KH
+        move 4⡀8⡀ QS→KH
       </output>
       <span
         class="statusspacer"
@@ -7116,7 +7116,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
         class="hiddenActionText"
         role="status"
       >
-        move b8 5D→6S
+        move b8⡇ 5D→6S
       </output>
       <span
         class="statusspacer"
@@ -8463,7 +8463,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
         class="hiddenActionText"
         role="status"
       >
-        move 56 KD→cascade (auto-foundation 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)
+        move 5⡂6 KD→cascade (auto-foundation 55748248278274382782733728827338278263 4D,4C,5H,5S,5D,5C,6H,6S,6D,6C,7H,7S,7D,7C,8H,8S,8D,8C,9H,9S,9D,9C,TH,TS,TD,TC,JH,JS,JD,JC,QH,QS,QD,QC,KH,KS,KD,KC)
       </output>
       <span
         class="statusspacer"
@@ -10842,7 +10842,7 @@ exports[`GameBoard enable debug mode 1`] = `
         class="hiddenActionText"
         role="status"
       >
-        select 5 6C
+        select 5⡅ 6C
       </output>
       <span
         class="statusspacer"

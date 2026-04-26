@@ -35,7 +35,7 @@ export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 	getRankForCompare(min) === getRankForCompare(max) - 1;
 
 /**
-	rank shorthand + suit shorthand
+	rank shorthand + suit shorthand, aka `rs`
 
 	XXX (techdebt) use type CardSH everywhere it makes sense
 
@@ -78,7 +78,7 @@ export const PileSHList = [
 	cascades: 1 - 9, 0 (1-8, but we allow 9 and 10 columns)
 	deck: k
 
-	TODO (5-priority) (review) (coords) every use of `position`, `Position`; use {@link PileSH} and {@link LocationSH} as appropriate
+	TODO (6-priority) (review) (coords) (types) every use of `position`, `Position`; use {@link PileSH} and {@link LocationSH} as appropriate
 
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */
@@ -87,9 +87,9 @@ export function isPileSH(val: string): val is PileSH {
 	return (PileSHList as readonly string[]).includes(val);
 }
 
-// TODO (5-priority) (refactor) (coords) review every use of `as PileSH`
-// TODO (5-priority) (refactor) (coords) use braille (at least for h), remove the curosr arg
-//  - Position = PileSH + braille (coord)
+// TODO (6-priority) (review) (coords) (types) review every use of `as PileSH`
+// TODO (6-priority) (review) (coords) (types) use coords (at least for h), remove the curosr arg
+//  - Position = PileSH + coords
 
 export interface CardLocation {
 	readonly fixture: Fixture;
@@ -228,7 +228,7 @@ export function calcCardId(shorthand: string, gameBoardId?: string) {
 }
 
 export function calcPilemarkerId(location: CardLocation, gameBoardId?: string) {
-	let pileId = `pilemarker-${shorthandPosition(location)}`;
+	let pileId = `pilemarker-${shorthandPile(location)}`;
 	if (pileId === 'pilemarker-h') {
 		pileId += '-' + (location.data[0] + 1).toString(10);
 	}
@@ -367,6 +367,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 //  - maybe we stop using "shorthand" altogether and start using "str"
 //  - maybe we stick with "SH" suffix matching the analogous object
 //  - PileStr, LocationStr, CardStr 🤔
+//  - rename to "printShorthandCard" to match "parseShorthandCard"
 export function shorthandCard(card: CardShorthand | null | undefined): CardSH | '  ' {
 	if (!card) return '  ';
 	const r = card.rank === '10' ? 'T' : card.rank === 'joker' ? 'W' : card.rank[0];
@@ -374,13 +375,11 @@ export function shorthandCard(card: CardShorthand | null | undefined): CardSH | 
 	return (r + s).toUpperCase() as CardSH;
 }
 
-/** TODO (techdebt) (refactor) change `rs` to single string since that's how it's _always_ called */
-export function parseShorthandCard(r: string | undefined, s?: string): CardShorthand | null {
-	if (!s && r?.length === 2) {
-		s = r[1];
-		r = r[0];
-	}
-	if (r === ' ' && s === ' ') return null;
+export function parseShorthandCard(rs: string | undefined): CardShorthand | null {
+	if (!rs) return null;
+
+	const [r, s] = rs;
+	if (!r || r === ' ' || !s || s === ' ') return null;
 
 	let rank: Rank;
 	let suit: Suit;
@@ -414,7 +413,7 @@ export function parseShorthandCard(r: string | undefined, s?: string): CardShort
 			rank = 'joker';
 			break;
 		default:
-			throw new Error(`invalid rank shorthand: "${r ?? 'undefined'}"`);
+			throw new Error(`invalid rank shorthand: "${r}"`);
 	}
 
 	switch (s) {
@@ -431,7 +430,7 @@ export function parseShorthandCard(r: string | undefined, s?: string): CardShort
 			suit = 'spades';
 			break;
 		default:
-			throw new Error(`invalid suit shorthand: "${s ?? 'undefined'}"`);
+			throw new Error(`invalid suit shorthand: "${s}"`);
 	}
 
 	return { rank, suit };
@@ -441,33 +440,69 @@ export function shorthandSequence(sequence: CardSequence) {
 	return sequence.cards.map((card) => shorthandCard(card)).join('-');
 }
 
-// TODO (5-priority) (refactor) (coords) remove `includeD0` and make 2 separate methods
-//  - locationToPosition
-//  - locationToSh
-export function shorthandPosition(location: CardLocation, includeD0 = false): PileSH | LocationSH {
+/**
+	Always use coords for: Position (card)
+	 - ❌ cell
+	 - ✅ foundation
+	 - ✅ cascade
+	 - ✅ deck
+
+	Always use coords for: Pile (without card)
+	 - ❌ cell
+	 - ✅ foundation
+	 - ❌ cascade
+	 - ❌ deck
+
+	Never use coords for:
+	 - `game.print()`
+	 - `game.print({ includeHistory: true })` (except if we are dumping the 'invalid history list')
+*/
+export function shorthandLocation(location: CardLocation): LocationSH {
+	const d0 = location.data[0];
+	switch (location.fixture) {
+		case 'cell': {
+			return shorthandPile(location);
+		}
+		case 'deck':
+		case 'foundation': {
+			const braille = d0 >= 0 ? countToBraille(d0) : '';
+			return (shorthandPile(location) + braille) as LocationSH;
+		}
+		case 'cascade': {
+			const d1 = location.data[1];
+			const braille = d1 >= 0 ? countToBraille(d1) : '';
+			return (shorthandPile(location) + braille) as LocationSH;
+		}
+	}
+}
+
+/**
+	used for referencing a _pile_, not a card location
+
+	@see {@link shorthandLocation}
+*/
+export function shorthandPile(location: CardLocation): PileSH {
 	const d0 = location.data[0];
 	switch (location.fixture) {
 		case 'deck': {
-			const braille = includeD0 && d0 >= 0 ? countToBraille(d0) : '';
-			return ('k' + braille) as PileSH;
+			return 'k';
 		}
 		case 'cell': {
+			// XXX (techdebt) && d0 < game.cells.length
+			// 0 <= d0 < MAX_CELL_COUNT
 			if (d0 >= 0 && d0 < 6) {
 				return (d0 + 10).toString(16) as PileSH;
 			}
 			break;
 		}
 		case 'foundation': {
-			const braille = includeD0 && d0 >= 0 ? countToBraille(d0) : '';
-			return ('h' + braille) as PileSH;
+			return 'h';
 		}
 		case 'cascade': {
-			const d1 = location.data[1];
-			const braille = includeD0 && d1 >= 0 ? countToBraille(d1) : '';
 			if (d0 === 9) {
-				return ('0' + braille) as PileSH;
+				return '0';
 			} else if (d0 >= 0 && d0 < 9) {
-				return ((d0 + 1).toString(10) + braille) as PileSH;
+				return (d0 + 1).toString(10) as PileSH;
 			}
 			break;
 		}
@@ -477,8 +512,10 @@ export function shorthandPosition(location: CardLocation, includeD0 = false): Pi
 
 export function shorthandSequenceWithPosition(sequence: CardSequence) {
 	// but don't include the position if this is select-to-peek
+	// TODO (5-priority) (gameplay) (peek) rather than omit the position, what if we add another marker
+	//  - juice has stars around the cards, maybe we do that here, too?
 	if (sequence.peekOnly) return shorthandSequence(sequence);
-	return shorthandPosition(sequence.location) + ' ' + shorthandSequence(sequence);
+	return shorthandLocation(sequence.location) + ' ' + shorthandSequence(sequence);
 }
 
 /**
@@ -490,8 +527,8 @@ export function shorthandSequenceWithPosition(sequence: CardSequence) {
 	notice also that this function only accepts the single character, it does not accept a game
 	so which d1 do we use for a cascade? this will return an invalid value (too high), which will be clamped if used directly
 
-	@deprecated TODO (5-priority) (refactor) (coords) use braille for all ambiguous positions, no more INCOMPLETE
-	 - origuess, print history shorthand must not have braille :( but the history list must have braille
+	@deprecated TODO (6-priority) (motivation) (refactor) (coords) use coords for all ambiguous positions, no more INCOMPLETE
+	 - origuess, print history shorthand must not have coords :( but the history list must have coords
 	 - which is fine, because we can transpose across foundations
 	 - it's just that replays might mix up the final foundations (unavoidable)
 */
@@ -545,5 +582,16 @@ export function parseShorthandPosition_INCOMPLETE(p: string | undefined): CardLo
 	we can use them to get an absolute position of a cursor (if we log a position in a cursor action).
 */
 const START_OF_8_DOT_BRAILLE = 0x2840;
+const end = START_OF_8_DOT_BRAILLE + 191;
 export const countToBraille = (count = 0) => String.fromCodePoint(START_OF_8_DOT_BRAILLE + count);
 export const brailleToCount = (char = '⡀') => char.charCodeAt(0) - START_OF_8_DOT_BRAILLE;
+export function removeBraille(actionText: string | undefined): string {
+	if (!actionText) return '';
+	if (actionText.startsWith('cursor')) return actionText;
+	return [...actionText]
+		.filter((ch) => {
+			const code = ch.codePointAt(0);
+			return code === undefined || code < START_OF_8_DOT_BRAILLE || code > end;
+		})
+		.join('');
+}

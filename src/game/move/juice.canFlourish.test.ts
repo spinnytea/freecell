@@ -292,7 +292,7 @@ describe('move.juice', () => {
 						' 56 67 27 38 '
 				);
 				expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 4] });
-				expect(game.touch().previousAction.text).toBe('select 8 9C-8H-7C-6D-5S-4H-3C-2H');
+				expect(game.touch().previousAction.text).toBe('select 8⡄ 9C-8H-7C-6D-5S-4H-3C-2H');
 				// BUG (techdebt) parse history is wrong :/
 				// expect(game.history.length).toBe(78);
 
