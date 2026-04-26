@@ -9,7 +9,7 @@ import {
 	isPileSH,
 	parseShorthandCard,
 	parseShorthandPosition_INCOMPLETE,
-	shorthandPosition,
+	shorthandPile,
 	shorthandSequence,
 	sortCardsOG,
 } from '@/game/card/card';
@@ -127,23 +127,25 @@ export interface PreviousAction {
 //  - we treat this text as a structured "source of truth" that human readable (it could have been a json object)
 //  - "move_regex" is basically a "decode" action
 //  - every actionText is an "encode" action (e.g. `calcMoveActionText`, but literally every `ACTION_TEXT_EXAMPLES`)
-const MOVE_REGEX = /^move (\w)(\w) ([\w-]+)→(\S+)$/;
+const MOVE_REGEX = /^move (\w)(.?)(\w)(.?) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish|flourish52) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
-	/^move (\w)(\w) ([\w-]+)→(\S+) \((auto-foundation|flourish|flourish52) (\w+) (\S+)\)$/;
+	/^move (\w)(.?)(\w)(.?) ([\w-]+)→(\S+) \((auto-foundation|flourish|flourish52) (\w+) (\S+)\)$/;
 const CURSOR_REGEX =
 	/^cursor (set|up|left|down|right|stop)( wrap)?( [a-z0-9].?)?( [A-Z0-9][A-Z])?$/;
-const SELECT_REGEX = /^(de)?select( (\w))? ([\w-]+)$/;
+const SELECT_REGEX = /^(de)?select( (\w)(.?))? ([\w-]+)$/;
+
+/**
+	quick-and-dirty check to ensure that, during game replays from history, the `moveByShorthand` actually occurred
+	@example expect(game.moveByShorthand(move).previousAction.text).toMatch(spotCheckMoveRegex(move));
+*/
+export function spotCheckMoveRegex(shorthandMove: string) {
+	return new RegExp(`^move ${shorthandMove[0]}.?${shorthandMove[1]}.?`);
+}
 
 /**
 	read {@link PreviousAction.text} which has the full context of what was moved
 	we can use this text to replaying a move, or (more importantly) undoing a move
-
-	XXX (techdebt) `parsePreviousActionText`, allow for both "undo" and "replay"
-	 - but like, that's not important for now
-	 - yes, i want to do this, but first i should focus on history
-	 - "replay" is already being done during {@link FreeCell.parse}
-	 - check out {@link parseMovesFromHistory}
 */
 export function parseAndUndoPreviousActionText(game: FreeCell, actionText: string): Card[] | null {
 	switch (parsePreviousActionType(actionText).type) {
@@ -222,10 +224,10 @@ export function parseCursorFromPreviousActionText(
 					//  - where the source suit may or may not be in the foundation
 					//  - where the source suit may or may not match the target suit
 					// ---
-					// TODO (5-priority) (refactor) (coords) when we use braille to make history accurate™️, all this testing will be moot
+					// TODO (6-priority) (motivation) (review) (coords) when we use coords to make history accurate™️, all this testing will be moot
 
 					if (toShorthand === 'foundation') {
-						const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+						const shorthand = parseShorthandCard(fromShorthand);
 						const foundation_d0 = [];
 						while (foundation_d0.length < NUMBER_OF_FOUNDATIONS)
 							foundation_d0.push(foundation_d0.length);
@@ -244,7 +246,7 @@ export function parseCursorFromPreviousActionText(
 							cursor.data[0] = foundation_d0[0];
 						}
 					} else {
-						const shorthand = parseShorthandCard(toShorthand[0], toShorthand[1]);
+						const shorthand = parseShorthandCard(toShorthand);
 						const card = findCard(cards, shorthand);
 						if (cursor.fixture !== card.location.fixture) {
 							throw new Error(
@@ -259,7 +261,7 @@ export function parseCursorFromPreviousActionText(
 					if (toShorthand === 'cascade') {
 						cursor.data[1] = 0;
 					} else {
-						const shorthand = parseShorthandCard(toShorthand[0], toShorthand[1]);
+						const shorthand = parseShorthandCard(toShorthand);
 						const card = findCard(cards, shorthand);
 						if (card.location.fixture !== 'foundation') {
 							if (cursor.fixture !== card.location.fixture) {
@@ -281,7 +283,7 @@ export function parseCursorFromPreviousActionText(
 		case 'select':
 		case 'deselect': {
 			const { from, fromShorthand } = parseActionTextSelect(actionText);
-			const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+			const shorthand = parseShorthandCard(fromShorthand);
 			const card = findCard(cards, shorthand);
 			if (from) {
 				const cursor = parseShorthandPosition_INCOMPLETE(from);
@@ -361,7 +363,7 @@ export function parseAltCursorFromPreviousActionText(
 		case 'select':
 		case 'deselect': {
 			const { from, fromShorthand } = parseActionTextSelect(actionText);
-			const shorthand = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+			const shorthand = parseShorthandCard(fromShorthand);
 			const card = findCard(cards, shorthand);
 			if (from) {
 				const cursor = parseShorthandPosition_INCOMPLETE(from);
@@ -405,8 +407,9 @@ export function parseActionTextMove(actionText: string) {
 function _parseActionTextMove(actionText: string) {
 	const match = MOVE_REGEX.exec(actionText);
 	if (match) {
-		const [, from, to, fromShorthand, toShorthand] = match;
-		return { from, to, fromShorthand, toShorthand };
+		// TODO (6-priority) (motivation) (refactor) (coords) how can we use fb, tb?
+		const [, from, fb, to, tb, fromShorthand, toShorthand] = match;
+		return { from, fb, to, tb, fromShorthand, toShorthand };
 	}
 	return undefined;
 }
@@ -414,8 +417,9 @@ function _parseActionTextMove(actionText: string) {
 function _parseActionTextMoveFoundation(actionText: string) {
 	const match = MOVE_FOUNDATION_REGEX.exec(actionText);
 	if (match) {
-		const [, from, to, fromShorthand, toShorthand] = match;
-		return { from, to, fromShorthand, toShorthand };
+		// TODO (6-priority) (motivation) (refactor) (coords) how can we use fb, tb?
+		const [, from, fb, to, tb, fromShorthand, toShorthand, , piles, autoShorthand] = match;
+		return { from, fb, to, tb, fromShorthand, toShorthand, piles, autoShorthand };
 	}
 	return undefined;
 }
@@ -432,8 +436,9 @@ function parseActionTextCursor(actionText: string) {
 function parseActionTextSelect(actionText: string) {
 	const match = SELECT_REGEX.exec(actionText);
 	if (match) {
-		const [, , , from, fromShorthand] = match;
-		return { from, fromShorthand };
+		// TODO (6-priority) (motivation) (refactor) (coords) how can we use fb?
+		const [, , , from, fb, fromShorthand] = match;
+		return { from, fb, fromShorthand };
 	}
 	throw new Error('invalid de/select actionText: ' + actionText);
 }
@@ -464,6 +469,7 @@ export function appendActionToHistory(action: PreviousAction, history: string[])
 	return { action, history: [...history, action.text] };
 }
 
+/** collapse history */
 function collapseHistory(action: PreviousAction, history: string[]): PaH | undefined {
 	const previousText = history.at(-1);
 	if (previousText && action.type === 'move') {
@@ -473,8 +479,8 @@ function collapseHistory(action: PreviousAction, history: string[]): PaH | undef
 			// action.type should parse, the condition is just a formality
 			const a = _parseActionTextMove(action.text);
 			if (a) {
-				const { from: pf, to: pt, fromShorthand: pfs } = p;
-				const { from: af, to: at, fromShorthand: afs, toShorthand: ats } = a;
+				const { from: pf, fb, to: pt, fromShorthand: pfs } = p;
+				const { from: af, to: at, tb, fromShorthand: afs, toShorthand: ats } = a;
 				if (pt === af && pfs === afs) {
 					// move 34 KH→cascade
 					// move 43 KH→cascade
@@ -489,7 +495,7 @@ function collapseHistory(action: PreviousAction, history: string[]): PaH | undef
 
 					// move 34 KH→cascade
 					// move 35 KH→cascade
-					const actionText = `move ${pf}${at} ${pfs}→${ats}`;
+					const actionText = `move ${pf}${fb}${at}${tb} ${pfs}→${ats}`;
 					const nextAction: PreviousAction = { text: actionText, type: 'move' };
 					if (action.gameFunction) nextAction.gameFunction = action.gameFunction; // preserve drag-drop
 					return {
@@ -511,14 +517,14 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 	// const firstFromShorthand = fromShorthands[0];
 	// if (!firstFromShorthand) throw new Error('no card to move: ' + actionText);
 
-	const firstCardSH = parseShorthandCard(fromShorthand[0], fromShorthand[1]);
+	const firstCardSH = parseShorthandCard(fromShorthand);
 	const firstCard = findCard(game.cards, firstCardSH);
-	if (shorthandPosition(firstCard.location) !== to)
+	if (shorthandPile(firstCard.location) !== to)
 		throw new Error(
 			'invalid first card position: ' +
 				actionText +
 				'; ' +
-				shorthandPosition(firstCard.location) +
+				shorthandPile(firstCard.location) +
 				' !== ' +
 				to
 		);
@@ -539,7 +545,7 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 }
 
 function parseActionTextAutoFoundation(actionText: string) {
-	let match = AUTO_FOUNDATION_REGEX.exec(actionText);
+	const match = AUTO_FOUNDATION_REGEX.exec(actionText);
 	if (match) {
 		// match[1] === 'auto-foundation' || match[1] === 'flourish' || match[1] === 'flourish52'
 		const froms = match[2].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
@@ -549,11 +555,12 @@ function parseActionTextAutoFoundation(actionText: string) {
 		return { froms, shorthands };
 	}
 
-	match = MOVE_FOUNDATION_REGEX.exec(actionText);
-	if (match) {
-		// match[5] === 'auto-foundation' || match[5] === 'flourish' || match[5] === 'flourish52'
-		const froms = match[6].split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
-		const shorthands = match[7].split(',').map((s) => parseShorthandCard(s));
+	const match2 = _parseActionTextMoveFoundation(actionText);
+	if (match2) {
+		const { piles, autoShorthand } = match2;
+		// type === 'auto-foundation' || type === 'flourish' || type === 'flourish52'
+		const froms = piles.split('').map((p) => parseShorthandPosition_INCOMPLETE(p));
+		const shorthands = autoShorthand.split(',').map((s) => parseShorthandCard(s));
 		if (froms.length !== shorthands.length)
 			throw new Error('invalid move actionText: ' + actionText);
 		return { froms, shorthands };
@@ -655,21 +662,20 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 
 /** XXX (techdebt) do we need to do any more type checking? I suppose we could just improve the regex */
 export function parsePreviousActionMoveShorthands(actionText: string) {
-	const match = MOVE_FOUNDATION_REGEX.exec(actionText);
+	const match = _parseActionTextMoveFoundation(actionText);
 
 	if (match) {
-		const moveShorthands = match[3].split('-');
-		const autoFoundationShorthands = match[7].split(',');
+		const { fromShorthand, autoShorthand } = match;
 		return {
-			moveShorthands,
-			autoFoundationShorthands,
+			moveShorthands: fromShorthand.split('-'),
+			autoFoundationShorthands: autoShorthand.split(','),
 		};
 	}
 
 	// we don't need special animations/shorthands for regular moves
 	// the default animations are already good enough
 	// (it's just one card or a sequence)
-	// match = MOVE_REGEX.exec(actionText);
+	// match = _parseActionTextMove(actionText);
 
 	return {};
 }
@@ -685,14 +691,14 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 		if (actionText.startsWith('invalid ')) {
 			return null;
 		}
-		let match = MOVE_REGEX.exec(actionText);
+		let match = _parseActionTextMove(actionText);
 		if (match) {
-			const [, from, to] = match;
+			const { from, to } = match;
 			moves.push(`${from}${to}`);
 		} else {
-			match = MOVE_FOUNDATION_REGEX.exec(actionText);
+			match = _parseActionTextMoveFoundation(actionText);
 			if (match) {
-				const [, from, to] = match;
+				const { from, to } = match;
 				moves.push(`${from}${to}`);
 			}
 		}
@@ -709,7 +715,7 @@ export function getCardsThatMoved(game: FreeCell): Card[] {
 
 export function getCardsFromInvalid(
 	previousAction: PreviousAction,
-	/** @deprecated HACK (5-priority) (refactor) (coords) due to incomplete information */
+	/** @deprecated TODO (6-priority) (motivation) (refactor) (coords) due to incomplete information */
 	cursor: CardLocation | null
 ): {
 	fromShorthands: string[];
@@ -736,13 +742,12 @@ export function getCardsFromInvalid(
 			return { fromShorthands, toShorthands: [], pileShorthands: [to_location] };
 		}
 
-		// TODO (5-priority) (techdebt) (motivation) (refactor) (coords) braille if the move text had more precision, we wouldn't need to recompute it
+		// TODO (6-priority) (techdebt) (motivation) (refactor) (coords) coords if the move text had more precision, we wouldn't need to recompute it
 		//  - drag and drop can use any foundation, we can "touch" any foundation
 		//  - parseCursorFromPreviousActionText? (needs cards)
 		//  - game.parseShorthandMove? (needs game)
 		//  - the pileSH simply does not have enough information
-		// TODO (5-priority) (refactor) (coords) use braille (at least for h), remove the curosr arg
-		if (cursor !== null && shorthandPosition(cursor) === to) {
+		if (cursor !== null && shorthandPile(cursor) === to) {
 			return { fromShorthands, toShorthands: [], pileShorthands: [cursor] };
 		}
 

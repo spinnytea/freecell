@@ -282,8 +282,8 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 					${0} | ${{ fixture: 'cell', data: [0] }}       | ${'cursor up wrap'}
 					${1} | ${{ fixture: 'cell', data: [1] }}       | ${'cursor up wrap'}
 					${2} | ${{ fixture: 'cell', data: [1] }}       | ${'cursor up wrap'}
-					${3} | ${{ fixture: 'cascade', data: [3, 0] }} | ${'cursor stop 4 KC'}
-					${4} | ${{ fixture: 'cascade', data: [4, 0] }} | ${'cursor stop 5 QS'}
+					${3} | ${{ fixture: 'cascade', data: [3, 0] }} | ${'cursor stop 4⡀ KC'}
+					${4} | ${{ fixture: 'cascade', data: [4, 0] }} | ${'cursor stop 5⡀ QS'}
 					${5} | ${{ fixture: 'foundation', data: [0] }} | ${'cursor up wrap'}
 					${6} | ${{ fixture: 'foundation', data: [0] }} | ${'cursor up wrap'}
 					${7} | ${{ fixture: 'foundation', data: [1] }} | ${'cursor up wrap'}
@@ -320,7 +320,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 				const game = new FreeCell().dealAll().setCursor({ fixture: 'cascade', data: [2, 6] });
 				expect(game.tableau[2].length).toBe(7);
 				expect(moveCursorWithBasicArrows(game, 'down')).toEqual({
-					action: { text: 'cursor stop 3 AD', type: 'cursor' },
+					action: { text: 'cursor stop 3⡆ AD', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [2, 6] },
 				});
 			});
@@ -673,15 +673,15 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 						${{ fixture: 'cascade', data: [5, 0] }} | ${{ fixture: 'cascade', data: [5, 1] }}  | ${'cursor down'}
 						${{ fixture: 'cascade', data: [6, 0] }} | ${{ fixture: 'cascade', data: [6, 1] }}  | ${'cursor down'}
 						${{ fixture: 'cascade', data: [7, 0] }} | ${{ fixture: 'cascade', data: [7, 1] }}  | ${'cursor down'}
-						${{ fixture: 'cascade', data: [0, 6] }} | ${{ fixture: 'cascade', data: [0, 6] }}  | ${'cursor stop 1 AS'}
-						${{ fixture: 'cascade', data: [1, 6] }} | ${{ fixture: 'cascade', data: [1, 6] }}  | ${'cursor stop 2 AH'}
-						${{ fixture: 'cascade', data: [2, 6] }} | ${{ fixture: 'cascade', data: [2, 6] }}  | ${'cursor stop 3 AD'}
-						${{ fixture: 'cascade', data: [3, 6] }} | ${{ fixture: 'cascade', data: [3, 6] }}  | ${'cursor stop 4 AC'}
-						${{ fixture: 'cascade', data: [4, 5] }} | ${{ fixture: 'cascade', data: [4, 5] }}  | ${'cursor stop 5 2S'}
-						${{ fixture: 'cascade', data: [5, 5] }} | ${{ fixture: 'cascade', data: [5, 5] }}  | ${'cursor stop 6 2H'}
-						${{ fixture: 'cascade', data: [6, 5] }} | ${{ fixture: 'cascade', data: [6, 5] }}  | ${'cursor stop 7 2D'}
-						${{ fixture: 'cascade', data: [7, 5] }} | ${{ fixture: 'cascade', data: [7, 5] }}  | ${'cursor stop 8 2C'}
-						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop k⡀ deck'}
+						${{ fixture: 'cascade', data: [0, 6] }} | ${{ fixture: 'cascade', data: [0, 6] }}  | ${'cursor stop 1⡆ AS'}
+						${{ fixture: 'cascade', data: [1, 6] }} | ${{ fixture: 'cascade', data: [1, 6] }}  | ${'cursor stop 2⡆ AH'}
+						${{ fixture: 'cascade', data: [2, 6] }} | ${{ fixture: 'cascade', data: [2, 6] }}  | ${'cursor stop 3⡆ AD'}
+						${{ fixture: 'cascade', data: [3, 6] }} | ${{ fixture: 'cascade', data: [3, 6] }}  | ${'cursor stop 4⡆ AC'}
+						${{ fixture: 'cascade', data: [4, 5] }} | ${{ fixture: 'cascade', data: [4, 5] }}  | ${'cursor stop 5⡅ 2S'}
+						${{ fixture: 'cascade', data: [5, 5] }} | ${{ fixture: 'cascade', data: [5, 5] }}  | ${'cursor stop 6⡅ 2H'}
+						${{ fixture: 'cascade', data: [6, 5] }} | ${{ fixture: 'cascade', data: [6, 5] }}  | ${'cursor stop 7⡅ 2D'}
+						${{ fixture: 'cascade', data: [7, 5] }} | ${{ fixture: 'cascade', data: [7, 5] }}  | ${'cursor stop 8⡅ 2C'}
+						${{ fixture: 'deck', data: [0] }}       | ${{ fixture: 'deck', data: [0] }}        | ${'cursor stop k'}
 					`('$start.fixture $start.data', ({ start, end, actionText }: { start: CardLocation; end: CardLocation; actionText: string }) => {
 						const g = game.setCursor(start);
 						expect(g.cursor).toEqual(start);

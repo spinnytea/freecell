@@ -11,8 +11,9 @@ import {
 	parseShorthandCard,
 	PileSH,
 	RankList,
+	removeBraille,
 	shorthandCard,
-	shorthandPosition,
+	shorthandPile,
 	shorthandSequenceWithPosition,
 	SuitList,
 } from '@/game/card/card';
@@ -237,7 +238,7 @@ export class FreeCell {
 				throw new Error(
 					`Must have at least as many cascades as foundations (${NUMBER_OF_FOUNDATIONS.toString(10)}); requested "${cascadeCount.toString(10)}".`
 				);
-			// 10 is a magic number - @see shorthandPosition, which we use for history
+			// 10 is a magic number - @see shorthandLocation, shorthandPile, which we use for history
 			if (cascadeCount > 10)
 				throw new Error(
 					`Cannot have more then 10 cascades; requested "${cascadeCount.toString(10)}".`
@@ -268,6 +269,7 @@ export class FreeCell {
 		this.availableMoves = availableMoves ?? null;
 		this.flashCards = flashCards ?? null;
 
+		// TODO (5-priority) (review) (coords) verify that every previousAction.text has coords as appropriate (i.e. shorthandLocation)
 		this.previousAction = action;
 		this.history = history ?? [];
 	}
@@ -424,6 +426,8 @@ export class FreeCell {
 				!selectionNever
 			) {
 				return this.__clone({
+					// TODO (5-priority) (gameplay) (peek) change verb instead of omitting position for peek
+					//  - SELECT_REGEX = (select|peek|deselect)
 					action: { text: 'select ' + shorthandSequenceWithPosition(selection), type: 'select' },
 					selection,
 					availableMoves: findAvailableMoves(this, selection),
@@ -686,7 +690,7 @@ export class FreeCell {
 		}
 
 		// clear selection if touching the same position
-		if (pileSh === shorthandPosition(this.selection.location)) {
+		if (pileSh === shorthandPile(this.selection.location)) {
 			return this.clearSelection();
 		}
 
@@ -701,7 +705,7 @@ export class FreeCell {
 		if (game.previousAction.type !== 'invalid') return game;
 
 		// try to move by shorthand
-		let g = this.moveByShorthand(`${shorthandPosition(this.selection.location)}${pileSh}`, {
+		let g = this.moveByShorthand(`${shorthandPile(this.selection.location)}${pileSh}`, {
 			autoFoundation,
 		});
 		if (g.previousAction.type !== 'invalid') return g;
@@ -914,7 +918,7 @@ export class FreeCell {
 		Flip-flop the cursor across the previous move.
 		This makes it easier to play with the arrow keys.
 
-		For Example: `move 23 KC-QD-JS→cascade`
+		For Example: `move 2⡀3 KC-QD-JS→cascade`
 		 - after: `KS` is in `3`
 		 - before: `KS` was in `2`
 
@@ -941,14 +945,21 @@ export class FreeCell {
 	*/
 	$touchAndMove(
 		location: CardLocation | string = this.cursor,
-		{ allowPeekOnly, stopWithInvalid, autoMove = true }: OptionsNonstandardGameplay = {}
+		{
+			autoFoundation,
+			allowPeekOnly,
+			stopWithInvalid,
+			autoMove = true,
+		}: OptionsNonstandardGameplay = {}
 	): FreeCell | this {
 		if (typeof location === 'string') {
 			location = findCard(this.cards, parseShorthandCard(location)).location;
 		}
 
 		if (autoMove) {
-			return this.setCursor(location).touch({ allowPeekOnly, stopWithInvalid }).autoMove();
+			return this.setCursor(location)
+				.touch({ allowPeekOnly, stopWithInvalid })
+				.autoMove({ autoFoundation });
 		} else {
 			return this.setCursor(location).touch({ allowPeekOnly, stopWithInvalid });
 		}
@@ -989,7 +1000,7 @@ export class FreeCell {
 		if (!g.selection || !g.availableMoves) return g;
 		if (g.selection.peekOnly) return this; // XXX (techdebt) (controls) should we move the cursor?
 		// HACK (techdebt) (controls) using parseShorthandMove just to come up with `to` is a bit overkill
-		const [, to] = parseShorthandMove(g, `${shorthandPosition(g.cursor)}${pileSh}`, g.cursor);
+		const [, to] = parseShorthandMove(g, `${shorthandPile(g.cursor)}${pileSh}`, g.cursor);
 		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
 	}
 
@@ -1101,7 +1112,7 @@ export class FreeCell {
 		if (includeHistory) {
 			str += printHistory(this);
 		} else {
-			str += '\n ' + this.previousAction.text;
+			str += '\n ' + removeBraille(this.previousAction.text);
 		}
 
 		return str;
@@ -1158,9 +1169,9 @@ export class FreeCell {
 		const nextCard = (spaces: (string | undefined)[]) => {
 			if (line.length < 3) throw new Error('not enough tokens');
 			spaces.push(line.pop());
-			const r = line.pop();
-			const s = line.pop();
-			const rs = parseShorthandCard(r, s);
+			const r = line.pop() ?? '';
+			const s = line.pop() ?? '';
+			const rs = parseShorthandCard(r + s);
 			if (!rs) return null;
 			return getCard(rs);
 		};

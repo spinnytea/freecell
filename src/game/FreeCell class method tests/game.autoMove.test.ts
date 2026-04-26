@@ -601,10 +601,10 @@ describe('game.autoMove', () => {
 					' move 25 QD→KS'
 			);
 			expect(game.previousAction).toEqual({
-				text: 'move 25 QD→KS',
+				text: 'move 2⡁5⡀ QD→KS',
 				type: 'move',
 			});
-			expect(game.history).toEqual(['hand-jammed', 'move 25 QD→KS']);
+			expect(game.history).toEqual(['hand-jammed', 'move 2⡁5⡀ QD→KS']);
 
 			expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
@@ -630,14 +630,14 @@ describe('game.autoMove', () => {
 					' move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)'
 			);
 			expect(game.previousAction).toEqual({
-				text: 'move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)',
+				text: 'move 2⡁5⡀ QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)',
 				type: 'move-foundation',
 				tweenCards: [
 					{ rank: 'queen', suit: 'diamonds', location: { fixture: 'cascade', data: [4, 1] } },
 					{ rank: 'jack', suit: 'spades', location: { fixture: 'cascade', data: [4, 2] } },
 				],
 			});
-			expect(game.history).toEqual(['hand-jammed', 'move 25 QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)']);
+			expect(game.history).toEqual(['hand-jammed', 'move 2⡁5⡀ QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)']);
 
 			expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
@@ -667,7 +667,7 @@ describe('game.autoMove', () => {
 				text: 'auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS',
 				type: 'auto-foundation',
 			});
-			expect(game.history).toEqual(['hand-jammed', 'move 25 QD-JS→KS', 'auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS']);
+			expect(game.history).toEqual(['hand-jammed', 'move 2⡁5⡀ QD-JS→KS', 'auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS']);
 
 			expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
@@ -690,10 +690,10 @@ describe('game.autoMove', () => {
 			);
 			// select a card
 			game = game.setCursor({ fixture: 'cascade', data: [7, 5] }).touch();
-			expect(game.previousAction.text).toBe('select 8 7D');
+			expect(game.previousAction.text).toBe('select 8⡅ 7D');
 			// invalid move
 			game = game.setCursor({ fixture: 'cascade', data: [5, 5] }).touch({ stopWithInvalid: true });
-			expect(game.previousAction.text).toBe('invalid move 86 7D→9C');
+			expect(game.previousAction.text).toBe('invalid move 8⡅6⡅ 7D→9C');
 			// do not move card
 			game = game.autoMove({ autoFoundation: false });
 			expect(game.print()).toBe(

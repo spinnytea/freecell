@@ -12,7 +12,8 @@ import {
 	parseShorthandPosition_INCOMPLETE,
 	PileSH,
 	shorthandCard,
-	shorthandPosition,
+	shorthandLocation,
+	shorthandPile,
 	shorthandSequence,
 	Suit,
 } from '@/game/card/card';
@@ -729,9 +730,13 @@ export function calcMoveActionText(from: CardSequence, to: CardSequence): string
 	const from_location = from.cards[0].location;
 	const to_card: Card | undefined = to.cards.at(to.cards.length - 1);
 	const to_location = to_card?.location ?? to.location;
-	const shorthandMove = `${shorthandPosition(from_location)}${shorthandPosition(to_location)}`;
-	// TODO (techdebt) (history) (shorthandMove) should the summary use `to_location.fixture` or `shorthandPosition(to_location)`
-	return `move ${shorthandMove} ${shorthandSequence(from)}→${to_card ? shorthandCard(to_card) : to_location.fixture}`;
+	const to_sh =
+		!!to_card || to_location.fixture === 'foundation'
+			? shorthandLocation(to_location)
+			: shorthandPile(to_location);
+	const to_sequence = to_card ? shorthandCard(to_card) : to_location.fixture;
+	const shorthandMove = `${shorthandLocation(from_location)}${to_sh}`;
+	return `move ${shorthandMove} ${shorthandSequence(from)}→${to_sequence}`;
 }
 
 export function calcAutoFoundationActionText(
@@ -740,17 +745,22 @@ export function calcAutoFoundationActionText(
 	isFlourish52: boolean
 ): string {
 	const movedCardsStr = moved.map((card) => shorthandCard(card)).join(',');
-	const movedPositionsStr = moved.map((card) => shorthandPosition(card.location)).join('');
+	const movedPositionsStr = moved.map((card) => shorthandPile(card.location)).join('');
 	const firstWord = isFlourish52 ? 'flourish52' : isFlourish ? 'flourish' : 'auto-foundation';
 	return `${firstWord} ${movedPositionsStr} ${movedCardsStr}`;
 }
 
-/*
+/**
 	position info is entirely superfluous, no need to add it to up/left/down/right
 
 	we don't need it in set/stop either,
 	but it does make a few things nicer to validate for having it there
 	(e.g. $toggleCursor)
+
+	// TODO (5-priority) (coords) (test) unit tests should match move text from/to
+	//  - the `to` should be the same
+
+	@param location - where the cursor will be, it may not match `game.cursor`
 */
 export function calcCursorActionText(
 	game: FreeCell,
@@ -761,13 +771,13 @@ export function calcCursorActionText(
 	const cardSuffix = card ? ` ${shorthandCard(card)}` : '';
 	switch (location.fixture) {
 		case 'deck':
-			return `cursor ${suffix} ${shorthandPosition(location, true)}${cardSuffix || ' deck'}`;
+			return `cursor ${suffix} ${card ? shorthandLocation(location) : shorthandPile(location)}${cardSuffix}`;
 		case 'cell':
-			return `cursor ${suffix} ${shorthandPosition(location)}${cardSuffix}`;
+			return `cursor ${suffix} ${shorthandPile(location)}${cardSuffix}`;
 		case 'cascade':
-			return `cursor ${suffix} ${shorthandPosition(location)}${cardSuffix}`;
+			return `cursor ${suffix} ${card ? shorthandLocation(location) : shorthandPile(location)}${cardSuffix}`;
 		case 'foundation':
-			return `cursor ${suffix} ${shorthandPosition(location, !card)}${cardSuffix}`;
+			return `cursor ${suffix} ${shorthandLocation(location)}${cardSuffix}`;
 	}
 	return `cursor ${suffix}`;
 }

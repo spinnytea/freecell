@@ -1,15 +1,19 @@
+import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import {
 	brailleToCount,
 	Card,
+	CardLocation,
 	cloneCards,
 	countToBraille,
 	initializeDeck,
 	isAdjacent,
 	parseShorthandCard,
+	parseShorthandPosition_INCOMPLETE,
 	Rank,
 	RankList,
 	shorthandCard,
-	shorthandPosition,
+	shorthandLocation,
+	shorthandPile,
 	shorthandSequence,
 	sortCardsBySuitAndRank,
 	sortCardsOG,
@@ -136,23 +140,21 @@ describe('game/card', () => {
 		});
 
 		test('parseShorthandCard empty', () => {
-			expect(parseShorthandCard(' ', ' ')).toBe(null);
+			expect(parseShorthandCard('  ')).toBe(null);
 		});
 
-		test('parseShorthandCard throw', () => {
-			expect(() => parseShorthandCard(' ', undefined)).toThrow('invalid rank shorthand: " "');
-			expect(() => parseShorthandCard(undefined, undefined)).toThrow('invalid rank shorthand: "undefined"');
-			expect(() => parseShorthandCard('8', ' ')).toThrow('invalid suit shorthand: " "');
-			expect(() => parseShorthandCard('8', undefined)).toThrow('invalid suit shorthand: "undefined"');
+		test('parseShorthandCard invalid', () => {
+			expect(parseShorthandCard(' ')).toBe(null);
+			expect(parseShorthandCard(undefined)).toBe(null);
+			expect(parseShorthandCard('8 ')).toBe(null);
+			expect(parseShorthandCard('8')).toBe(null);
 		});
 	});
 
-	describe('shorthandPosition', () => {
+	describe('shorthandLocation / shorthandPile', () => {
 		describe('deck', () => {
 			test.each`
 				d0    | shorthand | shorthandD0
-				${-2} | ${'k'}    | ${'k'}
-				${-1} | ${'k'}    | ${'k'}
 				${0}  | ${'k'}    | ${'k⡀'}
 				${1}  | ${'k'}    | ${'k⡁'}
 				${2}  | ${'k'}    | ${'k⡂'}
@@ -172,22 +174,25 @@ describe('game/card', () => {
 				${51} | ${'k'}    | ${'k⡳'}
 				${55} | ${'k'}    | ${'k⡷'}
 			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: string; shorthandD0: string }) => {
-				expect(shorthandPosition({ fixture: 'deck', data: [d0] })).toBe(shorthand);
-				expect(shorthandPosition({ fixture: 'deck', data: [d0] }, true)).toBe(shorthandD0);
+				const location: CardLocation = { fixture: 'deck', data: [d0] };
+				expect(shorthandPile(location)).toBe(shorthand);
+				expect(shorthandLocation(location)).toBe(shorthandD0);
+				expect(parseShorthandPosition_INCOMPLETE(shorthandPile(location))).toEqual({ fixture: 'deck', data: [0] });
+				expect(parseShorthandPosition_INCOMPLETE(shorthandLocation(location))).toEqual(location);
+			});
+
+			test.each`
+				d0    | shorthand | shorthandD0
+				${-2} | ${'k'}    | ${'k'}
+				${-1} | ${'k'}    | ${'k'}
+			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: string; shorthandD0: string }) => {
+				const location: CardLocation = { fixture: 'deck', data: [d0] };
+				expect(shorthandPile(location)).toBe(shorthand);
+				expect(shorthandLocation(location)).toBe(shorthandD0);
 			});
 		});
 
 		describe('cell', () => {
-			test.each`
-				d0    | error
-				${-2} | ${'invalid position: {"fixture":"cell","data":[-2]}'}
-				${-1} | ${'invalid position: {"fixture":"cell","data":[-1]}'}
-				${6}  | ${'invalid position: {"fixture":"cell","data":[6]}'}
-				${7}  | ${'invalid position: {"fixture":"cell","data":[7]}'}
-			`('$d0', ({ d0, error }: { d0: number; error: string }) => {
-				expect(() => shorthandPosition({ fixture: 'cell', data: [d0] })).toThrow(error);
-			});
-
 			test.each`
 				d0   | shorthand
 				${0} | ${'a'}
@@ -197,41 +202,57 @@ describe('game/card', () => {
 				${4} | ${'e'}
 				${5} | ${'f'}
 			`('$d0', ({ d0, shorthand }: { d0: number; shorthand: string }) => {
-				expect(shorthandPosition({ fixture: 'cell', data: [d0] })).toBe(shorthand);
-				expect(shorthandPosition({ fixture: 'cell', data: [d0] }, true)).toBe(shorthand);
+				const location: CardLocation = { fixture: 'cell', data: [d0] };
+				expect(shorthandPile(location)).toBe(shorthand);
+				expect(shorthandLocation(location)).toBe(shorthand);
+				expect(parseShorthandPosition_INCOMPLETE(shorthandPile(location))).toEqual(location);
+				expect(parseShorthandPosition_INCOMPLETE(shorthandLocation(location))).toEqual(location);
+			});
+
+			test.each`
+				d0    | error
+				${-2} | ${'invalid position: {"fixture":"cell","data":[-2]}'}
+				${-1} | ${'invalid position: {"fixture":"cell","data":[-1]}'}
+				${6}  | ${'invalid position: {"fixture":"cell","data":[6]}'}
+				${7}  | ${'invalid position: {"fixture":"cell","data":[7]}'}
+			`('$d0', ({ d0, error }: { d0: number; error: string }) => {
+				const location: CardLocation = { fixture: 'cell', data: [d0] };
+				expect(() => shorthandPile(location)).toThrow(error);
+				expect(() => shorthandLocation(location)).toThrow(error);
 			});
 		});
 
 		describe('foundation', () => {
 			test.each`
+				d0   | shorthand | shorthandD0
+				${0} | ${'h'}    | ${'h⡀'}
+				${1} | ${'h'}    | ${'h⡁'}
+				${2} | ${'h'}    | ${'h⡂'}
+				${3} | ${'h'}    | ${'h⡃'}
+				${4} | ${'h'}    | ${'h⡄'}
+				${5} | ${'h'}    | ${'h⡅'}
+				${6} | ${'h'}    | ${'h⡆'}
+				${7} | ${'h'}    | ${'h⡇'}
+			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: string; shorthandD0: string }) => {
+				const location: CardLocation = { fixture: 'foundation', data: [d0] };
+				expect(shorthandPile(location)).toBe(shorthand);
+				expect(shorthandLocation(location)).toBe(shorthandD0);
+				expect(parseShorthandPosition_INCOMPLETE(shorthandPile(location))).toEqual({ fixture: 'foundation', data: [0] });
+				expect(parseShorthandPosition_INCOMPLETE(shorthandLocation(location))).toEqual(location);
+			});
+
+			test.each`
 				d0    | shorthand | shorthandD0
 				${-2} | ${'h'}    | ${'h'}
 				${-1} | ${'h'}    | ${'h'}
-				${0}  | ${'h'}    | ${'h⡀'}
-				${1}  | ${'h'}    | ${'h⡁'}
-				${2}  | ${'h'}    | ${'h⡂'}
-				${3}  | ${'h'}    | ${'h⡃'}
-				${4}  | ${'h'}    | ${'h⡄'}
-				${5}  | ${'h'}    | ${'h⡅'}
-				${6}  | ${'h'}    | ${'h⡆'}
-				${7}  | ${'h'}    | ${'h⡇'}
 			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: string; shorthandD0: string }) => {
-				expect(shorthandPosition({ fixture: 'foundation', data: [d0] })).toBe(shorthand);
-				expect(shorthandPosition({ fixture: 'foundation', data: [d0] }, true)).toBe(shorthandD0);
+				const location: CardLocation = { fixture: 'foundation', data: [d0] };
+				expect(shorthandPile(location)).toBe(shorthand);
+				expect(shorthandLocation(location)).toBe(shorthandD0);
 			});
 		});
 
 		describe('cascade', () => {
-			test.each`
-				d0    | error
-				${-2} | ${'invalid position: {"fixture":"cascade","data":[-2,1]}'}
-				${-1} | ${'invalid position: {"fixture":"cascade","data":[-1,1]}'}
-				${10} | ${'invalid position: {"fixture":"cascade","data":[10,1]}'}
-				${11} | ${'invalid position: {"fixture":"cascade","data":[11,1]}'}
-			`('$d0', ({ d0, error }: { d0: number; error: string }) => {
-				expect(() => shorthandPosition({ fixture: 'cascade', data: [d0, 1] })).toThrow(error);
-			});
-
 			describe.each`
 				d0   | shorthand
 				${0} | ${'1'}
@@ -247,7 +268,6 @@ describe('game/card', () => {
 			`('$d0', ({ d0, shorthand }: { d0: number; shorthand: string }) => {
 				test.each`
 					d1    | braille
-					${-1} | ${''}
 					${0}  | ${'⡀'}
 					${1}  | ${'⡁'}
 					${10} | ${'⡊'}
@@ -255,9 +275,43 @@ describe('game/card', () => {
 					${20} | ${'⡔'}
 					${55} | ${'⡷'}
 				`('$d1', ({ d1, braille }: { d1: number; braille: string }) => {
-					expect(shorthandPosition({ fixture: 'cascade', data: [d0, d1] })).toBe(shorthand);
-					expect(shorthandPosition({ fixture: 'cascade', data: [d0, d1] }, true)).toBe(shorthand + braille);
+					const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
+					expect(shorthandPile(location)).toBe(shorthand);
+					expect(shorthandLocation(location)).toBe(shorthand + braille);
+					expect(parseShorthandPosition_INCOMPLETE(shorthandPile(location))).toEqual({ fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] });
+					expect(parseShorthandPosition_INCOMPLETE(shorthandLocation(location))).toEqual(location);
 				});
+			});
+
+			test.each`
+				d0   | d1    | shorthand
+				${0} | ${-1} | ${'1'}
+				${1} | ${-1} | ${'2'}
+				${2} | ${-1} | ${'3'}
+				${3} | ${-1} | ${'4'}
+				${4} | ${-1} | ${'5'}
+				${5} | ${-1} | ${'6'}
+				${6} | ${-1} | ${'7'}
+				${7} | ${-1} | ${'8'}
+				${8} | ${-1} | ${'9'}
+				${9} | ${-1} | ${'0'}
+			`('$d0', ({ d0, d1, shorthand }: { d0: number; d1: number; shorthand: string }) => {
+				const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
+				expect(shorthandPile(location)).toBe(shorthand);
+				expect(shorthandLocation(location)).toBe(shorthand);
+				expect(parseShorthandPosition_INCOMPLETE(shorthandPile(location))).toEqual({ fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] });
+				expect(parseShorthandPosition_INCOMPLETE(shorthandLocation(location))).toEqual({ fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] });
+			});
+
+			test.each`
+				d0    | error
+				${-2} | ${'invalid position: {"fixture":"cascade","data":[-2,1]}'}
+				${-1} | ${'invalid position: {"fixture":"cascade","data":[-1,1]}'}
+				${10} | ${'invalid position: {"fixture":"cascade","data":[10,1]}'}
+				${11} | ${'invalid position: {"fixture":"cascade","data":[11,1]}'}
+			`('$d0', ({ d0, error }: { d0: number; error: string }) => {
+				expect(() => shorthandPile({ fixture: 'cascade', data: [d0, 1] })).toThrow(error);
+				expect(() => shorthandLocation({ fixture: 'cascade', data: [d0, 1] })).toThrow(error);
 			});
 		});
 	});

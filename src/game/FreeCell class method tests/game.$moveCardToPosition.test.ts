@@ -1,4 +1,4 @@
-import { shorthandPosition } from '@/game/card/card';
+import { shorthandPile } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 
 /*
@@ -46,7 +46,7 @@ describe('game.$moveCardToPosition', () => {
 		// ~~maybe throwing _is_ fine if we can't get there~~
 		expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
 		expect(game.$selectCard('AH').cursor).toEqual({ fixture: 'deck', data: [2] });
-		expect(shorthandPosition(game.cursor)).toBe('k'); // REVIEW (techdebt) (deck) we have a deck shorthand now
+		expect(shorthandPile(game.cursor)).toBe('k'); // REVIEW (techdebt) (deck) we have a deck shorthand now
 		expect(game.$moveCardToPosition('AH', 'k')).toBe(game);
 
 		game = game.dealAll();
@@ -275,17 +275,17 @@ describe('game.$moveCardToPosition', () => {
 			});
 			game = game.$moveCardToPosition('KC', '5');
 			expect(game.previousAction).toEqual({
-				text: 'invalid move 45 KC-QD-JS-TD-9C-8D-7C→cascade',
+				text: 'invalid move 4⡆5 KC-QD-JS-TD-9C-8D-7C→cascade',
 				type: 'invalid',
 			});
 			game = game.$moveCardToPosition('TD', '5');
 			expect(game.previousAction).toEqual({
-				text: 'invalid move 45 TD-9C-8D-7C→cascade',
+				text: 'invalid move 4⡉5 TD-9C-8D-7C→cascade',
 				type: 'invalid',
 			});
 			game = game.$moveCardToPosition('9C', '5');
 			expect(game.previousAction).toEqual({
-				text: 'move 45 9C-8D-7C→cascade',
+				text: 'move 4⡊5 9C-8D-7C→cascade',
 				type: 'move',
 			});
 		});

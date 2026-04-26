@@ -136,7 +136,7 @@ describe('prioritizeAvailableMoves', () => {
 					' hand-jammed'
 			);
 			game = game.touch();
-			expect(game.previousAction.text).toBe('select 4 JS');
+			expect(game.previousAction.text).toBe('select 4⡀ JS');
 			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
 				['a', 'cell', -1],
 				['b', 'cell', -1],
@@ -155,12 +155,12 @@ describe('prioritizeAvailableMoves', () => {
 			]);
 			game = game.autoMove({ autoFoundation: false });
 			// if we don't move down, we select the sequence, we want to move the solo card for now
-			expect(game.touch().previousAction.text).toBe('select 3 QD-JS');
+			expect(game.touch().previousAction.text).toBe('select 3⡀ QD-JS');
 			game = game.moveCursor('down').touch();
-			expect(game.previousAction.text).toBe('select 3 JS');
+			expect(game.previousAction.text).toBe('select 3⡁ JS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([['6⡀', 11]]);
 			game = game.autoMove({ autoFoundation: false }).moveCursor('down').touch();
-			expect(game.previousAction.text).toBe('select 6 JS');
+			expect(game.previousAction.text).toBe('select 6⡁ JS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([['3⡀', 6]]);
 			expect(game.print()).toBe(
 				'' + //
@@ -182,19 +182,19 @@ describe('prioritizeAvailableMoves', () => {
 					' hand-jammed'
 			);
 			game = game.touch();
-			expect(game.previousAction.text).toBe('select 7 JS');
+			expect(game.previousAction.text).toBe('select 7⡁ JS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['3⡀', 7],
 				['6⡀', 13],
 			]);
 			game = game.autoMove({ autoFoundation: false });
 			// if we don't move down, we select the sequence, we want to move the solo card for now
-			expect(game.touch().previousAction.text).toBe('select 6 QH-JS');
+			expect(game.touch().previousAction.text).toBe('select 6⡀ QH-JS');
 			game = game.moveCursor('down').touch();
-			expect(game.previousAction.text).toBe('select 6 JS');
+			expect(game.previousAction.text).toBe('select 6⡁ JS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([['3⡀', 6]]);
 			game = game.autoMove({ autoFoundation: false }).moveCursor('down').touch();
-			expect(game.previousAction.text).toBe('select 3 JS');
+			expect(game.previousAction.text).toBe('select 3⡁ JS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([['6⡀', 11]]);
 			expect(game.print()).toBe(
 				'' + //
@@ -217,13 +217,13 @@ describe('prioritizeAvailableMoves', () => {
 					' hand-jammed'
 			);
 			game = game.touch();
-			expect(game.previousAction.text).toBe('select 4 QD-JS');
+			expect(game.previousAction.text).toBe('select 4⡀ QD-JS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([['3⡀', 13]]);
 			game = game.autoMove({ autoFoundation: false });
 			// if we don't move down, we select the larger sequence
-			expect(game.touch().previousAction.text).toBe('select 3 KS-QD-JS');
+			expect(game.touch().previousAction.text).toBe('select 3⡀ KS-QD-JS');
 			game = game.moveCursor('down').touch();
-			expect(game.previousAction.text).toBe('select 3 QD-JS');
+			expect(game.previousAction.text).toBe('select 3⡁ QD-JS');
 			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
 				['1', 'cascade:empty', 11],
 				['2', 'cascade:empty', 13],
@@ -232,7 +232,7 @@ describe('prioritizeAvailableMoves', () => {
 				['8', 'cascade:empty', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
-			expect(game.previousAction.text).toBe('select 4 QD-JS');
+			expect(game.previousAction.text).toBe('select 4⡀ QD-JS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([['3⡀', 13]]);
 			expect(game.print()).toBe(
 				'' + //
@@ -255,7 +255,7 @@ describe('prioritizeAvailableMoves', () => {
 			expect(game.cells.length).toBe(1);
 			expect(game.tableau.length).toBe(5);
 			game = game.touch();
-			expect(game.previousAction.text).toBe('select 3 KS');
+			expect(game.previousAction.text).toBe('select 3⡀ KS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['2', 4],
@@ -263,7 +263,7 @@ describe('prioritizeAvailableMoves', () => {
 				['5', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
-			expect(game.previousAction.text).toBe('select 4 KS');
+			expect(game.previousAction.text).toBe('select 4⡀ KS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['2', 4],
@@ -290,7 +290,7 @@ describe('prioritizeAvailableMoves', () => {
 			expect(game.cells.length).toBe(1);
 			expect(game.tableau.length).toBe(5);
 			game = game.touch();
-			expect(game.previousAction.text).toBe('select 3 KS');
+			expect(game.previousAction.text).toBe('select 3⡁ KS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['2', 7],
@@ -298,14 +298,14 @@ describe('prioritizeAvailableMoves', () => {
 				['5', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
-			expect(game.previousAction.text).toBe('select 4 KS');
+			expect(game.previousAction.text).toBe('select 4⡀ KS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['2', 4],
 				['5', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
-			expect(game.previousAction.text).toBe('select 5 KS');
+			expect(game.previousAction.text).toBe('select 5⡀ KS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['2', 4],
@@ -313,28 +313,28 @@ describe('prioritizeAvailableMoves', () => {
 			]);
 			// …do an extra lap because of deprecated king→cascade:empty rightJustifyAvailableMovesPriority
 			game = game.autoMove({ autoFoundation: false }).touch();
-			expect(game.previousAction.text).toBe('select 1 KS');
+			expect(game.previousAction.text).toBe('select 1⡀ KS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['2', 9],
 				['4', 7],
 				['5', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
-			expect(game.previousAction.text).toBe('select 2 KS');
+			expect(game.previousAction.text).toBe('select 2⡀ KS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['4', 7],
 				['5', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
-			expect(game.previousAction.text).toBe('select 4 KS');
+			expect(game.previousAction.text).toBe('select 4⡀ KS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['2', 4],
 				['5', 6],
 			]);
 			game = game.autoMove({ autoFoundation: false }).touch();
-			expect(game.previousAction.text).toBe('select 5 KS');
+			expect(game.previousAction.text).toBe('select 5⡀ KS');
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['1', 5],
 				['2', 4],
@@ -371,7 +371,7 @@ describe('prioritizeAvailableMoves', () => {
 				' move 68 QD-JS-TD-9S-8D-7S-6D-5S-4D-3S→KS'
 		).touch({ autoMove: false });
 		expect(game.previousAction).toEqual({
-			text: 'select 6 KC',
+			text: 'select 6⡀ KC',
 			type: 'select',
 		});
 		expect(availableMovesMinimized(game.availableMoves)).toEqual([['h⡁', 3]]);
@@ -406,16 +406,16 @@ describe('prioritizeAvailableMoves', () => {
 						' hand-jammed'
 				).touch();
 				expect(game.previousAction).toEqual({
-					text: 'select 4 JS',
+					text: 'select 4⡀ JS',
 					type: 'select',
 				});
 				expect(availableMovesMinimized(game.availableMoves)).toEqual([
 					['3⡁', 2],
 					['6⡀', 1],
 				]);
-				expect(game.autoMove().previousAction.text).toBe('move 43 JS→QD');
+				expect(game.autoMove().previousAction.text).toBe('move 4⡀3⡁ JS→QD');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('JS').autoMove().previousAction.text).toBe('move 46 JS→QH');
+				expect(game.autoMove().$selectCard('JS').autoMove().previousAction.text).toBe('move 4⡀6⡀ JS→QH');
 			});
 
 			test('previous test b', () => {
@@ -427,16 +427,16 @@ describe('prioritizeAvailableMoves', () => {
 						' hand-jammed'
 				).touch();
 				expect(game.previousAction).toEqual({
-					text: 'select 7 JS',
+					text: 'select 7⡁ JS',
 					type: 'select',
 				});
 				expect(availableMovesMinimized(game.availableMoves)).toEqual([
 					['3⡁', 2],
 					['6⡀', 1],
 				]);
-				expect(game.autoMove().previousAction.text).toBe('move 73 JS→QD');
+				expect(game.autoMove().previousAction.text).toBe('move 7⡁3⡁ JS→QD');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('JS').autoMove().previousAction.text).toBe('move 76 JS→QH');
+				expect(game.autoMove().$selectCard('JS').autoMove().previousAction.text).toBe('move 7⡁6⡀ JS→QH');
 			});
 		});
 
@@ -457,16 +457,16 @@ describe('prioritizeAvailableMoves', () => {
 						' cursor set 7 JH'
 				).touch();
 				expect(game.previousAction).toEqual({
-					text: 'select 7 JH-TS-9D-8C',
+					text: 'select 7⡄ JH-TS-9D-8C',
 					type: 'select',
 				});
 				expect(availableMovesMinimized(game.availableMoves)).toEqual([
 					['3⡀', 2],
 					['6⡁', 1],
 				]);
-				expect(game.autoMove().previousAction.text).toBe('move 73 JH-TS-9D-8C→QS');
+				expect(game.autoMove().previousAction.text).toBe('move 7⡄3⡀ JH-TS-9D-8C→QS');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('JH').autoMove().previousAction.text).toBe('move 76 JH-TS-9D-8C→QC');
+				expect(game.autoMove().$selectCard('JH').autoMove().previousAction.text).toBe('move 7⡄6⡁ JH-TS-9D-8C→QC');
 			});
 		});
 
@@ -496,9 +496,9 @@ describe('prioritizeAvailableMoves', () => {
 					['1⡄', 8],
 					['4⡂', 5],
 				]);
-				expect(game.autoMove().previousAction.text).toBe('move d1 3D→4C');
+				expect(game.autoMove().previousAction.text).toBe('move d1⡄ 3D→4C');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('3D').autoMove().previousAction.text).toBe('move d4 3D→4S');
+				expect(game.autoMove().$selectCard('3D').autoMove().previousAction.text).toBe('move d4⡂ 3D→4S');
 			});
 		});
 
@@ -521,16 +521,16 @@ describe('prioritizeAvailableMoves', () => {
 						' cursor set 1 JH'
 				).touch();
 				expect(game.previousAction).toEqual({
-					text: 'select 1 JH',
+					text: 'select 1⡃ JH',
 					type: 'select',
 				});
 				expect(availableMovesMinimized(game.availableMoves)).toEqual([
 					['5⡁', 2],
 					['6⡅', 1],
 				]);
-				expect(game.autoMove().previousAction.text).toBe('move 15 JH→QC');
+				expect(game.autoMove().previousAction.text).toBe('move 1⡃5⡁ JH→QC');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('JH').autoMove().previousAction.text).toBe('move 16 JH→QS');
+				expect(game.autoMove().$selectCard('JH').autoMove().previousAction.text).toBe('move 1⡃6⡅ JH→QS');
 			});
 
 			test('cursor set 1 TS', () => {
@@ -552,16 +552,16 @@ describe('prioritizeAvailableMoves', () => {
 						' cursor set 1 TS'
 				).touch();
 				expect(game.previousAction).toEqual({
-					text: 'select 1 TS',
+					text: 'select 1⡀ TS',
 					type: 'select',
 				});
 				expect(availableMovesMinimized(game.availableMoves)).toEqual([
 					['5⡂', 2],
 					['6⡆', 1],
 				]);
-				expect(game.autoMove().previousAction.text).toBe('move 15 TS→JH');
+				expect(game.autoMove().previousAction.text).toBe('move 1⡀5⡂ TS→JH');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('TS').autoMove().previousAction.text).toBe('move 16 TS→JD');
+				expect(game.autoMove().$selectCard('TS').autoMove().previousAction.text).toBe('move 1⡀6⡆ TS→JD');
 			});
 
 			test('cursor set 4 6S', () => {
@@ -583,16 +583,16 @@ describe('prioritizeAvailableMoves', () => {
 						' cursor set 4 6S'
 				).touch();
 				expect(game.previousAction).toEqual({
-					text: 'select 4 6S',
+					text: 'select 4⡁ 6S',
 					type: 'select',
 				});
 				expect(availableMovesMinimized(game.availableMoves)).toEqual([
 					['3⡄', 1],
 					['5⡆', 2],
 				]);
-				expect(game.autoMove().previousAction.text).toBe('move 45 6S→7D');
+				expect(game.autoMove().previousAction.text).toBe('move 4⡁5⡆ 6S→7D');
 				// move again, uses other option, collapses move
-				expect(game.autoMove().$selectCard('6S').autoMove().previousAction.text).toBe('move 43 6S→7H');
+				expect(game.autoMove().$selectCard('6S').autoMove().previousAction.text).toBe('move 4⡁3⡄ 6S→7H');
 			});
 		});
 
@@ -618,16 +618,16 @@ describe('prioritizeAvailableMoves', () => {
 				.touchByPile('2');
 			expect(game.history.length).toBe(12);
 			expect(game.previousAction).toEqual({
-				text: 'select 2 8H',
+				text: 'select 2⡄ 8H',
 				type: 'select',
 			});
 			expect(availableMovesMinimized(game.availableMoves)).toEqual([
 				['3⡇', 1], // this is what happened, move 23 8H→9C
 				['5⡄', 2], // this is preferred, move 25 8H→9S
 			]);
-			expect(game.autoMove().previousAction.text).toBe('move 25 8H→9S');
+			expect(game.autoMove().previousAction.text).toBe('move 2⡄5⡄ 8H→9S');
 			// move again, uses other option, collapses move
-			expect(game.autoMove().$selectCard('8H').autoMove().previousAction.text).toBe('move 23 8H→9C');
+			expect(game.autoMove().$selectCard('8H').autoMove().previousAction.text).toBe('move 2⡄3⡇ 8H→9C');
 		});
 
 		test('freeplay #29327', () => {
@@ -662,9 +662,9 @@ describe('prioritizeAvailableMoves', () => {
 				['3⡃', 1], // this is what happened, move 23 8H→9C
 				['4⡀', 2], // this is preferred, move 25 8H→9S
 			]);
-			expect(game.autoMove().previousAction.text).toBe('move b4 QD→KC');
+			expect(game.autoMove().previousAction.text).toBe('move b4⡀ QD→KC');
 			// move again, uses other option, collapses move
-			expect(game.autoMove().$selectCard('QD').autoMove().previousAction.text).toBe('move b3 QD→KS');
+			expect(game.autoMove().$selectCard('QD').autoMove().previousAction.text).toBe('move b3⡃ QD→KS');
 		});
 	});
 
