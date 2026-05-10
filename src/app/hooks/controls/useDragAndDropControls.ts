@@ -286,7 +286,7 @@ export function _overlappingAvailableMove(
 	dropTargets: DropTarget[],
 	{ cardHeight, cardWidth }: FixtureSizes
 ): CardLocation | null {
-	// must move at least a third of a card to count
+	// must move mouse at least a third of a card width to count
 	if (Math.abs(draggedX || 0) + Math.abs(draggedY || 0) < cardWidth / 3) {
 		dropTargets.forEach((dropTarget) => {
 			dropTarget.isOverlapping = false;

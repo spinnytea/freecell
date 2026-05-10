@@ -409,6 +409,7 @@ describe('game.parse', () => {
 
 		describe('end of game', () => {
 			// BUG (6-priority) (coords) (history) (parse) test.skip - previousAction.text is copy from print, does not include coords
+			// eslint-disable-next-line jest/no-disabled-tests
 			test.skip('previousAction.text', () => {
 				let game = FreeCell.parse(
 					'' + //
@@ -776,6 +777,7 @@ describe('game.parse', () => {
 	describe('no history, just previous', () => {
 		describe('undo the one move', () => {
 			// BUG (6-priority) (coords) (history) (parse) test.skip
+			// eslint-disable-next-line jest/no-disabled-tests
 			test.skip('valid move (success)', () => {
 				const game = FreeCell.parse(
 					'' + //

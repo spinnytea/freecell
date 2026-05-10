@@ -218,7 +218,7 @@ export function printHistory(game: FreeCell, skipLasgamet = false): string {
 		if (!skipLasgamet) str += `\n ${removeBraille(game.history.at(-1))}`;
 		str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
 		while (movesSeed.moves.length) {
-			str += '\n ' + movesSeed.moves.splice(0, game.tableau.length).join(' ') + ' ';
+			str += '\n ' + removeBraille(movesSeed.moves.splice(0, game.tableau.length).join(' ')) + ' ';
 		}
 	} else {
 		// print the history (lines) of the game

@@ -1,11 +1,12 @@
 import { shorthandPile } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
+import { PreviousAction } from '@/game/move/history';
 
 /*
 	XXX (techdebt) more unit testing
 	 - try to move the tests elsewhere:
 	   - standard moves: `game.touch.test.ts`
-	     - already has from each x to each
+	     - already has from each ⨉ to each
 	     - it may have just omitted some
 	   - special edge case testing: `move.parseShorthandMove.test.ts`
 	 - if it doesn't make sense to move it there, test here anyways
@@ -164,13 +165,49 @@ describe('game.$moveCardToPosition', () => {
 		});
 
 		describe('foundation', () => {
-			test.todo('first');
+			test('first', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'>            AS          \n' +
+						' 2S AH AD AC             \n' +
+						'    2H 2D 2C             \n' +
+						' hand-jammed'
+				);
+				expect(game.$moveCardToPosition('2S', 'h').previousAction).toEqual({ text: 'move 1⡀h⡀ 2S→AS', type: 'move' });
+			});
 
-			test.todo('second');
+			test('second', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'>               AS       \n' +
+						' 2S AH AD AC             \n' +
+						'    2H 2D 2C             \n' +
+						' hand-jammed'
+				);
+				expect(game.$moveCardToPosition('2S', 'h').previousAction).toEqual({ text: 'move 1⡀h⡁ 2S→AS', type: 'move' });
+			});
 
-			test.todo('third');
+			test('third', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'>                  AS    \n' +
+						' 2S AH AD AC             \n' +
+						'    2H 2D 2C             \n' +
+						' hand-jammed'
+				);
+				expect(game.$moveCardToPosition('2S', 'h').previousAction).toEqual({ text: 'move 1⡀h⡂ 2S→AS', type: 'move' });
+			});
 
-			test.todo('fourth');
+			test('fourth', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'>                     AS \n' +
+						' 2S AH AD AC             \n' +
+						'    2H 2D 2C             \n' +
+						' hand-jammed'
+				);
+				expect(game.$moveCardToPosition('2S', 'h').previousAction).toEqual({ text: 'move 1⡀h⡃ 2S→AS', type: 'move' });
+			});
 
 			test.todo('find existing');
 		});
@@ -198,6 +235,67 @@ describe('game.$moveCardToPosition', () => {
 	test.todo('to: special');
 
 	test.todo('something else selected');
+
+	describe('mismatch with moveByShorthand', () => {
+		describe('from cascade', () => {
+			const game = FreeCell.parse(
+				'' + //
+					'>                        \n' +
+					' AS AH AD AC             \n' +
+					' KS KH KD KC             \n' +
+					' QH QS QC QD             \n' +
+					' JS JH JD JC             \n' +
+					' TH TS TC TD             \n' +
+					' 9S 9H 9D 9C             \n' +
+					' 8H 8S 8C 8D             \n' +
+					' 7S 7H 7D 7C             \n' +
+					' 6H 6S 6C 6D             \n' +
+					' 5S 5H 5D 5C             \n' +
+					' 4H 4S 4C 4D             \n' +
+					' 3S 3H 3D 3C             \n' +
+					' 2H 2S 2C 2D             \n' +
+					' hand-jammed'
+			);
+
+			test('moveByShorthand', () => {
+				expect(game.moveByShorthand('18').previousAction).toEqual({
+					text: 'move 1⡁8 KS-QH-JS-TH-9S-8H-7S-6H-5S-4H-3S-2H→cascade (auto-foundation 12 AS,2S)',
+					type: 'move-foundation',
+					tweenCards: [
+						{ rank: 'king', suit: 'spades', location: { fixture: 'cascade', data: [7, 0] } },
+						{ rank: 'queen', suit: 'hearts', location: { fixture: 'cascade', data: [7, 1] } },
+						{ rank: 'jack', suit: 'spades', location: { fixture: 'cascade', data: [7, 2] } },
+						{ rank: '10', suit: 'hearts', location: { fixture: 'cascade', data: [7, 3] } },
+						{ rank: '9', suit: 'spades', location: { fixture: 'cascade', data: [7, 4] } },
+						{ rank: '8', suit: 'hearts', location: { fixture: 'cascade', data: [7, 5] } },
+						{ rank: '7', suit: 'spades', location: { fixture: 'cascade', data: [7, 6] } },
+						{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [7, 7] } },
+						{ rank: '5', suit: 'spades', location: { fixture: 'cascade', data: [7, 8] } },
+						{ rank: '4', suit: 'hearts', location: { fixture: 'cascade', data: [7, 9] } },
+						{ rank: '3', suit: 'spades', location: { fixture: 'cascade', data: [7, 10] } },
+						{ rank: '2', suit: 'hearts', location: { fixture: 'cascade', data: [7, 11] } },
+					],
+				});
+			});
+
+			test.each`
+				shorthand | action
+				${'2H'}   | ${{ text: 'move 1⡌8 2H→cascade', type: 'move' }}
+				${'3S'}   | ${{ text: 'move 1⡋8 3S-2H→cascade', type: 'move' }}
+				${'4H'}   | ${{ text: 'move 1⡊8 4H-3S-2H→cascade', type: 'move' }}
+				${'5S'}   | ${{ text: 'move 1⡉8 5S-4H-3S-2H→cascade', type: 'move' }}
+				${'6H'}   | ${{ text: 'move 1⡈8 6H-5S-4H-3S-2H→cascade', type: 'move' }}
+				${'7S'}   | ${{ text: 'move 1⡇8 7S-6H-5S-4H-3S-2H→cascade', type: 'move' }}
+				${'8H'}   | ${{ text: 'move 1⡆8 8H-7S-6H-5S-4H-3S-2H→cascade', type: 'move' }}
+				${'9S'}   | ${{ text: 'move 1⡅8 9S-8H-7S-6H-5S-4H-3S-2H→cascade', type: 'move' }}
+				${'TH'}   | ${{ text: 'move 1⡄8 TH-9S-8H-7S-6H-5S-4H-3S-2H→cascade', type: 'move' }}
+				${'JS'}   | ${{ text: 'move 1⡃8 JS-TH-9S-8H-7S-6H-5S-4H-3S-2H→cascade', type: 'move' }}
+				${'QH'}   | ${{ text: 'move 1⡂8 QH-JS-TH-9S-8H-7S-6H-5S-4H-3S-2H→cascade', type: 'move' }}
+			`('$shorthand', ({ shorthand, action }: { shorthand: string; action: PreviousAction }) => {
+				expect(game.$moveCardToPosition(shorthand, '8').previousAction).toEqual(action);
+			});
+		});
+	});
 
 	describe('invalid move', () => {
 		test('cannot select', () => {

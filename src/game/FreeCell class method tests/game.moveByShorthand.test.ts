@@ -5,11 +5,11 @@ import { FreeCell } from '@/game/game';
 	XXX (techdebt) more unit testing
 	 - try to move the tests elsewhere:
 	   - standard moves: `game.touch.test.ts`
-	     - already has from each x to each
+	     - already has from each ⨉ to each
 	     - it may have just omitted some
 	   - special edge case testing: `move.parseShorthandMove.test.ts`
 	 - if it doesn't make sense to move it there, test here anyways
-	 - what we want in this file is a test for: Position x Position
+	 - what we want in this file is a test for: Position ⨉ Position
 */
 describe('game.moveByShorthand', () => {
 	describe('from each position', () => {
@@ -273,7 +273,7 @@ describe('game.moveByShorthand', () => {
 		});
 	});
 
-	// TODO (techdebt) (history) (shorthandMove) shorthandMove is idealized, but we can move anything
+	// TODO (6-priority) (techdebt) (history) (shorthandMove) shorthandMove is idealized, but we can move anything
 	//  - make an example where shorthandMove is the same for various actual moves
 	//  - moveByShorthand (and the solutions catalog) always move the "largest" sequence
 	//  - when you move a sequence to an empty cascade, it can be ambiguous
@@ -315,8 +315,8 @@ describe('game.moveByShorthand', () => {
 		expect(countToBraille(game.$selectCard('7C').selection?.cards.length)).toBe('⡁');
 	});
 
-	// TODO (techdebt) (history) (shorthandMove) here's anothr tangible example
-	test('shorthandMove needs a count when nonstandard', () => {
+	// TODO (techdebt) (history) (shorthandMove) here's another tangible example
+	test('shorthandMove needs a coord when nonstandard', () => {
 		const gamePrint =
 			' KC 9C JD    2H 2C       \n' +
 			' 3D 4S 4H QC KH QH       \n' +

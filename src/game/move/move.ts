@@ -9,7 +9,9 @@ import {
 	getSequenceAt,
 	isAdjacent,
 	isRed,
-	parseShorthandPosition_INCOMPLETE,
+	LocationSH,
+	parseShorthandLocation,
+	parseShorthandPile,
 	PileSH,
 	shorthandCard,
 	shorthandLocation,
@@ -18,6 +20,7 @@ import {
 	Suit,
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
+import { MOVE_SHORTHAND_REGEX } from '@/game/move/history';
 
 /* *********** */
 /* DEFINITIONS */
@@ -802,18 +805,33 @@ export function calcCursorActionText(
 	4. Third freecell to home: ch \
 	etc.
 
-	@see {@link parseShorthandPositionForSelect}
-	@see {@link parseShorthandPositionForMove}
+	@see {@link parseShorthandPileForSelect}
+	@see {@link parseShorthandPileForMove}
+	@param shorthandMove `${PileSH}${PileSH}`
 */
 export function parseShorthandMove(
 	game: FreeCell,
 	shorthandMove: string,
-	/** @deprecated HACK (techdebt) there's a lot of packing and unpacking simply to make `moveCardToPosition` work */
+	/** @deprecated HACK (6-priority) (techdebt) there's a lot of packing and unpacking simply to make `moveCardToPosition` work */
 	from_shorthand_arg?: CardLocation
 ): [CardLocation, CardLocation] {
-	const [from_shorthand, to_shorthand] = shorthandMove.split('');
-	const from_location = from_shorthand_arg ?? parseShorthandPosition_INCOMPLETE(from_shorthand);
-	const to_location = parseShorthandPosition_INCOMPLETE(to_shorthand);
+	const match = MOVE_SHORTHAND_REGEX.exec(shorthandMove);
+	if (!match) throw new Error(`invalid shorthandMove ${shorthandMove}`);
+	const [, from_shorthand, to_shorthand] = match;
+
+	if (shorthandMove.length > 2 || from_shorthand.length > 1 || to_shorthand.length > 1) {
+		// REVIEW (6-priority) remove this throw, cleanup the if
+		throw new Error(`parseShorthandMove ${shorthandMove}`);
+		return [
+			parseShorthandLocation(from_shorthand as LocationSH),
+			parseShorthandLocation(to_shorthand as LocationSH),
+		];
+	}
+
+	// REVIEW (6-priority) why isn't this from_location = parseShorthandPileForSelect; we can still cleanup after if needed
+	const from_location = from_shorthand_arg ?? parseShorthandPile(from_shorthand as PileSH);
+	// REVIEW (6-priority) why isn't this from_location = parseShorthandPileForMove; we can still cleanup after if needed
+	const to_location = parseShorthandPile(to_shorthand as PileSH);
 
 	if (to_location.fixture === 'cascade') {
 		// clamp
@@ -904,13 +922,10 @@ export function parseShorthandMove(
 	and is independent of other moves (we don't know what will happen next)
 
 	@see {@link parseShorthandMove}
-	@see {@link parseShorthandPositionForMove}
+	@see {@link parseShorthandPileForMove}
 */
-export function parseShorthandPositionForSelect(
-	game: FreeCell,
-	pileSh: PileSH
-): CardLocation | null {
-	const from_location = parseShorthandPosition_INCOMPLETE(pileSh);
+export function parseShorthandPileForSelect(game: FreeCell, pileSh: PileSH): CardLocation | null {
+	const from_location = parseShorthandPile(pileSh);
 
 	// verify position wrt game - e.g. cellCount,cascadeCount
 	switch (from_location.fixture) {
@@ -963,15 +978,15 @@ export function parseShorthandPositionForSelect(
 
 	pre-req: game already has a selection
 	(required for 'h')
-	(if there is no selection, you should call {@link parseShorthandPositionForSelect}) instead
+	(if there is no selection, you should call {@link parseShorthandPileForSelect}) instead
 
 	@see {@link parseShorthandMove}
-	@see {@link parseShorthandPositionForSelect}
+	@see {@link parseShorthandPileForSelect}
 */
-export function parseShorthandPositionForMove(game: FreeCell, pileSh: PileSH): CardLocation | null {
+export function parseShorthandPileForMove(game: FreeCell, pileSh: PileSH): CardLocation | null {
 	if (!game.selection) return null;
 	// const from_location = game.selection.location;
-	const to_location = parseShorthandPosition_INCOMPLETE(pileSh);
+	const to_location = parseShorthandPile(pileSh);
 
 	// verify position wrt game - e.g. cellCount,cascadeCount
 	switch (to_location.fixture) {

@@ -48,8 +48,8 @@ import {
 	findAvailableMoves,
 	moveCards,
 	parseShorthandMove,
-	parseShorthandPositionForMove,
-	parseShorthandPositionForSelect,
+	parseShorthandPileForMove,
+	parseShorthandPileForSelect,
 } from '@/game/move/move';
 import { utils } from '@/utils';
 
@@ -657,6 +657,8 @@ export class FreeCell {
 		Play a move using the standard notation.
 		The standard notation is used to print the game history.
 		This make it easy to replay a known game.
+
+		@param shorthandMove `${PileSH}${PileSH}`
 	*/
 	moveByShorthand(
 		shorthandMove: string,
@@ -684,7 +686,7 @@ export class FreeCell {
 		{ autoFoundation, stopWithInvalid = false, gameFunction }: OptionsNonstandardGameplay = {}
 	): FreeCell | this {
 		if (!this.selection) {
-			const from_location = parseShorthandPositionForSelect(this, pileSh);
+			const from_location = parseShorthandPileForSelect(this, pileSh);
 			if (!from_location) return this;
 			return this.setCursor(from_location).touch({ autoFoundation });
 		}
@@ -695,7 +697,7 @@ export class FreeCell {
 		}
 
 		// try this move as selected
-		const to_location = parseShorthandPositionForMove(this, pileSh);
+		const to_location = parseShorthandPileForMove(this, pileSh);
 		if (!to_location) return this;
 		const game = this.setCursor(to_location, { gameFunction }).touch({
 			autoFoundation,
@@ -990,6 +992,8 @@ export class FreeCell {
 		If you know the card you want to move and where, it just "this card goes here".
 
 		sugar/helper controls
+
+		TODO (6-priority) rename to $moveCardToPile
 	*/
 	$moveCardToPosition(
 		shorthand: string,
@@ -999,7 +1003,9 @@ export class FreeCell {
 		const g = this.$selectCard(shorthand);
 		if (!g.selection || !g.availableMoves) return g;
 		if (g.selection.peekOnly) return this; // XXX (techdebt) (controls) should we move the cursor?
-		// HACK (techdebt) (controls) using parseShorthandMove just to come up with `to` is a bit overkill
+		// HACK (6-priority) (techdebt) (controls) using parseShorthandMove just to come up with `to` is a bit overkill
+		// const to = parseShorthandPileForMove(g, pileSh);
+		// if (to === null) return this;
 		const [, to] = parseShorthandMove(g, `${shorthandPile(g.cursor)}${pileSh}`, g.cursor);
 		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
 	}
