@@ -9,7 +9,6 @@ import {
 	getSequenceAt,
 	isAdjacent,
 	isRed,
-	LocationSH,
 	parseShorthandLocation,
 	parseShorthandPile,
 	PileSH,
@@ -20,7 +19,7 @@ import {
 	Suit,
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
-import { MOVE_SHORTHAND_REGEX } from '@/game/move/history';
+import { _parseShorthandMove } from '@/game/move/history';
 
 /* *********** */
 /* DEFINITIONS */
@@ -807,7 +806,7 @@ export function calcCursorActionText(
 
 	@see {@link parseShorthandPileForSelect}
 	@see {@link parseShorthandPileForMove}
-	@param shorthandMove `${PileSH}${PileSH}`
+	@param shorthandMove `${PileSH}${PileSH}` or `${LocationSH}${LocationSH}`
 */
 export function parseShorthandMove(
 	game: FreeCell,
@@ -815,23 +814,16 @@ export function parseShorthandMove(
 	/** @deprecated HACK (6-priority) (techdebt) there's a lot of packing and unpacking simply to make `moveCardToPosition` work */
 	from_shorthand_arg?: CardLocation
 ): [CardLocation, CardLocation] {
-	const match = MOVE_SHORTHAND_REGEX.exec(shorthandMove);
-	if (!match) throw new Error(`invalid shorthandMove ${shorthandMove}`);
-	const [, from_shorthand, to_shorthand] = match;
+	const { fromPile, fromLocation, toPile, toLocation } = _parseShorthandMove(shorthandMove);
 
-	if (shorthandMove.length > 2 || from_shorthand.length > 1 || to_shorthand.length > 1) {
-		// REVIEW (6-priority) remove this throw, cleanup the if
-		throw new Error(`parseShorthandMove ${shorthandMove}`);
-		return [
-			parseShorthandLocation(from_shorthand as LocationSH),
-			parseShorthandLocation(to_shorthand as LocationSH),
-		];
+	if (fromPile !== fromLocation || toPile !== toLocation) {
+		return [parseShorthandLocation(fromLocation), parseShorthandLocation(toLocation)];
 	}
 
 	// REVIEW (6-priority) why isn't this from_location = parseShorthandPileForSelect; we can still cleanup after if needed
-	const from_location = from_shorthand_arg ?? parseShorthandPile(from_shorthand as PileSH);
+	const from_location = from_shorthand_arg ?? parseShorthandPile(fromPile);
 	// REVIEW (6-priority) why isn't this from_location = parseShorthandPileForMove; we can still cleanup after if needed
-	const to_location = parseShorthandPile(to_shorthand as PileSH);
+	const to_location = parseShorthandPile(toPile);
 
 	if (to_location.fixture === 'cascade') {
 		// clamp

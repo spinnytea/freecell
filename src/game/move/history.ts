@@ -131,8 +131,8 @@ export interface PreviousAction {
 //  - we treat this text as a structured "source of truth" that human readable (it could have been a json object)
 //  - "move_regex" is basically a "decode" action
 //  - every actionText is an "encode" action (e.g. `calcMoveActionText`, but literally every `ACTION_TEXT_EXAMPLES`)
-export const MOVE_SHORTHAND_REGEX =
-	/^([abcdefhk1234567890][^abcdefhk1234567890]?)([abcdefhk1234567890][^abcdefhk1234567890]?)$/;
+const SHORTHAND_FROM_TO_REGEX =
+	/^([abcdefhk1234567890])([^abcdefhk1234567890]?)([abcdefhk1234567890])([^abcdefhk1234567890]?)$/;
 const MOVE_REGEX =
 	/^move ([abcdefhk1234567890])([^abcdefhk1234567890]?)([abcdefhk1234567890])([^abcdefhk1234567890]?) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish|flourish52) (\w+) (\S+)$/;
@@ -214,8 +214,8 @@ export function parseCursorFromPreviousActionText(
 			return { fixture: 'cell', data: [0] };
 		case 'move-foundation':
 		case 'move': {
-			const { to, tc, fromShorthand, toShorthand } = parseActionTextMove(actionText);
-			const cursor = parseShorthandLocation((to + tc) as LocationSH);
+			const { toLocation, fromShorthand, toShorthand } = parseActionTextMove(actionText);
+			const cursor = parseShorthandLocation(toLocation);
 			switch (cursor.fixture) {
 				case 'deck':
 					// we don't move cards to the deck in practice
@@ -356,8 +356,8 @@ export function parseAltCursorFromPreviousActionText(
 			return { fixture: 'deck', data: [0] };
 		case 'move-foundation':
 		case 'move': {
-			const { from } = parseActionTextMove(actionText);
-			const cursor = parseShorthandPile(from);
+			const { fromLocation } = parseActionTextMove(actionText);
+			const cursor = parseShorthandLocation(fromLocation);
 			// deck isn't standard gameplay (so `data: [0]` is fine, if we see it)
 			// cell is already accurate
 			// foundation can't be `from` in an move (so `data: [0]` is fine, if we see it)
@@ -402,6 +402,20 @@ export function parseAltCursorFromPreviousActionText(
 	return undefined;
 }
 
+export function _parseShorthandMove(shorthandMove: string) {
+	const match = SHORTHAND_FROM_TO_REGEX.exec(shorthandMove);
+	if (match) {
+		const [, fromPile, fc, toPile, tc] = match;
+		return {
+			fromPile: fromPile as PileSH,
+			fromLocation: (fromPile + (fc || '')) as LocationSH,
+			toPile: toPile as PileSH,
+			toLocation: (toPile + (tc || '')) as LocationSH,
+		};
+	}
+	throw new Error(`invalid shorthandMove ${shorthandMove}`);
+}
+
 export function parseActionTextMove(actionText: string) {
 	const result = _parseActionTextMove(actionText) ?? _parseActionTextMoveFoundation(actionText);
 	if (result) return result;
@@ -412,9 +426,16 @@ export function parseActionTextMove(actionText: string) {
 function _parseActionTextMove(actionText: string) {
 	const match = MOVE_REGEX.exec(actionText);
 	if (match) {
-		// TODO (6-priority) (motivation) (refactor) (coords) how can we use fc, tc?
-		const [, from, fc, to, tc, fromShorthand, toShorthand] = match;
-		return { from: from as PileSH, fc, to: to as PileSH, tc, fromShorthand, toShorthand };
+		// TODO (6-priority) (motivation) (refactor) (coords) minimize use of fromPile/toPile
+		const [, fromPile, fc, toPile, tc, fromShorthand, toShorthand] = match;
+		return {
+			fromPile: fromPile as PileSH,
+			fromLocation: (fromPile + (fc || '')) as LocationSH,
+			toPile: toPile as PileSH,
+			toLocation: (toPile + (tc || '')) as LocationSH,
+			fromShorthand,
+			toShorthand,
+		};
 	}
 	return undefined;
 }
@@ -422,9 +443,8 @@ function _parseActionTextMove(actionText: string) {
 function _parseActionTextAutoFoundation(actionText: string) {
 	const match = AUTO_FOUNDATION_REGEX.exec(actionText);
 	if (match) {
-		const [, type, piles, autoShorthand] = match;
+		const [, , piles, autoShorthand] = match;
 		return {
-			type,
 			piles: piles.split('') as PileSH[],
 			autoShorthand: autoShorthand.split(',') as CardSH[],
 		};
@@ -435,13 +455,13 @@ function _parseActionTextAutoFoundation(actionText: string) {
 function _parseActionTextMoveFoundation(actionText: string) {
 	const match = MOVE_FOUNDATION_REGEX.exec(actionText);
 	if (match) {
-		// TODO (6-priority) (motivation) (refactor) (coords) how can we use fc, tc?
-		const [, from, fc, to, tc, fromShorthand, toShorthand, , piles, autoShorthand] = match;
+		// TODO (6-priority) (motivation) (refactor) (coords) minimize use of fromPile/toPile
+		const [, fromPile, fc, toPile, tc, fromShorthand, toShorthand, , piles, autoShorthand] = match;
 		return {
-			from: from as PileSH,
-			fc,
-			to: to as PileSH,
-			tc,
+			fromPile: fromPile as PileSH,
+			fromLocation: (fromPile + (fc || '')) as LocationSH,
+			toPile: toPile as PileSH,
+			toLocation: (toPile + (tc || '')) as LocationSH,
 			fromShorthand,
 			toShorthand,
 			piles: piles.split('') as PileSH[],
@@ -505,12 +525,18 @@ function collapseHistory(action: PreviousAction, history: string[]): PaH | undef
 			// action.type should parse, the condition is just a formality
 			const a = _parseActionTextMove(action.text);
 			if (a) {
-				const { from: pf, fc, to: pt, fromShorthand: pfs } = p;
-				const { from: af, to: at, tc, fromShorthand: afs, toShorthand: ats } = a;
-				if (pt === af && pfs === afs) {
+				const { fromPile: pfp, fromLocation: pfl, toPile: ptp, fromShorthand: pfs } = p;
+				const {
+					fromPile: afp,
+					toPile: atp,
+					toLocation: atl,
+					fromShorthand: afs,
+					toShorthand: ats,
+				} = a;
+				if (ptp === afp && pfs === afs) {
 					// move 34 KH→cascade
 					// move 43 KH→cascade
-					if (pf === at) {
+					if (pfp === atp) {
 						const nextAction = parsePreviousActionType(history.at(-2) ?? 'init');
 						if (action.gameFunction) nextAction.gameFunction = action.gameFunction; // preserve drag-drop
 						return {
@@ -521,7 +547,7 @@ function collapseHistory(action: PreviousAction, history: string[]): PaH | undef
 
 					// move 34 KH→cascade
 					// move 35 KH→cascade
-					const actionText = `move ${pf}${fc}${at}${tc} ${pfs}→${ats}`;
+					const actionText = `move ${pfl}${atl} ${pfs}→${ats}`;
 					const nextAction: PreviousAction = { text: actionText, type: 'move' };
 					if (action.gameFunction) nextAction.gameFunction = action.gameFunction; // preserve drag-drop
 					return {
@@ -536,7 +562,7 @@ function collapseHistory(action: PreviousAction, history: string[]): PaH | undef
 }
 
 function undoMove(game: FreeCell, actionText: string): Card[] {
-	const { from, to, fromShorthand } = parseActionTextMove(actionText);
+	const { fromPile, toPile, fromShorthand } = parseActionTextMove(actionText);
 
 	// we don't actually need to parse this if we only care about the first card
 	// const fromShorthands = fromShorthand.split('-');
@@ -545,14 +571,14 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 
 	const firstCardSH = parseShorthandCard(fromShorthand);
 	const firstCard = findCard(game.cards, firstCardSH);
-	if (shorthandPile(firstCard.location) !== to)
+	if (shorthandPile(firstCard.location) !== toPile)
 		throw new Error(
 			'invalid first card position: ' +
 				actionText +
 				'; ' +
 				shorthandPile(firstCard.location) +
 				' !== ' +
-				to
+				toPile
 		);
 
 	const sequence = getSequenceAt(game, firstCard.location);
@@ -565,7 +591,7 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 				' !== ' +
 				fromShorthand
 		);
-	const location = parseShorthandPile(from);
+	const location = parseShorthandPile(fromPile);
 
 	return moveCards(game, sequence, location);
 }
@@ -712,8 +738,8 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 		// parseActionTextMove, but allow null for shuffle, deal, etc
 		const match = _parseActionTextMove(actionText) ?? _parseActionTextMoveFoundation(actionText);
 		if (match) {
-			const { from, to } = match;
-			moves.push(`${from}${to}`);
+			const { fromPile, toPile } = match;
+			moves.push(`${fromPile}${toPile}`);
 		}
 	}
 	return { seed, moves };
@@ -741,16 +767,16 @@ export function getCardsFromInvalid(
 	if (previousAction.text === 'invalid move tableau→deck') {
 		return { fromShorthands: [], toShorthands: [] };
 	}
-	const { to, fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
+	const { toPile, fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
 	const fromShorthands = fromShorthand.split('-');
 	if (toShorthand.length === 2 || toShorthand.includes('-')) {
 		// TODO (motivation) (animation) if attempting to stack onto a sequence, shake the whole sequence
 		//  - should we add the whole sequence to the actionText, instead of just the one target card?
 		return { fromShorthands, toShorthands: toShorthand.split('-') };
-	} else if (isFixture(toShorthand) && isPileSH(to)) {
+	} else if (isFixture(toShorthand) && isPileSH(toPile)) {
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
 
-		const to_location = parseShorthandPile(to);
+		const to_location = parseShorthandPile(toPile);
 		if (to_location.fixture !== 'foundation') {
 			return { fromShorthands, toShorthands: [], pileShorthands: [to_location] };
 		}
@@ -760,7 +786,7 @@ export function getCardsFromInvalid(
 		//  - parseCursorFromPreviousActionText? (needs cards)
 		//  - game.parseShorthandMove? (needs game)
 		//  - the pileSH simply does not have enough information
-		if (cursor !== null && shorthandPile(cursor) === to) {
+		if (cursor !== null && shorthandPile(cursor) === toPile) {
 			return { fromShorthands, toShorthands: [], pileShorthands: [cursor] };
 		}
 

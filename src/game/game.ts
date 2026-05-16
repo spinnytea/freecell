@@ -561,9 +561,9 @@ export class FreeCell {
 				!didUndo.previousAction.tweenCards
 			) {
 				const secondUndo = didUndo.undo({ skipActionPrev: true });
-				const { from, to } = parseActionTextMove(didUndo.previousAction.text);
+				const { fromLocation, toLocation } = parseActionTextMove(didUndo.previousAction.text);
 				didUndo.previousAction.tweenCards = getCardsThatMoved(
-					secondUndo.moveByShorthand(from + to, { autoFoundation: false })
+					secondUndo.moveByShorthand(fromLocation + toLocation, { autoFoundation: false })
 				);
 			}
 
@@ -1469,9 +1469,9 @@ export class FreeCell {
 			history.length
 		) {
 			const secondUndo = game.undo({ skipActionPrev: true });
-			const { from, to } = parseActionTextMove(game.previousAction.text);
+			const { fromLocation, toLocation } = parseActionTextMove(game.previousAction.text);
 			game.previousAction.tweenCards = getCardsThatMoved(
-				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
+				secondUndo.moveByShorthand(fromLocation + toLocation, { autoFoundation: false })
 			);
 		}
 
