@@ -224,13 +224,11 @@ export function parseCursorFromPreviousActionText(
 					// each cell identifies it's own d0
 					break;
 				case 'foundation': {
-					// XXX (techdebt) (test) parseCursorFromPreviousActionText needs _way_ more exhaustive testing
+					// XXX (3-priority) (techdebt) (test) parseCursorFromPreviousActionText needs _way_ more exhaustive testing
 					//  - RS→foundation, RS→RS
 					//  - for arbitrary ace positions and collisions
 					//  - where the source suit may or may not be in the foundation
 					//  - where the source suit may or may not match the target suit
-					// ---
-					// TODO (6-priority) (motivation) (review) (coords) when we use coords to make history accurate™️, all this testing will be moot
 
 					if (toShorthand === 'foundation') {
 						const shorthand = parseShorthandCard(fromShorthand);

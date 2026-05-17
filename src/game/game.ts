@@ -111,7 +111,7 @@ interface OptionsNonstandardGameplay {
 
 		@deprecated this is just for unit testing - can we avoid using it even there with actual examples?
 		 - {@link moveByShorthand} has a valid usecase for this
-		 - {@link $moveCardToPosition} has a valid usecase for this
+		 - {@link $moveCardToPile} has a valid usecase for this
 	*/
 	stopWithInvalid?: boolean;
 
@@ -993,10 +993,8 @@ export class FreeCell {
 		If you know the card you want to move and where, it just "this card goes here".
 
 		sugar/helper controls
-
-		TODO (6-priority) rename to $moveCardToPile
 	*/
-	$moveCardToPosition(
+	$moveCardToPile(
 		shorthand: string,
 		pileSh: PileSH,
 		{ autoFoundation }: OptionsNonstandardGameplay = {}

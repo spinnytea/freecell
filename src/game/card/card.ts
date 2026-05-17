@@ -79,6 +79,7 @@ export const PileSHList = [
 	deck: k
 
 	TODO (6-priority) (review) (coords) (types) every use of `position`, `Position`; use {@link PileSH} and {@link LocationSH} as appropriate
+   TODO (6-priority) (review) (coords) (types) review every use of `as PileSH` and `as LocationSH`
 
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */
@@ -86,10 +87,6 @@ export type PileSH = (typeof PileSHList)[number];
 export function isPileSH(val: string): val is PileSH {
 	return (PileSHList as readonly string[]).includes(val);
 }
-
-// TODO (6-priority) (review) (coords) (types) review every use of `as PileSH`
-// TODO (6-priority) (review) (coords) (types) use coords (at least for h), remove the curosr arg
-//  - Position = PileSH + coords
 
 export interface CardLocation {
 	readonly fixture: Fixture;

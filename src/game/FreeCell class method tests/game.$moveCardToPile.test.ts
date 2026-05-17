@@ -14,7 +14,7 @@ import { PreviousAction } from '@/game/move/history';
 	 - what we want in this file is a test for: "from any conceivable start" to "any given position"
 	 - this will make it easier to test a bunch more "invalid scenarios" more than anything
 */
-describe('game.$moveCardToPosition', () => {
+describe('game.$moveCardToPile', () => {
 	test('spot some concerns', () => {
 		let game = new FreeCell().dealAll({ demo: true, keepDeck: true });
 		game = game.$selectCard('AH');
@@ -36,8 +36,8 @@ describe('game.$moveCardToPosition', () => {
 		// another but a bunch of code relies on shorthand moves that don't allow for the deck to be interacted with
 		// if we are going to rely on the deck so much, we shouldn't attempt this move
 		// we block it with moveCardToPosition, but it shouldn't explode if we don't
-		expect(() => game.$moveCardToPosition('AH', 'a')).not.toThrow();
-		expect(game.$moveCardToPosition('AH', 'a')).toBe(game);
+		expect(() => game.$moveCardToPile('AH', 'a')).not.toThrow();
+		expect(game.$moveCardToPile('AH', 'a')).toBe(game);
 
 		// REVIEW (techdebt) (deck) this whole block is wrong now
 		// basically, we can't "move to or from" the deck, ~~because it's there's no move shorthand for it~~
@@ -48,7 +48,7 @@ describe('game.$moveCardToPosition', () => {
 		expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
 		expect(game.$selectCard('AH').cursor).toEqual({ fixture: 'deck', data: [2] });
 		expect(shorthandPile(game.cursor)).toBe('k'); // REVIEW (techdebt) (deck) we have a deck shorthand now
-		expect(game.$moveCardToPosition('AH', 'k')).toBe(game);
+		expect(game.$moveCardToPile('AH', 'k')).toBe(game);
 
 		game = game.dealAll();
 		expect(game.print()).toBe(
@@ -74,7 +74,7 @@ describe('game.$moveCardToPosition', () => {
 		);
 
 		// we can't select this card, so note it
-		game = game.$moveCardToPosition('AH', 'a');
+		game = game.$moveCardToPile('AH', 'a');
 		expect(game.print()).toBe(
 			'' + //
 				'             KS>KH KD KC \n' +
@@ -127,11 +127,11 @@ describe('game.$moveCardToPosition', () => {
 
 				game = game.$selectCard('AS');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [3] });
-				expect(game.$moveCardToPosition('AS', 'h')).toBe(game);
+				expect(game.$moveCardToPile('AS', 'h')).toBe(game);
 
 				game = game.$selectCard('2D');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [5] });
-				expect(game.$moveCardToPosition('2D', 'a')).toBe(game);
+				expect(game.$moveCardToPile('2D', 'a')).toBe(game);
 			});
 
 			// if this is the only card in the deck,
@@ -173,7 +173,7 @@ describe('game.$moveCardToPosition', () => {
 						'    2H 2D 2C             \n' +
 						' hand-jammed'
 				);
-				expect(game.$moveCardToPosition('2S', 'h').previousAction).toEqual({ text: 'move 1⡀h⡀ 2S→AS', type: 'move' });
+				expect(game.$moveCardToPile('2S', 'h').previousAction).toEqual({ text: 'move 1⡀h⡀ 2S→AS', type: 'move' });
 			});
 
 			test('second', () => {
@@ -184,7 +184,7 @@ describe('game.$moveCardToPosition', () => {
 						'    2H 2D 2C             \n' +
 						' hand-jammed'
 				);
-				expect(game.$moveCardToPosition('2S', 'h').previousAction).toEqual({ text: 'move 1⡀h⡁ 2S→AS', type: 'move' });
+				expect(game.$moveCardToPile('2S', 'h').previousAction).toEqual({ text: 'move 1⡀h⡁ 2S→AS', type: 'move' });
 			});
 
 			test('third', () => {
@@ -195,7 +195,7 @@ describe('game.$moveCardToPosition', () => {
 						'    2H 2D 2C             \n' +
 						' hand-jammed'
 				);
-				expect(game.$moveCardToPosition('2S', 'h').previousAction).toEqual({ text: 'move 1⡀h⡂ 2S→AS', type: 'move' });
+				expect(game.$moveCardToPile('2S', 'h').previousAction).toEqual({ text: 'move 1⡀h⡂ 2S→AS', type: 'move' });
 			});
 
 			test('fourth', () => {
@@ -206,7 +206,7 @@ describe('game.$moveCardToPosition', () => {
 						'    2H 2D 2C             \n' +
 						' hand-jammed'
 				);
-				expect(game.$moveCardToPosition('2S', 'h').previousAction).toEqual({ text: 'move 1⡀h⡃ 2S→AS', type: 'move' });
+				expect(game.$moveCardToPile('2S', 'h').previousAction).toEqual({ text: 'move 1⡀h⡃ 2S→AS', type: 'move' });
 			});
 
 			test.todo('find existing');
@@ -236,7 +236,8 @@ describe('game.$moveCardToPosition', () => {
 
 	test.todo('something else selected');
 
-	describe('mismatch with moveByShorthand', () => {
+	// TODO (techdebt) (coords) (history) (shorthandMove) shorthandMove is idealized, but we can move anything
+	describe('mismatch between shorthandMove and actual move', () => {
 		describe('from cascade', () => {
 			const game = FreeCell.parse(
 				'' + //
@@ -292,7 +293,7 @@ describe('game.$moveCardToPosition', () => {
 				${'JS'}   | ${{ text: 'move 1⡃8 JS-TH-9S-8H-7S-6H-5S-4H-3S-2H→cascade', type: 'move' }}
 				${'QH'}   | ${{ text: 'move 1⡂8 QH-JS-TH-9S-8H-7S-6H-5S-4H-3S-2H→cascade', type: 'move' }}
 			`('$shorthand', ({ shorthand, action }: { shorthand: string; action: PreviousAction }) => {
-				expect(game.$moveCardToPosition(shorthand, '8').previousAction).toEqual(action);
+				expect(game.$moveCardToPile(shorthand, '8').previousAction).toEqual(action);
 			});
 		});
 	});
@@ -316,7 +317,7 @@ describe('game.$moveCardToPosition', () => {
 					'          8D             \n' +
 					'          7C             \n' +
 					' move a8 TS→JH'
-			).$moveCardToPosition('2H', '5');
+			).$moveCardToPile('2H', '5');
 			expect(game.previousAction).toEqual({
 				text: 'touch stop',
 				type: 'invalid',
@@ -341,7 +342,7 @@ describe('game.$moveCardToPosition', () => {
 					'          8D             \n' +
 					'          7C             \n' +
 					' move a8 TS→JH'
-			).$moveCardToPosition('KS', 'd');
+			).$moveCardToPile('KS', 'd');
 			expect(game.previousAction).toEqual({
 				text: 'move a8 TS→JH',
 				type: 'move',
@@ -371,17 +372,17 @@ describe('game.$moveCardToPosition', () => {
 				text: 'move a8 TS→JH',
 				type: 'move',
 			});
-			game = game.$moveCardToPosition('KC', '5');
+			game = game.$moveCardToPile('KC', '5');
 			expect(game.previousAction).toEqual({
 				text: 'invalid move 4⡆5 KC-QD-JS-TD-9C-8D-7C→cascade',
 				type: 'invalid',
 			});
-			game = game.$moveCardToPosition('TD', '5');
+			game = game.$moveCardToPile('TD', '5');
 			expect(game.previousAction).toEqual({
 				text: 'invalid move 4⡉5 TD-9C-8D-7C→cascade',
 				type: 'invalid',
 			});
-			game = game.$moveCardToPosition('9C', '5');
+			game = game.$moveCardToPile('9C', '5');
 			expect(game.previousAction).toEqual({
 				text: 'move 4⡊5 9C-8D-7C→cascade',
 				type: 'move',

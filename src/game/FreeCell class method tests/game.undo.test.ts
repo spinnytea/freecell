@@ -1566,7 +1566,7 @@ describe('game.undo (+ history)', () => {
 			expect(game.history).toEqual(['hand-jammed', 'move 1⡀4 JH→cascade']);
 			game = game.undo().moveByShorthand('12');
 			expect(game.history).toEqual(['hand-jammed', 'move 1⡀2⡁ JH→QS']);
-			game = game.$moveCardToPosition('JH', '3');
+			game = game.$moveCardToPile('JH', '3');
 			expect(game.history).toEqual(['hand-jammed', 'move 1⡀3 JH→cascade']);
 		});
 
@@ -1665,7 +1665,7 @@ describe('game.undo (+ history)', () => {
 			);
 			// move card a
 			// move card b
-			game = game.$moveCardToPosition('KS', '4');
+			game = game.$moveCardToPile('KS', '4');
 			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade']);
 			game = game.$touchAndMove('QD');
 			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS']);
@@ -1683,10 +1683,10 @@ describe('game.undo (+ history)', () => {
 			game = game.$touchAndMove('QH');
 			// prettier-ignore
 			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀8⡂ QH-JC→KC']);
-			game = game.$moveCardToPosition('QH', '3');
+			game = game.$moveCardToPile('QH', '3');
 			// prettier-ignore
 			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀3 QH-JC→cascade']);
-			game = game.$moveCardToPosition('QH', '5');
+			game = game.$moveCardToPile('QH', '5');
 			// prettier-ignore
 			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀5 QH-JC→cascade']);
 			expect(game.print()).toBe(
@@ -1724,12 +1724,12 @@ describe('game.undo (+ history)', () => {
 
 			// move card c back
 			// move card b back
-			game = game.$moveCardToPosition('QH', '6');
+			game = game.$moveCardToPile('QH', '6');
 			// prettier-ignore
 			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS', 'move 1⡀6 QH-JC→cascade']);
-			game = game.$moveCardToPosition('QH', '1');
+			game = game.$moveCardToPile('QH', '1');
 			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade', 'move a4⡀ QD→KS']);
-			game = game.$moveCardToPosition('QD', 'a');
+			game = game.$moveCardToPile('QD', 'a');
 			expect(game.history).toEqual(['hand-jammed', 'move 3⡀4 KS→cascade']);
 			game = game.$touchAndMove('KS');
 			expect(game.history).toEqual(['hand-jammed', 'move 3⡀5 KS→cascade']);

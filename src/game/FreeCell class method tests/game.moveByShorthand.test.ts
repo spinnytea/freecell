@@ -273,7 +273,7 @@ describe('game.moveByShorthand', () => {
 		});
 	});
 
-	// TODO (6-priority) (techdebt) (history) (shorthandMove) shorthandMove is idealized, but we can move anything
+	// TODO (techdebt) (coords) (history) (shorthandMove) shorthandMove is idealized, but we can move anything
 	//  - make an example where shorthandMove is the same for various actual moves
 	//  - moveByShorthand (and the solutions catalog) always move the "largest" sequence
 	//  - when you move a sequence to an empty cascade, it can be ambiguous
@@ -301,21 +301,21 @@ describe('game.moveByShorthand', () => {
 
 		// cascade is imprecise (both the move (which cards) and summary (which cascasde) are imprecise)
 		expect(game.moveByShorthand('45').previousAction.text).toBe('move 4⡊5 9C-8D-7C→cascade');
-		expect(game.$moveCardToPosition('9C', '5').previousAction.text).toBe('move 4⡊5 9C-8D-7C→cascade');
-		expect(game.$moveCardToPosition('8D', '5').previousAction.text).toBe('move 4⡋5 8D-7C→cascade');
-		expect(game.$moveCardToPosition('7C', '5').previousAction.text).toBe('move 4⡌5 7C→cascade');
+		expect(game.$moveCardToPile('9C', '5').previousAction.text).toBe('move 4⡊5 9C-8D-7C→cascade');
+		expect(game.$moveCardToPile('8D', '5').previousAction.text).toBe('move 4⡋5 8D-7C→cascade');
+		expect(game.$moveCardToPile('7C', '5').previousAction.text).toBe('move 4⡌5 7C→cascade');
 
 		// cell is fine (move is specific, summary is imprecise)
 		expect(game.moveByShorthand('4a').previousAction.text).toBe('move 4⡌a 7C→cell');
 		expect(game.moveByShorthand('4d').previousAction.text).toBe('move 4⡌d 7C→cell');
 
-		// TODO (techdebt) (history) (shorthandMove) we can use brail dots :D
+		// TODO (techdebt) (coords) (history) (shorthandMove) we can use brail dots :D
 		expect(countToBraille(game.$selectCard('9C').selection?.cards.length)).toBe('⡃');
 		expect(countToBraille(game.$selectCard('8D').selection?.cards.length)).toBe('⡂');
 		expect(countToBraille(game.$selectCard('7C').selection?.cards.length)).toBe('⡁');
 	});
 
-	// TODO (techdebt) (history) (shorthandMove) here's another tangible example
+	// TODO (techdebt) (coords) (history) (shorthandMove) here's another tangible example
 	test('shorthandMove needs a coord when nonstandard', () => {
 		const gamePrint =
 			' KC 9C JD    2H 2C       \n' +
@@ -339,8 +339,8 @@ describe('game.moveByShorthand', () => {
 			' 84 1c 71 16 1d 14 d1 ';
 
 		const worldOne = FreeCell.parse(gamePrint).moveByShorthand('37').moveByShorthand('38');
-		const worldTwo = FreeCell.parse(gamePrint).$moveCardToPosition('5S', '7').$moveCardToPosition('7C', '8');
-		const worldThree = FreeCell.parse(gamePrint).$moveCardToPosition('3S', '7').$moveCardToPosition('5S', '8');
+		const worldTwo = FreeCell.parse(gamePrint).$moveCardToPile('5S', '7').$moveCardToPile('7C', '8');
+		const worldThree = FreeCell.parse(gamePrint).$moveCardToPile('3S', '7').$moveCardToPile('5S', '8');
 
 		expect(worldOne.print({ includeHistory: true })).toBe(
 			'' + //
