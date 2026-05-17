@@ -908,7 +908,9 @@ describe('game.parse', () => {
 				expect(gameUndid.previousAction).toEqual({
 					text: 'invalid move ab 9H→TC',
 					type: 'invalid',
+					gameFunction: 'undo',
 				});
+				expect(gameUndid.undo()).toBe(gameUndid);
 			});
 		});
 	});

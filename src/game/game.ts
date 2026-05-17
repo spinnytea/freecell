@@ -574,7 +574,18 @@ export class FreeCell {
 			//  - do we need to wrap all of the FreeCell function? I don't like that idea
 			//  - search for all `throw new Error`, include `src/game`, exclude `catalog, .test.ts`
 			// throw e;
-			const action: PreviousAction = { text: 'invalid ' + moveToUndo, type: 'invalid' };
+			const action: PreviousAction = {
+				text: 'invalid ' + moveToUndo,
+				type: 'invalid',
+				gameFunction: 'undo',
+			};
+			if (action.text === this.previousAction.text) {
+				// TODO (4-priority) (test) make a test, if we can this was a head scratcher
+				//  - maybe throwing an error to verify branch execution was the wrong approach
+				// if it's the same action in a row, then don't create a new one
+				// e.g. restart failure
+				return this;
+			}
 			return this.__clone({ action, selection: null, availableMoves: null });
 		}
 	}

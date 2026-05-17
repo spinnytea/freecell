@@ -13,7 +13,11 @@ export const FIFTY_TWO_CARD_FLOURISH =
 	 - log every single `Freecell.action.text` that goes through the `Freecell.constructor`
 	 - log every action in `Freecell.history`
 	 - categorize them
+	   - select ⨉ pile∊fixture
+	   - move ⨉ pile∊fixture ⨉ pile∊fixture
+		- etc
 	 - ensure they are covered here
+	 - store and test every game state in example game #5
 	 - and vice-versa because some of these are outdate
 */
 export const ACTION_TEXT_EXAMPLES: Record<string, string> = {

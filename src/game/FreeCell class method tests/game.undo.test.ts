@@ -1860,12 +1860,11 @@ describe('game.undo (+ history)', () => {
 			expect(gameUndid.previousAction).toEqual({
 				text: 'invalid move 67 9H→TC',
 				type: 'invalid',
+				gameFunction: 'undo',
 			});
 
 			// undoing again should just return the same game, since we can't undo past the invalid move
-			// but it's naïve and returns a new game with a new invalid action
-			expect(gameUndid.undo()).not.toBe(gameUndid);
-			expect(gameUndid.undo()).toEqual(gameUndid);
+			expect(gameUndid.undo()).toBe(gameUndid);
 		});
 
 		test('undo to init (hand-jammed)', () => {
