@@ -19,7 +19,7 @@ import { useRefPrevious } from '@/app/hooks/useRefPrevious';
 import { calcCardId, Card, shorthandCard } from '@/game/card/card';
 
 export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<string>) {
-	const { cards, cursor, selection, flashCards, previousAction } = useGame();
+	const { cards, selection, flashCards, previousAction } = useGame();
 	const fixtureSizes = useFixtureSizes();
 	const prevFixtureSizesRef = useRefPrevious(fixtureSizes);
 	const { enabledControlSchemes } = useSettings();
@@ -84,7 +84,6 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 				invalidMoveCards,
 			} = calcUpdatedCardPositions({
 				cards,
-				cursor,
 				previousAction,
 				previousTLZR,
 				calcTLZRForCard: calcTLZRForCardRef.current,
@@ -212,7 +211,6 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 			dependencies: [
 				// used within useGSAP
 				cards,
-				cursor,
 				previousAction,
 				calcTLZRForCardRef,
 				enableDragAndDrop,

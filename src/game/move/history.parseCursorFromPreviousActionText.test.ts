@@ -106,6 +106,8 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'invalid move kb 6H→cell'}                    | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${{ fixture: 'deck', data: [0] }}
 			${'invalid move ah 3C→foundation'}              | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cell', data: [0] }}
 			${'invalid move 1h 9C→foundation'}              | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cascade', data: [0, 0] }}
+			${'invalid move ah⡂ 3C→foundation'}             | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cell', data: [0] }}
+			${'invalid move 1⡁h⡂ 9C→foundation'}            | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cascade', data: [0, 1] }}
 			${'invalid move 2h TH→AH'}                      | ${someCards_h} | ${{ fixture: 'foundation', data: [1] }}  | ${{ fixture: 'cascade', data: [1, 0] }}
 			${'invalid move 13 KC-QD-JC→cascade'}           | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${{ fixture: 'cascade', data: [0, 0] }}
 			${'invalid move k1 KH→cascade'}                 | ${[]}          | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'deck', data: [0] }}

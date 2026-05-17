@@ -47,14 +47,11 @@ export interface InvalidMoveCardType {
 */
 export function calcUpdatedCardPositions({
 	cards,
-	cursor,
 	previousAction,
 	previousTLZR,
 	calcTLZRForCard,
 }: {
 	cards: Card[];
-	/** @deprecated TODO (6-priority) (motivation) (refactor) (coords) due to incomplete information */
-	cursor: CardLocation;
 	previousAction?: PreviousAction;
 	previousTLZR: Map<string, TLZR>;
 	calcTLZRForCard: (card: Card) => TLZR;
@@ -100,10 +97,7 @@ export function calcUpdatedCardPositions({
 
 	// IFF the action is an invalid move
 	if (previousAction?.type === 'invalid') {
-		const { fromShorthands, toShorthands, pileShorthands } = getCardsFromInvalid(
-			previousAction,
-			cursor
-		);
+		const { fromShorthands, toShorthands, pileShorthands } = getCardsFromInvalid(previousAction);
 		const invalidMoveCards: InvalidMoveCardType = { fromShorthands, toShorthands, pileShorthands };
 		return { updateCardPositions, unmovedCards, invalidMoveCards };
 	}
@@ -135,7 +129,6 @@ export function calcUpdatedCardPositions({
 			const { updateCardPositions: prevUpdateCardPositions } = calcUpdatedCardPositions({
 				previousTLZR,
 				cards: previousAction.tweenCards,
-				cursor,
 				calcTLZRForCard,
 			});
 

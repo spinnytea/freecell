@@ -7,7 +7,6 @@ import {
 	getSequenceAt,
 	initializeDeck,
 	isFixture,
-	isPileSH,
 	LocationSH,
 	parseShorthandCard,
 	parseShorthandLocation,
@@ -752,11 +751,7 @@ export function getCardsThatMoved(game: FreeCell): Card[] {
 	return fromShorthand.split('-').map((rs) => findCard(game.cards, parseShorthandCard(rs)));
 }
 
-export function getCardsFromInvalid(
-	previousAction: PreviousAction,
-	/** @deprecated TODO (6-priority) (motivation) (refactor) (coords) due to incomplete information */
-	cursor: CardLocation | null
-): {
+export function getCardsFromInvalid(previousAction: PreviousAction): {
 	fromShorthands: string[];
 	toShorthands: string[];
 	pileShorthands?: CardLocation[];
@@ -767,30 +762,21 @@ export function getCardsFromInvalid(
 	if (previousAction.text === 'invalid move tableau→deck') {
 		return { fromShorthands: [], toShorthands: [] };
 	}
-	const { toPile, fromShorthand, toShorthand } = parseActionTextInvalidMove(previousAction.text);
+	const { toLocation, fromShorthand, toShorthand } = parseActionTextInvalidMove(
+		previousAction.text
+	);
 	const fromShorthands = fromShorthand.split('-');
 	if (toShorthand.length === 2 || toShorthand.includes('-')) {
 		// TODO (motivation) (animation) if attempting to stack onto a sequence, shake the whole sequence
 		//  - should we add the whole sequence to the actionText, instead of just the one target card?
 		return { fromShorthands, toShorthands: toShorthand.split('-') };
-	} else if (isFixture(toShorthand) && isPileSH(toPile)) {
+	} else if (isFixture(toShorthand)) {
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
-
-		const to_location = parseShorthandPile(toPile);
-		if (to_location.fixture !== 'foundation') {
-			return { fromShorthands, toShorthands: [], pileShorthands: [to_location] };
-		}
-
-		// TODO (6-priority) (techdebt) (motivation) (refactor) (coords) coords if the move text had more precision, we wouldn't need to recompute it
-		//  - drag and drop can use any foundation, we can "touch" any foundation
-		//  - parseCursorFromPreviousActionText? (needs cards)
-		//  - game.parseShorthandMove? (needs game)
-		//  - the pileSH simply does not have enough information
-		if (cursor !== null && shorthandPile(cursor) === toPile) {
-			return { fromShorthands, toShorthands: [], pileShorthands: [cursor] };
-		}
-
-		return { fromShorthands, toShorthands: [], pileShorthands: [] };
+		return {
+			fromShorthands,
+			toShorthands: [],
+			pileShorthands: [parseShorthandLocation(toLocation)],
+		};
 	}
 	// super invalid, e.g. 'invalid move 12 asdf→asdf'
 	return { fromShorthands, toShorthands: [toShorthand] };

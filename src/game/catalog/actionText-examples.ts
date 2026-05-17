@@ -220,6 +220,16 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' 3C          AD AH       \n' +
 		' 9C TH                   \n' +
 		' hand-jammed',
+	'invalid move ah⡂ 3C→foundation':
+		'' + //
+		' 3C          AD AH       \n' +
+		' 9C TH                   \n' +
+		' hand-jammed',
+	'invalid move 1⡁h⡂ 9C→foundation':
+		'' + //
+		' 3C          AD AH       \n' +
+		' 9C TH                   \n' +
+		' hand-jammed',
 	'invalid move 2h TH→AH':
 		'' + //
 		' 3C          AD AH       \n' +
