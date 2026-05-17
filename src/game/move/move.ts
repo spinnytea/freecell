@@ -810,38 +810,29 @@ export function calcCursorActionText(
 */
 export function parseShorthandMove(
 	game: FreeCell,
-	shorthandMove: string,
-	/** @deprecated HACK (6-priority) (techdebt) there's a lot of packing and unpacking simply to make `moveCardToPosition` work */
-	from_shorthand_arg?: CardLocation
-): [CardLocation, CardLocation] {
+	shorthandMove: string
+): [CardLocation, CardLocation] | null {
 	const { fromPile, fromLocation, toPile, toLocation } = _parseShorthandMove(shorthandMove);
 
 	if (fromPile !== fromLocation || toPile !== toLocation) {
 		return [parseShorthandLocation(fromLocation), parseShorthandLocation(toLocation)];
 	}
 
-	// REVIEW (6-priority) why isn't this from_location = parseShorthandPileForSelect; we can still cleanup after if needed
-	const from_location = from_shorthand_arg ?? parseShorthandPile(fromPile);
-	// REVIEW (6-priority) why isn't this from_location = parseShorthandPileForMove; we can still cleanup after if needed
-	const to_location = parseShorthandPile(toPile);
+	const from_location = parseShorthandPileForSelect(game, fromPile);
+	if (!from_location) return null;
+	const selection = getSequenceAt(game, from_location);
+	const to_location = parseShorthandPileForMove(game, toPile, selection);
+	if (!to_location) return null;
 
 	if (to_location.fixture === 'cascade') {
 		// clamp
 		to_location.data[1] = Math.max(0, game.tableau[to_location.data[0]].length - 1);
 	}
 
-	if (from_location.fixture === 'deck') {
-		// top card in deck
-		from_location.data[0] = game.deck.length - 1;
-	}
-	if (to_location.fixture === 'deck') {
-		// top of the deck
-		to_location.data[0] = game.deck.length;
-	}
-
 	// clean up from_location based on MoveSourceType
 	// (pick the right starting sequence)
-	if (!from_shorthand_arg && from_location.fixture === 'cascade') {
+	// TODO (3-priority) ensure tested then delete
+	if (from_location.fixture === 'cascade') {
 		// REVIEW (techdebt) (controls) text: "invalid board size", this isn't just a key press
 		//  - we need an altrenate return type or soemthing
 		//  - formulate the error message in whatever calls this…
@@ -888,6 +879,7 @@ export function parseShorthandMove(
 
 	// clean up to_location based on MoveDestinationType
 	// (pick the right foundation idx)
+	// TODO (3-priority) ensure tested then delete
 	if (to_location.fixture === 'foundation') {
 		// adjust selection until stackable on target
 		// i.e. 2S can stack on AS, find that foundation
@@ -924,6 +916,7 @@ export function parseShorthandPileForSelect(game: FreeCell, pileSh: PileSH): Car
 		case 'deck':
 			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
+			// top card in deck
 			from_location.data[0] = game.deck.length - 1;
 			break;
 		case 'cell':
@@ -975,8 +968,12 @@ export function parseShorthandPileForSelect(game: FreeCell, pileSh: PileSH): Car
 	@see {@link parseShorthandMove}
 	@see {@link parseShorthandPileForSelect}
 */
-export function parseShorthandPileForMove(game: FreeCell, pileSh: PileSH): CardLocation | null {
-	if (!game.selection) return null;
+export function parseShorthandPileForMove(
+	game: FreeCell,
+	pileSh: PileSH,
+	selection: CardSequence | null = game.selection
+): CardLocation | null {
+	if (!selection) return null;
 	// const from_location = game.selection.location;
 	const to_location = parseShorthandPile(pileSh);
 
@@ -985,6 +982,7 @@ export function parseShorthandPileForMove(game: FreeCell, pileSh: PileSH): CardL
 		case 'deck':
 			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
+			// top card in deck
 			to_location.data[0] = game.deck.length;
 			break;
 		case 'cell':
@@ -994,8 +992,7 @@ export function parseShorthandPileForMove(game: FreeCell, pileSh: PileSH): CardL
 			// adjust selection until stackable on target
 			// i.e. 2S can stack on AS, find that foundation
 			// i.e. AC can go in any _empty_ foundation, find that one
-			const from_sequence = game.selection;
-			const tail_card = from_sequence.cards[from_sequence.cards.length - 1];
+			const tail_card = selection.cards[selection.cards.length - 1];
 			let d0 = 0;
 			while (
 				d0 < game.foundations.length &&

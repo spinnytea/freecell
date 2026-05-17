@@ -664,7 +664,8 @@ export class FreeCell {
 		shorthandMove: string,
 		{ autoFoundation, gameFunction }: OptionsNonstandardGameplay = {}
 	): FreeCell {
-		const [from, to] = parseShorthandMove(this, shorthandMove);
+		const [from, to] = parseShorthandMove(this, shorthandMove) ?? [];
+		if (!from || !to) return this;
 		const game = this.clearSelection().setCursor(from).touch({ selectionOnly: true });
 		// REVIEW (techdebt) dedicated error message? "invalid select (cursor) / invalid"
 		//  - would be for deck or foundation
@@ -1003,10 +1004,8 @@ export class FreeCell {
 		const g = this.$selectCard(shorthand);
 		if (!g.selection || !g.availableMoves) return g;
 		if (g.selection.peekOnly) return this; // XXX (techdebt) (controls) should we move the cursor?
-		// HACK (6-priority) (techdebt) (controls) using parseShorthandMove just to come up with `to` is a bit overkill
-		// const to = parseShorthandPileForMove(g, pileSh);
-		// if (to === null) return this;
-		const [, to] = parseShorthandMove(g, `${shorthandPile(g.cursor)}${pileSh}`, g.cursor);
+		const to = parseShorthandPileForMove(g, pileSh);
+		if (to === null) return this;
 		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
 	}
 

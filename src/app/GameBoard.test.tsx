@@ -33,9 +33,11 @@ function CribTheGame() {
 	cribGame = () => game;
 
 	moveByShorthand = (shorthandMove: string) => {
-		const [from, to] = parseShorthandMove(game, shorthandMove);
-		_clickByLocation(from);
-		_clickByLocation(to);
+		const [from, to] = parseShorthandMove(game, shorthandMove) ?? [];
+		if (from && to) {
+			_clickByLocation(from);
+			_clickByLocation(to);
+		}
 	};
 
 	function _clickByLocation(location: CardLocation) {
