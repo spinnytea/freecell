@@ -747,14 +747,12 @@ export function calcAutoFoundationActionText(
 	isFlourish52: boolean
 ): string {
 	const movedCardsStr = moved.map((card) => shorthandCard(card)).join(',');
-	const movedPositionsStr = moved.map((card) => shorthandPile(card.location)).join('');
+	const movedPilesStr = moved.map((card) => shorthandPile(card.location)).join('');
 	const firstWord = isFlourish52 ? 'flourish52' : isFlourish ? 'flourish' : 'auto-foundation';
-	return `${firstWord} ${movedPositionsStr} ${movedCardsStr}`;
+	return `${firstWord} ${movedPilesStr} ${movedCardsStr}`;
 }
 
 /**
-	position info is entirely superfluous, no need to add it to up/left/down/right
-
 	we don't need it in set/stop either,
 	but it does make a few things nicer to validate for having it there
 	(e.g. $toggleCursor)
@@ -911,7 +909,7 @@ export function parseShorthandMove(
 export function parseShorthandPileForSelect(game: FreeCell, pileSh: PileSH): CardLocation | null {
 	const from_location = parseShorthandPile(pileSh);
 
-	// verify position wrt game - e.g. cellCount,cascadeCount
+	// verify location wrt game - e.g. cellCount,cascadeCount
 	switch (from_location.fixture) {
 		case 'deck':
 			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
@@ -977,7 +975,7 @@ export function parseShorthandPileForMove(
 	// const from_location = game.selection.location;
 	const to_location = parseShorthandPile(pileSh);
 
-	// verify position wrt game - e.g. cellCount,cascadeCount
+	// verify location wrt game - e.g. cellCount,cascadeCount
 	switch (to_location.fixture) {
 		case 'deck':
 			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it

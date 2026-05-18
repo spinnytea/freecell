@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`game.moveByShorthand from each position deck 1`] = `
+exports[`game.moveByShorthand from each pile deck 1`] = `
 [
   {
     "location": {
@@ -75,7 +75,7 @@ exports[`game.moveByShorthand from each position deck 1`] = `
 ]
 `;
 
-exports[`game.moveByShorthand to each position deck empty 1`] = `
+exports[`game.moveByShorthand to each pile deck empty 1`] = `
 [
   {
     "location": {
@@ -90,7 +90,7 @@ exports[`game.moveByShorthand to each position deck empty 1`] = `
 ]
 `;
 
-exports[`game.moveByShorthand to each position deck not empty 1`] = `
+exports[`game.moveByShorthand to each pile deck not empty 1`] = `
 [
   {
     "location": {

@@ -106,7 +106,7 @@ describe('game.clampCursor', () => {
 			expect(game.cursor).toEqual({ fixture: 'cascade', data: [7, 4] });
 		});
 
-		// we can still sit on the 0th position
+		// we can still sit on the 0th location
 		test('empty', () => {
 			const game = new FreeCell({ cursor: { fixture: 'cascade', data: [2, 2] } });
 			expect(game.print()).toMatchSnapshot();

@@ -225,10 +225,10 @@ describe('game/card', () => {
 
 			test.each`
 				d0    | error
-				${-2} | ${'invalid position: {"fixture":"cell","data":[-2]}'}
-				${-1} | ${'invalid position: {"fixture":"cell","data":[-1]}'}
-				${6}  | ${'invalid position: {"fixture":"cell","data":[6]}'}
-				${7}  | ${'invalid position: {"fixture":"cell","data":[7]}'}
+				${-2} | ${'invalid location: {"fixture":"cell","data":[-2]}'}
+				${-1} | ${'invalid location: {"fixture":"cell","data":[-1]}'}
+				${6}  | ${'invalid location: {"fixture":"cell","data":[6]}'}
+				${7}  | ${'invalid location: {"fixture":"cell","data":[7]}'}
 			`('$d0', ({ d0, error }: { d0: number; error: string }) => {
 				const location: CardLocation = { fixture: 'cell', data: [d0] };
 				expect(() => shorthandPile(location)).toThrow(error);
@@ -327,10 +327,10 @@ describe('game/card', () => {
 
 			test.each`
 				d0    | error
-				${-2} | ${'invalid position: {"fixture":"cascade","data":[-2,1]}'}
-				${-1} | ${'invalid position: {"fixture":"cascade","data":[-1,1]}'}
-				${10} | ${'invalid position: {"fixture":"cascade","data":[10,1]}'}
-				${11} | ${'invalid position: {"fixture":"cascade","data":[11,1]}'}
+				${-2} | ${'invalid location: {"fixture":"cascade","data":[-2,1]}'}
+				${-1} | ${'invalid location: {"fixture":"cascade","data":[-1,1]}'}
+				${10} | ${'invalid location: {"fixture":"cascade","data":[10,1]}'}
+				${11} | ${'invalid location: {"fixture":"cascade","data":[11,1]}'}
 			`('$d0', ({ d0, error }: { d0: number; error: string }) => {
 				expect(() => shorthandPile({ fixture: 'cascade', data: [d0, 1] })).toThrow(error);
 				expect(() => shorthandLocation({ fixture: 'cascade', data: [d0, 1] })).toThrow(error);

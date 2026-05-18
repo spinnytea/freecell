@@ -818,7 +818,7 @@ describe('game.parse', () => {
 				// and if we replay that one move, we get back to where we started
 				const gameRedid = gameUndid.moveByShorthand('67');
 				// if the game was invlid, we can't get an accurate move from the history
-				// REVIEW (6-priority) (coords) (history) (parse) make sure "init invalid history" doesn't cause things to explode - awkward behavior is fine
+				// REVIEW (6-priority) (coords) (history) (parse) (print) (shorthandMove) make sure "init invalid history" doesn't cause things to explode - awkward behavior is fine
 				expect(gameRedid.history).toEqual(['init without history', 'move 6⡀7⡇ 9H→TC']);
 				expect(game.history).toEqual(['init without history', 'move 67 9H→TC']);
 				expect(_omit(gameRedid, ['history'])).toEqual(_omit(game, ['history']));
@@ -902,7 +902,7 @@ describe('game.parse', () => {
 						' move ab 9H→TC' // this is wrong (cursor is on '7 TC', ab are cells)
 				);
 				expect(game.history).toEqual(['init without history', 'move ab 9H→TC']);
-				// expect(() => game.undo()).toThrow('invalid first card position: move ab 9H→TC; 7 !== b');
+				// expect(() => game.undo()).toThrow('invalid first card location: move ab 9H→TC; 7 !== b');
 				const gameUndid = game.undo();
 				expect(gameUndid.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 				expect(gameUndid.previousAction).toEqual({
@@ -1325,7 +1325,7 @@ describe('game.parse', () => {
 					)
 						selCount = 1;
 					// special case for curror is immediatly after the selection (straddles home row, overlaps right)
-					// (no special case for left, because they would be the same position)
+					// (no special case for left, because they would be the same location)
 					if (c === '{ "fixture": "foundation", "data": [0] }' && s === '{ "fixture": "cell", "data": [3] }') selCount = 1;
 					expect((g2Print.match(/\|/g) ?? []).length).toBe(selCount);
 				});

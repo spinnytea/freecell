@@ -14,7 +14,7 @@ import {
 	removeBraille,
 	shorthandCard,
 	shorthandPile,
-	shorthandSequenceWithPosition,
+	shorthandSequenceWithLocation,
 	SuitList,
 } from '@/game/card/card';
 import { IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
@@ -366,7 +366,7 @@ export class FreeCell {
 
 	clearSelection(): FreeCell | this {
 		if (this.selection) {
-			const actionText = 'deselect ' + shorthandSequenceWithPosition(this.selection);
+			const actionText = 'deselect ' + shorthandSequenceWithLocation(this.selection);
 			return this.__clone({
 				action: { text: actionText, type: 'deselect' },
 				selection: null,
@@ -426,9 +426,9 @@ export class FreeCell {
 				!selectionNever
 			) {
 				return this.__clone({
-					// TODO (5-priority) (gameplay) (peek) change verb instead of omitting position for peek
+					// TODO (5-priority) (gameplay) (peek) change verb instead of omitting location for peek
 					//  - SELECT_REGEX = (select|peek|deselect)
-					action: { text: 'select ' + shorthandSequenceWithPosition(selection), type: 'select' },
+					action: { text: 'select ' + shorthandSequenceWithLocation(selection), type: 'select' },
 					selection,
 					availableMoves: findAvailableMoves(this, selection),
 				});
@@ -703,7 +703,7 @@ export class FreeCell {
 			return this.setCursor(from_location).touch({ autoFoundation });
 		}
 
-		// clear selection if touching the same position
+		// clear selection if touching the same pile
 		if (pileSh === shorthandPile(this.selection.location)) {
 			return this.clearSelection();
 		}
@@ -726,7 +726,7 @@ export class FreeCell {
 
 		if (stopWithInvalid) return game;
 
-		// clear selection and touchByPosition (like touch)
+		// clear selection and touchByPile (like touch)
 		g = this.clearSelection().touchByPile(pileSh, { autoFoundation, stopWithInvalid });
 		if (g.previousAction.type !== 'invalid') return g;
 

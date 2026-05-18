@@ -122,7 +122,8 @@ export interface PreviousAction {
 	gameFunction?: GameFunction;
 }
 
-// TODO (techdebt) should we verify Position, Shorthand, Fixture when we parse with these regex values?
+// TODO (techdebt) should we verify Pile/Location, Shorthand, Fixture when we parse with these regex values?
+//  - i.e. the helper methods return PileSH, should we also check isPileSH?
 //  - do we need to up our i/o game and handle parsing garbage?
 //  - red team: is it possible to make a game explode?
 //  - is this just "better error messages earlier?"
@@ -570,7 +571,7 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 	const firstCard = findCard(game.cards, firstCardSH);
 	if (shorthandPile(firstCard.location) !== toPile)
 		throw new Error(
-			'invalid first card position: ' +
+			'invalid first card pile: ' +
 				actionText +
 				'; ' +
 				shorthandPile(firstCard.location) +
@@ -820,7 +821,7 @@ export function unDealAll(game: FreeCell): Card[] {
 
 	// deck is going to be used _as_ "cards" to construct the next FreeCell state
 	// we must arrange the list in the order of the OG cards (game.cards),
-	// this is _not_ the position with the deck (game.deck)
+	// this is _not_ the deck tableau (game.deck)
 	sortCardsOG(game, deckOfCards);
 
 	if (deckOfCards.length !== game.cards.length) {

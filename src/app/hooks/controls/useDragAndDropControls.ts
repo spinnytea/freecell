@@ -43,7 +43,7 @@ interface DragState {
 	game: FreeCell;
 	/** game.selection; shorthands of cards being dragged, so we can animate the drag */
 	shorthands: string[];
-	/** all available card locations drop (each Position, all foundations) */
+	/** all available card locations drop (each Pile, all foundations) */
 	dropTargets: DropTarget[];
 }
 

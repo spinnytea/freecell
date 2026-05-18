@@ -15,7 +15,7 @@ describe('game/move.calcCursorActionText', () => {
 			expect(calcCursorActionText(game, 'set', { fixture: 'deck', data: [50] })).toBe('cursor set k⡲ KH');
 			expect(calcCursorActionText(game, 'set', { fixture: 'deck', data: [51] })).toBe('cursor set k⡳ KS');
 
-			// invalid cursor position
+			// invalid cursor pile
 			expect(calcCursorActionText(game, 'set', { fixture: 'deck', data: [-2] })).toBe('cursor set k');
 			expect(calcCursorActionText(game, 'set', { fixture: 'deck', data: [-1] })).toBe('cursor set k');
 			expect(calcCursorActionText(game, 'set', { fixture: 'deck', data: [52] })).toBe('cursor set k');
@@ -39,10 +39,10 @@ describe('game/move.calcCursorActionText', () => {
 				expect(calcCursorActionText(game, 'set', { fixture: 'cell', data: [4] })).toBe('cursor set e');
 				expect(calcCursorActionText(game, 'set', { fixture: 'cell', data: [5] })).toBe('cursor set f');
 
-				// invalid cursor position
+				// invalid cursor location
 				// XXX (techdebt) maybe don't throw?
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [-1] })).toThrow('invalid position: {"fixture":"cell","data":[-1]}');
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [6] })).toThrow('invalid position: {"fixture":"cell","data":[6]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [-1] })).toThrow('invalid location: {"fixture":"cell","data":[-1]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [6] })).toThrow('invalid location: {"fixture":"cell","data":[6]}');
 			});
 
 			test('6 cells', () => {
@@ -54,10 +54,10 @@ describe('game/move.calcCursorActionText', () => {
 				expect(calcCursorActionText(game, 'set', { fixture: 'cell', data: [4] })).toBe('cursor set e 2D');
 				expect(calcCursorActionText(game, 'set', { fixture: 'cell', data: [5] })).toBe('cursor set f 2C');
 
-				// invalid cursor position
+				// invalid cursor location
 				// XXX (techdebt) maybe don't throw?
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [-1] })).toThrow('invalid position: {"fixture":"cell","data":[-1]}');
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [6] })).toThrow('invalid position: {"fixture":"cell","data":[6]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [-1] })).toThrow('invalid location: {"fixture":"cell","data":[-1]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [6] })).toThrow('invalid location: {"fixture":"cell","data":[6]}');
 			});
 		});
 
@@ -73,10 +73,10 @@ describe('game/move.calcCursorActionText', () => {
 				expect(calcCursorActionText(game, 'set', { fixture: 'cell', data: [4] })).toBe('cursor set e');
 				expect(calcCursorActionText(game, 'set', { fixture: 'cell', data: [5] })).toBe('cursor set f');
 
-				// invalid cursor position
+				// invalid cursor location
 				// XXX (techdebt) maybe don't throw?
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [-1] })).toThrow('invalid position: {"fixture":"cell","data":[-1]}');
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [6] })).toThrow('invalid position: {"fixture":"cell","data":[6]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [-1] })).toThrow('invalid location: {"fixture":"cell","data":[-1]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [6] })).toThrow('invalid location: {"fixture":"cell","data":[6]}');
 			});
 
 			test('6 cells', () => {
@@ -88,10 +88,10 @@ describe('game/move.calcCursorActionText', () => {
 				expect(calcCursorActionText(game, 'set', { fixture: 'cell', data: [4] })).toBe('cursor set e');
 				expect(calcCursorActionText(game, 'set', { fixture: 'cell', data: [5] })).toBe('cursor set f');
 
-				// invalid cursor position
+				// invalid cursor location
 				// XXX (techdebt) maybe don't throw?
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [-1] })).toThrow('invalid position: {"fixture":"cell","data":[-1]}');
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [6] })).toThrow('invalid position: {"fixture":"cell","data":[6]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [-1] })).toThrow('invalid location: {"fixture":"cell","data":[-1]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cell', data: [6] })).toThrow('invalid location: {"fixture":"cell","data":[6]}');
 			});
 		});
 
@@ -121,9 +121,9 @@ describe('game/move.calcCursorActionText', () => {
 				expect(calcCursorActionText(game, 'set', { fixture: 'cascade', data: [8, 0] })).toBe('cursor set 9');
 				expect(calcCursorActionText(game, 'set', { fixture: 'cascade', data: [9, 0] })).toBe('cursor set 0');
 
-				// invalid cursor position
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [-1, 0] })).toThrow('invalid position: {"fixture":"cascade","data":[-1,0]}');
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [10, 0] })).toThrow('invalid position: {"fixture":"cascade","data":[10,0]}');
+				// invalid cursor location
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [-1, 0] })).toThrow('invalid location: {"fixture":"cascade","data":[-1,0]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [10, 0] })).toThrow('invalid location: {"fixture":"cascade","data":[10,0]}');
 			});
 
 			test('8 cascades', () => {
@@ -159,9 +159,9 @@ describe('game/move.calcCursorActionText', () => {
 				expect(calcCursorActionText(game, 'set', { fixture: 'cascade', data: [8, 0] })).toBe('cursor set 9');
 				expect(calcCursorActionText(game, 'set', { fixture: 'cascade', data: [9, 0] })).toBe('cursor set 0');
 
-				// invalid cursor position
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [-1, 0] })).toThrow('invalid position: {"fixture":"cascade","data":[-1,0]}');
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [10, 0] })).toThrow('invalid position: {"fixture":"cascade","data":[10,0]}');
+				// invalid cursor location
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [-1, 0] })).toThrow('invalid location: {"fixture":"cascade","data":[-1,0]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [10, 0] })).toThrow('invalid location: {"fixture":"cascade","data":[10,0]}');
 			});
 
 			test('10 cascades', () => {
@@ -199,9 +199,9 @@ describe('game/move.calcCursorActionText', () => {
 				expect(calcCursorActionText(game, 'set', { fixture: 'cascade', data: [8, BOTTOM_OF_CASCADE] })).toBe('cursor set 9');
 				expect(calcCursorActionText(game, 'set', { fixture: 'cascade', data: [9, BOTTOM_OF_CASCADE] })).toBe('cursor set 0');
 
-				// invalid cursor position
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [-1, 0] })).toThrow('invalid position: {"fixture":"cascade","data":[-1,0]}');
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [10, 0] })).toThrow('invalid position: {"fixture":"cascade","data":[10,0]}');
+				// invalid cursor location
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [-1, 0] })).toThrow('invalid location: {"fixture":"cascade","data":[-1,0]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [10, 0] })).toThrow('invalid location: {"fixture":"cascade","data":[10,0]}');
 			});
 		});
 
@@ -227,9 +227,9 @@ describe('game/move.calcCursorActionText', () => {
 				expect(calcCursorActionText(game, 'set', { fixture: 'cascade', data: [8, 0] })).toBe('cursor set 9');
 				expect(calcCursorActionText(game, 'set', { fixture: 'cascade', data: [9, 0] })).toBe('cursor set 0');
 
-				// invalid cursor position
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [-1, 0] })).toThrow('invalid position: {"fixture":"cascade","data":[-1,0]}');
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [10, 0] })).toThrow('invalid position: {"fixture":"cascade","data":[10,0]}');
+				// invalid cursor location
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [-1, 0] })).toThrow('invalid location: {"fixture":"cascade","data":[-1,0]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [10, 0] })).toThrow('invalid location: {"fixture":"cascade","data":[10,0]}');
 			});
 
 			test('8 cascades', () => {
@@ -257,9 +257,9 @@ describe('game/move.calcCursorActionText', () => {
 				expect(calcCursorActionText(game, 'set', { fixture: 'cascade', data: [8, 0] })).toBe('cursor set 9');
 				expect(calcCursorActionText(game, 'set', { fixture: 'cascade', data: [9, 0] })).toBe('cursor set 0');
 
-				// invalid cursor position
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [-1, 0] })).toThrow('invalid position: {"fixture":"cascade","data":[-1,0]}');
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [10, 0] })).toThrow('invalid position: {"fixture":"cascade","data":[10,0]}');
+				// invalid cursor location
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [-1, 0] })).toThrow('invalid location: {"fixture":"cascade","data":[-1,0]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [10, 0] })).toThrow('invalid location: {"fixture":"cascade","data":[10,0]}');
 			});
 
 			test('10 cascades', () => {
@@ -287,9 +287,9 @@ describe('game/move.calcCursorActionText', () => {
 				expect(calcCursorActionText(game, 'set', { fixture: 'cascade', data: [8, 1] })).toBe('cursor set 9');
 				expect(calcCursorActionText(game, 'set', { fixture: 'cascade', data: [9, 1] })).toBe('cursor set 0');
 
-				// invalid cursor position
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [-1, 0] })).toThrow('invalid position: {"fixture":"cascade","data":[-1,0]}');
-				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [10, 0] })).toThrow('invalid position: {"fixture":"cascade","data":[10,0]}');
+				// invalid cursor location
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [-1, 0] })).toThrow('invalid location: {"fixture":"cascade","data":[-1,0]}');
+				expect(() => calcCursorActionText(game, 'set', { fixture: 'cascade', data: [10, 0] })).toThrow('invalid location: {"fixture":"cascade","data":[10,0]}');
 			});
 		});
 

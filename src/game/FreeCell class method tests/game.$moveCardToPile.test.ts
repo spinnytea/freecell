@@ -11,7 +11,7 @@ import { PreviousAction } from '@/game/move/history';
 	   - special edge case testing: `move.parseShorthandMove.test.ts`
 	 - if it doesn't make sense to move it there, test here anyways
 	 - afterall, this does have some situations you can't simply "touch" your way into
-	 - what we want in this file is a test for: "from any conceivable start" to "any given position"
+	 - what we want in this file is a test for: "from any conceivable start pile/location" to "any given pile/location"
 	 - this will make it easier to test a bunch more "invalid scenarios" more than anything
 */
 describe('game.$moveCardToPile', () => {
@@ -35,7 +35,7 @@ describe('game.$moveCardToPile', () => {
 		// one part of the logic allows moving a card from the deck into play
 		// another but a bunch of code relies on shorthand moves that don't allow for the deck to be interacted with
 		// if we are going to rely on the deck so much, we shouldn't attempt this move
-		// we block it with moveCardToPosition, but it shouldn't explode if we don't
+		// we block it with moveCardToPile, but it shouldn't explode if we don't
 		expect(() => game.$moveCardToPile('AH', 'a')).not.toThrow();
 		expect(game.$moveCardToPile('AH', 'a')).toBe(game);
 
@@ -155,7 +155,7 @@ describe('game.$moveCardToPile', () => {
 		test.todo('selection is peekOnly');
 	});
 
-	describe('to each position', () => {
+	describe('to each pile', () => {
 		describe('cell', () => {
 			test.todo('a, b, c, d, e, f');
 
@@ -236,7 +236,7 @@ describe('game.$moveCardToPile', () => {
 
 	test.todo('something else selected');
 
-	// TODO (techdebt) (coords) (history) (shorthandMove) shorthandMove is idealized, but we can move anything
+	// TODO (techdebt) (coords) (history) (parse) (print) (shorthandMove) shorthandMove is idealized, but we can move anything
 	describe('mismatch between shorthandMove and actual move', () => {
 		describe('from cascade', () => {
 			const game = FreeCell.parse(

@@ -78,7 +78,6 @@ export const PileSHList = [
 	cascades: 1 - 9, 0 (1-8, but we allow 9 and 10 columns)
 	deck: k
 
-	TODO (6-priority) (review) (coords) (types) every use of `position`, `Position`; use {@link PileSH} and {@link LocationSH} as appropriate
    TODO (6-priority) (review) (coords) (types) review every use of `as PileSH` and `as LocationSH`
 
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
@@ -438,7 +437,7 @@ export function shorthandSequence(sequence: CardSequence) {
 }
 
 /**
-	Use coords for: Position (card)
+	Use coords for: Location (card)
 	 - ❌ cell
 	 - ✅ foundation
 	 - ✅ cascade
@@ -506,12 +505,12 @@ export function shorthandPile(location: CardLocation): PileSH {
 			break;
 		}
 	}
-	throw new Error(`invalid position: ${JSON.stringify(location)}`);
+	throw new Error(`invalid location: ${JSON.stringify(location)}`);
 }
 
-export function shorthandSequenceWithPosition(sequence: CardSequence) {
-	// but don't include the position if this is select-to-peek
-	// TODO (5-priority) (gameplay) (peek) rather than omit the position, what if we add another marker
+export function shorthandSequenceWithLocation(sequence: CardSequence) {
+	// but don't include the location if this is select-to-peek
+	// TODO (5-priority) (gameplay) (peek) rather than omit the location, what if we add another marker
 	//  - juice has stars around the cards, maybe we do that here, too?
 	if (sequence.peekOnly) return shorthandSequence(sequence);
 	return shorthandLocation(sequence.location) + ' ' + shorthandSequence(sequence);
@@ -552,7 +551,7 @@ export function parseShorthandPile(p: PileSH): CardLocation {
 		case '7':
 		case '8':
 		case '9':
-			// this isn't a valid cursor position, it will need to be clamped
+			// this isn't a valid cursor location, it will need to be clamped
 			// cascades can have sequences, so you need to decide if you really want the "bottom"
 			return {
 				fixture: 'cascade',
@@ -588,7 +587,7 @@ export function parseShorthandPile(p: PileSH): CardLocation {
 	6 dots are traditional literary text, and 8 dots are so computers can abuse them
 
 	we can use them to get the selection length (the number of cards that moved).
-	we can use them to get an absolute position of a cursor (if we log a position in a cursor action).
+	we can use them to get an actual location of a cursor (if we log a pile + coord).
 */
 const START_OF_8_DOT_BRAILLE = 0x2840;
 // TODO (6-priority) (refactor) (coords) compare START_OF_8_DOT_BRAILLE and BOTTOM_OF_CASCADE

@@ -21,7 +21,7 @@ import { parseShorthandMove } from '@/game/move/move';
 
 const gsapUtilsRandom = gsap.utils.random as jest.Mock;
 
-/** HACK (techdebt) we need the game state to make moves by position shorthand */
+/** HACK (techdebt) we need the game state to make moves by standard move notation */
 let moveByShorthand: (shorthandMove: string) => void;
 /** HACK (techdebt) @deprecated @use {@link screen} */
 let cribGame: () => FreeCell;
@@ -49,12 +49,12 @@ function CribTheGame() {
 			clickCard(card);
 		} else if ([0, -1, undefined].includes(location.data[1])) {
 			// pilemarker
-			const position = shorthandPile(location);
-			if (position !== 'h') {
-				clickPile(position);
+			const p = shorthandPile(location);
+			if (p !== 'h') {
+				clickPile(p);
 			} else {
 				const d0 = location.data[0];
-				fireEvent.click(screen.getAllByText(position)[d0 - 1]);
+				fireEvent.click(screen.getAllByText(p)[d0 - 1]);
 			}
 		} else {
 			throw new Error(`Card not found for location: ${JSON.stringify(location)}`);

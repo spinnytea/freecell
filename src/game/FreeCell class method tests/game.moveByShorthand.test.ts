@@ -9,10 +9,10 @@ import { FreeCell } from '@/game/game';
 	     - it may have just omitted some
 	   - special edge case testing: `move.parseShorthandMove.test.ts`
 	 - if it doesn't make sense to move it there, test here anyways
-	 - what we want in this file is a test for: Position ⨉ Position
+	 - what we want in this file is a test for: Pile ⨉ Pile
 */
 describe('game.moveByShorthand', () => {
-	describe('from each position', () => {
+	describe('from each pile', () => {
 		describe('cell', () => {
 			test.todo('a, b, c, d, e, f');
 
@@ -105,7 +105,7 @@ describe('game.moveByShorthand', () => {
 	// impl edge cases
 	test.todo('from: special');
 
-	describe('to each position', () => {
+	describe('to each pile', () => {
 		describe('cell', () => {
 			test.todo('a, b, c, d, e, f');
 
@@ -273,7 +273,7 @@ describe('game.moveByShorthand', () => {
 		});
 	});
 
-	// TODO (techdebt) (coords) (history) (shorthandMove) shorthandMove is idealized, but we can move anything
+	// TODO (techdebt) (coords) (history) (parse) (print) (shorthandMove) shorthandMove is idealized, but we can move anything
 	//  - make an example where shorthandMove is the same for various actual moves
 	//  - moveByShorthand (and the solutions catalog) always move the "largest" sequence
 	//  - when you move a sequence to an empty cascade, it can be ambiguous
@@ -309,13 +309,13 @@ describe('game.moveByShorthand', () => {
 		expect(game.moveByShorthand('4a').previousAction.text).toBe('move 4⡌a 7C→cell');
 		expect(game.moveByShorthand('4d').previousAction.text).toBe('move 4⡌d 7C→cell');
 
-		// TODO (techdebt) (coords) (history) (shorthandMove) we can use brail dots :D
+		// TODO (techdebt) (coords) (history) (parse) (print) (shorthandMove) we can use brail dots :D
 		expect(countToBraille(game.$selectCard('9C').selection?.cards.length)).toBe('⡃');
 		expect(countToBraille(game.$selectCard('8D').selection?.cards.length)).toBe('⡂');
 		expect(countToBraille(game.$selectCard('7C').selection?.cards.length)).toBe('⡁');
 	});
 
-	// TODO (techdebt) (coords) (history) (shorthandMove) here's another tangible example
+	// TODO (techdebt) (coords) (history) (parse) (print) (shorthandMove) here's another tangible example
 	test('shorthandMove needs a coord when nonstandard', () => {
 		const gamePrint =
 			' KC 9C JD    2H 2C       \n' +

@@ -200,7 +200,7 @@ export function printDeck(
 	print the history of the game \
 	split out logic from {@link FreeCell.print}
 
-	- BUG (history) (shorthandMove) standard move notation can only be used when `limit = 'opp+1'` for all moves
+	- BUG (history) (parse) (print) (shorthandMove) standard move notation can only be used when `limit = 'opp+1'` for all moves
 		- e.g. if (movesSeed && isStandardRuleset)
 	- REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
 		- e.g. if (movesSeed && isStandardGameplay)
@@ -217,9 +217,11 @@ export function printHistory(game: FreeCell, skipLasgamet = false): string {
 		// TODO (history) (print) remove the last action - not needed for save/reload
 		if (!skipLasgamet) str += `\n ${removeBraille(game.history.at(-1))}`;
 		str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
+		let movesStr = '';
 		while (movesSeed.moves.length) {
-			str += '\n ' + removeBraille(movesSeed.moves.splice(0, game.tableau.length).join(' ')) + ' ';
+			movesStr += '\n ' + movesSeed.moves.splice(0, game.tableau.length).join(' ') + ' ';
 		}
+		str += removeBraille(movesStr);
 	} else {
 		// print the history (lines) of the game
 		// ---

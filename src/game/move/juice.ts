@@ -137,7 +137,7 @@ function canFlourish52(game: FreeCell): Card[] {
 	game = _collectCardsTillAceToDeck(game);
 
 	const selectionsToTry: CardSequence[] = [];
-	const emptyPositions: CardLocation[] = [];
+	const emptyPiles: CardLocation[] = [];
 	for (let c_idx = 0; c_idx < game.tableau.length; c_idx++) {
 		const s = game
 			.setCursor({ fixture: 'cascade', data: [c_idx, BOTTOM_OF_CASCADE] })
@@ -145,15 +145,15 @@ function canFlourish52(game: FreeCell): Card[] {
 		if (s) {
 			selectionsToTry.push(s);
 		} else {
-			emptyPositions.push({ fixture: 'cascade', data: [c_idx, 0] });
+			emptyPiles.push({ fixture: 'cascade', data: [c_idx, 0] });
 		}
 	}
 
 	if (selectionsToTry.length === 0) return [];
-	if (emptyPositions.length < SuitList.length) return [];
+	if (emptyPiles.length < SuitList.length) return [];
 
 	sortCardsBySuitAndRank(game.deck);
-	game = _spreadDeckToEmptyPositions(game, emptyPositions);
+	game = _spreadDeckToEmptyPiles(game, emptyPiles);
 
 	const aces: Card[] = [];
 	selectionsToTry.forEach((selectionToTry) => {
@@ -231,14 +231,14 @@ export function _organizeCardsExcept(game: FreeCell, card: Card) {
 		peekOnly: true,
 	});
 
-	const emptyPositions: CardLocation[] = [];
+	const emptyPiles: CardLocation[] = [];
 	for (let d0 = game.tableau.length - 1; d0 >= 0; d0--) {
 		if (d0 !== cardD0) {
-			emptyPositions.push({ fixture: 'cascade', data: [d0, 0] });
+			emptyPiles.push({ fixture: 'cascade', data: [d0, 0] });
 		}
 	}
 	sortCardsBySuitAndRank(game.deck);
-	game = _spreadDeckToEmptyPositions(game, emptyPositions);
+	game = _spreadDeckToEmptyPiles(game, emptyPiles);
 
 	return game;
 }
@@ -270,12 +270,12 @@ export function _collectCardsTillAceToDeck(game: FreeCell): FreeCell {
 	return game;
 }
 
-function _spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLocation[]): FreeCell {
+function _spreadDeckToEmptyPiles(g: FreeCell, emptyPiles: CardLocation[]): FreeCell {
 	// unshuffle deck
 	// sortCardsBySuitAndRank(g.deck);
 
 	// put deck on board, split by suit
-	emptyPositions.forEach((emptyPosition) => {
+	emptyPiles.forEach((emptyPile) => {
 		// BUG (techdebt) (deck) (gameplay) why can't we deal from the middle?
 		// const last_card = g.deck.at(0);
 		const last_card = g.deck.at(-1);
@@ -286,7 +286,7 @@ function _spreadDeckToEmptyPositions(g: FreeCell, emptyPositions: CardLocation[]
 				cards: cards,
 				peekOnly: true,
 			};
-			g = _moveDeckToBoard(g, selection, emptyPosition);
+			g = _moveDeckToBoard(g, selection, emptyPile);
 		}
 	});
 
