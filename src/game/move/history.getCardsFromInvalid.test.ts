@@ -41,14 +41,14 @@ describe('game/history.getCardsFromInvalid', () => {
 
 	describe('other cases', () => {
 		test.each`
-			actionText                     | cursor  | result
-			${'invalid move tableau→deck'} | ${null} | ${{ fromShorthands: [], toShorthands: [] }}
-		`('$actionText', ({ actionText, cursor, result }: { actionText: string; cursor: CardLocation; result: ReturnType<typeof getCardsFromInvalid> }) => {
+			actionText                     | result
+			${'invalid move tableau→deck'} | ${{ fromShorthands: [], toShorthands: [] }}
+		`('$actionText', ({ actionText, result }: { actionText: string; cursor: CardLocation; result: ReturnType<typeof getCardsFromInvalid> }) => {
 			const previousAction: PreviousAction = {
 				text: actionText,
 				type: 'invalid',
 			};
-			expect(getCardsFromInvalid(previousAction, cursor)).toEqual(result);
+			expect(getCardsFromInvalid(previousAction)).toEqual(result);
 		});
 	});
 });

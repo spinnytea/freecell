@@ -86,7 +86,7 @@ export const PileSHList = [
 	cascades: 1 - 9, 0 (1-8, but we allow 9 and 10 columns)
 	deck: k
 
-   TODO (6-priority) (review) (coords) (types) review every use of `as PileSH` and `as LocationSH`
+	TODO (6-priority) (review) (coords) (types) review every use of `as PileSH` and `as LocationSH`
 
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */

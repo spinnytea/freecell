@@ -580,8 +580,11 @@ export class FreeCell {
 				gameFunction: 'undo',
 			};
 			if (action.text === this.previousAction.text) {
-				// TODO (4-priority) (test) make a test, if we can this was a head scratcher
+				// TODO (4-priority) (test) make a test, if we can; this was a head scratcher
 				//  - maybe throwing an error to verify branch execution was the wrong approach
+				//  - ^^ that's how that was found originally, a bad implementation would case a test to infinite loop
+				//  - we fixed that particular bug (by finishing the implementation)
+				//  - so now this is untestable? but it's a safeguard … in case of errors? … which we plan to eliminate?
 				// if it's the same action in a row, then don't create a new one
 				// e.g. restart failure
 				return this;
@@ -719,6 +722,8 @@ export class FreeCell {
 		if (game.previousAction.type !== 'invalid') return game;
 
 		// try to move by shorthand
+		// TODO (6-priority) use parseShorthandPileForMove instead of moveByShorthand?
+		// TODO (6-priority) test mismatch edge cases like $moveCardToPile
 		let g = this.moveByShorthand(`${shorthandPile(this.selection.location)}${pileSh}`, {
 			autoFoundation,
 		});

@@ -1595,7 +1595,8 @@ describe('GameBoard', () => {
 				moveByShorthand(move);
 				try {
 					expect(cribGame().previousAction.text).toMatch(spotCheckMoveRegex(move));
-				} catch (cause) {
+				} catch (error) {
+					const cause = error instanceof Error ? error : new Error(String(error));
 					console.error(cribGame().print({ includeHistory: true }));
 					throw new Error(`${name}, Move #${(idx + 1).toString(10)}, ${move} failed`, { cause });
 				}

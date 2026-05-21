@@ -132,12 +132,12 @@ export interface PreviousAction {
 //  - "move_regex" is basically a "decode" action
 //  - every actionText is an "encode" action (e.g. `calcMoveActionText`, but literally every `ACTION_TEXT_EXAMPLES`)
 const SHORTHAND_FROM_TO_REGEX =
-	/^([abcdefhk1234567890])([^abcdefhk1234567890]?)([abcdefhk1234567890])([^abcdefhk1234567890]?)$/;
+	/^([abcdefhk1234567890])([\u2840-\u28FF]?)([abcdefhk1234567890])([\u2840-\u28FF]?)$/;
 const MOVE_REGEX =
-	/^move ([abcdefhk1234567890])([^abcdefhk1234567890]?)([abcdefhk1234567890])([^abcdefhk1234567890]?) ([\w-]+)→(\S+)$/;
+	/^move ([abcdefhk1234567890])([\u2840-\u28FF]?)([abcdefhk1234567890])([\u2840-\u28FF]?) ([\w-]+)→(\S+)$/;
 const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish|flourish52) (\w+) (\S+)$/;
 const MOVE_FOUNDATION_REGEX =
-	/^move ([abcdefhk1234567890])([^abcdefhk1234567890]?)([abcdefhk1234567890])([^abcdefhk1234567890]?) ([\w-]+)→(\S+) \((auto-foundation|flourish|flourish52) (\w+) (\S+)\)$/;
+	/^move ([abcdefhk1234567890])([\u2840-\u28FF]?)([abcdefhk1234567890])([\u2840-\u28FF]?) ([\w-]+)→(\S+) \((auto-foundation|flourish|flourish52) (\w+) (\S+)\)$/;
 const CURSOR_REGEX =
 	/^cursor (set|up|left|down|right|stop)( wrap)?( ([a-z0-9].?))?( ([A-Z0-9][A-Z]))?$/;
 const SELECT_REGEX = /^(de)?select( ([abcdefhk1234567890]))? ([\w-]+)$/;

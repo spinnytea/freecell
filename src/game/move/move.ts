@@ -813,6 +813,18 @@ export function parseShorthandMove(
 	const { fromPile, fromLocation, toPile, toLocation } = _parseShorthandMove(shorthandMove);
 
 	if (fromPile !== fromLocation || toPile !== toLocation) {
+		// TODO (6-priority) (test) ensure that this does not break when coords are wrong
+		//  - i mean, why are we even using this?
+		//  - parseShorthandPileForSelect / parseShorthandPileForMove ?
+		//  - and _then_ we still make corrections later
+		//  - if we pass in coords... it's just more invalid moves
+		//  - what happens if we pass in invalid coords
+		//  - this _shouldn't_ happen because coords are all internal, never saved or loaded
+		//  - we should verify behavior anyway
+		//  - we should think it through to find holes
+		// ---
+		//  - is this function only ever used by game.moveByShorthand?
+		//  - which is used for replay (inaccurate), undo (?), and touchByPile (inaccurate)
 		return [parseShorthandLocation(fromLocation), parseShorthandLocation(toLocation)];
 	}
 
@@ -829,7 +841,6 @@ export function parseShorthandMove(
 
 	// clean up from_location based on MoveSourceType
 	// (pick the right starting sequence)
-	// TODO (3-priority) ensure tested then delete
 	if (from_location.fixture === 'cascade') {
 		// REVIEW (techdebt) (controls) text: "invalid board size", this isn't just a key press
 		//  - we need an altrenate return type or soemthing
@@ -877,7 +888,6 @@ export function parseShorthandMove(
 
 	// clean up to_location based on MoveDestinationType
 	// (pick the right foundation idx)
-	// TODO (3-priority) ensure tested then delete
 	if (to_location.fixture === 'foundation') {
 		// adjust selection until stackable on target
 		// i.e. 2S can stack on AS, find that foundation

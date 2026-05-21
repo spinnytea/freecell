@@ -8,7 +8,7 @@
     "build": "next build",
     "serve": "npx http-server -a localhost -p 8080 -o /freecell/manualtesting out",
     "fix": "npm run lint && npm run format",
-    "lint": "next lint --fix",
+    "lint": "next lint --fix && tsc --noEmit",
     "format": "prettier --write --list-different .",
     "test": "jest -u --watch",
     "test:cov": "jest --coverage",
