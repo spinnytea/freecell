@@ -7,6 +7,10 @@ import { FreeCell } from '@/game/game';
 
 export const SuitList = ['clubs', 'diamonds', 'hearts', 'spades'] as const;
 export type Suit = (typeof SuitList)[number];
+export function isSuit(val: string | undefined): val is Suit {
+	if (!val) return false;
+	return (SuitList as readonly string[]).includes(val);
+}
 export const isRed = (suit: Suit) => suit === 'diamonds' || suit === 'hearts';
 type SuitSH = 'C' | 'D' | 'H' | 'S';
 
@@ -27,6 +31,10 @@ export const RankList = [
 	'joker',
 ] as const;
 export type Rank = (typeof RankList)[number];
+export function isRank(val: string | undefined): val is Rank {
+	if (!val) return false;
+	return (RankList as readonly string[]).includes(val);
+}
 type RankSH = 'A' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'W';
 
 export const getSuitForCompare = (suit: Suit): number => SuitList.indexOf(suit);
