@@ -86,8 +86,6 @@ export const PileSHList = [
 	cascades: 1 - 9, 0 (1-8, but we allow 9 and 10 columns)
 	deck: k
 
-	TODO (6-priority) (review) (coords) (types) review every use of `as PileSH` and `as LocationSH`
-
 	@see [Standard FreeCell Notation](https://www.solitairelaboratory.com/solutioncatalog.html)
 */
 export type PileSH = (typeof PileSHList)[number];
@@ -100,7 +98,10 @@ export interface CardLocation {
 	// XXX (5-priority) (techdebt) (refactor) (rename) (coords) location.data → location.coords, d0/d1 → c0/c1
 	readonly data: number[];
 }
-export type LocationSH = `${PileSH}${string}`;
+/** XXX (review) (coords) (types) why do we even have `Coord`, instead of just `string`? */
+export type Coord = string & { length: 1 };
+/** XXX (review) (coords) (types) why do we even have `LocationSH`, instead of just `string`? */
+export type LocationSH = PileSH | `${PileSH}${Coord}`;
 
 export interface CardShorthand {
 	readonly rank: Rank;
@@ -470,12 +471,12 @@ export function shorthandLocation(location: CardLocation): LocationSH {
 		case 'deck':
 		case 'foundation': {
 			const braille = d0 >= 0 ? countToBraille(d0) : '';
-			return (shorthandPile(location) + braille) as LocationSH;
+			return `${shorthandPile(location)}${braille}`;
 		}
 		case 'cascade': {
 			const d1 = location.data[1];
 			const braille = d1 >= 0 ? countToBraille(d1) : '';
-			return (shorthandPile(location) + braille) as LocationSH;
+			return `${shorthandPile(location)}${braille}`;
 		}
 	}
 }
@@ -524,7 +525,6 @@ export function shorthandSequenceWithLocation(sequence: CardSequence) {
 	return shorthandLocation(sequence.location) + ' ' + shorthandSequence(sequence);
 }
 
-// TODO (6-priority) roll this out instead of parseShorthandPile
 export function parseShorthandLocation(p: LocationSH): CardLocation {
 	const location = parseShorthandPile(p as PileSH);
 	switch (location.fixture) {
@@ -598,9 +598,9 @@ export function parseShorthandPile(p: PileSH): CardLocation {
 	we can use them to get an actual location of a cursor (if we log a pile + coord).
 */
 const START_OF_8_DOT_BRAILLE = 0x2840;
-// TODO (6-priority) (refactor) (coords) compare START_OF_8_DOT_BRAILLE and BOTTOM_OF_CASCADE
-const end = START_OF_8_DOT_BRAILLE + 191;
-export const countToBraille = (count = 0) => String.fromCodePoint(START_OF_8_DOT_BRAILLE + count);
+const end = START_OF_8_DOT_BRAILLE + 191; // (end-start=191) must be larger than BOTTOM_OF_CASCADE=99
+export const countToBraille = (count = 0) =>
+	String.fromCodePoint(START_OF_8_DOT_BRAILLE + count) as Coord;
 export const brailleToCount = (char = '⡀') => char.charCodeAt(0) - START_OF_8_DOT_BRAILLE;
 export function removeBraille(actionText: string | undefined): string {
 	if (!actionText) return '';

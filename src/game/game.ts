@@ -721,9 +721,9 @@ export class FreeCell {
 		});
 		if (game.previousAction.type !== 'invalid') return game;
 
+		// the selected card can't move like this
 		// try to move by shorthand
-		// TODO (6-priority) use parseShorthandPileForMove instead of moveByShorthand?
-		// TODO (6-priority) test mismatch edge cases like $moveCardToPile
+		// (adjust move)
 		let g = this.moveByShorthand(`${shorthandPile(this.selection.location)}${pileSh}`, {
 			autoFoundation,
 		});

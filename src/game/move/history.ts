@@ -424,7 +424,6 @@ export function parseActionTextMove(actionText: string) {
 function _parseActionTextMove(actionText: string) {
 	const match = MOVE_REGEX.exec(actionText);
 	if (match) {
-		// TODO (6-priority) (motivation) (refactor) (coords) minimize use of fromPile/toPile
 		const [, fromPile, fc, toPile, tc, fromShorthand, toShorthand] = match;
 		return {
 			fromPile: fromPile as PileSH,
@@ -453,7 +452,6 @@ function _parseActionTextAutoFoundation(actionText: string) {
 function _parseActionTextMoveFoundation(actionText: string) {
 	const match = MOVE_FOUNDATION_REGEX.exec(actionText);
 	if (match) {
-		// TODO (6-priority) (motivation) (refactor) (coords) minimize use of fromPile/toPile
 		const [, fromPile, fc, toPile, tc, fromShorthand, toShorthand, , piles, autoShorthand] = match;
 		return {
 			fromPile: fromPile as PileSH,

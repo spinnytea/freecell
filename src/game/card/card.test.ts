@@ -4,6 +4,7 @@ import {
 	Card,
 	CardLocation,
 	cloneCards,
+	Coord,
 	countToBraille,
 	initializeDeck,
 	isAdjacent,
@@ -292,9 +293,9 @@ describe('game/card', () => {
 					${13} | ${'⡍'}
 					${20} | ${'⡔'}
 					${55} | ${'⡷'}
-				`('$d1', ({ d1, braille }: { d1: number; braille: string }) => {
+				`('$d1', ({ d1, braille }: { d1: number; braille: Coord }) => {
 					const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
-					const shorthandD0 = (shorthand + braille) as LocationSH;
+					const shorthandD0: LocationSH = `${shorthand}${braille}`;
 					expect(shorthandPile(location)).toBe(shorthand);
 					expect(shorthandLocation(location)).toBe(shorthandD0);
 					expect(parseShorthandPile(shorthand)).toEqual({ fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] });

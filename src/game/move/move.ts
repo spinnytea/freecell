@@ -813,18 +813,7 @@ export function parseShorthandMove(
 	const { fromPile, fromLocation, toPile, toLocation } = _parseShorthandMove(shorthandMove);
 
 	if (fromPile !== fromLocation || toPile !== toLocation) {
-		// TODO (6-priority) (test) ensure that this does not break when coords are wrong
-		//  - i mean, why are we even using this?
-		//  - parseShorthandPileForSelect / parseShorthandPileForMove ?
-		//  - and _then_ we still make corrections later
-		//  - if we pass in coords... it's just more invalid moves
-		//  - what happens if we pass in invalid coords
-		//  - this _shouldn't_ happen because coords are all internal, never saved or loaded
-		//  - we should verify behavior anyway
-		//  - we should think it through to find holes
-		// ---
-		//  - is this function only ever used by game.moveByShorthand?
-		//  - which is used for replay (inaccurate), undo (?), and touchByPile (inaccurate)
+		// optimization for when shorthandMove includes coords
 		return [parseShorthandLocation(fromLocation), parseShorthandLocation(toLocation)];
 	}
 
