@@ -277,8 +277,12 @@ describe('game.moveByShorthand', () => {
 	//  - make an example where shorthandMove is the same for various actual moves
 	//  - moveByShorthand (and the solutions catalog) always move the "largest" sequence
 	//  - when you move a sequence to an empty cascade, it can be ambiguous
-	//  - notably, it's _only_ to an empty cascade that's ambiguous
+	//  - notably, it's _only_ to an empty cascade and when splitting a stack that's ambiguous
 	//  - well, and (joker)
+	// ---
+	//  - verify behavior of print/parse w/w/o history
+	//  - standard move notation is inadequate for this level of freedom
+	//  - either use braille or block shorthand, or some other mitigation strategy
 	test('mismatch between shorthandMove and actual move', () => {
 		const game = FreeCell.parse(
 			'' + //

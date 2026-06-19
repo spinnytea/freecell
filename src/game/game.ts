@@ -28,6 +28,7 @@ import {
 	parseAltCursorFromPreviousActionText,
 	parseAndUndoPreviousActionText,
 	parseCursorFromPreviousActionText,
+	parseMoveFromActionText,
 	parseMovesFromHistory,
 	parsePreviousActionType,
 	PREVIOUS_ACTION_TYPE_IN_HISTORY,
@@ -1308,6 +1309,7 @@ export class FreeCell {
 		line.pop();
 		const actionText = line.slice(0).reverse().join('') || 'init';
 		const previousAction = parsePreviousActionType(actionText);
+		let verifyActionText = false;
 
 		// attempt to parse the history
 		const history: string[] = [];
@@ -1349,16 +1351,19 @@ export class FreeCell {
 			} else {
 				history.push(errorMessage ?? 'init with invalid history error');
 				history.push(actionText);
+				verifyActionText = true;
 			}
 		} else {
 			// parse the history (lines) of the game
 			//
-			// this history is a failsafe, but it is invalid
-			// there's no point in trying to verify it
+			// this history is a failsafe, but it is (provably) invalid
+			// there's (reasonably) no point in trying to verify it
 			// we could, separately, try to analyze what failed,
 			// but that's not something we need to do during parse
 			// ∴ just recreate the game state with what we have available
 			// (also, the unit tests do this _aallll_ the time with `hand-jammed` starting points)
+			// (and like, this is just a dump of what we think happened)
+			// (and the history only really matters if we try to undo or replay - ¿that's the time we could confirm?)
 			Array.prototype.push.apply(
 				history,
 				lines.map((l) => l.trim())
@@ -1373,6 +1378,7 @@ export class FreeCell {
 			} else if (PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type)) {
 				history.push('init without history');
 				history.push(actionText);
+				verifyActionText = true;
 			}
 		}
 
@@ -1488,30 +1494,32 @@ export class FreeCell {
 			);
 		}
 
-		/*
-		// XXX (techdebt) re-print the our game, confirm it matches the input
-		if (process.env.NODE_ENV === 'test') {
-			// XXX (techdebt) includeHistory could also be the "invalid history so just print what we have"
-			//  - this does _not_ start with :h, but is the history, just a bunch of lines of it
-			const reprint = game.print({ includeHistory: print.includes(':h') });
-			if (reprint !== print) {
-				// XXX (techdebt) sometimes unit tests don't include the "you win" message in the setup
-				if (!reprint.includes('Y O U   W I N !') && !reprint.includes('YOU WIN !') && !reprint.includes('A M A Z I N G !') && !reprint.includes('AMAZING !')) {
-					// print with non-empty deck doesn't match (weird game setup for testing)
-					// some games have invalid history (on purpose or otherwise)
-					if (!reprint.includes(':d') && !reprint.includes('init with invalid history')) {
-						// cursor is in the wrong place sometimes
-						// TODO (juice) (parse-history) (print) handle flash (e.g. game.$checkCanFlourish.test.ts `juice flash AH,AS`)
-						const rpc = reprint.replace('>', ' ');
-						const pc = print.replace('>', ' ');
-						if (rpc !== pc) {
-							throw new Error(`whoops!\n${print}\n${reprint}`);
-						}
-					}
+		if (verifyActionText) {
+			const move = parseMoveFromActionText(actionText);
+			if (move) {
+				const undid = game.undo();
+				if (undid.previousAction.type === 'invalid') return undid;
+
+				const redid = undid.moveByShorthand(move);
+				if (redid.previousAction.type === 'invalid') {
+					return undid.__clone({
+						action: redid.previousAction,
+						cursor: redid.cursor,
+						cards: redid.cards,
+						selection: null,
+						availableMoves: null,
+					});
+				}
+				if (actionText === redid.previousAction.text) return game; // XXX (test) e.g. ab
+				if (removeBraille(actionText) === removeBraille(redid.previousAction.text)) {
+					return game.__clone({
+						action: redid.previousAction,
+						history: redid.history.slice(0, -1),
+					});
 				}
 			}
 		}
-		// */
+
 		return game;
 	}
 }

@@ -237,6 +237,9 @@ describe('game.$moveCardToPile', () => {
 	test.todo('something else selected');
 
 	// TODO (techdebt) (coords) (history) (parse) (print) (shorthandMove) shorthandMove is idealized, but we can move anything
+	//  - verify behavior of print/parse w/w/o history
+	//  - standard move notation is inadequate for this level of freedom
+	//  - either use braille or block shorthand, or some other mitigation strategy
 	describe('mismatch between shorthandMove and actual move', () => {
 		describe('from cascade', () => {
 			const game = FreeCell.parse(
@@ -344,7 +347,7 @@ describe('game.$moveCardToPile', () => {
 					' move a8 TS→JH'
 			).$moveCardToPile('KS', 'd');
 			expect(game.previousAction).toEqual({
-				text: 'move a8 TS→JH',
+				text: 'move a8⡆ TS→JH',
 				type: 'move',
 			});
 		});
@@ -369,7 +372,7 @@ describe('game.$moveCardToPile', () => {
 					' move a8 TS→JH'
 			);
 			expect(game.previousAction).toEqual({
-				text: 'move a8 TS→JH',
+				text: 'move a8⡆ TS→JH',
 				type: 'move',
 			});
 			game = game.$moveCardToPile('KC', '5');

@@ -732,13 +732,22 @@ export function parseMovesFromHistory(history: string[]): { seed: number; moves:
 		}
 
 		// parseActionTextMove, but allow null for shuffle, deal, etc
-		const match = _parseActionTextMove(actionText) ?? _parseActionTextMoveFoundation(actionText);
-		if (match) {
-			const { fromPile, toPile } = match;
-			moves.push(`${fromPile}${toPile}`);
+		const move = parseMoveFromActionText(actionText);
+		if (move) {
+			moves.push(move);
 		}
 	}
 	return { seed, moves };
+}
+
+export function parseMoveFromActionText(actionText: string): `${PileSH}${PileSH}` | null {
+	const match = _parseActionTextMove(actionText) ?? _parseActionTextMoveFoundation(actionText);
+	if (match) {
+		const { fromPile, toPile } = match;
+		return `${fromPile}${toPile}`;
+	}
+
+	return null;
 }
 
 /** just the cards that moved */

@@ -44,7 +44,7 @@ describe('game.undo (+ history)', () => {
 						//53 6a 65 67 85 a8 68 27 // clipped most of the action
 						' 67 '
 				);
-				expect(game.history).toEqual(['init with invalid history replay cards', 'move 67 9H→TC']);
+				expect(game.history).toEqual(['init with invalid history replay cards', 'move 6⡀7⡇ 9H→TC']);
 				game = game.undo();
 				expect(game.history).toEqual(['init with invalid history replay cards']);
 				expect(game.previousAction).toEqual({

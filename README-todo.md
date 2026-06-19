@@ -9,7 +9,6 @@
 
 ## Top-Level TODOs
 
-- FIXME (6-priority) ← the rest of those
 - TODO (4-priority) (techdebt) replace @link with @linkcode
 - TODO (gsap) review how we use gsap, right now it feels like magic
 - TODO (techdebt) switch from nextjs to vite
