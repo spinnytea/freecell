@@ -139,8 +139,8 @@ const AUTO_FOUNDATION_REGEX = /^(auto-foundation|flourish|flourish52) (\w+) (\S+
 const MOVE_FOUNDATION_REGEX =
 	/^move ([abcdefhk1234567890])([\u2840-\u28FF]?)([abcdefhk1234567890])([\u2840-\u28FF]?) ([\w-]+)→(\S+) \((auto-foundation|flourish|flourish52) (\w+) (\S+)\)$/;
 const CURSOR_REGEX =
-	/^cursor (set|up|left|down|right|stop)( wrap)?( ([a-z0-9].?))?( ([A-Z0-9][A-Z]))?$/;
-const SELECT_REGEX = /^(de)?select( ([abcdefhk1234567890]))? ([\w-]+)$/;
+	/^cursor (set|up|left|down|right|stop)( wrap)?( ([abcdefhk1234567890][\u2840-\u28FF]?))?( (\w\w))?$/;
+const SELECT_REGEX = /^(de)?select( ([abcdefhk1234567890])([\u2840-\u28FF]?))? ([\w-]+)$/;
 
 /**
 	quick-and-dirty check to ensure that, during game replays from history, the `moveByShorthand` actually occurred
@@ -479,7 +479,7 @@ function parseActionTextCursor(actionText: string) {
 function parseActionTextSelect(actionText: string) {
 	const match = SELECT_REGEX.exec(actionText);
 	if (match) {
-		const [, , , shMove, fromShorthand] = match;
+		const [, , , shMove, , fromShorthand] = match;
 		return { p: shMove as PileSH | undefined, fromShorthand };
 	}
 	throw new Error('invalid de/select actionText: ' + actionText);

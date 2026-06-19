@@ -1309,7 +1309,7 @@ export class FreeCell {
 		line.pop();
 		const actionText = line.slice(0).reverse().join('') || 'init';
 		const previousAction = parsePreviousActionType(actionText);
-		let verifyActionText = false;
+		let verifyActionTextToRecoverCoords = false;
 
 		// attempt to parse the history
 		const history: string[] = [];
@@ -1351,7 +1351,7 @@ export class FreeCell {
 			} else {
 				history.push(errorMessage ?? 'init with invalid history error');
 				history.push(actionText);
-				verifyActionText = true;
+				verifyActionTextToRecoverCoords = true;
 			}
 		} else {
 			// parse the history (lines) of the game
@@ -1378,7 +1378,7 @@ export class FreeCell {
 			} else if (PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type)) {
 				history.push('init without history');
 				history.push(actionText);
-				verifyActionText = true;
+				verifyActionTextToRecoverCoords = true;
 			}
 		}
 
@@ -1494,7 +1494,7 @@ export class FreeCell {
 			);
 		}
 
-		if (verifyActionText) {
+		if (verifyActionTextToRecoverCoords) {
 			const move = parseMoveFromActionText(actionText);
 			if (move) {
 				const undid = game.undo();

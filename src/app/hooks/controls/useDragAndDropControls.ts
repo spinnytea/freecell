@@ -367,8 +367,8 @@ export function _checkIfValid(
 	].filter(
 		// omit the current location
 		//  - e.g. invalid move 22 7H-6C-5D-4S→4S
-		//  - e.g. if you do drag a card and the same position is the target, it's just every kind of wrong
-		//  - i.e. it's not worth having this position
+		//  - e.g. if you do drag a card and the same location is the target, it's just every kind of wrong
+		//  - i.e. it's not worth having this location
 		(avLocation) =>
 			avLocation.fixture !== location.fixture || avLocation.data[0] !== location.data[0]
 	);
