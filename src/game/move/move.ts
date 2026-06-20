@@ -9,7 +9,8 @@ import {
 	getSequenceAt,
 	isAdjacent,
 	isRed,
-	parseShorthandPosition_INCOMPLETE,
+	parseShorthandLocation,
+	parseShorthandPile,
 	PileSH,
 	shorthandCard,
 	shorthandLocation,
@@ -18,6 +19,7 @@ import {
 	Suit,
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
+import { _parseShorthandMove } from '@/game/move/history';
 
 /* *********** */
 /* DEFINITIONS */
@@ -745,14 +747,12 @@ export function calcAutoFoundationActionText(
 	isFlourish52: boolean
 ): string {
 	const movedCardsStr = moved.map((card) => shorthandCard(card)).join(',');
-	const movedPositionsStr = moved.map((card) => shorthandPile(card.location)).join('');
+	const movedPilesStr = moved.map((card) => shorthandPile(card.location)).join('');
 	const firstWord = isFlourish52 ? 'flourish52' : isFlourish ? 'flourish' : 'auto-foundation';
-	return `${firstWord} ${movedPositionsStr} ${movedCardsStr}`;
+	return `${firstWord} ${movedPilesStr} ${movedCardsStr}`;
 }
 
 /**
-	position info is entirely superfluous, no need to add it to up/left/down/right
-
 	we don't need it in set/stop either,
 	but it does make a few things nicer to validate for having it there
 	(e.g. $toggleCursor)
@@ -802,36 +802,35 @@ export function calcCursorActionText(
 	4. Third freecell to home: ch \
 	etc.
 
-	@see {@link parseShorthandPositionForSelect}
-	@see {@link parseShorthandPositionForMove}
+	@see {@link parseShorthandPileForSelect}
+	@see {@link parseShorthandPileForMove}
+	@param shorthandMove `${PileSH}${PileSH}` or `${LocationSH}${LocationSH}`
 */
 export function parseShorthandMove(
 	game: FreeCell,
-	shorthandMove: string,
-	/** @deprecated HACK (techdebt) there's a lot of packing and unpacking simply to make `moveCardToPosition` work */
-	from_shorthand_arg?: CardLocation
-): [CardLocation, CardLocation] {
-	const [from_shorthand, to_shorthand] = shorthandMove.split('');
-	const from_location = from_shorthand_arg ?? parseShorthandPosition_INCOMPLETE(from_shorthand);
-	const to_location = parseShorthandPosition_INCOMPLETE(to_shorthand);
+	shorthandMove: string
+): [CardLocation, CardLocation] | null {
+	const { fromPile, fromLocation, toPile, toLocation } = _parseShorthandMove(shorthandMove);
+
+	if (fromPile !== fromLocation || toPile !== toLocation) {
+		// optimization for when shorthandMove includes coords
+		return [parseShorthandLocation(fromLocation), parseShorthandLocation(toLocation)];
+	}
+
+	const from_location = parseShorthandPileForSelect(game, fromPile);
+	if (!from_location) return null;
+	const selection = getSequenceAt(game, from_location);
+	const to_location = parseShorthandPileForMove(game, toPile, selection);
+	if (!to_location) return null;
 
 	if (to_location.fixture === 'cascade') {
 		// clamp
 		to_location.data[1] = Math.max(0, game.tableau[to_location.data[0]].length - 1);
 	}
 
-	if (from_location.fixture === 'deck') {
-		// top card in deck
-		from_location.data[0] = game.deck.length - 1;
-	}
-	if (to_location.fixture === 'deck') {
-		// top of the deck
-		to_location.data[0] = game.deck.length;
-	}
-
 	// clean up from_location based on MoveSourceType
 	// (pick the right starting sequence)
-	if (!from_shorthand_arg && from_location.fixture === 'cascade') {
+	if (from_location.fixture === 'cascade') {
 		// REVIEW (techdebt) (controls) text: "invalid board size", this isn't just a key press
 		//  - we need an altrenate return type or soemthing
 		//  - formulate the error message in whatever calls this…
@@ -904,19 +903,17 @@ export function parseShorthandMove(
 	and is independent of other moves (we don't know what will happen next)
 
 	@see {@link parseShorthandMove}
-	@see {@link parseShorthandPositionForMove}
+	@see {@link parseShorthandPileForMove}
 */
-export function parseShorthandPositionForSelect(
-	game: FreeCell,
-	pileSh: PileSH
-): CardLocation | null {
-	const from_location = parseShorthandPosition_INCOMPLETE(pileSh);
+export function parseShorthandPileForSelect(game: FreeCell, pileSh: PileSH): CardLocation | null {
+	const from_location = parseShorthandPile(pileSh);
 
-	// verify position wrt game - e.g. cellCount,cascadeCount
+	// verify location wrt game - e.g. cellCount,cascadeCount
 	switch (from_location.fixture) {
 		case 'deck':
 			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
+			// top card in deck
 			from_location.data[0] = game.deck.length - 1;
 			break;
 		case 'cell':
@@ -963,21 +960,26 @@ export function parseShorthandPositionForSelect(
 
 	pre-req: game already has a selection
 	(required for 'h')
-	(if there is no selection, you should call {@link parseShorthandPositionForSelect}) instead
+	(if there is no selection, you should call {@link parseShorthandPileForSelect}) instead
 
 	@see {@link parseShorthandMove}
-	@see {@link parseShorthandPositionForSelect}
+	@see {@link parseShorthandPileForSelect}
 */
-export function parseShorthandPositionForMove(game: FreeCell, pileSh: PileSH): CardLocation | null {
-	if (!game.selection) return null;
+export function parseShorthandPileForMove(
+	game: FreeCell,
+	pileSh: PileSH,
+	selection: CardSequence | null = game.selection
+): CardLocation | null {
+	if (!selection) return null;
 	// const from_location = game.selection.location;
-	const to_location = parseShorthandPosition_INCOMPLETE(pileSh);
+	const to_location = parseShorthandPile(pileSh);
 
-	// verify position wrt game - e.g. cellCount,cascadeCount
+	// verify location wrt game - e.g. cellCount,cascadeCount
 	switch (to_location.fixture) {
 		case 'deck':
 			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
+			// top card in deck
 			to_location.data[0] = game.deck.length;
 			break;
 		case 'cell':
@@ -987,8 +989,7 @@ export function parseShorthandPositionForMove(game: FreeCell, pileSh: PileSH): C
 			// adjust selection until stackable on target
 			// i.e. 2S can stack on AS, find that foundation
 			// i.e. AC can go in any _empty_ foundation, find that one
-			const from_sequence = game.selection;
-			const tail_card = from_sequence.cards[from_sequence.cards.length - 1];
+			const tail_card = selection.cards[selection.cards.length - 1];
 			let d0 = 0;
 			while (
 				d0 < game.foundations.length &&

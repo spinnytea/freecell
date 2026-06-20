@@ -265,9 +265,9 @@ describe('game/move.findAvailableMoves', () => {
 			});
 
 			// this is a nice to have
-			// but we have to start bending a lot of rule, and start blocking them elsewhere
+			// but we would have to start bending a lot of rules, and start blocking them elsewhere
 			// (selecting the foundation is peekOnly for good reason)
-			// (the position 'h' represents all foundation positions, we shouldn't also add depth)
+			// (the pile 'h' represents all foundation positions, we shouldn't also add depth)
 			expect(game.$touchAndMove('4D').previousAction).not.toEqual({
 				text: 'move 4d 4D→cell',
 				type: 'move',

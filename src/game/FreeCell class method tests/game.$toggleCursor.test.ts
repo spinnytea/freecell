@@ -233,11 +233,10 @@ describe('game.$toggleCursor', () => {
 					expect(game.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('deck');
 					expect(game.$toggleCursor().$toggleCursor().$toggleCursor().cursor.fixture).toEqual('foundation');
 
-					// BUG (5-priority) (cursor) 'cursor set h TC' should be 'cursor set h⡁ 9D'
 					expect(game.previousAction.text).toBe('invalid move h⡁k TD→deck');
-					expect(game.$toggleCursor().previousAction.text).toEqual('cursor set h⡀ TC');
+					expect(game.$toggleCursor().previousAction.text).toEqual('cursor set h⡁ 9D');
 					expect(game.$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set k⡀ TD');
-					expect(game.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set h⡀ TC');
+					expect(game.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set h⡁ 9D');
 				});
 
 				describe('not empty', () => {
@@ -277,10 +276,9 @@ describe('game.$toggleCursor', () => {
 						expect(game.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('foundation');
 						expect(game.$toggleCursor().$toggleCursor().$toggleCursor().cursor.fixture).toEqual('deck');
 
-						// BUG (5-priority) (cursor) 'cursor set h TC' should be 'cursor set h⡁ 9D'
 						expect(game.previousAction.text).toBe('invalid move h⡁k TD→deck');
 						expect(game.$toggleCursor().previousAction.text).toEqual('cursor set k⡀ KD');
-						expect(game.$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set h⡀ TC');
+						expect(game.$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set h⡁ 9D');
 						expect(game.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set k⡀ KD');
 					});
 
@@ -397,7 +395,7 @@ describe('game.$toggleCursor', () => {
 					type: 'invalid',
 				});
 				const gameSelectFoundation = game.$selectCard('2C', { allowSelectFoundation: true });
-				// TODO (5-priority) (gameplay) (peek) missing position h
+				// TODO (5-priority) (gameplay) (peek) missing location of h
 				expect(gameSelectFoundation.previousAction).toEqual({
 					text: 'select 2C',
 					type: 'select',

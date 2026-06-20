@@ -42,15 +42,14 @@ describe('move.parseShorthandMove', () => {
 				' 32 57 5c a8 '
 		);
 
-		// REVIEW (techdebt) (controls) ef90 should return null
 		test.each`
 			pileSh | from_location
 			${'a'} | ${{ fixture: 'cell', data: [0] }}
 			${'b'} | ${{ fixture: 'cell', data: [1] }}
 			${'c'} | ${{ fixture: 'cell', data: [2] }}
 			${'d'} | ${{ fixture: 'cell', data: [3] }}
-			${'e'} | ${{ fixture: 'cell', data: [4] }}
-			${'f'} | ${{ fixture: 'cell', data: [5] }}
+			${'e'} | ${null}
+			${'f'} | ${null}
 			${'h'} | ${{ fixture: 'foundation', data: [0] }}
 			${'1'} | ${{ fixture: 'cascade', data: [0, 3] }}
 			${'2'} | ${{ fixture: 'cascade', data: [1, 5] }}
@@ -60,10 +59,11 @@ describe('move.parseShorthandMove', () => {
 			${'6'} | ${{ fixture: 'cascade', data: [5, 1] }}
 			${'7'} | ${{ fixture: 'cascade', data: [6, 4] }}
 			${'8'} | ${{ fixture: 'cascade', data: [7, 5] }}
-			${'9'} | ${{ fixture: 'cascade', data: [7, 5] }}
-			${'0'} | ${{ fixture: 'cascade', data: [7, 5] }}
-		`('$pileSh 5', ({ pileSh, from_location }: { pileSh: PileSH; from_location: CardLocation }) => {
-			expect(parseShorthandMove(game, `${pileSh}5`)).toEqual([from_location, { fixture: 'cascade', data: [4, 0] }]);
+			${'9'} | ${null}
+			${'0'} | ${null}
+		`('$pileSh 5', ({ pileSh, from_location }: { pileSh: PileSH; from_location: CardLocation | null }) => {
+			const result = from_location ? [from_location, { fixture: 'cascade', data: [4, 0] }] : null;
+			expect(parseShorthandMove(game, `${pileSh}5`)).toEqual(result);
 		});
 	});
 });

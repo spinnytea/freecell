@@ -43,7 +43,7 @@ interface DragState {
 	game: FreeCell;
 	/** game.selection; shorthands of cards being dragged, so we can animate the drag */
 	shorthands: string[];
-	/** all available card locations drop (each Position, all foundations) */
+	/** all available card locations drop (each Pile, all foundations) */
 	dropTargets: DropTarget[];
 }
 
@@ -286,7 +286,7 @@ export function _overlappingAvailableMove(
 	dropTargets: DropTarget[],
 	{ cardHeight, cardWidth }: FixtureSizes
 ): CardLocation | null {
-	// must move at least a third of a card to count
+	// must move mouse at least a third of a card width to count
 	if (Math.abs(draggedX || 0) + Math.abs(draggedY || 0) < cardWidth / 3) {
 		dropTargets.forEach((dropTarget) => {
 			dropTarget.isOverlapping = false;
@@ -367,8 +367,8 @@ export function _checkIfValid(
 	].filter(
 		// omit the current location
 		//  - e.g. invalid move 22 7H-6C-5D-4S→4S
-		//  - e.g. if you do drag a card and the same position is the target, it's just every kind of wrong
-		//  - i.e. it's not worth having this position
+		//  - e.g. if you do drag a card and the same location is the target, it's just every kind of wrong
+		//  - i.e. it's not worth having this location
 		(avLocation) =>
 			avLocation.fixture !== location.fixture || avLocation.data[0] !== location.data[0]
 	);

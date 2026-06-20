@@ -99,7 +99,7 @@ describe('game.touch', () => {
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 			});
 
-			describe('cursor x selection', () => {
+			describe('cursor ⨉ selection', () => {
 				test.each`
 					d0    | printSubstr                     | actionText
 					${44} | ${'7S 7H>AD 5D|3S|KD TC 3C TD'} | ${'cursor set k⡬ AD'}
@@ -193,7 +193,7 @@ describe('game.touch', () => {
 			});
 		});
 
-		test('cell x foundation', () => {
+		test('cell ⨉ foundation', () => {
 			game = game
 				.dealAll({ demo: true })
 				.setCursor({ fixture: 'cell', data: [3] })

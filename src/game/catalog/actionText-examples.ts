@@ -13,8 +13,22 @@ export const FIFTY_TWO_CARD_FLOURISH =
 	 - log every single `Freecell.action.text` that goes through the `Freecell.constructor`
 	 - log every action in `Freecell.history`
 	 - categorize them
+	   - select ⨉ pile∊fixture
+	   - move ⨉ pile∊fixture ⨉ pile∊fixture
+		- etc
 	 - ensure they are covered here
+	 - store and test every game state in example game #5
 	 - and vice-versa because some of these are outdate
+
+	REVIEW (5-priority) (techdebt) (review) (test) [Fuzzing Programs to Find Bugs · Computerphile](https://www.youtube.com/watch?v=kaD54VXxGrI)
+	 - apparently, this is what I want to do ^^: build a corpus of examples
+	 - start with Game #5 as a base, including every single move
+	 - include the other defined games (probably cleanest to just include the whole thing, than figure out layering them)
+	 - we already found random game states to test, so include those (through actual gameplay or otherwise)
+	 - do we write a fuzzing?
+	   - e.g. While Game #5 has a set of actual moves, we could spot check all the moves it did not make (valid yes, invalid?)
+		- e.g. Discard history and swap random cards on the board (making both valid and invalid states), and then retry the given move
+		- the important thing is, we need to know if the fuzzing is worth recording, how to automatically generate it and automatically evaluate it?
 */
 export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'init': '', // we cannot "take an action" to make an init
@@ -216,6 +230,16 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 		' 9C TH                   \n' +
 		' hand-jammed',
 	'invalid move 1h 9C→foundation':
+		'' + //
+		' 3C          AD AH       \n' +
+		' 9C TH                   \n' +
+		' hand-jammed',
+	'invalid move ah⡂ 3C→foundation':
+		'' + //
+		' 3C          AD AH       \n' +
+		' 9C TH                   \n' +
+		' hand-jammed',
+	'invalid move 1⡁h⡂ 9C→foundation':
 		'' + //
 		' 3C          AD AH       \n' +
 		' 9C TH                   \n' +

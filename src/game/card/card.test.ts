@@ -4,11 +4,15 @@ import {
 	Card,
 	CardLocation,
 	cloneCards,
+	Coord,
 	countToBraille,
 	initializeDeck,
 	isAdjacent,
+	LocationSH,
 	parseShorthandCard,
-	parseShorthandPosition_INCOMPLETE,
+	parseShorthandLocation,
+	parseShorthandPile,
+	PileSH,
 	Rank,
 	RankList,
 	shorthandCard,
@@ -173,22 +177,33 @@ describe('game/card', () => {
 				${50} | ${'k'}    | ${'k⡲'}
 				${51} | ${'k'}    | ${'k⡳'}
 				${55} | ${'k'}    | ${'k⡷'}
-			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: string; shorthandD0: string }) => {
+			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: PileSH; shorthandD0: LocationSH }) => {
 				const location: CardLocation = { fixture: 'deck', data: [d0] };
+				const location_pile: CardLocation = { fixture: 'deck', data: [0] };
 				expect(shorthandPile(location)).toBe(shorthand);
 				expect(shorthandLocation(location)).toBe(shorthandD0);
-				expect(parseShorthandPosition_INCOMPLETE(shorthandPile(location))).toEqual({ fixture: 'deck', data: [0] });
-				expect(parseShorthandPosition_INCOMPLETE(shorthandLocation(location))).toEqual(location);
+				expect(parseShorthandPile(shorthand)).toEqual(location_pile);
+				expect(parseShorthandPile(shorthandD0 as PileSH)).toEqual(location_pile);
+				expect(parseShorthandLocation(shorthand)).toEqual(location_pile);
+				// it's only when we print/parse with a coord that the location is not ambiguous
+				expect(parseShorthandLocation(shorthandD0)).toEqual(location);
 			});
 
 			test.each`
 				d0    | shorthand | shorthandD0
 				${-2} | ${'k'}    | ${'k'}
 				${-1} | ${'k'}    | ${'k'}
-			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: string; shorthandD0: string }) => {
+			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: PileSH; shorthandD0: LocationSH }) => {
 				const location: CardLocation = { fixture: 'deck', data: [d0] };
 				expect(shorthandPile(location)).toBe(shorthand);
 				expect(shorthandLocation(location)).toBe(shorthandD0);
+
+				// parse is all just the pile location, since there are no coords
+				const location_pile: CardLocation = { fixture: 'deck', data: [0] };
+				expect(parseShorthandPile(shorthand)).toEqual(location_pile);
+				expect(parseShorthandPile(shorthandD0 as PileSH)).toEqual(location_pile);
+				expect(parseShorthandLocation(shorthand)).toEqual(location_pile);
+				expect(parseShorthandLocation(shorthandD0)).toEqual(location_pile);
 			});
 		});
 
@@ -201,20 +216,20 @@ describe('game/card', () => {
 				${3} | ${'d'}
 				${4} | ${'e'}
 				${5} | ${'f'}
-			`('$d0', ({ d0, shorthand }: { d0: number; shorthand: string }) => {
+			`('$d0', ({ d0, shorthand }: { d0: number; shorthand: PileSH }) => {
 				const location: CardLocation = { fixture: 'cell', data: [d0] };
 				expect(shorthandPile(location)).toBe(shorthand);
 				expect(shorthandLocation(location)).toBe(shorthand);
-				expect(parseShorthandPosition_INCOMPLETE(shorthandPile(location))).toEqual(location);
-				expect(parseShorthandPosition_INCOMPLETE(shorthandLocation(location))).toEqual(location);
+				expect(parseShorthandPile(shorthand)).toEqual(location);
+				expect(parseShorthandLocation(shorthand)).toEqual(location);
 			});
 
 			test.each`
 				d0    | error
-				${-2} | ${'invalid position: {"fixture":"cell","data":[-2]}'}
-				${-1} | ${'invalid position: {"fixture":"cell","data":[-1]}'}
-				${6}  | ${'invalid position: {"fixture":"cell","data":[6]}'}
-				${7}  | ${'invalid position: {"fixture":"cell","data":[7]}'}
+				${-2} | ${'invalid location: {"fixture":"cell","data":[-2]}'}
+				${-1} | ${'invalid location: {"fixture":"cell","data":[-1]}'}
+				${6}  | ${'invalid location: {"fixture":"cell","data":[6]}'}
+				${7}  | ${'invalid location: {"fixture":"cell","data":[7]}'}
 			`('$d0', ({ d0, error }: { d0: number; error: string }) => {
 				const location: CardLocation = { fixture: 'cell', data: [d0] };
 				expect(() => shorthandPile(location)).toThrow(error);
@@ -233,12 +248,16 @@ describe('game/card', () => {
 				${5} | ${'h'}    | ${'h⡅'}
 				${6} | ${'h'}    | ${'h⡆'}
 				${7} | ${'h'}    | ${'h⡇'}
-			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: string; shorthandD0: string }) => {
+			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: PileSH; shorthandD0: LocationSH }) => {
 				const location: CardLocation = { fixture: 'foundation', data: [d0] };
+				const location_pile: CardLocation = { fixture: 'foundation', data: [0] };
 				expect(shorthandPile(location)).toBe(shorthand);
 				expect(shorthandLocation(location)).toBe(shorthandD0);
-				expect(parseShorthandPosition_INCOMPLETE(shorthandPile(location))).toEqual({ fixture: 'foundation', data: [0] });
-				expect(parseShorthandPosition_INCOMPLETE(shorthandLocation(location))).toEqual(location);
+				expect(parseShorthandPile(shorthand)).toEqual(location_pile);
+				expect(parseShorthandPile(shorthandD0 as PileSH)).toEqual(location_pile);
+				expect(parseShorthandLocation(shorthand)).toEqual(location_pile);
+				// it's only when we print/parse with a coord that the location is not ambiguous
+				expect(parseShorthandLocation(shorthandD0)).toEqual(location);
 			});
 
 			test.each`
@@ -265,7 +284,7 @@ describe('game/card', () => {
 				${7} | ${'8'}
 				${8} | ${'9'}
 				${9} | ${'0'}
-			`('$d0', ({ d0, shorthand }: { d0: number; shorthand: string }) => {
+			`('$d0', ({ d0, shorthand }: { d0: number; shorthand: PileSH }) => {
 				test.each`
 					d1    | braille
 					${0}  | ${'⡀'}
@@ -274,12 +293,16 @@ describe('game/card', () => {
 					${13} | ${'⡍'}
 					${20} | ${'⡔'}
 					${55} | ${'⡷'}
-				`('$d1', ({ d1, braille }: { d1: number; braille: string }) => {
+				`('$d1', ({ d1, braille }: { d1: number; braille: Coord }) => {
 					const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
+					const shorthandD0: LocationSH = `${shorthand}${braille}`;
 					expect(shorthandPile(location)).toBe(shorthand);
-					expect(shorthandLocation(location)).toBe(shorthand + braille);
-					expect(parseShorthandPosition_INCOMPLETE(shorthandPile(location))).toEqual({ fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] });
-					expect(parseShorthandPosition_INCOMPLETE(shorthandLocation(location))).toEqual(location);
+					expect(shorthandLocation(location)).toBe(shorthandD0);
+					expect(parseShorthandPile(shorthand)).toEqual({ fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] });
+					expect(parseShorthandPile(shorthandD0 as PileSH)).toEqual({ fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] });
+					expect(parseShorthandLocation(shorthand)).toEqual({ fixture: 'cascade', data: [d0, 0] });
+					// it's only when we print/parse with a coord that the location is not ambiguous
+					expect(parseShorthandLocation(shorthandD0)).toEqual(location);
 				});
 			});
 
@@ -295,20 +318,20 @@ describe('game/card', () => {
 				${7} | ${-1} | ${'8'}
 				${8} | ${-1} | ${'9'}
 				${9} | ${-1} | ${'0'}
-			`('$d0', ({ d0, d1, shorthand }: { d0: number; d1: number; shorthand: string }) => {
+			`('$d0', ({ d0, d1, shorthand }: { d0: number; d1: number; shorthand: PileSH }) => {
 				const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
 				expect(shorthandPile(location)).toBe(shorthand);
 				expect(shorthandLocation(location)).toBe(shorthand);
-				expect(parseShorthandPosition_INCOMPLETE(shorthandPile(location))).toEqual({ fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] });
-				expect(parseShorthandPosition_INCOMPLETE(shorthandLocation(location))).toEqual({ fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] });
+				expect(parseShorthandPile(shorthand)).toEqual({ fixture: 'cascade', data: [d0, BOTTOM_OF_CASCADE] });
+				expect(parseShorthandLocation(shorthand)).toEqual({ fixture: 'cascade', data: [d0, 0] });
 			});
 
 			test.each`
 				d0    | error
-				${-2} | ${'invalid position: {"fixture":"cascade","data":[-2,1]}'}
-				${-1} | ${'invalid position: {"fixture":"cascade","data":[-1,1]}'}
-				${10} | ${'invalid position: {"fixture":"cascade","data":[10,1]}'}
-				${11} | ${'invalid position: {"fixture":"cascade","data":[11,1]}'}
+				${-2} | ${'invalid location: {"fixture":"cascade","data":[-2,1]}'}
+				${-1} | ${'invalid location: {"fixture":"cascade","data":[-1,1]}'}
+				${10} | ${'invalid location: {"fixture":"cascade","data":[10,1]}'}
+				${11} | ${'invalid location: {"fixture":"cascade","data":[11,1]}'}
 			`('$d0', ({ d0, error }: { d0: number; error: string }) => {
 				expect(() => shorthandPile({ fixture: 'cascade', data: [d0, 1] })).toThrow(error);
 				expect(() => shorthandLocation({ fixture: 'cascade', data: [d0, 1] })).toThrow(error);

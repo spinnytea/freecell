@@ -360,11 +360,10 @@ describe('game.parse', () => {
 				expect(gameWithHist.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(gameWithHist).toEqual(game);
 
-				// BUG (6-priority) (coords) (history) (parse) gameNoHist is missing coords - previousAction.text is copy from print
 				const gameNoHist = FreeCell.parse(game.print());
-				expect(gameNoHist.history).toEqual(['init without history', 'move 2a 4S→cell (auto-foundation 56 AH,2H)']);
+				expect(gameNoHist.history).toEqual(['init without history', 'move 2⡆a 4S→cell (auto-foundation 56 AH,2H)']);
 				expect(gameNoHist.previousAction).toEqual({
-					text: 'move 2a 4S→cell (auto-foundation 56 AH,2H)',
+					text: 'move 2⡆a 4S→cell (auto-foundation 56 AH,2H)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: '4', suit: 'spades', location: { fixture: 'cell', data: [0] } }],
 				});
@@ -408,8 +407,7 @@ describe('game.parse', () => {
 		});
 
 		describe('end of game', () => {
-			// BUG (6-priority) (coords) (history) (parse) test.skip - previousAction.text is copy from print, does not include coords
-			test.skip('previousAction.text', () => {
+			test('previousAction.text', () => {
 				let game = FreeCell.parse(
 					'' + //
 						'             KC KS KH KD \n' +
@@ -448,7 +446,7 @@ describe('game.parse', () => {
 				expect(gameNoHist.print()).toBe(game.print());
 				expect(_omit(gameNoHist, ['history'])).toEqual(_omit(game, ['history']));
 				expect(game.history.length).toBe(71);
-				expect(gameNoHist.history).toEqual(['init without history', 'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)']);
+				expect(gameNoHist.history).toEqual(['init without history', 'move 1⡁3 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)']);
 
 				game = game.moveCursor('right');
 				expect(game.print()).toBe(
@@ -496,9 +494,13 @@ describe('game.parse', () => {
 					data: [1],
 				});
 				expect(gameWithHist.previousAction).toEqual({
-					text: 'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
+					text: 'move 1⡁3 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: 'king', suit: 'diamonds', location: { fixture: 'cascade', data: [2, 0] } }],
+				});
+				expect(gameWithHist.cursor).toEqual({
+					fixture: 'foundation',
+					data: [0],
 				});
 			});
 		});
@@ -559,7 +561,56 @@ describe('game.parse', () => {
 				const game = FreeCell.parse(
 					'' + //
 						'             AD 2C       \n' +
-						' AH 8S 2D QS 4C 9H 2S 3D \n' + // 9H is in the wrong place
+						' AH 8S 2D QS 4C    2S 3D \n' +
+						' 5C AS 9C KH 4D    3C 4S \n' +
+						' 3S 5D KC 3H KD    6S 8D \n' +
+						' TD 7S JD 7H 8H    JC 7D \n' +
+						' 5S QH 8C 9D KS    4H 6C \n' +
+						' 2H    TH 6D QD    QC 5H \n' +
+						' 9S    7C TS JS    JH    \n' +
+						'       6H 9H       TC    \n' + // 9H is in the wrong place
+						//                  9H
+						' move 67 9H→TC\n' +
+						':h shuffle32 5\n' +
+						' 53 6a 65 67 85 a8 68 27 \n' +
+						' 67 '
+				);
+				expect(game.print({ includeHistory: true })).toBe(
+					'' + //
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C    2S 3D \n' +
+						' 5C AS 9C KH 4D    3C 4S \n' +
+						' 3S 5D KC 3H KD    6S 8D \n' +
+						' TD 7S JD 7H 8H    JC 7D \n' +
+						' 5S QH 8C 9D KS    4H 6C \n' +
+						' 2H    TH 6D QD    QC 5H \n' +
+						' 9S    7C TS JS    JH    \n' +
+						'       6H 9H       TC    \n' +
+						' move 67 9H→TC\n' +
+						' init with invalid history replay cards'
+				);
+				expect(game.print()).toBe(
+					'' + //
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C    2S 3D \n' +
+						' 5C AS 9C KH 4D    3C 4S \n' +
+						' 3S 5D KC 3H KD    6S 8D \n' +
+						' TD 7S JD 7H 8H    JC 7D \n' +
+						' 5S QH 8C 9D KS    4H 6C \n' +
+						' 2H    TH 6D QD    QC 5H \n' +
+						' 9S    7C TS JS    JH    \n' +
+						'       6H 9H      >TC    \n' +
+						' invalid move 67 9H→TC'
+				);
+				expect(game.history).toEqual(['init with invalid history replay cards', 'move 67 9H→TC']);
+			});
+
+			test('invalid cards: move has not happened yet', () => {
+				// the state is invalid, don't try to correct it
+				const game = FreeCell.parse(
+					'' + //
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C 9H 2S 3D \n' + // 9H is in the previous place
 						' 5C AS 9C KH 4D    3C 4S \n' +
 						' 3S 5D KC 3H KD    6S 8D \n' +
 						' TD 7S JD 7H 8H    JC 7D \n' +
@@ -598,7 +649,7 @@ describe('game.parse', () => {
 						' 2H    TH 6D QD    QC 5H \n' +
 						' 9S    7C TS JS    JH    \n' +
 						'       6H         >TC    \n' +
-						' move 67 9H→TC'
+						' invalid move 67 9H→TC'
 				);
 				expect(game.history).toEqual(['init with invalid history replay cards', 'move 67 9H→TC']);
 			});
@@ -633,7 +684,7 @@ describe('game.parse', () => {
 						' 9S    7C TS JS    JH    \n' +
 						'       6H          TC    \n' +
 						'                   9H    \n' +
-						' move 27 9H→TC\n' +
+						' move 2⡅7⡇ 9H→TC\n' +
 						' init with invalid history replay action text'
 				);
 				expect(game.print()).toBe(
@@ -704,7 +755,7 @@ describe('game.parse', () => {
 						' 9S    7C TS JS    JH    \n' +
 						'       6H          TC    \n' +
 						'                   9H    \n' +
-						' move 67 9H→TC\n' +
+						' move 6⡀7⡇ 9H→TC\n' +
 						' init with invalid history replay cards'
 				);
 				expect(game.print()).toBe(
@@ -743,7 +794,7 @@ describe('game.parse', () => {
 							' 1h 1b 8h 4h 4b 4c 4d a2 \n' +
 							' 42 46 3h 7h 13' // missing last space; which I do _aaaallllllll_ the time
 					);
-					expect(game.history).toEqual(['init with invalid history trailing whitespace', 'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)']);
+					expect(game.history).toEqual(['init with invalid history trailing whitespace', 'move 1⡁3 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)']);
 				});
 
 				test('any line trimmed whitespace', () => {
@@ -767,7 +818,7 @@ describe('game.parse', () => {
 							' 1h 1b 8h 4h 4b 4c 4d a2\n' +
 							' 42 46 3h 7h 13'
 					);
-					expect(game.history).toEqual(['init with invalid history whitespace lines', 'move 13 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)']);
+					expect(game.history).toEqual(['init with invalid history whitespace lines', 'move 1⡁3 KD→cascade (auto-foundation 16263 JD,QD,KC,KS,KD)']);
 				});
 			});
 		});
@@ -775,8 +826,7 @@ describe('game.parse', () => {
 
 	describe('no history, just previous', () => {
 		describe('undo the one move', () => {
-			// BUG (6-priority) (coords) (history) (parse) test.skip
-			test.skip('valid move (success)', () => {
+			test('valid move (success)', () => {
 				const game = FreeCell.parse(
 					'' + //
 						'             AD 2C       \n' +
@@ -791,8 +841,7 @@ describe('game.parse', () => {
 						'                   9H    \n' +
 						' move 67 9H→TC'
 				);
-				// BUG (6-priority) (coords) (history) (parse) missing coords from invalid history - deduce the coords? or undo/redo?
-				expect(game.history).toEqual(['init without history', 'move 67 9H→TC']);
+				expect(game.history).toEqual(['init without history', 'move 6⡀7⡇ 9H→TC']);
 				const gameUndid = game.undo();
 				// REVIEW (cursor) (parse-history) is this the right place for the cursor?
 				//  - init should be at the deck, sure
@@ -815,23 +864,7 @@ describe('game.parse', () => {
 
 				// and if we replay that one move, we get back to where we started
 				const gameRedid = gameUndid.moveByShorthand('67');
-				// if the game was invlid, we can't get an accurate move from the history
-				// REVIEW (6-priority) (coords) (history) (parse) make sure "init invalid history" doesn't cause things to explode - awkward behavior is fine
-				expect(gameRedid.history).toEqual(['init without history', 'move 6⡀7⡇ 9H→TC']);
-				expect(game.history).toEqual(['init without history', 'move 67 9H→TC']);
-				expect(_omit(gameRedid, ['history'])).toEqual(_omit(game, ['history']));
-
-				const gameUndidReparsed = FreeCell.parse(gameUndid.print());
-				expect(gameUndid.previousAction).toEqual({
-					text: 'init without history',
-					type: 'init',
-					gameFunction: 'undo',
-				});
-				expect(gameUndidReparsed.previousAction).toEqual({
-					text: 'init without history',
-					type: 'init',
-				});
-				expect(_omit(gameUndidReparsed, ['previousAction'])).toEqual(_omit(gameUndid, ['previousAction']));
+				expect(gameRedid).toEqual(game);
 			});
 
 			test('invalid move (illegal move)', () => {
@@ -849,7 +882,7 @@ describe('game.parse', () => {
 						'                   9H    \n' +
 						' move 65 KS-QD-JS→8H' // this is an illegal move
 				);
-				expect(game.history).toEqual(['init without history', 'move 65 KS-QD-JS→8H']);
+				expect(game.history).toEqual(['init without history']);
 				const gameUndid = game.undo();
 				expect(gameUndid.print()).toBe(
 					'' + //
@@ -857,14 +890,13 @@ describe('game.parse', () => {
 						' AH 8S 2D QS 4C KS 2S 3D \n' +
 						' 5C AS 9C KH 4D QD 3C 4S \n' +
 						' 3S 5D KC 3H KD JS 6S 8D \n' +
-						' TD 7S JD 7H 8H    JC 7D \n' +
+						' TD 7S JD 7H>8H    JC 7D \n' +
 						' 5S QH 8C 9D       4H 6C \n' +
 						' 2H    TH 6D       QC 5H \n' +
 						' 9S    7C TS       JH    \n' +
 						'       6H          TC    \n' +
 						'                   9H    \n' +
-						':d>   \n' +
-						' init without history'
+						' invalid move 65 KS-QD-JS→8H'
 				);
 				// XXX (optional) (complexity) (undo) uhm, should we bother blocking that undo? we can't replay it
 				//  - prevent undo a move that was invalid in the first place?
@@ -900,13 +932,15 @@ describe('game.parse', () => {
 						' move ab 9H→TC' // this is wrong (cursor is on '7 TC', ab are cells)
 				);
 				expect(game.history).toEqual(['init without history', 'move ab 9H→TC']);
-				// expect(() => game.undo()).toThrow('invalid first card position: move ab 9H→TC; 7 !== b');
+				// expect(() => game.undo()).toThrow('invalid first card location: move ab 9H→TC; 7 !== b');
 				const gameUndid = game.undo();
 				expect(gameUndid.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 				expect(gameUndid.previousAction).toEqual({
 					text: 'invalid move ab 9H→TC',
 					type: 'invalid',
+					gameFunction: 'undo',
 				});
+				expect(gameUndid.undo()).toBe(gameUndid);
 			});
 		});
 	});
@@ -1321,7 +1355,7 @@ describe('game.parse', () => {
 					)
 						selCount = 1;
 					// special case for curror is immediatly after the selection (straddles home row, overlaps right)
-					// (no special case for left, because they would be the same position)
+					// (no special case for left, because they would be the same location)
 					if (c === '{ "fixture": "foundation", "data": [0] }' && s === '{ "fixture": "cell", "data": [3] }') selCount = 1;
 					expect((g2Print.match(/\|/g) ?? []).length).toBe(selCount);
 				});

@@ -69,6 +69,8 @@ describe('game/history.parsePreviousActionType', () => {
 			${'invalid move kb 6H→cell'}                    | ${{ text: 'invalid move kb 6H→cell', type: 'invalid', gameFunction: 'recall-or-bury' }}
 			${'invalid move ah 3C→foundation'}              | ${{ text: 'invalid move ah 3C→foundation', type: 'invalid' }}
 			${'invalid move 1h 9C→foundation'}              | ${{ text: 'invalid move 1h 9C→foundation', type: 'invalid' }}
+			${'invalid move ah⡂ 3C→foundation'}             | ${{ text: 'invalid move ah⡂ 3C→foundation', type: 'invalid' }}
+			${'invalid move 1⡁h⡂ 9C→foundation'}            | ${{ text: 'invalid move 1⡁h⡂ 9C→foundation', type: 'invalid' }}
 			${'invalid move 2h TH→AH'}                      | ${{ text: 'invalid move 2h TH→AH', type: 'invalid' }}
 			${'invalid move 13 KC-QD-JC→cascade'}           | ${{ text: 'invalid move 13 KC-QD-JC→cascade', type: 'invalid' }}
 			${'invalid move k1 KH→cascade'}                 | ${{ text: 'invalid move k1 KH→cascade', type: 'invalid', gameFunction: 'recall-or-bury' }}

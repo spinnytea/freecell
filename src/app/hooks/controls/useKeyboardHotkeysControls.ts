@@ -25,7 +25,7 @@ export function useKeyboardHotkeysControls() {
 				//  - doesn't shuffle
 				//  - probably because it's using touch's new game
 				// REVIEW (controls) use Hotkeys to deal… you have to use space or enter or something
-				//  - there's no key because there's no Position
+				//  - there's no key because there's no Pile
 				//    because there's no shorthand
 				//    because there's no valid move
 				//    time to adddd it, and haaanndle it

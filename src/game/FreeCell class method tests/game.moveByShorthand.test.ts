@@ -5,14 +5,14 @@ import { FreeCell } from '@/game/game';
 	XXX (techdebt) more unit testing
 	 - try to move the tests elsewhere:
 	   - standard moves: `game.touch.test.ts`
-	     - already has from each x to each
+	     - already has from each ⨉ to each
 	     - it may have just omitted some
 	   - special edge case testing: `move.parseShorthandMove.test.ts`
 	 - if it doesn't make sense to move it there, test here anyways
-	 - what we want in this file is a test for: Position x Position
+	 - what we want in this file is a test for: Pile ⨉ Pile
 */
 describe('game.moveByShorthand', () => {
-	describe('from each position', () => {
+	describe('from each pile', () => {
 		describe('cell', () => {
 			test.todo('a, b, c, d, e, f');
 
@@ -105,7 +105,7 @@ describe('game.moveByShorthand', () => {
 	// impl edge cases
 	test.todo('from: special');
 
-	describe('to each position', () => {
+	describe('to each pile', () => {
 		describe('cell', () => {
 			test.todo('a, b, c, d, e, f');
 
@@ -273,12 +273,16 @@ describe('game.moveByShorthand', () => {
 		});
 	});
 
-	// TODO (techdebt) (history) (shorthandMove) shorthandMove is idealized, but we can move anything
+	// TODO (techdebt) (coords) (history) (parse) (print) (shorthandMove) shorthandMove is idealized, but we can move anything
 	//  - make an example where shorthandMove is the same for various actual moves
 	//  - moveByShorthand (and the solutions catalog) always move the "largest" sequence
 	//  - when you move a sequence to an empty cascade, it can be ambiguous
-	//  - notably, it's _only_ to an empty cascade that's ambiguous
+	//  - notably, it's _only_ to an empty cascade and when splitting a stack that's ambiguous
 	//  - well, and (joker)
+	// ---
+	//  - verify behavior of print/parse w/w/o history
+	//  - standard move notation is inadequate for this level of freedom
+	//  - either use braille or block shorthand, or some other mitigation strategy
 	test('mismatch between shorthandMove and actual move', () => {
 		const game = FreeCell.parse(
 			'' + //
@@ -301,22 +305,22 @@ describe('game.moveByShorthand', () => {
 
 		// cascade is imprecise (both the move (which cards) and summary (which cascasde) are imprecise)
 		expect(game.moveByShorthand('45').previousAction.text).toBe('move 4⡊5 9C-8D-7C→cascade');
-		expect(game.$moveCardToPosition('9C', '5').previousAction.text).toBe('move 4⡊5 9C-8D-7C→cascade');
-		expect(game.$moveCardToPosition('8D', '5').previousAction.text).toBe('move 4⡋5 8D-7C→cascade');
-		expect(game.$moveCardToPosition('7C', '5').previousAction.text).toBe('move 4⡌5 7C→cascade');
+		expect(game.$moveCardToPile('9C', '5').previousAction.text).toBe('move 4⡊5 9C-8D-7C→cascade');
+		expect(game.$moveCardToPile('8D', '5').previousAction.text).toBe('move 4⡋5 8D-7C→cascade');
+		expect(game.$moveCardToPile('7C', '5').previousAction.text).toBe('move 4⡌5 7C→cascade');
 
 		// cell is fine (move is specific, summary is imprecise)
 		expect(game.moveByShorthand('4a').previousAction.text).toBe('move 4⡌a 7C→cell');
 		expect(game.moveByShorthand('4d').previousAction.text).toBe('move 4⡌d 7C→cell');
 
-		// TODO (techdebt) (history) (shorthandMove) we can use brail dots :D
+		// TODO (techdebt) (coords) (history) (parse) (print) (shorthandMove) we can use brail dots :D
 		expect(countToBraille(game.$selectCard('9C').selection?.cards.length)).toBe('⡃');
 		expect(countToBraille(game.$selectCard('8D').selection?.cards.length)).toBe('⡂');
 		expect(countToBraille(game.$selectCard('7C').selection?.cards.length)).toBe('⡁');
 	});
 
-	// TODO (techdebt) (history) (shorthandMove) here's anothr tangible example
-	test('shorthandMove needs a count when nonstandard', () => {
+	// TODO (techdebt) (coords) (history) (parse) (print) (shorthandMove) here's another tangible example
+	test('shorthandMove needs a coord when nonstandard', () => {
 		const gamePrint =
 			' KC 9C JD    2H 2C       \n' +
 			' 3D 4S 4H QC KH QH       \n' +
@@ -339,8 +343,8 @@ describe('game.moveByShorthand', () => {
 			' 84 1c 71 16 1d 14 d1 ';
 
 		const worldOne = FreeCell.parse(gamePrint).moveByShorthand('37').moveByShorthand('38');
-		const worldTwo = FreeCell.parse(gamePrint).$moveCardToPosition('5S', '7').$moveCardToPosition('7C', '8');
-		const worldThree = FreeCell.parse(gamePrint).$moveCardToPosition('3S', '7').$moveCardToPosition('5S', '8');
+		const worldTwo = FreeCell.parse(gamePrint).$moveCardToPile('5S', '7').$moveCardToPile('7C', '8');
+		const worldThree = FreeCell.parse(gamePrint).$moveCardToPile('3S', '7').$moveCardToPile('5S', '8');
 
 		expect(worldOne.print({ includeHistory: true })).toBe(
 			'' + //

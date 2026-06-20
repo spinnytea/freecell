@@ -14,7 +14,7 @@ import {
 	removeBraille,
 	shorthandCard,
 	shorthandPile,
-	shorthandSequenceWithPosition,
+	shorthandSequenceWithLocation,
 	SuitList,
 } from '@/game/card/card';
 import { IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
@@ -28,6 +28,7 @@ import {
 	parseAltCursorFromPreviousActionText,
 	parseAndUndoPreviousActionText,
 	parseCursorFromPreviousActionText,
+	parseMoveFromActionText,
 	parseMovesFromHistory,
 	parsePreviousActionType,
 	PREVIOUS_ACTION_TYPE_IN_HISTORY,
@@ -48,8 +49,8 @@ import {
 	findAvailableMoves,
 	moveCards,
 	parseShorthandMove,
-	parseShorthandPositionForMove,
-	parseShorthandPositionForSelect,
+	parseShorthandPileForMove,
+	parseShorthandPileForSelect,
 } from '@/game/move/move';
 import { utils } from '@/utils';
 
@@ -111,7 +112,7 @@ interface OptionsNonstandardGameplay {
 
 		@deprecated this is just for unit testing - can we avoid using it even there with actual examples?
 		 - {@link moveByShorthand} has a valid usecase for this
-		 - {@link $moveCardToPosition} has a valid usecase for this
+		 - {@link $moveCardToPile} has a valid usecase for this
 	*/
 	stopWithInvalid?: boolean;
 
@@ -366,7 +367,7 @@ export class FreeCell {
 
 	clearSelection(): FreeCell | this {
 		if (this.selection) {
-			const actionText = 'deselect ' + shorthandSequenceWithPosition(this.selection);
+			const actionText = 'deselect ' + shorthandSequenceWithLocation(this.selection);
 			return this.__clone({
 				action: { text: actionText, type: 'deselect' },
 				selection: null,
@@ -426,9 +427,9 @@ export class FreeCell {
 				!selectionNever
 			) {
 				return this.__clone({
-					// TODO (5-priority) (gameplay) (peek) change verb instead of omitting position for peek
+					// TODO (5-priority) (gameplay) (peek) change verb instead of omitting location for peek
 					//  - SELECT_REGEX = (select|peek|deselect)
-					action: { text: 'select ' + shorthandSequenceWithPosition(selection), type: 'select' },
+					action: { text: 'select ' + shorthandSequenceWithLocation(selection), type: 'select' },
 					selection,
 					availableMoves: findAvailableMoves(this, selection),
 				});
@@ -561,9 +562,9 @@ export class FreeCell {
 				!didUndo.previousAction.tweenCards
 			) {
 				const secondUndo = didUndo.undo({ skipActionPrev: true });
-				const { from, to } = parseActionTextMove(didUndo.previousAction.text);
+				const { fromLocation, toLocation } = parseActionTextMove(didUndo.previousAction.text);
 				didUndo.previousAction.tweenCards = getCardsThatMoved(
-					secondUndo.moveByShorthand(from + to, { autoFoundation: false })
+					secondUndo.moveByShorthand(fromLocation + toLocation, { autoFoundation: false })
 				);
 			}
 
@@ -574,7 +575,21 @@ export class FreeCell {
 			//  - do we need to wrap all of the FreeCell function? I don't like that idea
 			//  - search for all `throw new Error`, include `src/game`, exclude `catalog, .test.ts`
 			// throw e;
-			const action: PreviousAction = { text: 'invalid ' + moveToUndo, type: 'invalid' };
+			const action: PreviousAction = {
+				text: 'invalid ' + moveToUndo,
+				type: 'invalid',
+				gameFunction: 'undo',
+			};
+			if (action.text === this.previousAction.text) {
+				// TODO (4-priority) (test) make a test, if we can; this was a head scratcher
+				//  - maybe throwing an error to verify branch execution was the wrong approach
+				//  - ^^ that's how that was found originally, a bad implementation would case a test to infinite loop
+				//  - we fixed that particular bug (by finishing the implementation)
+				//  - so now this is untestable? but it's a safeguard … in case of errors? … which we plan to eliminate?
+				// if it's the same action in a row, then don't create a new one
+				// e.g. restart failure
+				return this;
+			}
 			return this.__clone({ action, selection: null, availableMoves: null });
 		}
 	}
@@ -657,12 +672,15 @@ export class FreeCell {
 		Play a move using the standard notation.
 		The standard notation is used to print the game history.
 		This make it easy to replay a known game.
+
+		@param shorthandMove `${PileSH}${PileSH}`
 	*/
 	moveByShorthand(
 		shorthandMove: string,
 		{ autoFoundation, gameFunction }: OptionsNonstandardGameplay = {}
 	): FreeCell {
-		const [from, to] = parseShorthandMove(this, shorthandMove);
+		const [from, to] = parseShorthandMove(this, shorthandMove) ?? [];
+		if (!from || !to) return this;
 		const game = this.clearSelection().setCursor(from).touch({ selectionOnly: true });
 		// REVIEW (techdebt) dedicated error message? "invalid select (cursor) / invalid"
 		//  - would be for deck or foundation
@@ -684,18 +702,18 @@ export class FreeCell {
 		{ autoFoundation, stopWithInvalid = false, gameFunction }: OptionsNonstandardGameplay = {}
 	): FreeCell | this {
 		if (!this.selection) {
-			const from_location = parseShorthandPositionForSelect(this, pileSh);
+			const from_location = parseShorthandPileForSelect(this, pileSh);
 			if (!from_location) return this;
 			return this.setCursor(from_location).touch({ autoFoundation });
 		}
 
-		// clear selection if touching the same position
+		// clear selection if touching the same pile
 		if (pileSh === shorthandPile(this.selection.location)) {
 			return this.clearSelection();
 		}
 
 		// try this move as selected
-		const to_location = parseShorthandPositionForMove(this, pileSh);
+		const to_location = parseShorthandPileForMove(this, pileSh);
 		if (!to_location) return this;
 		const game = this.setCursor(to_location, { gameFunction }).touch({
 			autoFoundation,
@@ -704,7 +722,9 @@ export class FreeCell {
 		});
 		if (game.previousAction.type !== 'invalid') return game;
 
+		// the selected card can't move like this
 		// try to move by shorthand
+		// (adjust move)
 		let g = this.moveByShorthand(`${shorthandPile(this.selection.location)}${pileSh}`, {
 			autoFoundation,
 		});
@@ -712,7 +732,7 @@ export class FreeCell {
 
 		if (stopWithInvalid) return game;
 
-		// clear selection and touchByPosition (like touch)
+		// clear selection and touchByPile (like touch)
 		g = this.clearSelection().touchByPile(pileSh, { autoFoundation, stopWithInvalid });
 		if (g.previousAction.type !== 'invalid') return g;
 
@@ -991,7 +1011,7 @@ export class FreeCell {
 
 		sugar/helper controls
 	*/
-	$moveCardToPosition(
+	$moveCardToPile(
 		shorthand: string,
 		pileSh: PileSH,
 		{ autoFoundation }: OptionsNonstandardGameplay = {}
@@ -999,8 +1019,8 @@ export class FreeCell {
 		const g = this.$selectCard(shorthand);
 		if (!g.selection || !g.availableMoves) return g;
 		if (g.selection.peekOnly) return this; // XXX (techdebt) (controls) should we move the cursor?
-		// HACK (techdebt) (controls) using parseShorthandMove just to come up with `to` is a bit overkill
-		const [, to] = parseShorthandMove(g, `${shorthandPile(g.cursor)}${pileSh}`, g.cursor);
+		const to = parseShorthandPileForMove(g, pileSh);
+		if (to === null) return this;
 		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
 	}
 
@@ -1289,6 +1309,7 @@ export class FreeCell {
 		line.pop();
 		const actionText = line.slice(0).reverse().join('') || 'init';
 		const previousAction = parsePreviousActionType(actionText);
+		let verifyActionTextToRecoverCoords = false;
 
 		// attempt to parse the history
 		const history: string[] = [];
@@ -1330,16 +1351,19 @@ export class FreeCell {
 			} else {
 				history.push(errorMessage ?? 'init with invalid history error');
 				history.push(actionText);
+				verifyActionTextToRecoverCoords = true;
 			}
 		} else {
 			// parse the history (lines) of the game
 			//
-			// this history is a failsafe, but it is invalid
-			// there's no point in trying to verify it
+			// this history is a failsafe, but it is (provably) invalid
+			// there's (reasonably) no point in trying to verify it
 			// we could, separately, try to analyze what failed,
 			// but that's not something we need to do during parse
 			// ∴ just recreate the game state with what we have available
 			// (also, the unit tests do this _aallll_ the time with `hand-jammed` starting points)
+			// (and like, this is just a dump of what we think happened)
+			// (and the history only really matters if we try to undo or replay - ¿that's the time we could confirm?)
 			Array.prototype.push.apply(
 				history,
 				lines.map((l) => l.trim())
@@ -1354,6 +1378,7 @@ export class FreeCell {
 			} else if (PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type)) {
 				history.push('init without history');
 				history.push(actionText);
+				verifyActionTextToRecoverCoords = true;
 			}
 		}
 
@@ -1463,36 +1488,38 @@ export class FreeCell {
 			history.length
 		) {
 			const secondUndo = game.undo({ skipActionPrev: true });
-			const { from, to } = parseActionTextMove(game.previousAction.text);
+			const { fromLocation, toLocation } = parseActionTextMove(game.previousAction.text);
 			game.previousAction.tweenCards = getCardsThatMoved(
-				secondUndo.moveByShorthand(from + to, { autoFoundation: false })
+				secondUndo.moveByShorthand(fromLocation + toLocation, { autoFoundation: false })
 			);
 		}
 
-		/*
-		// XXX (techdebt) re-print the our game, confirm it matches the input
-		if (process.env.NODE_ENV === 'test') {
-			// XXX (techdebt) includeHistory could also be the "invalid history so just print what we have"
-			//  - this does _not_ start with :h, but is the history, just a bunch of lines of it
-			const reprint = game.print({ includeHistory: print.includes(':h') });
-			if (reprint !== print) {
-				// XXX (techdebt) sometimes unit tests don't include the "you win" message in the setup
-				if (!reprint.includes('Y O U   W I N !') && !reprint.includes('YOU WIN !') && !reprint.includes('A M A Z I N G !') && !reprint.includes('AMAZING !')) {
-					// print with non-empty deck doesn't match (weird game setup for testing)
-					// some games have invalid history (on purpose or otherwise)
-					if (!reprint.includes(':d') && !reprint.includes('init with invalid history')) {
-						// cursor is in the wrong place sometimes
-						// TODO (juice) (parse-history) (print) handle flash (e.g. game.$checkCanFlourish.test.ts `juice flash AH,AS`)
-						const rpc = reprint.replace('>', ' ');
-						const pc = print.replace('>', ' ');
-						if (rpc !== pc) {
-							throw new Error(`whoops!\n${print}\n${reprint}`);
-						}
-					}
+		if (verifyActionTextToRecoverCoords) {
+			const move = parseMoveFromActionText(actionText);
+			if (move) {
+				const undid = game.undo();
+				if (undid.previousAction.type === 'invalid') return undid;
+
+				const redid = undid.moveByShorthand(move);
+				if (redid.previousAction.type === 'invalid') {
+					return undid.__clone({
+						action: redid.previousAction,
+						cursor: redid.cursor,
+						cards: redid.cards,
+						selection: null,
+						availableMoves: null,
+					});
+				}
+				if (actionText === redid.previousAction.text) return game; // XXX (test) e.g. ab
+				if (removeBraille(actionText) === removeBraille(redid.previousAction.text)) {
+					return game.__clone({
+						action: redid.previousAction,
+						history: redid.history.slice(0, -1),
+					});
 				}
 			}
 		}
-		// */
+
 		return game;
 	}
 }

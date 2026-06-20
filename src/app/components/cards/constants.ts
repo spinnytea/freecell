@@ -72,9 +72,9 @@ export enum ControlSchemes {
 		set cursor + touch (click on columns (d0), not cards (d0, d1); PileSH directly)
 
 		@deprecated TODO (controls) not yet implemented
-		 - touchByPosition but with the mouse
+		 - touchByPile but with the mouse
 		 - this could be "clicking on the background" rather than "clicking on a card"
-		 - is "clicking on a placeholder" identical (touch vs touchByPosition)? (probably‽ test it! :D :D)
+		 - is "clicking on a placeholder" identical (touch vs touchByPile)? (probably‽ test it! :D :D)
 		   i guess we can just disable it for cell/foundation specifically
 	*/
 	// MouseColumns = 'mouse hotcolumns',

@@ -257,13 +257,13 @@ describe('game.autoFoundationAll', () => {
 
 		describe('solves everything', () => {
 			test.each`
-				limit       | movedPositionsStr                                      | movedCardsStr
+				limit       | movedPilesStr                                          | movedCardsStr
 				${'none'}   | ${'34613421342134213421342134213421342134213421da2bc'} | ${'2H,2S,AD,2C,3H,3S,2D,3C,4H,4S,3D,4C,5H,5S,4D,5C,6H,6S,5D,6C,7H,7S,6D,7C,8H,8S,7D,8C,9H,9S,8D,9C,TH,TS,9D,TC,JH,JS,TD,JC,QH,QS,JD,QC,KH,KS,QD,KC,KD'}
 				${'opp+2'}  | ${'34613421342134213421342134213421342134213421da2bc'} | ${'2H,2S,AD,2C,3H,3S,2D,3C,4H,4S,3D,4C,5H,5S,4D,5C,6H,6S,5D,6C,7H,7S,6D,7C,8H,8S,7D,8C,9H,9S,8D,9C,TH,TS,9D,TC,JH,JS,TD,JC,QH,QS,JD,QC,KH,KS,QD,KC,KD'}
 				${'opp+1'}  | ${'346132142134213421342134213421342134213421342bdac'} | ${'2H,2S,AD,2C,3H,2D,3C,3S,3D,4C,4H,4S,4D,5C,5H,5S,5D,6C,6H,6S,6D,7C,7H,7S,7D,8C,8H,8S,8D,9C,9H,9S,9D,TC,TH,TS,TD,JC,JH,JS,JD,QC,QH,QS,QD,KC,KH,KS,KD'}
 				${'rank+1'} | ${'34613421342134213421342134213421342134213421da2bc'} | ${'2H,2S,AD,2C,3H,3S,2D,3C,4H,4S,3D,4C,5H,5S,4D,5C,6H,6S,5D,6C,7H,7S,6D,7C,8H,8S,7D,8C,9H,9S,8D,9C,TH,TS,9D,TC,JH,JS,TD,JC,QH,QS,JD,QC,KH,KS,QD,KC,KD'}
 				${'rank'}   | ${'613421342134213421342134213421342134213421342bdac'} | ${'AD,2C,2H,2S,2D,3C,3H,3S,3D,4C,4H,4S,4D,5C,5H,5S,5D,6C,6H,6S,6D,7C,7H,7S,7D,8C,8H,8S,8D,9C,9H,9S,9D,TC,TH,TS,TD,JC,JH,JS,JD,QC,QH,QS,QD,KC,KH,KS,KD'}
-			`('$limit', ({ limit, movedPositionsStr, movedCardsStr }: { limit: AutoFoundationLimit; movedPositionsStr: string; movedCardsStr: string }) => {
+			`('$limit', ({ limit, movedPilesStr, movedCardsStr }: { limit: AutoFoundationLimit; movedPilesStr: string; movedCardsStr: string }) => {
 				expect(
 					FreeCell.parse(
 						'' + //
@@ -289,7 +289,7 @@ describe('game.autoFoundationAll', () => {
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +
-						` flourish ${movedPositionsStr} ${movedCardsStr}`
+						` flourish ${movedPilesStr} ${movedCardsStr}`
 				);
 			});
 		});
