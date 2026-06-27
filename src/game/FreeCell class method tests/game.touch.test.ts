@@ -126,7 +126,7 @@ describe('game.touch', () => {
 
 			describe('check all coords', () => {
 				// spot check coords
-				// TODO (5-priority) (gameplay) (peek) include deck coords, change 'select' to 'peek'
+				// TODO (verbs-for-select) (gameplay) (peek) include deck coords, change 'select' to 'peek'
 				// TODO (joker) also test when jokers are in the deck
 				test.each`
 					d0    | actionText
@@ -687,7 +687,7 @@ describe('game.touch', () => {
 				' AC          \n' +
 				' hand-jammed';
 			// spot check coords
-			// TODO (5-priority) (gameplay) (peek) include deck coords, change 'select' to 'peek' as appropriate
+			// TODO (verbs-for-select) (gameplay) (peek) include deck coords, change 'select' to 'peek' as appropriate
 			// TODO (joker) also test when jokers are in the deck
 			test.each`
 				d1    | actionText

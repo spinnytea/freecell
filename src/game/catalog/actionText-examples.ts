@@ -43,8 +43,8 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'deal 2 cards': '',
 	'deal 44 cards': '',
 	'deal all cards': '',
-	'cursor set': '', // TODO (5-priority) (gameplay) (peek) k for deck, forget peekOnly
-	'cursor set KH': '', // TODO (5-priority) (gameplay) (peek) k for deck, forget peekOnly
+	'cursor set': '', // TODO (verbs-for-select) (gameplay) (peek) k for deck, forget peekOnly
+	'cursor set KH': '', // TODO (verbs-for-select) (gameplay) (peek) k for deck, forget peekOnly
 	'cursor set b': '',
 	'cursor set h⡂': '', // home needs coords
 	'cursor set h AD': '', // unless we have a card
@@ -65,7 +65,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'cursor stop h AD': '',
 	'cursor stop 6 2D': '',
 	'cursor stop 3': '',
-	// TODO (5-priority) (gameplay) (peek) every `(de)?select \w` should be replaced
+	// TODO (verbs-for-select) (gameplay) (peek) every `(de)?select \w` should be replaced
 	'select QS': '',
 	'select 4D-3S-2D': '',
 	'select 8 7C': '',

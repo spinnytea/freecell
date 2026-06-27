@@ -270,7 +270,7 @@ export class FreeCell {
 		this.availableMoves = availableMoves ?? null;
 		this.flashCards = flashCards ?? null;
 
-		// TODO (5-priority) (review) (coords) verify that every previousAction.text has coords as appropriate (i.e. shorthandLocation)
+		// TODO (verbs-for-select) (review) (coords) verify that every previousAction.text has coords as appropriate (i.e. shorthandLocation)
 		this.previousAction = action;
 		this.history = history ?? [];
 	}
@@ -427,7 +427,7 @@ export class FreeCell {
 				!selectionNever
 			) {
 				return this.__clone({
-					// TODO (5-priority) (gameplay) (peek) change verb instead of omitting location for peek
+					// FIXME (verbs-for-select) (gameplay) (peek) change verb instead of omitting location for peek
 					//  - SELECT_REGEX = (select|peek|deselect)
 					action: { text: 'select ' + shorthandSequenceWithLocation(selection), type: 'select' },
 					selection,

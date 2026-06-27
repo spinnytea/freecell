@@ -9,6 +9,7 @@
 
 ## Top-Level TODOs
 
+- FIXME (verbs-for-select) ← finish those
 - TODO (4-priority) (techdebt) replace @link with @linkcode
 - TODO (gsap) review how we use gsap, right now it feels like magic
 - TODO (techdebt) switch from nextjs to vite

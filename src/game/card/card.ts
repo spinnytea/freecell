@@ -95,12 +95,19 @@ export function isPileSH(val: string): val is PileSH {
 
 export interface CardLocation {
 	readonly fixture: Fixture;
-	// XXX (5-priority) (techdebt) (refactor) (rename) (coords) location.data → location.coords, d0/d1 → c0/c1
+	// XXX (3-priority) (techdebt) (refactor) (rename) (coords) location.data → location.coords, d0/d1 → c0/c1
+	//  - do this after the whole "rewrite actionText-examples.ts" thing
 	readonly data: number[];
 }
 /** XXX (review) (coords) (types) why do we even have `Coord`, instead of just `string`? */
 export type Coord = string & { length: 1 };
-/** XXX (review) (coords) (types) why do we even have `LocationSH`, instead of just `string`? */
+/**
+	XXX (review) (coords) (types) why do we even have `LocationSH`, instead of just `string`?
+	 - why not simply use `${PileSH}${string}`, but then we have {@linkcode Coord}
+	 - how far do we have to go down this type rabbit hole, when does the utility end?
+	 - {@linkcode PileSH} _is_ useful
+	 - even as written, it's imprecise
+*/
 export type LocationSH = PileSH | `${PileSH}${Coord}`;
 
 export interface CardShorthand {
@@ -519,7 +526,7 @@ export function shorthandPile(location: CardLocation): PileSH {
 
 export function shorthandSequenceWithLocation(sequence: CardSequence) {
 	// but don't include the location if this is select-to-peek
-	// TODO (5-priority) (gameplay) (peek) rather than omit the location, what if we add another marker
+	// TODO (verbs-for-select) (gameplay) (peek) rather than omit the location, what if we add another marker
 	//  - juice has stars around the cards, maybe we do that here, too?
 	if (sequence.peekOnly) return shorthandSequence(sequence);
 	return shorthandLocation(sequence.location) + ' ' + shorthandSequence(sequence);
