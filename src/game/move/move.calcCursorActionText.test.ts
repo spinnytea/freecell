@@ -61,9 +61,52 @@ describe('game/move.calcCursorActionText', () => {
 		});
 
 		describe('cell with card', () => {
-			const game = new FreeCell({ cellCount: 4 }).dealAll({ demo: true });
+			describe('1 cell', () => {
+				const game = new FreeCell({ cellCount: 1 }).dealAll({ demo: true });
+
+				describe('standard', () => {
+					test.each`
+						d0   | actionText
+						${0} | ${'cursor set a 2C'}
+					`('$d0', ({ d0, actionText }: { d0: number; actionText: string }) => {
+						const location: CardLocation = { fixture: 'cell', data: [d0] };
+						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
+						expect(game.setCursor(location).cursor).toEqual(location);
+					});
+				});
+
+				describe('clamp', () => {
+					test.each`
+						d0   | actionText
+						${4} | ${'cursor set e'}
+						${5} | ${'cursor set f'}
+					`('$d0', ({ d0, actionText }: { d0: number; actionText: string }) => {
+						const location: CardLocation = { fixture: 'cell', data: [d0] };
+						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
+						// FIXME (coords) (cursor) clamp
+						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
+						expect(game.setCursor(location).cursor).not.toEqual(location);
+					});
+				});
+
+				describe('invalid cursor location', () => {
+					test.each`
+						d0    | error
+						${-1} | ${'invalid location: {"fixture":"cell","data":[-1]}'}
+						${6}  | ${'invalid location: {"fixture":"cell","data":[6]}'}
+					`('$d0', ({ d0, error }: { d0: number; error: string }) => {
+						const location: CardLocation = { fixture: 'cell', data: [d0] };
+						// FIXME maybe don't throw?
+						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(game.setCursor(location).cursor).not.toEqual(location);
+					});
+				});
+			});
 
 			describe('4 cells', () => {
+				const game = new FreeCell({ cellCount: 4 }).dealAll({ demo: true });
+
 				describe('standard', () => {
 					test.each`
 						d0   | actionText
@@ -143,6 +186,52 @@ describe('game/move.calcCursorActionText', () => {
 		});
 
 		describe('cell w/o card', () => {
+			describe('1 cell', () => {
+				const game = new FreeCell({ cellCount: 1 });
+
+				describe('standard', () => {
+					test.each`
+						d0   | actionText
+						${0} | ${'cursor set a'}
+					`('$d0', ({ d0, actionText }: { d0: number; actionText: string }) => {
+						const location: CardLocation = { fixture: 'cell', data: [d0] };
+						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
+						expect(game.setCursor(location).cursor).toEqual(location);
+					});
+				});
+
+				describe('clamp', () => {
+					test.each`
+						d0   | actionText
+						${1} | ${'cursor set b'}
+						${2} | ${'cursor set c'}
+						${3} | ${'cursor set d'}
+						${4} | ${'cursor set e'}
+						${5} | ${'cursor set f'}
+					`('$d0', ({ d0, actionText }: { d0: number; actionText: string }) => {
+						const location: CardLocation = { fixture: 'cell', data: [d0] };
+						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
+						// FIXME (coords) (cursor) clamp
+						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
+						expect(game.setCursor(location).cursor).not.toEqual(location);
+					});
+				});
+
+				describe('invalid cursor location', () => {
+					test.each`
+						d0    | error
+						${-1} | ${'invalid location: {"fixture":"cell","data":[-1]}'}
+						${6}  | ${'invalid location: {"fixture":"cell","data":[6]}'}
+					`('$d0', ({ d0, error }: { d0: number; error: string }) => {
+						const location: CardLocation = { fixture: 'cell', data: [d0] };
+						// FIXME maybe don't throw?
+						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(game.setCursor(location).cursor).not.toEqual(location);
+					});
+				});
+			});
+
 			describe('4 cells', () => {
 				const game = new FreeCell({ cellCount: 4 });
 
