@@ -426,10 +426,9 @@ export class FreeCell {
 				(allowPeekOnly || !selection.peekOnly) &&
 				!selectionNever
 			) {
+				const verb = selection.peekOnly ? 'peek ' : 'select ';
 				return this.__clone({
-					// FIXME (verbs-for-select) (gameplay) (peek) change verb instead of omitting location for peek
-					//  - SELECT_REGEX = (select|peek|deselect)
-					action: { text: 'select ' + shorthandSequenceWithLocation(selection), type: 'select' },
+					action: { text: verb + shorthandSequenceWithLocation(selection), type: 'select' },
 					selection,
 					availableMoves: findAvailableMoves(this, selection),
 				});

@@ -41,8 +41,8 @@ describe('game/history.parsePreviousActionType', () => {
 			${'cursor stop h AD'}                           | ${{ text: 'cursor stop h AD', type: 'cursor' }}
 			${'cursor stop 6 2D'}                           | ${{ text: 'cursor stop 6 2D', type: 'cursor' }}
 			${'cursor stop 3'}                              | ${{ text: 'cursor stop 3', type: 'cursor' }}
-			${'select QS'}                                  | ${{ text: 'select QS', type: 'select' }}
-			${'select 4D-3S-2D'}                            | ${{ text: 'select 4D-3S-2D', type: 'select' }}
+			${'peek QS'}                                    | ${{ text: 'peek QS', type: 'select' }}
+			${'peek 4D-3S-2D'}                              | ${{ text: 'peek 4D-3S-2D', type: 'select' }}
 			${'select 8 7C'}                                | ${{ text: 'select 8 7C', type: 'select' }}
 			${'select 8 4D-3S-2D'}                          | ${{ text: 'select 8 4D-3S-2D', type: 'select' }}
 			${'deselect AS'}                                | ${{ text: 'deselect AS', type: 'deselect' }}

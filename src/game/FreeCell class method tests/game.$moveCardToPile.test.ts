@@ -28,7 +28,7 @@ describe('game.$moveCardToPile', () => {
 				' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
 				' 3S 3H 3D 3C             \n' +
 				':d 2S 2H 2D 2C AS>AH|AD AC \n' +
-				' select AH'
+				' peek AH'
 		);
 
 		// REVIEW (techdebt) (deck) this move isn't allowed

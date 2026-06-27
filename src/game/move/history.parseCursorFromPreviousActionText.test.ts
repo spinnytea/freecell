@@ -78,8 +78,8 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'cursor stop h AD'}                           | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
 			${'cursor stop 6 2D'}                           | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 5] }}  | ${undefined}
 			${'cursor stop 3'}                              | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${undefined}
-			${'select QS'}                                  | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 2] }}  | ${{ fixture: 'cascade', data: [7, 2] }}
-			${'select 4D-3S-2D'}                            | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 3] }}  | ${{ fixture: 'cascade', data: [7, 3] }}
+			${'peek QS'}                                    | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 2] }}  | ${{ fixture: 'cascade', data: [7, 2] }}
+			${'peek 4D-3S-2D'}                              | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 3] }}  | ${{ fixture: 'cascade', data: [7, 3] }}
 			${'select 8 7C'}                                | ${someCards_1} | ${{ fixture: 'cascade', data: [2, 5] }}  | ${{ fixture: 'cascade', data: [2, 5] }}
 			${'select 8 4D-3S-2D'}                          | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 3] }}  | ${{ fixture: 'cascade', data: [7, 3] }}
 			${'deselect AS'}                                | ${someCards_2} | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'cascade', data: [0, 0] }}

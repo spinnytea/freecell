@@ -56,7 +56,7 @@ describe('game.$selectCard', () => {
 				' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
 				' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
 				' AS AH AD AC             \n' +
-				' select KH'
+				' peek KH'
 		);
 	});
 
@@ -96,7 +96,7 @@ describe('game.$selectCard', () => {
 					'                         \n' +
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
-					' select KH'
+					' peek KH'
 			);
 			expect(game.selection).toEqual({
 				location: { fixture: 'foundation', data: [1] },

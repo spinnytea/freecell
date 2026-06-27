@@ -490,7 +490,7 @@ describe('useCardPositionAnimations', () => {
 
 				test('foundation', () => {
 					gameStateOne = gameStateOne.setCursor({ fixture: 'foundation', data: [0] }).touch({ allowSelectFoundation: true });
-					expect(gameStateOne.previousAction.text).toBe('select AC');
+					expect(gameStateOne.previousAction.text).toBe('peek AC');
 					expect(gameStateOne.selection).toEqual({
 						location: { fixture: 'foundation', data: [0] },
 						cards: [{ rank: 'ace', suit: 'clubs', location: { fixture: 'foundation', data: [0] } }],
@@ -1171,9 +1171,9 @@ describe('useCardPositionAnimations', () => {
 
 		/** singular animation */
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select QS');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'peek QS');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 4D-3S-2D');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'peek 4D-3S-2D');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 8 7C');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -1190,10 +1190,10 @@ describe('useCardPositionAnimations', () => {
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'invalid move 86 7D→9C');
 		describe('animate', () => {
 			// peekOnly
-			test.todo('· select QS');
+			test.todo('· peek QS');
 
 			// peekOnly
-			test.todo('· select 4D-3S-2D');
+			test.todo('· peek 4D-3S-2D');
 
 			// (canMove), !peekOnly
 			test.todo('· select 8 7C');

@@ -45,7 +45,7 @@ describe('game.touchByPile', () => {
 				game = game.touchByPile('k');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [7] });
 				expect(game.previousAction).toEqual({
-					text: 'select 6H',
+					text: 'peek 6H',
 					type: 'select',
 				});
 				expect(game.selection).toEqual({
@@ -323,7 +323,7 @@ describe('game.touchByPile', () => {
 				test('not empty', () => {
 					const game = new FreeCell().shuffle32(5).dealAll({ demo: true, keepDeck: true }).$selectCard('2H').touchByPile('k');
 					expect(game.previousAction).toEqual({
-						text: 'select 6H',
+						text: 'peek 6H',
 						type: 'select',
 					});
 					expect(game.__printDeck()).toBe('>6H|6C QC JS 9S AD 7C TS ');
@@ -690,7 +690,7 @@ describe('game.touchByPile', () => {
 					cards: [{ rank: '7', suit: 'hearts', location: { fixture: 'cascade', data: [1, 4] } }],
 					peekOnly: true,
 				});
-				expect(game.previousAction.text).toBe('select 7H');
+				expect(game.previousAction.text).toBe('peek 7H');
 				game = game.touchByPile('2');
 				expect(game.previousAction).toEqual({
 					text: 'deselect 7H',
@@ -707,8 +707,8 @@ describe('game.touchByPile', () => {
 					${'b'} | ${{ text: 'select b 2H', type: 'select' }}
 					${'c'} | ${{ text: 'select c 2D', type: 'select' }}
 					${'d'} | ${{ text: 'select d 2C', type: 'select' }}
-					${'e'} | ${{ text: 'select 5H', type: 'select' }}
-					${'f'} | ${{ text: 'select 5H', type: 'select' }}
+					${'e'} | ${{ text: 'peek 5H', type: 'select' }}
+					${'f'} | ${{ text: 'peek 5H', type: 'select' }}
 					${'h'} | ${{ text: 'invalid move 2⡄h⡁ 5H→AH', type: 'invalid' }}
 					${'1'} | ${{ text: 'select 1⡅ 3S', type: 'select' }}
 					${'2'} | ${{ text: 'deselect 5H', type: 'deselect' }}
@@ -718,8 +718,8 @@ describe('game.touchByPile', () => {
 					${'6'} | ${{ text: 'select 6⡄ 4H', type: 'select' }}
 					${'7'} | ${{ text: 'select 7⡄ 4D', type: 'select' }}
 					${'8'} | ${{ text: 'select 8⡄ 4C', type: 'select' }}
-					${'9'} | ${{ text: 'select 5H', type: 'select' }}
-					${'0'} | ${{ text: 'select 5H', type: 'select' }}
+					${'9'} | ${{ text: 'peek 5H', type: 'select' }}
+					${'0'} | ${{ text: 'peek 5H', type: 'select' }}
 				`('select $pileSh', ({ pileSh, previousAction }: { pileSh: PileSH; previousAction: PreviousAction }) => {
 					const game = new FreeCell({ cellCount: 4, cascadeCount: 8 }).dealAll({ demo: true }).$selectCard('5H').touchByPile(pileSh, { autoFoundation: false });
 					expect(game.previousAction).toEqual(previousAction);
@@ -730,22 +730,22 @@ describe('game.touchByPile', () => {
 				test.each`
 					pileSh | previousAction
 					${'a'} | ${{ text: 'select a 2C', type: 'select' }}
-					${'b'} | ${{ text: 'select 5H', type: 'select' }}
-					${'c'} | ${{ text: 'select 5H', type: 'select' }}
-					${'d'} | ${{ text: 'select 5H', type: 'select' }}
-					${'e'} | ${{ text: 'select 5H', type: 'select' }}
-					${'f'} | ${{ text: 'select 5H', type: 'select' }}
+					${'b'} | ${{ text: 'peek 5H', type: 'select' }}
+					${'c'} | ${{ text: 'peek 5H', type: 'select' }}
+					${'d'} | ${{ text: 'peek 5H', type: 'select' }}
+					${'e'} | ${{ text: 'peek 5H', type: 'select' }}
+					${'f'} | ${{ text: 'peek 5H', type: 'select' }}
 					${'h'} | ${{ text: 'move 2⡋h⡁ 2H→AH', type: 'move' }}
 					${'1'} | ${{ text: 'select 1⡋ 2S', type: 'select' }}
 					${'2'} | ${{ text: 'deselect 5H', type: 'deselect' }}
 					${'3'} | ${{ text: 'select 3⡋ 2D', type: 'select' }}
 					${'4'} | ${{ text: 'select 4⡊ 3C', type: 'select' }}
-					${'5'} | ${{ text: 'select 5H', type: 'select' }}
-					${'6'} | ${{ text: 'select 5H', type: 'select' }}
-					${'7'} | ${{ text: 'select 5H', type: 'select' }}
-					${'8'} | ${{ text: 'select 5H', type: 'select' }}
-					${'9'} | ${{ text: 'select 5H', type: 'select' }}
-					${'0'} | ${{ text: 'select 5H', type: 'select' }}
+					${'5'} | ${{ text: 'peek 5H', type: 'select' }}
+					${'6'} | ${{ text: 'peek 5H', type: 'select' }}
+					${'7'} | ${{ text: 'peek 5H', type: 'select' }}
+					${'8'} | ${{ text: 'peek 5H', type: 'select' }}
+					${'9'} | ${{ text: 'peek 5H', type: 'select' }}
+					${'0'} | ${{ text: 'peek 5H', type: 'select' }}
 				`('select $pileSh', ({ pileSh, previousAction }: { pileSh: PileSH; previousAction: PreviousAction }) => {
 					const game = new FreeCell({ cellCount: 1, cascadeCount: 4 }).dealAll({ demo: true }).$selectCard('5H').touchByPile(pileSh, { autoFoundation: false });
 					expect(game.previousAction).toEqual(previousAction);

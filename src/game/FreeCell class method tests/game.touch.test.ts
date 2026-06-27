@@ -40,7 +40,7 @@ describe('game.touch', () => {
 						'                         \n' +
 						'                         \n' +
 						':d>KS|4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S 9D \n' +
-						' select KS'
+						' peek KS'
 				);
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 
@@ -94,7 +94,7 @@ describe('game.touch', () => {
 						'                         \n' +
 						'                         \n' +
 						':d KS 4D 9C 5C 8H 7S 7H AD 5D 3S KD TC 3C TD JH AS JS 2D 6C 4H 7D QS 2S TS 9H AH 6D JD 8C 5H 6H 8D QH 5S KH 3H 4S 2C QC 2H JC KC 3D AC 4C QD 8S 6S TH 7C 9S>9D|\n' +
-						' select 9D'
+						' peek 9D'
 				);
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 			});
@@ -130,10 +130,10 @@ describe('game.touch', () => {
 				// TODO (joker) also test when jokers are in the deck
 				test.each`
 					d0    | actionText
-					${0}  | ${'select AC'}
-					${1}  | ${'select AD'}
-					${50} | ${'select KH'}
-					${51} | ${'select KS'}
+					${0}  | ${'peek AC'}
+					${1}  | ${'peek AD'}
+					${50} | ${'peek KH'}
+					${51} | ${'peek KS'}
 				`('$d0', ({ d0, actionText }: { d0: number; actionText: string }) => {
 					game = new FreeCell().setCursor({ fixture: 'deck', data: [d0] }).touch();
 					expect(game.previousAction.text).toBe(actionText);
@@ -347,7 +347,7 @@ describe('game.touch', () => {
 						' 9H AH 6D JD 8C 5H 6H 8D \n' +
 						' QH 5S KH 3H 4S 2C QC 2H \n' +
 						' JC KC 3D AC             \n' +
-						' select 3C'
+						' peek 3C'
 				);
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(game.print());
 
@@ -437,7 +437,7 @@ describe('game.touch', () => {
 						' 9H AH 6D JD 8C 5H 6H 8D \n' +
 						' QH 5S KH 3H 4S 2C QC 2H \n' +
 						' JC KC 3D AC             \n' +
-						' select 4D-3S-2D'
+						' peek 4D-3S-2D'
 				);
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(game.print());
 
@@ -461,7 +461,7 @@ describe('game.touch', () => {
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(game.print());
 
 				// side note: allowPeekOnly
-				expect(game.touch().previousAction.text).toBe('select 4D-3S-2D');
+				expect(game.touch().previousAction.text).toBe('peek 4D-3S-2D');
 				expect(game.touch({ allowPeekOnly: false }).previousAction.text).toBe('touch stop');
 			});
 
@@ -597,7 +597,7 @@ describe('game.touch', () => {
 						' 9H AH 6D JD 8C 5H 6H 8D \n' +
 						' QH 5S KH 3H 4S 2C QC 2H \n' +
 						' JC KC 3D AC             \n' +
-						' select AS'
+						' peek AS'
 				);
 				expect(FreeCell.parse(game.print(), { invalidFoundations: true }).print()).toBe(game.print());
 			});
@@ -619,7 +619,7 @@ describe('game.touch', () => {
 						' AS 6H 9S 4C KD TD 6C 9C \n' +
 						' 7C JH 7S TH QS AD KH 2D \n' +
 						' QC AH JS 4D             \n' +
-						' select QH-JC'
+						' peek QH-JC'
 				);
 				expect(FreeCell.parse(game.print()).print()).toBe(game.print());
 			});
@@ -691,17 +691,17 @@ describe('game.touch', () => {
 			// TODO (joker) also test when jokers are in the deck
 			test.each`
 				d1    | actionText
-				${0}  | ${'select KH-QS-JH-TS-9H-8S-7H-6S-5H-4S-3H-2S-AH'}
-				${1}  | ${'select QS-JH-TS-9H-8S-7H-6S-5H-4S-3H-2S-AH'}
-				${12} | ${'select AH'}
-				${13} | ${'select KS-QH-JS-TH-9S-8H-7S-6H-5S-4H-3S-2H-AS'}
-				${25} | ${'select AS'}
-				${26} | ${'select KD-QC-JD-TC-9D-8C-7D-6C-5D-4C-3D-2C-AD'}
-				${38} | ${'select AD'}
+				${0}  | ${'peek KH-QS-JH-TS-9H-8S-7H-6S-5H-4S-3H-2S-AH'}
+				${1}  | ${'peek QS-JH-TS-9H-8S-7H-6S-5H-4S-3H-2S-AH'}
+				${12} | ${'peek AH'}
+				${13} | ${'peek KS-QH-JS-TH-9S-8H-7S-6H-5S-4H-3S-2H-AS'}
+				${25} | ${'peek AS'}
+				${26} | ${'peek KD-QC-JD-TC-9D-8C-7D-6C-5D-4C-3D-2C-AD'}
+				${38} | ${'peek AD'}
 				${39} | ${'select 1⡧ KC-QD-JC-TD-9C-8D-7C-6D-5C-4D-3C-2D-AC'}
 				${50} | ${'select 1⡲ 2D-AC'}
 				${51} | ${'select 1⡳ AC'}
-			`('$d0', ({ d1, actionText }: { d1: number; actionText: string }) => {
+			`('$d1', ({ d1, actionText }: { d1: number; actionText: string }) => {
 				game = FreeCell.parse(gamePrint)
 					.setCursor({ fixture: 'cascade', data: [0, d1] })
 					.touch();
@@ -721,7 +721,7 @@ describe('game.touch', () => {
 				const blocked = game.touch();
 				expect(blocked.__printDeck()).toBe(' 6H 6C QC JS 9S AD 7C>TS|');
 				expect(blocked.previousAction).toEqual({
-					text: 'select TS',
+					text: 'peek TS',
 					type: 'select',
 				});
 				// 'recall-or-bury' does not apply here (this is neither recall nor bury)
@@ -1296,12 +1296,12 @@ describe('game.touch', () => {
 								' QC QD QH QS TC TD TH TS \n' +
 								' KC       KS JC JD JH JS \n' +
 								':d>KH|KD \n' +
-								' select KH'
+								' peek KH'
 						);
 						expect(blocked.history).toEqual(['hand-jammed']);
 						expect(blocked.previousAction).toEqual({
+							text: 'peek KH',
 							type: 'select',
-							text: 'select KH',
 						});
 						const burried = game.touch({ gameFunction: 'recall-or-bury' });
 						expect(burried.print()).toBe(
