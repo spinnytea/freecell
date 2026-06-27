@@ -603,7 +603,6 @@ export const countToBraille = (count = 0) =>
 export const brailleToCount = (char = '⡀') => char.charCodeAt(0) - START_OF_8_DOT_BRAILLE;
 export function removeBraille(actionText: string | undefined): string {
 	if (!actionText) return '';
-	if (actionText.startsWith('cursor')) return actionText;
 	return [...actionText]
 		.filter((ch) => {
 			const code = ch.codePointAt(0);
