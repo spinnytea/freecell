@@ -25,7 +25,6 @@ export type PreviousActionType =
 	| 'deal'
 	| 'cursor'
 	| 'select'
-	// | 'peek' // REVIEW (verbs-for-select) should we add peek? remove deselect?
 	| 'deselect'
 	| 'move'
 	| 'auto-foundation' // can be it's own history item, collapsed in standard gameplay

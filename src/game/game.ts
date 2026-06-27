@@ -1,4 +1,5 @@
 import {
+	calcSelectActionText,
 	Card,
 	CardLocation,
 	CardSequence,
@@ -14,7 +15,6 @@ import {
 	removeBraille,
 	shorthandCard,
 	shorthandPile,
-	shorthandSequenceWithLocation,
 	SuitList,
 } from '@/game/card/card';
 import { IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
@@ -367,9 +367,8 @@ export class FreeCell {
 
 	clearSelection(): FreeCell | this {
 		if (this.selection) {
-			const actionText = 'deselect ' + shorthandSequenceWithLocation(this.selection);
 			return this.__clone({
-				action: { text: actionText, type: 'deselect' },
+				action: { text: calcSelectActionText(this.selection, 'deselect'), type: 'deselect' },
 				selection: null,
 				availableMoves: null,
 			});
@@ -426,9 +425,8 @@ export class FreeCell {
 				(allowPeekOnly || !selection.peekOnly) &&
 				!selectionNever
 			) {
-				const verb = selection.peekOnly ? 'peek ' : 'select ';
 				return this.__clone({
-					action: { text: verb + shorthandSequenceWithLocation(selection), type: 'select' },
+					action: { text: calcSelectActionText(selection, 'select'), type: 'select' },
 					selection,
 					availableMoves: findAvailableMoves(this, selection),
 				});

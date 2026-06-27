@@ -65,7 +65,7 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'cursor stop h AD': '',
 	'cursor stop 6 2D': '',
 	'cursor stop 3': '',
-	// TODO (verbs-for-select) (gameplay) (peek) every `(de)?select \w` should be replaced
+	// TODO (verbs-for-select) (gameplay) (peek) every `(select|peek|deselect) [^abcdef] ` should be replaced
 	'peek QS': '',
 	'peek 4D-3S-2D': '',
 	'select 8 7C': '',

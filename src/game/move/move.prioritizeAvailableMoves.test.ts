@@ -791,7 +791,7 @@ describe('prioritizeAvailableMoves', () => {
 						'          JH             \n' +
 						'          QH             \n' +
 						':d>KH|\n' +
-						' peek KH'
+						' peek k KH'
 				);
 				// unless we use a game function
 				expect(game.clearSelection().moveByShorthand('k1', { gameFunction: 'recall-or-bury' }).print()).toBe(
@@ -877,7 +877,7 @@ describe('prioritizeAvailableMoves', () => {
 						' KH         >KC|KD TH KS \n' +
 						'          JH             \n' +
 						'          QH             \n' +
-						' peek KC'
+						' peek h KC'
 				);
 			});
 

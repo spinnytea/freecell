@@ -490,7 +490,7 @@ describe('useCardPositionAnimations', () => {
 
 				test('foundation', () => {
 					gameStateOne = gameStateOne.setCursor({ fixture: 'foundation', data: [0] }).touch({ allowSelectFoundation: true });
-					expect(gameStateOne.previousAction.text).toBe('peek AC');
+					expect(gameStateOne.previousAction.text).toBe('peek h⡀ AC');
 					expect(gameStateOne.selection).toEqual({
 						location: { fixture: 'foundation', data: [0] },
 						cards: [{ rank: 'ace', suit: 'clubs', location: { fixture: 'foundation', data: [0] } }],
