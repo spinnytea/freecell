@@ -6,7 +6,7 @@ import { calcCursorActionText } from '@/game/move/move';
 describe('game/move.calcCursorActionText', () => {
 	/**
 		This is not an exhaustive test of the arguments.
-		This is an exhaustive test of the cardSuffix condtions/logic within.
+		This is an exhaustive test of the cardSuffix conditions/logic within.
 	*/
 	describe('shorthandLocation / shorthandPile variations', () => {
 		describe('deck with card', () => {
@@ -27,17 +27,16 @@ describe('game/move.calcCursorActionText', () => {
 				});
 			});
 
-			describe('invalid cursor location', () => {
+			describe('clamp', () => {
 				test.each`
 					d0    | actionText
-					${-2} | ${'cursor set k'}
-					${-1} | ${'cursor set k'}
-					${52} | ${'cursor set k'}
+					${-2} | ${'cursor set k⡀ AC'}
+					${-1} | ${'cursor set k⡀ AC'}
+					${52} | ${'cursor set k⡳ KS'}
 				`('$d0', ({ d0, actionText }: { d0: number; actionText: string }) => {
 					const location: CardLocation = { fixture: 'deck', data: [d0] };
 					expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
-					// FIXME (coords) (cursor) maybe it should always be the same?
-					expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
+					expect(game.setCursor(location).previousAction.text).toBe(actionText);
 					expect(game.setCursor(location).cursor).not.toEqual(location);
 				});
 			});
@@ -78,27 +77,18 @@ describe('game/move.calcCursorActionText', () => {
 
 				describe('clamp', () => {
 					test.each`
-						d0   | actionText
-						${4} | ${'cursor set e'}
-						${5} | ${'cursor set f'}
+						d0    | actionText
+						${-1} | ${'cursor set a 2C'}
+						${1}  | ${'cursor set a 2C'}
+						${2}  | ${'cursor set a 2C'}
+						${3}  | ${'cursor set a 2C'}
+						${4}  | ${'cursor set a 2C'}
+						${5}  | ${'cursor set a 2C'}
+						${6}  | ${'cursor set a 2C'}
 					`('$d0', ({ d0, actionText }: { d0: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cell', data: [d0] };
 						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
-						// FIXME (coords) (cursor) clamp
-						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
-						expect(game.setCursor(location).cursor).not.toEqual(location);
-					});
-				});
-
-				describe('invalid cursor location', () => {
-					test.each`
-						d0    | error
-						${-1} | ${'invalid location: {"fixture":"cell","data":[-1]}'}
-						${6}  | ${'invalid location: {"fixture":"cell","data":[6]}'}
-					`('$d0', ({ d0, error }: { d0: number; error: string }) => {
-						const location: CardLocation = { fixture: 'cell', data: [d0] };
-						// FIXME maybe don't throw?
-						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
@@ -124,27 +114,15 @@ describe('game/move.calcCursorActionText', () => {
 
 				describe('clamp', () => {
 					test.each`
-						d0   | actionText
-						${4} | ${'cursor set e'}
-						${5} | ${'cursor set f'}
+						d0    | actionText
+						${-1} | ${'cursor set a 2S'}
+						${4}  | ${'cursor set d 2C'}
+						${5}  | ${'cursor set d 2C'}
+						${6}  | ${'cursor set d 2C'}
 					`('$d0', ({ d0, actionText }: { d0: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cell', data: [d0] };
 						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
-						// FIXME (coords) (cursor) clamp
-						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
-						expect(game.setCursor(location).cursor).not.toEqual(location);
-					});
-				});
-
-				describe('invalid cursor location', () => {
-					test.each`
-						d0    | error
-						${-1} | ${'invalid location: {"fixture":"cell","data":[-1]}'}
-						${6}  | ${'invalid location: {"fixture":"cell","data":[6]}'}
-					`('$d0', ({ d0, error }: { d0: number; error: string }) => {
-						const location: CardLocation = { fixture: 'cell', data: [d0] };
-						// FIXME maybe don't throw?
-						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
@@ -170,15 +148,15 @@ describe('game/move.calcCursorActionText', () => {
 					});
 				});
 
-				describe('invalid cursor location', () => {
+				describe('clamp', () => {
 					test.each`
-						d0    | error
-						${-1} | ${'invalid location: {"fixture":"cell","data":[-1]}'}
-						${6}  | ${'invalid location: {"fixture":"cell","data":[6]}'}
-					`('$d0', ({ d0, error }: { d0: number; error: string }) => {
+						d0    | actionText
+						${-1} | ${'cursor set a 3D'}
+						${6}  | ${'cursor set f 2C'}
+					`('$d0', ({ d0, actionText }: { d0: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cell', data: [d0] };
-						// FIXME maybe don't throw?
-						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
@@ -203,30 +181,18 @@ describe('game/move.calcCursorActionText', () => {
 
 				describe('clamp', () => {
 					test.each`
-						d0   | actionText
-						${1} | ${'cursor set b'}
-						${2} | ${'cursor set c'}
-						${3} | ${'cursor set d'}
-						${4} | ${'cursor set e'}
-						${5} | ${'cursor set f'}
+						d0    | actionText
+						${-1} | ${'cursor set a'}
+						${1}  | ${'cursor set a'}
+						${2}  | ${'cursor set a'}
+						${3}  | ${'cursor set a'}
+						${4}  | ${'cursor set a'}
+						${5}  | ${'cursor set a'}
+						${6}  | ${'cursor set a'}
 					`('$d0', ({ d0, actionText }: { d0: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cell', data: [d0] };
 						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
-						// FIXME (coords) (cursor) clamp
-						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
-						expect(game.setCursor(location).cursor).not.toEqual(location);
-					});
-				});
-
-				describe('invalid cursor location', () => {
-					test.each`
-						d0    | error
-						${-1} | ${'invalid location: {"fixture":"cell","data":[-1]}'}
-						${6}  | ${'invalid location: {"fixture":"cell","data":[6]}'}
-					`('$d0', ({ d0, error }: { d0: number; error: string }) => {
-						const location: CardLocation = { fixture: 'cell', data: [d0] };
-						// FIXME maybe don't throw?
-						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
@@ -252,27 +218,15 @@ describe('game/move.calcCursorActionText', () => {
 
 				describe('clamp', () => {
 					test.each`
-						d0   | actionText
-						${4} | ${'cursor set e'}
-						${5} | ${'cursor set f'}
+						d0    | actionText
+						${-1} | ${'cursor set a'}
+						${4}  | ${'cursor set d'}
+						${5}  | ${'cursor set d'}
+						${6}  | ${'cursor set d'}
 					`('$d0', ({ d0, actionText }: { d0: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cell', data: [d0] };
 						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
-						// FIXME (coords) (cursor) clamp
-						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
-						expect(game.setCursor(location).cursor).not.toEqual(location);
-					});
-				});
-
-				describe('invalid cursor location', () => {
-					test.each`
-						d0    | error
-						${-1} | ${'invalid location: {"fixture":"cell","data":[-1]}'}
-						${6}  | ${'invalid location: {"fixture":"cell","data":[6]}'}
-					`('$d0', ({ d0, error }: { d0: number; error: string }) => {
-						const location: CardLocation = { fixture: 'cell', data: [d0] };
-						// FIXME maybe don't throw?
-						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
@@ -298,15 +252,15 @@ describe('game/move.calcCursorActionText', () => {
 					});
 				});
 
-				describe('invalid cursor location', () => {
+				describe('clamp', () => {
 					test.each`
-						d0    | error
-						${-1} | ${'invalid location: {"fixture":"cell","data":[-1]}'}
-						${6}  | ${'invalid location: {"fixture":"cell","data":[6]}'}
-					`('$d0', ({ d0, error }: { d0: number; error: string }) => {
+						d0    | actionText
+						${-1} | ${'cursor set a'}
+						${6}  | ${'cursor set f'}
+					`('$d0', ({ d0, actionText }: { d0: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cell', data: [d0] };
-						// FIXME maybe don't throw?
-						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
@@ -339,44 +293,33 @@ describe('game/move.calcCursorActionText', () => {
 				describe('clamp d1', () => {
 					test.each`
 						d0   | d1                   | actionText
-						${0} | ${BOTTOM_OF_CASCADE} | ${'cursor set 1'}
-						${1} | ${BOTTOM_OF_CASCADE} | ${'cursor set 2'}
-						${2} | ${BOTTOM_OF_CASCADE} | ${'cursor set 3'}
-						${3} | ${BOTTOM_OF_CASCADE} | ${'cursor set 4'}
+						${0} | ${BOTTOM_OF_CASCADE} | ${'cursor set 1⡌ AS'}
+						${1} | ${BOTTOM_OF_CASCADE} | ${'cursor set 2⡌ AH'}
+						${2} | ${BOTTOM_OF_CASCADE} | ${'cursor set 3⡌ AD'}
+						${3} | ${BOTTOM_OF_CASCADE} | ${'cursor set 4⡌ AC'}
 					`('$d0,$d1', ({ d0, d1, actionText }: { d0: number; d1: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
 						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
-						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
 
 				describe('clamp d0', () => {
 					test.each`
-						d0   | d1   | actionText
-						${4} | ${0} | ${'cursor set 5'}
-						${5} | ${0} | ${'cursor set 6'}
-						${6} | ${0} | ${'cursor set 7'}
-						${7} | ${0} | ${'cursor set 8'}
-						${8} | ${0} | ${'cursor set 9'}
-						${9} | ${0} | ${'cursor set 0'}
+						d0    | d1   | actionText
+						${-1} | ${0} | ${'cursor set 1⡀ KS'}
+						${4}  | ${0} | ${'cursor set 4⡀ KC'}
+						${5}  | ${0} | ${'cursor set 4⡀ KC'}
+						${6}  | ${0} | ${'cursor set 4⡀ KC'}
+						${7}  | ${0} | ${'cursor set 4⡀ KC'}
+						${8}  | ${0} | ${'cursor set 4⡀ KC'}
+						${9}  | ${0} | ${'cursor set 4⡀ KC'}
+						${10} | ${0} | ${'cursor set 4⡀ KC'}
 					`('$d0,$d1', ({ d0, d1, actionText }: { d0: number; d1: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
 						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
-						// FIXME (coords) (cursor) clamp
-						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
-						expect(game.setCursor(location).cursor).not.toEqual(location);
-					});
-				});
-
-				describe('invalid cursor location', () => {
-					test.each`
-						d0    | d1   | error
-						${-1} | ${0} | ${'invalid location: {"fixture":"cascade","data":[-1,0]}'}
-						${10} | ${0} | ${'invalid location: {"fixture":"cascade","data":[10,0]}'}
-					`('$d0,$d1', ({ d0, d1, error }: { d0: number; d1: number; error: string }) => {
-						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
-						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
@@ -415,45 +358,33 @@ describe('game/move.calcCursorActionText', () => {
 				describe('clamp d1', () => {
 					test.each`
 						d0   | d1                   | actionText
-						${0} | ${BOTTOM_OF_CASCADE} | ${'cursor set 1'}
-						${1} | ${BOTTOM_OF_CASCADE} | ${'cursor set 2'}
-						${2} | ${BOTTOM_OF_CASCADE} | ${'cursor set 3'}
-						${3} | ${BOTTOM_OF_CASCADE} | ${'cursor set 4'}
-						${4} | ${BOTTOM_OF_CASCADE} | ${'cursor set 5'}
-						${5} | ${BOTTOM_OF_CASCADE} | ${'cursor set 6'}
-						${6} | ${BOTTOM_OF_CASCADE} | ${'cursor set 7'}
-						${7} | ${BOTTOM_OF_CASCADE} | ${'cursor set 8'}
+						${0} | ${BOTTOM_OF_CASCADE} | ${'cursor set 1⡆ AS'}
+						${1} | ${BOTTOM_OF_CASCADE} | ${'cursor set 2⡆ AH'}
+						${2} | ${BOTTOM_OF_CASCADE} | ${'cursor set 3⡆ AD'}
+						${3} | ${BOTTOM_OF_CASCADE} | ${'cursor set 4⡆ AC'}
+						${4} | ${BOTTOM_OF_CASCADE} | ${'cursor set 5⡅ 2S'}
+						${5} | ${BOTTOM_OF_CASCADE} | ${'cursor set 6⡅ 2H'}
+						${6} | ${BOTTOM_OF_CASCADE} | ${'cursor set 7⡅ 2D'}
+						${7} | ${BOTTOM_OF_CASCADE} | ${'cursor set 8⡅ 2C'}
 					`('$d0,$d1', ({ d0, d1, actionText }: { d0: number; d1: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
 						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
-						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
 
 				describe('clamp d0', () => {
 					test.each`
-						d0   | d1   | actionText
-						${8} | ${0} | ${'cursor set 9'}
-						${9} | ${0} | ${'cursor set 0'}
+						d0    | d1   | actionText
+						${-1} | ${0} | ${'cursor set 1⡀ KS'}
+						${8}  | ${0} | ${'cursor set 8⡀ QC'}
+						${9}  | ${0} | ${'cursor set 8⡀ QC'}
+						${10} | ${0} | ${'cursor set 8⡀ QC'}
 					`('$d0,$d1', ({ d0, d1, actionText }: { d0: number; d1: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
 						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
-						// FIXME (coords) (cursor) clamp
-						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
-						expect(game.setCursor(location).cursor).not.toEqual(location);
-					});
-				});
-
-				describe('invalid cursor location', () => {
-					test.each`
-						d0    | d1   | error
-						${-1} | ${0} | ${'invalid location: {"fixture":"cascade","data":[-1,0]}'}
-						${10} | ${0} | ${'invalid location: {"fixture":"cascade","data":[10,0]}'}
-					`('$d0,$d1', ({ d0, d1, error }: { d0: number; d1: number; error: string }) => {
-						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
-						// FIXME maybe don't throw
-						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
@@ -496,33 +427,33 @@ describe('game/move.calcCursorActionText', () => {
 				describe('clamp d1', () => {
 					test.each`
 						d0   | d1                   | actionText
-						${0} | ${BOTTOM_OF_CASCADE} | ${'cursor set 1'}
-						${1} | ${BOTTOM_OF_CASCADE} | ${'cursor set 2'}
-						${2} | ${BOTTOM_OF_CASCADE} | ${'cursor set 3'}
-						${3} | ${BOTTOM_OF_CASCADE} | ${'cursor set 4'}
-						${4} | ${BOTTOM_OF_CASCADE} | ${'cursor set 5'}
-						${5} | ${BOTTOM_OF_CASCADE} | ${'cursor set 6'}
-						${6} | ${BOTTOM_OF_CASCADE} | ${'cursor set 7'}
-						${7} | ${BOTTOM_OF_CASCADE} | ${'cursor set 8'}
-						${8} | ${BOTTOM_OF_CASCADE} | ${'cursor set 9'}
-						${9} | ${BOTTOM_OF_CASCADE} | ${'cursor set 0'}
+						${0} | ${BOTTOM_OF_CASCADE} | ${'cursor set 1⡅ AD'}
+						${1} | ${BOTTOM_OF_CASCADE} | ${'cursor set 2⡅ AC'}
+						${2} | ${BOTTOM_OF_CASCADE} | ${'cursor set 3⡄ 3D'}
+						${3} | ${BOTTOM_OF_CASCADE} | ${'cursor set 4⡄ 3C'}
+						${4} | ${BOTTOM_OF_CASCADE} | ${'cursor set 5⡄ 2S'}
+						${5} | ${BOTTOM_OF_CASCADE} | ${'cursor set 6⡄ 2H'}
+						${6} | ${BOTTOM_OF_CASCADE} | ${'cursor set 7⡄ 2D'}
+						${7} | ${BOTTOM_OF_CASCADE} | ${'cursor set 8⡄ 2C'}
+						${8} | ${BOTTOM_OF_CASCADE} | ${'cursor set 9⡄ AS'}
+						${9} | ${BOTTOM_OF_CASCADE} | ${'cursor set 0⡄ AH'}
 					`('$d0,$d1', ({ d0, d1, actionText }: { d0: number; d1: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
 						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
-						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
 
-				describe('invalid cursor location', () => {
+				describe('clamp d0', () => {
 					test.each`
-						d0    | d1   | error
-						${-1} | ${0} | ${'invalid location: {"fixture":"cascade","data":[-1,0]}'}
-						${10} | ${0} | ${'invalid location: {"fixture":"cascade","data":[10,0]}'}
-					`('$d0,$d1', ({ d0, d1, error }: { d0: number; d1: number; error: string }) => {
+						d0    | d1   | actionText
+						${-1} | ${0} | ${'cursor set 1⡀ KS'}
+						${10} | ${0} | ${'cursor set 0⡀ JH'}
+					`('$d0,$d1', ({ d0, d1, actionText }: { d0: number; d1: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
-						// FIXME maybe don't throw
-						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
@@ -569,30 +500,19 @@ describe('game/move.calcCursorActionText', () => {
 
 				describe('clamp d0', () => {
 					test.each`
-						d0   | d1   | actionText
-						${4} | ${0} | ${'cursor set 5'}
-						${5} | ${0} | ${'cursor set 6'}
-						${6} | ${0} | ${'cursor set 7'}
-						${7} | ${0} | ${'cursor set 8'}
-						${8} | ${0} | ${'cursor set 9'}
-						${9} | ${0} | ${'cursor set 0'}
+						d0    | d1   | actionText
+						${-1} | ${0} | ${'cursor set 1'}
+						${4}  | ${0} | ${'cursor set 4'}
+						${5}  | ${0} | ${'cursor set 4'}
+						${6}  | ${0} | ${'cursor set 4'}
+						${7}  | ${0} | ${'cursor set 4'}
+						${8}  | ${0} | ${'cursor set 4'}
+						${9}  | ${0} | ${'cursor set 4'}
+						${10} | ${0} | ${'cursor set 4'}
 					`('$d0,$d1', ({ d0, d1, actionText }: { d0: number; d1: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
 						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
-						// FIXME (coords) (cursor) clamp
-						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
-						expect(game.setCursor(location).cursor).not.toEqual(location);
-					});
-				});
-
-				describe('invalid cursor location', () => {
-					test.each`
-						d0    | d1   | error
-						${-1} | ${0} | ${'invalid location: {"fixture":"cascade","data":[-1,0]}'}
-						${10} | ${0} | ${'invalid location: {"fixture":"cascade","data":[10,0]}'}
-					`('$d0,$d1', ({ d0, d1, error }: { d0: number; d1: number; error: string }) => {
-						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
-						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
@@ -649,27 +569,15 @@ describe('game/move.calcCursorActionText', () => {
 
 				describe('clamp d0', () => {
 					test.each`
-						d0   | d1   | actionText
-						${8} | ${0} | ${'cursor set 9'}
-						${9} | ${0} | ${'cursor set 0'}
+						d0    | d1   | actionText
+						${-1} | ${0} | ${'cursor set 1'}
+						${8}  | ${0} | ${'cursor set 8'}
+						${9}  | ${0} | ${'cursor set 8'}
+						${10} | ${0} | ${'cursor set 8'}
 					`('$d0,$d1', ({ d0, d1, actionText }: { d0: number; d1: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
 						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
-						// FIXME (coords) (cursor) clamp
-						expect(game.setCursor(location).previousAction.text).not.toBe(actionText);
-						expect(game.setCursor(location).cursor).not.toEqual(location);
-					});
-				});
-
-				describe('invalid cursor location', () => {
-					test.each`
-						d0    | d1   | error
-						${-1} | ${0} | ${'invalid location: {"fixture":"cascade","data":[-1,0]}'}
-						${10} | ${0} | ${'invalid location: {"fixture":"cascade","data":[10,0]}'}
-					`('$d0,$d1', ({ d0, d1, error }: { d0: number; d1: number; error: string }) => {
-						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
-						// FIXME maybe don't throw
-						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});
@@ -730,15 +638,15 @@ describe('game/move.calcCursorActionText', () => {
 					});
 				});
 
-				describe('invalid cursor location', () => {
+				describe('clamp d0', () => {
 					test.each`
-						d0    | d1   | error
-						${-1} | ${0} | ${'invalid location: {"fixture":"cascade","data":[-1,0]}'}
-						${10} | ${0} | ${'invalid location: {"fixture":"cascade","data":[10,0]}'}
-					`('$d0,$d1', ({ d0, d1, error }: { d0: number; d1: number; error: string }) => {
+						d0    | d1   | actionText
+						${-1} | ${0} | ${'cursor set 1'}
+						${10} | ${0} | ${'cursor set 0'}
+					`('$d0,$d1', ({ d0, d1, actionText }: { d0: number; d1: number; actionText: string }) => {
 						const location: CardLocation = { fixture: 'cascade', data: [d0, d1] };
-						// FIXME maybe don't throw
-						expect(() => calcCursorActionText(game, 'set', location)).toThrow(error);
+						expect(calcCursorActionText(game, 'set', location)).toBe(actionText);
+						expect(game.setCursor(location).previousAction.text).toBe(actionText);
 						expect(game.setCursor(location).cursor).not.toEqual(location);
 					});
 				});

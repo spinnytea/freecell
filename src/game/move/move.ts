@@ -767,6 +767,7 @@ export function calcCursorActionText(
 	suffix: string,
 	location: CardLocation
 ): string {
+	location = game.__clampCursor(location);
 	const card = getCardAt(game, location);
 	const cardSuffix = card ? ` ${shorthandCard(card)}` : '';
 	switch (location.fixture) {
