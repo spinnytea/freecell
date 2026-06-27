@@ -524,12 +524,6 @@ export function shorthandPile(location: CardLocation): PileSH {
 	throw new Error(`invalid location: ${JSON.stringify(location)}`);
 }
 
-// REVIEW (verbs-for-select) this function is in the wrong file, and type should be PreviousActionType
-export function calcSelectActionText(sequence: CardSequence, type: 'select' | 'deselect'): string {
-	const verb = sequence.peekOnly && type === 'select' ? 'peek' : type;
-	return verb + ' ' + shorthandLocation(sequence.location) + ' ' + shorthandSequence(sequence);
-}
-
 export function parseShorthandLocation(p: LocationSH): CardLocation {
 	const location = parseShorthandPile(p as PileSH);
 	switch (location.fixture) {

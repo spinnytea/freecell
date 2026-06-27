@@ -1,5 +1,4 @@
 import {
-	calcSelectActionText,
 	Card,
 	CardLocation,
 	CardSequence,
@@ -45,6 +44,7 @@ import {
 	calcAutoFoundationActionText,
 	calcCursorActionText,
 	calcMoveActionText,
+	calcSelectActionText,
 	countEmptyFoundations,
 	findAvailableMoves,
 	moveCards,
