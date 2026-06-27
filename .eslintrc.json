@@ -10,6 +10,7 @@
 	"globals": {
 		"React": "readonly"
 	},
+	"ignorePatterns": ["src/ActionTextReporter.js"],
 	"rules": {
 		"prefer-const": ["error", { "destructuring": "all" }],
 		"@typescript-eslint/switch-exhaustiveness-check": "error",

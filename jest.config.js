@@ -48,7 +48,7 @@ const config = {
 		// "json",
 		// "text",
 		'lcov',
-		// "clover"
+		// "clover",
 	],
 
 	// An object that configures minimum threshold enforcement for coverage results
@@ -133,7 +133,7 @@ const config = {
 	// projects: undefined,
 
 	// Use this configuration option to add custom reporters to Jest
-	// reporters: undefined,
+	reporters: ['default', '<rootDir>/src/ActionTextReporter.js'],
 
 	// Automatically reset mock state before every test
 	// resetMocks: false,

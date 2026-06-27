@@ -663,6 +663,7 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 	const firstWord = actionText.split(' ')[0];
 	// some abnormal cases where the firstWord does not match the type
 	if (firstWord === 'hand-jammed') return { text: actionText, type: 'init' };
+	if (firstWord === 'copy-pasta') return { text: actionText, type: 'init' };
 	if (firstWord === 'touch') return { text: actionText, type: 'invalid' };
 	if (firstWord === 'peek') return { text: actionText, type: 'select' };
 	if (firstWord === 'flourish52') return { text: actionText, type: 'auto-foundation' };

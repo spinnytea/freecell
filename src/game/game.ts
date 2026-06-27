@@ -270,9 +270,20 @@ export class FreeCell {
 		this.availableMoves = availableMoves ?? null;
 		this.flashCards = flashCards ?? null;
 
-		// TODO (verbs-for-select) (review) (coords) verify that every previousAction.text has coords as appropriate (i.e. shorthandLocation)
 		this.previousAction = action;
 		this.history = history ?? [];
+
+		/*
+		// TODO (5-priority) (techdebt) (review) (test) compare {@link ACTION_TEXT_EXAMPLES} to test data
+		// HACK record every actionText during unit tests
+		// prettier-ignore
+		if (process.env.NODE_ENV === 'test') {
+			// eslint-disable-next-line
+			const tempLogPath = require('node:path').join(process.cwd(), '.temp-jest-recorded-action-text.txt');
+			// eslint-disable-next-line
+			require('node:fs').appendFileSync(tempLogPath, action.text + '\n', 'utf8');
+		}
+		*/
 	}
 
 	/**

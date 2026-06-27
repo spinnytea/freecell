@@ -399,7 +399,7 @@ describe('useCardPositionAnimations', () => {
 						'    4D JH                \n' +
 						'       TC                \n' +
 						'       9D                \n' +
-						' select AS'
+						' select 7 AS'
 				);
 				expect(gameStateOne.selection).toEqual({
 					location: { fixture: 'cascade', data: [6, 4] },
@@ -842,10 +842,10 @@ describe('useCardPositionAnimations', () => {
 									'                4C       \n' +
 									'                3H       \n' +
 									'                2S       \n' +
-									' select KC'
+									' select 2 KC'
 							);
 							const gameStateTwo = gameStateOne.touch();
-							expect(gameStateTwo.previousAction.text).not.toBe('deselect KC');
+							expect(gameStateTwo.previousAction.text).not.toBe('deselect 2⡃ KC');
 							expect(gameStateTwo.previousAction.text).toBe('move 2⡃1 KC→cascade (auto-foundation 28 2H,3C)');
 
 							const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
