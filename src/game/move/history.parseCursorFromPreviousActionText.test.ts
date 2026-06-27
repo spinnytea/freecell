@@ -63,6 +63,8 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'cursor set h AD'}                            | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
 			${'cursor set 6 2D'}                            | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 5] }}  | ${undefined}
 			${'cursor set 3'}                               | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${undefined}
+			${'cursor set k'}                               | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${undefined}
+			${'cursor set k KH'}                            | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${undefined}
 			${'cursor up'}                                  | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor left'}                                | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor down'}                                | ${[]}          | ${undefined}                             | ${undefined}
@@ -78,12 +80,10 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'cursor stop h AD'}                           | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
 			${'cursor stop 6 2D'}                           | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 5] }}  | ${undefined}
 			${'cursor stop 3'}                              | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${undefined}
-			${'peek QS'}                                    | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 2] }}  | ${{ fixture: 'cascade', data: [7, 2] }}
-			${'peek 4D-3S-2D'}                              | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 3] }}  | ${{ fixture: 'cascade', data: [7, 3] }}
+			${'peek 8 QS'}                                  | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 2] }}  | ${{ fixture: 'cascade', data: [7, 2] }}
+			${'peek 8 4D-3S-2D'}                            | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 3] }}  | ${{ fixture: 'cascade', data: [7, 3] }}
 			${'select 8 7C'}                                | ${someCards_1} | ${{ fixture: 'cascade', data: [2, 5] }}  | ${{ fixture: 'cascade', data: [2, 5] }}
 			${'select 8 4D-3S-2D'}                          | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 3] }}  | ${{ fixture: 'cascade', data: [7, 3] }}
-			${'deselect AS'}                                | ${someCards_2} | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'cascade', data: [0, 0] }}
-			${'deselect 4D-3S-2D'}                          | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 1] }}  | ${{ fixture: 'cascade', data: [5, 1] }}
 			${'deselect 6 2D'}                              | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 3] }}  | ${{ fixture: 'cascade', data: [5, 3] }}
 			${'deselect 6 4D-3S-2D'}                        | ${someCards_2} | ${{ fixture: 'cascade', data: [5, 1] }}  | ${{ fixture: 'cascade', data: [5, 1] }}
 			${'touch stop'}                                 | ${[]}          | ${undefined}                             | ${undefined}

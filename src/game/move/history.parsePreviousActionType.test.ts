@@ -26,6 +26,8 @@ describe('game/history.parsePreviousActionType', () => {
 			${'cursor set h AD'}                            | ${{ text: 'cursor set h AD', type: 'cursor' }}
 			${'cursor set 6 2D'}                            | ${{ text: 'cursor set 6 2D', type: 'cursor' }}
 			${'cursor set 3'}                               | ${{ text: 'cursor set 3', type: 'cursor' }}
+			${'cursor set k'}                               | ${{ text: 'cursor set k', type: 'cursor' }}
+			${'cursor set k KH'}                            | ${{ text: 'cursor set k KH', type: 'cursor' }}
 			${'cursor up'}                                  | ${{ text: 'cursor up', type: 'cursor' }}
 			${'cursor left'}                                | ${{ text: 'cursor left', type: 'cursor' }}
 			${'cursor down'}                                | ${{ text: 'cursor down', type: 'cursor' }}
@@ -41,12 +43,10 @@ describe('game/history.parsePreviousActionType', () => {
 			${'cursor stop h AD'}                           | ${{ text: 'cursor stop h AD', type: 'cursor' }}
 			${'cursor stop 6 2D'}                           | ${{ text: 'cursor stop 6 2D', type: 'cursor' }}
 			${'cursor stop 3'}                              | ${{ text: 'cursor stop 3', type: 'cursor' }}
-			${'peek QS'}                                    | ${{ text: 'peek QS', type: 'select' }}
-			${'peek 4D-3S-2D'}                              | ${{ text: 'peek 4D-3S-2D', type: 'select' }}
+			${'peek 8 QS'}                                  | ${{ text: 'peek 8 QS', type: 'select' }}
+			${'peek 8 4D-3S-2D'}                            | ${{ text: 'peek 8 4D-3S-2D', type: 'select' }}
 			${'select 8 7C'}                                | ${{ text: 'select 8 7C', type: 'select' }}
 			${'select 8 4D-3S-2D'}                          | ${{ text: 'select 8 4D-3S-2D', type: 'select' }}
-			${'deselect AS'}                                | ${{ text: 'deselect AS', type: 'deselect' }}
-			${'deselect 4D-3S-2D'}                          | ${{ text: 'deselect 4D-3S-2D', type: 'deselect' }}
 			${'deselect 6 2D'}                              | ${{ text: 'deselect 6 2D', type: 'deselect' }}
 			${'deselect 6 4D-3S-2D'}                        | ${{ text: 'deselect 6 4D-3S-2D', type: 'deselect' }}
 			${'touch stop'}                                 | ${{ text: 'touch stop', type: 'invalid' }}
