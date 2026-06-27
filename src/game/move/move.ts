@@ -19,7 +19,7 @@ import {
 	Suit,
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
-import { _parseShorthandMove } from '@/game/move/history';
+import { _parseShorthandMove, PreviousActionType } from '@/game/move/history';
 
 /* *********** */
 /* DEFINITIONS */
@@ -780,6 +780,12 @@ export function calcCursorActionText(
 			return `cursor ${suffix} ${shorthandLocation(location)}${cardSuffix}`;
 	}
 	return `cursor ${suffix}`;
+}
+
+type ActionTypesForSelect = Extract<PreviousActionType, 'select' | 'deselect'>;
+export function calcSelectActionText(sequence: CardSequence, type: ActionTypesForSelect): string {
+	const verb = sequence.peekOnly && type === 'select' ? 'peek' : type;
+	return verb + ' ' + shorthandLocation(sequence.location) + ' ' + shorthandSequence(sequence);
 }
 
 /**

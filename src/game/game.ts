@@ -14,7 +14,6 @@ import {
 	removeBraille,
 	shorthandCard,
 	shorthandPile,
-	shorthandSequenceWithLocation,
 	SuitList,
 } from '@/game/card/card';
 import { IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
@@ -45,6 +44,7 @@ import {
 	calcAutoFoundationActionText,
 	calcCursorActionText,
 	calcMoveActionText,
+	calcSelectActionText,
 	countEmptyFoundations,
 	findAvailableMoves,
 	moveCards,
@@ -270,9 +270,20 @@ export class FreeCell {
 		this.availableMoves = availableMoves ?? null;
 		this.flashCards = flashCards ?? null;
 
-		// TODO (5-priority) (review) (coords) verify that every previousAction.text has coords as appropriate (i.e. shorthandLocation)
 		this.previousAction = action;
 		this.history = history ?? [];
+
+		/*
+		// TODO (5-priority) (techdebt) (review) (test) compare {@link ACTION_TEXT_EXAMPLES} to test data
+		// HACK record every actionText during unit tests
+		// prettier-ignore
+		if (process.env.NODE_ENV === 'test') {
+			// eslint-disable-next-line
+			const tempLogPath = require('node:path').join(process.cwd(), '.temp-jest-recorded-action-text.txt');
+			// eslint-disable-next-line
+			require('node:fs').appendFileSync(tempLogPath, action.text + '\n', 'utf8');
+		}
+		*/
 	}
 
 	/**
@@ -367,9 +378,8 @@ export class FreeCell {
 
 	clearSelection(): FreeCell | this {
 		if (this.selection) {
-			const actionText = 'deselect ' + shorthandSequenceWithLocation(this.selection);
 			return this.__clone({
-				action: { text: actionText, type: 'deselect' },
+				action: { text: calcSelectActionText(this.selection, 'deselect'), type: 'deselect' },
 				selection: null,
 				availableMoves: null,
 			});
@@ -427,9 +437,7 @@ export class FreeCell {
 				!selectionNever
 			) {
 				return this.__clone({
-					// TODO (5-priority) (gameplay) (peek) change verb instead of omitting location for peek
-					//  - SELECT_REGEX = (select|peek|deselect)
-					action: { text: 'select ' + shorthandSequenceWithLocation(selection), type: 'select' },
+					action: { text: calcSelectActionText(selection, 'select'), type: 'select' },
 					selection,
 					availableMoves: findAvailableMoves(this, selection),
 				});

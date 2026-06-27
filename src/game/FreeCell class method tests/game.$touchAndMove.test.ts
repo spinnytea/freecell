@@ -39,13 +39,13 @@ describe('game.$touchAndMove', () => {
 	/** when we selected something within a cascade / select-to-peek */
 	test('allow changing selection if peekOnly', () => {
 		game = game.$touchAndMove({ fixture: 'cascade', data: [0, 1] });
-		expect(game.previousAction.text).toBe('select 2H');
+		expect(game.previousAction.text).toBe('peek 1⡁ 2H');
 		expect(game.selection?.peekOnly).toBe(true);
 		game = game.$touchAndMove({ fixture: 'cascade', data: [2, 2] });
-		expect(game.previousAction.text).toBe('select 5D');
+		expect(game.previousAction.text).toBe('peek 3⡂ 5D');
 		expect(game.selection?.peekOnly).toBe(true);
 		game = game.$touchAndMove({ fixture: 'cascade', data: [3, 0] });
-		expect(game.previousAction.text).toBe('select 3D');
+		expect(game.previousAction.text).toBe('peek 4⡀ 3D');
 		expect(game.selection?.peekOnly).toBe(true);
 	});
 
@@ -167,7 +167,7 @@ describe('game.$touchAndMove', () => {
 		expect(game.$touchAndMove('5C', { allowPeekOnly: false }).previousAction.text).toBe('select 4⡂ 5C-4H-3S');
 
 		// this is buried, so it's peekOnly
-		expect(game.$touchAndMove('QC').previousAction.text).toBe('select QC');
+		expect(game.$touchAndMove('QC').previousAction.text).toBe('peek 3⡁ QC');
 		// so if we disallow this
 		expect(game.$touchAndMove('QC', { allowPeekOnly: false }).previousAction.text).toBe('touch stop');
 	});

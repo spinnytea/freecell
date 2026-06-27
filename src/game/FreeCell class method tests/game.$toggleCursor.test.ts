@@ -395,9 +395,8 @@ describe('game.$toggleCursor', () => {
 					type: 'invalid',
 				});
 				const gameSelectFoundation = game.$selectCard('2C', { allowSelectFoundation: true });
-				// TODO (5-priority) (gameplay) (peek) missing location of h
 				expect(gameSelectFoundation.previousAction).toEqual({
-					text: 'select 2C',
+					text: 'peek h⡁ 2C',
 					type: 'select',
 				});
 				expect(gameSelectFoundation.$toggleCursor().previousAction.text).toBe('cursor set 7⡇ TC');

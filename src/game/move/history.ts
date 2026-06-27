@@ -140,7 +140,8 @@ const MOVE_FOUNDATION_REGEX =
 	/^move ([abcdefhk1234567890])([\u2840-\u28FF]?)([abcdefhk1234567890])([\u2840-\u28FF]?) ([\w-]+)→(\S+) \((auto-foundation|flourish|flourish52) (\w+) (\S+)\)$/;
 const CURSOR_REGEX =
 	/^cursor (set|up|left|down|right|stop)( wrap)?( ([abcdefhk1234567890][\u2840-\u28FF]?))?( (\w\w))?$/;
-const SELECT_REGEX = /^(de)?select( ([abcdefhk1234567890])([\u2840-\u28FF]?))? ([\w-]+)$/;
+const SELECT_REGEX =
+	/^(select|peek|deselect)( ([abcdefhk1234567890])([\u2840-\u28FF]?))? ([\w-]+)$/;
 
 /**
 	quick-and-dirty check to ensure that, during game replays from history, the `moveByShorthand` actually occurred
@@ -662,7 +663,9 @@ export function parsePreviousActionType(actionText: string): PreviousAction {
 	const firstWord = actionText.split(' ')[0];
 	// some abnormal cases where the firstWord does not match the type
 	if (firstWord === 'hand-jammed') return { text: actionText, type: 'init' };
+	if (firstWord === 'copy-pasta') return { text: actionText, type: 'init' };
 	if (firstWord === 'touch') return { text: actionText, type: 'invalid' };
+	if (firstWord === 'peek') return { text: actionText, type: 'select' };
 	if (firstWord === 'flourish52') return { text: actionText, type: 'auto-foundation' };
 	if (firstWord === 'flourish') return { text: actionText, type: 'auto-foundation' };
 

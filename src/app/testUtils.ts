@@ -9,7 +9,6 @@ export function spyOnGsap(_gsap: typeof gsap) {
 	const fromToSpy = jest.fn();
 	const toSpy = jest.fn();
 	const setSpy = jest.fn();
-	// TODO (5-priority) (review) (coords) verify that every addLabelSpy has coords as appropriate (i.e. shorthandLocation)
 	const addLabelSpy = jest.fn();
 	const addSpy = jest.fn();
 	const timeScaleSpy = jest.fn();

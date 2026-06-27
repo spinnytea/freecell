@@ -43,13 +43,15 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'deal 2 cards': '',
 	'deal 44 cards': '',
 	'deal all cards': '',
-	'cursor set': '', // TODO (5-priority) (gameplay) (peek) k for deck, forget peekOnly
-	'cursor set KH': '', // TODO (5-priority) (gameplay) (peek) k for deck, forget peekOnly
+	'cursor set': '',
+	'cursor set KH': '',
 	'cursor set b': '',
 	'cursor set h⡂': '', // home needs coords
 	'cursor set h AD': '', // unless we have a card
 	'cursor set 6 2D': '',
 	'cursor set 3': '', // a cascade without coords means it's 0 (no card, empty cascade)
+	'cursor set k': '',
+	'cursor set k KH': '',
 	'cursor up': '',
 	'cursor left': '',
 	'cursor down': '',
@@ -65,13 +67,10 @@ export const ACTION_TEXT_EXAMPLES: Record<string, string> = {
 	'cursor stop h AD': '',
 	'cursor stop 6 2D': '',
 	'cursor stop 3': '',
-	// TODO (5-priority) (gameplay) (peek) every `(de)?select \w` should be replaced
-	'select QS': '',
-	'select 4D-3S-2D': '',
+	'peek 8 QS': '',
+	'peek 8 4D-3S-2D': '',
 	'select 8 7C': '',
 	'select 8 4D-3S-2D': '',
-	'deselect AS': '',
-	'deselect 4D-3S-2D': '',
 	'deselect 6 2D': '',
 	'deselect 6 4D-3S-2D': '',
 	'touch stop':

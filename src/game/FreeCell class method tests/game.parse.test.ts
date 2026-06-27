@@ -984,7 +984,7 @@ describe('game.parse', () => {
 						'                         \n' +
 						'                         \n' +
 						':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH>AD|AC \n' +
-						' select AD'
+						' select k AD'
 				);
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [1] });
 				expect(game.selection).toEqual({
@@ -1001,7 +1001,7 @@ describe('game.parse', () => {
 						'                         \n' +
 						'                         \n' +
 						':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS>AH AD|AC|\n' +
-						' select AC'
+						' select k AC'
 				);
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
 				expect(game.selection).toEqual({
@@ -1021,7 +1021,7 @@ describe('game.parse', () => {
 						'                         \n' +
 						'                         \n' +
 						':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D>2C AS|AH|AD|AC|\n' +
-						' select KS'
+						' cursor set k 2C'
 				);
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [4] });
 				expect(game.selection).toEqual({
@@ -1380,7 +1380,7 @@ describe('game.parse', () => {
 					':    Y O U   W I N !    :\n' +
 					'                         \n' +
 					' move 42 JS→QH (auto-foundation 45656788a355782833552123 7H,8C,8S,9D,8H,9C,9S,TD,9H,TC,TS,JD,TH,JC,JS,QD,JH,QC,QS,KD,QH,KC,KS,KH)\n' +
-					' init hand-jammed'
+					' hand-jammed'
 			);
 			expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 			expect(game.print()).toBe(

@@ -399,7 +399,7 @@ describe('useCardPositionAnimations', () => {
 						'    4D JH                \n' +
 						'       TC                \n' +
 						'       9D                \n' +
-						' select AS'
+						' select 7 AS'
 				);
 				expect(gameStateOne.selection).toEqual({
 					location: { fixture: 'cascade', data: [6, 4] },
@@ -490,7 +490,7 @@ describe('useCardPositionAnimations', () => {
 
 				test('foundation', () => {
 					gameStateOne = gameStateOne.setCursor({ fixture: 'foundation', data: [0] }).touch({ allowSelectFoundation: true });
-					expect(gameStateOne.previousAction.text).toBe('select AC');
+					expect(gameStateOne.previousAction.text).toBe('peek h⡀ AC');
 					expect(gameStateOne.selection).toEqual({
 						location: { fixture: 'foundation', data: [0] },
 						cards: [{ rank: 'ace', suit: 'clubs', location: { fixture: 'foundation', data: [0] } }],
@@ -842,10 +842,10 @@ describe('useCardPositionAnimations', () => {
 									'                4C       \n' +
 									'                3H       \n' +
 									'                2S       \n' +
-									' select KC'
+									' select 2 KC'
 							);
 							const gameStateTwo = gameStateOne.touch();
-							expect(gameStateTwo.previousAction.text).not.toBe('deselect KC');
+							expect(gameStateTwo.previousAction.text).not.toBe('deselect 2⡃ KC');
 							expect(gameStateTwo.previousAction.text).toBe('move 2⡃1 KC→cascade (auto-foundation 28 2H,3C)');
 
 							const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
@@ -1171,17 +1171,13 @@ describe('useCardPositionAnimations', () => {
 
 		/** singular animation */
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select QS');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'peek 8 QS');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 4D-3S-2D');
+		if (skipThrow) pullActionTextExamples(actionTextExamples, 'peek 8 4D-3S-2D');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 8 7C');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 8 4D-3S-2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect AS');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 4D-3S-2D');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 6 2D');
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -1190,10 +1186,10 @@ describe('useCardPositionAnimations', () => {
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'invalid move 86 7D→9C');
 		describe('animate', () => {
 			// peekOnly
-			test.todo('· select QS');
+			test.todo('· peek 8 QS');
 
 			// peekOnly
-			test.todo('· select 4D-3S-2D');
+			test.todo('· peek 8 4D-3S-2D');
 
 			// (canMove), !peekOnly
 			test.todo('· select 8 7C');
@@ -1202,10 +1198,10 @@ describe('useCardPositionAnimations', () => {
 			test.todo('· select 8 4D-3S-2D');
 
 			// peekOnly
-			test.todo('· deselect AS');
+			test.todo('· deselect 2 AS');
 
 			// peekOnly
-			test.todo('· deselect 4D-3S-2D');
+			test.todo('· deselect 2 4D-3S-2D');
 
 			// (canMove), !peekOnly
 			test.todo('· deselect 6 2D');
