@@ -367,24 +367,21 @@ export function findAvailableMoves(
 	//  - this needs to be a setting, disabled by default
 	const mmsl = maxMovableSequenceLength(game);
 	game.tableau.forEach((cascade, idx) => {
-		// typescript is confused, we need to gaurd against selection even though we did it above
-		if (selection) {
-			const tail_card = cascade[cascade.length - 1];
-			if (!cascade.length) {
-				if (selection.cards.length <= mmsl / 2) {
-					availableMoves.push({
-						location: { fixture: 'cascade', data: [idx, cascade.length] },
-						moveDestinationType: 'cascade:empty',
-						priority: -1,
-					});
-				}
-			} else if (canStackCascade(tail_card, head_card) && selection.cards.length <= mmsl) {
+		const tail_card = cascade[cascade.length - 1];
+		if (!cascade.length) {
+			if (selection.cards.length <= mmsl / 2) {
 				availableMoves.push({
-					location: { fixture: 'cascade', data: [idx, cascade.length - 1] },
-					moveDestinationType: 'cascade:sequence',
+					location: { fixture: 'cascade', data: [idx, cascade.length] },
+					moveDestinationType: 'cascade:empty',
 					priority: -1,
 				});
 			}
+		} else if (canStackCascade(tail_card, head_card) && selection.cards.length <= mmsl) {
+			availableMoves.push({
+				location: { fixture: 'cascade', data: [idx, cascade.length - 1] },
+				moveDestinationType: 'cascade:sequence',
+				priority: -1,
+			});
 		}
 	});
 

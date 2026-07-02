@@ -95,7 +95,7 @@ describe('game.$checkCanFlourish', () => {
 					':h shuffle32 5'
 			);
 			const { cards, deck, cells, foundations, tableau, ...simplified } = game;
-			void cards, deck, cells, foundations, tableau;
+			(void cards, deck, cells, foundations, tableau);
 			expect(simplified).toMatchSnapshot();
 
 			// make sure the parse game is the same-ish (and doesn't blow up)
@@ -272,7 +272,7 @@ describe('game.$checkCanFlourish', () => {
 					':h shuffle32 23190'
 			);
 			const { cards, deck, cells, foundations, tableau, ...simplified } = game;
-			void cards, deck, cells, foundations, tableau;
+			(void cards, deck, cells, foundations, tableau);
 			expect(simplified).toMatchSnapshot();
 
 			// make sure the parse game is the same-ish (and doesn't blow up)
