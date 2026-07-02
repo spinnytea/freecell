@@ -15,7 +15,8 @@
     "term": "ts-node src/terminal/term.ts",
     "checkGames": "ts-node src/terminal/checkGames.ts",
     "solveGame": "ts-node src/terminal/solveGame.ts",
-    "clean": "npx rimraf out && npx rimraf coverage"
+    "clean": "rm -rf out coverage",
+    "clean:deep": "rm -rf out coverage .next node_modules/.cache "
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
@@ -50,7 +51,6 @@
     "jest-environment-jsdom": "^29.7.0",
     "lodash": "^4.17.21",
     "prettier": "^3.3.3",
-    "rimraf": "^6.0.1",
     "typescript": "=4.7.4"
   }
 }
