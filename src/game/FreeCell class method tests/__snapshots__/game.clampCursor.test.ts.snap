@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`game.clampCursor cascade col too large 1`] = `
 " 2S 2H 2D 2C AS AH AD AC 

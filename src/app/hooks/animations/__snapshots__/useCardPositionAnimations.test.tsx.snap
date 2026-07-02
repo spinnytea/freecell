@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`useCardPositionAnimations actionText examples animate · invalid move ah 3C→foundation: timeline.add 1`] = `
 [
