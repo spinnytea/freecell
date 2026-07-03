@@ -7,9 +7,9 @@ export const FIFTY_TWO_CARD_FLOURISH =
 
 	that is to say, here is a game state, where, we can apply this specific action
 
-	TODO (5-priority) (techdebt) (review) every `move \w\w ` should be replaced, aallll 400 of them
+	REVIEW (techdebt) (actionText) every `move \w\w ` should be replaced, aallll 400 of them
 
-	TODO (5-priority) (techdebt) (review) (test) compare {@link ACTION_TEXT_EXAMPLES} to test data
+	REVIEW (techdebt) (actionText) (test) compare {@link ACTION_TEXT_EXAMPLES} to test data
 	 - log every single `Freecell.action.text` that goes through the `Freecell.constructor`
 	 - log every action in `Freecell.history`
 	 - categorize them
@@ -20,7 +20,7 @@ export const FIFTY_TWO_CARD_FLOURISH =
 	 - store and test every game state in example game #5
 	 - and vice-versa because some of these are outdate
 
-	REVIEW (5-priority) (techdebt) (review) (test) [Fuzzing Programs to Find Bugs · Computerphile](https://www.youtube.com/watch?v=kaD54VXxGrI)
+	REVIEW (techdebt) (actionText) (test) [Fuzzing Programs to Find Bugs · Computerphile](https://www.youtube.com/watch?v=kaD54VXxGrI)
 	 - apparently, this is what I want to do ^^: build a corpus of examples
 	 - start with Game #5 as a base, including every single move
 	 - include the other defined games (probably cleanest to just include the whole thing, than figure out layering them)

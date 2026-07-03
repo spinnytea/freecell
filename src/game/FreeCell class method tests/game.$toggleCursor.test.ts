@@ -246,9 +246,8 @@ describe('game.$toggleCursor', () => {
 								'>QC QD QH QS TC|TD|TH TS \n' +
 								' KC       KS JC JD JH JS \n' +
 								' hand-jammed'
-						)
-							.setCursor({ fixture: 'deck', data: [2] }, { gameFunction: 'recall-or-bury' })
-							.touch({ gameFunction: 'recall-or-bury' });
+						).touchByPile('k', { gameFunction: 'recall-or-bury' });
+						expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
 						expect(game.print()).toBe(
 							'' + //
 								' QC QD QH QS TC 9D TH TS \n' +
@@ -270,7 +269,13 @@ describe('game.$toggleCursor', () => {
 							gameFunction: 'recall-or-bury',
 						});
 
-						// BUG (5-priority) (cursor) the cursor is already in the deck, the first toggle should be in the foundation?
+						// BUG (cursor) (deck) the cursor is already in the deck, the first toggle should be in the foundation?
+						//  - another quirk because the deck is "reversed"
+						//  - the "top" is the length-1, not 0
+						//  - we can't know where the top is without passing in the whole game
+						//  - i think the best path forward is to reverse the list, or at least just how the index maps onto it?
+						//  - the deck isn't used much so "inefficient" storage probably doesn't matter
+						//  - the "top" allows us to pop/push, but we don't _do_ that in practice
 						expect(game.cursor.fixture).toEqual('deck');
 						expect(game.$toggleCursor().cursor.fixture).toEqual('deck');
 						expect(game.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('foundation');

@@ -18,46 +18,116 @@ describe('game.$selectCard', () => {
 		);
 	});
 
-	test('select and then again', () => {
-		let game = new FreeCell().dealAll().$selectCard('AS');
-		expect(game.print()).toBe(
-			'' + //
-				'                         \n' +
-				' KS KH KD KC QS QH QD QC \n' +
-				' JS JH JD JC TS TH TD TC \n' +
-				' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
-				' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
-				' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
-				' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
-				'>AS|AH AD AC             \n' +
-				' select 1 AS'
-		);
-		game = game.$selectCard('2D');
-		expect(game.print()).toBe(
-			'' + //
-				'                         \n' +
-				' KS KH KD KC QS QH QD QC \n' +
-				' JS JH JD JC TS TH TD TC \n' +
-				' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
-				' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
-				' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
-				' 3S 3H 3D 3C 2S 2H>2D|2C \n' +
-				' AS AH AD AC             \n' +
-				' select 7 2D'
-		);
-		game = game.$selectCard('KH');
-		expect(game.print()).toBe(
-			'' + //
-				'                         \n' +
-				' KS>KH|KD KC QS QH QD QC \n' +
-				' JS JH JD JC TS TH TD TC \n' +
-				' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
-				' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
-				' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
-				' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
-				' AS AH AD AC             \n' +
-				' peek 2 KH'
-		);
+	describe('select and then again', () => {
+		test('different card', () => {
+			let game = new FreeCell().dealAll().$selectCard('AS');
+			expect(game.print()).toBe(
+				'' + //
+					'                         \n' +
+					' KS KH KD KC QS QH QD QC \n' +
+					' JS JH JD JC TS TH TD TC \n' +
+					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
+					'>AS|AH AD AC             \n' +
+					' select 1 AS'
+			);
+			expect(game.selection).toEqual({
+				location: { fixture: 'cascade', data: [0, 6] },
+				cards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 6] } }],
+				peekOnly: false,
+			});
+			game = game.$selectCard('2D');
+			expect(game.print()).toBe(
+				'' + //
+					'                         \n' +
+					' KS KH KD KC QS QH QD QC \n' +
+					' JS JH JD JC TS TH TD TC \n' +
+					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C 2S 2H>2D|2C \n' +
+					' AS AH AD AC             \n' +
+					' select 7 2D'
+			);
+			expect(game.selection).toEqual({
+				location: { fixture: 'cascade', data: [6, 5] },
+				cards: [{ rank: '2', suit: 'diamonds', location: { fixture: 'cascade', data: [6, 5] } }],
+				peekOnly: false,
+			});
+			game = game.$selectCard('KH');
+			expect(game.print()).toBe(
+				'' + //
+					'                         \n' +
+					' KS>KH|KD KC QS QH QD QC \n' +
+					' JS JH JD JC TS TH TD TC \n' +
+					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
+					' AS AH AD AC             \n' +
+					' peek 2 KH'
+			);
+			expect(game.selection).toEqual({
+				location: { fixture: 'cascade', data: [1, 0] },
+				cards: [{ rank: 'king', suit: 'hearts', location: { fixture: 'cascade', data: [1, 0] } }],
+				peekOnly: true,
+			});
+		});
+
+		test('same card', () => {
+			const gameStart = new FreeCell().dealAll().$selectCard('AS');
+			expect(gameStart.print()).toBe(
+				'' + //
+					'                         \n' +
+					' KS KH KD KC QS QH QD QC \n' +
+					' JS JH JD JC TS TH TD TC \n' +
+					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
+					'>AS|AH AD AC             \n' +
+					' select 1 AS'
+			);
+			expect(gameStart.selection).toEqual({
+				location: { fixture: 'cascade', data: [0, 6] },
+				cards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 6] } }],
+				peekOnly: false,
+			});
+			// BUG (5-priority) why not just leave it?
+			expect(gameStart.$selectCard('AS')).not.toBe(gameStart);
+			expect(gameStart.$selectCard('AS')).not.toEqual(gameStart);
+			const gameOnce = gameStart.$selectCard('AS');
+			expect(gameOnce.print()).toBe(
+				'' + //
+					'                         \n' +
+					' KS KH KD KC QS QH QD QC \n' +
+					' JS JH JD JC TS TH TD TC \n' +
+					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
+					'>AS|AH AD AC             \n' +
+					' touch stop'
+			);
+			expect(gameOnce.selection).toEqual({
+				location: { fixture: 'cascade', data: [0, 6] },
+				cards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 6] } }],
+				peekOnly: false,
+			});
+			// BUG (5-priority) infinite chain
+			expect(gameOnce.$selectCard('AS')).not.toBe(gameOnce);
+			expect(gameOnce.$selectCard('AS')).toEqual(gameOnce);
+		});
+	});
+
+	describe('foundation', () => {
+		test.todo('without previous selection');
+
+		test.todo('with previous selection');
+
+		test.todo('allowSelectFoundation');
 	});
 
 	describe('during win', () => {

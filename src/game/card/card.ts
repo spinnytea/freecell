@@ -99,10 +99,10 @@ export interface CardLocation {
 	//  - do this after the whole "rewrite actionText-examples.ts" thing
 	readonly data: number[];
 }
-/** XXX (review) (coords) (types) why do we even have `Coord`, instead of just `string`? */
+/** REVIEW (coords) (types) why do we even have `Coord`, instead of just `string`? */
 export type Coord = string & { length: 1 };
 /**
-	XXX (review) (coords) (types) why do we even have `LocationSH`, instead of just `string`?
+	REVIEW (coords) (types) why do we even have `LocationSH`, instead of just `string`?
 	 - why not simply use `${PileSH}${string}`, but then we have {@linkcode Coord}
 	 - how far do we have to go down this type rabbit hole, when does the utility end?
 	 - {@linkcode PileSH} _is_ useful
@@ -367,7 +367,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 /* PRINT / PARSE */
 /* ************* */
 
-// TODO (techdebt) (review) what does 'shorthand' even mean?
+// REVIEW (techdebt) what does 'shorthand' even mean?
 //  - rank,suit/card/sequence
 //  - pile/location/move/history
 //  - parseShorthandMove, parseShorthandPileForMove, parseShorthandPileForSelect

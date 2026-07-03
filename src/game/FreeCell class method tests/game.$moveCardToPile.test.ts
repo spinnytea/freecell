@@ -39,16 +39,19 @@ describe('game.$moveCardToPile', () => {
 		expect(() => game.$moveCardToPile('AH', 'a')).not.toThrow();
 		expect(game.$moveCardToPile('AH', 'a')).toBe(game);
 
-		// REVIEW (techdebt) (deck) this whole block is wrong now
-		// basically, we can't "move to or from" the deck, ~~because it's there's no move shorthand for it~~
-		// ~~maybe we should treat it like "foundation", but it's a stack or a queue (not a set of spots)~~
-		// maybe we should give it a single letter, like foundation
-		// but then we also need to allow actually moving to and from it - or at least, ... how far do we take this
-		// ~~maybe throwing _is_ fine if we can't get there~~
+		// REVIEW (techdebt) (deck) this whole block needs review
+		// basically, we can't "move to or from" the deck
 		expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
+		// REVIEW already selected?
+		expect(game.$selectCard('AH').previousAction).toEqual({ text: 'touch stop', type: 'invalid' });
+		// REVIEW same place as cursor
 		expect(game.$selectCard('AH').cursor).toEqual({ fixture: 'deck', data: [2] });
-		expect(shorthandPile(game.cursor)).toBe('k'); // REVIEW (techdebt) (deck) we have a deck shorthand now
+		expect(shorthandPile(game.cursor)).toBe('k');
+		// REVIEW (deck) AH is _in_ the deck?
 		expect(game.$moveCardToPile('AH', 'k')).toBe(game);
+		expect(game.touchByPile('h').previousAction.text).toBe('invalid move k⡂h⡀ AH→foundation');
+		// BUG (deck) (recall-or-bury) we should be able to make this move
+		expect(game.touchByPile('h', { gameFunction: 'recall-or-bury' }).previousAction.text).toBe('invalid move k⡂h⡀ AH→foundation');
 
 		game = game.dealAll();
 		expect(game.print()).toBe(

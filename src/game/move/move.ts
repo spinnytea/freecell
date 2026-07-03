@@ -754,7 +754,7 @@ export function calcAutoFoundationActionText(
 	but it does make a few things nicer to validate for having it there
 	(e.g. $toggleCursor)
 
-	// TODO (5-priority) (coords) (test) unit tests should match move text from/to
+	// TODO (actionText) (coords) (test) unit tests should match move text from/to
 	//  - the `to` should be the same
 
 	@param location - where the cursor will be, it may not match `game.cursor`

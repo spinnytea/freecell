@@ -274,7 +274,7 @@ export class FreeCell {
 		this.history = history ?? [];
 
 		/*
-		// TODO (5-priority) (techdebt) (review) (test) compare {@link ACTION_TEXT_EXAMPLES} to test data
+		// TODO (techdebt) (actionText) (test) compare {@link ACTION_TEXT_EXAMPLES} to test data
 		// HACK record every actionText during unit tests
 		// prettier-ignore
 		if (process.env.NODE_ENV === 'test') {
