@@ -82,7 +82,7 @@ function printGame() {
 
 const listener: KeypressListener = (str = '<none>', key) => {
 	if (!key) return;
-	const keyNameLower = key.name.toLowerCase();
+	const keyNameLower = (key.name || '').toLowerCase();
 	const before = game;
 	if (key.ctrl && keyNameLower === 'c') {
 		console.log('Exiting...');

@@ -12,9 +12,9 @@
     "format": "prettier --write --list-different .",
     "test": "jest -u --watch",
     "test:cov": "jest --coverage",
-    "term": "ts-node src/terminal/term.ts",
-    "checkGames": "ts-node src/terminal/checkGames.ts",
-    "solveGame": "ts-node src/terminal/solveGame.ts",
+    "term": "tsx src/terminal/term.ts",
+    "checkGames": "tsx src/terminal/checkGames.ts",
+    "solveGame": "tsx src/terminal/solveGame.ts",
     "clean": "rm -rf out coverage",
     "clean:deep": "rm -rf out coverage .next node_modules/.cache "
   },
@@ -25,7 +25,7 @@
     "next": "^15.4.4",
     "react": "^18",
     "react-dom": "^18",
-    "ts-node": "^10.9.2"
+    "tsx": "^4.23.0"
   },
   "devDependencies": {
     "@babel/plugin-syntax-jsx": "^7.24.7",

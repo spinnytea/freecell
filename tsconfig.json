@@ -32,8 +32,5 @@
 		".next/types/**/*.ts",
 		"out/freecell/types/**/*.ts"
 	],
-	"exclude": ["node_modules"],
-	"ts-node": {
-		"require": ["tsconfig-paths/register"]
-	}
+	"exclude": ["node_modules"]
 }
