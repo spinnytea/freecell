@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`animUpdatedCardPositions basic: timeline.fromTo 1`] = `
+exports[`animUpdatedCardPositions > basic > timeline.fromTo 1`] = `
 [
   [
     "#cKH",
@@ -19,7 +19,7 @@ exports[`animUpdatedCardPositions basic: timeline.fromTo 1`] = `
 ]
 `;
 
-exports[`animUpdatedCardPositions basic: timeline.to 1`] = `
+exports[`animUpdatedCardPositions > basic > timeline.to 1`] = `
 [
   [
     "#cKH",

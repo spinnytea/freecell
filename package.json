@@ -10,7 +10,7 @@
     "fix": "npm run lint && npm run format",
     "lint": "next lint --fix && tsc --noEmit",
     "format": "prettier --write --list-different .",
-    "test": "vitest",
+    "test": "vitest run -u",
     "test:cov": "vitest run --coverage",
     "term": "tsx src/terminal/term.ts",
     "checkGames": "tsx src/terminal/checkGames.ts",

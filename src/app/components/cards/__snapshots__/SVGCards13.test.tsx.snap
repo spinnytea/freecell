@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SVGCards13 getFilename 1`] = `
+exports[`SVGCards13 > getFilename 1`] = `
 [
   "ace of clubs → ace_of_clubs.svg",
   "2 of clubs → 2_of_clubs.svg",

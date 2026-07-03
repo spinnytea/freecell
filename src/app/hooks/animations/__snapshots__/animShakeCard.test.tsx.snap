@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`animShakeCard gameBoardId: timeline.add 1`] = `
+exports[`animShakeCard > gameBoardId > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -11,7 +11,7 @@ exports[`animShakeCard gameBoardId: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShakeCard gameBoardId: timeline.to 1`] = `
+exports[`animShakeCard > gameBoardId > timeline.to 1`] = `
 [
   [
     "#cKH-1",
@@ -68,7 +68,7 @@ exports[`animShakeCard gameBoardId: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShakeCard gsap.utils.random false: timeline.add 1`] = `
+exports[`animShakeCard > gsap.utils.random > false > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -79,7 +79,7 @@ exports[`animShakeCard gsap.utils.random false: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShakeCard gsap.utils.random false: timeline.to 1`] = `
+exports[`animShakeCard > gsap.utils.random > false > timeline.to 1`] = `
 [
   [
     "#cKH",
@@ -136,7 +136,7 @@ exports[`animShakeCard gsap.utils.random false: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShakeCard gsap.utils.random true: timeline.add 1`] = `
+exports[`animShakeCard > gsap.utils.random > true > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -147,7 +147,7 @@ exports[`animShakeCard gsap.utils.random true: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShakeCard gsap.utils.random true: timeline.to 1`] = `
+exports[`animShakeCard > gsap.utils.random > true > timeline.to 1`] = `
 [
   [
     "#cKH",
@@ -204,7 +204,7 @@ exports[`animShakeCard gsap.utils.random true: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShakeCard list one: timeline.add 1`] = `
+exports[`animShakeCard > list > one > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -212,7 +212,7 @@ exports[`animShakeCard list one: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShakeCard list one: timeline.to 1`] = `
+exports[`animShakeCard > list > one > timeline.to 1`] = `
 [
   [
     "#cKH",
@@ -243,7 +243,7 @@ exports[`animShakeCard list one: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShakeCard list three: timeline.add 1`] = `
+exports[`animShakeCard > list > three > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -257,7 +257,7 @@ exports[`animShakeCard list three: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShakeCard list three: timeline.to 1`] = `
+exports[`animShakeCard > list > three > timeline.to 1`] = `
 [
   [
     "#cKH",
@@ -340,7 +340,7 @@ exports[`animShakeCard list three: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShakeCard list two: timeline.add 1`] = `
+exports[`animShakeCard > list > two > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -351,7 +351,7 @@ exports[`animShakeCard list two: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShakeCard list two: timeline.to 1`] = `
+exports[`animShakeCard > list > two > timeline.to 1`] = `
 [
   [
     "#cKH",
@@ -408,6 +408,6 @@ exports[`animShakeCard list two: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShakeCard list zero: timeline.add 1`] = `[]`;
+exports[`animShakeCard > list > zero > timeline.add 1`] = `[]`;
 
-exports[`animShakeCard list zero: timeline.to 1`] = `[]`;
+exports[`animShakeCard > list > zero > timeline.to 1`] = `[]`;

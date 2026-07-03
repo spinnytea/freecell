@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`game.$checkCanFlourish check-can-flourish deep check 1`] = `
+exports[`game.$checkCanFlourish > check-can-flourish > deep check 1`] = `
 {
   "availableMoves": null,
   "cursor": {
@@ -47,7 +47,7 @@ exports[`game.$checkCanFlourish check-can-flourish deep check 1`] = `
 }
 `;
 
-exports[`game.$checkCanFlourish check-can-flourish52 deep check 1`] = `
+exports[`game.$checkCanFlourish > check-can-flourish52 > deep check 1`] = `
 {
   "availableMoves": null,
   "cursor": {

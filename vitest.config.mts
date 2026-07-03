@@ -35,6 +35,11 @@ export default defineConfig({
 				'coverage/**',
 			],
 		},
+		css: {
+			modules: {
+				classNameStrategy: 'non-scoped', // Forces class names to output cleanly as raw string literals
+			},
+		},
 		environment: 'jsdom',
 		exclude: ['**/node_modules/**', '**/.next/**', '**/dist/**'],
 		reporters: ['default', './src/ActionTextReporter.js'],
