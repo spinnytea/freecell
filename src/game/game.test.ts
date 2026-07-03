@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { getMoves } from '@/game/catalog/solutions-catalog';
 import { FreeCell } from '@/game/game';
 import { parseMovesFromHistory, PREVIOUS_ACTION_TYPE_IS_START_OF_GAME, spotCheckMoveRegex } from '@/game/move/history';

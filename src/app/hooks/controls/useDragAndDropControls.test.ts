@@ -1,3 +1,4 @@
+import { beforeAll, describe, expect, test } from 'vitest';
 import { calcCardCoords } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { calcStaticFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/StaticFixtureSizesContextProvider';
 import { _overlappingAvailableMove, DropTarget } from '@/app/hooks/controls/useDragAndDropControls';
@@ -40,9 +41,7 @@ describe('useDragAndDropControls', () => {
 					},
 				];
 				expect(countOverlapping(dropTargets)).toBe(1);
-				expect(_overlappingAvailableMove(draggable, pointerCoords, dropTargets, fixtureSizes)).toBe(
-					null
-				);
+				expect(_overlappingAvailableMove(draggable, pointerCoords, dropTargets, fixtureSizes)).toBe(null);
 				expect(countOverlapping(dropTargets)).toBe(0);
 			});
 
@@ -60,22 +59,20 @@ describe('useDragAndDropControls', () => {
 					const dropTargets: DropTarget[] = opts.map(([d0, isAvailableMove]) => ({
 						location: { fixture: 'cascade', data: [d0, 0] },
 						shorthand: null,
-						cardCoords: calcCardCoords(
-							fixtureSizes,
-							{ fixture: 'cascade', data: [d0, 0] },
-							'selection'
-						),
+						cardCoords: calcCardCoords(fixtureSizes, { fixture: 'cascade', data: [d0, 0] }, 'selection'),
 						isAvailableMove,
 						isOverlapping: false,
 					}));
 
 					beforeAll(() => {
+						// eslint-disable-next-line @vitest/no-standalone-expect
 						expect(dropTargets.map((dropTarget) => dropTarget.cardCoords)).toEqual([
 							{ top: 20, left: 20, width: 10, height: 20 },
 							{ top: 20, left: 30, width: 10, height: 20 },
 							{ top: 20, left: 40, width: 10, height: 20 },
 							{ top: 20, left: 50, width: 10, height: 20 },
 						]);
+						// eslint-disable-next-line @vitest/no-standalone-expect
 						expect(countOverlapping(dropTargets)).toBe(0);
 					});
 
@@ -99,9 +96,7 @@ describe('useDragAndDropControls', () => {
 						${'straddles →'}    | ${79} | ${null}
 					`('$x $desc', ({ x, overlapping }: { x: number; overlapping: CardLocation | null }) => {
 						const pointerCoords = { x, y: 25 };
-						expect(
-							_overlappingAvailableMove(draggable, pointerCoords, dropTargets, fixtureSizes)
-						).toEqual(overlapping);
+						expect(_overlappingAvailableMove(draggable, pointerCoords, dropTargets, fixtureSizes)).toEqual(overlapping);
 						expect(countOverlapping(dropTargets)).toBe(overlapping ? 1 : 0);
 					});
 				});
@@ -119,22 +114,20 @@ describe('useDragAndDropControls', () => {
 					const dropTargets: DropTarget[] = opts.map(([d0, isAvailableMove]) => ({
 						location: { fixture: 'cascade', data: [d0, 0] },
 						shorthand: null,
-						cardCoords: calcCardCoords(
-							fixtureSizes,
-							{ fixture: 'cascade', data: [d0, 0] },
-							'selection'
-						),
+						cardCoords: calcCardCoords(fixtureSizes, { fixture: 'cascade', data: [d0, 0] }, 'selection'),
 						isAvailableMove,
 						isOverlapping: false,
 					}));
 
 					beforeAll(() => {
+						// eslint-disable-next-line @vitest/no-standalone-expect
 						expect(dropTargets.map((dropTarget) => dropTarget.cardCoords)).toEqual([
 							{ top: 20, left: 20, width: 10, height: 20 },
 							{ top: 20, left: 30, width: 10, height: 20 },
 							{ top: 20, left: 40, width: 10, height: 20 },
 							{ top: 20, left: 50, width: 10, height: 20 },
 						]);
+						// eslint-disable-next-line @vitest/no-standalone-expect
 						expect(countOverlapping(dropTargets)).toBe(0);
 					});
 
@@ -158,9 +151,7 @@ describe('useDragAndDropControls', () => {
 						${'straddles →'}    | ${79} | ${null}
 					`('$x $desc', ({ x, overlapping }: { x: number; overlapping: CardLocation | null }) => {
 						const pointerCoords = { x, y: 25 };
-						expect(
-							_overlappingAvailableMove(draggable, pointerCoords, dropTargets, fixtureSizes)
-						).toEqual(overlapping);
+						expect(_overlappingAvailableMove(draggable, pointerCoords, dropTargets, fixtureSizes)).toEqual(overlapping);
 						expect(countOverlapping(dropTargets)).toBe(overlapping ? 1 : 0);
 					});
 				});

@@ -1,6 +1,8 @@
 import { MutableRefObject } from 'react';
 import { render } from '@testing-library/react';
 import { gsap } from 'gsap/all';
+import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest';
+import type { Mock } from 'vitest';
 import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositionAnimations';
@@ -11,9 +13,9 @@ import { getCardIdsFromSpy, spyOnGsap } from '@/app/testUtils';
 import { ACTION_TEXT_EXAMPLES, FIFTY_TWO_CARD_FLOURISH, pullActionTextExamples } from '@/game/catalog/actionText-examples';
 import { FreeCell } from '@/game/game';
 
-const gsapUtilsRandom = gsap.utils.random as jest.Mock;
+const gsapUtilsRandom = vi.mocked(gsap.utils.random);
 
-jest.mock('@/app/components/element/domUtils.ts', () => {
+vi.mock('@/app/components/element/domUtils.ts', () => {
 	const domTLZR = new Map<string, { top: number; left: number; zIndex: number }>();
 	return {
 		domUtils: {
@@ -28,9 +30,9 @@ jest.mock('@/app/components/element/domUtils.ts', () => {
 	};
 });
 
-jest.mock('@/app/hooks/animations/animShakeCard.ts', () => {
+vi.mock('@/app/hooks/animations/animShakeCard.ts', () => {
 	return {
-		animShakeCard: jest
+		animShakeCard: vi
 			.fn()
 			.mockImplementation(({ timeline, list, gameBoardIdRef }: { timeline: gsap.core.Timeline; list: string[]; gameBoardIdRef?: MutableRefObject<string> }) => {
 				const gameBoardId: string = gameBoardIdRef?.current ?? '';
@@ -39,9 +41,9 @@ jest.mock('@/app/hooks/animations/animShakeCard.ts', () => {
 	};
 });
 
-jest.mock('@/app/hooks/animations/animShuffleCards.ts', () => {
+vi.mock('@/app/hooks/animations/animShuffleCards.ts', () => {
 	return {
-		animShuffleCards: jest
+		animShuffleCards: vi
 			.fn()
 			.mockImplementation(({ timeline, list, gameBoardIdRef }: { timeline: gsap.core.Timeline; list: string[]; gameBoardIdRef?: MutableRefObject<string> }) => {
 				const gameBoardId: string = gameBoardIdRef?.current ?? '';
@@ -74,13 +76,13 @@ describe('useCardPositionAnimations', () => {
 	const newGameState = new FreeCell();
 
 	// REVIEW (techdebt) this is a _lot_ of mocking, can we make some accessors to simplify this?
-	let fromToSpy: jest.SpyInstance;
-	let toSpy: jest.SpyInstance;
-	let setSpy: jest.SpyInstance;
-	let addLabelSpy: jest.SpyInstance;
-	let addSpy: jest.SpyInstance;
-	let timeScaleSpy: jest.SpyInstance;
-	let consoleDebugSpy: jest.SpyInstance;
+	let fromToSpy: Mock;
+	let toSpy: Mock;
+	let setSpy: Mock;
+	let addLabelSpy: Mock;
+	let addSpy: Mock;
+	let timeScaleSpy: Mock;
+	let consoleDebugSpy: Mock;
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {
@@ -901,11 +903,11 @@ describe('useCardPositionAnimations', () => {
 		const skipThrow = true; // TODO (techdebt) remove after we finish all tests
 		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES);
 		afterAll(() => {
-			// eslint-disable-next-line jest/no-standalone-expect, @typescript-eslint/no-unnecessary-condition
+			// eslint-disable-next-line @vitest/no-standalone-expect, @typescript-eslint/no-unnecessary-condition
 			if (!skipThrow) expect(actionTextExamples).toEqual([]);
 		});
 		beforeEach(() => {
-			// eslint-disable-next-line jest/no-standalone-expect
+			// eslint-disable-next-line @vitest/no-standalone-expect
 			const actionText = (/·(.*)$/.exec(expect.getState().currentTestName ?? '')?.[1] ?? '').trim();
 			if (actionText) {
 				pullActionTextExamples(actionTextExamples, actionText);

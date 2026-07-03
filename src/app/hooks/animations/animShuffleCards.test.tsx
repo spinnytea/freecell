@@ -1,11 +1,13 @@
 import { gsap } from 'gsap/all';
+import { beforeEach, describe, expect, test } from 'vitest';
+import type { Mock } from 'vitest';
 import { animShuffleCards } from '@/app/hooks/animations/animShuffleCards';
 import { spyOnGsap } from '@/app/testUtils';
 
 describe('animShuffleCards', () => {
-	let toSpy: jest.SpyInstance;
-	let setSpy: jest.SpyInstance;
-	let addSpy: jest.SpyInstance;
+	let toSpy: Mock;
+	let setSpy: Mock;
+	let addSpy: Mock;
 	let mockCallTimes: () => Record<string, number>;
 
 	beforeEach(() => {

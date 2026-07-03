@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, test } from 'vitest';
 import { FreeCell } from '@/game/game';
 
 describe('game.clampCursor', () => {

@@ -1,4 +1,6 @@
-jest.mock('gsap/all', () => ({
+import { vi } from 'vitest';
+
+vi.mock('gsap/all', () => ({
 	gsap: {
 		to: () => ({}),
 		set: () => ({}),
@@ -7,7 +9,7 @@ jest.mock('gsap/all', () => ({
 		getProperty: () => ({}),
 		registerPlugin: () => ({}),
 		utils: {
-			random: jest.fn().mockImplementation(() => {
+			random: vi.fn().mockImplementation(() => {
 				throw new Error('you MUST mock gsap.utils.random');
 			}),
 		},

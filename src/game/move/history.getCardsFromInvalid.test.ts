@@ -1,3 +1,4 @@
+import { afterAll, describe, expect, test } from 'vitest';
 import { CardLocation } from '@/game/card/card';
 import { ACTION_TEXT_EXAMPLES, pullActionTextExamples } from '@/game/catalog/actionText-examples';
 import { getCardsFromInvalid, parsePreviousActionType, PreviousAction } from '@/game/move/history';
@@ -6,7 +7,7 @@ describe('game/history.getCardsFromInvalid', () => {
 	describe('specific cases', () => {
 		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES).filter((actionText) => parsePreviousActionType(actionText).type === 'invalid');
 		afterAll(() => {
-			// eslint-disable-next-line jest/no-standalone-expect
+			// eslint-disable-next-line @vitest/no-standalone-expect
 			expect(actionTextExamples).toEqual([]);
 		});
 

@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { CardLocation } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { moveCursorWithBasicArrows } from '@/game/move/keyboard';

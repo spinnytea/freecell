@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { getSeedsByTag } from '@/game/catalog/difficulty-catalog';
 
 describe('game/difficulty-catalog', () => {

@@ -1,4 +1,5 @@
 import { omit as _omit } from 'lodash';
+import { describe, expect, test } from 'vitest';
 import { availableMovesMinimized } from '@/app/testUtils';
 import { isPileSH, PileSH } from '@/game/card/card';
 import { getMoves } from '@/game/catalog/solutions-catalog';

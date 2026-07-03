@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { calcCardCoords, calcFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { calcStaticFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/StaticFixtureSizesContextProvider';
 import { CardLocation } from '@/game/card/card';

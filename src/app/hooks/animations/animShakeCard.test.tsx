@@ -1,13 +1,15 @@
 import { gsap } from 'gsap/all';
+import { describe, expect, test, vi, beforeEach } from 'vitest';
+import type { Mock } from 'vitest';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
 import { spyOnGsap } from '@/app/testUtils';
 
-const gsapUtilsRandom = gsap.utils.random as jest.Mock;
+const gsapUtilsRandom = vi.mocked(gsap.utils.random);
 const ANIMSHAKECARD_MOCK_CALL = [[true, false]];
 
 describe('animShakeCard', () => {
-	let toSpy: jest.SpyInstance;
-	let addSpy: jest.SpyInstance;
+	let toSpy: Mock;
+	let addSpy: Mock;
 	let mockCallTimes: () => Record<string, number>;
 
 	beforeEach(() => {

@@ -1,4 +1,6 @@
 import { gsap } from 'gsap/all';
+import { beforeEach, describe, expect, test } from 'vitest';
+import type { Mock } from 'vitest';
 import { TLZR } from '@/app/animation_interfaces';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';
@@ -6,8 +8,8 @@ import { spyOnGsap } from '@/app/testUtils';
 import { getRankForCompare } from '@/game/card/card';
 
 describe('animUpdatedCardPositions', () => {
-	let toSpy: jest.SpyInstance;
-	let fromToSpy: jest.SpyInstance;
+	let toSpy: Mock;
+	let fromToSpy: Mock;
 	let mockCallTimes: () => Record<string, number>;
 
 	beforeEach(() => {

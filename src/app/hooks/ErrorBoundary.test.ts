@@ -1,3 +1,5 @@
+import { describe, test } from 'vitest';
+
 describe('ErrorBoundary', () => {
 	test.todo('basic');
 

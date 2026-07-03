@@ -1,3 +1,4 @@
+import { describe, expect, test, vi } from 'vitest';
 import { utils } from '@/utils';
 
 describe('testUtils', () => {
@@ -26,7 +27,7 @@ describe('testUtils', () => {
 			${1.0}                  | ${32000} | ${32000}
 			${1.0001}               | ${32000} | ${32000}
 		`('$rand', ({ rand, max, result }: { rand: number; max: number; result: number }) => {
-			jest.spyOn(global.Math, 'random').mockReturnValueOnce(rand);
+			vi.spyOn(global.Math, 'random').mockReturnValueOnce(rand);
 			expect(utils.randomInteger(max)).toBe(result);
 		});
 	});

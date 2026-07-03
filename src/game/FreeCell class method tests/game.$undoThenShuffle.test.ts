@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { FreeCell } from '@/game/game';
 import { PREVIOUS_ACTION_TYPE_IS_START_OF_GAME } from '@/game/move/history';
 

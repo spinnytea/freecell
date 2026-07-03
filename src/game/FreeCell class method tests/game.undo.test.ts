@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { getMoves, SEED_SOLUTIONS_4x8, SEED_SOLUTIONS_6x10 } from '@/game/catalog/solutions-catalog';
 import { FreeCell } from '@/game/game';
 import { parseMovesFromHistory, spotCheckMoveRegex } from '@/game/move/history';
@@ -56,7 +57,7 @@ describe('game.undo (+ history)', () => {
 			});
 
 			// TODO (techdebt) this would be super cool to pull off
-			// eslint-disable-next-line jest/no-disabled-tests
+			// eslint-disable-next-line @vitest/no-disabled-tests
 			test.skip('init without history, but last move is legible', () => {
 				const gamePrint =
 					'            >KS KD KC KH \n' +

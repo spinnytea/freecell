@@ -1,3 +1,5 @@
+import { describe, test } from 'vitest';
+
 describe('DebugCursors', () => {
 	describe('CursorBox', () => {
 		test.todo('cell');

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, test } from 'vitest';
 import { availableMovesMinimized } from '@/app/testUtils';
 import { FreeCell } from '@/game/game';
 

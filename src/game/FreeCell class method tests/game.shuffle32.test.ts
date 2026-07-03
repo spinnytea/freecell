@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import type { Mock } from 'vitest';
 import { shorthandCard } from '@/game/card/card';
 import { IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
 import { FreeCell } from '@/game/game';
@@ -105,7 +107,7 @@ describe('game.shuffle32', () => {
 	test('Game #11982', () => {
 		expect(11982).toBe(IMPOSSIBLE_SEED);
 
-		const randomIntegerSpy = jest.spyOn(utils, 'randomInteger').mockImplementation(() => {
+		const randomIntegerSpy = vi.spyOn(utils, 'randomInteger').mockImplementation(() => {
 			throw new Error('you MUST mock utils.randomInteger');
 		});
 
@@ -144,9 +146,9 @@ describe('game.shuffle32', () => {
 	});
 
 	describe('randomize seed', () => {
-		let randomIntegerSpy: jest.SpyInstance;
+		let randomIntegerSpy: Mock;
 		beforeEach(() => {
-			randomIntegerSpy = jest.spyOn(utils, 'randomInteger').mockImplementation(() => {
+			randomIntegerSpy = vi.spyOn(utils, 'randomInteger').mockImplementation(() => {
 				throw new Error('you MUST mock utils.randomInteger');
 			});
 		});
