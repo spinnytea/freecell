@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`game.shuffle32 Game #1 1`] = `
+exports[`game.shuffle32 > Game #1 1`] = `
 FreeCell {
   "availableMoves": null,
   "cards": [

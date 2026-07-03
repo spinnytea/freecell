@@ -1,3 +1,4 @@
+import { describe, expect, test, vi } from 'vitest';
 import { Card, getRankForCompare, isRank, isSuit, Rank, shorthandCard, Suit } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 
@@ -58,7 +59,7 @@ describe('Human Readable Code', () => {
 			},
 		};
 
-		const printOutput = jest.fn();
+		const printOutput = vi.fn();
 		const printThem: Action = {
 			do(cards: Card[]): void {
 				printOutput(cards.map(shorthandCard).join(' '));
@@ -123,7 +124,7 @@ describe('Human Readable Code', () => {
 		const findAllThe = (cards: Card[]): Selection => new Selection(cards);
 
 		/** something to "print" to */
-		const printOutput = jest.fn();
+		const printOutput = vi.fn();
 
 		/**
 			sooo... just a class that performs actions on state
@@ -210,7 +211,7 @@ describe('Human Readable Code', () => {
 		}
 
 		/** something to "print" to */
-		const printOutput = jest.fn();
+		const printOutput = vi.fn();
 
 		/**
 			FauxO cards with some helpers

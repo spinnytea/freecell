@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction, useContext } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { gsap } from 'gsap/all';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import type { Mock } from 'vitest';
 import { MULTI_ANIMATION_TIMESCALE, SNAPPY_ACTION_TIMESCALE } from '@/app/animation_constants';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
@@ -19,7 +21,7 @@ import { FreeCell } from '@/game/game';
 import { spotCheckMoveRegex } from '@/game/move/history';
 import { parseShorthandMove } from '@/game/move/move';
 
-const gsapUtilsRandom = gsap.utils.random as jest.Mock;
+const gsapUtilsRandom = vi.mocked(gsap.utils.random);
 
 /** HACK (techdebt) we need the game state to make moves by standard move notation */
 let moveByShorthand: (shorthandMove: string) => void;
@@ -98,14 +100,14 @@ function MockGamePage({
 }
 
 describe('GameBoard', () => {
-	let gsapSetSpy: jest.SpyInstance;
-	let gsapFromSpy: jest.SpyInstance;
-	let fromToSpy: jest.SpyInstance;
-	let toSpy: jest.SpyInstance;
-	let setSpy: jest.SpyInstance;
-	let addLabelSpy: jest.SpyInstance;
-	let timeScaleSpy: jest.SpyInstance;
-	let consoleDebugSpy: jest.SpyInstance;
+	let gsapSetSpy: Mock;
+	let gsapFromSpy: Mock;
+	let fromToSpy: Mock;
+	let toSpy: Mock;
+	let setSpy: Mock;
+	let addLabelSpy: Mock;
+	let timeScaleSpy: Mock;
+	let consoleDebugSpy: Mock;
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
 	beforeEach(() => {

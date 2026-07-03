@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`useCardPositionAnimations actionText examples animate · invalid move ah 3C→foundation: timeline.add 1`] = `
+exports[`useCardPositionAnimations > actionText examples > animate > · invalid move ah 3C→foundation > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -8,7 +8,7 @@ exports[`useCardPositionAnimations actionText examples animate · invalid move a
 ]
 `;
 
-exports[`useCardPositionAnimations game (each PreviousActionType) init undefined -> init: timeline.set 1`] = `
+exports[`useCardPositionAnimations > game (each PreviousActionType) > init > undefined -> init > timeline.set 1`] = `
 [
   [
     "#cAC",
@@ -481,7 +481,7 @@ exports[`useCardPositionAnimations game (each PreviousActionType) init undefined
 ]
 `;
 
-exports[`useCardPositionAnimations game (each PreviousActionType) invalid MoveDestinationType cascade empty: timeline.add 1`] = `
+exports[`useCardPositionAnimations > game (each PreviousActionType) > invalid > MoveDestinationType > cascade > empty > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -489,7 +489,7 @@ exports[`useCardPositionAnimations game (each PreviousActionType) invalid MoveDe
 ]
 `;
 
-exports[`useCardPositionAnimations game (each PreviousActionType) invalid MoveDestinationType cell empty: timeline.add 1`] = `
+exports[`useCardPositionAnimations > game (each PreviousActionType) > invalid > MoveDestinationType > cell > empty > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -497,7 +497,7 @@ exports[`useCardPositionAnimations game (each PreviousActionType) invalid MoveDe
 ]
 `;
 
-exports[`useCardPositionAnimations game (each PreviousActionType) invalid MoveDestinationType foundation empty: timeline.add 1`] = `
+exports[`useCardPositionAnimations > game (each PreviousActionType) > invalid > MoveDestinationType > foundation > empty > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -505,7 +505,7 @@ exports[`useCardPositionAnimations game (each PreviousActionType) invalid MoveDe
 ]
 `;
 
-exports[`useCardPositionAnimations game (each PreviousActionType) invalid MoveSourceType foundation: timeline.add 1`] = `
+exports[`useCardPositionAnimations > game (each PreviousActionType) > invalid > MoveSourceType > foundation > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",

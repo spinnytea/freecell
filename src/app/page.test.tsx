@@ -1,20 +1,22 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { gsap } from 'gsap/all';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import type { Mock } from 'vitest';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
 import Page from '@/app/page';
 import { getPropertiesFromFromToSpy, getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';
 import { utils } from '@/utils';
 
 describe('page', () => {
-	let fromToSpy: jest.SpyInstance;
-	let toSpy: jest.SpyInstance;
-	let addLabelSpy: jest.SpyInstance;
+	let fromToSpy: Mock;
+	let toSpy: Mock;
+	let addLabelSpy: Mock;
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
-	let randomIntegerSpy: jest.SpyInstance;
+	let randomIntegerSpy: Mock;
 	beforeEach(() => {
 		({ fromToSpy, toSpy, addLabelSpy, mockCallTimes, mockReset } = spyOnGsap(gsap));
-		randomIntegerSpy = jest.spyOn(utils, 'randomInteger').mockImplementation(() => {
+		randomIntegerSpy = vi.spyOn(utils, 'randomInteger').mockImplementation(() => {
 			throw new Error('you MUST mock utils.randomInteger');
 		});
 	});

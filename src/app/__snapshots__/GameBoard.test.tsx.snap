@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`GameBoard completed games Game #5 (tutorial) 1`] = `
+exports[`GameBoard > completed games > Game #5 (tutorial) 1`] = `
 <div>
   <main
     class="none common"
@@ -1189,7 +1189,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 1`] = `
 </div>
 `;
 
-exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
+exports[`GameBoard > completed games > Game #5 (tutorial) 2`] = `
 <div>
   <main
     class="none common"
@@ -1342,7 +1342,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1361,7 +1361,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1380,7 +1380,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1399,7 +1399,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1418,7 +1418,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1437,7 +1437,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1456,7 +1456,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1475,7 +1475,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1494,7 +1494,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1513,7 +1513,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1532,7 +1532,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1551,7 +1551,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1570,7 +1570,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1589,7 +1589,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1608,7 +1608,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1627,7 +1627,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1646,7 +1646,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1665,7 +1665,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1684,7 +1684,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1703,7 +1703,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1722,7 +1722,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1741,7 +1741,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1760,7 +1760,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1779,7 +1779,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1798,7 +1798,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1817,7 +1817,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1836,7 +1836,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1855,7 +1855,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1874,7 +1874,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1893,7 +1893,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1912,7 +1912,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1931,7 +1931,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1950,7 +1950,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1969,7 +1969,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -1988,7 +1988,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2007,7 +2007,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2026,7 +2026,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2045,7 +2045,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2064,7 +2064,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2083,7 +2083,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2102,7 +2102,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2121,7 +2121,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2140,7 +2140,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2159,7 +2159,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2178,7 +2178,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2197,7 +2197,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2216,7 +2216,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2235,7 +2235,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2254,7 +2254,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2273,7 +2273,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2292,7 +2292,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2311,7 +2311,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2378,7 +2378,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 2`] = `
 </div>
 `;
 
-exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
+exports[`GameBoard > completed games > Game #5 (tutorial) 3`] = `
 <div>
   <main
     class="none common"
@@ -2531,7 +2531,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2550,7 +2550,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2569,7 +2569,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2588,7 +2588,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2607,7 +2607,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2626,7 +2626,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2645,7 +2645,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2664,7 +2664,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2683,7 +2683,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2702,7 +2702,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2721,7 +2721,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2740,7 +2740,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2759,7 +2759,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2778,7 +2778,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2797,7 +2797,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2816,7 +2816,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2835,7 +2835,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2854,7 +2854,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2873,7 +2873,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2892,7 +2892,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2911,7 +2911,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2930,7 +2930,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2949,7 +2949,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2968,7 +2968,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -2987,7 +2987,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3006,7 +3006,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3025,7 +3025,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3044,7 +3044,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3063,7 +3063,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3082,7 +3082,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3101,7 +3101,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3120,7 +3120,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3139,7 +3139,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3158,7 +3158,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3177,7 +3177,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3196,7 +3196,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3215,7 +3215,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3234,7 +3234,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3253,7 +3253,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3272,7 +3272,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3291,7 +3291,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3310,7 +3310,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3329,7 +3329,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3348,7 +3348,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3367,7 +3367,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3386,7 +3386,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3405,7 +3405,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3424,7 +3424,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3443,7 +3443,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3462,7 +3462,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3481,7 +3481,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3500,7 +3500,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3567,7 +3567,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 3`] = `
 </div>
 `;
 
-exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
+exports[`GameBoard > completed games > Game #5 (tutorial) 4`] = `
 <div>
   <main
     class="none common"
@@ -3720,7 +3720,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3739,7 +3739,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3758,7 +3758,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3777,7 +3777,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3796,7 +3796,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3815,7 +3815,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3834,7 +3834,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3853,7 +3853,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3872,7 +3872,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3891,7 +3891,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3910,7 +3910,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3929,7 +3929,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3948,7 +3948,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3967,7 +3967,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -3986,7 +3986,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4005,7 +4005,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4024,7 +4024,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4043,7 +4043,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4062,7 +4062,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4081,7 +4081,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4100,7 +4100,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4119,7 +4119,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4138,7 +4138,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4157,7 +4157,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4176,7 +4176,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4195,7 +4195,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4214,7 +4214,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4233,7 +4233,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4252,7 +4252,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4271,7 +4271,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4290,7 +4290,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4309,7 +4309,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4328,7 +4328,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4347,7 +4347,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4366,7 +4366,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4385,7 +4385,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4404,7 +4404,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4423,7 +4423,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4442,7 +4442,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4461,7 +4461,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4480,7 +4480,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4499,7 +4499,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4518,7 +4518,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4537,7 +4537,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4556,7 +4556,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4575,7 +4575,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4594,7 +4594,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4613,7 +4613,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4632,7 +4632,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4651,7 +4651,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4670,7 +4670,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4689,7 +4689,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4756,7 +4756,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 4`] = `
 </div>
 `;
 
-exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
+exports[`GameBoard > completed games > Game #5 (tutorial) 5`] = `
 <div>
   <main
     class="none common"
@@ -4909,7 +4909,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4928,7 +4928,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4947,7 +4947,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4966,7 +4966,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -4985,7 +4985,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5004,7 +5004,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5023,7 +5023,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5042,7 +5042,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5061,7 +5061,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5080,7 +5080,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5099,7 +5099,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5118,7 +5118,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5137,7 +5137,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5156,7 +5156,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5175,7 +5175,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5194,7 +5194,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5213,7 +5213,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5232,7 +5232,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5251,7 +5251,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5270,7 +5270,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5289,7 +5289,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5308,7 +5308,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5327,7 +5327,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5346,7 +5346,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5365,7 +5365,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5384,7 +5384,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5403,7 +5403,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5422,7 +5422,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5441,7 +5441,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5460,7 +5460,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5479,7 +5479,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5498,7 +5498,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5517,7 +5517,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5536,7 +5536,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5555,7 +5555,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5574,7 +5574,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5593,7 +5593,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5612,7 +5612,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5631,7 +5631,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5650,7 +5650,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5669,7 +5669,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5688,7 +5688,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5707,7 +5707,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5726,7 +5726,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5745,7 +5745,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5764,7 +5764,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5783,7 +5783,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5802,7 +5802,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5821,7 +5821,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5840,7 +5840,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5859,7 +5859,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5878,7 +5878,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -5945,7 +5945,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 5`] = `
 </div>
 `;
 
-exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
+exports[`GameBoard > completed games > Game #5 (tutorial) 6`] = `
 <div>
   <main
     class="none common"
@@ -6098,7 +6098,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6117,7 +6117,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6136,7 +6136,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6155,7 +6155,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6174,7 +6174,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6193,7 +6193,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6212,7 +6212,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6231,7 +6231,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6250,7 +6250,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6269,7 +6269,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6288,7 +6288,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6307,7 +6307,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6326,7 +6326,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6345,7 +6345,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6364,7 +6364,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6383,7 +6383,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6402,7 +6402,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6421,7 +6421,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6440,7 +6440,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6459,7 +6459,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6478,7 +6478,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6497,7 +6497,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6516,7 +6516,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6535,7 +6535,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6554,7 +6554,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6573,7 +6573,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6592,7 +6592,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6611,7 +6611,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6630,7 +6630,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6649,7 +6649,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6668,7 +6668,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6687,7 +6687,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6706,7 +6706,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6725,7 +6725,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6744,7 +6744,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6763,7 +6763,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6782,7 +6782,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6801,7 +6801,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6820,7 +6820,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6839,7 +6839,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6858,7 +6858,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6877,7 +6877,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6896,7 +6896,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6915,7 +6915,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6934,7 +6934,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6953,7 +6953,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6972,7 +6972,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -6991,7 +6991,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7010,7 +7010,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7029,7 +7029,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7048,7 +7048,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7067,7 +7067,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7134,7 +7134,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 6`] = `
 </div>
 `;
 
-exports[`GameBoard completed games Game #5 (tutorial) 7`] = `
+exports[`GameBoard > completed games > Game #5 (tutorial) 7`] = `
 [
   "#cKD-GameBoard.test-#5",
   "#c4C-GameBoard.test-#5",
@@ -7216,7 +7216,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 7`] = `
 ]
 `;
 
-exports[`GameBoard completed games Game #5 (tutorial) 8`] = `
+exports[`GameBoard > completed games > Game #5 (tutorial) 8`] = `
 [
   "#cAC-GameBoard.test-#5",
   "#cAD-GameBoard.test-#5",
@@ -7286,7 +7286,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 8`] = `
 ]
 `;
 
-exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
+exports[`GameBoard > completed games > Game #5 (tutorial) 9`] = `
 <div>
   <main
     class="none common"
@@ -7445,7 +7445,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7464,7 +7464,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7483,7 +7483,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7502,7 +7502,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7521,7 +7521,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7540,7 +7540,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7559,7 +7559,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7578,7 +7578,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7597,7 +7597,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7616,7 +7616,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7635,7 +7635,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7654,7 +7654,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7673,7 +7673,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7692,7 +7692,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7711,7 +7711,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7730,7 +7730,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7749,7 +7749,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7768,7 +7768,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7787,7 +7787,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7806,7 +7806,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7825,7 +7825,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7844,7 +7844,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7863,7 +7863,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7882,7 +7882,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7901,7 +7901,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7920,7 +7920,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7939,7 +7939,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7958,7 +7958,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7977,7 +7977,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -7996,7 +7996,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8015,7 +8015,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8034,7 +8034,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8053,7 +8053,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8072,7 +8072,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8091,7 +8091,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8110,7 +8110,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8129,7 +8129,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8148,7 +8148,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8167,7 +8167,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8186,7 +8186,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8205,7 +8205,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8224,7 +8224,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8243,7 +8243,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8262,7 +8262,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8281,7 +8281,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8300,7 +8300,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8319,7 +8319,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8338,7 +8338,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8357,7 +8357,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8376,7 +8376,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8395,7 +8395,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8414,7 +8414,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -8481,7 +8481,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 9`] = `
 </div>
 `;
 
-exports[`GameBoard completed games Game #5 (tutorial) 10`] = `
+exports[`GameBoard > completed games > Game #5 (tutorial) 10`] = `
 <div>
   <main
     class="none common"
@@ -9670,7 +9670,7 @@ exports[`GameBoard completed games Game #5 (tutorial) 10`] = `
 </div>
 `;
 
-exports[`GameBoard enable debug mode 1`] = `
+exports[`GameBoard > enable debug mode 1`] = `
 <div>
   <main
     class="none common"
@@ -9823,7 +9823,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -9842,7 +9842,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -9861,7 +9861,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -9880,7 +9880,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -9899,7 +9899,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -9918,7 +9918,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -9937,7 +9937,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -9956,7 +9956,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -9975,7 +9975,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -9994,7 +9994,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10013,7 +10013,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10032,7 +10032,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10051,7 +10051,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10070,7 +10070,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10089,7 +10089,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10108,7 +10108,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10127,7 +10127,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10146,7 +10146,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10165,7 +10165,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10184,7 +10184,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10203,7 +10203,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10222,7 +10222,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10241,7 +10241,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10260,7 +10260,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10279,7 +10279,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10298,7 +10298,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10317,7 +10317,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10336,7 +10336,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10355,7 +10355,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10374,7 +10374,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10393,7 +10393,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10412,7 +10412,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10431,7 +10431,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10450,7 +10450,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10469,7 +10469,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10488,7 +10488,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10507,7 +10507,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10526,7 +10526,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10545,7 +10545,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10564,7 +10564,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10583,7 +10583,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10602,7 +10602,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10621,7 +10621,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10640,7 +10640,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10659,7 +10659,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10678,7 +10678,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10697,7 +10697,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10716,7 +10716,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10735,7 +10735,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10754,7 +10754,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10773,7 +10773,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10792,7 +10792,7 @@ exports[`GameBoard enable debug mode 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -10915,7 +10915,7 @@ exports[`GameBoard enable debug mode 1`] = `
 </div>
 `;
 
-exports[`GameBoard renders a game 1`] = `
+exports[`GameBoard > renders a game 1`] = `
 <div>
   <main
     class="none common"
@@ -11068,7 +11068,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11087,7 +11087,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11106,7 +11106,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11125,7 +11125,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/ace_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/ace_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11144,7 +11144,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11163,7 +11163,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11182,7 +11182,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11201,7 +11201,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/2_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/2_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11220,7 +11220,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11239,7 +11239,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11258,7 +11258,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11277,7 +11277,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/3_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/3_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11296,7 +11296,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11315,7 +11315,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11334,7 +11334,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11353,7 +11353,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/4_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/4_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11372,7 +11372,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11391,7 +11391,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11410,7 +11410,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11429,7 +11429,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/5_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/5_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11448,7 +11448,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11467,7 +11467,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11486,7 +11486,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11505,7 +11505,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/6_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/6_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11524,7 +11524,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11543,7 +11543,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11562,7 +11562,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11581,7 +11581,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/7_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/7_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11600,7 +11600,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11619,7 +11619,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11638,7 +11638,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11657,7 +11657,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/8_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/8_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11676,7 +11676,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11695,7 +11695,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11714,7 +11714,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11733,7 +11733,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/9_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/9_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11752,7 +11752,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_clubs.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_clubs.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11771,7 +11771,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_diamonds.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_diamonds.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11790,7 +11790,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_hearts.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_hearts.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11809,7 +11809,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/10_of_spades.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/10_of_spades.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11828,7 +11828,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11847,7 +11847,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11866,7 +11866,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11885,7 +11885,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/jack_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/jack_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11904,7 +11904,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11923,7 +11923,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11942,7 +11942,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11961,7 +11961,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/queen_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/queen_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11980,7 +11980,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_clubs2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_clubs2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -11999,7 +11999,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_diamonds2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_diamonds2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -12018,7 +12018,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_hearts2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_hearts2.svg"
           style="color: transparent;"
           width="10"
         />
@@ -12037,7 +12037,7 @@ exports[`GameBoard renders a game 1`] = `
           decoding="async"
           draggable="false"
           height="14"
-          src="http://localhost/i/SVG-cards-1.3/king_of_spades2.svg"
+          src="http://localhost:3000/i/SVG-cards-1.3/king_of_spades2.svg"
           style="color: transparent;"
           width="10"
         />

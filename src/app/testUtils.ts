@@ -1,24 +1,24 @@
 import { gsap } from 'gsap/all';
+import { vi } from 'vitest';
+import type { Mock } from 'vitest';
 import { shorthandLocation, shorthandPile } from '@/game/card/card';
 import { AvailableMove } from '@/game/move/move';
 
 export function spyOnGsap(_gsap: typeof gsap) {
-	const gsapToSpy = jest.spyOn(_gsap, 'to');
-	const gsapSetSpy = jest.spyOn(_gsap, 'set');
-	const gsapFromSpy = jest.spyOn(_gsap, 'from');
-	const fromToSpy = jest.fn();
-	const toSpy = jest.fn();
-	const setSpy = jest.fn();
-	const addLabelSpy = jest.fn();
-	const addSpy = jest.fn();
-	const timeScaleSpy = jest.fn();
-	const killTweensOfSpy = jest.fn();
+	const gsapToSpy = vi.spyOn(_gsap, 'to');
+	const gsapSetSpy = vi.spyOn(_gsap, 'set');
+	const gsapFromSpy = vi.spyOn(_gsap, 'from');
+	const fromToSpy = vi.fn();
+	const toSpy = vi.fn();
+	const setSpy = vi.fn();
+	const addLabelSpy = vi.fn();
+	const addSpy = vi.fn();
+	const timeScaleSpy = vi.fn();
+	const killTweensOfSpy = vi.fn();
 	let timelineOnComplete: gsap.Callback | undefined;
-	const consoleDebugSpy = jest.spyOn(console, 'debug').mockImplementation(() => {
-		throw new Error('must mock console.debug');
-	});
+	const consoleDebugSpy = vi.mocked(console.debug); // mocked in `test_mocks` be we want it as a standard check here
 
-	jest.spyOn(_gsap, 'timeline').mockImplementation((vars: gsap.TimelineVars | undefined) => {
+	vi.spyOn(_gsap, 'timeline').mockImplementation((vars: gsap.TimelineVars | undefined) => {
 		timelineOnComplete = vars?.onComplete;
 		const timelineMock: unknown = {
 			fromTo: fromToSpy,
@@ -63,7 +63,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 			timeScaleSpy,
 			killTweensOfSpy,
 			consoleDebugSpy,
-		} as Record<string, jest.SpyInstance>).reduce<Record<string, number>>((acc, [key, spy]) => {
+		} as Record<string, Mock>).reduce<Record<string, number>>((acc, [key, spy]) => {
 			const length = spy.mock.calls.length;
 			if (length > 0) {
 				acc[key] = length;
@@ -94,24 +94,24 @@ export function spyOnGsap(_gsap: typeof gsap) {
 	};
 }
 
-export function getCardIdsFromSpy(spy: jest.SpyInstance) {
-	return spy.mock.calls.map(([cardIdSelector]: [string]) => cardIdSelector);
+export function getCardIdsFromSpy(spy: Mock): string[] {
+	return spy.mock.calls.map(([cardIdSelector]) => cardIdSelector as string);
 }
 
-export function getPropertiesFromSpy(spy: jest.SpyInstance): Record<string, number> {
+export function getPropertiesFromSpy(spy: Mock): Record<string, number> {
 	return accumulateGsapTweenVars(
-		spy.mock.calls.map(([, properties]: [string, gsap.TweenVars]) => properties)
+		spy.mock.calls.map(([, properties]) => properties as gsap.TweenVars)
 	);
 }
-export function getPropertiesFromFromToSpy(spy: jest.SpyInstance): {
+export function getPropertiesFromFromToSpy(spy: Mock): {
 	from: Record<string, number>;
 	to: Record<string, number>;
 } {
 	const from = accumulateGsapTweenVars(
-		spy.mock.calls.map(([, properties]: [string, gsap.TweenVars]) => properties)
+		spy.mock.calls.map(([, properties]) => properties as gsap.TweenVars)
 	);
 	const to = accumulateGsapTweenVars(
-		spy.mock.calls.map(([, , properties]: [string, gsap.TweenVars, gsap.TweenVars]) => properties)
+		spy.mock.calls.map(([, , properties]) => properties as gsap.TweenVars)
 	);
 	return { from, to };
 }

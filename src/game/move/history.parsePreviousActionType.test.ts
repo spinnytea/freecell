@@ -1,3 +1,4 @@
+import { afterAll, describe, expect, test } from 'vitest';
 import { ACTION_TEXT_EXAMPLES, FIFTY_TWO_CARD_FLOURISH, pullActionTextExamples } from '@/game/catalog/actionText-examples';
 import { parsePreviousActionType, PreviousAction } from '@/game/move/history';
 
@@ -5,7 +6,7 @@ describe('game/history.parsePreviousActionType', () => {
 	describe('specific cases', () => {
 		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES);
 		afterAll(() => {
-			// eslint-disable-next-line jest/no-standalone-expect
+			// eslint-disable-next-line @vitest/no-standalone-expect
 			expect(actionTextExamples).toEqual([]);
 		});
 

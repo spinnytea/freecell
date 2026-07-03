@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { animDragSequence } from '@/app/hooks/animations/animDragSequence';
 
 describe('animDragSequence', () => {

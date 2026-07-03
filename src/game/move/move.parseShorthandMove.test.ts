@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { CardLocation, PileSH } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { parseShorthandMove } from '@/game/move/move';

@@ -17,13 +17,12 @@
 				"name": "next"
 			}
 		],
-		"baseUrl": "./src",
 		"paths": {
-			"@/*": ["./*"]
+			"@/*": ["./src/*"]
 		},
 		"forceConsistentCasingInFileNames": true,
 		"target": "ES2017",
-		"types": ["jest", "node"]
+		"types": ["node"]
 	},
 	"include": [
 		"next-env.d.ts",

@@ -10,7 +10,7 @@
 	"globals": {
 		"React": "readonly"
 	},
-	"ignorePatterns": ["src/ActionTextReporter.js"],
+	"ignorePatterns": ["src/ActionTextReporter.mts"],
 	"rules": {
 		"prefer-const": ["error", { "destructuring": "all" }],
 		"@typescript-eslint/switch-exhaustiveness-check": "error",
@@ -56,11 +56,10 @@
 			"files": ["*.test.ts", "*.test.tsx"],
 			"env": {
 				"browser": false,
-				"jest": true,
 				"node": true
 			},
-			"plugins": ["jest"],
-			"extends": ["plugin:jest/recommended"]
+			"plugins": ["@vitest"],
+			"extends": ["plugin:@vitest/legacy-recommended"]
 		}
 	]
 }

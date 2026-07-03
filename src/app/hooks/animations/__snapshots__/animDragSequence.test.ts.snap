@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`animDragSequence fn - c 1`] = `
+exports[`animDragSequence > fn - c 1`] = `
 [
   0,
   0.03509775004326936,

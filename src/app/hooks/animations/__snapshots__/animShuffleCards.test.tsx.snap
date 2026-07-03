@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`animShuffleCards gameBoardId: timeline.add 1`] = `
+exports[`animShuffleCards > gameBoardId > timeline.add 1`] = `
 [
   [
     "shuffle",
@@ -11,7 +11,7 @@ exports[`animShuffleCards gameBoardId: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShuffleCards gameBoardId: timeline.set 1`] = `
+exports[`animShuffleCards > gameBoardId > timeline.set 1`] = `
 [
   [
     "#c2C-1",
@@ -28,7 +28,7 @@ exports[`animShuffleCards gameBoardId: timeline.set 1`] = `
 ]
 `;
 
-exports[`animShuffleCards gameBoardId: timeline.to 1`] = `
+exports[`animShuffleCards > gameBoardId > timeline.to 1`] = `
 [
   [
     "#c2C-1",
@@ -73,7 +73,7 @@ exports[`animShuffleCards gameBoardId: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list four: timeline.add 1`] = `
+exports[`animShuffleCards > list > four > timeline.add 1`] = `
 [
   [
     "shuffle",
@@ -84,7 +84,7 @@ exports[`animShuffleCards list four: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list four: timeline.set 1`] = `
+exports[`animShuffleCards > list > four > timeline.set 1`] = `
 [
   [
     "#c2C",
@@ -101,7 +101,7 @@ exports[`animShuffleCards list four: timeline.set 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list four: timeline.to 1`] = `
+exports[`animShuffleCards > list > four > timeline.to 1`] = `
 [
   [
     "#c2C",
@@ -146,7 +146,7 @@ exports[`animShuffleCards list four: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list one: timeline.add 1`] = `
+exports[`animShuffleCards > list > one > timeline.add 1`] = `
 [
   [
     "shuffle",
@@ -154,7 +154,7 @@ exports[`animShuffleCards list one: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list one: timeline.set 1`] = `
+exports[`animShuffleCards > list > one > timeline.set 1`] = `
 [
   [
     "#cAS",
@@ -165,7 +165,7 @@ exports[`animShuffleCards list one: timeline.set 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list one: timeline.to 1`] = `
+exports[`animShuffleCards > list > one > timeline.to 1`] = `
 [
   [
     "#cAS",
@@ -190,7 +190,7 @@ exports[`animShuffleCards list one: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list three: timeline.add 1`] = `
+exports[`animShuffleCards > list > three > timeline.add 1`] = `
 [
   [
     "shuffle",
@@ -201,7 +201,7 @@ exports[`animShuffleCards list three: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list three: timeline.set 1`] = `
+exports[`animShuffleCards > list > three > timeline.set 1`] = `
 [
   [
     "#c2C",
@@ -218,7 +218,7 @@ exports[`animShuffleCards list three: timeline.set 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list three: timeline.to 1`] = `
+exports[`animShuffleCards > list > three > timeline.to 1`] = `
 [
   [
     "#c2C",
@@ -263,7 +263,7 @@ exports[`animShuffleCards list three: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list two: timeline.add 1`] = `
+exports[`animShuffleCards > list > two > timeline.add 1`] = `
 [
   [
     "shuffle",
@@ -274,7 +274,7 @@ exports[`animShuffleCards list two: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list two: timeline.set 1`] = `
+exports[`animShuffleCards > list > two > timeline.set 1`] = `
 [
   [
     "#cAS",
@@ -291,7 +291,7 @@ exports[`animShuffleCards list two: timeline.set 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list two: timeline.to 1`] = `
+exports[`animShuffleCards > list > two > timeline.to 1`] = `
 [
   [
     "#cAS",
@@ -336,8 +336,8 @@ exports[`animShuffleCards list two: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShuffleCards list zero: timeline.add 1`] = `[]`;
+exports[`animShuffleCards > list > zero > timeline.add 1`] = `[]`;
 
-exports[`animShuffleCards list zero: timeline.set 1`] = `[]`;
+exports[`animShuffleCards > list > zero > timeline.set 1`] = `[]`;
 
-exports[`animShuffleCards list zero: timeline.to 1`] = `[]`;
+exports[`animShuffleCards > list > zero > timeline.to 1`] = `[]`;

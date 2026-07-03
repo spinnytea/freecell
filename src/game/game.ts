@@ -279,11 +279,11 @@ export class FreeCell {
 		// prettier-ignore
 		if (process.env.NODE_ENV === 'test') {
 			// eslint-disable-next-line
-			const tempLogPath = require('node:path').join(process.cwd(), '.temp-jest-recorded-action-text.txt');
+			const tempLogPath = require('node:path').join(process.cwd(), '.temp-test-recorded-action-text.txt');
 			// eslint-disable-next-line
 			require('node:fs').appendFileSync(tempLogPath, action.text + '\n', 'utf8');
 		}
-		*/
+		// */
 	}
 
 	/**

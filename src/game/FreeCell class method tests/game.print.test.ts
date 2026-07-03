@@ -1,3 +1,4 @@
+import { beforeAll, describe, expect, test } from 'vitest';
 import { FreeCell } from '@/game/game';
 
 describe('game.print', () => {

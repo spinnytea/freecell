@@ -14,6 +14,8 @@ Ready to release: `npm run build` and `npm run serve` (prebuild will `cleanup`, 
 
 Bump the version in package.json. Make and push version tags with `git tag v1.3.2` and `git push --tags`.
 
+`npx npm-check-updates --interactive --format group`
+
 ## Terms
 
 **Foundation** - The four spaces to place cards, in order, from Ace - King. \

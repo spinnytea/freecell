@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { findCard, parseShorthandCard } from '@/game/card/card';
 import { getSeedsByTag } from '@/game/catalog/difficulty-catalog';
 import { FreeCell } from '@/game/game';
@@ -622,7 +623,7 @@ describe('move.juice', () => {
 
 	describe('checkGames', () => {
 		// XXX (benchmark) juice.canFlourish:  730 seconds (12 minutes)
-		// eslint-disable-next-line jest/no-disabled-tests
+		// eslint-disable-next-line @vitest/no-disabled-tests
 		test.skip('canFlourish', () => {
 			// const flourishSeeds: number[] = [];
 			let flourishCount = 0;
@@ -639,7 +640,7 @@ describe('move.juice', () => {
 		});
 
 		// XXX (benchmark) juice.canFlourish52: 94 seconds
-		// eslint-disable-next-line jest/no-disabled-tests
+		// eslint-disable-next-line @vitest/no-disabled-tests
 		test.skip('canFlourish52', () => {
 			const catalogSeeds = getSeedsByTag('canFlourish52');
 

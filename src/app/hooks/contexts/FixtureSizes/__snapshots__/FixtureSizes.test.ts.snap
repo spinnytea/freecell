@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`FixtureSizes calcFixtureSizes adjust counts 1`] = `
+exports[`FixtureSizes > calcFixtureSizes > adjust counts 1`] = `
 {
   "boardHeight": 600,
   "boardWidth": 800,
@@ -46,7 +46,7 @@ exports[`FixtureSizes calcFixtureSizes adjust counts 1`] = `
 }
 `;
 
-exports[`FixtureSizes calcFixtureSizes basic 1`] = `
+exports[`FixtureSizes > calcFixtureSizes > basic 1`] = `
 {
   "boardHeight": 600,
   "boardWidth": 800,
@@ -88,7 +88,7 @@ exports[`FixtureSizes calcFixtureSizes basic 1`] = `
 }
 `;
 
-exports[`FixtureSizes calcFixtureSizes landscape 1`] = `
+exports[`FixtureSizes > calcFixtureSizes > landscape 1`] = `
 {
   "boardHeight": 600,
   "boardWidth": 800,
@@ -130,7 +130,7 @@ exports[`FixtureSizes calcFixtureSizes landscape 1`] = `
 }
 `;
 
-exports[`FixtureSizes calcFixtureSizes portait 1`] = `
+exports[`FixtureSizes > calcFixtureSizes > portait 1`] = `
 {
   "boardHeight": 600,
   "boardWidth": 800,

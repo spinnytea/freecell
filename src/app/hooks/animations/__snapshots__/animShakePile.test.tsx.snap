@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`animShakePile gameBoardId: timeline.add 1`] = `
+exports[`animShakePile > gameBoardId > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -11,7 +11,7 @@ exports[`animShakePile gameBoardId: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShakePile gameBoardId: timeline.to 1`] = `
+exports[`animShakePile > gameBoardId > timeline.to 1`] = `
 [
   [
     "#pilemarker-a-1",
@@ -68,7 +68,7 @@ exports[`animShakePile gameBoardId: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShakePile gsap.utils.random false: timeline.add 1`] = `
+exports[`animShakePile > gsap.utils.random > false > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -79,7 +79,7 @@ exports[`animShakePile gsap.utils.random false: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShakePile gsap.utils.random false: timeline.to 1`] = `
+exports[`animShakePile > gsap.utils.random > false > timeline.to 1`] = `
 [
   [
     "#pilemarker-a",
@@ -136,7 +136,7 @@ exports[`animShakePile gsap.utils.random false: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShakePile gsap.utils.random true: timeline.add 1`] = `
+exports[`animShakePile > gsap.utils.random > true > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -147,7 +147,7 @@ exports[`animShakePile gsap.utils.random true: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShakePile gsap.utils.random true: timeline.to 1`] = `
+exports[`animShakePile > gsap.utils.random > true > timeline.to 1`] = `
 [
   [
     "#pilemarker-a",
@@ -204,7 +204,7 @@ exports[`animShakePile gsap.utils.random true: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShakePile list one: timeline.add 1`] = `
+exports[`animShakePile > list > one > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -212,7 +212,7 @@ exports[`animShakePile list one: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShakePile list one: timeline.to 1`] = `
+exports[`animShakePile > list > one > timeline.to 1`] = `
 [
   [
     "#pilemarker-a",
@@ -243,7 +243,7 @@ exports[`animShakePile list one: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShakePile list three: timeline.add 1`] = `
+exports[`animShakePile > list > three > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -257,7 +257,7 @@ exports[`animShakePile list three: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShakePile list three: timeline.to 1`] = `
+exports[`animShakePile > list > three > timeline.to 1`] = `
 [
   [
     "#pilemarker-a",
@@ -340,7 +340,7 @@ exports[`animShakePile list three: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShakePile list two: timeline.add 1`] = `
+exports[`animShakePile > list > two > timeline.add 1`] = `
 [
   [
     "invalidMoveCards.fromShorthands",
@@ -351,7 +351,7 @@ exports[`animShakePile list two: timeline.add 1`] = `
 ]
 `;
 
-exports[`animShakePile list two: timeline.to 1`] = `
+exports[`animShakePile > list > two > timeline.to 1`] = `
 [
   [
     "#pilemarker-a",
@@ -408,6 +408,6 @@ exports[`animShakePile list two: timeline.to 1`] = `
 ]
 `;
 
-exports[`animShakePile list zero: timeline.add 1`] = `[]`;
+exports[`animShakePile > list > zero > timeline.add 1`] = `[]`;
 
-exports[`animShakePile list zero: timeline.to 1`] = `[]`;
+exports[`animShakePile > list > zero > timeline.to 1`] = `[]`;
