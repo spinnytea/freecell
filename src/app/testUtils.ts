@@ -16,10 +16,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 	const timeScaleSpy = vi.fn();
 	const killTweensOfSpy = vi.fn();
 	let timelineOnComplete: gsap.Callback | undefined;
-	// FIXME console.debug is still making it to the console during tests
-	const consoleDebugSpy = vi.spyOn(console, 'debug').mockImplementation(() => {
-		throw new Error('must mock console.debug');
-	});
+	const consoleDebugSpy = vi.mocked(console.debug); // mocked in `test_mocks` be we want it as a standard check here
 
 	vi.spyOn(_gsap, 'timeline').mockImplementation((vars: gsap.TimelineVars | undefined) => {
 		timelineOnComplete = vars?.onComplete;

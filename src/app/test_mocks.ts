@@ -1,5 +1,5 @@
 import { cleanup } from '@testing-library/react';
-import { afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, vi } from 'vitest';
 
 vi.mock('gsap/all', () => ({
 	gsap: {
@@ -19,6 +19,14 @@ vi.mock('gsap/all', () => ({
 		create: () => [],
 	},
 }));
+
+beforeEach(() => {
+	vi.stubGlobal('console', {
+		debug: vi.fn().mockImplementation(() => {
+			throw new Error('must mock console.debug');
+		}),
+	});
+});
 
 afterEach(() => {
 	cleanup();
