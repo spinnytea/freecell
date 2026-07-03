@@ -78,8 +78,8 @@ describe('game.$selectCard', () => {
 		});
 
 		test('same card', () => {
-			const gameStart = new FreeCell().dealAll().$selectCard('AS');
-			expect(gameStart.print()).toBe(
+			const game = new FreeCell().dealAll().$selectCard('AS');
+			expect(game.print()).toBe(
 				'' + //
 					'                         \n' +
 					' KS KH KD KC QS QH QD QC \n' +
@@ -91,16 +91,32 @@ describe('game.$selectCard', () => {
 					'>AS|AH AD AC             \n' +
 					' select 1 AS'
 			);
-			expect(gameStart.selection).toEqual({
+			expect(game.selection).toEqual({
 				location: { fixture: 'cascade', data: [0, 6] },
 				cards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 6] } }],
 				peekOnly: false,
 			});
-			// BUG (5-priority) why not just leave it?
-			expect(gameStart.$selectCard('AS')).not.toBe(gameStart);
-			expect(gameStart.$selectCard('AS')).not.toEqual(gameStart);
-			const gameOnce = gameStart.$selectCard('AS');
-			expect(gameOnce.print()).toBe(
+			expect(game.$selectCard('AS')).toBe(game);
+		});
+
+		test('different action first', () => {
+			const gameStart = new FreeCell().dealAll().$selectCard('AS').moveCursor('right');
+			expect(gameStart.print()).toBe(
+				'' + //
+					'                         \n' +
+					' KS KH KD KC QS QH QD QC \n' +
+					' JS JH JD JC TS TH TD TC \n' +
+					' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+					' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+					' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
+					'|AS>AH AD AC             \n' +
+					' cursor right'
+			);
+			const gameSelect = gameStart.$selectCard('AS');
+			expect(gameSelect).not.toBe(gameStart);
+			expect(gameSelect).not.toEqual(gameStart);
+			expect(gameSelect.print()).toBe(
 				'' + //
 					'                         \n' +
 					' KS KH KD KC QS QH QD QC \n' +
@@ -110,16 +126,8 @@ describe('game.$selectCard', () => {
 					' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
 					' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
 					'>AS|AH AD AC             \n' +
-					' touch stop'
+					' select 1 AS'
 			);
-			expect(gameOnce.selection).toEqual({
-				location: { fixture: 'cascade', data: [0, 6] },
-				cards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 6] } }],
-				peekOnly: false,
-			});
-			// BUG (5-priority) infinite chain
-			expect(gameOnce.$selectCard('AS')).not.toBe(gameOnce);
-			expect(gameOnce.$selectCard('AS')).toEqual(gameOnce);
 		});
 	});
 

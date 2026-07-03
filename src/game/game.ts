@@ -1006,7 +1006,19 @@ export class FreeCell {
 		if (shorthand === null) return this;
 		const location = findCard(this.cards, shorthand).location;
 		const game = this.setCursor(location).touch({ allowSelectFoundation, selectionOnly: true });
+		if (game.previousAction.type === 'deselect' && !game.selection) {
+			// if we are trying to re-select what's already selected
+			// do not clear selection
+			const g = game.touch({ allowSelectFoundation, selectionOnly: true });
+			if (g.previousAction.text === this.previousAction.text) {
+				// if just _just_ selected this card, noop
+				return this;
+			}
+			// if we did something else first
+			return g;
+		}
 		if (game.previousAction.type !== 'select') {
+			// don't do anything there than a select
 			// do not clear selection
 			return this.__clone({ action: { text: 'touch stop', type: 'invalid' }, cursor: location });
 		}

@@ -43,8 +43,7 @@ describe('game.$moveCardToPile', () => {
 		// REVIEW (techdebt) (deck) this whole block needs review
 		// basically, we can't "move to or from" the deck
 		expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
-		// REVIEW already selected?
-		expect(game.$selectCard('AH').previousAction).toEqual({ text: 'touch stop', type: 'invalid' });
+		expect(game.$selectCard('AH').previousAction).toEqual({ text: 'peek k⡂ AH', type: 'select' });
 		// REVIEW same place as cursor
 		expect(game.$selectCard('AH').cursor).toEqual({ fixture: 'deck', data: [2] });
 		expect(shorthandPile(game.cursor)).toBe('k');
