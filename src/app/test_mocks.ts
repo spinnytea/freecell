@@ -22,6 +22,7 @@ vi.mock('gsap/all', () => ({
 
 beforeEach(() => {
 	vi.stubGlobal('console', {
+		...console,
 		debug: vi.fn().mockImplementation(() => {
 			throw new Error('must mock console.debug');
 		}),

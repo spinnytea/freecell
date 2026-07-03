@@ -43,7 +43,7 @@ export default defineConfig({
 		},
 		environment: 'jsdom',
 		exclude: ['**/node_modules/**', '**/.next/**', '**/dist/**'],
-		reporters: ['default', './src/ActionTextReporter.js'],
+		reporters: ['default', './src/ActionTextReporter.mts'],
 		setupFiles: ['./src/app/test_mocks.ts'],
 	},
 });

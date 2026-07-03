@@ -1,20 +1,19 @@
-const fs = require('fs');
-const path = require('path');
+import type { Reporter } from 'vitest/reporters';
+import fs from 'node:fs';
+import path from 'node:path';
 
-class ActionTextReporter {
-	constructor(globalConfig, options) {
-		this.tempLogPath = path.join(process.cwd(), '.temp-jest-recorded-action-text.txt');
-		this.finalLogPath = path.join(process.cwd(), 'global-recorded-text.txt');
-	}
+export default class ActionTextReporter implements Reporter {
+	tempLogPath: string = path.join(process.cwd(), '.temp-test-recorded-action-text.txt');
+	finalLogPath: string = path.join(process.cwd(), 'global-recorded-text.txt');
 
 	// clear previous runs before new tests execute
-	onRunStart() {
+	onTestRunStart() {
 		if (fs.existsSync(this.tempLogPath)) fs.unlinkSync(this.tempLogPath);
 		if (fs.existsSync(this.finalLogPath)) fs.unlinkSync(this.finalLogPath);
 	}
 
 	// compile, deduplicate, and sort after all worker processes finish
-	onRunComplete() {
+	onTestRunEnd() {
 		if (!fs.existsSync(this.tempLogPath)) return;
 
 		const rawContent = fs.readFileSync(this.tempLogPath, 'utf8');
@@ -29,5 +28,3 @@ class ActionTextReporter {
 		fs.unlinkSync(this.tempLogPath);
 	}
 }
-
-module.exports = ActionTextReporter;
