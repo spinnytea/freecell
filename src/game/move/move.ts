@@ -615,6 +615,7 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 			const d0 = to.data[0];
 
 			// make space for the from_cards
+			// TODO (deck) verify order (think about i/o, what has to go first)
 			cards.forEach((card) => {
 				if (card.location.fixture === 'deck') {
 					if (card.location.data[0] >= d0) {
@@ -627,6 +628,7 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 			});
 
 			// put in the from cards
+			// TODO (deck) verify math
 			from_cards.forEach((card, idx) => {
 				card.location = {
 					fixture: 'deck',
@@ -918,6 +920,7 @@ export function parseShorthandPileForSelect(game: FreeCell, pileSh: PileSH): Car
 			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
 			// top card in deck
+			// TODO (deck) (test) top should now be 0
 			from_location.data[0] = game.deck.length - 1;
 			break;
 		case 'cell':
@@ -984,6 +987,9 @@ export function parseShorthandPileForMove(
 			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
 			// top card in deck
+			// TODO (deck) (test) top should now be 0
+			// - TODO (test) and not like -1, items should be added "before" the index
+			// - TODO (test) now this is like cascade where empty is still 0)
 			to_location.data[0] = game.deck.length;
 			break;
 		case 'cell':

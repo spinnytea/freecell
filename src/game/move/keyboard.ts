@@ -154,7 +154,7 @@ export function moveCursorWithBasicArrows(
 				case 'down':
 					if (d1 >= game.tableau[d0].length - 1) {
 						if (game.deck.length) {
-							// deck is rendered in reverse
+							// TODO (deck) (keyboard) deck is rendered in reverse
 							return {
 								action: { text: 'cursor down wrap', type: 'cursor' },
 								cursor: { fixture: 'deck', data: [game.deck.length - 1 - d0] },
@@ -175,6 +175,7 @@ export function moveCursorWithBasicArrows(
 					// d1 will be fixed with __clampCursor
 					// REVIEW (controls) spread up/down between cascade and deck?
 					//  - i.e. use the cascade to jump multiple cards in the deck
+					// TODO (deck) (keyboard) deck is rendered in reverse
 					return {
 						action: { text: 'cursor up wrap', type: 'cursor' },
 						cursor: {
@@ -183,7 +184,7 @@ export function moveCursorWithBasicArrows(
 						},
 					};
 				case 'left':
-					// left and right are reversed in the deck
+					// TODO (deck) (keyboard) left and right are reversed in the deck
 					if (d0 === game.deck.length - 1 || game.deck.length === 0) {
 						return {
 							action: { text: 'cursor left wrap', type: 'cursor' },
@@ -195,7 +196,7 @@ export function moveCursorWithBasicArrows(
 						cursor: { fixture, data: [d0 + 1] },
 					};
 				case 'right':
-					// left and right are reversed in the deck
+					// TODO (deck) (keyboard) left and right are reversed in the deck
 					if (game.deck.length === 0) {
 						return {
 							action: { text: 'cursor right wrap', type: 'cursor' },

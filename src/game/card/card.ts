@@ -151,6 +151,7 @@ export function initializeDeck(includeJoker = false): Card[] {
 	const deck = new Array<Card>();
 
 	// initialize deck
+	// FIXME (deck) (init) does this need to be reversed?
 	RankList.forEach((rank) => {
 		if (rank === 'joker' && !includeJoker) return;
 		SuitList.forEach((suit) => {
@@ -212,6 +213,7 @@ export function sortCardsOG(game: FreeCell, cards: Card[]): void {
 	   - or maybe, since this is only used by juice, we should move it there for now
 */
 export function sortCardsBySuitAndRank(deck: Card[]): void {
+	// TODO (deck) (juice) deos this need to be reversed?
 	deck.sort((a, b) => {
 		// sort by suit (high to low)
 		const sa = getSuitForCompare(a.suit);

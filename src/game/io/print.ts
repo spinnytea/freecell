@@ -176,7 +176,7 @@ export function printDeck(
 			// prettier-ignore
 			const deckStr = game.deck
 				.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-				.reverse()
+				.reverse() // FIXME (deck) (print-parse) remove this
 				.join('');
 			const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
 			const offDeckPrefix = cursor.data[0] === game.deck.length ? '>  ' : '';
@@ -185,7 +185,7 @@ export function printDeck(
 			// if no cursor/selection in deck
 			const deckStr = game.deck
 				.map((card) => shorthandCard(card))
-				.reverse()
+				.reverse() // FIXME (deck) (print-parse) remove this
 				.join(' ');
 			return ` ${deckStr} `;
 		}
@@ -251,6 +251,7 @@ function getPrintSeparator(
 			return '|';
 		}
 		if (location.fixture !== 'cascade') {
+			// FIXME (deck) (print-parse) double check math? we may not need shift anymore
 			const shift = location.fixture === 'deck' ? 1 : -1;
 			if (
 				isLocationEqual(

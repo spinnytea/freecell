@@ -271,7 +271,7 @@ export class FreeCell {
 
 		/*
 		// TODO (techdebt) (actionText) (test) compare {@link ACTION_TEXT_EXAMPLES} to test data
-		// HACK record every actionText during unit tests
+		// HACK (actionText) (test) record every actionText during unit tests
 		// prettier-ignore
 		if (process.env.NODE_ENV === 'test') {
 			// eslint-disable-next-line
@@ -775,6 +775,8 @@ export class FreeCell {
 		- XXX (techdebt) rename to shuffle32k, including actionText and print history
 		- XXX (motivation) more shuffle options bcuz why not
 
+		FIXME (deck) (shuffle) verify deck order of numbered game shuffles
+
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/
 	shuffle32(seed?: number): FreeCell | this {
@@ -805,6 +807,7 @@ export class FreeCell {
 		// if there are no cards to shuffle, noop
 		if (deck.length === 0) return this;
 
+		// FIXME (deck) (shuffle) is this just from 0 to length?
 		let temp: Card;
 		for (let i = deck.length; i > 0; i--) {
 			seed = (214013 * seed + 2531011) % Math.pow(2, 31);
@@ -845,6 +848,7 @@ export class FreeCell {
 		while (game.deck.length > remaining) {
 			c++;
 			if (c >= game.tableau.length) c = 0;
+			// FIXME (deal) (deck) remove deck.pop; deal from 0, unshift; or all at once, then splice
 			const card = game.deck.pop();
 			if (card) {
 				card.location = { fixture: 'cascade', data: [c, game.tableau[c].length] };
@@ -852,6 +856,7 @@ export class FreeCell {
 			}
 		}
 
+		// FIXME (deal) (deck) remove deck.pop; deal from 0, unshift; or all at once, then splice
 		if (demo && !keepDeck) {
 			game.cells.forEach((ignore, idx) => {
 				const card = game.deck.pop();
@@ -874,6 +879,7 @@ export class FreeCell {
 				game.cursor = DEFAULT_CURSOR_LOCATION;
 			} else {
 				// we could just subtract one every time we deal a card
+				// FIXME (deal) (deck) remove this weird reverse math, review the math (there should be tests)
 				const reversePrevD0 = this.deck.length - this.cursor.data[0] - 1;
 				const clampD0 = Math.max(0, Math.min(reversePrevD0, game.deck.length));
 				const nextD0 = Math.max(0, game.deck.length - 1 - clampD0);
@@ -1310,6 +1316,7 @@ export class FreeCell {
 
 		if (deckLength > 0) {
 			// now, reverse the deck
+			// FIXME (deck) (print-parse) except, now we don't need to
 			cards.forEach((card) => {
 				if (card.location.fixture === 'deck') {
 					card.location = { fixture: 'deck', data: [deckLength - card.location.data[0] - 1] };
@@ -1318,6 +1325,7 @@ export class FreeCell {
 		}
 
 		// add the remaining (unused) cards to the deck
+		// FIXME (deck) (print-parse) sort of undefined behavior, but double check this order with "initial deal"
 		remaining.forEach((card, idx) => {
 			card.location = { fixture: 'deck', data: [deckLength + idx] };
 		});
@@ -1342,6 +1350,7 @@ export class FreeCell {
 				if (deckLength === 0) {
 					history.push('deal all cards');
 				} else {
+					// TODO (deck) do the basic math
 					history.push('deal 44 cards');
 				}
 			}
@@ -1454,6 +1463,7 @@ export class FreeCell {
 		}
 		const deck_cursor_index = deck_spaces.indexOf('>');
 		let deck_selection_index = deck_spaces.indexOf('|');
+		// FIXME (deck) (print-parse) verify deck selection math - there should be tests
 		if (deck_cursor_index > -1) {
 			cursor = {
 				fixture: 'deck',

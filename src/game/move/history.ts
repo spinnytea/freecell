@@ -221,6 +221,7 @@ export function parseCursorFromPreviousActionText(
 				case 'deck':
 					// we don't move cards to the deck in practice
 					// moving to `k` is enough for now (no need to look for toShorthand within the deck)
+					// REVIEW (deck) move to top of deck? move to bottom of deck?
 					break;
 				case 'cell':
 					// each cell identifies it's own d0
@@ -793,6 +794,8 @@ export function getCardsFromInvalid(previousAction: PreviousAction): {
 
 /**
 	symmetric pair to {@link FreeCell.dealAll}
+
+	TODO (deck) compare to initializeDeck in a test
 */
 export function unDealAll(game: FreeCell): Card[] {
 	// compiling everything into the deck, and then to be sorted like game.cards

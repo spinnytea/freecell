@@ -44,7 +44,7 @@ describe('game.$moveCardToPile', () => {
 		// basically, we can't "move to or from" the deck
 		expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
 		expect(game.$selectCard('AH').previousAction).toEqual({ text: 'peek k⡂ AH', type: 'select' });
-		// REVIEW same place as cursor
+		// REVIEW (deck) same place as cursor
 		expect(game.$selectCard('AH').cursor).toEqual({ fixture: 'deck', data: [2] });
 		expect(shorthandPile(game.cursor)).toBe('k');
 		// REVIEW (deck) AH is _in_ the deck?

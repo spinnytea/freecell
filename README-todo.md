@@ -9,6 +9,11 @@
 
 ## Top-Level TODOs
 
+- FIXME (deck) ← finish those
+  - start with init, print, parse; the data model
+  - then do shuffle, deal
+  - then keyboard
+  - then juice
 - TODO (4-priority) (techdebt) replace @link with @linkcode
 - TODO (gsap) review how we use gsap, right now it feels like magic
 - TODO (techdebt) switch from nextjs to vite
