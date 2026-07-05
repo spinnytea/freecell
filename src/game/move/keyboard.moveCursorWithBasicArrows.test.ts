@@ -315,7 +315,19 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 			});
 
 			// i.e. if the deck has 1 card in it, and the cursor is in the middle of the tableau
-			test.todo('moves when deck is short');
+			test('moves when deck is short', () => {
+				const game = new FreeCell({ cascadeCount: 10 }).dealAll({ demo: true, keepDeck: true }).setCursor({ fixture: 'cascade', data: [9, 4] });
+				expect(game.tableau[9].length).toBe(4);
+				expect(game.deck.length).toBe(8);
+				expect(moveCursorWithBasicArrows(game, 'down')).toEqual({
+					action: { text: 'cursor down wrap', type: 'cursor' },
+					cursor: { fixture: 'deck', data: [-2] },
+				});
+
+				// confirm that the cursor will be clamped
+				// XXX (test) this file shouldn't have this
+				expect(game.moveCursor('down').cursor).toEqual({ fixture: 'deck', data: [0] });
+			});
 
 			test('stops when deck empty', () => {
 				const game = new FreeCell().dealAll().setCursor({ fixture: 'cascade', data: [2, 6] });
@@ -368,8 +380,8 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 			});
 
 			test('size mismatch: tableau !== deck', () => {
-				const game = new FreeCell({ cursor: { fixture: 'deck', data: [15] } });
-				expect(moveCursorWithBasicArrows(game, 'up')).toEqual({
+				const game = new FreeCell();
+				expect(moveCursorWithBasicArrows(game.setCursor({ fixture: 'deck', data: [15] }), 'up')).toEqual({
 					action: { text: 'cursor up wrap', type: 'cursor' },
 					cursor: { fixture: 'cascade', data: [36, 99] },
 				});

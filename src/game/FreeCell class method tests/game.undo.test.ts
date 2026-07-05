@@ -137,10 +137,15 @@ describe('game.undo (+ history)', () => {
 
 			test('shuffled', () => {
 				const game = new FreeCell().shuffle32(1);
+				// REVIEW (deck) better cursor position on KS? - BOTTOM_OF_CASCADE ?
+				// expect(game.__printDeck()).toBe(
+				// 	'>JD 2D 9H JC 5D 7H 7C 5H KD KC 9S 5S AD QC KH 3H 2S KS 9D QD JS AS AH 3C 4C 5C TS QH 4H AC 4D 7S 3S TD 4S TH 8H 2C JH 7D 6D 8S 8D QS 6C 3D 8C TC 6S 9C 2H 6H '
+				// );
 				expect(game.__printDeck()).toBe(
 					' JD 2D 9H JC 5D 7H 7C 5H KD KC 9S 5S AD QC KH 3H 2S KS 9D QD JS AS AH 3C 4C 5C TS QH 4H AC 4D 7S 3S TD 4S TH 8H 2C JH 7D 6D 8S 8D QS 6C 3D 8C TC 6S 9C 2H>6H '
 				);
 				const dealt = game.dealAll();
+				expect(dealt.__printDeck()).toBe('');
 				expect(dealt.previousAction).toEqual({
 					text: 'deal all cards',
 					type: 'deal',
@@ -162,13 +167,14 @@ describe('game.undo (+ history)', () => {
 				expect(undid.__printDeck()).toBe(
 					' JD 2D 9H JC 5D 7H 7C 5H KD KC 9S 5S AD QC KH 3H 2S KS 9D QD JS AS AH 3C 4C 5C TS QH 4H AC 4D 7S 3S TD 4S TH 8H 2C JH 7D 6D 8S 8D QS 6C 3D 8C TC 6S 9C 2H>6H '
 				);
+				expect(undid.previousAction.gameFunction).toBe('undo');
+				delete undid.previousAction.gameFunction;
+
 				expect(game.deck[0].location.data[0]).toBe(0);
 				expect(game.deck[9].location.data[0]).toBe(9);
 				expect(dealt.deck).toEqual([]);
 				expect(undid.deck[0].location.data[0]).toBe(0);
 				expect(undid.deck[9].location.data[0]).toBe(9);
-				expect(undid.previousAction.gameFunction).toBe('undo');
-				delete undid.previousAction.gameFunction;
 				expect(undid).toEqual(game);
 			});
 
@@ -198,7 +204,15 @@ describe('game.undo (+ history)', () => {
 
 			test('keepDeck', () => {
 				const game = new FreeCell();
+				// REVIEW (deck) better cursor position on KS? - BOTTOM_OF_CASCADE ?
+				// expect(game.__printDeck()).toBe(
+				// 	'>KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC '
+				// );
+				expect(game.__printDeck()).toBe(
+					' KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD>AC '
+				);
 				const dealt = game.dealAll({ demo: true, keepDeck: true });
+				expect(dealt.__printDeck()).toBe(' 2S 2H 2D 2C AS AH AD>AC ');
 				expect(dealt.previousAction).toEqual({
 					text: 'deal 44 cards',
 					type: 'deal',
@@ -218,6 +232,9 @@ describe('game.undo (+ history)', () => {
 						' deal 44 cards'
 				);
 				const undid = dealt.undo();
+				expect(undid.__printDeck()).toBe(
+					' KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD>AC '
+				);
 				expect(undid.previousAction.gameFunction).toBe('undo');
 				delete undid.previousAction.gameFunction;
 				expect(undid).toEqual(game);

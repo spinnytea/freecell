@@ -10,6 +10,7 @@
 ## Top-Level TODOs
 
 - FIXME (deck) ← finish those
+  - (or _first_ do `npm test src/game/game.test` top down)
   - start with init, print, parse; the data model
   - then do shuffle, deal
   - then keyboard

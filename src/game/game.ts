@@ -241,8 +241,9 @@ export class FreeCell {
 			if (cascadeCount > 10)
 				throw new Error(`Cannot have more then 10 cascades; requested "${cascadeCount}".`);
 
-			this.deck = initializeDeck();
-			this.cards = [...this.deck];
+			this.cards = initializeDeck();
+			// REVIEW (deck) sort?
+			this.deck = [...this.cards].sort((a, b) => a.location.data[0] - b.location.data[0]);
 
 			this.win = false;
 		}
@@ -775,8 +776,6 @@ export class FreeCell {
 		- XXX (techdebt) rename to shuffle32k, including actionText and print history
 		- XXX (motivation) more shuffle options bcuz why not
 
-		FIXME (deck) (shuffle) verify deck order of numbered game shuffles
-
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/
 	shuffle32(seed?: number): FreeCell | this {
@@ -807,7 +806,6 @@ export class FreeCell {
 		// if there are no cards to shuffle, noop
 		if (deck.length === 0) return this;
 
-		// FIXME (deck) (shuffle) is this just from 0 to length?
 		let temp: Card;
 		for (let i = deck.length; i > 0; i--) {
 			seed = (214013 * seed + 2531011) % Math.pow(2, 31);
@@ -848,7 +846,6 @@ export class FreeCell {
 		while (game.deck.length > remaining) {
 			c++;
 			if (c >= game.tableau.length) c = 0;
-			// FIXME (deal) (deck) remove deck.pop; deal from 0, unshift; or all at once, then splice
 			const card = game.deck.pop();
 			if (card) {
 				card.location = { fixture: 'cascade', data: [c, game.tableau[c].length] };
@@ -856,7 +853,6 @@ export class FreeCell {
 			}
 		}
 
-		// FIXME (deal) (deck) remove deck.pop; deal from 0, unshift; or all at once, then splice
 		if (demo && !keepDeck) {
 			game.cells.forEach((ignore, idx) => {
 				const card = game.deck.pop();
@@ -874,22 +870,24 @@ export class FreeCell {
 			});
 		}
 
+		const endDeckLength = game.deck.length;
+		const dealtCount = startDeckLength - endDeckLength;
+		if (dealtCount === 0) return this;
+
 		if (game.cursor.fixture === 'deck') {
 			if (!game.deck.length) {
 				game.cursor = DEFAULT_CURSOR_LOCATION;
 			} else {
-				// we could just subtract one every time we deal a card
-				// FIXME (deal) (deck) remove this weird reverse math, review the math (there should be tests)
-				const reversePrevD0 = this.deck.length - this.cursor.data[0] - 1;
-				const clampD0 = Math.max(0, Math.min(reversePrevD0, game.deck.length));
-				const nextD0 = Math.max(0, game.deck.length - 1 - clampD0);
+				// FIXME cards have moved, update the coords
+				// game.deck.forEach((card, idx) => {
+				// 	card.location = { fixture: 'deck', data: [idx] };
+				// });
+
+				const nextD0 = Math.max(0, Math.min(this.cursor.data[0] - dealtCount, game.deck.length));
 				game.cursor = { fixture: 'deck', data: [nextD0] };
 			}
 		}
 
-		const endDeckLength = game.deck.length;
-		const dealtCount = startDeckLength - endDeckLength;
-		if (dealtCount === 0) return this;
 		if (endDeckLength) {
 			let actionText = 'deal 1 card';
 			if (dealtCount > 1) {
@@ -1316,7 +1314,6 @@ export class FreeCell {
 
 		if (deckLength > 0) {
 			// now, reverse the deck
-			// FIXME (deck) (print-parse) except, now we don't need to
 			cards.forEach((card) => {
 				if (card.location.fixture === 'deck') {
 					card.location = { fixture: 'deck', data: [deckLength - card.location.data[0] - 1] };
@@ -1325,7 +1322,7 @@ export class FreeCell {
 		}
 
 		// add the remaining (unused) cards to the deck
-		// FIXME (deck) (print-parse) sort of undefined behavior, but double check this order with "initial deal"
+		// TODO (deal) (deck) (test) (print-parse) double check this order with "initial deal"
 		remaining.forEach((card, idx) => {
 			card.location = { fixture: 'deck', data: [deckLength + idx] };
 		});
@@ -1463,7 +1460,7 @@ export class FreeCell {
 		}
 		const deck_cursor_index = deck_spaces.indexOf('>');
 		let deck_selection_index = deck_spaces.indexOf('|');
-		// FIXME (deck) (print-parse) verify deck selection math - there should be tests
+		// TODO (deck) (print-parse) verify deck selection math - there should be tests
 		if (deck_cursor_index > -1) {
 			cursor = {
 				fixture: 'deck',

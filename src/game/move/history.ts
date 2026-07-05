@@ -794,8 +794,6 @@ export function getCardsFromInvalid(previousAction: PreviousAction): {
 
 /**
 	symmetric pair to {@link FreeCell.dealAll}
-
-	TODO (deck) compare to initializeDeck in a test
 */
 export function unDealAll(game: FreeCell): Card[] {
 	// compiling everything into the deck, and then to be sorted like game.cards

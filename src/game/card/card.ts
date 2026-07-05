@@ -146,12 +146,20 @@ export interface CardSequence {
 /* HELPER METHODS */
 /* ************** */
 
+// FIXME (init) rename - this conflates "deck" the fixture, and "deck" the list of cards
 // XXX (joker) will need to add an argument
 export function initializeDeck(includeJoker = false): Card[] {
 	const deck = new Array<Card>();
 
-	// initialize deck
-	// FIXME (deck) (init) does this need to be reversed?
+	/*
+		initialize deck
+		this order was chosen because of how the shuffle32 reference algoritm works
+
+		> Create an array of 52 cards:
+		> Ace of Clubs, Ace of Diamonds, Ace of Hearts, Ace of Spades, 2 of Clubs, 2 of Diamonds,
+		> and so on through the ranks: Ace, 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King.
+		> The array indexes are 0 to 51, with Ace of Clubs at 0, and King of Spades at 51.
+	*/
 	RankList.forEach((rank) => {
 		if (rank === 'joker' && !includeJoker) return;
 		SuitList.forEach((suit) => {
@@ -213,7 +221,6 @@ export function sortCardsOG(game: FreeCell, cards: Card[]): void {
 	   - or maybe, since this is only used by juice, we should move it there for now
 */
 export function sortCardsBySuitAndRank(deck: Card[]): void {
-	// TODO (deck) (juice) deos this need to be reversed?
 	deck.sort((a, b) => {
 		// sort by suit (high to low)
 		const sa = getSuitForCompare(a.suit);

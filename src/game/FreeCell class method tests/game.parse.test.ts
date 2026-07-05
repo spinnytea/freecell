@@ -38,7 +38,12 @@ describe('game.parse', () => {
 			type: 'init',
 		});
 
-		// this should have been all we needed to check, lol
+		// confirm intial cursor
+		expect(g.cursor).toEqual({ fixture: 'deck', data: [0] });
+		expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+		expect(gameHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+
+		// this should have been all we needed to check 😬
 		expect(game).toEqual(gameHist);
 		// and we may as well check this too
 		expect(game).toEqual(g);
@@ -996,7 +1001,24 @@ describe('game.parse', () => {
 				expect(game.availableMoves).toEqual([]);
 			});
 
-			test('end', () => {
+			test('cursor after selection', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'                         \n' +
+						'                         \n' +
+						':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH|AD>AC \n' +
+						' select k AD'
+				);
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.selection).toEqual({
+					location: { fixture: 'deck', data: [1] },
+					cards: [{ rank: 'ace', suit: 'diamonds', location: { fixture: 'deck', data: [1] } }],
+					peekOnly: true,
+				});
+				expect(game.availableMoves).toEqual([]);
+			});
+
+			test('last card selected', () => {
 				const game = FreeCell.parse(
 					'' + //
 						'                         \n' +
@@ -1291,6 +1313,8 @@ describe('game.parse', () => {
 					);
 				});
 			});
+
+			test.todo('deck');
 		});
 
 		describe('various valid selections', () => {

@@ -270,14 +270,12 @@ export function _collectCardsTillAceToDeck(game: FreeCell): FreeCell {
 	return game;
 }
 
-// TODO (deck) (juice) verify with test
 function _spreadDeckToEmptyPiles(g: FreeCell, emptyPiles: CardLocation[]): FreeCell {
 	// unshuffle deck
 	// sortCardsBySuitAndRank(g.deck);
 
 	// put deck on board, split by suit
 	emptyPiles.forEach((emptyPile) => {
-		// TODO (deck) (juice) reversed deck? or is this special to juice
 		// BUG (techdebt) (deck) (gameplay) (juice) why can't we deal from the middle?
 		// const last_card = g.deck.at(0);
 		const last_card = g.deck.at(-1);
