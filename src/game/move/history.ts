@@ -5,7 +5,7 @@ import {
 	cloneCards,
 	findCard,
 	getSequenceAt,
-	initializeDeck,
+	initializeDeckOfCards,
 	isFixture,
 	LocationSH,
 	parseShorthandCard,
@@ -167,7 +167,7 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 			// (there is some sugar where we can shuffle -> init -> shuffle, but that basically replaces the shuffle, it does not stack)
 			// if there _were_ multiple shuffles in the history, this would be invalid
 			// but we have to assume there are not
-			return initializeDeck();
+			return initializeDeckOfCards();
 		case 'deal':
 			return unDealAll(game);
 		case 'move':

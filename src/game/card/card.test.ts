@@ -7,7 +7,7 @@ import {
 	cloneCards,
 	Coord,
 	countToBraille,
-	initializeDeck,
+	initializeDeckOfCards,
 	isAdjacent,
 	LocationSH,
 	parseShorthandCard,
@@ -64,8 +64,8 @@ describe('game/card', () => {
 				peekOnly: true,
 			});
 
-		test('initializeDeck', () => {
-			const deck = initializeDeck();
+		test('initializeDeckOfCards', () => {
+			const deck = initializeDeckOfCards();
 			const game = new FreeCell();
 			expect(deckShorthand(deck)).toBe(INIT_DECK_SHORTHAND);
 			expect(deckShorthand(game.cards)).toBe(INIT_DECK_SHORTHAND);

@@ -146,9 +146,12 @@ export interface CardSequence {
 /* HELPER METHODS */
 /* ************** */
 
-// FIXME (init) rename - this conflates "deck" the fixture, and "deck" the list of cards
-// XXX (joker) will need to add an argument
-export function initializeDeck(includeJoker = false): Card[] {
+/**
+	Create the standard deck of cards for a new game.
+
+	- XXX (joker) will need to add an argument
+*/
+export function initializeDeckOfCards(includeJoker = false): Card[] {
 	const deck = new Array<Card>();
 
 	/*

@@ -6,7 +6,7 @@ import {
 	cloneCards,
 	findCard,
 	getSequenceAt,
-	initializeDeck,
+	initializeDeckOfCards,
 	isLocationEqual,
 	parseShorthandCard,
 	PileSH,
@@ -241,7 +241,7 @@ export class FreeCell {
 			if (cascadeCount > 10)
 				throw new Error(`Cannot have more then 10 cascades; requested "${cascadeCount}".`);
 
-			this.cards = initializeDeck();
+			this.cards = initializeDeckOfCards();
 			// REVIEW (deck) sort?
 			this.deck = [...this.cards].sort((a, b) => a.location.data[0] - b.location.data[0]);
 
@@ -878,7 +878,7 @@ export class FreeCell {
 			if (!game.deck.length) {
 				game.cursor = DEFAULT_CURSOR_LOCATION;
 			} else {
-				// FIXME cards have moved, update the coords
+				// FIXME (deck) cards have moved, update the coords
 				// game.deck.forEach((card, idx) => {
 				// 	card.location = { fixture: 'deck', data: [idx] };
 				// });
