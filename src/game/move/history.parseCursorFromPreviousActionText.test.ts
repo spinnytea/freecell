@@ -49,14 +49,14 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 		// XXX (techdebt) (cursor) we could detect the location of select/deselect
 		test.each`
 			actionText                                      | cards          | after                                    | before
-			${'init'}                                       | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'init with invalid history'}                  | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cell', data: [0] }}
-			${'init partial'}                               | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'shuffle deck (1)'}                           | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'deal 1 card'}                                | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'deal 2 cards'}                               | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'deal 44 cards'}                              | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
-			${'deal all cards'}                             | ${someCards_1} | ${{ fixture: 'cell', data: [0] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'init'}                                       | ${someCards_1} | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'deck', data: [99] }}
+			${'init with invalid history'}                  | ${[]}          | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'cell', data: [0] }}
+			${'init partial'}                               | ${someCards_1} | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'deck', data: [99] }}
+			${'shuffle deck (1)'}                           | ${someCards_1} | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'deck', data: [99] }}
+			${'deal 1 card'}                                | ${someCards_1} | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'deck', data: [99] }}
+			${'deal 2 cards'}                               | ${someCards_1} | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'deck', data: [99] }}
+			${'deal 44 cards'}                              | ${someCards_1} | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'deck', data: [99] }}
+			${'deal all cards'}                             | ${someCards_1} | ${{ fixture: 'cell', data: [0] }}        | ${{ fixture: 'deck', data: [99] }}
 			${'cursor set'}                                 | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor set KH'}                              | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${undefined}
 			${'cursor set b'}                               | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${undefined}
@@ -64,7 +64,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'cursor set h AD'}                            | ${someCards_1} | ${{ fixture: 'foundation', data: [2] }}  | ${undefined}
 			${'cursor set 6 2D'}                            | ${someCards_1} | ${{ fixture: 'cascade', data: [7, 5] }}  | ${undefined}
 			${'cursor set 3'}                               | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${undefined}
-			${'cursor set k'}                               | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${undefined}
+			${'cursor set k'}                               | ${[]}          | ${{ fixture: 'deck', data: [99] }}       | ${undefined}
 			${'cursor set k KH'}                            | ${someCards_1} | ${{ fixture: 'deck', data: [0] }}        | ${undefined}
 			${'cursor up'}                                  | ${[]}          | ${undefined}                             | ${undefined}
 			${'cursor left'}                                | ${[]}          | ${undefined}                             | ${undefined}
@@ -104,18 +104,18 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 			${'invalid move 75 6D-5S-4D-3C→7C'}             | ${someCards_2} | ${{ fixture: 'cascade', data: [4, 0] }}  | ${{ fixture: 'cascade', data: [6, 0] }}
 			${'invalid move hc AC→cell'}                    | ${[]}          | ${{ fixture: 'cell', data: [2] }}        | ${{ fixture: 'foundation', data: [0] }}
 			${'invalid move 1c KC-QD-JC→cell'}              | ${[]}          | ${{ fixture: 'cell', data: [2] }}        | ${{ fixture: 'cascade', data: [0, 0] }}
-			${'invalid move kb 6H→cell'}                    | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${{ fixture: 'deck', data: [0] }}
+			${'invalid move kb 6H→cell'}                    | ${[]}          | ${{ fixture: 'cell', data: [1] }}        | ${{ fixture: 'deck', data: [99] }}
 			${'invalid move ah 3C→foundation'}              | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cell', data: [0] }}
 			${'invalid move 1h 9C→foundation'}              | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cascade', data: [0, 0] }}
 			${'invalid move ah⡂ 3C→foundation'}             | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cell', data: [0] }}
 			${'invalid move 1⡁h⡂ 9C→foundation'}            | ${someCards_h} | ${{ fixture: 'foundation', data: [2] }}  | ${{ fixture: 'cascade', data: [0, 1] }}
 			${'invalid move 2h TH→AH'}                      | ${someCards_h} | ${{ fixture: 'foundation', data: [1] }}  | ${{ fixture: 'cascade', data: [1, 0] }}
 			${'invalid move 13 KC-QD-JC→cascade'}           | ${[]}          | ${{ fixture: 'cascade', data: [2, 0] }}  | ${{ fixture: 'cascade', data: [0, 0] }}
-			${'invalid move k1 KH→cascade'}                 | ${[]}          | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'deck', data: [0] }}
-			${'invalid move bk 6C→deck'}                    | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cell', data: [1] }}
-			${'invalid move hk TD→deck'}                    | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'foundation', data: [0] }}
-			${'invalid move 4k 6D→deck'}                    | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cascade', data: [3, 0] }}
-			${'invalid move 2k TC-9D-8C→deck'}              | ${[]}          | ${{ fixture: 'deck', data: [0] }}        | ${{ fixture: 'cascade', data: [1, 0] }}
+			${'invalid move k1 KH→cascade'}                 | ${[]}          | ${{ fixture: 'cascade', data: [0, 0] }}  | ${{ fixture: 'deck', data: [99] }}
+			${'invalid move bk 6C→deck'}                    | ${[]}          | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'cell', data: [1] }}
+			${'invalid move hk TD→deck'}                    | ${[]}          | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'foundation', data: [0] }}
+			${'invalid move 4k 6D→deck'}                    | ${[]}          | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'cascade', data: [3, 0] }}
+			${'invalid move 2k TC-9D-8C→deck'}              | ${[]}          | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'cascade', data: [1, 0] }}
 		`(
 			'$actionText',
 			({ actionText, cards, after, before }: { actionText: string; cards: Card[]; after: CardLocation | undefined; before: CardLocation | undefined }) => {
@@ -137,11 +137,11 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 	// TOOD (techdebt) should we also add these to ACTION_TEXT_EXAMPLES to a supplemental "invalid tweens"
 	describe('other cases', () => {
 		test.each`
-			actionText                     | cards | after                             | before
-			${'invalid undo tween'}        | ${[]} | ${undefined}                      | ${undefined}
-			${'invalid move tableau→deck'} | ${[]} | ${{ fixture: 'deck', data: [0] }} | ${undefined}
-			${'juice flash AH,AS'}         | ${[]} | ${{ fixture: 'cell', data: [0] }} | ${{ fixture: 'cell', data: [0] }}
-			${'juice flash *AS*'}          | ${[]} | ${{ fixture: 'cell', data: [0] }} | ${{ fixture: 'cell', data: [0] }}
+			actionText                     | cards | after                              | before
+			${'invalid undo tween'}        | ${[]} | ${undefined}                       | ${undefined}
+			${'invalid move tableau→deck'} | ${[]} | ${{ fixture: 'deck', data: [99] }} | ${undefined}
+			${'juice flash AH,AS'}         | ${[]} | ${{ fixture: 'cell', data: [0] }}  | ${{ fixture: 'cell', data: [0] }}
+			${'juice flash *AS*'}          | ${[]} | ${{ fixture: 'cell', data: [0] }}  | ${{ fixture: 'cell', data: [0] }}
 		`(
 			'$actionText',
 			({ actionText, cards, after, before }: { actionText: string; cards: Card[]; after: CardLocation | undefined; before: CardLocation | undefined }) => {

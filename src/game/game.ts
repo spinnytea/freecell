@@ -1,3 +1,4 @@
+import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import {
 	Card,
 	CardLocation,
@@ -60,8 +61,8 @@ const DEFAULT_NUMBER_OF_CASCADES = 8;
 const MIN_CELL_COUNT = 1;
 const MAX_CELL_COUNT = 6;
 
-const INIT_CURSOR_LOCATION: CardLocation = { fixture: 'deck', data: [0] };
-const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
+export const INIT_CURSOR_LOCATION: CardLocation = { fixture: 'deck', data: [BOTTOM_OF_CASCADE] };
+export const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 
 interface OptionsNonstandardGameplay {
 	/**
@@ -430,6 +431,7 @@ export class FreeCell {
 				selection.cards.length &&
 				(allowSelectFoundation || this.cursor.fixture !== 'foundation') &&
 				(allowPeekOnly || !selection.peekOnly) &&
+				!(gameFunction === 'recall-or-bury' && this.cursor.fixture === 'deck') &&
 				!selectionNever
 			) {
 				return this.__clone({
@@ -952,7 +954,9 @@ export class FreeCell {
 		const actionText = this.history.at(-1);
 		const after = parseCursorFromPreviousActionText(actionText, this.cards);
 		if (!after) return this;
-		if (!isLocationEqual(after, this.cursor)) return this.setCursor(after);
+		if (!isLocationEqual(this.__clampCursor(after, this.previousAction.gameFunction), this.cursor))
+			// REVIEW (deck) only deck needs to __clampCursor
+			return this.setCursor(after);
 		const before = parseAltCursorFromPreviousActionText(actionText, this.cards, allowEmptyDeck);
 		if (!before) return this;
 		return this.setCursor(before);
@@ -1316,7 +1320,6 @@ export class FreeCell {
 		}
 
 		// add the remaining (unused) cards to the deck
-		// TODO (deal) (deck) (test) (print-parse) double check this order with "initial deal"
 		remaining.forEach((card, idx) => {
 			card.location = { fixture: 'deck', data: [deckLength + idx] };
 		});
@@ -1341,7 +1344,7 @@ export class FreeCell {
 				if (deckLength === 0) {
 					history.push('deal all cards');
 				} else {
-					// FIXME (deck) (test) remaining affects dealtCount
+					// TODO (deck) (test) remaining affects dealtCount
 					const dealtCount = cards.length - deckLength - remaining.length;
 					history.push(`deal ${dealtCount} cards`);
 				}

@@ -262,7 +262,7 @@ export function _collectCardsTillAceToDeck(game: FreeCell): FreeCell {
 	}
 
 	game = _moveCardsToDeck(game, {
-		location: { fixture: 'foundation', data: [0] },
+		location: { fixture: 'foundation', data: [0] }, // this is unused, and it's a bunch of cards across all cascades
 		cards: cardsToMove,
 		peekOnly: true,
 	});
@@ -306,7 +306,7 @@ function _sortAces(a: Card, b: Card) {
 */
 function _moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCell {
 	if (!selection.cards.length) return game;
-	const to: CardLocation = { fixture: 'deck', data: [game.deck.length] };
+	const to: CardLocation = { fixture: 'deck', data: [(game.deck.length || 1) - 1] };
 	const cards = moveCards(game, selection, to);
 	const actionText = 'invalid move tableau→deck';
 	return game.__clone({

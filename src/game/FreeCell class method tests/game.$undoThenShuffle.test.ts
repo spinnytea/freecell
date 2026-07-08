@@ -18,7 +18,7 @@ describe('game.$undoThenShuffle', () => {
 				text: 'init',
 				type: 'init',
 			});
-			expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+			expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
 
 			const undids = game.$undoThenShuffle(2);
 			expect(undids.history).toEqual([]);
@@ -26,7 +26,7 @@ describe('game.$undoThenShuffle', () => {
 				text: 'init',
 				type: 'init',
 			});
-			expect(undids.cursor).toEqual({ fixture: 'deck', data: [0] });
+			expect(undids.cursor).toEqual({ fixture: 'deck', data: [51] });
 			expect(undids).toBe(game);
 		});
 
@@ -37,7 +37,7 @@ describe('game.$undoThenShuffle', () => {
 				text: 'shuffle deck (1)',
 				type: 'shuffle',
 			});
-			expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+			expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
 
 			const undids = game.$undoThenShuffle(2);
 			expect(undids.history).toEqual(['shuffle deck (2)']);
@@ -45,7 +45,7 @@ describe('game.$undoThenShuffle', () => {
 				text: 'shuffle deck (2)',
 				type: 'shuffle',
 			});
-			expect(undids.cursor).toEqual({ fixture: 'deck', data: [0] });
+			expect(undids.cursor).toEqual({ fixture: 'deck', data: [51] });
 		});
 
 		test('shuffle + deal', () => {
@@ -64,7 +64,7 @@ describe('game.$undoThenShuffle', () => {
 				type: 'shuffle',
 				gameFunction: 'undo',
 			});
-			expect(undids.cursor).toEqual({ fixture: 'deck', data: [0] });
+			expect(undids.cursor).toEqual({ fixture: 'deck', data: [51] });
 		});
 
 		test('deal', () => {
@@ -82,7 +82,7 @@ describe('game.$undoThenShuffle', () => {
 				text: 'shuffle deck (2)',
 				type: 'shuffle',
 			});
-			expect(undids.cursor).toEqual({ fixture: 'deck', data: [0] });
+			expect(undids.cursor).toEqual({ fixture: 'deck', data: [51] });
 		});
 
 		test('deal 44 cards', () => {
@@ -92,7 +92,7 @@ describe('game.$undoThenShuffle', () => {
 				text: 'deal 44 cards',
 				type: 'deal',
 			});
-			expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+			expect(game.cursor).toEqual({ fixture: 'deck', data: [7] });
 
 			const undids = game.$undoThenShuffle(2);
 			expect(undids.history).toEqual(['shuffle deck (2)']);
@@ -100,7 +100,7 @@ describe('game.$undoThenShuffle', () => {
 				text: 'shuffle deck (2)',
 				type: 'shuffle',
 			});
-			expect(undids.cursor).toEqual({ fixture: 'deck', data: [0] });
+			expect(undids.cursor).toEqual({ fixture: 'deck', data: [51] });
 		});
 
 		test('first move', () => {
@@ -130,7 +130,7 @@ describe('game.$undoThenShuffle', () => {
 				type: 'shuffle',
 				gameFunction: 'undo',
 			});
-			expect(undids.cursor).toEqual({ fixture: 'deck', data: [0] });
+			expect(undids.cursor).toEqual({ fixture: 'deck', data: [51] });
 
 			// the point is, do not go back to 'init', shuffle instead
 			undids = undids.$undoThenShuffle(2);
@@ -139,7 +139,7 @@ describe('game.$undoThenShuffle', () => {
 				text: 'shuffle deck (2)',
 				type: 'shuffle',
 			});
-			expect(undids.cursor).toEqual({ fixture: 'deck', data: [0] });
+			expect(undids.cursor).toEqual({ fixture: 'deck', data: [51] });
 		});
 	});
 });

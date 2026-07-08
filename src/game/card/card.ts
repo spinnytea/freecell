@@ -540,15 +540,20 @@ export function parseShorthandLocation(p: LocationSH): CardLocation {
 	const location = parseShorthandPile(p as PileSH);
 	switch (location.fixture) {
 		case 'cascade':
-			// if !p[1], then brailleToCount ⇒ 0
+			// p[1] is optional, then brailleToCount ⇒ 0
 			location.data[1] = brailleToCount(p[1]);
 			break;
-		case 'deck':
 		case 'foundation':
+			// p[1] is required, …but brailleToCount ⇒ 0
 			location.data[0] = brailleToCount(p[1]);
 			break;
 		case 'cell':
+			// p[1] is not allowed
 			if (p[1]) throw new Error(`cell should never have coords -- "${p}"`);
+			break;
+		case 'deck':
+			// p[1] is optional, then data[0] ⇐ BOTTOM_OF_CASCADE
+			if (p[1]) location.data[0] = brailleToCount(p[1]);
 			break;
 	}
 	return location;
@@ -588,7 +593,7 @@ export function parseShorthandPile(p: PileSH): CardLocation {
 			// consider using parseShorthandPileForMove instead
 			return { fixture: 'foundation', data: [0] };
 		case 'k':
-			return { fixture: 'deck', data: [0] };
+			return { fixture: 'deck', data: [BOTTOM_OF_CASCADE] };
 		case 'a':
 		case 'b':
 		case 'c':

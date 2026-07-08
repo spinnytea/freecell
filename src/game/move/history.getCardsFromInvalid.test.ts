@@ -26,10 +26,10 @@ describe('game/history.getCardsFromInvalid', () => {
 			${'invalid move 2h TH→AH'}            | ${{ fromShorthands: ['TH'], toShorthands: ['AH'] }}
 			${'invalid move 13 KC-QD-JC→cascade'} | ${{ fromShorthands: ['KC', 'QD', 'JC'], toShorthands: [], pileShorthands: [{ fixture: 'cascade', data: [2, 0] }] }}
 			${'invalid move k1 KH→cascade'}       | ${{ fromShorthands: ['KH'], toShorthands: [], pileShorthands: [{ fixture: 'cascade', data: [0, 0] }] }}
-			${'invalid move bk 6C→deck'}          | ${{ fromShorthands: ['6C'], toShorthands: [], pileShorthands: [{ fixture: 'deck', data: [0] }] }}
-			${'invalid move hk TD→deck'}          | ${{ fromShorthands: ['TD'], toShorthands: [], pileShorthands: [{ fixture: 'deck', data: [0] }] }}
-			${'invalid move 4k 6D→deck'}          | ${{ fromShorthands: ['6D'], toShorthands: [], pileShorthands: [{ fixture: 'deck', data: [0] }] }}
-			${'invalid move 2k TC-9D-8C→deck'}    | ${{ fromShorthands: ['TC', '9D', '8C'], toShorthands: [], pileShorthands: [{ fixture: 'deck', data: [0] }] }}
+			${'invalid move bk 6C→deck'}          | ${{ fromShorthands: ['6C'], toShorthands: [], pileShorthands: [{ fixture: 'deck', data: [99] }] }}
+			${'invalid move hk TD→deck'}          | ${{ fromShorthands: ['TD'], toShorthands: [], pileShorthands: [{ fixture: 'deck', data: [99] }] }}
+			${'invalid move 4k 6D→deck'}          | ${{ fromShorthands: ['6D'], toShorthands: [], pileShorthands: [{ fixture: 'deck', data: [99] }] }}
+			${'invalid move 2k TC-9D-8C→deck'}    | ${{ fromShorthands: ['TC', '9D', '8C'], toShorthands: [], pileShorthands: [{ fixture: 'deck', data: [99] }] }}
 		`('$actionText', ({ actionText, result }: { actionText: string; result: ReturnType<typeof getCardsFromInvalid> }) => {
 			pullActionTextExamples(actionTextExamples, actionText);
 			const previousAction: PreviousAction = {

@@ -128,6 +128,7 @@ describe('game.$toggleCursor', () => {
 			// deal 44 cards keeps the cursor in the deck (after)
 			const gameDealMost = new FreeCell().dealAll({ demo: true, keepDeck: true });
 			expect(gameDealMost.deck.length).toBe(8);
+			expect(gameDealMost.__printDeck()).toBe('>2S 2H 2D 2C AS AH AD AC ');
 
 			expect(gameDealMost.cursor.fixture).toEqual('deck');
 			expect(gameDealMost.$toggleCursor().cursor.fixture).toEqual('deck');
@@ -135,9 +136,9 @@ describe('game.$toggleCursor', () => {
 			expect(gameDealMost.$toggleCursor().$toggleCursor().$toggleCursor().cursor.fixture).toEqual('deck');
 
 			expect(gameDealMost.previousAction.text).toBe('deal 44 cards');
-			expect(gameDealMost.$toggleCursor().previousAction.text).toBe('cursor set k⡀ AC');
-			expect(gameDealMost.$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set k⡀ AC');
-			expect(gameDealMost.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set k⡀ AC');
+			expect(gameDealMost.$toggleCursor().previousAction.text).toBe('cursor set k⡇ 2S');
+			expect(gameDealMost.$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set k⡇ 2S');
+			expect(gameDealMost.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set k⡇ 2S');
 		});
 
 		test('allowEmptyDeck', () => {
@@ -241,58 +242,131 @@ describe('game.$toggleCursor', () => {
 				});
 
 				describe('not empty', () => {
-					test('top', () => {
+					test('first', () => {
 						const game = FreeCell.parse(
 							'' + //
-								'>QC QD QH QS TC|TD|TH TS \n' +
-								' KC       KS JC JD JH JS \n' +
+								'>            TC|TD|TH TS \n' +
+								'             JC JD JH JS \n' +
 								' hand-jammed'
-						).touchByPile('k', { gameFunction: 'recall-or-bury' });
-						expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
+						)
+							.setCursor({ fixture: 'deck', data: [99] })
+							.touch({ gameFunction: 'recall-or-bury' });
+						expect(game.cursor).toEqual({ fixture: 'deck', data: [7] });
 						expect(game.print()).toBe(
 							'' + //
-								' QC QD QH QS TC 9D TH TS \n' +
-								' KC       KS JC JD JH JS \n' +
-								':d>TD KH KD \n' +
-								' invalid move hk TD→deck'
+								'             TC 9D TH TS \n' +
+								'             JC JD JH JS \n' +
+								':d TD>KS KH KD KC QS QH QD QC \n' +
+								' invalid move hk TD→KS'
 						);
 						expect(game.print({ includeHistory: true })).toBe(
 							'' + //
-								' QC QD QH QS TC 9D TH TS \n' +
-								' KC       KS JC JD JH JS \n' +
-								':d TD KH KD \n' +
-								' invalid move h⡁k TD→deck\n' +
+								'             TC 9D TH TS \n' +
+								'             JC JD JH JS \n' +
+								':d TD KS KH KD KC QS QH QD QC \n' +
+								' invalid move h⡁k⡇ TD→KS\n' +
 								' hand-jammed'
 						);
 						expect(game.previousAction).toEqual({
 							type: 'move',
-							text: 'invalid move h⡁k TD→deck',
+							text: 'invalid move h⡁k⡇ TD→KS',
 							gameFunction: 'recall-or-bury',
 						});
 
-						// BUG (cursor) (deck) the cursor is already in the deck, the first toggle should be in the foundation?
-						//  - another quirk because the deck is "reversed"
-						//  - the "top" is the length-1, not 0
-						//  - we can't know where the top is without passing in the whole game
-						//  - i think the best path forward is to reverse the list, or at least just how the index maps onto it?
-						//  - the deck isn't used much so "inefficient" storage probably doesn't matter
-						//  - the "top" allows us to pop/push, but we don't _do_ that in practice
 						expect(game.cursor.fixture).toEqual('deck');
-						expect(game.$toggleCursor().cursor.fixture).toEqual('deck');
-						expect(game.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('foundation');
-						expect(game.$toggleCursor().$toggleCursor().$toggleCursor().cursor.fixture).toEqual('deck');
+						expect(game.$toggleCursor().cursor.fixture).toEqual('foundation');
+						expect(game.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('deck');
+						expect(game.$toggleCursor().$toggleCursor().$toggleCursor().cursor.fixture).toEqual('foundation');
 
-						expect(game.previousAction.text).toBe('invalid move h⡁k TD→deck');
-						expect(game.$toggleCursor().previousAction.text).toEqual('cursor set k⡀ KD');
-						expect(game.$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set h⡁ 9D');
-						expect(game.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set k⡀ KD');
+						expect(game.previousAction.text).toBe('invalid move h⡁k⡇ TD→KS');
+						expect(game.$toggleCursor().previousAction.text).toEqual('cursor set h⡁ 9D');
+						expect(game.$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set k⡇ KS');
+						expect(game.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set h⡁ 9D');
 					});
 
-					test.todo('first');
+					test('middle', () => {
+						const game = FreeCell.parse(
+							'' + //
+								'>            TC|TD|TH TS \n' +
+								'             JC JD JH JS \n' +
+								' hand-jammed'
+						)
+							.setCursor({ fixture: 'deck', data: [3] })
+							.touch({ gameFunction: 'recall-or-bury' });
+						expect(game.cursor).toEqual({ fixture: 'deck', data: [3] });
+						expect(game.print()).toBe(
+							'' + //
+								'             TC 9D TH TS \n' +
+								'             JC JD JH JS \n' +
+								':d KS KH KD KC TD>QS QH QD QC \n' +
+								' invalid move hk TD→QS'
+						);
+						expect(game.print({ includeHistory: true })).toBe(
+							'' + //
+								'             TC 9D TH TS \n' +
+								'             JC JD JH JS \n' +
+								':d KS KH KD KC TD QS QH QD QC \n' +
+								' invalid move h⡁k⡃ TD→QS\n' +
+								' hand-jammed'
+						);
+						expect(game.previousAction).toEqual({
+							type: 'move',
+							text: 'invalid move h⡁k⡃ TD→QS',
+							gameFunction: 'recall-or-bury',
+						});
 
-					test.todo('middle');
+						expect(game.cursor.fixture).toEqual('deck');
+						expect(game.$toggleCursor().cursor.fixture).toEqual('foundation');
+						expect(game.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('deck');
+						expect(game.$toggleCursor().$toggleCursor().$toggleCursor().cursor.fixture).toEqual('foundation');
 
-					test.todo('last');
+						expect(game.previousAction.text).toBe('invalid move h⡁k⡃ TD→QS');
+						expect(game.$toggleCursor().previousAction.text).toEqual('cursor set h⡁ 9D');
+						expect(game.$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set k⡃ QS');
+						expect(game.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set h⡁ 9D');
+					});
+
+					test('last', () => {
+						const game = FreeCell.parse(
+							'' + //
+								'>            TC|TD|TH TS \n' +
+								'             JC JD JH JS \n' +
+								' hand-jammed'
+						)
+							.setCursor({ fixture: 'deck', data: [0] })
+							.touch({ gameFunction: 'recall-or-bury' });
+						expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+						expect(game.print()).toBe(
+							'' + //
+								'             TC 9D TH TS \n' +
+								'             JC JD JH JS \n' +
+								':d KS KH KD KC QS QH QD TD>QC \n' +
+								' invalid move hk TD→QC'
+						);
+						expect(game.print({ includeHistory: true })).toBe(
+							'' + //
+								'             TC 9D TH TS \n' +
+								'             JC JD JH JS \n' +
+								':d KS KH KD KC QS QH QD TD QC \n' +
+								' invalid move h⡁k⡀ TD→QC\n' +
+								' hand-jammed'
+						);
+						expect(game.previousAction).toEqual({
+							type: 'move',
+							text: 'invalid move h⡁k⡀ TD→QC',
+							gameFunction: 'recall-or-bury',
+						});
+
+						expect(game.cursor.fixture).toEqual('deck');
+						expect(game.$toggleCursor().cursor.fixture).toEqual('foundation');
+						expect(game.$toggleCursor().$toggleCursor().cursor.fixture).toEqual('deck');
+						expect(game.$toggleCursor().$toggleCursor().$toggleCursor().cursor.fixture).toEqual('foundation');
+
+						expect(game.previousAction.text).toBe('invalid move h⡁k⡀ TD→QC');
+						expect(game.$toggleCursor().previousAction.text).toEqual('cursor set h⡁ 9D');
+						expect(game.$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set k⡀ QC');
+						expect(game.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toEqual('cursor set h⡁ 9D');
+					});
 				});
 			});
 

@@ -16,7 +16,7 @@ describe('game.parse', () => {
 			'' + //
 				'                         \n' +
 				'                         \n' +
-				':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD>AC \n' +
+				':d>KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
 				' init'
 		);
 		expect(gamePrintHist).toBe(
@@ -39,9 +39,9 @@ describe('game.parse', () => {
 		});
 
 		// confirm intial cursor
-		expect(g.cursor).toEqual({ fixture: 'deck', data: [0] });
-		expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
-		expect(gameHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+		expect(g.cursor).toEqual({ fixture: 'deck', data: [51] });
+		expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
+		expect(gameHist.cursor).toEqual({ fixture: 'deck', data: [51] });
 
 		// this should have been all we needed to check 😬
 		expect(game).toEqual(gameHist);
@@ -212,7 +212,7 @@ describe('game.parse', () => {
 					text: 'init',
 					type: 'init',
 				});
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
 
 				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
 				expect(gameWithHist.history).toEqual([]);
@@ -220,7 +220,7 @@ describe('game.parse', () => {
 					text: 'init',
 					type: 'init',
 				});
-				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [51] });
 				expect(gameWithHist).toEqual(game);
 
 				const gameNoHist = FreeCell.parse(game.print());
@@ -229,7 +229,7 @@ describe('game.parse', () => {
 					text: 'init',
 					type: 'init',
 				});
-				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [51] });
 				expect(gameNoHist).toEqual(game);
 			});
 
@@ -240,7 +240,7 @@ describe('game.parse', () => {
 					text: 'shuffle deck (1)',
 					type: 'shuffle',
 				});
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
 
 				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
 				expect(gameWithHist.history).toEqual(['shuffle deck (1)']);
@@ -248,7 +248,7 @@ describe('game.parse', () => {
 					text: 'shuffle deck (1)',
 					type: 'shuffle',
 				});
-				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [51] });
 				expect(gameWithHist).toEqual(game);
 
 				const gameNoHist = FreeCell.parse(game.print());
@@ -257,7 +257,7 @@ describe('game.parse', () => {
 					text: 'shuffle deck (1)',
 					type: 'shuffle',
 				});
-				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [51] });
 				expect(gameNoHist).toEqual(game);
 			});
 
@@ -325,7 +325,7 @@ describe('game.parse', () => {
 					text: 'deal 44 cards',
 					type: 'deal',
 				});
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [7] });
 
 				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
 				expect(gameWithHist.history).toEqual(['deal 44 cards']);
@@ -333,7 +333,7 @@ describe('game.parse', () => {
 					text: 'deal 44 cards',
 					type: 'deal',
 				});
-				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [7] });
 				expect(gameWithHist).toEqual(game);
 
 				const gameNoHist = FreeCell.parse(game.print());
@@ -342,7 +342,7 @@ describe('game.parse', () => {
 					text: 'deal 44 cards',
 					type: 'deal',
 				});
-				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [7] });
 				expect(gameNoHist).toEqual(game);
 			});
 

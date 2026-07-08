@@ -64,12 +64,11 @@ describe('game', () => {
 			suit: 'spades',
 			location: { fixture: 'deck', data: [51] },
 		});
-		// REVIEW (deck) better cursor position on KS? - BOTTOM_OF_CASCADE ?
 		expect(game.print()).toBe(
 			'' + //
 				'                         \n' +
 				'                         \n' +
-				':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD>AC \n' +
+				':d>KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
 				' init'
 		);
 	});
@@ -472,7 +471,7 @@ describe('game', () => {
 		describe('update cursor', () => {
 			test('standard', () => {
 				let game = new FreeCell();
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
 				game = game.dealAll();
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(game.deck.length).toBe(0);
@@ -480,7 +479,7 @@ describe('game', () => {
 
 			test('demo', () => {
 				let game = new FreeCell();
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
 				game = game.dealAll({ demo: true });
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(game.deck.length).toBe(0);
@@ -753,7 +752,7 @@ describe('game', () => {
 				'' + //
 					'                   \n' +
 					'                         \n' +
-					':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD>AC \n' +
+					':d>KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
 					' init'
 			);
 			expect(game.cells.length).toBe(2);

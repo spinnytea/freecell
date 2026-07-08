@@ -1204,7 +1204,7 @@ FreeCell {
   ],
   "cursor": {
     "data": [
-      0,
+      51,
     ],
     "fixture": "deck",
   },

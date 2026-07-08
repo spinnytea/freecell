@@ -753,17 +753,20 @@ describe('game.touch', () => {
 					text: 'invalid move k⡀h⡁ AC→foundation',
 					type: 'invalid',
 				});
+				expect(blocked.deck.length).toBe(52);
 
 				// empty
 				let recalled = game.touch({ gameFunction: 'recall-or-bury' });
-				// BUG (4-priority) (recall-or-bury) weird extra space at the end of the deck
+				// BUG (4-priority) (deck) (recall-or-bury) there is a gap in the deck
 				//  - maybe the card wasn't removed properly
 				//  - do we need to shift the rest of the cards?
+				expect(recalled.deck[0]).toBe(undefined); // BUG (4-priority) (deck) (recall-or-bury) AD
+				expect(blocked.deck.length).toBe(52); // BUG (4-priority) (deck) (recall-or-bury) 51
 				expect(recalled.print()).toBe(
 					'' +
 						'               >AC       \n' +
 						'                         \n' +
-						':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD  \n' +
+						':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD    \n' +
 						' invalid move kh AC→foundation'
 				);
 				expect(recalled.previousAction).toEqual({
@@ -774,14 +777,17 @@ describe('game.touch', () => {
 
 				// not empty
 				recalled = recalled.$selectCard('2C').touchByPile('h', { gameFunction: 'recall-or-bury' });
-				// BUG (4-priority) (recall-or-bury) weird extra space in the middle of the deck
+				// BUG (4-priority) (deck) (recall-or-bury) there are two gaps in the deck
 				//  - maybe the card wasn't removed properly
 				//  - do we need to shift the rest of the cards?
+				expect(recalled.deck[0]).toBe(undefined); // BUG (4-priority) (deck) (recall-or-bury) AD
+				expect(recalled.deck[4]).toBe(undefined); // BUG (4-priority) (deck) (recall-or-bury) 2H
+				expect(blocked.deck.length).toBe(52); // BUG (4-priority) (deck) (recall-or-bury) 50
 				expect(recalled.print()).toBe(
 					'' +
 						'               >2C       \n' +
 						'                         \n' +
-						':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D  AS AH AD  \n' +
+						':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D    AS AH AD    \n' +
 						' invalid move kh 2C→AC'
 				);
 				expect(recalled.previousAction).toEqual({
@@ -1512,7 +1518,7 @@ describe('game.touch', () => {
 									' TD 7S JD 7H 8H JH JC 7D \n' +
 									' 5S QH 8C 9D KS QD 4H AC \n' +
 									' 2H TC TH                \n' +
-									':d 6H>6D 6C QC JS 9S AD 7C TS \n' +
+									':d 6D>6H 6C QC JS 9S AD 7C TS \n' +
 									' invalid move 4k 6D→6H'
 							);
 							expect(burried.print({ includeHistory: true })).toBe(
@@ -1524,7 +1530,7 @@ describe('game.touch', () => {
 									' TD 7S JD 7H 8H JH JC 7D \n' +
 									' 5S QH 8C 9D KS QD 4H AC \n' +
 									' 2H TC TH                \n' +
-									':d 6H 6D 6C QC JS 9S AD 7C TS \n' +
+									':d 6D 6H 6C QC JS 9S AD 7C TS \n' +
 									' invalid move 4⡅k⡇ 6D→6H\n' +
 									' deal 44 cards\n' +
 									' shuffle deck (5)'
@@ -1561,7 +1567,7 @@ describe('game.touch', () => {
 									' TD 7S JD 7H 8H JH JC 7D \n' +
 									' 5S QH 8C 9D KS QD 4H AC \n' +
 									' 2H TC TH                \n' +
-									':d 6H 6C QC JS 9S>6D AD 7C TS \n' +
+									':d 6H 6C QC JS 6D>9S AD 7C TS \n' +
 									' invalid move 4k 6D→9S'
 							);
 							expect(burried.print({ includeHistory: true })).toBe(
@@ -1573,7 +1579,7 @@ describe('game.touch', () => {
 									' TD 7S JD 7H 8H JH JC 7D \n' +
 									' 5S QH 8C 9D KS QD 4H AC \n' +
 									' 2H TC TH                \n' +
-									':d 6H 6C QC JS 9S 6D AD 7C TS \n' +
+									':d 6H 6C QC JS 6D 9S AD 7C TS \n' +
 									' invalid move 4⡅k⡃ 6D→9S\n' +
 									' deal 44 cards\n' +
 									' shuffle deck (5)'
@@ -1610,7 +1616,7 @@ describe('game.touch', () => {
 									' TD 7S JD 7H 8H JH JC 7D \n' +
 									' 5S QH 8C 9D KS QD 4H AC \n' +
 									' 2H TC TH                \n' +
-									':d 6H 6C QC JS 9S AD 7C TS>6D \n' +
+									':d 6H 6C QC JS 9S AD 7C 6D>TS \n' +
 									' invalid move 4k 6D→TS'
 							);
 							expect(burried.print({ includeHistory: true })).toBe(
@@ -1622,7 +1628,7 @@ describe('game.touch', () => {
 									' TD 7S JD 7H 8H JH JC 7D \n' +
 									' 5S QH 8C 9D KS QD 4H AC \n' +
 									' 2H TC TH                \n' +
-									':d 6H 6C QC JS 9S AD 7C TS 6D \n' +
+									':d 6H 6C QC JS 9S AD 7C 6D TS \n' +
 									' invalid move 4⡅k⡀ 6D→TS\n' +
 									' deal 44 cards\n' +
 									' shuffle deck (5)'
@@ -2102,6 +2108,22 @@ describe('game.touch', () => {
 								' invalid move 2⡀k TC-9D-8C→deck\n' +
 								' hand-jammed'
 						);
+
+						// bonus: verify we deal them out in the order we would expect
+						//  - 8C was the bottom card in the cascade, the one we have to move first, so it's the first one that puts in the deck
+						//  - TC was the top of the cascade, so it gets put onto the deck last
+						//  - the deck is a stack, we deal from the top
+						//  - TC is first one out of the deck, then 9D, the 8C
+						expect(game.dealAll().print({ includeHistory: true })).toBe(
+							'' + //
+								'             7C 8D TH KS \n' +
+								' TC 9D 8C KD JH 9C QD KH \n' +
+								'          QC       JC KC \n' +
+								'          JD       TD QH \n' +
+								' deal all cards\n' +
+								' invalid move 2⡀k TC-9D-8C→deck\n' +
+								' hand-jammed'
+						);
 					});
 
 					describe('not empty', () => {
@@ -2117,6 +2139,7 @@ describe('game.touch', () => {
 								.setCursor({ fixture: 'deck', data: [7] }, { gameFunction: 'recall-or-bury' })
 								.touch({ gameFunction: 'recall-or-bury' });
 							expect(game.__printDeck()).toBe(' TC 9D>8C KH KC QH QD JC TD 9C ');
+							expect(game.deck.length).toBe(10);
 							expect(game.print()).toBe(
 								'' + //
 									'             7C 8D TH KS \n' +
@@ -2149,16 +2172,15 @@ describe('game.touch', () => {
 							)
 								.setCursor({ fixture: 'deck', data: [6] })
 								.touch({ gameFunction: 'recall-or-bury' });
-							// XXX (deck) move cursor, parseCursorFromPreviousActionText, etc
-							//  - cursor should be on TC still
-							expect(game.__printDeck()).toBe(' KH TC 9D>8C KC QH QD JC TD 9C ');
+							expect(game.__printDeck()).toBe(' TC 9D 8C>KH KC QH QD JC TD 9C ');
+							expect(game.deck.length).toBe(10);
 							expect(game.print()).toBe(
 								'' + //
 									'             7C 8D TH KS \n' +
 									'          KD JH          \n' +
 									'          QC             \n' +
 									'          JD             \n' +
-									':d KH TC 9D>8C KC QH QD JC TD 9C \n' +
+									':d TC 9D 8C>KH KC QH QD JC TD 9C \n' +
 									' invalid move 2k TC-9D-8C→KH'
 							);
 							expect(game.print({ includeHistory: true })).toBe(
@@ -2167,7 +2189,7 @@ describe('game.touch', () => {
 									'          KD JH          \n' +
 									'          QC             \n' +
 									'          JD             \n' +
-									':d KH TC 9D 8C KC QH QD JC TD 9C \n' +
+									':d TC 9D 8C KH KC QH QD JC TD 9C \n' +
 									' invalid move 2⡀k⡆ TC-9D-8C→KH\n' +
 									' hand-jammed'
 							);
@@ -2184,14 +2206,15 @@ describe('game.touch', () => {
 							)
 								.setCursor({ fixture: 'deck', data: [2] })
 								.touch({ gameFunction: 'recall-or-bury' });
-							expect(game.__printDeck()).toBe(' KH KC QH QD JC TC 9D>8C TD 9C ');
+							expect(game.__printDeck()).toBe(' KH KC QH QD TC 9D 8C>JC TD 9C ');
+							expect(game.deck.length).toBe(10);
 							expect(game.print()).toBe(
 								'' + //
 									'             7C 8D TH KS \n' +
 									'          KD JH          \n' +
 									'          QC             \n' +
 									'          JD             \n' +
-									':d KH KC QH QD JC TC 9D>8C TD 9C \n' +
+									':d KH KC QH QD TC 9D 8C>JC TD 9C \n' +
 									' invalid move 2k TC-9D-8C→JC'
 							);
 							expect(game.print({ includeHistory: true })).toBe(
@@ -2200,7 +2223,7 @@ describe('game.touch', () => {
 									'          KD JH          \n' +
 									'          QC             \n' +
 									'          JD             \n' +
-									':d KH KC QH QD JC TC 9D 8C TD 9C \n' +
+									':d KH KC QH QD TC 9D 8C JC TD 9C \n' +
 									' invalid move 2⡀k⡂ TC-9D-8C→JC\n' +
 									' hand-jammed'
 							);
@@ -2217,14 +2240,15 @@ describe('game.touch', () => {
 							)
 								.setCursor({ fixture: 'deck', data: [0] })
 								.touch({ gameFunction: 'recall-or-bury' });
-							expect(game.__printDeck()).toBe(' KH KC QH QD JC TD 9C TC 9D>8C ');
+							expect(game.__printDeck()).toBe(' KH KC QH QD JC TD TC 9D 8C>9C ');
+							expect(game.deck.length).toBe(10);
 							expect(game.print()).toBe(
 								'' + //
 									'             7C 8D TH KS \n' +
 									'          KD JH          \n' +
 									'          QC             \n' +
 									'          JD             \n' +
-									':d KH KC QH QD JC TD 9C TC 9D>8C \n' +
+									':d KH KC QH QD JC TD TC 9D 8C>9C \n' +
 									' invalid move 2k TC-9D-8C→9C'
 							);
 							expect(game.print({ includeHistory: true })).toBe(
@@ -2233,7 +2257,7 @@ describe('game.touch', () => {
 									'          KD JH          \n' +
 									'          QC             \n' +
 									'          JD             \n' +
-									':d KH KC QH QD JC TD 9C TC 9D 8C \n' +
+									':d KH KC QH QD JC TD TC 9D 8C 9C \n' +
 									' invalid move 2⡀k⡀ TC-9D-8C→9C\n' +
 									' hand-jammed'
 							);
