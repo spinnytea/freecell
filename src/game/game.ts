@@ -242,8 +242,7 @@ export class FreeCell {
 				throw new Error(`Cannot have more then 10 cascades; requested "${cascadeCount}".`);
 
 			this.cards = initializeDeckOfCards();
-			// REVIEW (deck) sort?
-			this.deck = [...this.cards].sort((a, b) => a.location.data[0] - b.location.data[0]);
+			this.deck = [...this.cards];
 
 			this.win = false;
 		}
@@ -878,11 +877,6 @@ export class FreeCell {
 			if (!game.deck.length) {
 				game.cursor = DEFAULT_CURSOR_LOCATION;
 			} else {
-				// FIXME (deck) cards have moved, update the coords
-				// game.deck.forEach((card, idx) => {
-				// 	card.location = { fixture: 'deck', data: [idx] };
-				// });
-
 				const nextD0 = Math.max(0, Math.min(this.cursor.data[0] - dealtCount, game.deck.length));
 				game.cursor = { fixture: 'deck', data: [nextD0] };
 			}
@@ -1347,8 +1341,9 @@ export class FreeCell {
 				if (deckLength === 0) {
 					history.push('deal all cards');
 				} else {
-					// TODO (deck) do the basic math
-					history.push('deal 44 cards');
+					// FIXME (deck) (test) remaining affects dealtCount
+					const dealtCount = cards.length - deckLength - remaining.length;
+					history.push(`deal ${dealtCount} cards`);
 				}
 			}
 		} else if (popped.startsWith(':h')) {

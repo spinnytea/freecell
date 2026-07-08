@@ -918,7 +918,6 @@ export function parseShorthandPileForSelect(game: FreeCell, pileSh: PileSH): Car
 			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
 			// top card in deck
-			// TODO (deck) (test) should this change?
 			from_location.data[0] = game.deck.length - 1;
 			break;
 		case 'cell':

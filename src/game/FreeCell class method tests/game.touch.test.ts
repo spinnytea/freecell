@@ -2151,7 +2151,6 @@ describe('game.touch', () => {
 								.touch({ gameFunction: 'recall-or-bury' });
 							// XXX (deck) move cursor, parseCursorFromPreviousActionText, etc
 							//  - cursor should be on TC still
-							//  - but this is non-standard gameplay so whatever
 							expect(game.__printDeck()).toBe(' KH TC 9D>8C KC QH QD JC TD 9C ');
 							expect(game.print()).toBe(
 								'' + //
