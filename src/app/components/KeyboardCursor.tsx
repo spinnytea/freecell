@@ -8,8 +8,8 @@ import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSiz
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 
 /**
-	REVIEW (techdebt) (hud) styles and icon →, ➡
-	TODO (animation) animate cursor on select/deselect
+	- REVIEW (techdebt) (hud) styles and icon →, ➡
+	- TODO (animation) animate cursor on select/deselect
 */
 export function KeyboardCursor() {
 	const cursorRef = useRef<HTMLDivElement | null>(null);

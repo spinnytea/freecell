@@ -3,14 +3,14 @@ import { countToBraille } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 
 /*
-	XXX (techdebt) more unit testing
-	 - try to move the tests elsewhere:
-	   - standard moves: `game.touch.test.ts`
-	     - already has from each ⨉ to each
-	     - it may have just omitted some
-	   - special edge case testing: `move.parseShorthandMove.test.ts`
-	 - if it doesn't make sense to move it there, test here anyways
-	 - what we want in this file is a test for: Pile ⨉ Pile
+	- XXX (techdebt) more unit testing
+	   - try to move the tests elsewhere:
+	      - standard moves: `game.touch.test.ts`
+	         - already has from each ⨉ to each
+	         - it may have just omitted some
+	      - special edge case testing: `move.parseShorthandMove.test.ts`
+	   - if it doesn't make sense to move it there, test here anyways
+	   - what we want in this file is a test for: Pile ⨉ Pile
 */
 describe('game.moveByShorthand', () => {
 	describe('from each pile', () => {

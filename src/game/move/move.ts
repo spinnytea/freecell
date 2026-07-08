@@ -33,7 +33,7 @@ import { _parseShorthandMove, PreviousActionType } from '@/game/move/history';
 	---
 
 	- TODO (techdebt) remove `foundation` from MoveSourceType or add `deck` to MoveDestinationType
-	  - now that it's more advanced, `GameFunction` seems like a much better way to handle foundation→any
+	   - now that it's more advanced, `GameFunction` seems like a much better way to handle foundation→any
 	- TODO (techdebt) remove `deck` from MoveSourceType?
 
 	Moving cards to the deck isn't a standard move.
@@ -55,13 +55,13 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 	higher priorities take precidence
 
 	- TODO (controls) (settings) multiple MoveDestinationTypePriorities
-	  - grow cascades vs empty cascades
-	  - these priorities favor "growing cascades", my preference
-	  - another play enjoys "getting the cards off the board"
-	  - make another set of MoveDestinationTypePriorities with a different goal in mind
-	  - e.g. "empty cascades" would favor
-	    - cell → foundation
-	    - cascade:single → foundation
+	   - grow cascades vs empty cascades
+	   - these priorities favor "growing cascades", my preference
+	   - another play enjoys "getting the cards off the board"
+	   - make another set of MoveDestinationTypePriorities with a different goal in mind
+	   - e.g. "empty cascades" would favor
+	      - cell → foundation
+	      - cascade:single → foundation
 	- IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
 */
 export const MoveDestinationTypePriorities: {
@@ -393,8 +393,8 @@ export function findAvailableMoves(
 /**
 	update the AvailableMove priority (in place)
 
-	REVIEW (controls) cycle (cell, cascade:empty) as one group?
-	 - a->b->c->d -> 1->2->5->8 -> a->b->c->d
+	- REVIEW (controls) cycle (cell, cascade:empty) as one group?
+	   - a->b->c->d -> 1->2->5->8 -> a->b->c->d
 */
 function prioritizeAvailableMoves(
 	game: FreeCell,

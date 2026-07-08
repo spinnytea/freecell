@@ -67,9 +67,9 @@ export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
 ]);
 
 /**
-	REVIEW (techdebt) (animation) is newGame even valid?
-	 - then it'll just be, like, a new game
-	 - should we have a special animation for this?
+	- REVIEW (techdebt) (animation) is newGame even valid?
+	   - then it'll just be, like, a new game
+	   - should we have a special animation for this?
 */
 export type GameFunction =
 	// user actions
@@ -106,13 +106,13 @@ export interface PreviousAction {
 
 		this is out-of-scope of a standard {@link FreeCell}, but his is the best time to calc and store it
 
-		TODO (techdebt) (combine-move-auto-foundation) currently only used for move-foundation
-		- maybe we should rename this variable?
-		- maybe we can always list "this are the cards that moved during this action"
-		  'move-foundation' has 2 sets of moves, what then?
+		- TODO (techdebt) (combine-move-auto-foundation) currently only used for move-foundation
+		   - maybe we should rename this variable?
+		   - maybe we can always list "this are the cards that moved during this action" \
+		     'move-foundation' has 2 sets of moves, what then?
 
-		TODO (techdebt) (settings) add an option to skip this calculation
-		- for non-animated interfaces
+		- TODO (techdebt) (settings) add an option to skip this calculation
+		   - for non-animated interfaces
 
 		@see {@link getCardsThatMoved}
 	*/

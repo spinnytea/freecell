@@ -65,8 +65,7 @@ const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 
 interface OptionsNonstandardGameplay {
 	/**
-		@deprecated
-		XXX (techdebt) this is just to get unit tests passing, we should have examples that do not need this
+		@deprecated XXX (techdebt) this is just to get unit tests passing, we should have examples that do not need this
 	*/
 	autoFoundation?: boolean;
 
@@ -77,9 +76,9 @@ interface OptionsNonstandardGameplay {
 		But as this whole implementation excercise goes, "why not?"
 		For now it's locked behind a hidden feature flag (debug/testing flag).
 
-		TODO (controls) (gameplay) select ACES in foundation to move to empty ones
-		 - so like, we can select an ACE in the foundation, but no other card
-		 - if we do select one, then the only availableMoves are other empty foundations
+		- TODO (controls) (gameplay) select ACES in foundation to move to empty ones
+		  - so like, we can select an ACE in the foundation, but no other card
+		  - if we do select one, then the only availableMoves are other empty foundations
 
 		@deprecated this is just for… for testing, yeah that's it
 		 - or maybe to rearrange foundations
@@ -91,10 +90,10 @@ interface OptionsNonstandardGameplay {
 		this isn't something I ever wanted to enable (peeking at cards is fun),
 		but drag-and-drop is a nightmare and is making bugs.
 
-		XXX (dragndrop-bugs) (settings) I really like the idea of this, but it was disabled in standard implementations ¿for a reason?
-		 - it's disabled in my game because of (drag-and-drop)
-		 - so if we can figure out how to get this to work, then we can make a setting for it
-		 - I don't know why I'm asking for so much trouble (bugs and features and complexity oh my)
+		- XXX (dragndrop-bugs) (settings) I really like the idea of this, but it was disabled in standard implementations ¿for a reason?
+		   - it's disabled in my game because of (drag-and-drop)
+		   - so if we can figure out how to get this to work, then we can make a setting for it
+		   - I don't know why I'm asking for so much trouble (bugs and features and complexity oh my)
 	*/
 	allowPeekOnly?: boolean;
 
@@ -117,8 +116,7 @@ interface OptionsNonstandardGameplay {
 	stopWithInvalid?: boolean;
 
 	/**
-	 	@deprecated
-		XXX (techdebt) this is just to get unit tests passing, and maintain this flow until we have settings
+	 	@deprecated XXX (techdebt) this is just to get unit tests passing, and maintain this flow until we have settings
 	*/
 	autoMove?: boolean;
 
@@ -607,8 +605,8 @@ export class FreeCell {
 		but it's inherrent to the standard gameplay move notation.
 		Now this is called automatically after moves.
 
-		REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
-		 - historyIsInvalidAtIdx?
+		- REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
+		   - historyIsInvalidAtIdx?
 	*/
 	autoFoundationAll({
 		limit = 'opp+1',
@@ -652,11 +650,11 @@ export class FreeCell {
 
 		this is the cornerstone for click-to-move
 
-		IDEA (controls) compare how often this aligns with saved gameplay
-		 - note that it will never be perfect
-		 - we can move however we want in games (with keyboard, drag and drop)
-		 - and we will notably move in ways counter to the autoMove (that's their whole point)
-		 - but it'd be interesting to compare, i guess its, my move preferences to, i guess, this one piece of documentation
+		- IDEA (controls) compare how often this aligns with saved gameplay
+		   - note that it will never be perfect
+		   - we can move however we want in games (with keyboard, drag and drop)
+		   - and we will notably move in ways counter to the autoMove (that's their whole point)
+		   - but it'd be interesting to compare, i guess its, my move preferences to, i guess, this one piece of documentation
 
 		@example
 			game.setCursor(loc).touch().autoMove();
@@ -775,7 +773,7 @@ export class FreeCell {
 		These deals are numbered from 1 to 32000.
 
 		- TODO (controls) (gameplay) add some kind of shortcut to can-flourish52 seeds
-		  - e.g. if we shuffle N times in a row, then pick a random seed from the list
+		   - e.g. if we shuffle N times in a row, then pick a random seed from the list
 		- XXX (techdebt) rename to shuffle32k, including actionText and print history
 		- XXX (motivation) more shuffle options bcuz why not
 
@@ -1083,7 +1081,7 @@ export class FreeCell {
 		print the deck (row) of the game \
 		split out logic from {@link FreeCell.print}
 
-		TODO (refactor) remove - used in lots of tests
+		- TODO (refactor) remove - used in lots of tests
 		@see {@link printDeck}
 	*/
 	__printDeck(cursor = this.cursor, selection = this.selection): string {
@@ -1094,7 +1092,7 @@ export class FreeCell {
 		print the history of the game \
 		split out logic from {@link FreeCell.print}
 
-		TODO (refactor) remove - used in lots of tests
+		- TODO (refactor) remove - used in lots of tests
 		@see {@link printHistory}
 	*/
 	__printHistory(skipLastHist = false): string {
@@ -1167,7 +1165,7 @@ export class FreeCell {
 		must be a valid output of game.print(), there isn't much error correction/detection
 		i.e. must `game.print() === FreeCell.parse(game.print()).print()`
 
-		XXX (techdebt) remove invalidFoundations and deal demo
+		- XXX (techdebt) remove invalidFoundations and deal demo
 	*/
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		if (!print) throw new Error('No game string provided.');

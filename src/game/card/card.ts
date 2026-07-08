@@ -45,7 +45,7 @@ export const isAdjacent = ({ min, max }: { min: Rank; max: Rank }) =>
 /**
 	rank shorthand + suit shorthand, aka `rs`
 
-	XXX (techdebt) use type CardSH everywhere it makes sense
+	- XXX (techdebt) use type CardSH everywhere it makes sense
 
 	@example 'KH'
 	@example 'AS'
@@ -102,11 +102,11 @@ export interface CardLocation {
 /** REVIEW (coords) (types) why do we even have `Coord`, instead of just `string`? */
 export type Coord = string & { length: 1 };
 /**
-	REVIEW (coords) (types) why do we even have `LocationSH`, instead of just `string`?
-	 - why not simply use `${PileSH}${string}`, but then we have {@linkcode Coord}
-	 - how far do we have to go down this type rabbit hole, when does the utility end?
-	 - {@linkcode PileSH} _is_ useful
-	 - even as written, it's imprecise
+	- REVIEW (coords) (types) why do we even have `LocationSH`, instead of just `string`?
+	   - why not simply use `${PileSH}${string}`, but then we have {@linkcode Coord}
+	   - how far do we have to go down this type rabbit hole, when does the utility end?
+	   - {@linkcode PileSH} _is_ useful
+	   - even as written, it's imprecise
 */
 export type LocationSH = PileSH | `${PileSH}${Coord}`;
 
@@ -207,9 +207,9 @@ export function sortCardsOG(game: FreeCell, cards: Card[]): void {
 	and then assigns d0 to all of them
 	(this is meant to be used _as a_ game.deck)
 
-	TODO (techdebt) (motivation) (flourish-anim) (optimize) do not shuffle in place, produce a new state
-	 - basically, we should do another game.__clone
-	 - or maybe, since this is only used by juice, we should move it there for now
+	- TODO (techdebt) (motivation) (flourish-anim) (optimize) do not shuffle in place, produce a new state
+	   - basically, we should do another game.__clone
+	   - or maybe, since this is only used by juice, we should move it there for now
 */
 export function sortCardsBySuitAndRank(deck: Card[]): void {
 	deck.sort((a, b) => {

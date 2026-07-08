@@ -32,9 +32,9 @@ export const CARD_FACE_CUTOFF = 60;
 
 	`click-to-select` and `click-to-move` don't really make sense together; if both present, click-to-move takes precidence
 
-	TODO (controls) (hud) put current controls/cheetsheet on screen
-		- when using arrows, show arrows/space/enter/esc
-		- when using hotkeys, show abcdefh1234567890
+	- TODO (controls) (hud) put current controls/cheetsheet on screen
+	   - when using arrows, show arrows/space/enter/esc
+	   - when using hotkeys, show abcdefh1234567890
 */
 export enum ControlSchemes {
 	/**
@@ -50,7 +50,7 @@ export enum ControlSchemes {
 	Hotkeys = 'keyboard hotkeys',
 
 	/*
-		IDEA (animation) (flash-rank) (hud) set flashCards to all cards of a rank (e.g. all 8s)
+		- IDEA (animation) (flash-rank) (hud) set flashCards to all cards of a rank (e.g. all 8s)
 
 		The biggest problem is HHHoowwoowwwWWa do we do the controls
 		 - touch = wheel select?
@@ -120,10 +120,10 @@ export enum ControlSchemes {
 	   e.g. w/o a selection, only move the cursor to other cards
 	   e.g. w/ a selection, only move the cursor to valid moves
 
-	TODO (animation) (controls) use or remove - not sure what the point of this is
-	 - when I glace at this: waste of time, extra work
-	 - when I read the options: much potential for animations, validation, eeggs
-	 - we can make a list for each {@link ControlSchemes} for meta/validation
+	- TODO (animation) (controls) use or remove - not sure what the point of this is
+	   - when I glace at this: waste of time, extra work
+	   - when I read the options: much potential for animations, validation, eeggs
+	   - we can make a list for each {@link ControlSchemes} for meta/validation
 */
 export type GameplayMetaInteractions =
 	| 'move cursor w/o selection'

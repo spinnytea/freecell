@@ -15,7 +15,7 @@ import { calcCardId, calcPilemarkerId } from '@/game/card/card';
 
 /**
 	- TODO (animation) (drag-and-drop) if the cascade is too long, the last cards should overshoot and reverse
-	  - add a little whimsy
+	   - add a little whimsy
 
 	@example
 	// a game with a long drag sequence
@@ -52,11 +52,11 @@ export function animDragSequence({
 
 	Magic numbers (`a * (i+b)^y - c`)
 	- `b` move down the curve a bit
-	  - log2(0) = -Infinity
-	  - log2(1) = 0
-	  - log2(2) = 1
-	  - log2(3) = is a good place to start
-	  - log2(4) = is where I think it maybe should be, but 3 makes c to simple?
+	   - log2(0) = -Infinity
+	   - log2(1) = 0
+	   - log2(2) = 1
+	   - log2(3) = is a good place to start
+	   - log2(4) = is where I think it maybe should be, but 3 makes c to simple?
 	- `a` after selecting the curve, just feels right
 	- `minusC` is computed in a unit test
 */

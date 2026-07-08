@@ -29,7 +29,7 @@ export const FLASH_ROTATION_ANGLE = -5;
 
 /**
 	we want the same† reset animation for animDragSequenceClear and animUpdatedCardPositions
-	REVIEW (drag-and-drop) but they need to be separate implementations
+	- REVIEW (drag-and-drop) but they need to be separate implementations
 
 	we want the drag action to be a bit snappier, so we want to reduce the overall time
 */

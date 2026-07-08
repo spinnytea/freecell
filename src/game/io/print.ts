@@ -13,7 +13,7 @@ import { parseMovesFromHistory } from '@/game/move/history';
 	print the home row of the game board \
 	split out logic from {@link FreeCell.print}
 
-	XXX (techdebt) optimize
+	- XXX (techdebt) optimize
 */
 export function printHome(
 	game: FreeCell,
@@ -81,7 +81,7 @@ export function printHome(
 	print the tableau of the game board \
 	split out logic from {@link FreeCell.print}
 
-	XXX (refactor) remove
+	- XXX (refactor) remove
 	@see {@link printTableau}
 */
 export function printTableau(
@@ -129,7 +129,7 @@ export function printTableau(
 	print the win message, if applicable \
 	split out logic from {@link FreeCell.print}
 
-	REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
+	- REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
 */
 export function printWin(game: FreeCell): string {
 	if (game.win) {
@@ -164,7 +164,7 @@ export function printWin(game: FreeCell): string {
 	print the deck (row) of the game \
 	split out logic from {@link FreeCell.print}
 
-	XXX (techdebt) optimize
+	- XXX (techdebt) optimize
 */
 export function printDeck(
 	game: FreeCell,

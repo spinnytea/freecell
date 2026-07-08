@@ -4,16 +4,16 @@ import { FreeCell } from '@/game/game';
 import { PreviousAction } from '@/game/move/history';
 
 /*
-	XXX (techdebt) more unit testing
-	 - try to move the tests elsewhere:
-	   - standard moves: `game.touch.test.ts`
-	     - already has from each ⨉ to each
-	     - it may have just omitted some
-	   - special edge case testing: `move.parseShorthandMove.test.ts`
-	 - if it doesn't make sense to move it there, test here anyways
-	 - afterall, this does have some situations you can't simply "touch" your way into
-	 - what we want in this file is a test for: "from any conceivable start pile/location" to "any given pile/location"
-	 - this will make it easier to test a bunch more "invalid scenarios" more than anything
+	- XXX (techdebt) more unit testing
+	   - try to move the tests elsewhere:
+	      - standard moves: `game.touch.test.ts`
+	         - already has from each ⨉ to each
+	         - it may have just omitted some
+	      - special edge case testing: `move.parseShorthandMove.test.ts`
+	   - if it doesn't make sense to move it there, test here anyways
+	   - afterall, this does have some situations you can't simply "touch" your way into
+	   - what we want in this file is a test for: "from any conceivable start pile/location" to "any given pile/location"
+	   - this will make it easier to test a bunch more "invalid scenarios" more than anything
 */
 describe('game.$moveCardToPile', () => {
 	test('spot some concerns', () => {

@@ -377,15 +377,15 @@ describe('useCardPositionAnimations', () => {
 			/**
 				should we animate the AS dip to "deselect" (un peek) with tweenCards
 
-				REVIEW (techdebt) (animation) refactor tweenCards?
-				 - the more i review these animations the more i think:
-				 - replace tweenCards the _entire_ FreeCell game state
-				 - do the animation to the tweenGame
-				 - then do the animation to the final game
-				---
-				 - does that even work in this case since the deselect is masked?
-				 - yeah, because we don't need a 3 stage animation
-				 - we just want to animate everything to the "final resting state" _and then_ the auto-foundation
+				- REVIEW (techdebt) (animation) refactor tweenCards?
+				   - the more i review these animations the more i think:
+				   - replace tweenCards the _entire_ FreeCell game state
+				   - do the animation to the tweenGame
+				   - then do the animation to the final game
+				  ---
+				   - does that even work in this case since the deselect is masked?
+				   - yeah, because we don't need a 3 stage animation
+				   - we just want to animate everything to the "final resting state" _and then_ the auto-foundation
 			*/
 			test('selection goes to foundation', () => {
 				const gameStateOne = FreeCell.parse(

@@ -19,7 +19,7 @@ function ignoreTarget(target: EventTarget | null): boolean {
 }
 
 /**
-	REVIEW (techdebt) (controls) "integration" test
+	- REVIEW (techdebt) (controls) "integration" test
 */
 export function useKeybaordMiscControls() {
 	const [, setGame, newGame] = useContext(GameContext);

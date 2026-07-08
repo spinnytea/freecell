@@ -268,9 +268,9 @@ describe('game.autoMove', () => {
 			});
 
 			/**
-				TODO (joker) cascade:sequence cycle
-					- there can only be 1 or 2 options in normal play
-					- jokers:wild and jokers:high allow more options
+				- TODO (joker) cascade:sequence cycle
+				   - there can only be 1 or 2 options in normal play
+				   - jokers:wild and jokers:high allow more options
 			*/
 			test.todo('cycles through cascade:sequence with jokers');
 
@@ -569,9 +569,9 @@ describe('game.autoMove', () => {
 			});
 
 			/**
-				TODO (joker) cascade:sequence cycle
-					- there can only be 1 or 2 options in normal play
-					- jokers:wild and jokers:high allow more options
+				- TODO (joker) cascade:sequence cycle
+				   - there can only be 1 or 2 options in normal play
+				   - jokers:wild and jokers:high allow more options
 			*/
 			test.todo('cycles through cascade:sequence with jokers');
 

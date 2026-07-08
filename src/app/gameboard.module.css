@@ -57,9 +57,9 @@
 }
 
 /*
-	REVIEW (hud) Is invisible still accessible?
-	 - this doesn't fit in the status bar, esp with a long auto-foundation
-	 - it's used in the unit tests, though we could (¿should?) just enable debug mode theres
+	- REVIEW (hud) Is invisible still accessible?
+	   - this doesn't fit in the status bar, esp with a long auto-foundation
+	   - it's used in the unit tests, though we could (¿should?) just enable debug mode theres
 */
 .hiddenActionText {
 	display: none;

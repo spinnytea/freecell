@@ -117,12 +117,12 @@ const DEFAULT_DISPLAY_OPTIONS: GameBoardDisplayOptions = {
 	fixtureLayout: 'portrait',
 };
 
-/*
-	TODO (techdebt) much needed style overhaul
-	TODO (techdebt) manual testing Game #5, click to advance through all moves
+/**
+	- TODO (techdebt) much needed style overhaul
+	- TODO (techdebt) manual testing Game #5, click to advance through all moves
 
-	TODO (techdebt) manual tests for cursor
-	TODO (techdebt) manual tests for selection: one, two, three, etc
+	- TODO (techdebt) manual tests for cursor
+	- TODO (techdebt) manual tests for selection: one, two, three, etc
 
 	+-----------+
 	| _ a c _ _ |
@@ -133,25 +133,25 @@ const DEFAULT_DISPLAY_OPTIONS: GameBoardDisplayOptions = {
 	|   b       |
 	+-----------+
 
-	TODO (animation) animate cards sliding
-	TODO (animation) animate cell selection rotation
-	TODO (animation) animate invalid move animation
-	TODO (animation) animate moving a sequence
-	TODO (animation) animate cursorBox movement
-	TODO (animation) animate flourish (not just flourish52)
+	- TODO (animation) animate cards sliding
+	- TODO (animation) animate cell selection rotation
+	- TODO (animation) animate invalid move animation
+	- TODO (animation) animate moving a sequence
+	- TODO (animation) animate cursorBox movement
+	- TODO (animation) animate flourish (not just flourish52)
 
-	TODO (hud) fixture sizes: narrow
-	TODO (hud) fixture sizes: wide
-	TODO (hud) fixture sizes: mobile portrait
-	TODO (hud) fixture sizes: mobile landscape
+	- TODO (hud) fixture sizes: narrow
+	- TODO (hud) fixture sizes: wide
+	- TODO (hud) fixture sizes: mobile portrait
+	- TODO (hud) fixture sizes: mobile landscape
 
-	TODO (deployment) various sizes of tall -> portrait -> landscape -> wide
-	 - if not well defined playing fields to spot check, at least a reminder to play with the screen size
+	- TODO (deployment) various sizes of tall -> portrait -> landscape -> wide
+	   - if not well defined playing fields to spot check, at least a reminder to play with the screen size
 
-	TODO (controls) each of the control schemes
+	- TODO (controls) each of the control schemes
 
-	TODO (techdebt) Selection is obvious for each of cell, foundation, cascade, deck.
-	TODO (techdebt) Visual check DebugCursors.
+	- TODO (techdebt) Selection is obvious for each of cell, foundation, cascade, deck.
+	- TODO (techdebt) Visual check DebugCursors.
 */
 export default function Page() {
 	const [cardWidth, setCardWidth] = useState(() => calcCardWidth());

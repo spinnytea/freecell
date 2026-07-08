@@ -1650,7 +1650,7 @@ describe('game.undo (+ history)', () => {
 			move card a back
 			(no moves anymore, just shuffle and deal)
 
-			TODO (collapse) (undo) this doesn't actually call undo
+			- TODO (collapse) (undo) this doesn't actually call undo
 
 			@see GameBoard.test.tsx
 		*/
