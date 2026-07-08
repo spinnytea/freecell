@@ -47,7 +47,7 @@ vi.mock('@/app/hooks/animations/animShuffleCards.ts', () => {
 			.fn()
 			.mockImplementation(({ timeline, list, gameBoardIdRef }: { timeline: gsap.core.Timeline; list: string[]; gameBoardIdRef?: MutableRefObject<string> }) => {
 				const gameBoardId: string = gameBoardIdRef?.current ?? '';
-				timeline.addLabel(`mock animShuffleCards ${list.length.toString(10)}${gameBoardId ? ` in id ${gameBoardId}` : ''}`);
+				timeline.addLabel(`mock animShuffleCards ${list.length}${gameBoardId ? ` in id ${gameBoardId}` : ''}`);
 			}),
 	};
 });

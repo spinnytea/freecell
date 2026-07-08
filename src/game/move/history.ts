@@ -836,7 +836,7 @@ export function unDealAll(game: FreeCell): Card[] {
 
 	if (deckOfCards.length !== game.cards.length) {
 		throw new Error(
-			`incomplete implementation -- missing some cards (${deckOfCards.length.toString(10)} / ${game.cards.length.toString(10)})`
+			`incomplete implementation -- missing some cards (${deckOfCards.length} / ${game.cards.length})`
 		);
 	}
 

@@ -1600,7 +1600,7 @@ describe('GameBoard', () => {
 				} catch (error) {
 					const cause = error instanceof Error ? error : new Error(String(error));
 					console.error(cribGame().print({ includeHistory: true }));
-					throw new Error(`${name}, Move #${(idx + 1).toString(10)}, ${move} failed`, { cause });
+					throw new Error(`${name}, Move #${idx + 1}, ${move} failed`, { cause });
 				}
 			});
 

@@ -216,7 +216,7 @@ export function printHistory(game: FreeCell, skipLasgamet = false): string {
 		// the previous action could be a cursor movement, or a canceled touch action (touch stop)
 		// TODO (history) (print) remove the last action - not needed for save/reload
 		if (!skipLasgamet) str += `\n ${removeBraille(game.history.at(-1))}`;
-		str += '\n:h shuffle32 ' + movesSeed.seed.toString(10);
+		str += `\n:h shuffle32 ${movesSeed.seed}`;
 		let movesStr = '';
 		while (movesSeed.moves.length) {
 			movesStr += '\n ' + movesSeed.moves.splice(0, game.tableau.length).join(' ') + ' ';

@@ -83,8 +83,7 @@ function hueristicScoreGame(game: FreeCell) {
 }
 
 function pickFromFrontier(): FreeCell {
-	if (!frontier.length)
-		throw new Error(`ran out of options after ${attempted.size.toString(10)} attempts`);
+	if (!frontier.length) throw new Error(`ran out of options after ${attempted.size} attempts`);
 
 	const best = frontier.reduce((a_idx, b, b_idx) => {
 		const a = frontier[a_idx];
@@ -161,7 +160,7 @@ tryUntilDone()
 				JSON.stringify(hueristicScoreGame(result), null, 2),
 				JSON.stringify([...attempted.keys()].slice(-100), null, 2),
 			].join('\n\n');
-			writeFileSync(`solveGame-${GAME_NUMBER.toString(10)}.out`, out);
+			writeFileSync(`solveGame-${GAME_NUMBER}.out`, out);
 			console.log(out);
 		} else {
 			const msg = JSON.stringify(printStatus('Not Found.'));
@@ -179,7 +178,7 @@ tryUntilDone()
 				out.push(getMsg());
 			}
 
-			writeFileSync(`solveGame-${GAME_NUMBER.toString(10)}.out`, out.join('\n\n'));
+			writeFileSync(`solveGame-${GAME_NUMBER}.out`, out.join('\n\n'));
 			console.log(msg);
 		}
 	})

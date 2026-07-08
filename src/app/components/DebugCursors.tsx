@@ -27,7 +27,7 @@ export function DebugCursors() {
 		<div id="cursors">
 			{availableMoves?.map(({ location, priority }) => (
 				<LocationBox
-					key={`available-${shorthandPile(location)}-${location.data[0].toString(10)}`}
+					key={`available-${shorthandPile(location)}-${location.data[0]}`}
 					type={`available-${priority < 0 ? 'low' : 'high'}`}
 					fixtureSizes={fixtureSizes}
 					location={location}

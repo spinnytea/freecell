@@ -96,16 +96,11 @@ export function getMoves(
 		seedSolutions = SEED_SOLUTIONS_6x10;
 	}
 	if (!seedSolutions) {
-		throw new Error(
-			`No solution for games of size ${cellCount.toString(10)} × ${cascadeCount.toString(10)}.`
-		);
+		throw new Error(`No solution for games of size ${cellCount} × ${cascadeCount}.`);
 	}
 
 	const moves = seedSolutions.get(seed)?.split(' ');
-	if (!moves)
-		throw new Error(
-			`No solution for Game #${seed.toString(10)} (${cellCount.toString(10)} × ${cascadeCount.toString(10)}).`
-		);
+	if (!moves) throw new Error(`No solution for Game #${seed} (${cellCount} × ${cascadeCount}).`);
 
 	return moves;
 }

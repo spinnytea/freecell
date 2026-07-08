@@ -157,7 +157,7 @@ describe('game.shuffle32', () => {
 			test.each([1, 3, 5, 617, 23190, 32000])('%d', (value: number) => {
 				const game = new FreeCell().shuffle32(value);
 				expect(game.previousAction).toEqual({
-					text: `shuffle deck (${value.toString(10)})`,
+					text: `shuffle deck (${value})`,
 					type: 'shuffle',
 				});
 				expect(randomIntegerSpy).not.toHaveBeenCalled();
@@ -170,7 +170,7 @@ describe('game.shuffle32', () => {
 					randomIntegerSpy.mockReturnValueOnce(value);
 					const game = new FreeCell().shuffle32();
 					expect(game.previousAction).toEqual({
-						text: `shuffle deck (${value.toString(10)})`,
+						text: `shuffle deck (${value})`,
 						type: 'shuffle',
 					});
 					expect(randomIntegerSpy.mock.calls).toEqual([[32000]]);

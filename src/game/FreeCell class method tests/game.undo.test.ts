@@ -1965,7 +1965,7 @@ describe('game.undo (+ history)', () => {
 					expect(movesSeed?.moves).toEqual(getMoves(seed, { cellCount, cascadeCount }));
 
 					game = undoUntilStart(game);
-					expect(game.history).toEqual([`shuffle deck (${seed.toString(10)})`, 'deal all cards']);
+					expect(game.history).toEqual([`shuffle deck (${seed})`, 'deal all cards']);
 					const newGame = new FreeCell({ cellCount, cascadeCount }).shuffle32(seed).dealAll();
 					expect(game.cards).toEqual(newGame.cards);
 

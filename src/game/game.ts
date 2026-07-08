@@ -231,17 +231,15 @@ export class FreeCell {
 		} else {
 			if (cellCount < MIN_CELL_COUNT || cellCount > MAX_CELL_COUNT)
 				throw new Error(
-					`Must have between ${MIN_CELL_COUNT.toString(10)} and ${MAX_CELL_COUNT.toString(10)} cells; requested "${cellCount.toString(10)}".`
+					`Must have between ${MIN_CELL_COUNT} and ${MAX_CELL_COUNT} cells; requested "${cellCount}".`
 				);
 			if (cascadeCount < NUMBER_OF_FOUNDATIONS)
 				throw new Error(
-					`Must have at least as many cascades as foundations (${NUMBER_OF_FOUNDATIONS.toString(10)}); requested "${cascadeCount.toString(10)}".`
+					`Must have at least as many cascades as foundations (${NUMBER_OF_FOUNDATIONS}); requested "${cascadeCount}".`
 				);
 			// 10 is a magic number - @see shorthandLocation, shorthandPile, which we use for history
 			if (cascadeCount > 10)
-				throw new Error(
-					`Cannot have more then 10 cascades; requested "${cascadeCount.toString(10)}".`
-				);
+				throw new Error(`Cannot have more then 10 cascades; requested "${cascadeCount}".`);
 
 			this.deck = initializeDeck();
 			this.cards = [...this.deck];
@@ -789,7 +787,7 @@ export class FreeCell {
 			} while (seed === IMPOSSIBLE_SEED);
 		}
 
-		const actionText = `shuffle deck (${seed.toString(10)})`;
+		const actionText = `shuffle deck (${seed})`;
 		const cards = cloneCards(this.cards);
 		const deck: Card[] = [];
 		cards.forEach((card) => {
@@ -889,7 +887,7 @@ export class FreeCell {
 		if (endDeckLength) {
 			let actionText = 'deal 1 card';
 			if (dealtCount > 1) {
-				actionText = `deal ${dealtCount.toString(10)} cards`;
+				actionText = `deal ${dealtCount} cards`;
 			}
 			game.previousAction.text = actionText;
 			game.history[game.history.length - 1] = actionText;
@@ -1220,13 +1218,13 @@ export class FreeCell {
 		const cellCountPre = line.length - 1 - 3 * NUMBER_OF_FOUNDATIONS;
 		if (cellCountPre % 3 !== 0) {
 			throw new Error(
-				`Invalid cell line length (${line.length.toString(10)}); expected "1 + count ⨉ 3" -- "${line.slice(0).reverse().join('')}"`
+				`Invalid cell line length (${line.length}); expected "1 + count ⨉ 3" -- "${line.slice(0).reverse().join('')}"`
 			);
 		}
 		const cellCount = cellCountPre / 3;
 		if (cellCount < MIN_CELL_COUNT || cellCount > MAX_CELL_COUNT) {
 			throw new Error(
-				`Must have between ${MIN_CELL_COUNT.toString(10)} and ${MAX_CELL_COUNT.toString(10)} cells; requested "${cellCount.toString(10)}".`
+				`Must have between ${MIN_CELL_COUNT} and ${MAX_CELL_COUNT} cells; requested "${cellCount}".`
 			);
 		}
 		for (let i = 0; i < cellCount; i++) {
@@ -1263,13 +1261,13 @@ export class FreeCell {
 		const cascadeCountPre = line.length - 1;
 		if (cascadeCountPre % 3 !== 0) {
 			throw new Error(
-				`Invalid cascade line length (${line.length.toString(10)}); expected "1 + count ⨉ 3" -- "${line.slice(0).reverse().join('')}"`
+				`Invalid cascade line length (${line.length}); expected "1 + count ⨉ 3" -- "${line.slice(0).reverse().join('')}"`
 			);
 		}
 		const cascadeCount = cascadeCountPre / 3;
 		if (cascadeCount < NUMBER_OF_FOUNDATIONS) {
 			throw new Error(
-				`Must have at least as many cascades as foundations (${NUMBER_OF_FOUNDATIONS.toString(10)}); requested "${cascadeCount.toString(10)}".`
+				`Must have at least as many cascades as foundations (${NUMBER_OF_FOUNDATIONS}); requested "${cascadeCount}".`
 			);
 		}
 

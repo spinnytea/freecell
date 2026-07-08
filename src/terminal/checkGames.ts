@@ -34,9 +34,9 @@ for (let seed = 1; seed <= 32000; seed++) {
 	if (seed % 1000 === 0) {
 		console.log(
 			[
-				`Game #${seed.toString(10)}`,
-				`${flourishSeeds.length.toString(10)} flourish`,
-				`${flourish52Seeds.length.toString(10)} flourish52`,
+				`Game #${seed}`,
+				`${flourishSeeds.length} flourish`,
+				`${flourish52Seeds.length} flourish52`,
 				// TODO (techdebt) update node and typescript `const shortFormat = new Intl.DurationFormat("en");`
 				`took: ${((Date.now() - start) / 1000).toFixed(1)}s`,
 			].join('; ')
@@ -55,7 +55,7 @@ const flourish52Diff = utils.sortedDiff(flourish52Seeds, catalogSeeds_canFlouris
 
 const checks = [
 	{
-		title: `canFlourish - seed lengths (${catalogSeeds_canFlourish.length.toString(10)})`,
+		title: `canFlourish - seed lengths (${catalogSeeds_canFlourish.length})`,
 		pass: flourishSeeds.length === catalogSeeds_canFlourish.length,
 	},
 	{
@@ -63,7 +63,7 @@ const checks = [
 		pass: flourishDiff.in_a.length === 0 && flourishDiff.in_b.length === 0,
 	},
 	{
-		title: `canFlourish52 - seed lengths (${catalogSeeds_canFlourish52.length.toString(10)})`,
+		title: `canFlourish52 - seed lengths (${catalogSeeds_canFlourish52.length})`,
 		pass: flourish52Seeds.length === catalogSeeds_canFlourish52.length,
 	},
 	{

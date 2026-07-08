@@ -20,7 +20,7 @@ export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObj
 		<div id="piles">
 			{fixtureSizes.home.cellLeft.map((left, idx) => (
 				<Pile
-					key={`cell-${idx.toString(10)}`}
+					key={`cell-${idx}`}
 					top={homeTop}
 					left={left}
 					fixtureSizes={fixtureSizes}
@@ -31,7 +31,7 @@ export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObj
 			))}
 			{fixtureSizes.home.foundationLeft.map((left, idx) => (
 				<Pile
-					key={`foundation-${idx.toString(10)}`}
+					key={`foundation-${idx}`}
 					top={homeTop}
 					left={left}
 					fixtureSizes={fixtureSizes}
@@ -44,7 +44,7 @@ export function PileMarkers({ gameBoardIdRef }: { gameBoardIdRef?: MutableRefObj
 			))}
 			{fixtureSizes.tableau.cascadeLeft.map((left, idx) => (
 				<Pile
-					key={`cascade-${idx.toString(10)}`}
+					key={`cascade-${idx}`}
 					top={tableauTop}
 					left={left}
 					fixtureSizes={fixtureSizes}
