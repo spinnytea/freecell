@@ -320,6 +320,18 @@ describe('game.parse', () => {
 
 			test('deal 44 cards', () => {
 				const game = new FreeCell().dealAll({ demo: true, keepDeck: true });
+				expect(game.print()).toBe(
+					'' + //
+						'                         \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+						' 3S 3H 3D 3C             \n' +
+						':d>2S 2H 2D 2C AS AH AD AC \n' +
+						' deal 44 cards'
+				);
 				expect(game.history).toEqual(['deal 44 cards']);
 				expect(game.previousAction).toEqual({
 					text: 'deal 44 cards',
@@ -344,6 +356,50 @@ describe('game.parse', () => {
 				});
 				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [7] });
 				expect(gameNoHist).toEqual(game);
+			});
+
+			test('remaining affects dealtCount', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'                         \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C             \n' +
+						' 3S 3H 3D 3C             \n' +
+						':d>2S 2H 2D 2C AS AH AD AC \n' +
+						' deal abcd'
+				);
+				expect(game.print()).toBe(
+					'' + //
+						'                         \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C             \n' +
+						' 3S 3H 3D 3C             \n' +
+						':d 4S 4H 4D 4C>2S 2H 2D 2C AS AH AD AC \n' +
+						' deal abcd' // invalid action text is preserved
+				);
+				expect(game.previousAction).toEqual({
+					text: 'deal abcd', // invalid action text is preserved
+					type: 'deal',
+				});
+				// invalid action text is not preserved in the history
+				expect(game.history).toEqual(['deal 40 cards']);
+
+				const gameDealAgain = game.dealAll();
+				expect(gameDealAgain.history).toEqual(['deal 40 cards', 'deal all cards']);
+
+				const gameDealAgainUndo = gameDealAgain.undo();
+				expect(gameDealAgainUndo.history).toEqual(['deal 40 cards']);
+				expect(gameDealAgainUndo.previousAction).toEqual({
+					text: 'deal 40 cards',
+					type: 'deal',
+					gameFunction: 'undo',
+				});
 			});
 
 			test('first move', () => {

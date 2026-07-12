@@ -1,24 +1,53 @@
 import { beforeAll, describe, expect, test } from 'vitest';
+import { initializeDeckOfCards } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 
 describe('game.print', () => {
 	describe('compare game state', () => {
-		describe('empty deck', () => {
-			let game: FreeCell;
-			beforeAll(() => {
-				game = new FreeCell().dealAll();
+		describe('deck', () => {
+			describe('empty', () => {
+				let game: FreeCell;
+				beforeAll(() => {
+					game = new FreeCell().dealAll();
+				});
+
+				test('omitted from standard', () => {
+					expect(game.print()).not.toContain(':d');
+				});
+
+				test('omitted from includeHistory', () => {
+					expect(game.print({ includeHistory: true })).not.toContain(':d');
+				});
+
+				test('included in verbose', () => {
+					expect(game.print({ verbose: true })).toContain(':d');
+				});
 			});
 
-			test('omitted from standard', () => {
-				expect(game.print()).not.toContain(':d');
+			test('not empty', () => {
+				const game = new FreeCell().dealAll({ demo: true, keepDeck: true });
+				expect(game.__printDeck()).toBe('>2S 2H 2D 2C AS AH AD AC ');
+				expect(game.__printDeck({ fixture: 'cascade', data: [-1, -1] })).toBe(' 2S 2H 2D 2C AS AH AD AC ');
 			});
 
-			test('omitted from includeHistory', () => {
-				expect(game.print({ includeHistory: true })).not.toContain(':d');
-			});
-
-			test('included in verbose', () => {
-				expect(game.print({ verbose: true })).toContain(':d');
+			test('has gaps', () => {
+				const cards = initializeDeckOfCards();
+				cards.forEach((card, idx) => {
+					card.location = { fixture: 'cascade', data: [0, idx] };
+				});
+				cards[51].location = { fixture: 'deck', data: [1] };
+				cards[50].location = { fixture: 'deck', data: [4] };
+				const game = new FreeCell({ cards });
+				game.deck.length = 6;
+				expect(game.__printDeck({ fixture: 'deck', data: [0] })).toBe('    KH       KS>   ');
+				expect(game.__printDeck({ fixture: 'deck', data: [1] })).toBe('    KH      >KS    ');
+				expect(game.__printDeck({ fixture: 'deck', data: [2] })).toBe('    KH   >   KS    ');
+				expect(game.__printDeck({ fixture: 'deck', data: [3] })).toBe('    KH>      KS    ');
+				expect(game.__printDeck({ fixture: 'deck', data: [4] })).toBe('   >KH       KS    ');
+				expect(game.__printDeck({ fixture: 'deck', data: [5] })).toBe('>   KH       KS    ');
+				expect(game.__printDeck({ fixture: 'deck', data: [6] })).toBe('    KH       KS    '); // invalid
+				expect(game.__printDeck({ fixture: 'deck', data: [7] })).toBe('    KH       KS    '); // invalid
+				expect(game.__printDeck({ fixture: 'cascade', data: [-1, -1] })).toBe('    KH       KS    ');
 			});
 		});
 

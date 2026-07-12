@@ -343,8 +343,7 @@ describe('keyboard.moveCursorWithBasicArrows', () => {
 	describe('deck', () => {
 		describe('going off-top moves to cascade', () => {
 			test('single', () => {
-				let game = new FreeCell({ cursor: { fixture: 'deck', data: [49] } });
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [49] });
+				let game = new FreeCell({ cursor: { fixture: 'deck', data: [5] } });
 
 				game = game.dealAll({ demo: true, keepDeck: true });
 				expect(game.print()).toBe(

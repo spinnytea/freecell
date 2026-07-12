@@ -259,7 +259,7 @@ export class FreeCell {
 
 		// clamp cursor is a helper in case the game changes and the cursor is no longer valid
 		// it prevents us from having to manually specify it every time
-		this.cursor = this.__clampCursor(cursor ?? INIT_CURSOR_LOCATION, action.gameFunction);
+		this.cursor = this.__clampCursor(cursor ?? INIT_CURSOR_LOCATION);
 
 		// selection & available moves are _not_ checked for validity
 		// they should be reset any time we move a card
@@ -331,7 +331,7 @@ export class FreeCell {
 		});
 	}
 
-	__clampCursor(location?: CardLocation, gameFunction?: GameFunction): CardLocation {
+	__clampCursor(location?: CardLocation): CardLocation {
 		if (!location) return DEFAULT_CURSOR_LOCATION;
 
 		const [d0, d1] = location.data;
@@ -352,7 +352,6 @@ export class FreeCell {
 			}
 			case 'deck':
 				if (d0 <= 0) return { fixture: 'deck', data: [0] };
-				else if (d0 === this.deck.length && gameFunction === 'recall-or-bury') return location;
 				else if (d0 >= this.deck.length)
 					return { fixture: 'deck', data: [Math.max(0, this.deck.length - 1)] };
 				else return location;
@@ -360,7 +359,7 @@ export class FreeCell {
 	}
 
 	setCursor(cursor: CardLocation, { gameFunction }: OptionsNonstandardGameplay = {}): FreeCell {
-		cursor = this.__clampCursor(cursor, gameFunction);
+		cursor = this.__clampCursor(cursor);
 		const action: PreviousAction = {
 			type: 'cursor',
 			text: calcCursorActionText(this, 'set', cursor),
@@ -879,7 +878,7 @@ export class FreeCell {
 			if (!game.deck.length) {
 				game.cursor = DEFAULT_CURSOR_LOCATION;
 			} else {
-				const nextD0 = Math.max(0, Math.min(this.cursor.data[0] - dealtCount, game.deck.length));
+				const nextD0 = Math.max(0, Math.min(this.cursor.data[0], game.deck.length - 1));
 				game.cursor = { fixture: 'deck', data: [nextD0] };
 			}
 		}
@@ -954,8 +953,8 @@ export class FreeCell {
 		const actionText = this.history.at(-1);
 		const after = parseCursorFromPreviousActionText(actionText, this.cards);
 		if (!after) return this;
-		if (!isLocationEqual(this.__clampCursor(after, this.previousAction.gameFunction), this.cursor))
-			// REVIEW (deck) only deck needs to __clampCursor
+		if (!isLocationEqual(this.__clampCursor(after), this.cursor))
+			// REVIEW (deck) (optimize) only deck needs to __clampCursor
 			return this.setCursor(after);
 		const before = parseAltCursorFromPreviousActionText(actionText, this.cards, allowEmptyDeck);
 		if (!before) return this;
@@ -1344,7 +1343,6 @@ export class FreeCell {
 				if (deckLength === 0) {
 					history.push('deal all cards');
 				} else {
-					// TODO (deck) (test) remaining affects dealtCount
 					const dealtCount = cards.length - deckLength - remaining.length;
 					history.push(`deal ${dealtCount} cards`);
 				}
@@ -1458,7 +1456,6 @@ export class FreeCell {
 		}
 		const deck_cursor_index = deck_spaces.indexOf('>');
 		let deck_selection_index = deck_spaces.indexOf('|');
-		// TODO (deck) (print-parse) verify deck selection math - there should be tests
 		if (deck_cursor_index > -1) {
 			cursor = {
 				fixture: 'deck',

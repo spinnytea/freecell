@@ -536,8 +536,8 @@ describe('game.undo (+ history)', () => {
 
 					describe('sequence', () => {
 						// TODO (2-priority) (controls) (gameplay) move card to the top of a sequence
-						test.todo('top');
-						// t('top', () => {
+						test.todo('first');
+						// t('first', () => {
 						// 	let game = FreeCell.parse(
 						// 		'' + //
 						// 			'   |TC|      9C TD KH KS \n' +
@@ -591,7 +591,7 @@ describe('game.undo (+ history)', () => {
 
 						test.todo('middle');
 
-						test('bottom', () => {
+						test('last', () => {
 							let game = FreeCell.parse(
 								'' + //
 									'   |TC|      9C TD KH KS \n' +
@@ -684,11 +684,11 @@ describe('game.undo (+ history)', () => {
 					test.todo('single');
 
 					describe('sequence', () => {
-						test.todo('top');
+						test.todo('first');
 
 						test.todo('middle');
 
-						test.todo('bottom');
+						test.todo('last');
 					});
 
 					test.todo('empty');
@@ -785,11 +785,11 @@ describe('game.undo (+ history)', () => {
 						});
 
 						describe('sequence', () => {
-							test.todo('top');
+							test.todo('first');
 
 							test.todo('middle');
 
-							test('bottom', () => {
+							test('last', () => {
 								let game = FreeCell.parse(
 									'' + //
 										'>            TC 8D KH KS \n' +
@@ -865,11 +865,11 @@ describe('game.undo (+ history)', () => {
 						test.todo('single');
 
 						describe('sequence', () => {
-							test.todo('top');
+							test.todo('first');
 
 							test.todo('middle');
 
-							test.todo('bottom');
+							test.todo('last');
 						});
 
 						test.todo('empty');

@@ -363,6 +363,25 @@ describe('game.touchByPile', () => {
 					expect(game.__printDeck()).toBe(' 2H>6H 6C QC JS 9S AD 7C TS ');
 					expect(game).toMatchSnapshot();
 				});
+
+				// XXX (motivation) (deck) it's a lot of exceptions to get this to work
+				// eslint-disable-next-line @vitest/no-disabled-tests
+				test.skip('not empty (fixed)', () => {
+					const game = new FreeCell()
+						.shuffle32(5)
+						.dealAll({ demo: true, keepDeck: true })
+						.$selectCard('2H')
+						.touchByPile('k', { gameFunction: 'recall-or-bury' });
+					expect(game.previousAction).toEqual({
+						text: 'invalid move 1⡅k 2H→deck',
+						type: 'move',
+						gameFunction: 'recall-or-bury',
+					});
+					expect(game.cursor).toEqual({ fixture: 'deck', data: [8] });
+					expect(game.deck.length).toBe(9);
+					expect(game.__printDeck()).toBe('>2H 6H 6C QC JS 9S AD 7C TS ');
+					expect(game).toMatchSnapshot();
+				});
 			});
 		});
 

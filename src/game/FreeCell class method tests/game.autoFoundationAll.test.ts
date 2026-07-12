@@ -249,11 +249,13 @@ describe('game.autoFoundationAll', () => {
 				' hand-jammed';
 			*/
 
-			test.todo('top');
+			test.todo('pile');
+
+			test.todo('first');
 
 			test.todo('middle');
 
-			test.todo('bottom');
+			test.todo('last');
 		});
 
 		describe('solves everything', () => {

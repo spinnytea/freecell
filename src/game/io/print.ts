@@ -174,7 +174,6 @@ export function printDeck(
 	if (game.deck.length) {
 		if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
 			// using entries to catch gaps
-			// TODO (deck) (test) test this explicitly
 			const strs = [];
 			for (const [idx, card] of game.deck.entries()) {
 				strs.push(
@@ -183,12 +182,10 @@ export function printDeck(
 			}
 			const deckStr = strs.reverse().join('');
 			const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
-			const offDeckPrefix = cursor.data[0] === game.deck.length ? '>  ' : '';
-			return `${offDeckPrefix}${deckStr}${lastCol}`;
+			return `${deckStr}${lastCol}`;
 		} else {
 			// if no cursor/selection in deck
 			// using for-of to catch gaps
-			// TODO (deck) (test) test this explicitly
 			const strs = [];
 			for (const card of game.deck) {
 				strs.push(shorthandCard(card));

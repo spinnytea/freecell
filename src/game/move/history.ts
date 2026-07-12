@@ -39,6 +39,7 @@ export type PreviousActionType =
 	// IDEA (4-priority) (deck) (history) add a PreviousActionType of 'illegal' or 'illegal-move'
 	//  - e.g. gameFunction === 'recall-or-bury'
 	//  - e.g. move card off foundation
+	//  - then we can stop using "invalid move xx xxx" of type "move"
 	// | 'illegal'
 	| 'juice';
 
@@ -231,7 +232,7 @@ export function parseCursorFromPreviousActionText(
 				case 'deck':
 					// we don't move cards to the deck in practice
 					// moving to `k` is enough for now (no need to look for toShorthand within the deck)
-					// REVIEW (deck) look for toShorthand within the deck
+					// REVIEW (motivation) (deck) look for toShorthand within the deck
 					break;
 				case 'cell':
 					// each cell identifies it's own d0

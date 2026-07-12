@@ -515,26 +515,28 @@ describe('game', () => {
 				});
 
 				describe('update cursor', () => {
-					// REVIEW (deal) (deck) this doesn't seem right anymore
-					//  - the cursor should stay on the card it was on before?
 					test.each`
 						startD0 | endD0 | startSelect     | endSelect       | printDeck
 						${0}    | ${0}  | ${'peek k⡀ AC'} | ${'peek k⡀ AC'} | ${' 2S 2H 2D 2C AS AH AD>AC '}
-						${1}    | ${0}  | ${'peek k⡁ AD'} | ${'peek k⡀ AC'} | ${' 2S 2H 2D 2C AS AH AD>AC '}
-						${2}    | ${0}  | ${'peek k⡂ AH'} | ${'peek k⡀ AC'} | ${' 2S 2H 2D 2C AS AH AD>AC '}
-						${7}    | ${0}  | ${'peek k⡇ 2S'} | ${'peek k⡀ AC'} | ${' 2S 2H 2D 2C AS AH AD>AC '}
-						${8}    | ${0}  | ${'peek k⡈ 3C'} | ${'peek k⡀ AC'} | ${' 2S 2H 2D 2C AS AH AD>AC '}
-						${9}    | ${0}  | ${'peek k⡉ 3D'} | ${'peek k⡀ AC'} | ${' 2S 2H 2D 2C AS AH AD>AC '}
-						${10}   | ${0}  | ${'peek k⡊ 3H'} | ${'peek k⡀ AC'} | ${' 2S 2H 2D 2C AS AH AD>AC '}
-						${11}   | ${0}  | ${'peek k⡋ 3S'} | ${'peek k⡀ AC'} | ${' 2S 2H 2D 2C AS AH AD>AC '}
-						${43}   | ${0}  | ${'peek k⡫ JS'} | ${'peek k⡀ AC'} | ${' 2S 2H 2D 2C AS AH AD>AC '}
-						${44}   | ${0}  | ${'peek k⡬ QC'} | ${'peek k⡀ AC'} | ${' 2S 2H 2D 2C AS AH AD>AC '}
-						${45}   | ${1}  | ${'peek k⡭ QD'} | ${'peek k⡁ AD'} | ${' 2S 2H 2D 2C AS AH>AD AC '}
-						${46}   | ${2}  | ${'peek k⡮ QH'} | ${'peek k⡂ AH'} | ${' 2S 2H 2D 2C AS>AH AD AC '}
-						${47}   | ${3}  | ${'peek k⡯ QS'} | ${'peek k⡃ AS'} | ${' 2S 2H 2D 2C>AS AH AD AC '}
-						${48}   | ${4}  | ${'peek k⡰ KC'} | ${'peek k⡄ 2C'} | ${' 2S 2H 2D>2C AS AH AD AC '}
-						${49}   | ${5}  | ${'peek k⡱ KD'} | ${'peek k⡅ 2D'} | ${' 2S 2H>2D 2C AS AH AD AC '}
-						${50}   | ${6}  | ${'peek k⡲ KH'} | ${'peek k⡆ 2H'} | ${' 2S>2H 2D 2C AS AH AD AC '}
+						${1}    | ${1}  | ${'peek k⡁ AD'} | ${'peek k⡁ AD'} | ${' 2S 2H 2D 2C AS AH>AD AC '}
+						${2}    | ${2}  | ${'peek k⡂ AH'} | ${'peek k⡂ AH'} | ${' 2S 2H 2D 2C AS>AH AD AC '}
+						${3}    | ${3}  | ${'peek k⡃ AS'} | ${'peek k⡃ AS'} | ${' 2S 2H 2D 2C>AS AH AD AC '}
+						${4}    | ${4}  | ${'peek k⡄ 2C'} | ${'peek k⡄ 2C'} | ${' 2S 2H 2D>2C AS AH AD AC '}
+						${5}    | ${5}  | ${'peek k⡅ 2D'} | ${'peek k⡅ 2D'} | ${' 2S 2H>2D 2C AS AH AD AC '}
+						${6}    | ${6}  | ${'peek k⡆ 2H'} | ${'peek k⡆ 2H'} | ${' 2S>2H 2D 2C AS AH AD AC '}
+						${7}    | ${7}  | ${'peek k⡇ 2S'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${8}    | ${7}  | ${'peek k⡈ 3C'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${9}    | ${7}  | ${'peek k⡉ 3D'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${10}   | ${7}  | ${'peek k⡊ 3H'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${11}   | ${7}  | ${'peek k⡋ 3S'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${43}   | ${7}  | ${'peek k⡫ JS'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${44}   | ${7}  | ${'peek k⡬ QC'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${45}   | ${7}  | ${'peek k⡭ QD'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${46}   | ${7}  | ${'peek k⡮ QH'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${47}   | ${7}  | ${'peek k⡯ QS'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${48}   | ${7}  | ${'peek k⡰ KC'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${49}   | ${7}  | ${'peek k⡱ KD'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${50}   | ${7}  | ${'peek k⡲ KH'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
 						${51}   | ${7}  | ${'peek k⡳ KS'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
 					`(
 						'cursor at $startD0',

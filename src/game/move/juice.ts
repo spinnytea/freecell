@@ -276,8 +276,6 @@ function _spreadDeckToEmptyPiles(g: FreeCell, emptyPiles: CardLocation[]): FreeC
 
 	// put deck on board, split by suit
 	emptyPiles.forEach((emptyPile) => {
-		// BUG (techdebt) (deck) (gameplay) (juice) why can't we deal from the middle?
-		// const last_card = g.deck.at(0);
 		const last_card = g.deck.at(-1);
 		if (last_card) {
 			const cards = g.deck.filter((card) => card.suit === last_card.suit);

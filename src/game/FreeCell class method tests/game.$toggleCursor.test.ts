@@ -242,6 +242,8 @@ describe('game.$toggleCursor', () => {
 				});
 
 				describe('not empty', () => {
+					test.todo('pile');
+
 					test('first', () => {
 						const game = FreeCell.parse(
 							'' + //

@@ -657,6 +657,21 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 		}
 	}
 
+	if (from.location.fixture === 'deck') {
+		// shift all the cards
+		const d0 = from.location.data[0];
+		cards.forEach((card) => {
+			if (card.location.fixture === 'deck') {
+				if (card.location.data[0] > d0) {
+					card.location = {
+						fixture: 'deck',
+						data: [card.location.data[0] - from_cards.length],
+					};
+				}
+			}
+		});
+	}
+
 	return cards;
 }
 

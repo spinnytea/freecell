@@ -139,16 +139,6 @@ describe('game.moveByShorthand', () => {
 			test.todo('sequence');
 		});
 
-		// REVIEW (deck) (test) deck: 'empty', 'not empty' → 'empty', 'top', 'middle', 'last', 'bottom'
-		// REVIEW (deck) (test) all tests: 'empty', 'top', 'first', 'middle', 'last', 'bottom'
-		//  - 'empty'
-		//  - 'top' ⇒ 'before', 'pile' (cascade)
-		//  - 'first'
-		//  - 'middle' ⇒ 'middle 1', 'middle 2'
-		//  - 'last'
-		//  - 'bottom' ⇒ 'after', 'pile' (deck)
-		// REVIEW (deck) (test) 'single', 'sequence'
-		// REVIEW (deck) (test) every `describe.*deck`
 		describe('deck', () => {
 			test('empty', () => {
 				const game = new FreeCell().shuffle32(5).dealAll({ demo: true });
