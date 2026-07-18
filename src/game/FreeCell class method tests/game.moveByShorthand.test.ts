@@ -64,7 +64,7 @@ describe('game.moveByShorthand', () => {
 					' TD 7S JD 7H 8H JH JC 7D \n' +
 					' 5S QH 8C 9D KS QD 4H AC \n' +
 					' 2H TC TH 6D             \n' +
-					':d 6H 6C QC JS 9S AD 7C>TS \n' +
+					':d>6H 6C QC JS 9S AD 7C TS \n' +
 					' deal 44 cards'
 			);
 			const burried = game.moveByShorthand('kb', { gameFunction: 'recall-or-bury' });
@@ -199,7 +199,7 @@ describe('game.moveByShorthand', () => {
 						' TD 7S JD 7H 8H JH JC 7D \n' +
 						' 5S QH 8C 9D KS QD 4H AC \n' +
 						' 2H TC TH 6D             \n' +
-						':d 6H 6C QC JS 9S AD 7C>TS \n' +
+						':d>6H 6C QC JS 9S AD 7C TS \n' +
 						' deal 44 cards'
 				);
 				const burried = game.moveByShorthand('4k', { gameFunction: 'recall-or-bury' });
@@ -212,8 +212,8 @@ describe('game.moveByShorthand', () => {
 						' TD 7S JD 7H 8H JH JC 7D \n' +
 						' 5S QH 8C 9D KS QD 4H AC \n' +
 						' 2H TC TH                \n' +
-						':d>6D 6H 6C QC JS 9S AD 7C TS \n' +
-						' invalid move 4k 6D→deck'
+						':d 6D>6H 6C QC JS 9S AD 7C TS \n' +
+						' invalid move 4k 6D→6H'
 				);
 				expect(burried.deck).toMatchSnapshot();
 				expect(burried.print({ includeHistory: true })).toBe(
@@ -226,12 +226,12 @@ describe('game.moveByShorthand', () => {
 						' 5S QH 8C 9D KS QD 4H AC \n' +
 						' 2H TC TH                \n' +
 						':d 6D 6H 6C QC JS 9S AD 7C TS \n' +
-						' invalid move 4⡅k 6D→deck\n' +
+						' invalid move 4⡅k⡇ 6D→6H\n' +
 						' deal 44 cards\n' +
 						' shuffle deck (5)'
 				);
 				expect(burried.previousAction).toEqual({
-					text: 'invalid move 4⡅k 6D→deck',
+					text: 'invalid move 4⡅k⡇ 6D→6H',
 					type: 'move',
 					gameFunction: 'recall-or-bury',
 				});

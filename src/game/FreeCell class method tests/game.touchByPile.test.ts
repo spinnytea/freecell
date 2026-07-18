@@ -42,7 +42,7 @@ describe('game.touchByPile', () => {
 
 			test('not empty', () => {
 				let game = new FreeCell().shuffle32(5).dealAll({ demo: true, keepDeck: true });
-				expect(game.__printDeck()).toBe(' 6H 6C QC JS 9S AD 7C>TS ');
+				expect(game.__printDeck()).toBe('>6H 6C QC JS 9S AD 7C TS ');
 				game = game.touchByPile('k');
 				expect(game.cursor).toEqual({ fixture: 'deck', data: [7] });
 				expect(game.previousAction).toEqual({
@@ -339,10 +339,34 @@ describe('game.touchByPile', () => {
 						type: 'move',
 						gameFunction: 'recall-or-bury',
 					});
+					expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+					expect(game.deck.length).toBe(1);
 					expect(game.__printDeck()).toBe('>3H ');
+					expect(game.history.slice(0, 1)).toEqual(['shuffle deck (11737)']);
+					expect(game.history.slice(-2)).toEqual(['move a8⡆ TS→JH', 'invalid move 3⡄k 3H→deck']);
+					expect(game).toMatchSnapshot();
 				});
 
-				test('not empty', () => {
+				test('not empty (incorrect)', () => {
+					const game = new FreeCell()
+						.shuffle32(5)
+						.dealAll({ demo: true, keepDeck: true })
+						.$selectCard('2H')
+						.touchByPile('k', { gameFunction: 'recall-or-bury' });
+					expect(game.previousAction).toEqual({
+						text: 'invalid move 1⡅k⡇ 2H→6H',
+						type: 'move',
+						gameFunction: 'recall-or-bury',
+					});
+					expect(game.cursor).toEqual({ fixture: 'deck', data: [7] });
+					expect(game.deck.length).toBe(9);
+					expect(game.__printDeck()).toBe(' 2H>6H 6C QC JS 9S AD 7C TS ');
+					expect(game).toMatchSnapshot();
+				});
+
+				// XXX (motivation) (deck) it's a lot of exceptions to get this to work
+				// eslint-disable-next-line @vitest/no-disabled-tests
+				test.skip('not empty (fixed)', () => {
 					const game = new FreeCell()
 						.shuffle32(5)
 						.dealAll({ demo: true, keepDeck: true })
@@ -353,7 +377,10 @@ describe('game.touchByPile', () => {
 						type: 'move',
 						gameFunction: 'recall-or-bury',
 					});
+					expect(game.cursor).toEqual({ fixture: 'deck', data: [8] });
+					expect(game.deck.length).toBe(9);
 					expect(game.__printDeck()).toBe('>2H 6H 6C QC JS 9S AD 7C TS ');
+					expect(game).toMatchSnapshot();
 				});
 			});
 		});

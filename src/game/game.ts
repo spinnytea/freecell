@@ -1,3 +1,4 @@
+import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import {
 	Card,
 	CardLocation,
@@ -6,7 +7,7 @@ import {
 	cloneCards,
 	findCard,
 	getSequenceAt,
-	initializeDeck,
+	initializeDeckOfCards,
 	isLocationEqual,
 	parseShorthandCard,
 	PileSH,
@@ -60,8 +61,8 @@ const DEFAULT_NUMBER_OF_CASCADES = 8;
 const MIN_CELL_COUNT = 1;
 const MAX_CELL_COUNT = 6;
 
-const INIT_CURSOR_LOCATION: CardLocation = { fixture: 'deck', data: [0] };
-const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
+export const INIT_CURSOR_LOCATION: CardLocation = { fixture: 'deck', data: [BOTTOM_OF_CASCADE] };
+export const DEFAULT_CURSOR_LOCATION: CardLocation = { fixture: 'cell', data: [0] };
 
 interface OptionsNonstandardGameplay {
 	/**
@@ -241,8 +242,8 @@ export class FreeCell {
 			if (cascadeCount > 10)
 				throw new Error(`Cannot have more then 10 cascades; requested "${cascadeCount}".`);
 
-			this.deck = initializeDeck();
-			this.cards = [...this.deck];
+			this.cards = initializeDeckOfCards();
+			this.deck = [...this.cards];
 
 			this.win = false;
 		}
@@ -258,7 +259,7 @@ export class FreeCell {
 
 		// clamp cursor is a helper in case the game changes and the cursor is no longer valid
 		// it prevents us from having to manually specify it every time
-		this.cursor = this.__clampCursor(cursor ?? INIT_CURSOR_LOCATION, action.gameFunction);
+		this.cursor = this.__clampCursor(cursor ?? INIT_CURSOR_LOCATION);
 
 		// selection & available moves are _not_ checked for validity
 		// they should be reset any time we move a card
@@ -271,7 +272,7 @@ export class FreeCell {
 
 		/*
 		// TODO (techdebt) (actionText) (test) compare {@link ACTION_TEXT_EXAMPLES} to test data
-		// HACK record every actionText during unit tests
+		// HACK (actionText) (test) record every actionText during unit tests
 		// prettier-ignore
 		if (process.env.NODE_ENV === 'test') {
 			// eslint-disable-next-line
@@ -330,7 +331,7 @@ export class FreeCell {
 		});
 	}
 
-	__clampCursor(location?: CardLocation, gameFunction?: GameFunction): CardLocation {
+	__clampCursor(location?: CardLocation): CardLocation {
 		if (!location) return DEFAULT_CURSOR_LOCATION;
 
 		const [d0, d1] = location.data;
@@ -351,7 +352,6 @@ export class FreeCell {
 			}
 			case 'deck':
 				if (d0 <= 0) return { fixture: 'deck', data: [0] };
-				else if (d0 === this.deck.length && gameFunction === 'recall-or-bury') return location;
 				else if (d0 >= this.deck.length)
 					return { fixture: 'deck', data: [Math.max(0, this.deck.length - 1)] };
 				else return location;
@@ -359,7 +359,7 @@ export class FreeCell {
 	}
 
 	setCursor(cursor: CardLocation, { gameFunction }: OptionsNonstandardGameplay = {}): FreeCell {
-		cursor = this.__clampCursor(cursor, gameFunction);
+		cursor = this.__clampCursor(cursor);
 		const action: PreviousAction = {
 			type: 'cursor',
 			text: calcCursorActionText(this, 'set', cursor),
@@ -430,6 +430,7 @@ export class FreeCell {
 				selection.cards.length &&
 				(allowSelectFoundation || this.cursor.fixture !== 'foundation') &&
 				(allowPeekOnly || !selection.peekOnly) &&
+				!(gameFunction === 'recall-or-bury' && this.cursor.fixture === 'deck') &&
 				!selectionNever
 			) {
 				return this.__clone({
@@ -869,21 +870,19 @@ export class FreeCell {
 			});
 		}
 
+		const endDeckLength = game.deck.length;
+		const dealtCount = startDeckLength - endDeckLength;
+		if (dealtCount === 0) return this;
+
 		if (game.cursor.fixture === 'deck') {
 			if (!game.deck.length) {
 				game.cursor = DEFAULT_CURSOR_LOCATION;
 			} else {
-				// we could just subtract one every time we deal a card
-				const reversePrevD0 = this.deck.length - this.cursor.data[0] - 1;
-				const clampD0 = Math.max(0, Math.min(reversePrevD0, game.deck.length));
-				const nextD0 = Math.max(0, game.deck.length - 1 - clampD0);
+				const nextD0 = Math.max(0, Math.min(this.cursor.data[0], game.deck.length - 1));
 				game.cursor = { fixture: 'deck', data: [nextD0] };
 			}
 		}
 
-		const endDeckLength = game.deck.length;
-		const dealtCount = startDeckLength - endDeckLength;
-		if (dealtCount === 0) return this;
 		if (endDeckLength) {
 			let actionText = 'deal 1 card';
 			if (dealtCount > 1) {
@@ -954,7 +953,9 @@ export class FreeCell {
 		const actionText = this.history.at(-1);
 		const after = parseCursorFromPreviousActionText(actionText, this.cards);
 		if (!after) return this;
-		if (!isLocationEqual(after, this.cursor)) return this.setCursor(after);
+		if (!isLocationEqual(this.__clampCursor(after), this.cursor))
+			// REVIEW (deck) (optimize) only deck needs to __clampCursor
+			return this.setCursor(after);
 		const before = parseAltCursorFromPreviousActionText(actionText, this.cards, allowEmptyDeck);
 		if (!before) return this;
 		return this.setCursor(before);
@@ -1342,7 +1343,8 @@ export class FreeCell {
 				if (deckLength === 0) {
 					history.push('deal all cards');
 				} else {
-					history.push('deal 44 cards');
+					const dealtCount = cards.length - deckLength - remaining.length;
+					history.push(`deal ${dealtCount} cards`);
 				}
 			}
 		} else if (popped.startsWith(':h')) {

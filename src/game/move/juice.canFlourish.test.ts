@@ -622,7 +622,7 @@ describe('move.juice', () => {
 	});
 
 	describe('checkGames', () => {
-		// XXX (benchmark) juice.canFlourish:  730 seconds (12 minutes)
+		// XXX (benchmark) juice.canFlourish:  730 seconds (12 minutes) … 7.2 seconds
 		// eslint-disable-next-line @vitest/no-disabled-tests
 		test.skip('canFlourish', () => {
 			// const flourishSeeds: number[] = [];
@@ -639,7 +639,7 @@ describe('move.juice', () => {
 			expect(flourishCount).toBe(28843);
 		});
 
-		// XXX (benchmark) juice.canFlourish52: 94 seconds
+		// XXX (benchmark) juice.canFlourish52: 94 seconds … 2.0 seconds
 		// eslint-disable-next-line @vitest/no-disabled-tests
 		test.skip('canFlourish52', () => {
 			const catalogSeeds = getSeedsByTag('canFlourish52');
@@ -806,12 +806,23 @@ describe('move.juice', () => {
 		});
 
 		test('demo', () => {
-			const game = _collectCellsToDeck(new FreeCell().dealAll({ demo: true }));
-			expect(_collectCardsTillAceToDeck(game).print()).toBe(
+			let game = new FreeCell().dealAll({ demo: true });
+			expect(game.__printDeck()).toBe('');
+
+			game = _collectCellsToDeck(game);
+			expect(game.__printDeck()).toBe(' 2S 2H 2D>2C ');
+			expect(game.deck[4]).toBe(undefined);
+			expect(game.deck.length).toBe(4);
+
+			game = _collectCardsTillAceToDeck(game);
+			expect(game.deck[4]).not.toBe(undefined);
+			expect(game.deck.length).toBe(48);
+
+			expect(game.print()).toBe(
 				'' + //
 					'             AS AH AD AC \n' +
 					'                         \n' +
-					':d QC TC 8C 6C 4C QD TD 8D 6D 4D QH TH 8H 6H 4H QS TS 8S 6S 4S KC JC 9C 7C 5C 3C KD JD 9D 7D 5D 3D KH JH 9H 7H 5H 3H KS JS 9S 7S 5S>3S 2S 2H 2D 2C \n' +
+					':d QC TC 8C 6C 4C QD TD 8D 6D 4D QH TH 8H 6H 4H QS TS 8S 6S 4S KC JC 9C 7C 5C 3C KD JD 9D 7D 5D 3D KH JH 9H 7H 5H 3H KS JS 9S 7S 5S 3S>2S 2H 2D 2C \n' +
 					' invalid move tableau→deck'
 			);
 		});

@@ -306,15 +306,15 @@ describe('game.shuffle32', () => {
 				' TD 7S JD 7H 8H JH JC 7D \n' +
 				' 5S QH 8C 9D KS QD 4H AC \n' +
 				' 2H TC TH 6D             \n' +
-				':d 6H 6C QC JS 9S AD 7C>TS \n' +
+				':d>6H 6C QC JS 9S AD 7C TS \n' +
 				' deal 44 cards'
 		);
 		expect(game.history).toEqual(['shuffle deck (5)', 'deal 44 cards']);
-		expect(game.__printDeck()).toEqual(' 6H 6C QC JS 9S AD 7C>TS ');
+		expect(game.__printDeck()).toEqual('>6H 6C QC JS 9S AD 7C TS ');
 		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual(['shuffle deck (5)', 'deal 44 cards']);
 		game = game.shuffle32(6);
 		expect(game.history).toEqual(['shuffle deck (5)', 'deal 44 cards', 'shuffle deck (6)']);
-		expect(game.__printDeck()).toEqual(' AD 6H QC TS 6C JS 9S>7C ');
+		expect(game.__printDeck()).toEqual('>AD 6H QC TS 6C JS 9S 7C ');
 		expect(FreeCell.parse(game.print({ includeHistory: true })).history).toEqual(['init with invalid history replay cards', 'shuffle deck (6)']);
 		game = game.dealAll();
 		expect(game.history).toEqual(['shuffle deck (5)', 'deal 44 cards', 'shuffle deck (6)', 'deal all cards']);

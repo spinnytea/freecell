@@ -16,7 +16,7 @@ describe('game.parse', () => {
 			'' + //
 				'                         \n' +
 				'                         \n' +
-				':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD>AC \n' +
+				':d>KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
 				' init'
 		);
 		expect(gamePrintHist).toBe(
@@ -38,7 +38,12 @@ describe('game.parse', () => {
 			type: 'init',
 		});
 
-		// this should have been all we needed to check, lol
+		// confirm intial cursor
+		expect(g.cursor).toEqual({ fixture: 'deck', data: [51] });
+		expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
+		expect(gameHist.cursor).toEqual({ fixture: 'deck', data: [51] });
+
+		// this should have been all we needed to check 😬
 		expect(game).toEqual(gameHist);
 		// and we may as well check this too
 		expect(game).toEqual(g);
@@ -207,7 +212,7 @@ describe('game.parse', () => {
 					text: 'init',
 					type: 'init',
 				});
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
 
 				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
 				expect(gameWithHist.history).toEqual([]);
@@ -215,7 +220,7 @@ describe('game.parse', () => {
 					text: 'init',
 					type: 'init',
 				});
-				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [51] });
 				expect(gameWithHist).toEqual(game);
 
 				const gameNoHist = FreeCell.parse(game.print());
@@ -224,7 +229,7 @@ describe('game.parse', () => {
 					text: 'init',
 					type: 'init',
 				});
-				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [51] });
 				expect(gameNoHist).toEqual(game);
 			});
 
@@ -235,7 +240,7 @@ describe('game.parse', () => {
 					text: 'shuffle deck (1)',
 					type: 'shuffle',
 				});
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
 
 				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
 				expect(gameWithHist.history).toEqual(['shuffle deck (1)']);
@@ -243,7 +248,7 @@ describe('game.parse', () => {
 					text: 'shuffle deck (1)',
 					type: 'shuffle',
 				});
-				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [51] });
 				expect(gameWithHist).toEqual(game);
 
 				const gameNoHist = FreeCell.parse(game.print());
@@ -252,7 +257,7 @@ describe('game.parse', () => {
 					text: 'shuffle deck (1)',
 					type: 'shuffle',
 				});
-				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [51] });
 				expect(gameNoHist).toEqual(game);
 			});
 
@@ -315,12 +320,24 @@ describe('game.parse', () => {
 
 			test('deal 44 cards', () => {
 				const game = new FreeCell().dealAll({ demo: true, keepDeck: true });
+				expect(game.print()).toBe(
+					'' + //
+						'                         \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+						' 3S 3H 3D 3C             \n' +
+						':d>2S 2H 2D 2C AS AH AD AC \n' +
+						' deal 44 cards'
+				);
 				expect(game.history).toEqual(['deal 44 cards']);
 				expect(game.previousAction).toEqual({
 					text: 'deal 44 cards',
 					type: 'deal',
 				});
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [7] });
 
 				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
 				expect(gameWithHist.history).toEqual(['deal 44 cards']);
@@ -328,7 +345,7 @@ describe('game.parse', () => {
 					text: 'deal 44 cards',
 					type: 'deal',
 				});
-				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(gameWithHist.cursor).toEqual({ fixture: 'deck', data: [7] });
 				expect(gameWithHist).toEqual(game);
 
 				const gameNoHist = FreeCell.parse(game.print());
@@ -337,8 +354,52 @@ describe('game.parse', () => {
 					text: 'deal 44 cards',
 					type: 'deal',
 				});
-				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(gameNoHist.cursor).toEqual({ fixture: 'deck', data: [7] });
 				expect(gameNoHist).toEqual(game);
+			});
+
+			test('remaining affects dealtCount', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'                         \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C             \n' +
+						' 3S 3H 3D 3C             \n' +
+						':d>2S 2H 2D 2C AS AH AD AC \n' +
+						' deal abcd'
+				);
+				expect(game.print()).toBe(
+					'' + //
+						'                         \n' +
+						' KS KH KD KC QS QH QD QC \n' +
+						' JS JH JD JC TS TH TD TC \n' +
+						' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+						' 5S 5H 5D 5C             \n' +
+						' 3S 3H 3D 3C             \n' +
+						':d 4S 4H 4D 4C>2S 2H 2D 2C AS AH AD AC \n' +
+						' deal abcd' // invalid action text is preserved
+				);
+				expect(game.previousAction).toEqual({
+					text: 'deal abcd', // invalid action text is preserved
+					type: 'deal',
+				});
+				// invalid action text is not preserved in the history
+				expect(game.history).toEqual(['deal 40 cards']);
+
+				const gameDealAgain = game.dealAll();
+				expect(gameDealAgain.history).toEqual(['deal 40 cards', 'deal all cards']);
+
+				const gameDealAgainUndo = gameDealAgain.undo();
+				expect(gameDealAgainUndo.history).toEqual(['deal 40 cards']);
+				expect(gameDealAgainUndo.previousAction).toEqual({
+					text: 'deal 40 cards',
+					type: 'deal',
+					gameFunction: 'undo',
+				});
 			});
 
 			test('first move', () => {
@@ -996,7 +1057,24 @@ describe('game.parse', () => {
 				expect(game.availableMoves).toEqual([]);
 			});
 
-			test('end', () => {
+			test('cursor after selection', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'                         \n' +
+						'                         \n' +
+						':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH|AD>AC \n' +
+						' select k AD'
+				);
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.selection).toEqual({
+					location: { fixture: 'deck', data: [1] },
+					cards: [{ rank: 'ace', suit: 'diamonds', location: { fixture: 'deck', data: [1] } }],
+					peekOnly: true,
+				});
+				expect(game.availableMoves).toEqual([]);
+			});
+
+			test('last card selected', () => {
 				const game = FreeCell.parse(
 					'' + //
 						'                         \n' +
@@ -1291,6 +1369,8 @@ describe('game.parse', () => {
 					);
 				});
 			});
+
+			test.todo('deck');
 		});
 
 		describe('various valid selections', () => {

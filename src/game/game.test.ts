@@ -7,6 +7,38 @@ describe('game', () => {
 	test('init', () => {
 		const game = new FreeCell();
 		expect(game).toMatchSnapshot();
+		// cards are orded ace to king, and by suit
+		expect(game.cards[0]).toEqual({
+			rank: 'ace',
+			suit: 'clubs',
+			location: { fixture: 'deck', data: [0] },
+		});
+		expect(game.cards[1]).toEqual({
+			rank: 'ace',
+			suit: 'diamonds',
+			location: { fixture: 'deck', data: [1] },
+		});
+		expect(game.cards[2]).toEqual({
+			rank: 'ace',
+			suit: 'hearts',
+			location: { fixture: 'deck', data: [2] },
+		});
+		expect(game.cards[3]).toEqual({
+			rank: 'ace',
+			suit: 'spades',
+			location: { fixture: 'deck', data: [3] },
+		});
+		expect(game.cards[4]).toEqual({
+			rank: '2',
+			suit: 'clubs',
+			location: { fixture: 'deck', data: [4] },
+		});
+		expect(game.cards[51]).toEqual({
+			rank: 'king',
+			suit: 'spades',
+			location: { fixture: 'deck', data: [51] },
+		});
+		// deck coords match index
 		expect(game.deck[0]).toEqual({
 			rank: 'ace',
 			suit: 'clubs',
@@ -36,7 +68,7 @@ describe('game', () => {
 			'' + //
 				'                         \n' +
 				'                         \n' +
-				':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD>AC \n' +
+				':d>KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
 				' init'
 		);
 	});
@@ -435,11 +467,11 @@ describe('game', () => {
 		});
 	});
 
-	describe('deallAll', () => {
+	describe('dealAll', () => {
 		describe('update cursor', () => {
 			test('standard', () => {
 				let game = new FreeCell();
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
 				game = game.dealAll();
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(game.deck.length).toBe(0);
@@ -447,40 +479,92 @@ describe('game', () => {
 
 			test('demo', () => {
 				let game = new FreeCell();
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
 				game = game.dealAll({ demo: true });
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(game.deck.length).toBe(0);
 			});
 
 			describe('keepDeck', () => {
-				test.each`
-					startD0 | endD0 | printDeck
-					${0}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
-					${1}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
-					${2}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
-					${7}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
-					${8}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
-					${9}    | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
-					${10}   | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
-					${11}   | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
-					${43}   | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
-					${44}   | ${0}  | ${' 2S 2H 2D 2C AS AH AD>AC '}
-					${45}   | ${1}  | ${' 2S 2H 2D 2C AS AH>AD AC '}
-					${46}   | ${2}  | ${' 2S 2H 2D 2C AS>AH AD AC '}
-					${47}   | ${3}  | ${' 2S 2H 2D 2C>AS AH AD AC '}
-					${48}   | ${4}  | ${' 2S 2H 2D>2C AS AH AD AC '}
-					${49}   | ${5}  | ${' 2S 2H>2D 2C AS AH AD AC '}
-					${50}   | ${6}  | ${' 2S>2H 2D 2C AS AH AD AC '}
-					${51}   | ${7}  | ${'>2S 2H 2D 2C AS AH AD AC '}
-				`('cursor at $startD0', ({ startD0, endD0, printDeck }: { startD0: number; endD0: number; printDeck: string }) => {
+				test('cards and deck', () => {
 					let game = new FreeCell();
-					game = game.setCursor({ fixture: 'deck', data: [startD0] });
-					expect(game.cursor).toEqual({ fixture: 'deck', data: [startD0] });
+					expect(game.deck.length).toBe(52);
+					expect(game.cards[0]).toEqual({ rank: 'ace', suit: 'clubs', location: { fixture: 'deck', data: [0] } });
+					expect(game.cards[7]).toEqual({ rank: '2', suit: 'spades', location: { fixture: 'deck', data: [7] } });
+					expect(game.cards[8]).toEqual({ rank: '3', suit: 'clubs', location: { fixture: 'deck', data: [8] } });
+					expect(game.cards[51]).toEqual({ rank: 'king', suit: 'spades', location: { fixture: 'deck', data: [51] } });
+					expect(game.cards[52]).toBe(undefined);
+					expect(game.deck[0]).toEqual({ rank: 'ace', suit: 'clubs', location: { fixture: 'deck', data: [0] } });
+					expect(game.deck[7]).toEqual({ rank: '2', suit: 'spades', location: { fixture: 'deck', data: [7] } });
+					expect(game.deck[8]).toEqual({ rank: '3', suit: 'clubs', location: { fixture: 'deck', data: [8] } });
+					expect(game.deck[51]).toEqual({ rank: 'king', suit: 'spades', location: { fixture: 'deck', data: [51] } });
+					expect(game.deck[52]).toBe(undefined);
+
 					game = game.dealAll({ demo: true, keepDeck: true });
-					expect(game.cursor).toEqual({ fixture: 'deck', data: [endD0] });
 					expect(game.deck.length).toBe(8);
-					expect(game.__printDeck()).toBe(printDeck);
+					expect(game.cards[0]).toEqual({ rank: 'ace', suit: 'clubs', location: { fixture: 'deck', data: [0] } });
+					expect(game.cards[7]).toEqual({ rank: '2', suit: 'spades', location: { fixture: 'deck', data: [7] } });
+					expect(game.cards[8]).toEqual({ rank: '3', suit: 'clubs', location: { fixture: 'cascade', data: [3, 5] } });
+					expect(game.cards[51]).toEqual({ rank: 'king', suit: 'spades', location: { fixture: 'cascade', data: [0, 0] } });
+					expect(game.cards[52]).toBe(undefined);
+					expect(game.deck[0]).toEqual({ rank: 'ace', suit: 'clubs', location: { fixture: 'deck', data: [0] } });
+					expect(game.deck[7]).toEqual({ rank: '2', suit: 'spades', location: { fixture: 'deck', data: [7] } });
+					expect(game.deck[8]).toBe(undefined);
+					expect(game.deck[51]).toBe(undefined);
+					expect(game.deck[52]).toBe(undefined);
+				});
+
+				describe('update cursor', () => {
+					test.each`
+						startD0 | endD0 | startSelect     | endSelect       | printDeck
+						${0}    | ${0}  | ${'peek k⡀ AC'} | ${'peek k⡀ AC'} | ${' 2S 2H 2D 2C AS AH AD>AC '}
+						${1}    | ${1}  | ${'peek k⡁ AD'} | ${'peek k⡁ AD'} | ${' 2S 2H 2D 2C AS AH>AD AC '}
+						${2}    | ${2}  | ${'peek k⡂ AH'} | ${'peek k⡂ AH'} | ${' 2S 2H 2D 2C AS>AH AD AC '}
+						${3}    | ${3}  | ${'peek k⡃ AS'} | ${'peek k⡃ AS'} | ${' 2S 2H 2D 2C>AS AH AD AC '}
+						${4}    | ${4}  | ${'peek k⡄ 2C'} | ${'peek k⡄ 2C'} | ${' 2S 2H 2D>2C AS AH AD AC '}
+						${5}    | ${5}  | ${'peek k⡅ 2D'} | ${'peek k⡅ 2D'} | ${' 2S 2H>2D 2C AS AH AD AC '}
+						${6}    | ${6}  | ${'peek k⡆ 2H'} | ${'peek k⡆ 2H'} | ${' 2S>2H 2D 2C AS AH AD AC '}
+						${7}    | ${7}  | ${'peek k⡇ 2S'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${8}    | ${7}  | ${'peek k⡈ 3C'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${9}    | ${7}  | ${'peek k⡉ 3D'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${10}   | ${7}  | ${'peek k⡊ 3H'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${11}   | ${7}  | ${'peek k⡋ 3S'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${43}   | ${7}  | ${'peek k⡫ JS'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${44}   | ${7}  | ${'peek k⡬ QC'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${45}   | ${7}  | ${'peek k⡭ QD'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${46}   | ${7}  | ${'peek k⡮ QH'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${47}   | ${7}  | ${'peek k⡯ QS'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${48}   | ${7}  | ${'peek k⡰ KC'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${49}   | ${7}  | ${'peek k⡱ KD'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${50}   | ${7}  | ${'peek k⡲ KH'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+						${51}   | ${7}  | ${'peek k⡳ KS'} | ${'peek k⡇ 2S'} | ${'>2S 2H 2D 2C AS AH AD AC '}
+					`(
+						'cursor at $startD0',
+						({
+							startD0,
+							endD0,
+							startSelect,
+							endSelect,
+							printDeck,
+						}: {
+							startD0: number;
+							endD0: number;
+							startSelect: string;
+							endSelect: string;
+							printDeck: string;
+						}) => {
+							let game = new FreeCell();
+							game = game.setCursor({ fixture: 'deck', data: [startD0] });
+							expect(game.cursor).toEqual({ fixture: 'deck', data: [startD0] });
+							expect(game.touch().previousAction.text).toEqual(startSelect);
+
+							game = game.dealAll({ demo: true, keepDeck: true });
+							expect(game.cursor).toEqual({ fixture: 'deck', data: [endD0] });
+							expect(game.touch().previousAction.text).toEqual(endSelect);
+							expect(game.deck.length).toBe(8);
+							expect(game.__printDeck()).toBe(printDeck);
+						}
+					);
 				});
 			});
 		});
@@ -670,7 +754,7 @@ describe('game', () => {
 				'' + //
 					'                   \n' +
 					'                         \n' +
-					':d KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD>AC \n' +
+					':d>KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC \n' +
 					' init'
 			);
 			expect(game.cells.length).toBe(2);

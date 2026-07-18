@@ -7,7 +7,7 @@ import {
 	cloneCards,
 	Coord,
 	countToBraille,
-	initializeDeck,
+	initializeDeckOfCards,
 	isAdjacent,
 	LocationSH,
 	parseShorthandCard,
@@ -64,8 +64,8 @@ describe('game/card', () => {
 				peekOnly: true,
 			});
 
-		test('initializeDeck', () => {
-			const deck = initializeDeck();
+		test('initializeDeckOfCards', () => {
+			const deck = initializeDeckOfCards();
 			const game = new FreeCell();
 			expect(deckShorthand(deck)).toBe(INIT_DECK_SHORTHAND);
 			expect(deckShorthand(game.cards)).toBe(INIT_DECK_SHORTHAND);
@@ -180,7 +180,7 @@ describe('game/card', () => {
 				${55} | ${'k'}    | ${'k⡷'}
 			`('$d0', ({ d0, shorthand, shorthandD0 }: { d0: number; shorthand: PileSH; shorthandD0: LocationSH }) => {
 				const location: CardLocation = { fixture: 'deck', data: [d0] };
-				const location_pile: CardLocation = { fixture: 'deck', data: [0] };
+				const location_pile: CardLocation = { fixture: 'deck', data: [99] };
 				expect(shorthandPile(location)).toBe(shorthand);
 				expect(shorthandLocation(location)).toBe(shorthandD0);
 				expect(parseShorthandPile(shorthand)).toEqual(location_pile);
@@ -200,7 +200,7 @@ describe('game/card', () => {
 				expect(shorthandLocation(location)).toBe(shorthandD0);
 
 				// parse is all just the pile location, since there are no coords
-				const location_pile: CardLocation = { fixture: 'deck', data: [0] };
+				const location_pile: CardLocation = { fixture: 'deck', data: [99] };
 				expect(parseShorthandPile(shorthand)).toEqual(location_pile);
 				expect(parseShorthandPile(shorthandD0 as PileSH)).toEqual(location_pile);
 				expect(parseShorthandLocation(shorthand)).toEqual(location_pile);

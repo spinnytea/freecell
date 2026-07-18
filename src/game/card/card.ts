@@ -146,11 +146,23 @@ export interface CardSequence {
 /* HELPER METHODS */
 /* ************** */
 
-// XXX (joker) will need to add an argument
-export function initializeDeck(includeJoker = false): Card[] {
+/**
+	Create the standard deck of cards for a new game.
+
+	- XXX (joker) will need to add an argument
+*/
+export function initializeDeckOfCards(includeJoker = false): Card[] {
 	const deck = new Array<Card>();
 
-	// initialize deck
+	/*
+		initialize deck
+		this order was chosen because of how the shuffle32 reference algoritm works
+
+		> Create an array of 52 cards:
+		> Ace of Clubs, Ace of Diamonds, Ace of Hearts, Ace of Spades, 2 of Clubs, 2 of Diamonds,
+		> and so on through the ranks: Ace, 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King.
+		> The array indexes are 0 to 51, with Ace of Clubs at 0, and King of Spades at 51.
+	*/
 	RankList.forEach((rank) => {
 		if (rank === 'joker' && !includeJoker) return;
 		SuitList.forEach((suit) => {
@@ -528,15 +540,20 @@ export function parseShorthandLocation(p: LocationSH): CardLocation {
 	const location = parseShorthandPile(p as PileSH);
 	switch (location.fixture) {
 		case 'cascade':
-			// if !p[1], then brailleToCount ⇒ 0
+			// p[1] is optional, then brailleToCount ⇒ 0
 			location.data[1] = brailleToCount(p[1]);
 			break;
-		case 'deck':
 		case 'foundation':
+			// p[1] is required, …but brailleToCount ⇒ 0
 			location.data[0] = brailleToCount(p[1]);
 			break;
 		case 'cell':
+			// p[1] is not allowed
 			if (p[1]) throw new Error(`cell should never have coords -- "${p}"`);
+			break;
+		case 'deck':
+			// p[1] is optional, then data[0] ⇐ BOTTOM_OF_CASCADE
+			if (p[1]) location.data[0] = brailleToCount(p[1]);
 			break;
 	}
 	return location;
@@ -576,7 +593,7 @@ export function parseShorthandPile(p: PileSH): CardLocation {
 			// consider using parseShorthandPileForMove instead
 			return { fixture: 'foundation', data: [0] };
 		case 'k':
-			return { fixture: 'deck', data: [0] };
+			return { fixture: 'deck', data: [BOTTOM_OF_CASCADE] };
 		case 'a':
 		case 'b':
 		case 'c':

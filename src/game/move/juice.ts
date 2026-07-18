@@ -262,7 +262,7 @@ export function _collectCardsTillAceToDeck(game: FreeCell): FreeCell {
 	}
 
 	game = _moveCardsToDeck(game, {
-		location: { fixture: 'foundation', data: [0] },
+		location: { fixture: 'foundation', data: [0] }, // this is unused, and it's a bunch of cards across all cascades
 		cards: cardsToMove,
 		peekOnly: true,
 	});
@@ -276,8 +276,12 @@ function _spreadDeckToEmptyPiles(g: FreeCell, emptyPiles: CardLocation[]): FreeC
 
 	// put deck on board, split by suit
 	emptyPiles.forEach((emptyPile) => {
-		// BUG (techdebt) (deck) (gameplay) why can't we deal from the middle?
-		// const last_card = g.deck.at(0);
+		// TODO (deck) (test) we deal from the middle
+		//  - e.g. const last_card = g.deck.at(0);
+		//  - this isn't a valid move, and we probably won't do it
+		//  - but it will help ensure moveCards + deck representation is sound
+		//  - we _had_ a bug about the deck having gaps
+		//  - this will help test that those gaps do not come back
 		const last_card = g.deck.at(-1);
 		if (last_card) {
 			const cards = g.deck.filter((card) => card.suit === last_card.suit);
@@ -306,7 +310,7 @@ function _sortAces(a: Card, b: Card) {
 */
 function _moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCell {
 	if (!selection.cards.length) return game;
-	const to: CardLocation = { fixture: 'deck', data: [game.deck.length] };
+	const to: CardLocation = { fixture: 'deck', data: [(game.deck.length || 1) - 1] };
 	const cards = moveCards(game, selection, to);
 	const actionText = 'invalid move tableau→deck';
 	return game.__clone({

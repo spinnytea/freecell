@@ -1,3 +1,4 @@
+import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import {
 	Card,
 	CardLocation,
@@ -612,12 +613,12 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 		case 'deck': {
 			// we can, in theory, move cards to the deck
 			// this isn't standard gameplay
-			const d0 = to.data[0];
+			const d0 = Math.max(0, Math.min(to.data[0], game.deck.length - 1));
 
 			// make space for the from_cards
 			cards.forEach((card) => {
 				if (card.location.fixture === 'deck') {
-					if (card.location.data[0] >= d0) {
+					if (card.location.data[0] > d0) {
 						card.location = {
 							fixture: 'deck',
 							data: [card.location.data[0] + from_cards.length],
@@ -627,10 +628,11 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 			});
 
 			// put in the from cards
+			const shift = game.deck.length ? 0 : -1;
 			from_cards.forEach((card, idx) => {
 				card.location = {
 					fixture: 'deck',
-					data: [d0 - idx + from_cards.length - 1],
+					data: [d0 - idx + from_cards.length + shift],
 				};
 			});
 			break;
@@ -653,6 +655,21 @@ export function moveCards(game: FreeCell, from: CardSequence, to: CardLocation):
 			});
 			break;
 		}
+	}
+
+	if (from.location.fixture === 'deck') {
+		// shift all the cards
+		const d0 = from.location.data[0];
+		cards.forEach((card) => {
+			if (card.location.fixture === 'deck') {
+				if (card.location.data[0] > d0) {
+					card.location = {
+						fixture: 'deck',
+						data: [card.location.data[0] - from_cards.length],
+					};
+				}
+			}
+		});
 	}
 
 	return cards;
@@ -984,7 +1001,7 @@ export function parseShorthandPileForMove(
 			// deck isn't standard gameplay (it's not a location to move from/to), but even IFF we do, __clampCursor can handle it
 			// each index is NOT getting it's own letter, so iff we can pick any place, it'll be the start or end or by numberical value so why _not_ just clamp it
 			// top card in deck
-			to_location.data[0] = game.deck.length;
+			to_location.data[0] = BOTTOM_OF_CASCADE;
 			break;
 		case 'cell':
 			if (to_location.data[0] >= game.cells.length) return null;

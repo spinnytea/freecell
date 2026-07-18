@@ -173,20 +173,24 @@ export function printDeck(
 ): string {
 	if (game.deck.length) {
 		if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
-			// prettier-ignore
-			const deckStr = game.deck
-				.map((card, idx) => `${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`)
-				.reverse()
-				.join('');
+			// using for-of entries to catch gaps (.map will skip gaps)
+			const strs = [];
+			for (const [idx, card] of game.deck.entries()) {
+				strs.push(
+					`${getPrintSeparator({ fixture: 'deck', data: [idx] }, cursor, selection)}${shorthandCard(card)}`
+				);
+			}
+			const deckStr = strs.reverse().join('');
 			const lastCol = getPrintSeparator({ fixture: 'deck', data: [-1] }, null, selection);
-			const offDeckPrefix = cursor.data[0] === game.deck.length ? '>  ' : '';
-			return `${offDeckPrefix}${deckStr}${lastCol}`;
+			return `${deckStr}${lastCol}`;
 		} else {
 			// if no cursor/selection in deck
-			const deckStr = game.deck
-				.map((card) => shorthandCard(card))
-				.reverse()
-				.join(' ');
+			// using for-of to catch gaps (.map will skip gaps)
+			const strs = [];
+			for (const card of game.deck) {
+				strs.push(shorthandCard(card));
+			}
+			const deckStr = strs.reverse().join(' ');
 			return ` ${deckStr} `;
 		}
 	} else if (cursor.fixture === 'deck') {

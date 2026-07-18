@@ -1,5 +1,4 @@
 import { describe, expect, test } from 'vitest';
-import { shorthandPile } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { PreviousAction } from '@/game/move/history';
 
@@ -16,7 +15,7 @@ import { PreviousAction } from '@/game/move/history';
 	   - this will make it easier to test a bunch more "invalid scenarios" more than anything
 */
 describe('game.$moveCardToPile', () => {
-	test('spot some concerns', () => {
+	test('spot some concerns (resolved)', () => {
 		let game = new FreeCell().dealAll({ demo: true, keepDeck: true });
 		game = game.$selectCard('AH');
 		expect(game.print()).toBe(
@@ -32,26 +31,46 @@ describe('game.$moveCardToPile', () => {
 				' peek k AH'
 		);
 
-		// REVIEW (techdebt) (deck) this move isn't allowed
-		// one part of the logic allows moving a card from the deck into play
-		// another but a bunch of code relies on shorthand moves that don't allow for the deck to be interacted with
-		// if we are going to rely on the deck so much, we shouldn't attempt this move
-		// we block it with moveCardToPile, but it shouldn't explode if we don't
+		// playing cards from the deck is not allowed (it should be empty for standard gameplay, anyways)
+		// don't explode (it use to throw an error)
 		expect(() => game.$moveCardToPile('AH', 'a')).not.toThrow();
+		// block the move
 		expect(game.$moveCardToPile('AH', 'a')).toBe(game);
 
-		// REVIEW (techdebt) (deck) this whole block needs review
-		// basically, we can't "move to or from" the deck
-		expect(game.cursor).toEqual({ fixture: 'deck', data: [2] });
-		expect(game.$selectCard('AH').previousAction).toEqual({ text: 'peek k⡂ AH', type: 'select' });
-		// REVIEW same place as cursor
-		expect(game.$selectCard('AH').cursor).toEqual({ fixture: 'deck', data: [2] });
-		expect(shorthandPile(game.cursor)).toBe('k');
-		// REVIEW (deck) AH is _in_ the deck?
+		// we do allow interacting with the deck (for what it's worth)
+		expect(game.$selectCard('2C').previousAction).toEqual({ text: 'peek k⡄ 2C', type: 'select' });
+		// noop, already selected
+		expect(game.$selectCard('AH')).toBe(game);
+
+		// cannot move a card within the deck
 		expect(game.$moveCardToPile('AH', 'k')).toBe(game);
-		expect(game.touchByPile('h').previousAction.text).toBe('invalid move k⡂h⡀ AH→foundation');
-		// BUG (deck) (recall-or-bury) we should be able to make this move
-		expect(game.touchByPile('h', { gameFunction: 'recall-or-bury' }).previousAction.text).toBe('invalid move k⡂h⡀ AH→foundation');
+
+		// blocked
+		expect(game.touchByPile('h').print()).toBe(
+			'' +
+				'            >            \n' +
+				' KS KH KD KC QS QH QD QC \n' +
+				' JS JH JD JC TS TH TD TC \n' +
+				' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+				' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+				' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+				' 3S 3H 3D 3C             \n' +
+				':d 2S 2H 2D 2C AS|AH|AD AC \n' +
+				' invalid move kh AH→foundation'
+		);
+		// gameFunction
+		expect(game.touchByPile('h', { gameFunction: 'recall-or-bury' }).print()).toBe(
+			'' +
+				'            >AH          \n' +
+				' KS KH KD KC QS QH QD QC \n' +
+				' JS JH JD JC TS TH TD TC \n' +
+				' 9S 9H 9D 9C 8S 8H 8D 8C \n' +
+				' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
+				' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
+				' 3S 3H 3D 3C             \n' +
+				':d 2S 2H 2D 2C AS AD AC \n' +
+				' invalid move kh AH→foundation'
+		);
 
 		game = game.dealAll();
 		expect(game.print()).toBe(

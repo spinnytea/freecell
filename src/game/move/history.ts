@@ -1,3 +1,4 @@
+import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
 import {
 	Card,
 	CardLocation,
@@ -5,7 +6,7 @@ import {
 	cloneCards,
 	findCard,
 	getSequenceAt,
-	initializeDeck,
+	initializeDeckOfCards,
 	isFixture,
 	LocationSH,
 	parseShorthandCard,
@@ -16,7 +17,12 @@ import {
 	shorthandSequence,
 	sortCardsOG,
 } from '@/game/card/card';
-import { FreeCell, NUMBER_OF_FOUNDATIONS } from '@/game/game';
+import {
+	DEFAULT_CURSOR_LOCATION,
+	FreeCell,
+	INIT_CURSOR_LOCATION,
+	NUMBER_OF_FOUNDATIONS,
+} from '@/game/game';
 import { moveCards } from '@/game/move/move';
 
 export type PreviousActionType =
@@ -30,6 +36,11 @@ export type PreviousActionType =
 	| 'auto-foundation' // can be it's own history item, collapsed in standard gameplay
 	| 'move-foundation' // move + auto-foundation
 	| 'invalid'
+	// IDEA (4-priority) (deck) (history) add a PreviousActionType of 'illegal' or 'illegal-move'
+	//  - e.g. gameFunction === 'recall-or-bury'
+	//  - e.g. move card off foundation
+	//  - then we can stop using "invalid move xx xxx" of type "move"
+	// | 'illegal'
 	| 'juice';
 
 /**
@@ -167,7 +178,7 @@ export function parseAndUndoPreviousActionText(game: FreeCell, actionText: strin
 			// (there is some sugar where we can shuffle -> init -> shuffle, but that basically replaces the shuffle, it does not stack)
 			// if there _were_ multiple shuffles in the history, this would be invalid
 			// but we have to assume there are not
-			return initializeDeck();
+			return initializeDeckOfCards();
 		case 'deal':
 			return unDealAll(game);
 		case 'move':
@@ -209,10 +220,10 @@ export function parseCursorFromPreviousActionText(
 	switch (parsePreviousActionType(actionText).type) {
 		case 'init':
 		case 'shuffle':
-			return { fixture: 'deck', data: [0] };
+			return INIT_CURSOR_LOCATION;
 		case 'deal':
-			if (/^deal \d+ cards?/.test(actionText)) return { fixture: 'deck', data: [0] };
-			return { fixture: 'cell', data: [0] };
+			if (/^deal \d+ cards?/.test(actionText)) return INIT_CURSOR_LOCATION;
+			return DEFAULT_CURSOR_LOCATION;
 		case 'move-foundation':
 		case 'move': {
 			const { toLocation, fromShorthand, toShorthand } = parseActionTextMove(actionText);
@@ -221,6 +232,7 @@ export function parseCursorFromPreviousActionText(
 				case 'deck':
 					// we don't move cards to the deck in practice
 					// moving to `k` is enough for now (no need to look for toShorthand within the deck)
+					// REVIEW (motivation) (deck) look for toShorthand within the deck
 					break;
 				case 'cell':
 					// each cell identifies it's own d0
@@ -305,7 +317,7 @@ export function parseCursorFromPreviousActionText(
 				return undefined;
 			}
 			if (actionText === 'invalid move tableau→deck') {
-				return { fixture: 'deck', data: [0] };
+				return { fixture: 'deck', data: [BOTTOM_OF_CASCADE] };
 			}
 			if (actionText.startsWith('invalid')) {
 				return parseCursorFromPreviousActionText(actionText.substring(8), cards);
@@ -327,7 +339,7 @@ export function parseCursorFromPreviousActionText(
 		case 'auto-foundation':
 			return undefined;
 		case 'juice':
-			return { fixture: 'cell', data: [0] };
+			return DEFAULT_CURSOR_LOCATION;
 	}
 	// throw new Error(`invalid actionText '${actionText}' or 'invalid ${actionText}'`);
 	return undefined;
@@ -350,9 +362,9 @@ export function parseAltCursorFromPreviousActionText(
 		case 'shuffle':
 		case 'deal':
 			if (!allowEmptyDeck && !cards.some(({ location }) => location.fixture === 'deck')) {
-				return { fixture: 'cell', data: [0] };
+				return DEFAULT_CURSOR_LOCATION;
 			}
-			return { fixture: 'deck', data: [0] };
+			return INIT_CURSOR_LOCATION;
 		case 'move-foundation':
 		case 'move': {
 			const { fromLocation } = parseActionTextMove(actionText);
@@ -395,7 +407,7 @@ export function parseAltCursorFromPreviousActionText(
 		case 'auto-foundation':
 			return undefined;
 		case 'juice':
-			return { fixture: 'cell', data: [0] };
+			return DEFAULT_CURSOR_LOCATION;
 	}
 	// throw new Error(`invalid actionText '${actionText}' or 'invalid ${actionText}'`);
 	return undefined;

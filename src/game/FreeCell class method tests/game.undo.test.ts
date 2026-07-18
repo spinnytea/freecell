@@ -138,9 +138,10 @@ describe('game.undo (+ history)', () => {
 			test('shuffled', () => {
 				const game = new FreeCell().shuffle32(1);
 				expect(game.__printDeck()).toBe(
-					' JD 2D 9H JC 5D 7H 7C 5H KD KC 9S 5S AD QC KH 3H 2S KS 9D QD JS AS AH 3C 4C 5C TS QH 4H AC 4D 7S 3S TD 4S TH 8H 2C JH 7D 6D 8S 8D QS 6C 3D 8C TC 6S 9C 2H>6H '
+					'>JD 2D 9H JC 5D 7H 7C 5H KD KC 9S 5S AD QC KH 3H 2S KS 9D QD JS AS AH 3C 4C 5C TS QH 4H AC 4D 7S 3S TD 4S TH 8H 2C JH 7D 6D 8S 8D QS 6C 3D 8C TC 6S 9C 2H 6H '
 				);
 				const dealt = game.dealAll();
+				expect(dealt.__printDeck()).toBe('');
 				expect(dealt.previousAction).toEqual({
 					text: 'deal all cards',
 					type: 'deal',
@@ -160,15 +161,16 @@ describe('game.undo (+ history)', () => {
 				expect(dealt.__printDeck()).toBe('');
 				const undid = dealt.undo();
 				expect(undid.__printDeck()).toBe(
-					' JD 2D 9H JC 5D 7H 7C 5H KD KC 9S 5S AD QC KH 3H 2S KS 9D QD JS AS AH 3C 4C 5C TS QH 4H AC 4D 7S 3S TD 4S TH 8H 2C JH 7D 6D 8S 8D QS 6C 3D 8C TC 6S 9C 2H>6H '
+					'>JD 2D 9H JC 5D 7H 7C 5H KD KC 9S 5S AD QC KH 3H 2S KS 9D QD JS AS AH 3C 4C 5C TS QH 4H AC 4D 7S 3S TD 4S TH 8H 2C JH 7D 6D 8S 8D QS 6C 3D 8C TC 6S 9C 2H 6H '
 				);
+				expect(undid.previousAction.gameFunction).toBe('undo');
+				delete undid.previousAction.gameFunction;
+
 				expect(game.deck[0].location.data[0]).toBe(0);
 				expect(game.deck[9].location.data[0]).toBe(9);
 				expect(dealt.deck).toEqual([]);
 				expect(undid.deck[0].location.data[0]).toBe(0);
 				expect(undid.deck[9].location.data[0]).toBe(9);
-				expect(undid.previousAction.gameFunction).toBe('undo');
-				delete undid.previousAction.gameFunction;
 				expect(undid).toEqual(game);
 			});
 
@@ -198,13 +200,17 @@ describe('game.undo (+ history)', () => {
 
 			test('keepDeck', () => {
 				const game = new FreeCell();
+				expect(game.__printDeck()).toBe(
+					'>KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC '
+				);
 				const dealt = game.dealAll({ demo: true, keepDeck: true });
+				expect(dealt.__printDeck()).toBe('>2S 2H 2D 2C AS AH AD AC ');
 				expect(dealt.previousAction).toEqual({
 					text: 'deal 44 cards',
 					type: 'deal',
 				});
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
-				expect(dealt.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'deck', data: [51] });
+				expect(dealt.cursor).toEqual({ fixture: 'deck', data: [7] });
 				expect(dealt.print()).toBe(
 					'' + //
 						'                         \n' +
@@ -214,10 +220,13 @@ describe('game.undo (+ history)', () => {
 						' 7S 7H 7D 7C 6S 6H 6D 6C \n' +
 						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
 						' 3S 3H 3D 3C             \n' +
-						':d 2S 2H 2D 2C AS AH AD>AC \n' +
+						':d>2S 2H 2D 2C AS AH AD AC \n' +
 						' deal 44 cards'
 				);
 				const undid = dealt.undo();
+				expect(undid.__printDeck()).toBe(
+					'>KS KH KD KC QS QH QD QC JS JH JD JC TS TH TD TC 9S 9H 9D 9C 8S 8H 8D 8C 7S 7H 7D 7C 6S 6H 6D 6C 5S 5H 5D 5C 4S 4H 4D 4C 3S 3H 3D 3C 2S 2H 2D 2C AS AH AD AC '
+				);
 				expect(undid.previousAction.gameFunction).toBe('undo');
 				delete undid.previousAction.gameFunction;
 				expect(undid).toEqual(game);
@@ -493,131 +502,135 @@ describe('game.undo (+ history)', () => {
 				});
 
 				describe('to: cascade', () => {
-					test('single', () => {
-						let game = FreeCell.parse(
-							'' + //
-								' KC|QC|      JC QD KH KS \n' +
-								'   >KD                   \n' +
-								' hand-jammed'
-						);
-						const origPrint = game.print({ includeHistory: true });
-						expect(origPrint).toEqual(
-							'' + //
-								' KC QC       JC QD KH KS \n' +
-								'    KD                   \n' +
-								' hand-jammed'
-						);
-						expect(game.history).toEqual(['hand-jammed']);
-
-						game = game.touch({ autoFoundation: false });
-						expect(game.print({ includeHistory: true })).toBe(
-							'' + //
-								' KC          JC QD KH KS \n' +
-								'    KD                   \n' +
-								'    QC                   \n' +
-								' move b2⡀ QC→KD\n' +
-								' hand-jammed'
-						);
-						expect(game.history).toEqual(['hand-jammed', 'move b2⡀ QC→KD']);
-						expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
-						expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
-
-						expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
-					});
-
-					describe('sequence', () => {
-						// TODO (2-priority) (controls) (gameplay) move card to the top of a sequence
-						test.todo('top');
-						// t('top', () => {
-						// 	let game = FreeCell.parse(
-						// 		'' + //
-						// 			'   |TC|      9C TD KH KS \n' +
-						// 			' KC>KD                   \n' +
-						// 			' QD QC                   \n' +
-						// 			' JC JD                   \n' +
-						// 			' hand-jammed'
-						// 	);
-						// 	const origPrint = game.print({ includeHistory: true });
-						// 	expect(origPrint).toEqual(
-						// 		'' + //
-						// 			'    TC       9C TD KH KS \n' +
-						// 			' KC KD                   \n' +
-						// 			' QD QC                   \n' +
-						// 			' JC JD                   \n' +
-						// 			' hand-jammed'
-						// 	);
-
-						// 	game = game.touch();
-						// 	// what it is
-						// 	expect(game.previousAction.text).toEqual('invalid move b2 TC→JD');
-						// 	expect(game.history).toEqual(['hand-jammed']);
-						// 	// XXX (techdebt) what is should be
-						// 	expect(game.print()).toBe(
-						// 		'' + //
-						// 			'             9C TD KH KS \n' +
-						// 			' KC KD                   \n' +
-						// 			' QD QC                   \n' +
-						// 			' JC JD                   \n' +
-						// 			'    TC                   \n' +
-						// 			' move b2 TC→JD\n' +
-						// 			' hand-jammed'
-						// 	);
-						// 	expect(game.print({ includeHistory: true })).toBe(
-						// 		'' + //
-						// 			'             9C TD KH KS \n' +
-						// 			' KC KD                   \n' +
-						// 			' QD QC                   \n' +
-						// 			' JC JD                   \n' +
-						// 			'    TC                   \n' +
-						// 			' move b2 TC→JD\n' +
-						// 			' hand-jammed'
-						// 	);
-						// 	expect(game.history).toEqual(['hand-jammed', 'move b2 TC→JD']);
-						// 	expect(
-						// 		FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
-						// 	).toBe(game.print({ includeHistory: true }));
-
-						// 	expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
-						// });
-
-						test.todo('middle');
-
-						test('bottom', () => {
+					describe('not empty', () => {
+						test('single', () => {
 							let game = FreeCell.parse(
 								'' + //
-									'   |TC|      9C TD KH KS \n' +
-									' KC KD                   \n' +
-									' QD QC                   \n' +
-									' JC>JD                   \n' +
+									' KC|QC|      JC QD KH KS \n' +
+									'   >KD                   \n' +
 									' hand-jammed'
 							);
 							const origPrint = game.print({ includeHistory: true });
 							expect(origPrint).toEqual(
 								'' + //
-									'    TC       9C TD KH KS \n' +
-									' KC KD                   \n' +
-									' QD QC                   \n' +
-									' JC JD                   \n' +
+									' KC QC       JC QD KH KS \n' +
+									'    KD                   \n' +
 									' hand-jammed'
 							);
+							expect(game.history).toEqual(['hand-jammed']);
 
 							game = game.touch({ autoFoundation: false });
 							expect(game.print({ includeHistory: true })).toBe(
 								'' + //
-									'             9C TD KH KS \n' +
-									' KC KD                   \n' +
-									' QD QC                   \n' +
-									' JC JD                   \n' +
-									'    TC                   \n' +
-									' move b2⡂ TC→JD\n' +
+									' KC          JC QD KH KS \n' +
+									'    KD                   \n' +
+									'    QC                   \n' +
+									' move b2⡀ QC→KD\n' +
 									' hand-jammed'
 							);
-							expect(game.history).toEqual(['hand-jammed', 'move b2⡂ TC→JD']);
+							expect(game.history).toEqual(['hand-jammed', 'move b2⡀ QC→KD']);
 							expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
 							expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
 
 							expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 						});
+
+						describe('sequence', () => {
+							// TODO (2-priority) (controls) (gameplay) move card to the top of a sequence
+							test.todo('first');
+							// t('first', () => {
+							// 	let game = FreeCell.parse(
+							// 		'' + //
+							// 			'   |TC|      9C TD KH KS \n' +
+							// 			' KC>KD                   \n' +
+							// 			' QD QC                   \n' +
+							// 			' JC JD                   \n' +
+							// 			' hand-jammed'
+							// 	);
+							// 	const origPrint = game.print({ includeHistory: true });
+							// 	expect(origPrint).toEqual(
+							// 		'' + //
+							// 			'    TC       9C TD KH KS \n' +
+							// 			' KC KD                   \n' +
+							// 			' QD QC                   \n' +
+							// 			' JC JD                   \n' +
+							// 			' hand-jammed'
+							// 	);
+
+							// 	game = game.touch();
+							// 	// what it is
+							// 	expect(game.previousAction.text).toEqual('invalid move b2 TC→JD');
+							// 	expect(game.history).toEqual(['hand-jammed']);
+							// 	// XXX (techdebt) what is should be
+							// 	expect(game.print()).toBe(
+							// 		'' + //
+							// 			'             9C TD KH KS \n' +
+							// 			' KC KD                   \n' +
+							// 			' QD QC                   \n' +
+							// 			' JC JD                   \n' +
+							// 			'    TC                   \n' +
+							// 			' move b2 TC→JD\n' +
+							// 			' hand-jammed'
+							// 	);
+							// 	expect(game.print({ includeHistory: true })).toBe(
+							// 		'' + //
+							// 			'             9C TD KH KS \n' +
+							// 			' KC KD                   \n' +
+							// 			' QD QC                   \n' +
+							// 			' JC JD                   \n' +
+							// 			'    TC                   \n' +
+							// 			' move b2 TC→JD\n' +
+							// 			' hand-jammed'
+							// 	);
+							// 	expect(game.history).toEqual(['hand-jammed', 'move b2 TC→JD']);
+							// 	expect(
+							// 		FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })
+							// 	).toBe(game.print({ includeHistory: true }));
+
+							// 	expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
+							// });
+
+							test.todo('middle');
+
+							test('last', () => {
+								let game = FreeCell.parse(
+									'' + //
+										'   |TC|      9C TD KH KS \n' +
+										' KC KD                   \n' +
+										' QD QC                   \n' +
+										' JC>JD                   \n' +
+										' hand-jammed'
+								);
+								const origPrint = game.print({ includeHistory: true });
+								expect(origPrint).toEqual(
+									'' + //
+										'    TC       9C TD KH KS \n' +
+										' KC KD                   \n' +
+										' QD QC                   \n' +
+										' JC JD                   \n' +
+										' hand-jammed'
+								);
+
+								game = game.touch({ autoFoundation: false });
+								expect(game.print({ includeHistory: true })).toBe(
+									'' + //
+										'             9C TD KH KS \n' +
+										' KC KD                   \n' +
+										' QD QC                   \n' +
+										' JC JD                   \n' +
+										'    TC                   \n' +
+										' move b2⡂ TC→JD\n' +
+										' hand-jammed'
+								);
+								expect(game.history).toEqual(['hand-jammed', 'move b2⡂ TC→JD']);
+								expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+								expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
+
+								expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
+							});
+						});
+
+						test.todo('pile');
 					});
 
 					test('empty', () => {
@@ -672,14 +685,18 @@ describe('game.undo (+ history)', () => {
 				});
 
 				describe('to: cascade', () => {
-					test.todo('single');
+					describe('not empty', () => {
+						test.todo('single');
 
-					describe('sequence', () => {
-						test.todo('top');
+						describe('sequence', () => {
+							test.todo('first');
 
-						test.todo('middle');
+							test.todo('middle');
 
-						test.todo('bottom');
+							test.todo('last');
+						});
+
+						test.todo('pile');
 					});
 
 					test.todo('empty');
@@ -744,93 +761,97 @@ describe('game.undo (+ history)', () => {
 					});
 
 					describe('to: cascade', () => {
-						test('single', () => {
-							let game = FreeCell.parse(
-								'' + //
-									' KC          JC QD KH KS \n' +
-									'|QC>KD                   \n' +
-									' hand-jammed'
-							);
-							const origPrint = game.print({ includeHistory: true });
-							expect(origPrint).toEqual(
-								'' + //
-									' KC          JC QD KH KS \n' +
-									' QC KD                   \n' +
-									' hand-jammed'
-							);
-							expect(game.history).toEqual(['hand-jammed']);
-
-							game = game.touch({ autoFoundation: false });
-							expect(game.print({ includeHistory: true })).toBe(
-								'' + //
-									' KC          JC QD KH KS \n' +
-									'    KD                   \n' +
-									'    QC                   \n' +
-									' move 1⡀2⡀ QC→KD\n' +
-									' hand-jammed'
-							);
-							expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
-							expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
-
-							expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
-						});
-
-						describe('sequence', () => {
-							test.todo('top');
-
-							test.todo('middle');
-
-							test('bottom', () => {
+						describe('not empty', () => {
+							test('single', () => {
 								let game = FreeCell.parse(
 									'' + //
-										'>            TC 8D KH KS \n' +
-										'    TD KC KD    9D       \n' +
-										'       QD QC             \n' +
-										'       JC JD             \n' +
+										' KC          JC QD KH KS \n' +
+										'|QC>KD                   \n' +
 										' hand-jammed'
-								)
-									.setCursor({ fixture: 'cascade', data: [1, 0] })
-									.touch()
-									.setCursor({ fixture: 'cascade', data: [2, 2] })
-									.touch({ autoFoundation: false });
-								expect(game.print()).toBe(
-									'' + //
-										'             TC 8D KH KS \n' +
-										'       KC KD    9D       \n' +
-										'       QD QC             \n' +
-										'      >JC JD             \n' +
-										'       TD                \n' +
-										' move 23 TD→JC'
 								);
+								const origPrint = game.print({ includeHistory: true });
+								expect(origPrint).toEqual(
+									'' + //
+										' KC          JC QD KH KS \n' +
+										' QC KD                   \n' +
+										' hand-jammed'
+								);
+								expect(game.history).toEqual(['hand-jammed']);
+
+								game = game.touch({ autoFoundation: false });
 								expect(game.print({ includeHistory: true })).toBe(
 									'' + //
-										'             TC 8D KH KS \n' +
-										'       KC KD    9D       \n' +
-										'       QD QC             \n' +
-										'       JC JD             \n' +
-										'       TD                \n' +
-										' move 2⡀3⡂ TD→JC\n' +
+										' KC          JC QD KH KS \n' +
+										'    KD                   \n' +
+										'    QC                   \n' +
+										' move 1⡀2⡀ QC→KD\n' +
 										' hand-jammed'
 								);
-								game = game.undo();
-								expect(game.print()).toBe(
-									'' + //
-										'             TC 8D KH KS \n' +
-										'    TD KC KD    9D       \n' +
-										'       QD QC             \n' +
-										'       JC JD             \n' +
-										':d>   \n' +
-										' hand-jammed'
-								);
-								expect(game.print({ includeHistory: true })).toBe(
-									'' + //
-										'             TC 8D KH KS \n' +
-										'    TD KC KD    9D       \n' +
-										'       QD QC             \n' +
-										'       JC JD             \n' +
-										' hand-jammed'
-								);
+								expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+								expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
+
+								expect(game.undo().print({ includeHistory: true })).toBe(origPrint);
 							});
+
+							describe('sequence', () => {
+								test.todo('first');
+
+								test.todo('middle');
+
+								test('last', () => {
+									let game = FreeCell.parse(
+										'' + //
+											'>            TC 8D KH KS \n' +
+											'    TD KC KD    9D       \n' +
+											'       QD QC             \n' +
+											'       JC JD             \n' +
+											' hand-jammed'
+									)
+										.setCursor({ fixture: 'cascade', data: [1, 0] })
+										.touch()
+										.setCursor({ fixture: 'cascade', data: [2, 2] })
+										.touch({ autoFoundation: false });
+									expect(game.print()).toBe(
+										'' + //
+											'             TC 8D KH KS \n' +
+											'       KC KD    9D       \n' +
+											'       QD QC             \n' +
+											'      >JC JD             \n' +
+											'       TD                \n' +
+											' move 23 TD→JC'
+									);
+									expect(game.print({ includeHistory: true })).toBe(
+										'' + //
+											'             TC 8D KH KS \n' +
+											'       KC KD    9D       \n' +
+											'       QD QC             \n' +
+											'       JC JD             \n' +
+											'       TD                \n' +
+											' move 2⡀3⡂ TD→JC\n' +
+											' hand-jammed'
+									);
+									game = game.undo();
+									expect(game.print()).toBe(
+										'' + //
+											'             TC 8D KH KS \n' +
+											'    TD KC KD    9D       \n' +
+											'       QD QC             \n' +
+											'       JC JD             \n' +
+											':d>   \n' +
+											' hand-jammed'
+									);
+									expect(game.print({ includeHistory: true })).toBe(
+										'' + //
+											'             TC 8D KH KS \n' +
+											'    TD KC KD    9D       \n' +
+											'       QD QC             \n' +
+											'       JC JD             \n' +
+											' hand-jammed'
+									);
+								});
+							});
+
+							test.todo('pile');
 						});
 
 						test.todo('empty');
@@ -853,14 +874,18 @@ describe('game.undo (+ history)', () => {
 					});
 
 					describe('to: cascade', () => {
-						test.todo('single');
+						describe('not empty', () => {
+							test.todo('single');
 
-						describe('sequence', () => {
-							test.todo('top');
+							describe('sequence', () => {
+								test.todo('first');
 
-							test.todo('middle');
+								test.todo('middle');
 
-							test.todo('bottom');
+								test.todo('last');
+							});
+
+							test.todo('pile');
 						});
 
 						test.todo('empty');
