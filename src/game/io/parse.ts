@@ -10,7 +10,7 @@ import { parseMovesFromHistory } from '@/game/move/history';
 
 /**
 	parse the history (shorthand) of the game \
-	split out logic from {@link FreeCell.parse}
+	split out logic from {@linkcode FreeCell.prototype.parse}
 */
 export function parseHistoryShorthand(
 	print: string,

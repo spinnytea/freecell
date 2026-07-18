@@ -48,8 +48,8 @@ export type PreviousActionType =
 	Every piece of metadata within a game should change the hud in some way,
 	but these actions change the game board / game state.
 
-	Moving the cursor will produce a new {@link FreeCell},
-	but these actions change {@link FreeCell.cards} (and deck, cells, foundations, tableau).
+	Moving the cursor will produce a new {@linkcode FreeCell},
+	but these actions change {@linkcode FreeCell.cards} (and deck, cells, foundations, tableau).
 */
 export const PREVIOUS_ACTION_TYPE_IN_HISTORY = new Set<PreviousActionType>([
 	'init',
@@ -61,7 +61,7 @@ export const PREVIOUS_ACTION_TYPE_IN_HISTORY = new Set<PreviousActionType>([
 ]);
 
 /**
-	Primarily for {@link GameFunction} of `undo` and `restart`.
+	Primarily for {@linkcode GameFunction} of `undo` and `restart`.
 	These action types are effectively "game start."
 */
 export const PREVIOUS_ACTION_TYPE_IS_START_OF_GAME = new Set<PreviousActionType>([
@@ -70,7 +70,7 @@ export const PREVIOUS_ACTION_TYPE_IS_START_OF_GAME = new Set<PreviousActionType>
 	'deal',
 ]);
 
-/** @deprecated XXX (techdebt) seems like a duplicate of {@link PREVIOUS_ACTION_TYPE_IN_HISTORY} */
+/** @deprecated XXX (techdebt) seems like a duplicate of {@linkcode PREVIOUS_ACTION_TYPE_IN_HISTORY} */
 export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
 	'move',
 	'move-foundation',
@@ -112,10 +112,10 @@ export interface PreviousAction {
 		just the cards that moved during an in-between step (i.e. move -> auto-foundation)
 
 		we are keeping track of which cards we part of "move",
-		specifically so we have {@link Card.location},
+		specifically so we have {@linkcode Card.location},
 		so we can use that for animations
 
-		this is out-of-scope of a standard {@link FreeCell}, but his is the best time to calc and store it
+		this is out-of-scope of a standard {@linkcode FreeCell}, but his is the best time to calc and store it
 
 		- TODO (techdebt) (combine-move-auto-foundation) currently only used for move-foundation
 		   - maybe we should rename this variable?
@@ -125,7 +125,7 @@ export interface PreviousAction {
 		- TODO (techdebt) (settings) add an option to skip this calculation
 		   - for non-animated interfaces
 
-		@see {@link getCardsThatMoved}
+		@see {@linkcode getCardsThatMoved}
 	*/
 	tweenCards?: Card[];
 
@@ -163,7 +163,7 @@ export function spotCheckMoveRegex(shorthandMove: string) {
 }
 
 /**
-	read {@link PreviousAction.text} which has the full context of what was moved
+	read {@linkcode PreviousAction.text} which has the full context of what was moved
 	we can use this text to replaying a move, or (more importantly) undoing a move
 */
 export function parseAndUndoPreviousActionText(game: FreeCell, actionText: string): Card[] | null {
@@ -804,7 +804,7 @@ export function getCardsFromInvalid(previousAction: PreviousAction): {
 }
 
 /**
-	symmetric pair to {@link FreeCell.dealAll}
+	symmetric pair to {@linkcode FreeCell.dealAll}
 */
 export function unDealAll(game: FreeCell): Card[] {
 	// compiling everything into the deck, and then to be sorted like game.cards

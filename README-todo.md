@@ -9,7 +9,6 @@
 
 ## Top-Level TODOs
 
-- TODO (4-priority) (techdebt) replace @link with @linkcode
 - TODO (gsap) review how we use gsap, right now it feels like magic
 - TODO (techdebt) switch from nextjs to vite
   - https://vite.dev/guide/build.html#multi-page-app
@@ -107,7 +106,7 @@
   - https://dev.to/stephengade/pwa-build-installable-nextjs-app-that-works-offline-3fff
   - Progressive Web App, using service workers
   - What I already have should work, android is just dumb
-- XXX (techdebt) optimize
+- XXX (techdebt) (optimize) optimize
   - i've never benchmarked memory/speed before in any meaningful way
   - is the game impl even a problem? prove that there are no memory leeks (maybe print/parse proves it)
   - deff code cleanup, some of the code is ugly; some is still at "make it work and move on"

@@ -198,7 +198,7 @@ export function _collectCellsToDeck(game: FreeCell): FreeCell {
 	But that assumes game settings.
 	This kind of 'simulation" is probably more robust.
 
-	Contains all the magic for {@link canFlourish}.
+	Contains all the magic for {@linkcode canFlourish}.
 */
 export function _organizeCardsExcept(game: FreeCell, card: Card) {
 	const [cardD0, cardD1] = card.location.data;
@@ -304,10 +304,6 @@ function _sortAces(a: Card, b: Card) {
 	return sa - sb;
 }
 
-/**
-	{@link FreeCell.$setSelection} is a generic helper, it makes sense to move into {@link FreeCell}.
-	`_moveCardsToDeck` is too specific, we should keep this separate.
-*/
 function _moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCell {
 	if (!selection.cards.length) return game;
 	const to: CardLocation = { fixture: 'deck', data: [(game.deck.length || 1) - 1] };
@@ -320,10 +316,6 @@ function _moveCardsToDeck(game: FreeCell, selection: CardSequence): FreeCell {
 	});
 }
 
-/**
-	{@link FreeCell.$setSelection} is a generic helper, it makes sense to move into {@link FreeCell}.
-	`_moveDeckToBoard` is too specific, we should keep this separate.
-*/
 function _moveDeckToBoard(game: FreeCell, selection: CardSequence, to: CardLocation): FreeCell {
 	if (!selection.cards.length) return game;
 	const cards = moveCards(game, selection, to);

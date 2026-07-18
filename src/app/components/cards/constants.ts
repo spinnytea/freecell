@@ -21,7 +21,7 @@ export const ASSET_FOLDER = process.env.BASE_PATH ?? '';
 */
 export const BOTTOM_OF_CASCADE = 99;
 
-/** @see {@link BOTTOM_OF_CASCADE}, except aces start at "1" so a 2 is "102" */
+/** @see {@linkcode BOTTOM_OF_CASCADE}, except aces start at "1" so a 2 is "102" */
 export const FOUNDATION_BASE_Z_INDEX = 101;
 
 export type CardFaces = 'SVGCards13' | 'SmolCards';
@@ -85,7 +85,7 @@ export enum ControlSchemes {
 		easy gameplay. tapping a card will move it to the "next best location".
 		It gets it wrong sometimes, but the history is kept clean by collapsing successive moves.
 
-		superseds {@link ClickToMove} (this will take predicence)
+		superseds {@linkcode ClickToMove} (this will take predicence)
 	*/
 	ClickToSelect = 'click-to-select',
 
@@ -94,7 +94,7 @@ export enum ControlSchemes {
 
 		flexible gameplay. tap a card to select it, then tap where you would like it to move.
 
-		superseded by {@link ClickToSelect}
+		superseded by {@linkcode ClickToSelect}
 	*/
 	ClickToMove = 'click-to-move',
 
@@ -123,7 +123,7 @@ export enum ControlSchemes {
 	- TODO (animation) (controls) use or remove - not sure what the point of this is
 	   - when I glace at this: waste of time, extra work
 	   - when I read the options: much potential for animations, validation, eeggs
-	   - we can make a list for each {@link ControlSchemes} for meta/validation
+	   - we can make a list for each {@linkcode ControlSchemes} for meta/validation
 */
 export type GameplayMetaInteractions =
 	| 'move cursor w/o selection'

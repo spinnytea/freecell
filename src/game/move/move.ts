@@ -45,7 +45,7 @@ export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' |
 /**
 	- `cell` is shorthand for `cell:empty` (can only move cards to an empty cell)
 	- `foundation` is shorthand for `foundation:sequence`
-	  (caveat: ace is `foundation:empty`, {@link canStackFoundation} is a cleaner approach to being more specific)
+	  (caveat: ace is `foundation:empty`, {@linkcode canStackFoundation} is a cleaner approach to being more specific)
 
 	Moving cards to the deck isn't a standard move.
 	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveDestinationType.
@@ -103,11 +103,11 @@ export const MoveDestinationTypePriorities: {
 };
 
 /**
-	{@link MoveDestinationTypePriorities} is good as a general rule of thumb,
+	{@linkcode MoveDestinationTypePriorities} is good as a general rule of thumb,
 	but in some special/edge cases, we want to deviate
 
-	we aren't hair-splicing the {@link AvailableMove.priority},
-	we are picking which {@link MoveDestinationType} is best
+	we aren't hair-splicing the {@linkcode AvailableMove.priority},
+	we are picking which {@linkcode MoveDestinationType} is best
 
 	this is simple, in concept, but gnarly to look at
 */
@@ -823,8 +823,8 @@ export function calcSelectActionText(sequence: CardSequence, type: ActionTypesFo
 	4. Third freecell to home: ch \
 	etc.
 
-	@see {@link parseShorthandPileForSelect}
-	@see {@link parseShorthandPileForMove}
+	@see {@linkcode parseShorthandPileForSelect}
+	@see {@linkcode parseShorthandPileForMove}
 	@param shorthandMove `${PileSH}${PileSH}` or `${LocationSH}${LocationSH}`
 */
 export function parseShorthandMove(
@@ -923,8 +923,8 @@ export function parseShorthandMove(
 	this happens without regard to selection,
 	and is independent of other moves (we don't know what will happen next)
 
-	@see {@link parseShorthandMove}
-	@see {@link parseShorthandPileForMove}
+	@see {@linkcode parseShorthandMove}
+	@see {@linkcode parseShorthandPileForMove}
 */
 export function parseShorthandPileForSelect(game: FreeCell, pileSh: PileSH): CardLocation | null {
 	const from_location = parseShorthandPile(pileSh);
@@ -981,10 +981,10 @@ export function parseShorthandPileForSelect(game: FreeCell, pileSh: PileSH): Car
 
 	pre-req: game already has a selection
 	(required for 'h')
-	(if there is no selection, you should call {@link parseShorthandPileForSelect}) instead
+	(if there is no selection, you should call {@linkcode parseShorthandPileForSelect}) instead
 
-	@see {@link parseShorthandMove}
-	@see {@link parseShorthandPileForSelect}
+	@see {@linkcode parseShorthandMove}
+	@see {@linkcode parseShorthandPileForSelect}
 */
 export function parseShorthandPileForMove(
 	game: FreeCell,

@@ -11,9 +11,9 @@ import { parseMovesFromHistory } from '@/game/move/history';
 
 /**
 	print the home row of the game board \
-	split out logic from {@link FreeCell.print}
+	split out logic from {@linkcode FreeCell.prototype.print}
 
-	- XXX (techdebt) optimize
+	- XXX (techdebt) (optimize) optimize
 */
 export function printHome(
 	game: FreeCell,
@@ -79,10 +79,7 @@ export function printHome(
 
 /**
 	print the tableau of the game board \
-	split out logic from {@link FreeCell.print}
-
-	- XXX (refactor) remove
-	@see {@link printTableau}
+	split out logic from {@linkcode FreeCell.prototype.print}
 */
 export function printTableau(
 	game: FreeCell,
@@ -127,7 +124,7 @@ export function printTableau(
 
 /**
 	print the win message, if applicable \
-	split out logic from {@link FreeCell.print}
+	split out logic from {@linkcode FreeCell.prototype.print}
 
 	- REVIEW (joker) where do we put them? - auto-arrange them in the cells? move them back to the deck (hide them)?
 */
@@ -162,9 +159,9 @@ export function printWin(game: FreeCell): string {
 
 /**
 	print the deck (row) of the game \
-	split out logic from {@link FreeCell.print}
+	split out logic from {@linkcode FreeCell.prototype.print}
 
-	- XXX (techdebt) optimize
+	- XXX (techdebt) (optimize) optimize
 */
 export function printDeck(
 	game: FreeCell,
@@ -202,13 +199,13 @@ export function printDeck(
 
 /**
 	print the history of the game \
-	split out logic from {@link FreeCell.print}
+	split out logic from {@linkcode FreeCell.prototype.print}
 
 	- BUG (history) (parse) (print) (shorthandMove) standard move notation can only be used when `limit = 'opp+1'` for all moves
 		- e.g. if (movesSeed && isStandardRuleset)
 	- REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
 		- e.g. if (movesSeed && isStandardGameplay)
-	- XXX (techdebt) optimize
+	- XXX (techdebt) (optimize) optimize
 */
 export function printHistory(game: FreeCell, skipLasgamet = false): string {
 	let str = '';

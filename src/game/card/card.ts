@@ -505,7 +505,7 @@ export function shorthandLocation(location: CardLocation): LocationSH {
 
 	Also, just the "standard notation" without coords.
 
-	@see {@link shorthandLocation}
+	@see {@linkcode shorthandLocation}
 */
 export function shorthandPile(location: CardLocation): PileSH {
 	const d0 = location.data[0];

@@ -9,7 +9,7 @@ export const FIFTY_TWO_CARD_FLOURISH =
 
 	- REVIEW (techdebt) (actionText) every `move \w\w ` should be replaced, aallll 400 of them
 
-	- REVIEW (techdebt) (actionText) (test) compare {@link ACTION_TEXT_EXAMPLES} to test data
+	- REVIEW (techdebt) (actionText) (test) compare `ACTION_TEXT_EXAMPLES` to test data
 	   - log every single `Freecell.action.text` that goes through the `Freecell.constructor`
 	   - log every action in `Freecell.history`
 	   - categorize them

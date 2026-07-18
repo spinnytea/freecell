@@ -235,9 +235,9 @@ describe('Human Readable Code', () => {
 				return this;
 			}
 
-			/** {@link bySuit} */
+			/** {@linkcode bySuit} */
 			are(suit: Suit): Selection;
-			/** {@link withRank} */
+			/** {@linkcode withRank} */
 			are(comparison: Comparison, rank: Rank): Selection;
 			/** general "choice", overloaded verb with clear argument checks */
 			are(first: Suit | Comparison, second?: Rank): Selection {
@@ -257,7 +257,7 @@ describe('Human Readable Code', () => {
 			}
 
 			/**
-				helper method for {@link are}, but can be called directly
+				helper method for {@linkcode are}, but can be called directly
 
 				@example
 					findAllThe(cards).bySuit(suit)
@@ -267,7 +267,7 @@ describe('Human Readable Code', () => {
 			}
 
 			/**
-				helper method for {@link are}, but can be called directly
+				helper method for {@linkcode are}, but can be called directly
 
 				@example
 					findAllThe(cards).withRank(comparison, rank)

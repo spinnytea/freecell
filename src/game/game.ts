@@ -111,8 +111,8 @@ interface OptionsNonstandardGameplay {
 		we'll still need this to test the animations, until we find another real-world example to circumvent
 
 		@deprecated this is just for unit testing - can we avoid using it even there with actual examples?
-		 - {@link moveByShorthand} has a valid usecase for this
-		 - {@link $moveCardToPile} has a valid usecase for this
+		 - {@linkcode FreeCell.moveByShorthand} has a valid usecase for this
+		 - {@linkcode FreeCell.$moveCardToPile} has a valid usecase for this
 	*/
 	stopWithInvalid?: boolean;
 
@@ -126,12 +126,12 @@ interface OptionsNonstandardGameplay {
 
 interface OptionsTouch extends OptionsNonstandardGameplay {
 	/**
-		sometimes we only want {@link touch} to select a card (not move or whatever)
+		sometimes we only want {@linkcode FreeCell.touch} to select a card (not move or whatever)
 	*/
 	selectionOnly?: boolean;
 
 	/**
-		sometimes we only want {@link touch} to attemp a move (not select anything)
+		sometimes we only want {@linkcode FreeCell.touch} to attemp a move (not select anything)
 	*/
 	selectionNever?: boolean;
 }
@@ -271,7 +271,7 @@ export class FreeCell {
 		this.history = history ?? [];
 
 		/*
-		// TODO (techdebt) (actionText) (test) compare {@link ACTION_TEXT_EXAMPLES} to test data
+		// TODO (techdebt) (actionText) (test) compare ACTION_TEXT_EXAMPLES to test data
 		// HACK (actionText) (test) record every actionText during unit tests
 		// prettier-ignore
 		if (process.env.NODE_ENV === 'test') {
@@ -699,7 +699,7 @@ export class FreeCell {
 		meant to turn keypress into game moves.
 		OG FreeCell only let you move in this manner.
 
-		similar to {@link moveByShorthand},
+		similar to {@linkcode moveByShorthand},
 		but meant for gameplay (not replay history)
 	*/
 	touchByPile(
@@ -898,7 +898,7 @@ export class FreeCell {
 	/**
 		don't leave the game at 'init', always have a shuffled deck
 
-		a better game feel than just {@link $shuffleOrDealAll}
+		a better game feel than just {@linkcode $shuffleOrDealAll}
 
 		sugar/helper controls
 	*/
@@ -925,7 +925,7 @@ export class FreeCell {
 	/**
 		at the start of the game, you need to shuffle before you deal
 
-		redundant when used with {@link $undoThenShuffle},
+		redundant when used with {@linkcode $undoThenShuffle},
 		but it's good to always have an … hole card
 
 		sugar/helper controls
@@ -1078,10 +1078,10 @@ export class FreeCell {
 
 	/**
 		print the deck (row) of the game \
-		split out logic from {@link FreeCell.print}
+		split out logic from {@linkcode FreeCell.print}
 
 		- TODO (refactor) remove - used in lots of tests
-		@see {@link printDeck}
+		@see {@linkcode printDeck}
 	*/
 	__printDeck(cursor = this.cursor, selection = this.selection): string {
 		return printDeck(this, cursor, selection);
@@ -1089,10 +1089,10 @@ export class FreeCell {
 
 	/**
 		print the history of the game \
-		split out logic from {@link FreeCell.print}
+		split out logic from {@linkcode FreeCell.print}
 
 		- TODO (refactor) remove - used in lots of tests
-		@see {@link printHistory}
+		@see {@linkcode printHistory}
 	*/
 	__printHistory(skipLastHist = false): string {
 		return printHistory(this, skipLastHist);

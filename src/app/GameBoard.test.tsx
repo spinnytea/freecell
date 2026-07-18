@@ -25,7 +25,7 @@ const gsapUtilsRandom = vi.mocked(gsap.utils.random);
 
 /** HACK (techdebt) we need the game state to make moves by standard move notation */
 let moveByShorthand: (shorthandMove: string) => void;
-/** HACK (techdebt) @deprecated @use {@link screen} */
+/** HACK (techdebt) @deprecated @use {@linkcode screen} */
 let cribGame: () => FreeCell;
 /** HACK (techdebt) crib hook to update settings */
 let setSettings: Dispatch<SetStateAction<Settings>>;
