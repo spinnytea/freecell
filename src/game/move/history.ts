@@ -36,7 +36,7 @@ export type PreviousActionType =
 	| 'auto-foundation' // can be it's own history item, collapsed in standard gameplay
 	| 'move-foundation' // move + auto-foundation
 	| 'invalid'
-	// IDEA (4-priority) (deck) (history) add a PreviousActionType of 'illegal' or 'illegal-move'
+	// IDEA (deck) (history) add a PreviousActionType of 'illegal' or 'illegal-move'
 	//  - e.g. gameFunction === 'recall-or-bury'
 	//  - e.g. move card off foundation
 	//  - then we can stop using "invalid move xx xxx" of type "move"

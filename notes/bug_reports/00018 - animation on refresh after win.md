@@ -4,9 +4,11 @@ Page refresh animates cards to foundation (just col 5, KD sequence)
 
 The ellusive state finally caught
 
+after you win & refresh: sometimes the cards animate the last move one card at a time? (Not sure what is animated or why), maybe we can sense it's a win with no previous card tlzr and just set the position?
+
 ## Labels
 
-TODO (animation) (gsap)
+BUG (animation) (gsap)
 
 ### Game State
 

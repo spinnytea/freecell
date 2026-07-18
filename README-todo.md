@@ -87,7 +87,7 @@
   - could this simply be "autoMove().clear selection()"? (feels hacky)
   - need to disable when "peekOnly || !availableMoves?.length"
 - TODO (deployment) rules page (SUG) - separate from the manual testing
-- IDEA (joker) add joker to gameplay
+- IDEA (motivation) (joker) add joker to gameplay
   - high - any rank can stack onto them, they cannot be stacked on anything (color-fixed cascade)
   - low - they can stack onto any rank, but nothing can stack onto them (moving dead space)
   - wild - they can stack onto any rank, any rank can stack onto them
@@ -96,8 +96,8 @@
   - one set of undos = one restart?
   - spitball impl: attempts positive and negative, display Math.abs(attempts), set neg when undo, set pos and increase when move
 - IDEA (theme) sounds - normally i don't like to, but some folio for moving cards should be okay
-- TODO (theme) more themes - card themes / decks / colors, background colors, etc
-- TODO (2-priority) (deployment) (offline) need some way to play without internet
+- TODO (settings) (theme) more themes - card themes / decks / colors, background colors, etc
+- TODO (3-priority) (motivation) (deployment) (offline) need some way to play without internet
   - android "save page" isn't interactive
   - it just has the last rendered image and is otherwise frozen
 - IDEA (deployment) (offline) (refactor) re-package as an android app?
@@ -120,6 +120,41 @@
   - ipad safari
   - android chrome
 - TODO (techdebt) [bug reports](./notes/bug_reports/template.md)
+- TODO (animation) (gsap) If you undo too quickly, you can mess up zindex
+  - properly chain speed up anim and/or reset zindex on complete?
+- TODO (4-priority) (techdebt) (hud) (test) If copy-paste current/history is normal, make a proper newline between them; put lines in quotes? Make a button?
+- IDEA (gameplay) (settings) Alt rules: hard mode: move each and once (only only head of stack?)
+  - e.g. 9H>TS, TS-9H>JH, but not then 9H>TC
+  - may need to "grey" the card once moved
+- IDEA (deployment) (hud) Game seeds in the url?
+  - What if the game in progress does not match the seed?
+- IDEA (settings) boost the chance of a seed that allows flourish52
+  - maybe with settings
+  - there's only so many games (32000 games, 28839 florush, 19 flourish52), so repeats will be noticable
+  - maybe 1 in 10 pick a random seed from the list?
+- TODO (techdebt) (coords) (history) (parse) (print) (shorthandMove) (test) $moveCardToPile.test
+  - shows move can differ from shorthanded: note that in the history, so we can parse it correctly
+  - detect during parse? "invalid history ambiguous moves"
+  - maybe there is a way to not it with certainty, like, with coords
+    - replay the game when writing the history
+    - and if the "shorthand" doesn't product the same coords
+    - then write the coords into the history
+- IDEA (parse) (print) more options
+  - Print: HUD
+  - Print History: Archive
+  - Print Verbose: HUD + digest .…...... But history should have all this; we need notation for the gaps (e.g. cords when ambiguous history)
+- TODO (2-priority) (hud) (drag-and-drop) Draw drag/drop gizmos in Debug mode (e.g. drag drop ranges)
+- TODO (2-priority) (hud) (drag-and-drop) animate alloweable moves different from detected hover
+- IDEA (settings) disable "helpful" settings
+  - e.g. click to move (picks "best" move for you)
+  - e.g. flash flourish (you can do the math yourself)
+- IDEA (gameplay) (hud) (settings) Dynamic meta
+  - score based
+  - "fewest moves" and/or "unroll super moves"
+  - shortest play time
+- IDEA (gameplay) (undo) Undo… redo?
+  - if you undo, show/enable a redo button
+  - allows you to manually replay
 
 ## Discarded TODOs
 
