@@ -4,7 +4,7 @@ Undo: zIndex Animation order is wrong (need to zindex boost in flight)
 
 ## Labels
 
-TODO (animation)
+TODO (animation) (gsap)
 
 ### Game State 1
 

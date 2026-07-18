@@ -4,7 +4,7 @@
 
 ## Labels
 
-(techdebt)
+TODO (techdebt)
 
 ### Game State
 
