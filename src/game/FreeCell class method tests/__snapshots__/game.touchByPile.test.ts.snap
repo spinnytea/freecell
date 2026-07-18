@@ -1173,7 +1173,7 @@ FreeCell {
 }
 `;
 
-exports[`game.touchByPile > with selection > deck > gameFunction: recall-or-bury > not empty 1`] = `
+exports[`game.touchByPile > with selection > deck > gameFunction: recall-or-bury > not empty (incorrect) 1`] = `
 FreeCell {
   "availableMoves": null,
   "cards": [

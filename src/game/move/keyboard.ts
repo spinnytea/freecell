@@ -154,7 +154,7 @@ export function moveCursorWithBasicArrows(
 				case 'down':
 					if (d1 >= game.tableau[d0].length - 1) {
 						if (game.deck.length) {
-							// REVIEW (controls) should we spread the cursor?
+							// REVIEW (controls) (gameplay) should we spread the cursor?
 							//  - like how the cells map to the start of the tableau,
 							//  - and the foundation maps to the end of the tableau
 							//  - should we do some scaling/interpolation math?

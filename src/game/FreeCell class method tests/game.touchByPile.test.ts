@@ -347,7 +347,7 @@ describe('game.touchByPile', () => {
 					expect(game).toMatchSnapshot();
 				});
 
-				test('not empty', () => {
+				test('not empty (incorrect)', () => {
 					const game = new FreeCell()
 						.shuffle32(5)
 						.dealAll({ demo: true, keepDeck: true })

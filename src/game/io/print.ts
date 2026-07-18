@@ -173,7 +173,7 @@ export function printDeck(
 ): string {
 	if (game.deck.length) {
 		if (cursor.fixture === 'deck' || selection?.location.fixture === 'deck') {
-			// using entries to catch gaps
+			// using for-of entries to catch gaps (.map will skip gaps)
 			const strs = [];
 			for (const [idx, card] of game.deck.entries()) {
 				strs.push(
@@ -185,7 +185,7 @@ export function printDeck(
 			return `${deckStr}${lastCol}`;
 		} else {
 			// if no cursor/selection in deck
-			// using for-of to catch gaps
+			// using for-of to catch gaps (.map will skip gaps)
 			const strs = [];
 			for (const card of game.deck) {
 				strs.push(shorthandCard(card));

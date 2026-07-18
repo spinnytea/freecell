@@ -276,6 +276,12 @@ function _spreadDeckToEmptyPiles(g: FreeCell, emptyPiles: CardLocation[]): FreeC
 
 	// put deck on board, split by suit
 	emptyPiles.forEach((emptyPile) => {
+		// TODO (deck) (test) we deal from the middle
+		//  - e.g. const last_card = g.deck.at(0);
+		//  - this isn't a valid move, and we probably won't do it
+		//  - but it will help ensure moveCards + deck representation is sound
+		//  - we _had_ a bug about the deck having gaps
+		//  - this will help test that those gaps do not come back
 		const last_card = g.deck.at(-1);
 		if (last_card) {
 			const cards = g.deck.filter((card) => card.suit === last_card.suit);

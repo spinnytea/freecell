@@ -800,14 +800,16 @@ describe('game.touch', () => {
 			});
 
 			describe('to: cascade', () => {
-				test.todo('single');
+				describe('not empty', () => {
+					test.todo('single');
 
-				describe('sequence', () => {
-					test.todo('fist');
+					describe('sequence', () => {
+						test.todo('fist');
 
-					test.todo('middle');
+						test.todo('middle');
 
-					test.todo('last');
+						test.todo('last');
+					});
 
 					test.todo('pile');
 				});
@@ -1028,164 +1030,166 @@ describe('game.touch', () => {
 			});
 
 			describe('to: cascade', () => {
-				test('single', () => {
-					game = FreeCell.parse(
-						'' + //
-							'>QC QD QH QS TC TD TH TS \n' +
-							' KC KD KH KS JC JD JH JS \n' +
-							' hand-jammed'
-					)
-						.touch()
-						.setCursor({ fixture: 'cascade', data: [1, 0] });
-					expect(game.previousAction.text).toBe('cursor set 2⡀ KD');
-					expect(game.print()).toBe(
-						'' + //
-							'|QC|QD QH QS TC TD TH TS \n' +
-							' KC>KD KH KS JC JD JH JS \n' +
-							' cursor set 2 KD'
-					);
-					expect(game.cursor).toEqual({ fixture: 'cascade', data: [1, 0] });
-					expect(game.selection).toEqual({
-						location: { fixture: 'cell', data: [0] },
-						cards: [{ rank: 'queen', suit: 'clubs', location: { fixture: 'cell', data: [0] } }],
-						peekOnly: false,
-					});
-					expect(game.availableMoves).toEqual([
-						{
-							location: { fixture: 'cascade', data: [1, 0] },
-							moveDestinationType: 'cascade:sequence',
-							priority: 7,
-						},
-						{
-							location: { fixture: 'cascade', data: [2, 0] },
-							moveDestinationType: 'cascade:sequence',
-							priority: 6,
-						},
-					]);
-					game = game.touch({ autoFoundation: false });
-					expect(game.print()).toBe(
-						'' + //
-							'    QD QH QS TC TD TH TS \n' +
-							' KC>KD KH KS JC JD JH JS \n' +
-							'    QC                   \n' +
-							' move a2 QC→KD'
-					);
-					expect(game.previousAction).toEqual({
-						text: 'move a2⡀ QC→KD',
-						type: 'move',
-					});
-					expect(game.cursor).toEqual({ fixture: 'cascade', data: [1, 0] });
-					expect(game.selection).toEqual(null);
-					expect(game.availableMoves).toEqual(null);
-				});
-
-				describe('sequence', () => {
-					beforeEach(() => {
+				describe('not empty', () => {
+					test('single', () => {
 						game = FreeCell.parse(
 							'' + //
-								'>TD          TC 9D KH KS \n' +
-								' KC                   KD \n' +
-								' QD                   QC \n' +
-								' JC                   JD \n' +
+								'>QC QD QH QS TC TD TH TS \n' +
+								' KC KD KH KS JC JD JH JS \n' +
 								' hand-jammed'
-						).touch();
-					});
-
-					test.todo('first');
-
-					test.todo('middle');
-
-					test('last', () => {
-						game = game.setCursor({ fixture: 'cascade', data: [0, 2] });
-						expect(game.previousAction.text).toBe('cursor set 1⡂ JC');
+						)
+							.touch()
+							.setCursor({ fixture: 'cascade', data: [1, 0] });
+						expect(game.previousAction.text).toBe('cursor set 2⡀ KD');
 						expect(game.print()).toBe(
 							'' + //
-								'|TD|         TC 9D KH KS \n' +
-								' KC                   KD \n' +
-								' QD                   QC \n' +
-								'>JC                   JD \n' +
-								' cursor set 1 JC'
+								'|QC|QD QH QS TC TD TH TS \n' +
+								' KC>KD KH KS JC JD JH JS \n' +
+								' cursor set 2 KD'
 						);
-						expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 2] });
+						expect(game.cursor).toEqual({ fixture: 'cascade', data: [1, 0] });
 						expect(game.selection).toEqual({
 							location: { fixture: 'cell', data: [0] },
-							cards: [{ rank: '10', suit: 'diamonds', location: { fixture: 'cell', data: [0] } }],
+							cards: [{ rank: 'queen', suit: 'clubs', location: { fixture: 'cell', data: [0] } }],
 							peekOnly: false,
 						});
 						expect(game.availableMoves).toEqual([
 							{
-								location: { fixture: 'cell', data: [1] },
-								moveDestinationType: 'cell',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cell', data: [2] },
-								moveDestinationType: 'cell',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cell', data: [3] },
-								moveDestinationType: 'cell',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'foundation', data: [1] },
-								moveDestinationType: 'foundation',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cascade', data: [0, 2] },
-								moveDestinationType: 'cascade:sequence',
-								priority: 8,
-							},
-							{
 								location: { fixture: 'cascade', data: [1, 0] },
-								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								moveDestinationType: 'cascade:sequence',
+								priority: 7,
 							},
 							{
 								location: { fixture: 'cascade', data: [2, 0] },
-								moveDestinationType: 'cascade:empty',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cascade', data: [3, 0] },
-								moveDestinationType: 'cascade:empty',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cascade', data: [4, 0] },
-								moveDestinationType: 'cascade:empty',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cascade', data: [5, 0] },
-								moveDestinationType: 'cascade:empty',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cascade', data: [6, 0] },
-								moveDestinationType: 'cascade:empty',
-								priority: -1,
+								moveDestinationType: 'cascade:sequence',
+								priority: 6,
 							},
 						]);
 						game = game.touch({ autoFoundation: false });
 						expect(game.print()).toBe(
 							'' + //
-								'             TC 9D KH KS \n' +
-								' KC                   KD \n' +
-								' QD                   QC \n' +
-								'>JC                   JD \n' +
-								' TD                      \n' +
-								' move a1 TD→JC'
+								'    QD QH QS TC TD TH TS \n' +
+								' KC>KD KH KS JC JD JH JS \n' +
+								'    QC                   \n' +
+								' move a2 QC→KD'
 						);
 						expect(game.previousAction).toEqual({
-							text: 'move a1⡂ TD→JC',
+							text: 'move a2⡀ QC→KD',
 							type: 'move',
 						});
-						expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 2] });
+						expect(game.cursor).toEqual({ fixture: 'cascade', data: [1, 0] });
 						expect(game.selection).toEqual(null);
 						expect(game.availableMoves).toEqual(null);
+					});
+
+					describe('sequence', () => {
+						beforeEach(() => {
+							game = FreeCell.parse(
+								'' + //
+									'>TD          TC 9D KH KS \n' +
+									' KC                   KD \n' +
+									' QD                   QC \n' +
+									' JC                   JD \n' +
+									' hand-jammed'
+							).touch();
+						});
+
+						test.todo('first');
+
+						test.todo('middle');
+
+						test('last', () => {
+							game = game.setCursor({ fixture: 'cascade', data: [0, 2] });
+							expect(game.previousAction.text).toBe('cursor set 1⡂ JC');
+							expect(game.print()).toBe(
+								'' + //
+									'|TD|         TC 9D KH KS \n' +
+									' KC                   KD \n' +
+									' QD                   QC \n' +
+									'>JC                   JD \n' +
+									' cursor set 1 JC'
+							);
+							expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 2] });
+							expect(game.selection).toEqual({
+								location: { fixture: 'cell', data: [0] },
+								cards: [{ rank: '10', suit: 'diamonds', location: { fixture: 'cell', data: [0] } }],
+								peekOnly: false,
+							});
+							expect(game.availableMoves).toEqual([
+								{
+									location: { fixture: 'cell', data: [1] },
+									moveDestinationType: 'cell',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cell', data: [2] },
+									moveDestinationType: 'cell',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cell', data: [3] },
+									moveDestinationType: 'cell',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'foundation', data: [1] },
+									moveDestinationType: 'foundation',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [0, 2] },
+									moveDestinationType: 'cascade:sequence',
+									priority: 8,
+								},
+								{
+									location: { fixture: 'cascade', data: [1, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [2, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [3, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [4, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [5, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+								{
+									location: { fixture: 'cascade', data: [6, 0] },
+									moveDestinationType: 'cascade:empty',
+									priority: -1,
+								},
+							]);
+							game = game.touch({ autoFoundation: false });
+							expect(game.print()).toBe(
+								'' + //
+									'             TC 9D KH KS \n' +
+									' KC                   KD \n' +
+									' QD                   QC \n' +
+									'>JC                   JD \n' +
+									' TD                      \n' +
+									' move a1 TD→JC'
+							);
+							expect(game.previousAction).toEqual({
+								text: 'move a1⡂ TD→JC',
+								type: 'move',
+							});
+							expect(game.cursor).toEqual({ fixture: 'cascade', data: [0, 2] });
+							expect(game.selection).toEqual(null);
+							expect(game.availableMoves).toEqual(null);
+						});
 					});
 
 					test.todo('pile');
@@ -1370,16 +1374,18 @@ describe('game.touch', () => {
 			});
 
 			describe('to: cascade', () => {
-				test.todo('single');
+				describe('not empty', () => {
+					test.todo('single');
 
-				describe('sequence', () => {
+					describe('sequence', () => {
+						test.todo('first');
+
+						test.todo('middle');
+
+						test.todo('last');
+					});
+
 					test.todo('pile');
-
-					test.todo('first');
-
-					test.todo('middle');
-
-					test.todo('last');
 				});
 
 				test.todo('empty');
@@ -1450,6 +1456,8 @@ describe('game.touch', () => {
 						beforeEach(() => {
 							game = new FreeCell().shuffle32(5).dealAll({ demo: true, keepDeck: true }).$selectCard('6D');
 						});
+
+						test.todo('pile');
 
 						test('first', () => {
 							game = game.setCursor({ fixture: 'deck', data: [7] });
@@ -1767,110 +1775,30 @@ describe('game.touch', () => {
 				});
 
 				describe('to: cascade', () => {
-					test('single', () => {
-						game = game
-							.dealAll()
-							.setCursor({ fixture: 'cascade', data: [0, 6] })
-							.touch()
-							.setCursor({ fixture: 'cascade', data: [6, 5] });
-						expect(game.previousAction.text).toBe('cursor set 7⡅ KH');
-						expect(game.print()).toBe(
-							'' + //
-								'                         \n' +
-								' 8H 5D KS 3C 3S 3H JD AC \n' +
-								' 9H 7D KC 5C 9D 5H 2C 2H \n' +
-								' 6D TC 4H TS 3D 8S QH 4S \n' +
-								' 6S 2S 5S 7H QD 8C JC 8D \n' +
-								' AS 6H 9S 4C KD TD 6C 9C \n' +
-								' 7C JH 7S TH QS AD>KH 2D \n' +
-								'|QC|AH JS 4D             \n' +
-								' cursor set 7 KH'
-						);
-						expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 5] });
-						expect(game.selection).toEqual({
-							location: { fixture: 'cascade', data: [0, 6] },
-							cards: [{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [0, 6] } }],
-							peekOnly: false,
-						});
-						expect(game.availableMoves).toEqual([
-							{
-								location: { fixture: 'cell', data: [0] },
-								moveDestinationType: 'cell',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cell', data: [1] },
-								moveDestinationType: 'cell',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cell', data: [2] },
-								moveDestinationType: 'cell',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cell', data: [3] },
-								moveDestinationType: 'cell',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cascade', data: [6, 5] },
-								moveDestinationType: 'cascade:sequence',
-								priority: 4,
-							},
-						]);
-						game = game.touch({ autoFoundation: false });
-						expect(game.print()).toBe(
-							'' + //
-								'                         \n' +
-								' 8H 5D KS 3C 3S 3H JD AC \n' +
-								' 9H 7D KC 5C 9D 5H 2C 2H \n' +
-								' 6D TC 4H TS 3D 8S QH 4S \n' +
-								' 6S 2S 5S 7H QD 8C JC 8D \n' +
-								' AS 6H 9S 4C KD TD 6C 9C \n' +
-								' 7C JH 7S TH QS AD>KH 2D \n' +
-								'    AH JS 4D       QC    \n' +
-								' move 17 QC→KH'
-						);
-						expect(game.previousAction).toEqual({
-							text: 'move 1⡆7⡅ QC→KH',
-							type: 'move',
-						});
-						expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 5] });
-						expect(game.selection).toEqual(null);
-						expect(game.availableMoves).toEqual(null);
-					});
-
-					describe('sequence', () => {
-						test.todo('first');
-
-						test.todo('middle');
-
-						test('last', () => {
-							game = FreeCell.parse(
-								'' + //
-									'>            TC 8D KH KS \n' +
-									'    TD KC KD    9D       \n' +
-									'       QD QC             \n' +
-									'       JC JD             \n' +
-									' hand-jammed'
-							)
-								.setCursor({ fixture: 'cascade', data: [1, 0] })
+					describe('not empty', () => {
+						test('single', () => {
+							game = game
+								.dealAll()
+								.setCursor({ fixture: 'cascade', data: [0, 6] })
 								.touch()
-								.setCursor({ fixture: 'cascade', data: [2, 2] });
-							expect(game.previousAction.text).toBe('cursor set 3⡂ JC');
+								.setCursor({ fixture: 'cascade', data: [6, 5] });
+							expect(game.previousAction.text).toBe('cursor set 7⡅ KH');
 							expect(game.print()).toBe(
 								'' + //
-									'             TC 8D KH KS \n' +
-									'   |TD|KC KD    9D       \n' +
-									'       QD QC             \n' +
-									'      >JC JD             \n' +
-									' cursor set 3 JC'
+									'                         \n' +
+									' 8H 5D KS 3C 3S 3H JD AC \n' +
+									' 9H 7D KC 5C 9D 5H 2C 2H \n' +
+									' 6D TC 4H TS 3D 8S QH 4S \n' +
+									' 6S 2S 5S 7H QD 8C JC 8D \n' +
+									' AS 6H 9S 4C KD TD 6C 9C \n' +
+									' 7C JH 7S TH QS AD>KH 2D \n' +
+									'|QC|AH JS 4D             \n' +
+									' cursor set 7 KH'
 							);
-							expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 2] });
+							expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 5] });
 							expect(game.selection).toEqual({
-								location: { fixture: 'cascade', data: [1, 0] },
-								cards: [{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } }],
+								location: { fixture: 'cascade', data: [0, 6] },
+								cards: [{ rank: 'queen', suit: 'clubs', location: { fixture: 'cascade', data: [0, 6] } }],
 								peekOnly: false,
 							});
 							expect(game.availableMoves).toEqual([
@@ -1895,49 +1823,133 @@ describe('game.touch', () => {
 									priority: -1,
 								},
 								{
-									location: { fixture: 'cascade', data: [0, 0] },
-									moveDestinationType: 'cascade:empty',
-									priority: -1,
-								},
-								{
-									location: { fixture: 'cascade', data: [2, 2] },
+									location: { fixture: 'cascade', data: [6, 5] },
 									moveDestinationType: 'cascade:sequence',
-									priority: 14,
-								},
-								{
-									location: { fixture: 'cascade', data: [4, 0] },
-									moveDestinationType: 'cascade:empty',
-									priority: -1,
-								},
-								{
-									location: { fixture: 'cascade', data: [6, 0] },
-									moveDestinationType: 'cascade:empty',
-									priority: -1,
-								},
-								{
-									location: { fixture: 'cascade', data: [7, 0] },
-									moveDestinationType: 'cascade:empty',
-									priority: -1,
+									priority: 4,
 								},
 							]);
 							game = game.touch({ autoFoundation: false });
 							expect(game.print()).toBe(
 								'' + //
-									'             TC 8D KH KS \n' +
-									'       KC KD    9D       \n' +
-									'       QD QC             \n' +
-									'      >JC JD             \n' +
-									'       TD                \n' +
-									' move 23 TD→JC'
+									'                         \n' +
+									' 8H 5D KS 3C 3S 3H JD AC \n' +
+									' 9H 7D KC 5C 9D 5H 2C 2H \n' +
+									' 6D TC 4H TS 3D 8S QH 4S \n' +
+									' 6S 2S 5S 7H QD 8C JC 8D \n' +
+									' AS 6H 9S 4C KD TD 6C 9C \n' +
+									' 7C JH 7S TH QS AD>KH 2D \n' +
+									'    AH JS 4D       QC    \n' +
+									' move 17 QC→KH'
 							);
 							expect(game.previousAction).toEqual({
-								text: 'move 2⡀3⡂ TD→JC',
+								text: 'move 1⡆7⡅ QC→KH',
 								type: 'move',
 							});
-							expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 2] });
+							expect(game.cursor).toEqual({ fixture: 'cascade', data: [6, 5] });
 							expect(game.selection).toEqual(null);
 							expect(game.availableMoves).toEqual(null);
 						});
+
+						describe('sequence', () => {
+							test.todo('first');
+
+							test.todo('middle');
+
+							test('last', () => {
+								game = FreeCell.parse(
+									'' + //
+										'>            TC 8D KH KS \n' +
+										'    TD KC KD    9D       \n' +
+										'       QD QC             \n' +
+										'       JC JD             \n' +
+										' hand-jammed'
+								)
+									.setCursor({ fixture: 'cascade', data: [1, 0] })
+									.touch()
+									.setCursor({ fixture: 'cascade', data: [2, 2] });
+								expect(game.previousAction.text).toBe('cursor set 3⡂ JC');
+								expect(game.print()).toBe(
+									'' + //
+										'             TC 8D KH KS \n' +
+										'   |TD|KC KD    9D       \n' +
+										'       QD QC             \n' +
+										'      >JC JD             \n' +
+										' cursor set 3 JC'
+								);
+								expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 2] });
+								expect(game.selection).toEqual({
+									location: { fixture: 'cascade', data: [1, 0] },
+									cards: [{ rank: '10', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 0] } }],
+									peekOnly: false,
+								});
+								expect(game.availableMoves).toEqual([
+									{
+										location: { fixture: 'cell', data: [0] },
+										moveDestinationType: 'cell',
+										priority: -1,
+									},
+									{
+										location: { fixture: 'cell', data: [1] },
+										moveDestinationType: 'cell',
+										priority: -1,
+									},
+									{
+										location: { fixture: 'cell', data: [2] },
+										moveDestinationType: 'cell',
+										priority: -1,
+									},
+									{
+										location: { fixture: 'cell', data: [3] },
+										moveDestinationType: 'cell',
+										priority: -1,
+									},
+									{
+										location: { fixture: 'cascade', data: [0, 0] },
+										moveDestinationType: 'cascade:empty',
+										priority: -1,
+									},
+									{
+										location: { fixture: 'cascade', data: [2, 2] },
+										moveDestinationType: 'cascade:sequence',
+										priority: 14,
+									},
+									{
+										location: { fixture: 'cascade', data: [4, 0] },
+										moveDestinationType: 'cascade:empty',
+										priority: -1,
+									},
+									{
+										location: { fixture: 'cascade', data: [6, 0] },
+										moveDestinationType: 'cascade:empty',
+										priority: -1,
+									},
+									{
+										location: { fixture: 'cascade', data: [7, 0] },
+										moveDestinationType: 'cascade:empty',
+										priority: -1,
+									},
+								]);
+								game = game.touch({ autoFoundation: false });
+								expect(game.print()).toBe(
+									'' + //
+										'             TC 8D KH KS \n' +
+										'       KC KD    9D       \n' +
+										'       QD QC             \n' +
+										'      >JC JD             \n' +
+										'       TD                \n' +
+										' move 23 TD→JC'
+								);
+								expect(game.previousAction).toEqual({
+									text: 'move 2⡀3⡂ TD→JC',
+									type: 'move',
+								});
+								expect(game.cursor).toEqual({ fixture: 'cascade', data: [2, 2] });
+								expect(game.selection).toEqual(null);
+								expect(game.availableMoves).toEqual(null);
+							});
+						});
+
+						test.todo('pile');
 					});
 
 					test('empty', () => {
@@ -2085,6 +2097,8 @@ describe('game.touch', () => {
 					});
 
 					describe('not empty', () => {
+						test.todo('pile');
+
 						test('first', () => {
 							const game = FreeCell.parse(
 								'' + //
@@ -2189,33 +2203,37 @@ describe('game.touch', () => {
 					});
 				});
 
-				test('to: cell', () => {
-					const game = FreeCell.parse(
-						'' + //
-							'>            7C 8D TH KS \n' +
-							'   |TC|   KD JH          \n' +
-							'   |9D|   QC             \n' +
-							'   |8C|   JD             \n' +
-							' hand-jammed'
-					).touch();
-					expect(game.print()).toBe(
-						'' + //
-							'>            7C 8D TH KS \n' +
-							'   |TC|   KD JH          \n' +
-							'   |9D|   QC             \n' +
-							'   |8C|   JD             \n' +
-							':d KH KC QH QD JC TD 9C \n' +
-							' invalid move 2a TC-9D-8C→cell'
-					);
-					expect(game.print({ includeHistory: true })).toBe(
-						'' + //
-							'             7C 8D TH KS \n' +
-							'    TC    KD JH          \n' +
-							'    9D    QC             \n' +
-							'    8C    JD             \n' +
-							':d KH KC QH QD JC TD 9C \n' +
-							' hand-jammed'
-					);
+				describe('to: cell', () => {
+					test('empty', () => {
+						const game = FreeCell.parse(
+							'' + //
+								'>            7C 8D TH KS \n' +
+								'   |TC|   KD JH          \n' +
+								'   |9D|   QC             \n' +
+								'   |8C|   JD             \n' +
+								' hand-jammed'
+						).touch();
+						expect(game.print()).toBe(
+							'' + //
+								'>            7C 8D TH KS \n' +
+								'   |TC|   KD JH          \n' +
+								'   |9D|   QC             \n' +
+								'   |8C|   JD             \n' +
+								':d KH KC QH QD JC TD 9C \n' +
+								' invalid move 2a TC-9D-8C→cell'
+						);
+						expect(game.print({ includeHistory: true })).toBe(
+							'' + //
+								'             7C 8D TH KS \n' +
+								'    TC    KD JH          \n' +
+								'    9D    QC             \n' +
+								'    8C    JD             \n' +
+								':d KH KC QH QD JC TD 9C \n' +
+								' hand-jammed'
+						);
+					});
+
+					test.todo('not empty');
 				});
 
 				describe('to: foundation', () => {
@@ -2265,103 +2283,20 @@ describe('game.touch', () => {
 							.touch();
 					});
 
-					test('single', () => {
-						game = game.setCursor({ fixture: 'cascade', data: [4, 0] });
-						expect(game.previousAction.text).toBe('cursor set 5⡀ JH');
-						expect(game.print()).toBe(
-							'' + //
-								'             7C 8D TH KS \n' +
-								'   |TC|   KD>JH          \n' +
-								'   |9D|   QC             \n' +
-								'   |8C|   JD             \n' +
-								':d KH KC QH QD JC TD 9C \n' +
-								' cursor set 5 JH'
-						);
-						expect(game.cursor).toEqual({ fixture: 'cascade', data: [4, 0] });
-						expect(game.selection).toEqual({
-							location: { fixture: 'cascade', data: [1, 0] },
-							cards: [
-								{ rank: '10', suit: 'clubs', location: { fixture: 'cascade', data: [1, 0] } },
-								{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 1] } },
-								{ rank: '8', suit: 'clubs', location: { fixture: 'cascade', data: [1, 2] } },
-							],
-							peekOnly: false,
-						});
-						expect(game.availableMoves).toEqual([
-							{
-								location: { fixture: 'cascade', data: [0, 0] },
-								moveDestinationType: 'cascade:empty',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cascade', data: [2, 0] },
-								moveDestinationType: 'cascade:empty',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cascade', data: [3, 2] },
-								moveDestinationType: 'cascade:sequence',
-								priority: 2,
-							},
-							{
-								location: { fixture: 'cascade', data: [4, 0] },
-								moveDestinationType: 'cascade:sequence',
-								priority: 1,
-							},
-							{
-								location: { fixture: 'cascade', data: [5, 0] },
-								moveDestinationType: 'cascade:empty',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cascade', data: [6, 0] },
-								moveDestinationType: 'cascade:empty',
-								priority: -1,
-							},
-							{
-								location: { fixture: 'cascade', data: [7, 0] },
-								moveDestinationType: 'cascade:empty',
-								priority: -1,
-							},
-						]);
-						game = game.touch({ autoFoundation: false });
-						expect(game.print()).toBe(
-							'' + //
-								'             7C 8D TH KS \n' +
-								'          KD>JH          \n' +
-								'          QC TC          \n' +
-								'          JD 9D          \n' +
-								'             8C          \n' +
-								':d KH KC QH QD JC TD 9C \n' +
-								' move 25 TC-9D-8C→JH'
-						);
-						expect(game.previousAction).toEqual({
-							text: 'move 2⡀5⡀ TC-9D-8C→JH',
-							type: 'move',
-						});
-						expect(game.cursor).toEqual({ fixture: 'cascade', data: [4, 0] });
-						expect(game.selection).toEqual(null);
-						expect(game.availableMoves).toEqual(null);
-					});
-
-					describe('sequence', () => {
-						test.todo('first');
-
-						test.todo('middle');
-
-						test('last', () => {
-							game = game.setCursor({ fixture: 'cascade', data: [3, 2] });
-							expect(game.previousAction.text).toBe('cursor set 4⡂ JD');
+					describe('not empty', () => {
+						test('single', () => {
+							game = game.setCursor({ fixture: 'cascade', data: [4, 0] });
+							expect(game.previousAction.text).toBe('cursor set 5⡀ JH');
 							expect(game.print()).toBe(
 								'' + //
 									'             7C 8D TH KS \n' +
-									'   |TC|   KD JH          \n' +
+									'   |TC|   KD>JH          \n' +
 									'   |9D|   QC             \n' +
-									'   |8C|  >JD             \n' +
+									'   |8C|   JD             \n' +
 									':d KH KC QH QD JC TD 9C \n' +
-									' cursor set 4 JD'
+									' cursor set 5 JH'
 							);
-							expect(game.cursor).toEqual({ fixture: 'cascade', data: [3, 2] });
+							expect(game.cursor).toEqual({ fixture: 'cascade', data: [4, 0] });
 							expect(game.selection).toEqual({
 								location: { fixture: 'cascade', data: [1, 0] },
 								cards: [
@@ -2412,23 +2347,110 @@ describe('game.touch', () => {
 							expect(game.print()).toBe(
 								'' + //
 									'             7C 8D TH KS \n' +
-									'          KD JH          \n' +
-									'          QC             \n' +
-									'         >JD             \n' +
-									'          TC             \n' +
-									'          9D             \n' +
-									'          8C             \n' +
+									'          KD>JH          \n' +
+									'          QC TC          \n' +
+									'          JD 9D          \n' +
+									'             8C          \n' +
 									':d KH KC QH QD JC TD 9C \n' +
-									' move 24 TC-9D-8C→JD'
+									' move 25 TC-9D-8C→JH'
 							);
 							expect(game.previousAction).toEqual({
-								text: 'move 2⡀4⡂ TC-9D-8C→JD',
+								text: 'move 2⡀5⡀ TC-9D-8C→JH',
 								type: 'move',
 							});
-							expect(game.cursor).toEqual({ fixture: 'cascade', data: [3, 2] });
+							expect(game.cursor).toEqual({ fixture: 'cascade', data: [4, 0] });
 							expect(game.selection).toEqual(null);
 							expect(game.availableMoves).toEqual(null);
 						});
+
+						describe('sequence', () => {
+							test.todo('first');
+
+							test.todo('middle');
+
+							test('last', () => {
+								game = game.setCursor({ fixture: 'cascade', data: [3, 2] });
+								expect(game.previousAction.text).toBe('cursor set 4⡂ JD');
+								expect(game.print()).toBe(
+									'' + //
+										'             7C 8D TH KS \n' +
+										'   |TC|   KD JH          \n' +
+										'   |9D|   QC             \n' +
+										'   |8C|  >JD             \n' +
+										':d KH KC QH QD JC TD 9C \n' +
+										' cursor set 4 JD'
+								);
+								expect(game.cursor).toEqual({ fixture: 'cascade', data: [3, 2] });
+								expect(game.selection).toEqual({
+									location: { fixture: 'cascade', data: [1, 0] },
+									cards: [
+										{ rank: '10', suit: 'clubs', location: { fixture: 'cascade', data: [1, 0] } },
+										{ rank: '9', suit: 'diamonds', location: { fixture: 'cascade', data: [1, 1] } },
+										{ rank: '8', suit: 'clubs', location: { fixture: 'cascade', data: [1, 2] } },
+									],
+									peekOnly: false,
+								});
+								expect(game.availableMoves).toEqual([
+									{
+										location: { fixture: 'cascade', data: [0, 0] },
+										moveDestinationType: 'cascade:empty',
+										priority: -1,
+									},
+									{
+										location: { fixture: 'cascade', data: [2, 0] },
+										moveDestinationType: 'cascade:empty',
+										priority: -1,
+									},
+									{
+										location: { fixture: 'cascade', data: [3, 2] },
+										moveDestinationType: 'cascade:sequence',
+										priority: 2,
+									},
+									{
+										location: { fixture: 'cascade', data: [4, 0] },
+										moveDestinationType: 'cascade:sequence',
+										priority: 1,
+									},
+									{
+										location: { fixture: 'cascade', data: [5, 0] },
+										moveDestinationType: 'cascade:empty',
+										priority: -1,
+									},
+									{
+										location: { fixture: 'cascade', data: [6, 0] },
+										moveDestinationType: 'cascade:empty',
+										priority: -1,
+									},
+									{
+										location: { fixture: 'cascade', data: [7, 0] },
+										moveDestinationType: 'cascade:empty',
+										priority: -1,
+									},
+								]);
+								game = game.touch({ autoFoundation: false });
+								expect(game.print()).toBe(
+									'' + //
+										'             7C 8D TH KS \n' +
+										'          KD JH          \n' +
+										'          QC             \n' +
+										'         >JD             \n' +
+										'          TC             \n' +
+										'          9D             \n' +
+										'          8C             \n' +
+										':d KH KC QH QD JC TD 9C \n' +
+										' move 24 TC-9D-8C→JD'
+								);
+								expect(game.previousAction).toEqual({
+									text: 'move 2⡀4⡂ TC-9D-8C→JD',
+									type: 'move',
+								});
+								expect(game.cursor).toEqual({ fixture: 'cascade', data: [3, 2] });
+								expect(game.selection).toEqual(null);
+								expect(game.availableMoves).toEqual(null);
+							});
+						});
+
+						test.todo('pile');
 					});
 
 					test('empty', () => {
