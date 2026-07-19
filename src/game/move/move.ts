@@ -27,28 +27,36 @@ import { _parseShorthandMove, PreviousActionType } from '@/game/move/history';
 /* *********** */
 
 /**
-	- `deck` is shorthand for `deck:single` (can only move single cards from the deck)
-	- `cell` is shorthand for `cell:single` (cells only have one card)
-	- `foundation` is shorthand for `foundation:single` (¿can only move single cards from a foundation?)
-
-	---
-
-	- TODO (techdebt) remove `foundation` from MoveSourceType or add `deck` to MoveDestinationType
-	   - now that it's more advanced, `GameFunction` seems like a much better way to handle foundation→any
-	- TODO (techdebt) remove `deck` from MoveSourceType?
+	used to determind {@link MoveDestinationTypePriorities}
 
 	Moving cards to the deck isn't a standard move.
-	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveDestinationType.
+	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveSourceType.
+
+	- TODO (techdebt) (refactor) make these shorthands explicit
+	   - `deck` is shorthand for `deck:single` (can only move single cards from the deck)
+	   - `cell` is shorthand for `cell:single` (cells only have one card)
+	   - `foundation` is shorthand for `foundation:single`
+	- TODO (techdebt) remove `foundation` from MoveSourceType
+	   - now that it's more advanced, `GameFunction` seems like a much better way to handle foundation→any
+	   - consider this alongside PreaviousActionType of illegal
+	   - we do not need to include illegal moves in `MoveSourceType` nor {@link MoveDestinationType}
 */
 export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
 
 /**
-	- `cell` is shorthand for `cell:empty` (can only move cards to an empty cell)
-	- `foundation` is shorthand for `foundation:sequence`
-	  (caveat: ace is `foundation:empty`, {@linkcode canStackFoundation} is a cleaner approach to being more specific)
+	used to determind {@link MoveDestinationTypePriorities}
 
 	Moving cards to the deck isn't a standard move.
 	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveDestinationType.
+
+	- TODO (techdebt) (refactor) make these shorthands explicit
+	   - `cell` is shorthand for `cell:empty` (can only move cards to an empty cell)
+	   - `foundation` is shorthand for `foundation:sequence`
+	   - (caveat: ace is `foundation:empty`, {@linkcode canStackFoundation} is a cleaner approach to being more specific)
+	- IDEA (gameplay) `foundation:sequence`
+	   - autofoundation and other tools are just sugar
+	   - cascade:sequence is _also_ just sugar
+	   - so what would foundation:sequence even look like, that'd be a whole new type of move
 */
 export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cascade:sequence';
 

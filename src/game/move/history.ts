@@ -238,7 +238,7 @@ export function parseCursorFromPreviousActionText(
 					// each cell identifies it's own d0
 					break;
 				case 'foundation': {
-					// XXX (3-priority) (techdebt) (test) parseCursorFromPreviousActionText needs _way_ more exhaustive testing
+					// XXX (techdebt) (test) parseCursorFromPreviousActionText needs _way_ more exhaustive testing
 					//  - RS→foundation, RS→RS
 					//  - for arbitrary ace positions and collisions
 					//  - where the source suit may or may not be in the foundation

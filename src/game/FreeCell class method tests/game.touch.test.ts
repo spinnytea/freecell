@@ -716,6 +716,14 @@ describe('game.touch', () => {
 		});
 	});
 
+	// TODO (test) list out every single, uh, "type" of location, and then ensure we have a complete cross product from ⨉ to
+	//  - cell (empty, not empty)
+	//  - foundation (empty (specific, pile, wrong target), not empty (each limit, pile, wrong target))
+	//  - cascade (empty, not empty (before, single, sequence (first, middle, last), pile))
+	//  - deck (empty, not empty (pile, first, middle, last))
+	// ---
+	//  - review `MoveSourceType` for legal moves, make a separate list for all possible moves
+	//  - review `MoveDestinationType` for legal moves, make a separate list for all possible moves
 	describe('move card', () => {
 		let game: FreeCell;
 

@@ -536,7 +536,7 @@ describe('game.undo (+ history)', () => {
 						});
 
 						describe('sequence', () => {
-							// TODO (2-priority) (controls) (gameplay) move card to the top of a sequence
+							// TODO (controls) (gameplay) move card to the top of a sequence
 							test.todo('first');
 							// t('first', () => {
 							// 	let game = FreeCell.parse(

@@ -36,14 +36,14 @@ export interface InvalidMoveCardType {
 
 	- TODO (techdebt) (combine-move-auto-foundation) unit test
 	- IDEA (animation) animations by move type
-		- first check all the cards that did move (updateCardPositions)
-		- then check all the cards we expected to move based on actionText
-		- then pick an animation based on PreviousActionType/actionText
+	   - first check all the cards that did move (updateCardPositions)
+	   - then check all the cards we expected to move based on actionText
+	   - then pick an animation based on PreviousActionType/actionText
 		there's nuance to some of the PreviousActionType (e.g. variations on init/select)
-		- if there's a mismatch, run the default animation
-		- most actionTypes can use the default, esp at first
-		---
-		- we are informally doing this for `move-foundation`
+	   - if there's a mismatch, run the default animation
+	   - most actionTypes can use the default, esp at first
+	  ---
+	   - we are informally doing this for `move-foundation`
 */
 export function calcUpdatedCardPositions({
 	cards,

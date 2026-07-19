@@ -2,9 +2,9 @@
 
 ```
 \b((F)IXME|BUG|HACK|TODO|XXX|REVIEW|IDEA)\b
-\b((F)IXME|BUG|HACK|TODO|XXX|REVIEW|IDEA)\b(\s+\(\w+\))+
+\b((F)IXME|BUG|HACK|TODO|XXX|REVIEW|IDEA)\b(\s+\([\w\d\-]+\))+
 \b(BUG|HACK|TODO|XXX|REVIEW|IDEA)\b(\S|\s[^(])
-\([65432]-priority\)
+\([5432]-priority\)
 ```
 
 ## Top-Level TODOs
@@ -153,6 +153,14 @@
 - IDEA (gameplay) (undo) Undo… redo?
   - if you undo, show/enable a redo button
   - allows you to manually replay
+- IDEA (motivation) (documentation) `/tutorial`
+  - recreate the Game #5 documentation, forward linking back to original
+- IDEA (motivation) (documentation) recreate other references?
+  - like /tutorial, but we link to other Resources on the [README](./README.md#resources)
+  - Partially duplication backup, partially deep verification
+- TODO (2-priority) (motivation) (documentation) update `/manualtesting`
+  - ensure current is accurate, review gaps/tasks
+  - add (documentation) label
 
 ## Discarded TODOs
 

@@ -24,7 +24,7 @@ Bump the version in package.json. Make and push version tags with `git tag v1.3.
 **Run/Sequence** - noun, Sequences are built downward in decreasing rank, for example 4-3-2-A, 10-9-8-7-6, K-Q-J, etc. \
 **Stack** - verb, to place a card or sequence on another card to sequence (note: use the noun _sequence_ instead)
 
-# Resource
+# Resources
 
 - Playing Card Deck https://code.google.com/archive/p/vector-playing-cards/
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) | [Next.js Documentation](https://nextjs.org/docs)

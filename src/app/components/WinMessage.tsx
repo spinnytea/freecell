@@ -31,10 +31,15 @@ export function WinMessage() {
 
 				// animate color hue, to white
 				if (winIsFlourish) {
-					// TODO (4-priority) (animation) "you win" animation feels like it starts at the wrong time
+					// TODO (animation) (refactor) "you win" animation feels like it starts at the wrong time
 					//  - maybe it needs a small delay?
 					//  - it shouldn't wait until the flourish is over
 					//  - bit it IS weird to see to when the board is so full
+					// ---
+					//  - this needs a single global timeline
+					//  - useCardPositionAnimations is a good start,
+					//  - but we need to move that timeline to a context and share it…
+					//  - well maybe that's the only way we interact with gsap
 					const color = { h: 0, s: 100, l: 44 }; /* #df0000 */
 					const applyColor: gsap.Callback = () => {
 						if (elementRef.current) {

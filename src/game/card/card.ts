@@ -95,7 +95,7 @@ export function isPileSH(val: string): val is PileSH {
 
 export interface CardLocation {
 	readonly fixture: Fixture;
-	// XXX (3-priority) (techdebt) (refactor) (rename) (coords) location.data → location.coords, d0/d1 → c0/c1
+	// XXX (techdebt) (refactor) (rename) (coords) location.data → location.coords, d0/d1 → c0/c1
 	//  - do this after the whole "rewrite actionText-examples.ts" thing
 	readonly data: number[];
 }
@@ -384,7 +384,7 @@ export function getSequenceAt(game: FreeCell, location: CardLocation): CardSeque
 //  - pile/location/move/history
 //  - parseShorthandMove, parseShorthandPileForMove, parseShorthandPileForSelect
 //  - review every use of `shorthand`, `sh`, "Shorthand"
-//  - ---
+// ---
 //  - "sh" just means "the text representation"
 //  - `Pile` is the code/json and `PileSH` is how we represent it in print/parse
 //  - so this is just an encode/decode process between JSON and string
