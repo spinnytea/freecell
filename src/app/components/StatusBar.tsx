@@ -8,18 +8,16 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
 const version = `v${process.env.VERSION ?? 'Unknown'}`;
 
-export function formatGamePrintForTest(printOutput: string): string {
+export function formatGamePrintForTest(fnString: string, printOutput: string): string {
 	const lines = printOutput.split('\n');
 	const escapedLines = lines.map((line) => line.replace(/\\/g, '\\\\').replace(/'/g, "\\'"));
 	const body = escapedLines.map((line, index) => {
 		const hasNextLine = index < escapedLines.length - 1;
 		const lineText = hasNextLine ? `${line}\\n` : line;
 		const suffix = hasNextLine ? ' +' : '';
-		return `	'${lineText}'${suffix}`;
+		return `		'${lineText}'${suffix}`;
 	});
-
-	// FIXME append `//` to first line
-	return ['expect(game.print()).toBe(', "	'' +", ...body, ');'].join('\n');
+	return ['expect(' + fnString + ').toBe(', "	'' + //", ...body, ');'].join('\n');
 }
 
 function stopPropagation(event: MouseEvent) {
@@ -41,8 +39,14 @@ export function StatusBar() {
 	}
 
 	function generateGameStateText(): string {
-		// FIXME also do game.print({ includeHistory: true });
-		return formatGamePrintForTest(game.print());
+		return (
+			formatGamePrintForTest('game.print()', game.print()) +
+			'\n\n' +
+			formatGamePrintForTest(
+				'game.print({ includeHistory: true })',
+				game.print({ includeHistory: true })
+			)
+		);
 	}
 
 	return (
