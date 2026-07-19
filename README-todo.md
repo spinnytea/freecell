@@ -121,7 +121,6 @@
 - TODO (techdebt) [bug reports](./notes/bug_reports/template.md)
 - TODO (animation) (gsap) If you undo too quickly, you can mess up zindex
   - properly chain speed up anim and/or reset zindex on complete?
-- TODO (4-priority) (techdebt) (hud) (test) If copy-paste current/history is normal, make a proper newline between them; put lines in quotes? Make a button?
 - IDEA (gameplay) (settings) Alt rules: hard mode: move each and once (only only head of stack?)
   - e.g. 9H>TS, TS-9H>JH, but not then 9H>TC
   - may need to "grey" the card once moved

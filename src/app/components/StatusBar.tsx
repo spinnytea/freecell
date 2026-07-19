@@ -1,5 +1,6 @@
 import { MouseEvent, useContext } from 'react';
 import Link from 'next/link';
+import { CopyClipboardButton } from '@/app/components/buttons/CopyClipboardButton';
 import { Checkbox } from '@/app/components/element/Checkbox';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
@@ -25,6 +26,11 @@ export function StatusBar() {
 		}));
 	}
 
+	function generateGameStateText(): string {
+		// FIXME finish
+		return 'stuff';
+	}
+
 	return (
 		<section className={styles_gameboard.status} onClick={stopPropagation}>
 			<Checkbox
@@ -33,6 +39,7 @@ export function StatusBar() {
 				text="Show Debug Info"
 				onChange={handleShowDebugInfoChange}
 			/>
+			{showDebugInfo && <CopyClipboardButton text={generateGameStateText} />}
 			<output className={styles_gameboard.hiddenActionText} role="status">
 				{previousAction.text}
 			</output>

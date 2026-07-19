@@ -40,10 +40,15 @@
 	right: 2ch;
 }
 
+/* XXX (techdebt) deprecated? unused? will be in the settings eventually? */
 .checkbox {
 	font-size: 1rem;
 	line-height: 1em;
 	margin: 0.2em 0;
 	padding: 0.5em 0.8ch;
 	user-select: none;
+}
+
+.copyClipboardButton {
+	width: 12ch;
 }
