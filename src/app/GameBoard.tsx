@@ -1,14 +1,14 @@
 import { MutableRefObject, useContext, useRef } from 'react';
 import classNames from 'classnames';
+import { SettingsButton } from '@/app/components/buttons/SettingsButton';
+import { UndoButton } from '@/app/components/buttons/UndoButton';
 import { CardImage } from '@/app/components/cards/CardImage';
 import { CardsOnBoard } from '@/app/components/CardsOnBoard';
 import { DebugCursors } from '@/app/components/DebugCursors';
 import { KeyboardCursor } from '@/app/components/KeyboardCursor';
 import { PileMarkers } from '@/app/components/PileMarkers';
-import { SettingsButton } from '@/app/components/SettingsButton';
 import { StatusBar } from '@/app/components/StatusBar';
 import { TextBoard } from '@/app/components/TextBoard';
-import { UndoButton } from '@/app/components/UndoButton';
 import { WinMessage } from '@/app/components/WinMessage';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { FixtureLayout } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
