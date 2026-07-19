@@ -1,4 +1,4 @@
-import type { Reporter } from 'vitest/reporters';
+import { type Reporter } from 'vitest/reporters';
 import fs from 'node:fs';
 import path from 'node:path';
 

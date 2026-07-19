@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { gsap } from 'gsap/all';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
-import type { Mock } from 'vitest';
+import { beforeEach, describe, expect, type Mock, test, vi } from 'vitest';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
 import Page from '@/app/page';
 import { getPropertiesFromFromToSpy, getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';

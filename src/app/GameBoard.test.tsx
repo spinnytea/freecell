@@ -1,14 +1,13 @@
 import { Dispatch, SetStateAction, useContext } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { gsap } from 'gsap/all';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
-import type { Mock } from 'vitest';
+import { beforeEach, describe, expect, type Mock, test, vi } from 'vitest';
 import { MULTI_ANIMATION_TIMESCALE, SNAPPY_ACTION_TIMESCALE } from '@/app/animation_constants';
 import { ControlSchemes } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
-import GameBoard from '@/app/GameBoard';
+import { GameBoard } from '@/app/GameBoard';
 import { StaticFixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/StaticFixtureSizesContextProvider';
-import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
+import { StaticGameContextProvider } from '@/app/hooks/contexts/Game/StaticGameContextProvider';
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import { Settings } from '@/app/hooks/contexts/Settings/Settings';

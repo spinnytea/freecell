@@ -35,7 +35,7 @@ function saveToLocalStorage(game: FreeCell): void {
 	}
 }
 
-export default function GameContextProvider({
+export function GameContextProvider({
 	children,
 }: Readonly<{
 	children: ReactNode;

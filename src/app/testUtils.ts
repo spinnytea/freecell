@@ -1,6 +1,5 @@
 import { gsap } from 'gsap/all';
-import { vi } from 'vitest';
-import type { Mock } from 'vitest';
+import { type Mock, vi } from 'vitest';
 import { shorthandLocation, shorthandPile } from '@/game/card/card';
 import { AvailableMove } from '@/game/move/move';
 

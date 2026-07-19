@@ -12,7 +12,7 @@ function castGame(game: FreeCell | string) {
 	- if multiple simply toggle between the two
 	- if one is provided, use that for all newGame, but play like normal
 */
-export default function StaticGameContextProvider({
+export function StaticGameContextProvider({
 	games,
 	children,
 }: Readonly<{

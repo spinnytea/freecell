@@ -1,6 +1,5 @@
 import { gsap } from 'gsap/all';
-import { beforeEach, describe, expect, test } from 'vitest';
-import type { Mock } from 'vitest';
+import { beforeEach, describe, expect, type Mock, test } from 'vitest';
 import { TLZR } from '@/app/animation_interfaces';
 import { animUpdatedCardPositions } from '@/app/hooks/animations/animUpdatedCardPositions';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';

@@ -1,5 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
-import type { Mock } from 'vitest';
+import { beforeEach, describe, expect, type Mock, test, vi } from 'vitest';
 import { shorthandCard } from '@/game/card/card';
 import { IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-catalog';
 import { FreeCell } from '@/game/game';

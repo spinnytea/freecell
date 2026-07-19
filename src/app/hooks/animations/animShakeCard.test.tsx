@@ -1,6 +1,5 @@
 import { gsap } from 'gsap/all';
-import { describe, expect, test, vi, beforeEach } from 'vitest';
-import type { Mock } from 'vitest';
+import { describe, expect, type Mock, test, vi, beforeEach } from 'vitest';
 import { animShakeCard } from '@/app/hooks/animations/animShakeCard';
 import { spyOnGsap } from '@/app/testUtils';
 

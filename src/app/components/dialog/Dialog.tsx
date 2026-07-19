@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styles_common from '@/app/common.module.css';
 import styles_dialog from '@/app/components/dialog/dialog.module.css';
 
-export default function Dialog({
+export function Dialog({
 	open = false,
 	onClose,
 	ariaLabel,

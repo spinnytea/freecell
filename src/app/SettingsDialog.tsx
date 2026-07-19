@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import classNames from 'classnames';
 import styles_buttons from '@/app/components/buttons.module.css';
-import Dialog from '@/app/components/dialog/Dialog';
+import { Dialog } from '@/app/components/dialog/Dialog';
 import styles_dialog from '@/app/components/dialog/dialog.module.css';
 import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
@@ -10,7 +10,7 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 	- TODO (deployment) (hud) iPad dialog buttons are wweeeiiirddd
 	- IDEA (animation) (hud) button for instant replay
 */
-export default function SettingsDialog() {
+export function SettingsDialog() {
 	const [, setGame, newGame] = useContext(GameContext);
 	const [{ showSettingsDialog }, setSettings] = useContext(SettingsContext);
 

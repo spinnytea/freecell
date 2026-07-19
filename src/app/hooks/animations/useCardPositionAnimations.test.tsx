@@ -1,13 +1,12 @@
 import { MutableRefObject } from 'react';
 import { render } from '@testing-library/react';
 import { gsap } from 'gsap/all';
-import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest';
-import type { Mock } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, type Mock, test, vi } from 'vitest';
 import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositionAnimations';
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
-import StaticGameContextProvider from '@/app/hooks/contexts/Game/StaticGameContextProvider';
+import { StaticGameContextProvider } from '@/app/hooks/contexts/Game/StaticGameContextProvider';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
 import { getCardIdsFromSpy, spyOnGsap } from '@/app/testUtils';
 import { ACTION_TEXT_EXAMPLES, FIFTY_TWO_CARD_FLOURISH, pullActionTextExamples } from '@/game/catalog/actionText-examples';

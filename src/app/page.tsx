@@ -4,11 +4,11 @@ import { useGSAP } from '@gsap/react';
 import classNames from 'classnames';
 import { gsap, Draggable } from 'gsap/all';
 import styles_common from '@/app/common.module.css';
-import GameBoard from '@/app/GameBoard';
+import { GameBoard } from '@/app/GameBoard';
 import styles_gameboard from '@/app/gameboard.module.css';
-import GameContextProvider from '@/app/hooks/contexts/Game/GameContextProvider';
+import { GameContextProvider } from '@/app/hooks/contexts/Game/GameContextProvider';
 import { SettingsContextProvider } from '@/app/hooks/contexts/Settings/SettingsContextProvider';
-import SettingsDialog from '@/app/SettingsDialog';
+import { SettingsDialog } from '@/app/SettingsDialog';
 
 gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(Draggable);
