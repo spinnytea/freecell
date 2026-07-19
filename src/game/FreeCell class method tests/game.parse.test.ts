@@ -978,31 +978,60 @@ describe('game.parse', () => {
 				);
 			});
 
-			test('invalid move (produces invalid action)', () => {
-				const game = FreeCell.parse(
-					'' + //
-						'             AD 2C       \n' +
-						' AH 8S 2D QS 4C    2S 3D \n' +
-						' 5C AS 9C KH 4D    3C 4S \n' +
-						' 3S 5D KC 3H KD    6S 8D \n' +
-						' TD 7S JD 7H 8H    JC 7D \n' +
-						' 5S QH 8C 9D KS    4H 6C \n' +
-						' 2H    TH 6D QD    QC 5H \n' +
-						' 9S    7C TS JS    JH    \n' +
-						'       6H         >TC    \n' +
-						'                   9H    \n' +
-						' move ab 9H→TC' // this is wrong (cursor is on '7 TC', ab are cells)
-				);
-				expect(game.history).toEqual(['init without history', 'move ab 9H→TC']);
-				// expect(() => game.undo()).toThrow('invalid first card location: move ab 9H→TC; 7 !== b');
-				const gameUndid = game.undo();
-				expect(gameUndid.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
-				expect(gameUndid.previousAction).toEqual({
-					text: 'invalid move ab 9H→TC',
-					type: 'invalid',
-					gameFunction: 'undo',
+			describe('invalid move (produces invalid action)', () => {
+				test('invalid first card pile', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'             AD 2C       \n' +
+							' AH 8S 2D QS 4C    2S 3D \n' +
+							' 5C AS 9C KH 4D    3C 4S \n' +
+							' 3S 5D KC 3H KD    6S 8D \n' +
+							' TD 7S JD 7H 8H    JC 7D \n' +
+							' 5S QH 8C 9D KS    4H 6C \n' +
+							' 2H    TH 6D QD    QC 5H \n' +
+							' 9S    7C TS JS    JH    \n' +
+							'       6H         >TC    \n' +
+							'                   9H    \n' +
+							' move ab 9H→TC' // this is wrong (cursor is on '7 TC', ab are cells)
+					);
+					expect(game.history).toEqual(['init without history', 'move ab 9H→TC']);
+					expect(() => game.undo({ throwError: true })).toThrow('invalid first card pile: move ab 9H→TC; 7 !== b');
+					const gameUndid = game.undo();
+					expect(gameUndid.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+					expect(gameUndid.previousAction).toEqual({
+						text: 'invalid move ab 9H→TC',
+						type: 'invalid',
+						gameFunction: 'undo',
+					});
+					expect(gameUndid.undo()).toBe(gameUndid);
 				});
-				expect(gameUndid.undo()).toBe(gameUndid);
+
+				test('invalid sequence', () => {
+					const game = FreeCell.parse(
+						'' + //
+							'             AD 2C       \n' +
+							' AH 8S 2D QS 4C    2S 3D \n' +
+							' 5C AS 9C KH 4D    3C 4S \n' +
+							' 3S 5D KC 3H KD    6S 8D \n' +
+							' TD 7S JD 7H 8H    JC 7D \n' +
+							' 5S QH 8C 9D KS    4H 6C \n' +
+							' 2H    TH 6D QD    QC 5H \n' +
+							' 9S    7C TS JS    JH    \n' +
+							'       6H         >TC    \n' +
+							'                   9H    \n' +
+							' move a7 9H-8C→TC' // this is wrong (this isn't the sequence in the cascade)
+					);
+					expect(game.history).toEqual(['init without history', 'move a7 9H-8C→TC']);
+					expect(() => game.undo({ throwError: true })).toThrow('invalid sequence: move a7 9H-8C→TC; 9H !== 9H-8C');
+					const gameUndid = game.undo();
+					expect(gameUndid.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+					expect(gameUndid.previousAction).toEqual({
+						text: 'invalid move a7 9H-8C→TC',
+						type: 'invalid',
+						gameFunction: 'undo',
+					});
+					expect(gameUndid.undo()).toBe(gameUndid);
+				});
 			});
 		});
 	});

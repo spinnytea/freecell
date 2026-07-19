@@ -516,13 +516,16 @@ export class FreeCell {
 		}
 	}
 
-	/**
-		go back one move
-	*/
+	/** go back one move */
 	undo({
 		skipActionPrev = false,
 		toggleCursor = false,
-	}: { skipActionPrev?: boolean; toggleCursor?: boolean } = {}): FreeCell | this {
+		throwError = false,
+	}: {
+		skipActionPrev?: boolean;
+		toggleCursor?: boolean;
+		throwError?: boolean;
+	} = {}): FreeCell | this {
 		const history = this.history.slice(0);
 		const moveToUndo = history.pop();
 		if (!moveToUndo) return this;
@@ -579,18 +582,15 @@ export class FreeCell {
 			//  - this is a very programmer centric thing
 			//  - do we need to wrap all of the FreeCell function? I don't like that idea
 			//  - search for all `throw new Error`, include `src/game`, exclude `catalog, .test.ts`
-			// throw e;
+			if (throwError) {
+				throw e;
+			}
 			const action: PreviousAction = {
 				text: 'invalid ' + moveToUndo,
 				type: 'invalid',
 				gameFunction: 'undo',
 			};
 			if (action.text === this.previousAction.text) {
-				// TODO (4-priority) (test) make a test, if we can; this was a head scratcher
-				//  - maybe throwing an error to verify branch execution was the wrong approach
-				//  - ^^ that's how that was found originally, a bad implementation would case a test to infinite loop
-				//  - we fixed that particular bug (by finishing the implementation)
-				//  - so now this is untestable? but it's a safeguard … in case of errors? … which we plan to eliminate?
 				// if it's the same action in a row, then don't create a new one
 				// e.g. restart failure
 				return this;
