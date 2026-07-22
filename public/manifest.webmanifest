@@ -1,0 +1,17 @@
+{
+	"name": "freecell",
+	"short_name": "freecell",
+	"description": "A playable freecell solitaire web app that can be used offline after the first load.",
+	"start_url": "/freecell/",
+	"display": "standalone",
+	"background_color": "#ffffff",
+	"theme_color": "#df0000",
+	"icons": [
+		{
+			"src": "/freecell/favicon.svg",
+			"type": "image/svg+xml",
+			"sizes": "any",
+			"purpose": "any maskable"
+		}
+	]
+}
