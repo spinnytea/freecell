@@ -1,9 +1,16 @@
-import '@/app/globals.css';
 import type { Metadata } from 'next';
+import '@/app/globals.css';
+import { OfflineServiceWorker } from '@/app/OfflineServiceWorker';
 
 export const metadata: Metadata = {
 	title: 'freecell',
 	description: 'card game',
+	manifest: '/freecell/manifest.webmanifest',
+	icons: {
+		icon: '/freecell/manifest-icon.svg',
+		shortcut: '/freecell/manifest-icon.svg',
+		apple: '/freecell/manifest-icon.svg',
+	},
 };
 
 // XXX (hud) red orange yellow green blue pruple?
@@ -31,7 +38,10 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body>{children}</body>
+			<body>
+				{children}
+				<OfflineServiceWorker />
+			</body>
 		</html>
 	);
 }
