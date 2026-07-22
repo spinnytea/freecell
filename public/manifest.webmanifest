@@ -4,11 +4,11 @@
 	"description": "A playable freecell solitaire web app that can be used offline after the first load.",
 	"start_url": "/freecell/",
 	"display": "standalone",
-	"background_color": "#081a1f",
-	"theme_color": "#081a1f",
+	"background_color": "#ffffff",
+	"theme_color": "#df0000",
 	"icons": [
 		{
-			"src": "/freecell/manifest-icon.svg",
+			"src": "/freecell/favicon.svg",
 			"type": "image/svg+xml",
 			"sizes": "512x512",
 			"purpose": "any maskable"

@@ -1,12 +1,15 @@
 const CACHE_NAME = 'freecell-offline-v__VERSION__'; // @see write-service-worker.mjs
-// FIXME why are the manifest specifically called out, they are under `/freecell` as well
-const APP_SHELL = ['/freecell/', '/freecell/manifest.webmanifest', '/freecell/manifest-icon.svg'];
+const APP_SHELL_PREFETCH = [
+	'/freecell/',
+	'/freecell/manifest.webmanifest',
+	'/freecell/favicon.svg',
+];
 
 self.addEventListener('install', (event) => {
 	event.waitUntil(
 		(async () => {
 			const cache = await caches.open(CACHE_NAME);
-			await cache.addAll(APP_SHELL);
+			await cache.addAll(APP_SHELL_PREFETCH);
 			await self.skipWaiting();
 		})()
 	);
@@ -43,6 +46,9 @@ self.addEventListener('fetch', (event) => {
 				cache.put(request, networkResponse.clone());
 				return networkResponse;
 			} catch {
+				// if the request is not cached
+				// and the request fails
+				// return index.html
 				return caches.match('/freecell/');
 			}
 		})()

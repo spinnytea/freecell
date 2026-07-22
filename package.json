@@ -1,5 +1,6 @@
 {
   "name": "freecell",
+	"description": "A playable freecell solitaire web app that can be used offline after the first load.",
   "version": "2.0.12",
   "private": true,
   "scripts": {

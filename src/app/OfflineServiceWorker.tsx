@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-const SERVICE_WORKER_PATH = `${process.env.BASE_PATH ?? '/freecell'}/sw.js`;
+const SERVICE_WORKER_PATH = `${process.env.BASE_PATH ?? ''}/sw.js`;
 
 export function OfflineServiceWorker() {
 	useEffect(() => {
