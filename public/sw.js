@@ -28,29 +28,37 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-	if (event.request.method !== 'GET') {
+	const request = event.request;
+	const isNavigationRequest = request.mode === 'navigate';
+
+	if (request.method !== 'GET') {
 		return;
 	}
 
-	event.respondWith(
-		(async () => {
-			const request = event.request;
-			const cachedResponse = await caches.match(request, { ignoreSearch: true });
-			if (cachedResponse) {
-				return cachedResponse;
-			}
-
-			try {
-				const networkResponse = await fetch(request);
-				const cache = await caches.open(CACHE_NAME);
-				cache.put(request, networkResponse.clone());
-				return networkResponse;
-			} catch {
-				// if the request is not cached
-				// and the request fails
-				// return index.html
+	if (request.mode === 'navigate') {
+		event.respondWith(
+			fetch(request).catch(() => {
+				// Fallback: If network fails, serve the cached offline page/app shell
 				return caches.match('/freecell/');
-			}
-		})()
-	);
+			})
+		);
+	} else {
+		event.respondWith(
+			(async () => {
+				const cachedResponse = await caches.match(request, { ignoreSearch: true });
+				if (cachedResponse) {
+					return cachedResponse;
+				}
+
+				try {
+					const networkResponse = await fetch(request);
+					const cache = await caches.open(CACHE_NAME);
+					cache.put(request, networkResponse.clone());
+					return networkResponse;
+				} catch {
+					return caches.match('/freecell/');
+				}
+			})()
+		);
+	}
 });

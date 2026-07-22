@@ -19,6 +19,6 @@ describe('OfflineServiceWorker', () => {
 
 		render(<OfflineServiceWorker />);
 
-		expect(registerSpy).toHaveBeenCalledWith('/freecell/sw.js');
+		expect(registerSpy).toHaveBeenCalledWith('/sw-Unknown.js');
 	});
 });

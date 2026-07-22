@@ -7,7 +7,7 @@ const projectRoot = join(__dirname, '..');
 const packageJson = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'));
 const version = packageJson.version;
 const sourceServiceWorkerPath = join(projectRoot, 'public', 'sw.js');
-const outputServiceWorkerPath = join(projectRoot, 'out', 'freecell', 'sw.js');
+const outputServiceWorkerPath = join(projectRoot, 'out', 'freecell', `sw-${version}.js`);
 const template = readFileSync(sourceServiceWorkerPath, 'utf8');
 const rendered = template.replaceAll('__VERSION__', version);
 

@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
+import { ASSET_FOLDER } from '@/app/components/cards/constants';
 
-const SERVICE_WORKER_PATH = `${process.env.BASE_PATH ?? ''}/sw.js`;
+const SERVICE_WORKER_PATH = `${ASSET_FOLDER}/sw-${process.env.VERSION ?? 'Unknown'}.js`;
 
 export function OfflineServiceWorker() {
 	useEffect(() => {
