@@ -1,5 +1,5 @@
-// Keep this in sync with the release version so a new deploy gets a fresh cache.
-const CACHE_NAME = 'freecell-offline-v2.0.12';
+const CACHE_NAME = 'freecell-offline-v__VERSION__'; // @see write-service-worker.mjs
+// FIXME why are the manifest specifically called out, they are under `/freecell` as well
 const APP_SHELL = ['/freecell/', '/freecell/manifest.webmanifest', '/freecell/manifest-icon.svg'];
 
 self.addEventListener('install', (event) => {

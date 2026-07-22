@@ -5,7 +5,7 @@
   "scripts": {
     "start": "next dev",
     "prebuild": "npm run clean && npm run fix && npm run test:cov",
-    "build": "next build",
+    "build": "next build && node scripts/write-service-worker.mjs",
     "serve": "npx http-server -a localhost -p 8080 -o /freecell/manualtesting out",
     "fix": "npm run lint && npm run format",
     "lint": "next lint --fix && tsc --noEmit",

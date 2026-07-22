@@ -7,6 +7,7 @@ export const metadata: Metadata = {
 	description: 'card game',
 	manifest: '/freecell/manifest.webmanifest',
 	icons: {
+		// FIXME use favicon.svg
 		icon: '/freecell/manifest-icon.svg',
 		shortcut: '/freecell/manifest-icon.svg',
 		apple: '/freecell/manifest-icon.svg',
