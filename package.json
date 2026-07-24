@@ -1,6 +1,6 @@
 {
   "name": "freecell",
-	"description": "A playable freecell solitaire web app that can be used offline after the first load.",
+  "description": "A playable freecell solitaire web app that can be used offline after the first load.",
   "version": "2.1.0",
   "private": true,
   "scripts": {
@@ -51,6 +51,8 @@
     "jsdom": "^29.1.1",
     "lodash": "^4.18.1",
     "prettier": "^3.9.4",
+    "sharp": "^0.35.3",
+    "to-ico": "^1.1.5",
     "typescript": "=5.4.5",
     "vitest": "^4.1.9"
   }

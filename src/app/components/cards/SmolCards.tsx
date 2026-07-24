@@ -43,7 +43,7 @@ const TEXT: { [rank in Rank]: string } = {
 	'jack': 'J',
 	'queen': 'Q',
 	'king': 'K',
-	'joker': 'W', // unused
+	'joker': 'W',
 };
 
 export function SmolCards({

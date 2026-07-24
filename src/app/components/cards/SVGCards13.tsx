@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
-import { ASSET_FOLDER } from '@/app/components/cards/constants';
+import { ASSET_FOLDER, scale_height } from '@/app/components/cards/constants';
 import { SmolCards } from '@/app/components/cards/SmolCards';
 import { isRed, Rank, Suit } from '@/game/card/card';
 
@@ -35,6 +35,24 @@ export function SVGCards13({
 			onError={() => {
 				setError(true);
 			}}
+		/>
+	);
+}
+
+export function SVGCards13Testing({
+	width,
+	filename,
+}: Readonly<{
+	width: number;
+	filename: string;
+}>) {
+	return (
+		<Image
+			src={ASSET_FOLDER + '/i/SVG-cards-1.3/' + filename}
+			alt={filename}
+			width={width}
+			height={scale_height(width)}
+			draggable={false}
 		/>
 	);
 }
