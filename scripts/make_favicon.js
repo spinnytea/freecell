@@ -4,29 +4,33 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const dir = path.join(__dirname, '..', 'public');
-const inputSvg = path.join(dir, 'favicon.svg');
+const squareSvg = path.join(dir, 'favicon.svg');
+const maskableSvg = path.join(dir, 'maskable.svg');
 const outputIco = path.join(dir, 'favicon.ico');
 
-// Traditional ICO File, Modern Web and Mobile Icons
-const faviconSizes = [16, 32, 180, 192, 512];
-// transparent
-const background = { r: 0, g: 0, b: 0, alpha: 0 };
+const faviconSizes = [16, 32];
+const maskableSizes = [180, 512];
 
 async function generateFavicon() {
 	try {
-		const pipeline = sharp(inputSvg);
+		const squarePipeline = sharp(squareSvg);
+		const maskablePipeline = sharp(maskableSvg);
 
-		for (const size of faviconSizes) {
-			const outputPng = path.join(dir, `favicon-${size}x${size}.png`);
-			await pipeline.clone().resize(size, size, { background }).png().toFile(outputPng);
+		// for (const size of faviconSizes) {
+		// 	const outputPng = path.join(dir, `favicon-${size}x${size}.png`);
+		// 	await squarePipeline.clone().resize(size, size).png().toFile(outputPng);
+		// 	console.log(`Successfully generated ${outputPng}`);
+		// }
+
+		for (const size of maskableSizes) {
+			const outputPng = path.join(dir, `maskable-${size}x${size}.png`);
+			await maskablePipeline.clone().resize(size, size).png().toFile(outputPng);
 			console.log(`Successfully generated ${outputPng}`);
 		}
 
 		// generate optimized image buffers for each target size
 		const icoBuffers = await Promise.all(
-			faviconSizes
-				.filter((size) => size <= 256)
-				.map((size) => pipeline.clone().resize(size, size, { background }).toBuffer())
+			faviconSizes.map((size) => squarePipeline.clone().resize(size, size).toBuffer())
 		);
 
 		// bundle and save
