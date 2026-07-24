@@ -7,9 +7,17 @@ export const metadata: Metadata = {
 	description: 'card game',
 	manifest: '/freecell/manifest.webmanifest',
 	icons: {
-		icon: ['/freecell/favicon.svg', '/freecell/favicon.ico'],
-		shortcut: ['/freecell/favicon.svg', '/freecell/favicon.ico'],
-		apple: ['/freecell/favicon.svg', '/freecell/favicon.ico'],
+		icon: [
+			{ url: '/freecell/favicon.svg', type: 'image/svg+xml' },
+			{ url: '/freecell/favicon.ico', type: 'image/x-icon' },
+			{ url: '/freecell/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+			{ url: '/freecell/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+			{ url: '/freecell/favicon-192x192.png', sizes: '192x192', type: 'image/png' },
+			{ url: '/freecell/favicon-256x256.png', sizes: '256x256', type: 'image/png' },
+			{ url: '/freecell/favicon-512x512.png', sizes: '512x512', type: 'image/png' },
+		],
+		shortcut: ['/freecell/favicon.svg'],
+		apple: [{ url: '/freecell/favicon-180x180.png', sizes: '180x180', type: 'image/png' }],
 	},
 };
 

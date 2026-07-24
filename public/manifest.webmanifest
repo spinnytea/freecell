@@ -8,6 +8,42 @@
 	"theme_color": "#df0000",
 	"icons": [
 		{
+			"src": "/freecell/favicon-16x16.png",
+			"type": "image/png",
+			"sizes": "16x16",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/freecell/favicon-32x32.png",
+			"type": "image/png",
+			"sizes": "32x32",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/freecell/favicon-180x180.png",
+			"type": "image/png",
+			"sizes": "180x180",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/freecell/favicon-192x192.png",
+			"type": "image/png",
+			"sizes": "192x192",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/freecell/favicon-256x256.png",
+			"type": "image/png",
+			"sizes": "256x256",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/freecell/favicon-512x512.png",
+			"type": "image/png",
+			"sizes": "512x512",
+			"purpose": "any maskable"
+		},
+		{
 			"src": "/freecell/favicon.svg",
 			"type": "image/svg+xml",
 			"sizes": "any",
