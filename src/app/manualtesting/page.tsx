@@ -8,6 +8,7 @@ import Link from 'next/link';
 import styles_common from '@/app/common.module.css';
 import { CardImage } from '@/app/components/cards/CardImage';
 import { ControlSchemes } from '@/app/components/cards/constants';
+import { SVGCards13Testing } from '@/app/components/cards/SVGCards13';
 import { GameBoard, GameBoardDisplayOptions } from '@/app/GameBoard';
 import styles_gameboard from '@/app/gameboard.module.css';
 import { StaticGameContextProvider } from '@/app/hooks/contexts/Game/StaticGameContextProvider';
@@ -106,8 +107,10 @@ const gamePrint_animations: { nextActionText: string; gamePrint: string }[] = [
 
 const supportedBrowsers = ['Mac Chrome', 'Mac Safari', 'Android Chrome', 'iPad Safari'];
 
-const calcCardWidth = (windowInnerWidth = 9999) =>
-	Math.floor(Math.min(Math.max((windowInnerWidth - 80) / 13, 10), 75));
+const calcCardWidth = (windowInnerWidth = 9999) => {
+	const scaled = Math.floor((windowInnerWidth - 80) / 14);
+	return Math.min(Math.max(10, scaled), 75);
+};
 
 const DEFAULT_DISPLAY_OPTIONS: GameBoardDisplayOptions = {
 	showSettingsButton: false,
@@ -182,37 +185,65 @@ export default function Page() {
 				<li>
 					Playing Cards
 					<ol>
-						<li>Visual check on all Suit x Rank.</li>
-						<li>Visual check on red/black jokers.</li>
+						<li>
+							Visual check on standard cards. Suit x Rank + red/black jokers.
+							<ManualTestingSettingsContextProvider cardFace="SVGCards13">
+								<div className={styles_manualtesting.allplayingcards}>
+									{SuitList.map((suit) =>
+										RankList.map((rank) => (
+											<CardImage
+												key={`${rank}-${suit}`}
+												rank={rank}
+												suit={suit}
+												width={cardWidth}
+											/>
+										))
+									)}
+								</div>
+							</ManualTestingSettingsContextProvider>
+						</li>
+						<li>
+							Visual check on smol cards (mobile). Suit x Rank + red/black jokers.
+							<ManualTestingSettingsContextProvider cardFace="SmolCards">
+								<div className={styles_manualtesting.allplayingcards}>
+									{SuitList.map((suit) =>
+										RankList.map((rank) => (
+											<CardImage
+												key={`${rank}-${suit}`}
+												rank={rank}
+												suit={suit}
+												width={cardWidth}
+											/>
+										))
+									)}
+								</div>
+							</ManualTestingSettingsContextProvider>
+						</li>
+						<li>
+							Visual check on card back.
+							<div className={styles_manualtesting.allplayingcards}>
+								<CardImage rank="joker" suit="spades" width={cardWidth} hidden />
+							</div>
+						</li>
+						<li>
+							Visual check on unused card options.
+							<div className={styles_manualtesting.allplayingcards}>
+								<SVGCards13Testing filename="jack_of_clubs.svg" width={cardWidth} />
+								<SVGCards13Testing filename="queen_of_clubs.svg" width={cardWidth} />
+								<SVGCards13Testing filename="king_of_clubs.svg" width={cardWidth} />
+								<SVGCards13Testing filename="jack_of_diamonds.svg" width={cardWidth} />
+								<SVGCards13Testing filename="queen_of_diamonds.svg" width={cardWidth} />
+								<SVGCards13Testing filename="king_of_diamonds.svg" width={cardWidth} />
+								<SVGCards13Testing filename="jack_of_hearts.svg" width={cardWidth} />
+								<SVGCards13Testing filename="queen_of_hearts.svg" width={cardWidth} />
+								<SVGCards13Testing filename="king_of_hearts.svg" width={cardWidth} />
+								<SVGCards13Testing filename="ace_of_spades2.svg" width={cardWidth} />
+								<SVGCards13Testing filename="jack_of_spades.svg" width={cardWidth} />
+								<SVGCards13Testing filename="queen_of_spades.svg" width={cardWidth} />
+								<SVGCards13Testing filename="king_of_spades.svg" width={cardWidth} />
+							</div>
+						</li>
 					</ol>
-					<ManualTestingSettingsContextProvider cardFace="SVGCards13">
-						<div className={styles_manualtesting.allplayingcards}>
-							{SuitList.map((suit) =>
-								RankList.map((rank) => (
-									<CardImage key={`${rank}-${suit}`} rank={rank} suit={suit} width={cardWidth} />
-								))
-							)}
-							<CardImage rank="joker" suit="clubs" width={cardWidth} />
-							<CardImage rank="joker" suit="diamonds" width={cardWidth} />
-							<CardImage rank="joker" suit="hearts" width={cardWidth} />
-							<CardImage rank="joker" suit="spades" width={cardWidth} />
-							<CardImage rank="joker" suit="spades" width={cardWidth} hidden />
-						</div>
-					</ManualTestingSettingsContextProvider>
-					<ManualTestingSettingsContextProvider cardFace="SmolCards">
-						<div className={styles_manualtesting.allplayingcards}>
-							{SuitList.map((suit) =>
-								RankList.map((rank) => (
-									<CardImage key={`${rank}-${suit}`} rank={rank} suit={suit} width={cardWidth} />
-								))
-							)}
-							<CardImage rank="joker" suit="clubs" width={cardWidth} />
-							<CardImage rank="joker" suit="diamonds" width={cardWidth} />
-							<CardImage rank="joker" suit="hearts" width={cardWidth} />
-							<CardImage rank="joker" suit="spades" width={cardWidth} />
-							<CardImage rank="joker" suit="spades" width={cardWidth} hidden />
-						</div>
-					</ManualTestingSettingsContextProvider>
 					<ol start={3} style={{ display: 'none' }}>
 						{/* TODO (motivation) animate card flash for use in flourishes and end of game */}
 						<li>
