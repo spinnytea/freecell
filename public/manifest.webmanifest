@@ -32,12 +32,6 @@
 			"purpose": "any maskable"
 		},
 		{
-			"src": "/freecell/favicon-256x256.png",
-			"type": "image/png",
-			"sizes": "256x256",
-			"purpose": "any maskable"
-		},
-		{
 			"src": "/freecell/favicon-512x512.png",
 			"type": "image/png",
 			"sizes": "512x512",

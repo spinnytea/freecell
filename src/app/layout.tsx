@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 			{ url: '/freecell/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
 			{ url: '/freecell/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
 			{ url: '/freecell/favicon-192x192.png', sizes: '192x192', type: 'image/png' },
-			{ url: '/freecell/favicon-256x256.png', sizes: '256x256', type: 'image/png' },
 			{ url: '/freecell/favicon-512x512.png', sizes: '512x512', type: 'image/png' },
 		],
 		shortcut: ['/freecell/favicon.svg'],

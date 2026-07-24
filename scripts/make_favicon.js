@@ -8,7 +8,7 @@ const inputSvg = path.join(dir, 'favicon.svg');
 const outputIco = path.join(dir, 'favicon.ico');
 
 // Traditional ICO File, Modern Web and Mobile Icons
-const faviconSizes = [16, 32, 180, 192, 256, 512];
+const faviconSizes = [16, 32, 180, 192, 512];
 // transparent
 const background = { r: 0, g: 0, b: 0, alpha: 0 };
 
