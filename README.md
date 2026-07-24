@@ -30,5 +30,6 @@ Bump the version in package.json. Make and push version tags with `git tag v1.3.
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) | [Next.js Documentation](https://nextjs.org/docs)
 - Card Back: https://commons.wikimedia.org/wiki/File:Card_back_10.svg
 - [Generate favicon from svg](https://svg2ico.com/)
+  - but now we have a local script [make_favicon.js](./scripts/make_favicon.js)
 - [Definitions of terms used in FreeCell](https://mobilityware.helpshift.com/hc/en/12-freecell/faq/3459-definitions-of-terms-used-in-freecell/)
 - [FreeCell - Wikipedia](https://en.wikipedia.org/wiki/FreeCell)
