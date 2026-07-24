@@ -1,12 +1,14 @@
 {
   "name": "freecell",
   "description": "A playable freecell solitaire web app that can be used offline after the first load.",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": true,
   "scripts": {
     "start": "next dev",
-    "prebuild": "npm run clean && npm run fix && npm run test:cov",
+    "prebuild": "npm run fix && npm run test:cov",
     "build": "next build && node scripts/write-service-worker.mjs",
+    "prerelease": "npm prune && npm run clean",
+    "release": "npm run build",
     "serve": "npx http-server -a localhost -p 8080 -o /freecell/manualtesting out",
     "fix": "npm run lint && npm run format",
     "lint": "next lint --fix && tsc --noEmit",
