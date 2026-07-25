@@ -206,7 +206,7 @@ describe('GameBoard', () => {
 				toSpy: 53,
 				addLabelSpy: 2,
 			});
-			// TODO (2-priority) (animation) should we split deal and check-can-flourish?
+			// TODO (animation) (refactor) we should split deal and check-can-flourish
 			//  - deal and check-can-flourish are squashed in one update
 			//  - it would be nice to chain the card tilt so it's not so hidden
 			expect(addLabelSpy.mock.calls).toEqual([['gameFunction check-can-flourish'], ['updateCardPositions']]);

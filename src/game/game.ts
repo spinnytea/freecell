@@ -136,7 +136,7 @@ interface OptionsTouch extends OptionsNonstandardGameplay {
 	selectionNever?: boolean;
 }
 
-// TODO (techdebt) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
+// TODO (techdebt) (refactor) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
 export class FreeCell {
 	readonly cards: Card[];
 	readonly win: boolean;
@@ -151,7 +151,7 @@ export class FreeCell {
 		return this.previousAction.text.includes('flourish52');
 	}
 
-	// REVIEW (motivation) consider: preferred foundation suits? (HSDC) - render these?
+	// REVIEW (motivation) (settings) consider: preferred foundation suits? (HSDC) - render these?
 	//  - i.e. instead of allowing any suit in any foundation spot, suits go in designated spots
 	//  - this kind of goes against the whole flexible design
 	// structure to make the logic easier
@@ -534,7 +534,6 @@ export class FreeCell {
 			const cards = parseAndUndoPreviousActionText(this, moveToUndo);
 			if (!cards) return this;
 
-			// TODO (techdebt) test init partial
 			const action = parsePreviousActionType(history.pop() ?? 'init partial');
 			action.gameFunction = 'undo';
 
@@ -616,7 +615,6 @@ export class FreeCell {
 	} = {}): FreeCell | this {
 		// should only do auto-foundation after a card moves
 		// e.g. don't auto-foundation just because we select a card or move the cursor
-		// TODO (gameplay) (setting) autoFoundation "only after [any] move" vs "only after move to foundation"
 		if (!anytime && this.previousAction.type !== 'move') {
 			return this;
 		}
@@ -648,12 +646,6 @@ export class FreeCell {
 		move the selected card(s) to the "best" allowable location
 
 		this is the cornerstone for click-to-move
-
-		- IDEA (controls) compare how often this aligns with saved gameplay
-		   - note that it will never be perfect
-		   - we can move however we want in games (with keyboard, drag and drop)
-		   - and we will notably move in ways counter to the autoMove (that's their whole point)
-		   - but it'd be interesting to compare, i guess its, my move preferences to, i guess, this one piece of documentation
 
 		@example
 			game.setCursor(loc).touch().autoMove();
@@ -835,7 +827,6 @@ export class FreeCell {
 		keepDeck = false,
 	}: { demo?: boolean; keepDeck?: boolean } = {}): FreeCell {
 		// TODO (techdebt) replace `const game = this.__clone({})` with `return this.__clone({})`
-		// IDEA (techdebt) deal in multiple actions (deal most, demo)
 		const game = this.__clone({ action: { text: 'deal all cards', type: 'deal' } });
 
 		const remaining = demo ? game.cells.length + game.foundations.length : 0;
@@ -1080,8 +1071,7 @@ export class FreeCell {
 		print the deck (row) of the game \
 		split out logic from {@linkcode FreeCell.print}
 
-		- TODO (refactor) remove - used in lots of tests
-		@see {@linkcode printDeck}
+		@deprecated TODO (refactor) remove, call {@linkcode printDeck} instead, but used in lots of tests
 	*/
 	__printDeck(cursor = this.cursor, selection = this.selection): string {
 		return printDeck(this, cursor, selection);
@@ -1091,8 +1081,7 @@ export class FreeCell {
 		print the history of the game \
 		split out logic from {@linkcode FreeCell.print}
 
-		- TODO (refactor) remove - used in lots of tests
-		@see {@linkcode printHistory}
+		@deprecated TODO (refactor) remove, call {@linkcode printHistory} instead, but used in lots of tests
 	*/
 	__printHistory(skipLastHist = false): string {
 		return printHistory(this, skipLastHist);

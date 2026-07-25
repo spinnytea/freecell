@@ -361,7 +361,8 @@ describe('game', () => {
 			);
 
 			// so we can only go back as far as possible
-			expect(game.restart().print({ includeHistory: true })).toBe(
+			const gameRestarted = game.restart();
+			expect(gameRestarted.print({ includeHistory: true })).toBe(
 				'' + //
 					' 6C          AD          \n' +
 					' AH 8S 2D QS 4C 9H 2S 3D \n' +
@@ -374,6 +375,7 @@ describe('game', () => {
 					'       6H                \n' +
 					' init partial'
 			);
+			expect(gameRestarted.undo()).toBe(gameRestarted);
 		});
 
 		// new game / undo may not go to the same place by default

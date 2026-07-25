@@ -40,6 +40,7 @@ import { _parseShorthandMove, PreviousActionType } from '@/game/move/history';
 	   - now that it's more advanced, `GameFunction` seems like a much better way to handle foundation→any
 	   - consider this alongside PreaviousActionType of illegal
 	   - we do not need to include illegal moves in `MoveSourceType` nor {@linkcode MoveDestinationType}
+	- TODO (drag-and-drop) (test) test drag-and-drop for every MoveSourceType ⨉ MoveDestinationType
 */
 export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
 

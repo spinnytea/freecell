@@ -9,6 +9,21 @@
 
 ## Top-Level TODOs
 
+> There isn't currently anything marked with a priority.
+> Some next tasks could be:
+>
+> 1. review all 390 task tags / make a reistry of labels
+>    - if motivation and techdebt are first, maybe they need to be capitalized?
+>    - when we "copy the same idea" multiple times, maybe we need to make a common label for it?
+>    - i don't want to migrate tasks to jira or github or whatever
+>    - todo tree died / isn't enough, maybe i need something else
+> 2. actaully learn gsap, then do the `(animation) (refactor)`
+>    - it would be nice to get the `useCardPositionAnimations` tests in good shape
+>    - which might also lead into the "all action text" tests
+> 3. `notes/bug_reports`
+> 4. (settings)
+> 5. print/parse discrepancies for "non-standard" gameplay
+
 - TODO (gsap) review how we use gsap, right now it feels like magic
 - TODO (techdebt) switch from nextjs to vite
   - https://vite.dev/guide/build.html#multi-page-app
@@ -95,7 +110,7 @@
   - spitball impl: attempts positive and negative, display Math.abs(attempts), set neg when undo, set pos and increase when move
 - IDEA (theme) sounds - normally i don't like to, but some folio for moving cards should be okay
 - TODO (settings) (theme) more themes - card themes / decks / colors, background colors, etc
-- TODO (3-priority) (motivation) (deployment) (offline) continue researching PWA (progressive web app), sing SW (service worker)
+- TODO (motivation) (deployment) (offline) continue researching PWA (progressive web app), sing SW (service worker)
   - https://dev.to/stephengade/pwa-build-installable-nextjs-app-that-works-offline-3fff
   - Progressive Web App, using service workers
 - XXX (techdebt) (optimize) optimize
@@ -148,7 +163,7 @@
 - IDEA (motivation) (documentation) recreate other references?
   - like /tutorial, but we link to other Resources on the [README](./README.md#resources)
   - Partially duplication backup, partially deep verification
-- TODO (2-priority) (motivation) (documentation) update `/manualtesting`
+- TODO (motivation) (documentation) update `/manualtesting`
   - ensure current is accurate, review gaps/tasks
   - add (documentation) label
 

@@ -10,6 +10,9 @@ export function OfflineServiceWorker() {
 		if (!('serviceWorker' in navigator)) {
 			return;
 		}
+		if (process.env.NODE_ENV === 'development') {
+			return;
+		}
 
 		navigator.serviceWorker.register(SERVICE_WORKER_PATH).catch(() => {
 			// Ignore service worker registration failures here so the game still renders.
