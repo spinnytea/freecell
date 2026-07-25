@@ -54,7 +54,6 @@
   - which is normal for a "resize"
   - maybe it just doesn't have any "previous positions" available
   - still, there's got to be something we can do
-- REVIEW (hud) (mobile) icon for bookmarks / save link to home screen (Andriod, iOS)
 - TODO (motivation) (flourish-anim) animate card flash for use in flourishes and end of game
   - blue, red, pink, etc
   - snazzy explosion when you place the last card
@@ -96,6 +95,9 @@
   - spitball impl: attempts positive and negative, display Math.abs(attempts), set neg when undo, set pos and increase when move
 - IDEA (theme) sounds - normally i don't like to, but some folio for moving cards should be okay
 - TODO (settings) (theme) more themes - card themes / decks / colors, background colors, etc
+- TODO (3-priority) (motivation) (deployment) (offline) continue researching PWA (progressive web app), sing SW (service worker)
+  - https://dev.to/stephengade/pwa-build-installable-nextjs-app-that-works-offline-3fff
+  - Progressive Web App, using service workers
 - XXX (techdebt) (optimize) optimize
   - i've never benchmarked memory/speed before in any meaningful way
   - is the game impl even a problem? prove that there are no memory leeks (maybe print/parse proves it)
@@ -131,8 +133,6 @@
   - Print: HUD
   - Print History: Archive
   - Print Verbose: HUD + digest .…...... But history should have all this; we need notation for the gaps (e.g. cords when ambiguous history)
-- TODO (2-priority) (hud) (drag-and-drop) Draw drag/drop gizmos in Debug mode (e.g. drag drop ranges)
-- TODO (2-priority) (hud) (drag-and-drop) animate alloweable moves different from detected hover
 - IDEA (settings) disable "helpful" settings
   - e.g. click to move (picks "best" move for you)
   - e.g. flash flourish (you can do the math yourself)

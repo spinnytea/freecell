@@ -21,10 +21,10 @@ export function useKeyboardHotkeysControls() {
 			let consumed = false;
 			const pKeyL = key.toLowerCase();
 			if (isPileSH(pKeyL) && pKeyL !== 'k') {
-				// REVIEW (controls) use Hotkeys 'h' to start a new game
+				// REVIEW (controls) (keyboard) use Hotkeys 'h' to start a new game
 				//  - doesn't shuffle
 				//  - probably because it's using touch's new game
-				// REVIEW (controls) use Hotkeys to deal… you have to use space or enter or something
+				// REVIEW (controls) (keyboard) use Hotkeys to deal… you have to use space or enter or something
 				//  - there's no key because there's no Pile
 				//    because there's no shorthand
 				//    because there's no valid move

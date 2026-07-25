@@ -55,3 +55,32 @@ export const CURSOR_TRANSLATE_DURATION = 1 / 16;
 export const WIN_TEXT_ANIMATION_DURATION = 0.75;
 export const WIN_TEXT_COLOR_DURATION = 1.2;
 export const WIN_TEXT_COLOR_DURATION_52 = 2;
+
+/**
+	When dragging a card, the card/cursor needs to be "close enough"
+	to a card for it to be considered overlapping.
+	If it card is an {@linkcode FreeCell.prototype.availableMoves},
+	then it gets a slightly larger capture distance to be considered overlapping.
+
+	This means your drag will target available moves a little be sooner than invalid moves.
+
+	> ℹ️ not sure if this is the right place for this \
+	> `src/app/components/cards/constants.ts` is for facts \
+	> `src/app/animation_constants.ts` (this file) is for squishy feely tuning
+*/
+export const CARD_DISTANCE_RANGE_BOOST_FOR_AVAILABLE = 1.2;
+
+/**
+	When dragging a card and it's considered to be "overlapping",
+	then it _is_ a particular distance away from the card cursor.
+	If it card is an {@linkcode FreeCell.prototype.availableMoves},
+	then we will artificially decrease the distance to that card for distance comparisons.
+
+	This means that availble move will be prefered (to a point) over invalid moves when overlapping both.
+	It does not affect two or more invalid moves nor two or more available moves.
+
+	> ℹ️ not sure if this is the right place for this \
+	> `src/app/components/cards/constants.ts` is for facts \
+	> `src/app/animation_constants.ts` (this file) is for squishy feely tuning
+*/
+export const CARD_DISTANCE_SNAP_BENEFIT_FOR_AVAILABLE = 0.5;

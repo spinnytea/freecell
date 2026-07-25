@@ -1,10 +1,15 @@
 ### Description
 
-Can't seem to drag-drop (KS h) - you have to go WAY near the top of the foundation card & confirm auto-foundation for this move
+drag-and-drop KS h
+
+- drag boost the index
+- you drop it
+- it animates from zIndex of 3 to 13
+- it shouldn't drop _below_ the cards; maybe it needs to animate from boosted to 13
 
 ## Labels
 
-TODO (drag-and-drop) (drop-target-size)
+TODO (animation) (gsap)
 
 ### Game State
 

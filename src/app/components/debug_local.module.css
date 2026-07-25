@@ -1,0 +1,45 @@
+/*
+	These are styles that don't end up in the final artifacy
+	DebugDropTargets is commented out, not behind a flag
+*/
+
+.cardCoords {
+	position: absolute;
+	z-index: 100;
+	border-radius: var(--pile-border-radius);
+	pointer-events: none;
+
+	border-color: #ff00ffaa;
+	background-color: #ff00ff33;
+}
+.cardDistance {
+	position: absolute;
+	z-index: 102;
+	border-radius: 50%;
+	pointer-events: none;
+	border: 1px solid;
+
+	border-color: #ff00ffaa;
+	background-color: #ff00ff11;
+}
+.cardMaxDist {
+	position: absolute;
+	z-index: 101;
+	border-radius: 50%;
+	pointer-events: none;
+	border: 2px solid;
+
+	border-color: #888888aa;
+	background-color: #88888811;
+}
+
+.isAvailableMove {
+	z-index: 105;
+	border-color: #00ffffaa;
+	background-color: #00ffff33;
+}
+.isOverlapping {
+	z-index: 106;
+	border-color: #0000ffaa;
+	background-color: #0000ff33;
+}

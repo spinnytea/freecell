@@ -54,8 +54,8 @@ function CardOnBoard({
 		rank
 	);
 
-	// XXX (techdebt) (dragndrop-bugs) this is so ugly
-	useDragAndDropControls(cardRef, location, gameBoardIdRef);
+	// XXX (techdebt) (dragndrop-bugs) this is so ugly; each card gets it's own entire state?
+	const DebugDropTargets = useDragAndDropControls(cardRef, location, gameBoardIdRef);
 
 	useGSAP(() => {
 		// set the initial position, once on load
@@ -66,13 +66,21 @@ function CardOnBoard({
 	//  - I'm starting to think we can't use Dragable in conjunction with another mouse event
 	const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardIdRef?.current);
 	return (
-		<div id={cardId} className={styles_cardsonboard.card} ref={cardRef} onClick={handleClickToMove}>
-			<CardImage
-				rank={rank}
-				suit={suit}
-				hidden={location.fixture === 'deck'}
-				width={fixtureSizes.cardWidth}
-			/>
-		</div>
+		<>
+			<div
+				id={cardId}
+				className={styles_cardsonboard.card}
+				ref={cardRef}
+				onClick={handleClickToMove}
+			>
+				<CardImage
+					rank={rank}
+					suit={suit}
+					hidden={location.fixture === 'deck'}
+					width={fixtureSizes.cardWidth}
+				/>
+			</div>
+			{DebugDropTargets}
+		</>
 	);
 }

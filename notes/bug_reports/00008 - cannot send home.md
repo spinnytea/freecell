@@ -8,7 +8,7 @@ More control over where next card moves (i.e. cannot move to foundation if multi
 
 ## Labels
 
-TODO (controls)
+TODO (click-to-move) (controls) (mobile)
 
 ### Game State
 
