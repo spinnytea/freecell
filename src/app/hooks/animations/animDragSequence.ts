@@ -1,6 +1,7 @@
 import { MutableRefObject } from 'react';
 import { gsap } from 'gsap/all';
 import {
+	CURSOR_TRANSLATE_DURATION,
 	DEFAULT_TRANSLATE_DURATION,
 	DRAG_RELEASE_CLEAR_SPEEDUP,
 	MAX_ANIMATION_OVERLAP,
@@ -154,9 +155,12 @@ export function animDragOverlap({
 		if (dropTarget.shorthand) {
 			const cardId = calcCardId(dropTarget.shorthand, gameBoardIdRef?.current);
 			const cardIdSelector = '#' + cardId;
-			// BUG (animation) (controls) (drag-and-drop) mobile does not rotate drop targets
-			const rotation = dropTarget.isOverlapping ? -5 : 0;
-			gsap.set(cardIdSelector, { rotation });
+			const rotation = dropTarget.isOverlapping ? (dropTarget.isAvailableMove ? -7 : -4) : 0;
+			gsap.to(cardIdSelector, {
+				rotation,
+				duration: CURSOR_TRANSLATE_DURATION,
+				ease: 'power1.out',
+			});
 		} else {
 			const pileId = calcPilemarkerId(dropTarget.location, gameBoardIdRef?.current);
 			if (dropTarget.isOverlapping) {

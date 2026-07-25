@@ -41,7 +41,7 @@ export function useClickToMoveControls(
 		}
 		if (skipBcuzDragAndDropIntegration) return;
 
-		// TODO (techdebt) (gameplay) (dragndrop-bugs) remove allowPeekOnly: false
+		// TODO (techdebt) (gameplay) (dragndrop-bugs) (mobile) remove allowPeekOnly: false
 		//  - I have _no_ idea why this allows click-to-move to work on mobile
 		domUtils.consumeDomEvent(event);
 		setGame((g) =>

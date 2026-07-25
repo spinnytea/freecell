@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, test } from 'vitest';
-import { calcCardCoords } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import { calcCardCoords, CardCoords } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
 import { calcStaticFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/StaticFixtureSizesContextProvider';
 import { _overlappingAvailableMove, DropTarget } from '@/app/hooks/controls/useDragAndDropControls';
 import { CardLocation } from '@/game/card/card';
@@ -28,27 +28,27 @@ describe('useDragAndDropControls', () => {
 			// x/y distance (l/r and t/b) cutoffs
 			// check isOverlapping = false
 			test('check dist threshold', () => {
-				const draggable = { x: 0, y: 0 } as Draggable;
-				const pointerCoords = { x: 0, y: 0 };
-				const fixtureSizes = calcStaticFixtureSizes(1, 1, 4);
+				const draggable = { x: 0, y: 0, pointerX: 0, pointerY: 0 } as Draggable;
+				const selectedCardCoords: CardCoords = { top: -10, left: -5, width: 10, height: 20 };
 				const dropTargets: DropTarget[] = [
 					{
 						location: { fixture: 'cascade', data: [0, 0] },
 						shorthand: null,
 						cardCoords: { top: -10, left: -5, width: 10, height: 20 },
+						cardDistance: 1,
+						cardMaxDist: 1,
 						isAvailableMove: false,
 						isOverlapping: true,
 					},
 				];
 				expect(countOverlapping(dropTargets)).toBe(1);
-				expect(_overlappingAvailableMove(draggable, pointerCoords, dropTargets, fixtureSizes)).toBe(null);
+				expect(_overlappingAvailableMove(draggable, selectedCardCoords, dropTargets)).toBe(null);
 				expect(countOverlapping(dropTargets)).toBe(0);
 			});
 
 			describe('boost for availableMove', () => {
 				// empty | not | av | av | not | empty
 				describe('naan', () => {
-					const draggable = { x: 999, y: 999 } as Draggable;
 					const fixtureSizes = calcStaticFixtureSizes(1, 1, 6);
 					const opts: [number, boolean][] = [
 						[1, false],
@@ -60,6 +60,8 @@ describe('useDragAndDropControls', () => {
 						location: { fixture: 'cascade', data: [d0, 0] },
 						shorthand: null,
 						cardCoords: calcCardCoords(fixtureSizes, { fixture: 'cascade', data: [d0, 0] }, 'selection'),
+						cardDistance: 1,
+						cardMaxDist: 1,
 						isAvailableMove,
 						isOverlapping: false,
 					}));
@@ -95,15 +97,15 @@ describe('useDragAndDropControls', () => {
 						${'straddles ←'}    | ${78} | ${{ fixture: 'cascade', data: [4, 0] }}
 						${'straddles →'}    | ${79} | ${null}
 					`('$x $desc', ({ x, overlapping }: { x: number; overlapping: CardLocation | null }) => {
-						const pointerCoords = { x, y: 25 };
-						expect(_overlappingAvailableMove(draggable, pointerCoords, dropTargets, fixtureSizes)).toEqual(overlapping);
+						const draggable = { x, y: 25, pointerX: 0, pointerY: 0 } as Draggable;
+						const selectedCardCoords: CardCoords = { top: -10, left: -5, width: 10, height: 20 };
+						expect(_overlappingAvailableMove(draggable, selectedCardCoords, dropTargets)).toEqual(overlapping);
 						expect(countOverlapping(dropTargets)).toBe(overlapping ? 1 : 0);
 					});
 				});
 
 				// empty | av | not | av | empty
 				describe('anna', () => {
-					const draggable = { x: 999, y: 999 } as Draggable;
 					const fixtureSizes = calcStaticFixtureSizes(1, 1, 6);
 					const opts: [number, boolean][] = [
 						[1, true],
@@ -115,6 +117,8 @@ describe('useDragAndDropControls', () => {
 						location: { fixture: 'cascade', data: [d0, 0] },
 						shorthand: null,
 						cardCoords: calcCardCoords(fixtureSizes, { fixture: 'cascade', data: [d0, 0] }, 'selection'),
+						cardDistance: 1,
+						cardMaxDist: 1,
 						isAvailableMove,
 						isOverlapping: false,
 					}));
@@ -133,8 +137,8 @@ describe('useDragAndDropControls', () => {
 
 					test.each`
 						desc                | x     | overlapping
-						${'straddles ←'}    | ${1}  | ${null}
-						${'straddles →'}    | ${2}  | ${{ fixture: 'cascade', data: [1, 0] }}
+						${'straddles ←'}    | ${-1} | ${null}
+						${'straddles →'}    | ${0}  | ${{ fixture: 'cascade', data: [1, 0] }}
 						${'center (empty)'} | ${15} | ${{ fixture: 'cascade', data: [1, 0] }}
 						${'center (av)'}    | ${25} | ${{ fixture: 'cascade', data: [1, 0] }}
 						${'straddles ←'}    | ${31} | ${{ fixture: 'cascade', data: [1, 0] }}
@@ -147,11 +151,12 @@ describe('useDragAndDropControls', () => {
 						${'straddles →'}    | ${49} | ${{ fixture: 'cascade', data: [4, 0] }}
 						${'center (av)'}    | ${55} | ${{ fixture: 'cascade', data: [4, 0] }}
 						${'center (empty)'} | ${65} | ${{ fixture: 'cascade', data: [4, 0] }}
-						${'straddles ←'}    | ${78} | ${{ fixture: 'cascade', data: [4, 0] }}
-						${'straddles →'}    | ${79} | ${null}
+						${'straddles ←'}    | ${80} | ${{ fixture: 'cascade', data: [4, 0] }}
+						${'straddles →'}    | ${81} | ${null}
 					`('$x $desc', ({ x, overlapping }: { x: number; overlapping: CardLocation | null }) => {
-						const pointerCoords = { x, y: 25 };
-						expect(_overlappingAvailableMove(draggable, pointerCoords, dropTargets, fixtureSizes)).toEqual(overlapping);
+						const draggable = { x, y: 25, pointerX: 0, pointerY: 0 } as Draggable;
+						const selectedCardCoords: CardCoords = { top: -10, left: -5, width: 10, height: 20 };
+						expect(_overlappingAvailableMove(draggable, selectedCardCoords, dropTargets)).toEqual(overlapping);
 						expect(countOverlapping(dropTargets)).toBe(overlapping ? 1 : 0);
 					});
 				});

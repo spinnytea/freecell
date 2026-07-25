@@ -26,6 +26,8 @@
 	border-color: rgba(var(--pile-border-rgb), 0.5);
 }
 
+/* DebugCursors */
+
 .cursorBox {
 	position: absolute;
 	pointer-events: none;

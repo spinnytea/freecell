@@ -80,7 +80,7 @@ describe('game.moveCursor', () => {
 		});
 	});
 
-	// TODO (controls) only cycle between places that have a card
+	// TODO (controls) (keyboard) only cycle between places that have a card
 	//  - up/left/down/right only work when that spot has a card
 	//  - or relly, jump over the empty spaces
 	//  - impl isn't trivial
@@ -88,7 +88,7 @@ describe('game.moveCursor', () => {
 		test.todo('what do these tests need / look like?');
 	});
 
-	// TODO (controls) only cycle between places that the selection can move
+	// TODO (controls) (keyboard) only cycle between places that the selection can move
 	//  - we pick a move by priority
 	//  - we need to have the default ordering (or something) for picking the next cursor
 	//  - left and right are easy

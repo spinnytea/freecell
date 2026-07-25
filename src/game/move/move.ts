@@ -27,7 +27,7 @@ import { _parseShorthandMove, PreviousActionType } from '@/game/move/history';
 /* *********** */
 
 /**
-	used to determind {@link MoveDestinationTypePriorities}
+	used to determind {@linkcode MoveDestinationTypePriorities}
 
 	Moving cards to the deck isn't a standard move.
 	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveSourceType.
@@ -39,12 +39,12 @@ import { _parseShorthandMove, PreviousActionType } from '@/game/move/history';
 	- TODO (techdebt) remove `foundation` from MoveSourceType
 	   - now that it's more advanced, `GameFunction` seems like a much better way to handle foundation→any
 	   - consider this alongside PreaviousActionType of illegal
-	   - we do not need to include illegal moves in `MoveSourceType` nor {@link MoveDestinationType}
+	   - we do not need to include illegal moves in `MoveSourceType` nor {@linkcode MoveDestinationType}
 */
 export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
 
 /**
-	used to determind {@link MoveDestinationTypePriorities}
+	used to determind {@linkcode MoveDestinationTypePriorities}
 
 	Moving cards to the deck isn't a standard move.
 	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveDestinationType.
