@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -8,8 +8,17 @@ const packageJson = JSON.parse(readFileSync(join(projectRoot, 'package.json'), '
 const version = packageJson.version;
 const sourceServiceWorkerPath = join(projectRoot, 'public', 'sw.js');
 const outputServiceWorkerPath = join(projectRoot, 'out', 'freecell', `sw-${version}.js`);
+const outdatedServiceWorkerPath = join(projectRoot, 'out', 'freecell', 'sw.js');
 const template = readFileSync(sourceServiceWorkerPath, 'utf8');
 const rendered = template.replaceAll('__VERSION__', version);
 
 mkdirSync(dirname(outputServiceWorkerPath), { recursive: true });
 writeFileSync(outputServiceWorkerPath, rendered);
+try {
+	unlinkSync(outdatedServiceWorkerPath);
+} catch (e) {
+	if (err.code !== 'ENOENT') {
+		throw err; // re-throw any unexpected errors
+	}
+	// silent if re-run
+}
