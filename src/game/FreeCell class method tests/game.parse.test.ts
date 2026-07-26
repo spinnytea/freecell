@@ -905,7 +905,7 @@ describe('game.parse', () => {
 				);
 				expect(game.history).toEqual(['init without history', 'move 6⡀7⡇ 9H→TC']);
 				const gameUndid = game.undo();
-				// REVIEW (cursor) (parse-history) is this the right place for the cursor?
+				// REVIEW (cursor) (parse) is this the right place for the cursor?
 				//  - init should be at the deck, sure
 				//  - but init with history errors, when the game is under way?
 				//  - or i guess, init when the deck is empty?

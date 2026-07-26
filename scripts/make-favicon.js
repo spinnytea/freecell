@@ -3,6 +3,12 @@ const toIco = require('to-ico');
 const fs = require('fs').promises;
 const path = require('path');
 
+// Use this to recreate the suite of favicons
+//  - `favicon.svg` is the official actual icon all others come from
+//    ↪ favicon.ico
+//  - `maskable.svg` is ... a duplicate, adjusted to fit inside a circle
+//    ↪ maskable-size.png
+
 const dir = path.join(__dirname, '..', 'public');
 const squareSvg = path.join(dir, 'favicon.svg');
 const maskableSvg = path.join(dir, 'maskable.svg');

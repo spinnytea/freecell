@@ -12,11 +12,9 @@
 > There isn't currently anything marked with a priority.
 > Some next tasks could be:
 >
-> 1. review all 390 task tags / make a reistry of labels
+> 1. review all 390 task tags
 >    - if motivation and techdebt are first, maybe they need to be capitalized?
 >    - when we "copy the same idea" multiple times, maybe we need to make a common label for it?
->    - i don't want to migrate tasks to jira or github or whatever
->    - todo tree died / isn't enough, maybe i need something else
 > 2. actaully learn gsap, then do the `(animation) (refactor)`
 >    - it would be nice to get the `useCardPositionAnimations` tests in good shape
 >    - which might also lead into the "all action text" tests
