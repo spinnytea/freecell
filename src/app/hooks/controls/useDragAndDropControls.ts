@@ -84,7 +84,9 @@ export function useDragAndDropControls(
 		location: _location,
 		fixtureSizes: useFixtureSizes(),
 		settings: _settings,
-		/** @deprecated BUG (click-to-move) (controls) (drag-and-drop) (dragndrop-bugs) this is so ugly */
+		/**
+			@deprecated BUG (click-to-move) (controls) (drag-and-drop) (dragndrop-bugs) this is so ugly
+		*/
 		handleClickToMove: useClickToMoveControls(_location, false),
 	});
 

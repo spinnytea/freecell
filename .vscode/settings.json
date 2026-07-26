@@ -1,6 +1,11 @@
 {
-	"todo-tree.filtering.excludeGlobs": ["**/node_modules"],
-	"todo-tree.highlights.customHighlight": {
+	"better-todo-tree.filtering.excludeGlobs": [
+		"**/node_modules/**",
+		"**/dist/**",
+		"**/build/**",
+		"**/.git/**"
+	],
+	"better-todo-tree.highlights.customHighlight": {
 		"FIXME": {
 			"type": "whole-line",
 			"icon": "flame",
@@ -34,7 +39,7 @@
 			"icon": "archive",
 			"iconColour": "#8888",
 			"foreground": "#8888",
-			"background": "none"
+			"background": "#0000"
 		},
 		"REVIEW": {
 			"type": "text-and-comment",
@@ -48,7 +53,7 @@
 			"icon": "light-bulb",
 			"iconColour": "#aa4",
 			"foreground": "#aa4",
-			"background": "none"
+			"background": "#0000"
 		},
 		"[ ]": {
 			"type": "whole-line",
@@ -65,11 +70,11 @@
 			"background": "#84e3"
 		}
 	},
-	"todo-tree.general.tags": ["FIXME", "BUG", "HACK", "TODO", "XXX", "REVIEW", "IDEA", "[ ]", "[x]"],
-	"todo-tree.general.statusBar": "tags",
-	"todo-tree.highlights.useColourScheme": true,
-	"todo-tree.tree.showCountsInTree": true,
-	"todo-tree.tree.showCurrentScanMode": false,
-	"todo-tree.regex.regex": "(//|#|<!--|;|/\\*\\*?|-|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)",
-	"todo-tree.tree.groupedByTag": true
+	"better-todo-tree.general.tags": ["FIXME", "BUG", "HACK", "TODO", "XXX", "REVIEW", "IDEA", "[ ]", "[x]"],
+	"better-todo-tree.general.statusBar": "tags",
+	"better-todo-tree.highlights.useColourScheme": true,
+	"better-todo-tree.tree.showCountsInTree": true,
+	"better-todo-tree.tree.showCurrentScanMode": false,
+	"better-todo-tree.regex.regex": "(//|#|<!--|;|/\\*\\*?|-|^|^[ \\t]*(-|\\d+\\.|@\\w+))\\s*($TAGS)",
+	"better-todo-tree.tree.groupedByTag": true,
 }

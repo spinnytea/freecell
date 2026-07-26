@@ -13,7 +13,9 @@ const isTestEnv = process.env.NODE_ENV === 'test';
 */
 export function useClickToMoveControls(
 	location: CardLocation,
-	/** @deprecated XXX (techdebt) (dragndrop-bugs) this is so ugly */
+	/**
+		@deprecated XXX (techdebt) (dragndrop-bugs) this is so ugly
+	*/
 	disabledInProd?: boolean
 ) {
 	const [game, setGame] = useContext(GameContext);

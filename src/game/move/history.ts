@@ -70,7 +70,9 @@ export const PREVIOUS_ACTION_TYPE_IS_START_OF_GAME = new Set<PreviousActionType>
 	'deal',
 ]);
 
-/** @deprecated XXX (techdebt) seems like a duplicate of {@linkcode PREVIOUS_ACTION_TYPE_IN_HISTORY} */
+/**
+	@deprecated XXX (techdebt) seems like a duplicate of {@linkcode PREVIOUS_ACTION_TYPE_IN_HISTORY}
+*/
 export const PREVIOUS_ACTION_TYPE_IS_MOVE = new Set<PreviousActionType>([
 	'move',
 	'move-foundation',
