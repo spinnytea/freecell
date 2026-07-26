@@ -6,7 +6,7 @@ import { calcCursorActionText } from '@/game/move/move';
 
 export type KeyboardArrowDirection = 'up' | 'right' | 'left' | 'down';
 
-// TODO (controls) actually play the game and see what's not quite right
+// TODO (controls) (gameplay) (keyboard) actually play the game and see what's not quite right
 //  - "up wrap" and "down wrap" to cascade should move to the "first card of the last sequence"
 //  - move to the bottom card, then "cast upwards" while the cards can stack
 export function moveCursorWithBasicArrows(
@@ -154,7 +154,7 @@ export function moveCursorWithBasicArrows(
 				case 'down':
 					if (d1 >= game.tableau[d0].length - 1) {
 						if (game.deck.length) {
-							// REVIEW (controls) (gameplay) should we spread the cursor?
+							// REVIEW (controls) (gameplay) (keyboard) should we spread the cursor?
 							//  - like how the cells map to the start of the tableau,
 							//  - and the foundation maps to the end of the tableau
 							//  - should we do some scaling/interpolation math?
@@ -176,7 +176,7 @@ export function moveCursorWithBasicArrows(
 				case 'up':
 					// if d0 is wrong, it will be fixed with __clampCursor
 					// d1 will be fixed with __clampCursor
-					// REVIEW (controls) spread up/down between cascade and deck?
+					// REVIEW (controls) (gameplay) (keyboard) spread up/down between cascade and deck?
 					//  - i.e. use the cascade to jump multiple cards in the deck
 					return {
 						action: { text: 'cursor up wrap', type: 'cursor' },

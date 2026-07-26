@@ -207,7 +207,7 @@ describe('prioritizeAvailableMoves', () => {
 			);
 		});
 
-		// REVIEW (techdebt) (controls) this one is just back and forth, there may be nothing we can do
+		// REVIEW (techdebt) (click-to-move) (controls) this one is just back and forth, there may be nothing we can do
 		// start at 0, move to stacked, move to another sequence (3S -> 4D ??)
 		test('empty to one sequence', () => {
 			let game = FreeCell.parse(

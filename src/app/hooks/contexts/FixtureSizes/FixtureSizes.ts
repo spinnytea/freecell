@@ -16,7 +16,7 @@ import {
 	Rank,
 } from '@/game/card/card';
 
-// IDEA (hud) bad layout idea: free cells on left (top down), foundation on right (top down)
+// IDEA (hud) (settings) bad layout idea: free cells on left (top down), foundation on right (top down)
 //  - so tableau can start at the top of the screen?
 //  - it's a layout
 export const DEFAULT_CLIENT_WIDTH = 800;
@@ -289,8 +289,7 @@ export function calcTopLeftZ(
 			const ret = {
 				top: fixtureSizes.tableau.top + fixtureSizes.tableau.offsetTop * data[1],
 				left: fixtureSizes.tableau.cascadeLeft[data[0]],
-				// REVIEW (animation) why did we put this here?
-				zIndex: data[1], // we don't really need to make one cascade strictly above another
+				zIndex: data[1], // one cascade does not need to be above another (no need to account for d0)
 				rotation: 0,
 			};
 			if (selection?.location.fixture === 'cascade' && selection.location.data[0] === data[0]) {

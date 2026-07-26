@@ -8,7 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outputPath = path.join(root, 'README-todo-labels.md');
 const pattern = /\b(FIXME|BUG|HACK|TODO|XXX|REVIEW|IDEA)\b((?:\s+\([\w\d\-]+\))+)/g;
 const excludeDirs = new Set(['coverage', '.git', 'node_modules', '.next', '.turbo']);
-const labels = new Set();
+const labels = new Map();
 
 function walk(dir) {
 	for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -30,8 +30,9 @@ function walk(dir) {
 			const text = readFileSync(fullPath, 'utf8');
 			for (const match of text.matchAll(pattern)) {
 				const tagGroup = match[2];
-				for (const label of tagGroup.matchAll(/\(([\w\d\-]+)\)/g)) {
-					labels.add(label[1]);
+				for (const labelGroup of tagGroup.matchAll(/\(([\w\d\-]+)\)/g)) {
+					const label = labelGroup[1];
+					labels.set(label, (labels.get(label) || 0) + 1);
 				}
 			}
 		} catch {
@@ -42,12 +43,10 @@ function walk(dir) {
 
 walk(root);
 
+const sortedLabels = Array.from(labels.entries()).sort(([a], [b]) => a.localeCompare(b));
 const output =
 	'> generated file \\\n' +
 	'> rebuild with `node scripts/find-task-labels.mjs`\n\n' +
-	[...labels]
-		.sort()
-		.map((label) => `(${label})`)
-		.join('\n') +
+	sortedLabels.map(([label, count]) => `${String(count).padStart(3)} (${label})`).join('\n') +
 	'\n';
 writeFileSync(outputPath, output, 'utf8');

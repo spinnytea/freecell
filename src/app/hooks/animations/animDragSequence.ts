@@ -35,6 +35,7 @@ export function animDragSequence({
 	list.forEach((shorthand, index) => {
 		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 		// do not animate zIndex, it causes bugs
+		// REVIEW (anim-zindex) but why does zIndex animation cause bugs?
 		// needs a double boost for foundation
 		gsap.set(cardIdSelector, { zIndex: BOTTOM_OF_CASCADE + BOTTOM_OF_CASCADE + index });
 		if (index === 0) {
@@ -90,6 +91,7 @@ export function animDragSequenceClear({
 
 		gsap.killTweensOf(cardIdSelector);
 		// do not animate zIndex, it causes bugs
+		// REVIEW (anim-zindex) but why does zIndex animation cause bugs?
 		gsap.set(cardIdSelector, { zIndex: zIndex + BOTTOM_OF_CASCADE + index });
 		gsap.to(cardIdSelector, {
 			transform: '', // 'translate3d(0px, 0px, 0px)',

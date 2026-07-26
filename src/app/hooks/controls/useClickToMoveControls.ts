@@ -5,16 +5,16 @@ import { GameContext } from '@/app/hooks/contexts/Game/GameContext';
 import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 import { CardLocation } from '@/game/card/card';
 
-/** HACK (techdebt) (dragndrop-bugs) unit tests want to use the standard click event (we mock out all of Draggable) */
+/** HACK (dragndrop-bugs) unit tests want to use the standard click event (we mock out all of Draggable) */
 const isTestEnv = process.env.NODE_ENV === 'test';
 
 /**
-	- REVIEW (techdebt) (controls) "integration" test
+	- REVIEW (techdebt) (controls) (manualtesting) (test) "integration" test
 */
 export function useClickToMoveControls(
 	location: CardLocation,
 	/**
-		@deprecated XXX (techdebt) (dragndrop-bugs) this is so ugly
+		@deprecated HACK (click-to-move) (dragndrop-bugs) this is so ugly
 	*/
 	disabledInProd?: boolean
 ) {
@@ -32,7 +32,7 @@ export function useClickToMoveControls(
 		if (game.win) return; // if the game is over (reset)
 		if (game.deck.length) return; // game init (shuffle / deal)
 
-		// XXX (techdebt) (dragndrop-bugs) disabledInProd buz unit tests, unless I can figure something else out
+		// XXX (dragndrop-bugs) disabledInProd buz unit tests, unless I can figure something else out
 		const skipBcuzDragAndDropIntegration =
 			disabledInProd !== undefined && disabledInProd === !isTestEnv;
 		if (showDebugInfo) {
@@ -43,7 +43,7 @@ export function useClickToMoveControls(
 		}
 		if (skipBcuzDragAndDropIntegration) return;
 
-		// TODO (techdebt) (gameplay) (dragndrop-bugs) (mobile) remove allowPeekOnly: false
+		// BUG (gameplay) (dragndrop-bugs) (mobile) (peek) remove allowPeekOnly: false
 		//  - I have _no_ idea why this allows click-to-move to work on mobile
 		domUtils.consumeDomEvent(event);
 		setGame((g) =>

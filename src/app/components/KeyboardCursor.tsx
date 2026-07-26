@@ -8,7 +8,7 @@ import { useFixtureSizes } from '@/app/hooks/contexts/FixtureSizes/useFixtureSiz
 import { useGame } from '@/app/hooks/contexts/Game/useGame';
 
 /**
-	- REVIEW (techdebt) (hud) styles and icon →, ➡
+	- REVIEW (techdebt) (hud) (icons) styles and icons: →, ➡
 	- TODO (animation) animate cursor on select/deselect
 */
 export function KeyboardCursor() {

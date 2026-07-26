@@ -109,7 +109,7 @@ export function useDragAndDropControls(
 					5. onDragEnd - when the drag even is over
 				*/
 				Draggable.create(cardRef.current, {
-					zIndexBoost: false, // this only works if you drag it twice in a row
+					zIndexBoost: false, // zIndexBoost only works if you drag it twice in a row
 					// The behavior of react-draggable's onClick firing once on desktop and twice on mobile devices is a known issue,
 					// primarily related to how touch events are handled and how they interact with synthetic React events.
 					onClick: function (event: PointerEvent) {
@@ -310,7 +310,6 @@ export function useDragAndDropControls(
 }
 
 /**
-	- XXX (optimize) (drag-and-drop) technically, since all cards are the same size, we can do dist from top/left, and skip the width/height adjustments
 	@modifies `dropTargets.isOverlapping`
 */
 export function _overlappingAvailableMove(
@@ -326,10 +325,18 @@ export function _overlappingAvailableMove(
 		return null;
 	}
 
-	// do not use draggable.pointerX nor draggable.pointerY
-	// use the center of the card being dragged
-	// this way it doesn't matter where the drag starts (where the cursor is, where your finger is)
-	// this way it only matters where the card actually is, where you managed to drag it to, and what's visually on screen
+	/*
+		# Caution
+		do not use draggable.pointerX nor draggable.pointerY
+		use the center of the card being dragged
+		this way it doesn't matter where the drag starts (where the cursor is, where your finger is)
+		this way it only matters where the card actually is, where you managed to drag it to, and what's visually on screen
+
+		# Note
+		technically, since all cards are the same size,
+		we could do the dist calculation from top/left, and skip the width,height/2 adjustments
+		but when it comes to debugging, it's nicer/easier to see what's happening by centering on the cards.
+	*/
 	const currCardX = selectedCardCoords.left + selectedCardCoords.width / 2 + draggedX;
 	const currCardY = selectedCardCoords.top + selectedCardCoords.height / 2 + draggedY;
 
@@ -415,7 +422,7 @@ export function _checkIfValid(
 	const dropTargets: DropTarget[] = allMoveLocations.map((avLocation) => ({
 		location: avLocation,
 		shorthand: shorthandCard(getCardAt(game, avLocation)).trim() || null,
-		// XXX (controls) (settings) (drag-and-drop) option to drop on card vs column
+		// XXX (controls) (drag-and-drop) (settings) option to drop on card vs column
 		// BUG (drag-and-drop) CursorType 'cascade' doesn't work with dist2 based overlappingAvailableMove - remove it?
 		//  - we could use "distance to bounding box"
 		//  - not sure how to "boost" in that case, maybe it's okay to "overlook" av | not | av

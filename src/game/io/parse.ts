@@ -3,10 +3,10 @@ import { Card, removeBraille } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { parseMovesFromHistory } from '@/game/move/history';
 
-// XXX (refactor) parseHome
-// XXX (refactor) parseTableau
-// XXX (refactor) parseWin
-// XXX (refactor) parseDeck
+// XXX (refactor-restructure) parseHome
+// XXX (refactor-restructure) parseTableau
+// XXX (refactor-restructure) parseWin
+// XXX (refactor-restructure) parseDeck
 
 /**
 	parse the history (shorthand) of the game \
@@ -45,7 +45,7 @@ export function parseHistoryShorthand(
 	if (deckLength === 0) {
 		replayGameForHistroy = replayGameForHistroy.dealAll();
 	} else if (deckLength !== cards.length) {
-		// XXX (optional) (complexity) not valid gameplay, but like, we _do_ this in the tests, and accounting for this is fun
+		// XXX (optional-complexity) not valid gameplay, but like, we _do_ this in the tests, and accounting for this is fun
 		replayGameForHistroy = replayGameForHistroy.dealAll({ demo: true, keepDeck: true });
 	}
 
@@ -81,14 +81,14 @@ export function parseHistoryShorthand(
 		return { errorMessage: 'init with invalid history replay cards' };
 	}
 
-	// XXX (optional) (complexity) verify cursor
+	// XXX (optional-complexity) verify cursor
 	//  - we parse the history before the cursor
 	//  - we would need to do that before parseHistoryShorthand
 	//  - we could simply use the actionText to recover the cursor,
 	//    but there is a separate optional complexity that uses the history to recover it more completely
 	//  - (maybe we need to compromise and do both? verify the cursor if we have it, which will be most of the time)
 
-	// XXX (optional) (complexity) verify selection, availableMoves
+	// XXX (optional-complexity) verify selection, availableMoves
 	//  - we don't try to create the selection or availableMoves until after we've created a `game = new FreeCell`
 	//  - … we would also need to _print_ the selection and availableMoves when we print the history
 	// if (replayGameForHistroy.selection !== null) {

@@ -7,20 +7,6 @@ exports[`GameBoard > completed games > Game #5 (tutorial) 1`] = `
     tabindex="0"
   >
     <div
-      class="hiddenDeckBack"
-    >
-      <img
-        alt="card back"
-        data-nimg="1"
-        decoding="async"
-        draggable="false"
-        height="0"
-        src="/i/Card_back_10.svg"
-        style="color: transparent;"
-        width="0"
-      />
-    </div>
-    <div
       id="piles"
     >
       <div
@@ -1195,20 +1181,6 @@ exports[`GameBoard > completed games > Game #5 (tutorial) 2`] = `
     class="none common"
     tabindex="0"
   >
-    <div
-      class="hiddenDeckBack"
-    >
-      <img
-        alt="card back"
-        data-nimg="1"
-        decoding="async"
-        draggable="false"
-        height="0"
-        src="/i/Card_back_10.svg"
-        style="color: transparent;"
-        width="0"
-      />
-    </div>
     <div
       id="piles"
     >
@@ -2385,20 +2357,6 @@ exports[`GameBoard > completed games > Game #5 (tutorial) 3`] = `
     tabindex="0"
   >
     <div
-      class="hiddenDeckBack"
-    >
-      <img
-        alt="card back"
-        data-nimg="1"
-        decoding="async"
-        draggable="false"
-        height="0"
-        src="/i/Card_back_10.svg"
-        style="color: transparent;"
-        width="0"
-      />
-    </div>
-    <div
       id="piles"
     >
       <div
@@ -3573,20 +3531,6 @@ exports[`GameBoard > completed games > Game #5 (tutorial) 4`] = `
     class="none common"
     tabindex="0"
   >
-    <div
-      class="hiddenDeckBack"
-    >
-      <img
-        alt="card back"
-        data-nimg="1"
-        decoding="async"
-        draggable="false"
-        height="0"
-        src="/i/Card_back_10.svg"
-        style="color: transparent;"
-        width="0"
-      />
-    </div>
     <div
       id="piles"
     >
@@ -4763,20 +4707,6 @@ exports[`GameBoard > completed games > Game #5 (tutorial) 5`] = `
     tabindex="0"
   >
     <div
-      class="hiddenDeckBack"
-    >
-      <img
-        alt="card back"
-        data-nimg="1"
-        decoding="async"
-        draggable="false"
-        height="0"
-        src="/i/Card_back_10.svg"
-        style="color: transparent;"
-        width="0"
-      />
-    </div>
-    <div
       id="piles"
     >
       <div
@@ -5951,20 +5881,6 @@ exports[`GameBoard > completed games > Game #5 (tutorial) 6`] = `
     class="none common"
     tabindex="0"
   >
-    <div
-      class="hiddenDeckBack"
-    >
-      <img
-        alt="card back"
-        data-nimg="1"
-        decoding="async"
-        draggable="false"
-        height="0"
-        src="/i/Card_back_10.svg"
-        style="color: transparent;"
-        width="0"
-      />
-    </div>
     <div
       id="piles"
     >
@@ -7293,20 +7209,6 @@ exports[`GameBoard > completed games > Game #5 (tutorial) 9`] = `
     tabindex="0"
   >
     <div
-      class="hiddenDeckBack"
-    >
-      <img
-        alt="card back"
-        data-nimg="1"
-        decoding="async"
-        draggable="false"
-        height="0"
-        src="/i/Card_back_10.svg"
-        style="color: transparent;"
-        width="0"
-      />
-    </div>
-    <div
       id="piles"
     >
       <div
@@ -8488,20 +8390,6 @@ exports[`GameBoard > completed games > Game #5 (tutorial) 10`] = `
     tabindex="0"
   >
     <div
-      class="hiddenDeckBack"
-    >
-      <img
-        alt="card back"
-        data-nimg="1"
-        decoding="async"
-        draggable="false"
-        height="0"
-        src="/i/Card_back_10.svg"
-        style="color: transparent;"
-        width="0"
-      />
-    </div>
-    <div
       id="piles"
     >
       <div
@@ -9676,20 +9564,6 @@ exports[`GameBoard > enable debug mode 1`] = `
     class="none common"
     tabindex="0"
   >
-    <div
-      class="hiddenDeckBack"
-    >
-      <img
-        alt="card back"
-        data-nimg="1"
-        decoding="async"
-        draggable="false"
-        height="0"
-        src="/i/Card_back_10.svg"
-        style="color: transparent;"
-        width="0"
-      />
-    </div>
     <div
       id="piles"
     >
@@ -10921,20 +10795,6 @@ exports[`GameBoard > renders a game 1`] = `
     class="none common"
     tabindex="0"
   >
-    <div
-      class="hiddenDeckBack"
-    >
-      <img
-        alt="card back"
-        data-nimg="1"
-        decoding="async"
-        draggable="false"
-        height="0"
-        src="/i/Card_back_10.svg"
-        style="color: transparent;"
-        width="0"
-      />
-    </div>
     <div
       id="piles"
     >

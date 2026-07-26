@@ -54,7 +54,7 @@ function CardOnBoard({
 		rank
 	);
 
-	// XXX (techdebt) (dragndrop-bugs) this is so ugly; each card gets it's own entire state?
+	// XXX (dragndrop-bugs) this is so ugly; each card gets it's own entire state?
 	const DebugDropTargets = useDragAndDropControls(cardRef, location, gameBoardIdRef);
 
 	useGSAP(() => {
@@ -62,7 +62,7 @@ function CardOnBoard({
 		gsap.set(cardRef.current, { top, left, zIndex, rotation });
 	});
 
-	// XXX (techdebt) (dragndrop-bugs) even if we move onClick to it's own dedicated div, Draggable _still_ eats the event
+	// XXX (dragndrop-bugs) even if we move onClick to it's own dedicated div, Draggable _still_ eats the event
 	//  - I'm starting to think we can't use Dragable in conjunction with another mouse event
 	const cardId = calcCardId(shorthandCard({ rank, suit }), gameBoardIdRef?.current);
 	return (

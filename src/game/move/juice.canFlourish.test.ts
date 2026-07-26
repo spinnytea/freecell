@@ -177,7 +177,7 @@ describe('move.juice', () => {
 						' deal all cards'
 				);
 				expect(juice.canFlourish(game)).toEqual([{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 5] } }]);
-				// BUG (techdebt) (motivation) technically we can flourish 52 with one card
+				// BUG (motivation) technically we can flourish 52 with one card
 				expect(juice.canFlourish52(game)).toEqual([
 					// { rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [0, 5] } },
 				]);
@@ -606,7 +606,7 @@ describe('move.juice', () => {
 				expect(game.printFoundation()).toBe('AS AH AD AC');
 				expect(juice.canFlourish(game)).toEqual([]);
 				expect(juice.canFlourish52(game)).toEqual([]);
-				// TODO (techdebt) (gameplay) (hud) winning should pick the correct foundation index - we just moved 'move dh 2C→AC', so the cursor should be on KC
+				// TODO (2-priority) (techdebt) (gameplay) (hud) winning should pick the correct foundation index - we just moved 'move dh 2C→AC', so the cursor should be on KC
 				expect(game.moveByShorthand('dh').print()).toBe(
 					'' +
 						'             KS KH KD>KC \n' +

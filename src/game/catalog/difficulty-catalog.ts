@@ -3,7 +3,7 @@ import { CAN_FLOURISH_SEEDS, IMPOSSIBLE_SEED } from '@/game/catalog/raw-seeds-ca
 /**
 	of the original 32,000 deals
 
-	- REVIEW (gameplay) https://www.solitairelaboratory.com/fclists.html
+	- REVIEW (documentation) (gameplay) (optional-complexity) (settings) https://www.solitairelaboratory.com/fclists.html
 */
 const TAGGED_SEEDS = new Map<number, string[]>([
 	[2, ['one cell']],

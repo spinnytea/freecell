@@ -206,7 +206,7 @@ describe('GameBoard', () => {
 				toSpy: 53,
 				addLabelSpy: 2,
 			});
-			// TODO (animation) (refactor) we should split deal and check-can-flourish
+			// TODO (animation) (refactor-timeline) we should split deal and check-can-flourish
 			//  - deal and check-can-flourish are squashed in one update
 			//  - it would be nice to chain the card tilt so it's not so hidden
 			expect(addLabelSpy.mock.calls).toEqual([['gameFunction check-can-flourish'], ['updateCardPositions']]);
@@ -350,7 +350,10 @@ describe('GameBoard', () => {
 				['#c6C-GameBoard.test-#5', { top: 5, left: 10 }, { top: 5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c6C-GameBoard.test-#5', { top: 5, left: 10 }, { top: 24, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
 			]);
-			// REVIEW (animation) (fixture-sizes) we should schedule the "rotate to 0" before the card moves (deselect cell)
+			// REVIEW (motivation) (animation) (refactor-timeline) should we schedule the "rotate to 0" before the card moves (deselect cell)
+			//  - this may not be a good idea, it could slow down gameplay
+			//  - it would be nice to try it or see it
+			//  - this is one of the the kinds of "play with gsap" I wanted to do with this whole project, why I started it in the first place
 			expect(toSpy.mock.calls).toEqual([
 				['#c6C-GameBoard.test-#5', { rotation: 10, duration: 0.1, ease: 'power1.inOut' }, '<'],
 				['#c6C-GameBoard.test-#5', { zIndex: 4, duration: 0.15, ease: 'none' }, '<'],
@@ -378,7 +381,7 @@ describe('GameBoard', () => {
 				['updateCardPositionsPrev'],
 				['updateCardPositions'],
 			]);
-			// REVIEW (animation) (test) shouldn't 2C (move-foundation) move with a delay; it should start partway through the 5H moving
+			// REVIEW (animation) (move-foundation) (test) shouldn't 2C move with a delay; it should start partway through the 5H moving
 			expect(fromToSpy.mock.calls).toEqual([
 				['#c5H-GameBoard.test-#5', { top: 22, left: 60 }, { top: 22.5, left: 60, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c5H-GameBoard.test-#5', { top: 22.5, left: 60 }, { top: 25, left: 80, duration: 0.3, ease: 'power1.out' }, '>0'],
@@ -523,7 +526,7 @@ describe('GameBoard', () => {
 				['#c9S-GameBoard.test-#5', { top: 5, left: 10 }, { top: 5, left: 10, duration: 0.3, ease: 'power1.out' }, '>0'],
 				['#c9S-GameBoard.test-#5', { top: 5, left: 10 }, { top: 28, left: 50, duration: 0.3, ease: 'power1.out' }, '>0'],
 			]);
-			// REVIEW (animation) (fixture-sizes) we should schedule the "rotate to 0" before the card moves (deselect cell)
+			// REVIEW (animation) (refactor-timeline) we should schedule the "rotate to 0" before the card moves (deselect cell)
 			expect(toSpy.mock.calls).toEqual([
 				['#cTD-GameBoard.test-#5', { zIndex: 7, duration: 0.15, ease: 'none' }, '<'],
 				['#c9S-GameBoard.test-#5', { rotation: 10, duration: 0.1, ease: 'power1.inOut' }, '<'],

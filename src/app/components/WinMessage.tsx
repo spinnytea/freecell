@@ -31,7 +31,7 @@ export function WinMessage() {
 
 				// animate color hue, to white
 				if (winIsFlourish) {
-					// TODO (animation) (refactor) "you win" animation feels like it starts at the wrong time
+					// TODO (animation) (refactor-timeline) "you win" animation feels like it starts at the wrong time
 					//  - maybe it needs a small delay?
 					//  - it shouldn't wait until the flourish is over
 					//  - bit it IS weird to see to when the board is so full

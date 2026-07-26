@@ -88,7 +88,7 @@ describe('game.moveCursor', () => {
 		test.todo('what do these tests need / look like?');
 	});
 
-	// TODO (controls) (keyboard) only cycle between places that the selection can move
+	// TODO (controls) (keyboard) (settings) only cycle between places that the selection can move
 	//  - we pick a move by priority
 	//  - we need to have the default ordering (or something) for picking the next cursor
 	//  - left and right are easy

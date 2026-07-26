@@ -107,7 +107,7 @@ describe('game.$checkCanFlourish', () => {
 			expect(copy).toEqual(game);
 			let parsed = FreeCell.parse(game.print());
 			// parsed is missing some info
-			expect(parsed.flashCards).toBe(null); // TODO (techdebt) (motivation) (flourish-anim) recover this, since it's int he print
+			expect(parsed.flashCards).toBe(null); // TODO (motivation) (flourish-anim) recover this, since it's int he print
 			expect(parsed.history).toEqual([]); // does not include history
 			expect(parsed.previousAction).toEqual({
 				text: 'juice flash AH,AS',
@@ -280,7 +280,7 @@ describe('game.$checkCanFlourish', () => {
 			let copy = game.__copy();
 			let parsed = FreeCell.parse(game.print());
 			// parsed is missing some info
-			expect(parsed.flashCards).toBe(null); // TODO (techdebt) (motivation) (flourish-anim) recover this, since it's int he print
+			expect(parsed.flashCards).toBe(null); // TODO (motivation) (flourish-anim) (parse) recover this, since it's in the print
 			expect(parsed.history).toEqual([]); // does not include history
 			expect(parsed.previousAction).toEqual({
 				text: 'juice flash *AS*',

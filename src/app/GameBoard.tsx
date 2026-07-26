@@ -2,7 +2,6 @@ import { MutableRefObject, useContext, useRef } from 'react';
 import classNames from 'classnames';
 import { SettingsButton } from '@/app/components/buttons/SettingsButton';
 import { UndoButton } from '@/app/components/buttons/UndoButton';
-import { CardImage } from '@/app/components/cards/CardImage';
 import { CardsOnBoard } from '@/app/components/CardsOnBoard';
 import { DebugCursors } from '@/app/components/DebugCursors';
 import { KeyboardCursor } from '@/app/components/KeyboardCursor';
@@ -45,7 +44,6 @@ const nextUid = (function* () {
 // TODO (controls) (keyboard) generally speaking, the keyboard controls are greedy
 //  - cannot interact with status bar -> manual teating
 //  - when you undo or leave settings, focus is still there; arrow keys should move focus back to the game board
-// REVIEW (techdebt) (deployment) verify that the card back is always available
 export function GameBoard({
 	className,
 	displayOptions = {},
@@ -75,9 +73,6 @@ export function GameBoard({
 			className={classNames(className, styles_gameboard.common)}
 			onClick={handleClickSetup}
 		>
-			<div className={styles_gameboard.hiddenDeckBack}>
-				<CardImage rank="king" suit="hearts" hidden width={0} />
-			</div>
 			{existsFixtureSizes ? (
 				<BoardLayout displayOptions={displayOptions} gameBoardIdRef={gameBoardIdRef} />
 			) : (

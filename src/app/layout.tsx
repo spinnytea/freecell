@@ -16,11 +16,13 @@ export const metadata: Metadata = {
 	},
 };
 
-// XXX (hud) red orange yellow green blue pruple?
-//  -        sep oct    nov    dec   jan  feb
-//  -        mar apr    may    jun   july aug
+// XXX (hud) (theme) more months / colors?
+//  - red | orange | yellow | green | blue | pruple
+//  - ----+--------+--------+-------+------+-------
+//  - sep | oct    | nov    | dec   | jan  | feb
+//  - mar | apr    | may    | jun   | july | aug
 /*
-// TODO (hud) change the color based on the month; this flickers on load
+// TODO (hud) (theme) change the color based on the month; this flickers on load
 const UPDATE_BACKGROUND_COLOR = `
 	const GLOBALS_CSS_COLOR_OPTIONS = [
 		'var(--felt--electric-blue)',

@@ -13,8 +13,9 @@ export interface Settings {
 
 // TODO (gameplay) (settings) option to skip `$checkCanFlourish` (just return this if setting is false)
 //  - maybe better incorporate the helper function
-// TODO (gameplay) (settings) autoFoundation "only after [any] move" vs "only after move to foundation"
-// TODO (hud) (settings) two different deck positions, with 2 different keyboard arrow layouts
+// IDEA (hud) (settings) two different deck positions, with 2 different keyboard arrow layouts
+//  - cell | home ⏎ tableau
+//  - cell | tableau | home
 export function calcDefaultSettings(): Settings {
 	return {
 		newGameCascadeCount: 8,

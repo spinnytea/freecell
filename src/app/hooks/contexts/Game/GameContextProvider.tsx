@@ -25,9 +25,10 @@ function saveToLocalStorage(game: FreeCell): void {
 			// this way we can recover the last one after we finish,
 			// i.e. if we accidentally start a new one before we can snapshot it / archive it
 			// we only need the one for this usecase; it's not a showcase of past games
-			// REVIEW (techdebt) (settings) we can get this from a browser/laptop, how do we get it from, say, mobile?
+			// REVIEW (deployment) (mobile) (test) we can get this from a browser/laptop, how do we get it from, say, mobile?
 			//  - may need to make another endpoint or something
 			//  - /freecell/manualtesting -> /freecell/data
+			//  - we can copy the current game, but not the previous game
 			window.localStorage.setItem(LOCAL_STORAGE_KEY_PREV, gamePrintHist);
 		}
 	} catch (e) {
