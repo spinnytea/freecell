@@ -69,7 +69,7 @@ function MockGameBoard() {
 	return null;
 }
 
-// TODO (animation) (refactor) (test) rewrite these with the rigour of GameBoard > Game #5 (tutorial)
+// TODO (animation) (refactor-timeline) (refactor-test) rewrite these with the rigour of GameBoard > Game #5 (tutorial)
 describe('useCardPositionAnimations', () => {
 	// we can use this for a lot of tests, so we don't need to keep remaking it
 	const newGameState = new FreeCell();
@@ -151,7 +151,7 @@ describe('useCardPositionAnimations', () => {
 					toSpy: 52,
 					addLabelSpy: 2,
 				});
-				// TODO (techdebt) (animation) isn't this backwards?
+				// BUG (techdebt) (animation) (gsap) isn't this backwards?
 				//  - shouldn't kings be first?
 				expect(toSpy.mock.calls[0]).toEqual(['#cAC', { duration: 0.15, ease: 'none', zIndex: 0 }, '<']);
 				expect(fromToSpy.mock.calls[0]).toEqual(['#cAC', { top: 36.6, left: 428.07 }, { top: 441.4, left: 14.035, duration: 0.3, ease: 'power1.out' }, '>0']);

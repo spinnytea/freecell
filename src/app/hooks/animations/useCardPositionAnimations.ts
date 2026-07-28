@@ -100,7 +100,7 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 
 				const nextTLZR = new Map(previousTLZR);
 				if (updateCardPositionsPrev) {
-					// XXX (techdebt) (motivation) this needs to be refactored this is the first non-trivial animation, so it's a bit of a 1-off
+					// XXX (motivation) this needs to be refactored this is the first non-trivial animation, so it's a bit of a 1-off
 					//  - everything else so far has been about making sure the cards move in the right order
 					timeline.addLabel('updateCardPositionsPrev');
 					animUpdatedCardPositions({
@@ -188,10 +188,10 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 			}
 
 			if (updateCardPositions.length || enableDragAndDrop) {
-				// HACK (techdebt) this is a stabilizing force to get cards back into their correct positions
+				// HACK (techdebt) (gsap) this is a stabilizing force to get cards back into their correct positions
 				//  - cards can sometimes get stranded
 				//  - kind of an "in case of emergency, break glass"
-				// XXX (animation) should this be refactored to animUnmovedCards?
+				// XXX (animation) (refactor-restructure) should this be refactored to animUnmovedCards?
 				unmovedCards.forEach(({ shorthand, top, left, zIndex, rotation }) => {
 					const cardId = calcCardId(shorthand, gameBoardIdRef?.current);
 					const cardIdSelector = '#' + cardId;

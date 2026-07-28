@@ -4,7 +4,7 @@ Undo: zIndex Animation order is wrong (need to zindex boost in flight)
 
 ## Labels
 
-TODO (animation) (gsap)
+TODO (anim-zindex) (animation) (gsap)
 
 ### Game State 1
 
@@ -48,7 +48,7 @@ undo
 
 ### Game State 2
 
-zIndex of cars in flight
+zIndex of cards in flight
 
 undo/redo, JS goes under 6H
 

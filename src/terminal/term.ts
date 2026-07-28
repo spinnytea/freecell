@@ -3,8 +3,8 @@ import { FreeCell } from '@/game/game';
 import { printDeck, printHome, printTableau, printWin } from '@/game/io/print';
 import readline from 'readline';
 
-// TODO (terminal) (gameplay) save/load game
-// TODO (terminal) (controls) play the game, update keyboard arrow controls
+// TODO (terminal) (gameplay) save/load game; like localStorage, but to a file
+// TODO (terminal) (controls) (gameplay) (keyboard) play the game, update keyboard arrow controls
 // HACK (terminal) need to lazy load chalk?
 type ChalkColors = 'red' | 'yellow' | 'bold' | 'blueBright' | 'underline' | 'bgYellowBright';
 type ColorizeCb = (str: string, ...colors: ChalkColors[]) => string;

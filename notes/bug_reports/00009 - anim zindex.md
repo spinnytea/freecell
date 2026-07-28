@@ -4,7 +4,7 @@ So much zindex flicker: undo/redo
 
 ## Labels
 
-TODO (animation) (gsap)
+TODO (anim-zindex) (animation) (gsap)
 
 ### Game State
 

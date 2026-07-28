@@ -13,7 +13,7 @@ import { parseMovesFromHistory } from '@/game/move/history';
 	print the home row of the game board \
 	split out logic from {@linkcode FreeCell.prototype.print}
 
-	- XXX (techdebt) (optimize) optimize
+	- XXX (optimize) optimize
 */
 export function printHome(
 	game: FreeCell,
@@ -130,7 +130,7 @@ export function printTableau(
 */
 export function printWin(game: FreeCell): string {
 	if (game.win) {
-		// XXX (hud) different messages depending on how you win
+		// XXX (gameplay) (hud) different messages depending on how you win
 		const msg = game.winIsFlourish52
 			? game.tableau.length > 6
 				? 'A M A Z I N G !'
@@ -161,7 +161,7 @@ export function printWin(game: FreeCell): string {
 	print the deck (row) of the game \
 	split out logic from {@linkcode FreeCell.prototype.print}
 
-	- XXX (techdebt) (optimize) optimize
+	- XXX (optimize) optimize
 */
 export function printDeck(
 	game: FreeCell,
@@ -201,11 +201,9 @@ export function printDeck(
 	print the history of the game \
 	split out logic from {@linkcode FreeCell.prototype.print}
 
-	- BUG (history) (parse) (print) (shorthandMove) standard move notation can only be used when `limit = 'opp+1'` for all moves
+	- BUG (history) (parse) (print) (settings) (shorthandMove-mismatch) standard move notation can only be used when `limit = 'opp+1'` for all moves
 		- e.g. if (movesSeed && isStandardRuleset)
-	- REVIEW (history) (more-undo) standard move notation can only be used if we do not "undo" (or at least, do not undo an auto-foundation)
-		- e.g. if (movesSeed && isStandardGameplay)
-	- XXX (techdebt) (optimize) optimize
+	- XXX (optimize) optimize
 */
 export function printHistory(game: FreeCell, skipLasgamet = false): string {
 	let str = '';

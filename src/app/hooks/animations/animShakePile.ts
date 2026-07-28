@@ -3,7 +3,7 @@ import { gsap } from 'gsap/all';
 import { INVALID_SHAKE_MAGNITUDE, INVALID_SHAKE_PORTION } from '@/app/animation_constants';
 import { calcPilemarkerId, CardLocation } from '@/game/card/card';
 
-// TODO (modivation) (animation) make this distince from `animShakeCard`
+// TODO (motivation) (animation) make this distince from `animShakeCard`
 export function animShakePile({
 	timeline,
 	list,

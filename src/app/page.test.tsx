@@ -27,7 +27,7 @@ describe('page', () => {
 				<Page />
 			</ErrorBoundary>
 		);
-		expect(screen.queryAllByAltText('card back').length).toBe(53); // there is hidden card back
+		expect(screen.queryAllByAltText('card back').length).toBe(52);
 		expect(addLabelSpy.mock.calls).toEqual([['shuffle deck (5)'], ['updateCardPositions']]);
 		expect(mockCallTimes()).toEqual({
 			gsapSetSpy: 52,
@@ -61,7 +61,7 @@ describe('page', () => {
 			rotation: 2,
 		});
 
-		expect(screen.queryAllByAltText('card back').length).toBe(1); // there is hidden card back
+		expect(screen.queryAllByAltText('card back').length).toBe(0);
 		expect(screen.getByText('king of hearts')).toBeTruthy();
 		expect(randomIntegerSpy.mock.calls).toEqual([[32000]]); // just one shuffle
 	});

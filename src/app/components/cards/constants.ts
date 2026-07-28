@@ -32,7 +32,7 @@ export const CARD_FACE_CUTOFF = 60;
 
 	`click-to-select` and `click-to-move` don't really make sense together; if both present, click-to-move takes precidence
 
-	- TODO (controls) (hud) put current controls/cheetsheet on screen
+	- TODO (controls) (documentation) (hud) put current controls/cheetsheet on screen
 	   - when using arrows, show arrows/space/enter/esc
 	   - when using hotkeys, show abcdefh1234567890
 */
@@ -120,7 +120,8 @@ export enum ControlSchemes {
 	   e.g. w/o a selection, only move the cursor to other cards
 	   e.g. w/ a selection, only move the cursor to valid moves
 
-	- TODO (animation) (controls) use or remove - not sure what the point of this is
+	- TODO (animation) (controls) use or remove
+	   - not sure what the point of this is anymore
 	   - when I glace at this: waste of time, extra work
 	   - when I read the options: much potential for animations, validation, eeggs
 	   - we can make a list for each {@linkcode ControlSchemes} for meta/validation

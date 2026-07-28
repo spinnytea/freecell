@@ -258,7 +258,7 @@ describe('game.$moveCardToPile', () => {
 
 	test.todo('something else selected');
 
-	// TODO (techdebt) (coords) (history) (parse) (print) (shorthandMove) shorthandMove is idealized, but we can move anything
+	// TODO (coords) (history) (parse) (print) (shorthandMove-mismatch) shorthandMove is idealized, but we can move anything
 	//  - verify behavior of print/parse w/w/o history
 	//  - standard move notation is inadequate for this level of freedom
 	//  - either use braille or block shorthand, or some other mitigation strategy

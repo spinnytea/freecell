@@ -8,7 +8,7 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 
 /**
 	- TODO (deployment) (hud) iPad dialog buttons are wweeeiiirddd
-	- IDEA (animation) (hud) button for instant replay
+	- IDEA (animation) (hud) (optional-complexity) button for instant replay
 */
 export function SettingsDialog() {
 	const [, setGame, newGame] = useContext(GameContext);

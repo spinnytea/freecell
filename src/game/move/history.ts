@@ -36,7 +36,7 @@ export type PreviousActionType =
 	| 'auto-foundation' // can be it's own history item, collapsed in standard gameplay
 	| 'move-foundation' // move + auto-foundation
 	| 'invalid'
-	// IDEA (deck) (history) add a PreviousActionType of 'illegal' or 'illegal-move'
+	// IDEA (deck) (history) (move-foundation) add a PreviousActionType of 'illegal' or 'illegal-move'
 	//  - e.g. gameFunction === 'recall-or-bury'
 	//  - e.g. move card off foundation
 	//  - then we can stop using "invalid move xx xxx" of type "move"
@@ -119,12 +119,12 @@ export interface PreviousAction {
 
 		this is out-of-scope of a standard {@linkcode FreeCell}, but his is the best time to calc and store it
 
-		- TODO (techdebt) (combine-move-auto-foundation) currently only used for move-foundation
+		- TODO (techdebt) (combine-move-auto-foundation) (refactor-rename) currently only used for move-foundation
 		   - maybe we should rename this variable?
-		   - maybe we can always list "this are the cards that moved during this action" \
+		   - maybe we can always list "these are the cards that moved during this action" \
 		     'move-foundation' has 2 sets of moves, what then?
 
-		- TODO (techdebt) (settings) add an option to skip this calculation
+		- TODO (terminal) (settings) add an option to skip this calculation
 		   - for non-animated interfaces
 
 		@see {@linkcode getCardsThatMoved}
@@ -269,6 +269,7 @@ export function parseCursorFromPreviousActionText(
 						const shorthand = parseShorthandCard(toShorthand);
 						const card = findCard(cards, shorthand);
 						if (cursor.fixture !== card.location.fixture) {
+							// TODO (parse) (refactor-no-throw) maybe just fallback to a default?
 							throw new Error(
 								`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
 							);
@@ -283,10 +284,12 @@ export function parseCursorFromPreviousActionText(
 						const card = findCard(cards, shorthand);
 						if (card.location.fixture !== 'foundation') {
 							if (cursor.fixture !== card.location.fixture) {
+								// TODO (parse) (refactor-no-throw) maybe just fallback to a default?
 								throw new Error(
 									`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
 								);
 							} else if (cursor.data[0] !== card.location.data[0]) {
+								// TODO (parse) (refactor-no-throw) maybe just fallback to a default?
 								throw new Error(
 									`invalid move actionText cascade "${actionText}" for cards w/ ${JSON.stringify(card)}`
 								);
@@ -306,7 +309,7 @@ export function parseCursorFromPreviousActionText(
 			if (p) {
 				const cursor = parseShorthandPile(p);
 				if (cursor.fixture !== card.location.fixture) {
-					// XXX (techdebt) do we really even need to get the cursor and check against the card?
+					// XXX (techdebt) (parse) (refactor-no-throw) do we really even need to get the cursor and check against the card?
 					throw new Error(
 						`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
 					);
@@ -343,8 +346,8 @@ export function parseCursorFromPreviousActionText(
 		case 'juice':
 			return DEFAULT_CURSOR_LOCATION;
 	}
+	// XXX (parse) (refactor-no-throw) just delete it?
 	// throw new Error(`invalid actionText '${actionText}' or 'invalid ${actionText}'`);
-	return undefined;
 }
 
 /**
@@ -386,7 +389,7 @@ export function parseAltCursorFromPreviousActionText(
 			if (p) {
 				const cursor = parseShorthandPile(p);
 				if (cursor.fixture !== card.location.fixture) {
-					// XXX (techdebt) do we really even need to get the cursor and check against the card?
+					// XXX (techdebt) (parse) (refactor-no-throw) do we really even need to get the cursor and check against the card?
 					throw new Error(
 						`invalid move actionText fixture "${actionText}" for cards w/ ${JSON.stringify(card)}`
 					);
@@ -411,8 +414,8 @@ export function parseAltCursorFromPreviousActionText(
 		case 'juice':
 			return DEFAULT_CURSOR_LOCATION;
 	}
+	// XXX (parse) (refactor-no-throw) just delete it?
 	// throw new Error(`invalid actionText '${actionText}' or 'invalid ${actionText}'`);
-	return undefined;
 }
 
 export function _parseShorthandMove(shorthandMove: string) {
@@ -426,13 +429,14 @@ export function _parseShorthandMove(shorthandMove: string) {
 			toLocation: (toPile + (tc || '')) as LocationSH,
 		};
 	}
+	// REVIEW (parse) (refactor-no-throw) where is this used?
 	throw new Error(`invalid shorthandMove ${shorthandMove}`);
 }
 
 export function parseActionTextMove(actionText: string) {
 	const result = _parseActionTextMove(actionText) ?? _parseActionTextMoveFoundation(actionText);
 	if (result) return result;
-
+	// REVIEW (parse) (refactor-no-throw) where is this used?
 	throw new Error('invalid move actionText: ' + actionText);
 }
 
@@ -488,6 +492,7 @@ function parseActionTextCursor(actionText: string) {
 		const [, text, wrap, , shMove, , shCard] = match as (string | undefined)[];
 		return { text, wrap: !!wrap, p: shMove as LocationSH | undefined, shorthand: shCard };
 	}
+	// REVIEW (parse) (refactor-no-throw) where is this used?
 	throw new Error('invalid cursor actionText: ' + actionText);
 }
 
@@ -497,6 +502,7 @@ function parseActionTextSelect(actionText: string) {
 		const [, , , shMove, , fromShorthand] = match;
 		return { p: shMove as PileSH | undefined, fromShorthand };
 	}
+	// REVIEW (parse) (refactor-no-throw) where is this used?
 	throw new Error('invalid de/select actionText: ' + actionText);
 }
 
@@ -504,7 +510,7 @@ function parseActionTextInvalidMove(actionText: string) {
 	if (actionText.startsWith('invalid ')) {
 		return parseActionTextMove(actionText.substring(8));
 	}
-
+	// REVIEW (parse) (refactor-no-throw) where is this used?
 	throw new Error('not "invalid move" actionText: ' + actionText);
 }
 
@@ -583,6 +589,7 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 	const firstCardSH = parseShorthandCard(fromShorthand);
 	const firstCard = findCard(game.cards, firstCardSH);
 	if (shorthandPile(firstCard.location) !== toPile)
+		// TODO (parse) (refactor-no-throw) instead of throwing, maybe return undefined to represent noop
 		throw new Error(
 			'invalid first card pile: ' +
 				actionText +
@@ -594,6 +601,7 @@ function undoMove(game: FreeCell, actionText: string): Card[] {
 
 	const sequence = getSequenceAt(game, firstCard.location);
 	if (shorthandSequence(sequence) !== fromShorthand)
+		// TODO (parse) (refactor-no-throw) instead of throwing, maybe return undefined to represent noop
 		throw new Error(
 			'invalid sequence: ' +
 				actionText +
@@ -615,11 +623,14 @@ function parseActionTextAutoFoundation(actionText: string) {
 		// type === 'auto-foundation' || type === 'flourish' || type === 'flourish52'
 		const froms = piles.map((p) => parseShorthandPile(p));
 		const shorthands = autoShorthand.map((s) => parseShorthandCard(s));
-		if (froms.length !== shorthands.length)
+		if (froms.length !== shorthands.length) {
+			// REVIEW (parse) (refactor-no-throw) where is this used?
 			throw new Error('invalid move actionText: ' + actionText);
+		}
 		return { froms, shorthands };
 	}
 
+	// REVIEW (parse) (refactor-no-throw) where is this used?
 	throw new Error('invalid move actionText: ' + actionText);
 }
 
@@ -633,9 +644,11 @@ function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 		const from = froms.pop();
 		const shorthand = shorthands.pop();
 		const card = findCard(cards, shorthand);
+		// REVIEW (parse) (refactor-no-throw) where is this used?
 		if (!from || !shorthand) throw new Error('invalid move actionText: ' + actionText);
 
 		if (card.location.fixture !== 'foundation') {
+			// REVIEW (parse) (refactor-no-throw) where is this used?
 			throw new Error(
 				`Undoing auto-foundation of card not in foundation? ${JSON.stringify(card.location)}`
 			);
@@ -652,6 +665,8 @@ function undoAutoFoundation(game: FreeCell, actionText: string): FreeCell {
 				break;
 			case 'deck':
 			case 'foundation':
+				// REVIEW (move-foundation) (parse) (refactor-no-throw) just implment it? could be fun
+				//  - you can still complain in comments
 				throw new Error(`Invalid auto-foundation card destination: ${JSON.stringify(from)}`);
 		}
 	}
@@ -849,6 +864,9 @@ export function unDealAll(game: FreeCell): Card[] {
 	sortCardsOG(game, deckOfCards);
 
 	if (deckOfCards.length !== game.cards.length) {
+		// TODO (optimize) (refactor-no-throw) (test) this shouldn't happen
+		//  - maybe just return an initialized deck?
+		//  - maybe only throw when NODE_ENV === 'test'
 		throw new Error(
 			`incomplete implementation -- missing some cards (${deckOfCards.length} / ${game.cards.length})`
 		);

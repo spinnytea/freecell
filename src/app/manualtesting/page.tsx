@@ -19,12 +19,12 @@ import { RankList, SuitList } from '@/game/card/card';
 gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(Draggable);
 
-// XXX (techdebt) replace 52CardFlourish with 1/2
+// XXX (techdebt) (manualtesting) replace 52CardFlourish with 1/2
 //  - it's not working because we can't make changes to a "win", how do we step between states?
 //  - we trigger a rerender during unit testing, but we can't do that in manual testing
 // const gamePrint_52CardFlourish1 = '>                        \n                         \n hand-jammed';
 // const gamePrint_52CardFlourish2 = '>            KH KC KD KS \n                         \n hand-jammed';
-// XXX (techdebt) somehow this one is getting shuffled when it's reset??
+// XXX (techdebt) (manualtesting) somehow this one is getting shuffled when it's reset??
 // const gamePrint_52CardFlourish =
 // '' + //
 // 	   '>                        \n'+
@@ -54,7 +54,7 @@ const gamePrint_animations: { nextActionText: string; gamePrint: string }[] = [
 			' hand-jammed',
 	},
 	{
-		// TODO (techdebt) showUndoButton inside board, or just cycle move + undo
+		// TODO (techdebt) (manualtesting) showUndoButton inside board, or just cycle move + undo
 		nextActionText: 'move 36 5S-4H→cascade (auto-foundation 3262 3S,4D,4H,5C)',
 		gamePrint:
 			' 5D          2S 3D 3H 4C \n' +
@@ -93,7 +93,7 @@ const gamePrint_animations: { nextActionText: string; gamePrint: string }[] = [
 			' move 36 TH-9S-8D-7C-6H-5C-4D→JC',
 	},
 	// {
-	// 	// TODO (techdebt) there isn't a way to get to the deal, static game provider resets to the win
+	// 	// TODO (techdebt) (manualtesting) there isn't a way to get to the deal, static game provider resets to the win
 	// 	//  - we need to set it during `useState` and allow `newGame` to start a new game
 	// 	nextActionText: 'init',
 	// 	gamePrint:
@@ -121,11 +121,10 @@ const DEFAULT_DISPLAY_OPTIONS: GameBoardDisplayOptions = {
 };
 
 /**
-	- TODO (techdebt) much needed style overhaul
-	- TODO (techdebt) manual testing Game #5, click to advance through all moves
-
-	- TODO (techdebt) manual tests for cursor
-	- TODO (techdebt) manual tests for selection: one, two, three, etc
+	- TODO (techdebt) (manualtesting) much needed style overhaul
+	- TODO (techdebt) (manualtesting) manual testing Game #5, click to advance through all moves
+	- TODO (techdebt) (manualtesting) manual tests for cursor
+	- TODO (techdebt) (manualtesting) manual tests for selection: one, two, three, etc
 
 	+-----------+
 	| _ a c _ _ |
@@ -136,25 +135,25 @@ const DEFAULT_DISPLAY_OPTIONS: GameBoardDisplayOptions = {
 	|   b       |
 	+-----------+
 
-	- TODO (animation) animate cards sliding
-	- TODO (animation) animate cell selection rotation
-	- TODO (animation) animate invalid move animation
-	- TODO (animation) animate moving a sequence
-	- TODO (animation) animate cursorBox movement
-	- TODO (animation) animate flourish (not just flourish52)
+	- TODO (animation) (manualtesting) animate cards sliding
+	- TODO (animation) (manualtesting) animate cell selection rotation
+	- TODO (animation) (manualtesting) animate invalid move animation
+	- TODO (animation) (manualtesting) animate moving a sequence
+	- TODO (animation) (manualtesting) animate cursorBox movement
+	- TODO (animation) (manualtesting) animate flourish (not just flourish52)
 
-	- TODO (hud) fixture sizes: narrow
-	- TODO (hud) fixture sizes: wide
-	- TODO (hud) fixture sizes: mobile portrait
-	- TODO (hud) fixture sizes: mobile landscape
+	- TODO (hud) (manualtesting) fixture sizes: narrow
+	- TODO (hud) (manualtesting) fixture sizes: wide
+	- TODO (hud) (manualtesting) fixture sizes: mobile portrait
+	- TODO (hud) (manualtesting) fixture sizes: mobile landscape
 
-	- TODO (deployment) various sizes of tall -> portrait -> landscape -> wide
+	- TODO (deployment) (manualtesting) various sizes of tall -> portrait -> landscape -> wide
 	   - if not well defined playing fields to spot check, at least a reminder to play with the screen size
 
-	- TODO (controls) each of the control schemes
+	- TODO (controls) (manualtesting) each of the control schemes
 
-	- TODO (techdebt) Selection is obvious for each of cell, foundation, cascade, deck.
-	- TODO (techdebt) Visual check DebugCursors.
+	- TODO (techdebt) (manualtesting) Selection is obvious for each of cell, foundation, cascade, deck.
+	- TODO (techdebt) (manualtesting) Visual check DebugCursors.
 */
 export default function Page() {
 	const [cardWidth, setCardWidth] = useState(() => calcCardWidth());
@@ -245,7 +244,7 @@ export default function Page() {
 						</li>
 					</ol>
 					<ol start={3} style={{ display: 'none' }}>
-						{/* TODO (motivation) animate card flash for use in flourishes and end of game */}
+						{/* TODO (motivation) (manualtesting) animate card flash for use in flourishes and end of game */}
 						<li>
 							Shiny ✨
 							<ManualTestingSettingsContextProvider cardFace="SVGCards13">
@@ -261,7 +260,7 @@ export default function Page() {
 
 				<li>
 					Flourish
-					{/* TODO (techdebt) keep refining */}
+					{/* TODO (techdebt) (manualtesting) keep refining */}
 					{/*  - include next move, e.g. '3b' */}
 					{/*  - swap out GameBoard - we want separate/simpler controls? */}
 					{/*  - swap out GameBoard - we don't want keyboard controls to bleed between games */}
@@ -269,7 +268,7 @@ export default function Page() {
 						<li>Foundation always renders highest card.</li>
 						<li>Win animation.</li>
 						<li>Move 8S for a 52 Card Flourish (e.g. 3b).</li>
-						{/* TODO (animation) reset deck animation */}
+						{/* TODO (animation) (manualtesting) reset deck animation */}
 						{/* <li>Reset deck animation.</li> */}
 					</ol>
 					<ManualTestingSettingsContextProvider>

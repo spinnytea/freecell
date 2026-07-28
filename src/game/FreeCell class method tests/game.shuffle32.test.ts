@@ -253,7 +253,7 @@ describe('game.shuffle32', () => {
 		);
 	});
 
-	// BUG (techdebt) (history) this actionText seed is wrong
+	// BUG (history) (optional-complexity) this actionText seed is wrong
 	//  - it's correct if `new FreeCell().shuffle32()`
 	//  - it's wrong if `new FreeCell().shuffle32().shuffle32()`
 	//  - (we need to print multiple shuffles, not just throw out the old one)
@@ -261,6 +261,7 @@ describe('game.shuffle32', () => {
 	//  - e.g. :h shuffle32 5,5
 	//  - e.g. :h shuffle32 1
 	//  - e.g. :h shuffle32 5,1
+	//  - or should we re-sort the deck before each shuffle?
 	test('shuffle32 twice', () => {
 		// if we use the same seed, shouldn' the order of the cards be the same?
 		let a = new FreeCell().shuffle32(5);

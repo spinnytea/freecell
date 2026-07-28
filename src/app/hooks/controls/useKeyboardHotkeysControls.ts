@@ -6,7 +6,7 @@ import { SettingsContext } from '@/app/hooks/contexts/Settings/SettingsContext';
 import { isPileSH } from '@/game/card/card';
 
 /**
-	- REVIEW (techdebt) (controls) "integration" test
+	- REVIEW (techdebt) (controls) (manualtesting) (test) "integration" test
 */
 export function useKeyboardHotkeysControls() {
 	const [, setGame] = useContext(GameContext);
@@ -21,10 +21,10 @@ export function useKeyboardHotkeysControls() {
 			let consumed = false;
 			const pKeyL = key.toLowerCase();
 			if (isPileSH(pKeyL) && pKeyL !== 'k') {
-				// REVIEW (controls) (keyboard) use Hotkeys 'h' to start a new game
+				// REVIEW (terminal) (controls) (keyboard) use Hotkeys 'h' to start a new game
 				//  - doesn't shuffle
 				//  - probably because it's using touch's new game
-				// REVIEW (controls) (keyboard) use Hotkeys to deal… you have to use space or enter or something
+				// REVIEW (terminal) (controls) (keyboard) use Hotkeys to deal… you have to use space or enter
 				//  - there's no key because there's no Pile
 				//    because there's no shorthand
 				//    because there's no valid move

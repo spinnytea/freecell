@@ -77,7 +77,7 @@ interface OptionsNonstandardGameplay {
 		But as this whole implementation excercise goes, "why not?"
 		For now it's locked behind a hidden feature flag (debug/testing flag).
 
-		- TODO (controls) (gameplay) select ACES in foundation to move to empty ones
+		- IDEA (controls) (gameplay) (move-foundation) (optional-complexity) select ACES in foundation to move to empty ones
 		  - so like, we can select an ACE in the foundation, but no other card
 		  - if we do select one, then the only availableMoves are other empty foundations
 
@@ -136,7 +136,7 @@ interface OptionsTouch extends OptionsNonstandardGameplay {
 	selectionNever?: boolean;
 }
 
-// TODO (techdebt) (refactor) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
+// TODO (techdebt) (refactor-rename) rename file to "FreeCell.tsx" or "FreeCellGameModel" ?
 export class FreeCell {
 	readonly cards: Card[];
 	readonly win: boolean;
@@ -151,7 +151,7 @@ export class FreeCell {
 		return this.previousAction.text.includes('flourish52');
 	}
 
-	// REVIEW (motivation) (settings) consider: preferred foundation suits? (HSDC) - render these?
+	// REVIEW (motivation) (settings) (optional-complexity) consider: preferred foundation suits? (HSDC) - render these?
 	//  - i.e. instead of allowing any suit in any foundation spot, suits go in designated spots
 	//  - this kind of goes against the whole flexible design
 	// structure to make the logic easier
@@ -231,14 +231,17 @@ export class FreeCell {
 			this.win = this.cards.every((card) => card.location.fixture === 'foundation');
 		} else {
 			if (cellCount < MIN_CELL_COUNT || cellCount > MAX_CELL_COUNT)
+				// TODO (refactor-no-throw) maybe just fallback to a default?
 				throw new Error(
 					`Must have between ${MIN_CELL_COUNT} and ${MAX_CELL_COUNT} cells; requested "${cellCount}".`
 				);
 			if (cascadeCount < NUMBER_OF_FOUNDATIONS)
+				// TODO (refactor-no-throw) maybe just fallback to a default?
 				throw new Error(
 					`Must have at least as many cascades as foundations (${NUMBER_OF_FOUNDATIONS}); requested "${cascadeCount}".`
 				);
-			// 10 is a magic number - @see shorthandLocation, shorthandPile, which we use for history
+			// TODO (refactor-no-throw) maybe just fallback to a default?
+			// XXX (refactor-restructure) 10 is a magic number - @see shorthandLocation, shorthandPile, which we use for history
 			if (cascadeCount > 10)
 				throw new Error(`Cannot have more then 10 cascades; requested "${cascadeCount}".`);
 
@@ -390,7 +393,7 @@ export class FreeCell {
 
 		e.g. select cursor, deselect cursor, move selection to location
 
-		- IDEA (controls) maybe foundation cannot be selected, but can aces still cycle to another foundation?
+		- IDEA (controls) (gameplay) (move-foundation) (optional-complexity) maybe foundation cannot be selected, but can aces still cycle to another foundation?
 	*/
 	touch({
 		autoFoundation = true,
@@ -412,7 +415,6 @@ export class FreeCell {
 
 		// set selection, or move selection if applicable
 		if (!this.selection || this.selection.peekOnly || selectionOnly) {
-			// TODO (techdebt) (controls) we do not have a allowSelectDeck flag, because you can't reasonably select it through the UI
 			if (this.win && this.cursor.fixture === 'foundation' && !allowSelectFoundation) {
 				// REVIEW (techdebt) (joker) (settings) settings for new game?
 				//  - we could pass in `cards: null` or `cards: []` to reset a a game
@@ -553,6 +555,8 @@ export class FreeCell {
 			});
 
 			// HACK (techdebt) (history) because new game history is not ['init']
+			//  - ^^ why do we care about this hack?
+			//  - do we want to change that?
 			if (
 				action.type === 'init' &&
 				action.text === 'init partial' &&
@@ -577,7 +581,7 @@ export class FreeCell {
 
 			return didUndo;
 		} catch (e) {
-			// TODO (techdebt) (refactor) let's not throw errors during gameplay
+			// TODO (techdebt) (refactor-no-throw) let's not throw errors during gameplay
 			//  - this is a very programmer centric thing
 			//  - do we need to wrap all of the FreeCell function? I don't like that idea
 			//  - search for all `throw new Error`, include `src/game`, exclude `catalog, .test.ts`
@@ -603,8 +607,9 @@ export class FreeCell {
 		but it's inherrent to the standard gameplay move notation.
 		Now this is called automatically after moves.
 
-		- REVIEW (history) standard move notation can only be used when `limit = 'opp+1'` for all moves
+		- REVIEW (history) (settings) standard move notation can only be used when `limit = 'opp+1'` for all moves
 		   - historyIsInvalidAtIdx?
+		- REVIEW (gameplay) (settings) should we just remove all other limit options?
 	*/
 	autoFoundationAll({
 		limit = 'opp+1',
@@ -763,10 +768,10 @@ export class FreeCell {
 	/**
 		These deals are numbered from 1 to 32000.
 
-		- TODO (controls) (gameplay) add some kind of shortcut to can-flourish52 seeds
+		- TODO (gameplay) (settings) add some kind of shortcut to can-flourish52 seeds
 		   - e.g. if we shuffle N times in a row, then pick a random seed from the list
-		- XXX (techdebt) rename to shuffle32k, including actionText and print history
-		- XXX (motivation) more shuffle options bcuz why not
+		- XXX (techdebt) (refactor-rename) rename to shuffle32k, including actionText and print history
+		- XXX (motivation) (optional-complexity) more shuffle options bcuz why not
 
 		@see [Deal cards for FreeCell](https://rosettacode.org/wiki/Deal_cards_for_FreeCell)
 	*/
@@ -945,7 +950,7 @@ export class FreeCell {
 		const after = parseCursorFromPreviousActionText(actionText, this.cards);
 		if (!after) return this;
 		if (!isLocationEqual(this.__clampCursor(after), this.cursor))
-			// REVIEW (deck) (optimize) only deck needs to __clampCursor
+			// REVIEW (optimize) (deck) only deck needs to __clampCursor
 			return this.setCursor(after);
 		const before = parseAltCursorFromPreviousActionText(actionText, this.cards, allowEmptyDeck);
 		if (!before) return this;
@@ -1026,7 +1031,7 @@ export class FreeCell {
 	): FreeCell {
 		const g = this.$selectCard(shorthand);
 		if (!g.selection || !g.availableMoves) return g;
-		if (g.selection.peekOnly) return this; // XXX (techdebt) (controls) should we move the cursor?
+		if (g.selection.peekOnly) return this; // XXX (techdebt) (controls) we should move the cursor
 		const to = parseShorthandPileForMove(g, pileSh);
 		if (to === null) return this;
 		return g.setCursor(to).touch({ autoFoundation, stopWithInvalid: true });
@@ -1071,7 +1076,7 @@ export class FreeCell {
 		print the deck (row) of the game \
 		split out logic from {@linkcode FreeCell.print}
 
-		@deprecated TODO (refactor) remove, call {@linkcode printDeck} instead, but used in lots of tests
+		@deprecated TODO (refactor-test) remove, call {@linkcode printDeck} instead, but used in lots of tests
 	*/
 	__printDeck(cursor = this.cursor, selection = this.selection): string {
 		return printDeck(this, cursor, selection);
@@ -1081,7 +1086,7 @@ export class FreeCell {
 		print the history of the game \
 		split out logic from {@linkcode FreeCell.print}
 
-		@deprecated TODO (refactor) remove, call {@linkcode printHistory} instead, but used in lots of tests
+		@deprecated TODO (refactor-test) remove, call {@linkcode printHistory} instead, but used in lots of tests
 	*/
 	__printHistory(skipLastHist = false): string {
 		return printHistory(this, skipLastHist);
@@ -1090,7 +1095,7 @@ export class FreeCell {
 	/**
 		print the game board
 		- all card locations
-		- current cursor (keyboard)
+		- current cursor
 		- current selection
 
 		you can use this to play the game from a text-only interface (e.g. console) if you like
@@ -1133,7 +1138,7 @@ export class FreeCell {
 			str += `\n:d${printDeck(this, cursor, selection)}`;
 		}
 
-		// TODO (print) (settings) have a dedicated line for house rules, e.g. "with jokers", "auto-foundation opp+2", etc.
+		// TODO (joker) (print) (settings) have a dedicated line for house rules, e.g. "with jokers", "auto-foundation opp+2", etc.
 
 		if (includeHistory) {
 			str += printHistory(this);
@@ -1154,16 +1159,17 @@ export class FreeCell {
 		i.e. must `game.print() === FreeCell.parse(game.print()).print()`
 
 		- XXX (techdebt) remove invalidFoundations and deal demo
+		- XXX (deployment) (parse) (refactor-no-throw) throwing on parse is OK
+		   - since it's an entry point from something that ought to be correct
+		   - but if we do, we need to wrap every parse in a try catch in deployment code
 	*/
 	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
 		if (!print) throw new Error('No game string provided.');
 
-		// XXX (techdebt) do we need to build a whole game to get the deck of cards?
-		//  - split the cards into their own utils method?
 		// REVIEW (joker) (settings) how do we know if we should include jokers?
 		//  - this isn't an issue of settings (probably?) because we just need a deck
 		//  - we will make the actual game later, once we have all the card locations
-		const cards = new FreeCell().cards;
+		const cards = initializeDeckOfCards();
 		const remaining = cards.slice(0);
 
 		if (print.includes('>', print.indexOf('>') + 1)) {
@@ -1193,7 +1199,7 @@ export class FreeCell {
 
 		const nextLine = () => lines.pop()?.split('').reverse() ?? [];
 		const nextCard = (spaces: (string | undefined)[]) => {
-			if (line.length < 3) throw new Error('not enough tokens');
+			if (line.length < 3) throw new Error('not enough characters');
 			spaces.push(line.pop());
 			const r = line.pop() ?? '';
 			const s = line.pop() ?? '';
@@ -1463,11 +1469,6 @@ export class FreeCell {
 		}
 
 		if (!cursor) {
-			// XXX (optional) (complexity) we could just use the actionText
-			//  - there is a unit test that shows why the loop is desireable
-			//  - from before we had move-foundation, when it was separately move + auto-foundation
-			// cursor = parseCursorFromPreviousActionText(actionText, cards);
-
 			// try to figure out the location of the cursor based on the previous move
 			for (let i = history.length - 1; !cursor && i >= 0; i--) {
 				cursor = parseCursorFromPreviousActionText(history[i], cards);

@@ -32,7 +32,7 @@ import { _parseShorthandMove, PreviousActionType } from '@/game/move/history';
 	Moving cards to the deck isn't a standard move.
 	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveSourceType.
 
-	- TODO (techdebt) (refactor) make these shorthands explicit
+	- TODO (techdebt) (refactor-rename) make these shorthands explicit
 	   - `deck` is shorthand for `deck:single` (can only move single cards from the deck)
 	   - `cell` is shorthand for `cell:single` (cells only have one card)
 	   - `foundation` is shorthand for `foundation:single`
@@ -50,7 +50,7 @@ export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' |
 	Moving cards to the deck isn't a standard move.
 	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveDestinationType.
 
-	- TODO (techdebt) (refactor) make these shorthands explicit
+	- TODO (techdebt) (refactor-rename) make these shorthands explicit
 	   - `cell` is shorthand for `cell:empty` (can only move cards to an empty cell)
 	   - `foundation` is shorthand for `foundation:sequence`
 	   - (caveat: ace is `foundation:empty`, {@linkcode canStackFoundation} is a cleaner approach to being more specific)
@@ -58,13 +58,14 @@ export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' |
 	   - autofoundation and other tools are just sugar
 	   - cascade:sequence is _also_ just sugar
 	   - so what would foundation:sequence even look like, that'd be a whole new type of move
+		- would it be "autoFoundation limit:none"?
 */
 export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cascade:sequence';
 
 /**
 	higher priorities take precidence
 
-	- TODO (controls) (settings) multiple MoveDestinationTypePriorities
+	- TODO (click-to-move) (controls) (settings) multiple MoveDestinationTypePriorities
 	   - grow cascades vs empty cascades
 	   - these priorities favor "growing cascades", my preference
 	   - another play enjoys "getting the cards off the board"
@@ -72,12 +73,12 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 	   - e.g. "empty cascades" would favor
 	      - cell → foundation
 	      - cascade:single → foundation
-	- IDEA (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
+	- IDEA (click-to-move) (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
 */
 export const MoveDestinationTypePriorities: {
 	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
 } = {
-	// XXX (controls) MoveSourceType deck: move from the deck directly is not a valid move
+	// XXX (click-to-move) (controls) MoveSourceType deck: move from the deck directly is not a valid move
 	'deck': {
 		'cell': 1,
 		'foundation': 4,
@@ -90,7 +91,7 @@ export const MoveDestinationTypePriorities: {
 		'cascade:empty': 2,
 		'cascade:sequence': 4,
 	},
-	// XXX (controls) MoveSourceType foundation: once on the foundation, a card cannot be removed
+	// XXX (click-to-move) (controls) MoveSourceType foundation: once on the foundation, a card cannot be removed
 	'foundation': {
 		'cell': 1,
 		'foundation': 4,
@@ -149,7 +150,7 @@ function calcMoveDestinationTypePriority(
 			}
 
 			// prioritize *:single→foundation, if opp+2 would auto-foundation
-			// XXX (settings) skip this if game settings are opp+2 or none
+			// XXX (optimize) (settings) skip this if game settings are opp+2 or none
 			const selectionIdx = game.foundations.findIndex((c) => c?.suit === moving_card.suit);
 			if (foundationCanAcceptCards(game, selectionIdx, 'opp+2')) {
 				return {
@@ -185,7 +186,8 @@ export interface AvailableMove {
 	priority: number;
 }
 
-// TODO (settings) these _exist_, but we need to be able to pick them
+// TODO (gameplay) (settings) these _exist_, but we need to be able to pick them
+//  - or should we just remove them?
 export type AutoFoundationLimit =
 	// move all cards that can go up
 	// i.e. 3KKK
@@ -403,7 +405,7 @@ export function findAvailableMoves(
 /**
 	update the AvailableMove priority (in place)
 
-	- REVIEW (controls) cycle (cell, cascade:empty) as one group?
+	- REVIEW (click-to-move) (controls) cycle (cell, cascade:empty) as one group?
 	   - a->b->c->d -> 1->2->5->8 -> a->b->c->d
 */
 function prioritizeAvailableMoves(

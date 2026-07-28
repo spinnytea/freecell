@@ -95,7 +95,7 @@ export function isPileSH(val: string): val is PileSH {
 
 export interface CardLocation {
 	readonly fixture: Fixture;
-	// XXX (techdebt) (refactor) (rename) (coords) location.data → location.coords, d0/d1 → c0/c1
+	// XXX (techdebt) (refactor-rename) (coords) location.data → location.coords, d0/d1 → c0/c1
 	//  - do this after the whole "rewrite actionText-examples.ts" thing
 	readonly data: number[];
 }
@@ -176,6 +176,7 @@ export function initializeDeckOfCards(includeJoker = false): Card[] {
 	});
 
 	// some arbitrary technical limit, see BOTTOM_OF_CASCADE docs for details
+	// TODO (2-priority) (optimize) (refactor-no-throw) (refactor-test) move this to a unit test, it doesn't need to be in production
 	if (deck.length > BOTTOM_OF_CASCADE) {
 		throw new Error('there are too many cards for the system to handle');
 	}
@@ -205,6 +206,8 @@ export function sortCardsOG(game: FreeCell, cards: Card[]): void {
 		const oa = order.get(shorthandCard(a));
 		const ob = order.get(shorthandCard(b));
 
+		// REVIEW (refactor-no-throw) where is this used?
+		//  - explain why throw is still okay
 		if (oa == undefined)
 			throw new Error(`undeal deck has ${shorthandCard(a)}, but game cards do not?`);
 		if (ob == undefined)
@@ -219,7 +222,7 @@ export function sortCardsOG(game: FreeCell, cards: Card[]): void {
 	and then assigns d0 to all of them
 	(this is meant to be used _as a_ game.deck)
 
-	- TODO (techdebt) (motivation) (flourish-anim) (optimize) do not shuffle in place, produce a new state
+	- TODO (optimize) (flourish-anim) do not shuffle in place, produce a new state
 	   - basically, we should do another game.__clone
 	   - or maybe, since this is only used by juice, we should move it there for now
 */
@@ -271,6 +274,8 @@ export function cloneCards(cards: Card[]): Card[] {
 }
 
 export function findCard(cards: Card[], card: CardShorthand | null | undefined): Card {
+	// REVIEW (refactor-no-throw) where is this used?
+	//  - explain why throw is still okay
 	if (!card) throw new Error('no card provided');
 	const found = cards.find((c) => c.suit === card.suit && c.rank === card.rank);
 	if (!found) throw new Error('missing card ' + shorthandCard(card));
@@ -437,6 +442,7 @@ export function parseShorthandCard(rs: string | undefined): CardShorthand | null
 			rank = 'joker';
 			break;
 		default:
+			// REVIEW (parse) (refactor-no-throw) maybe return null? it should only be invalid during a parse
 			throw new Error(`invalid rank shorthand: "${r}"`);
 	}
 
@@ -454,6 +460,7 @@ export function parseShorthandCard(rs: string | undefined): CardShorthand | null
 			suit = 'spades';
 			break;
 		default:
+			// REVIEW (parse) (refactor-no-throw) maybe return null? it should only be invalid during a parse
 			throw new Error(`invalid suit shorthand: "${s}"`);
 	}
 
@@ -510,29 +517,26 @@ export function shorthandLocation(location: CardLocation): LocationSH {
 export function shorthandPile(location: CardLocation): PileSH {
 	const d0 = location.data[0];
 	switch (location.fixture) {
-		case 'deck': {
+		case 'deck':
 			return 'k';
-		}
-		case 'cell': {
+		case 'cell':
 			// XXX (techdebt) && d0 < game.cells.length
 			// 0 <= d0 < MAX_CELL_COUNT
 			if (d0 >= 0 && d0 < 6) {
 				return (d0 + 10).toString(16) as PileSH;
 			}
 			break;
-		}
-		case 'foundation': {
+		case 'foundation':
 			return 'h';
-		}
-		case 'cascade': {
+		case 'cascade':
 			if (d0 === 9) {
 				return '0';
 			} else if (d0 >= 0 && d0 < 9) {
 				return (d0 + 1).toString(10) as PileSH;
 			}
 			break;
-		}
 	}
+	// shouldn't happen, mostly to make typescript happy
 	throw new Error(`invalid location: ${JSON.stringify(location)}`);
 }
 
@@ -549,7 +553,9 @@ export function parseShorthandLocation(p: LocationSH): CardLocation {
 			break;
 		case 'cell':
 			// p[1] is not allowed
-			if (p[1]) throw new Error(`cell should never have coords -- "${p}"`);
+			// REVIEW (optimize) (parse) (refactor-no-throw) (test) this is a nice way to enforce it, but it's probably better to just leave it off?
+			//  - maybe check if NODE_ENV === 'test' ??
+			// if (p[1]) throw new Error(`cell should never have coords -- "${p}"`);
 			break;
 		case 'deck':
 			// p[1] is optional, then data[0] ⇐ BOTTOM_OF_CASCADE
@@ -602,7 +608,8 @@ export function parseShorthandPile(p: PileSH): CardLocation {
 		case 'f':
 			return { fixture: 'cell', data: [parseInt(p, 16) - 10] };
 	}
-	throw new Error(`invalid pile shorthand: "${p}"`);
+	// XXX (parse) (refactor-no-throw) just delete it?
+	// throw new Error(`invalid pile shorthand: "${p}"`);
 }
 
 /**
