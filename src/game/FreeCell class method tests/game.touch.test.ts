@@ -313,13 +313,13 @@ describe('game.touch', () => {
 			});
 			// AS is a valid target
 			expect(game.availableMoves).toEqual([
-				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: -1 },
-				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: -1 },
+				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell:empty', priority: -1 },
+				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell:empty', priority: -1 },
+				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell:empty', priority: -1 },
+				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell:empty', priority: -1 },
 				{
 					location: { fixture: 'foundation', data: [0] },
-					moveDestinationType: 'foundation',
+					moveDestinationType: 'foundation:any',
 					priority: 4,
 				},
 			]);
@@ -933,17 +933,17 @@ describe('game.touch', () => {
 				expect(game.availableMoves).toEqual([
 					{
 						location: { fixture: 'cell', data: [1] },
-						moveDestinationType: 'cell',
+						moveDestinationType: 'cell:empty',
 						priority: 7,
 					},
 					{
 						location: { fixture: 'cell', data: [2] },
-						moveDestinationType: 'cell',
+						moveDestinationType: 'cell:empty',
 						priority: 6,
 					},
 					{
 						location: { fixture: 'cell', data: [3] },
-						moveDestinationType: 'cell',
+						moveDestinationType: 'cell:empty',
 						priority: 5,
 					},
 				]);
@@ -991,22 +991,22 @@ describe('game.touch', () => {
 					expect(game.availableMoves).toEqual([
 						{
 							location: { fixture: 'cell', data: [1] },
-							moveDestinationType: 'cell',
+							moveDestinationType: 'cell:empty',
 							priority: -1,
 						},
 						{
 							location: { fixture: 'cell', data: [2] },
-							moveDestinationType: 'cell',
+							moveDestinationType: 'cell:empty',
 							priority: -1,
 						},
 						{
 							location: { fixture: 'cell', data: [3] },
-							moveDestinationType: 'cell',
+							moveDestinationType: 'cell:empty',
 							priority: -1,
 						},
 						{
 							location: { fixture: 'foundation', data: [3] },
-							moveDestinationType: 'foundation',
+							moveDestinationType: 'foundation:any',
 							priority: 1,
 						},
 						{
@@ -1126,22 +1126,22 @@ describe('game.touch', () => {
 							expect(game.availableMoves).toEqual([
 								{
 									location: { fixture: 'cell', data: [1] },
-									moveDestinationType: 'cell',
+									moveDestinationType: 'cell:empty',
 									priority: -1,
 								},
 								{
 									location: { fixture: 'cell', data: [2] },
-									moveDestinationType: 'cell',
+									moveDestinationType: 'cell:empty',
 									priority: -1,
 								},
 								{
 									location: { fixture: 'cell', data: [3] },
-									moveDestinationType: 'cell',
+									moveDestinationType: 'cell:empty',
 									priority: -1,
 								},
 								{
 									location: { fixture: 'foundation', data: [1] },
-									moveDestinationType: 'foundation',
+									moveDestinationType: 'foundation:any',
 									priority: -1,
 								},
 								{
@@ -1643,22 +1643,22 @@ describe('game.touch', () => {
 					expect(game.availableMoves).toEqual([
 						{
 							location: { fixture: 'cell', data: [0] },
-							moveDestinationType: 'cell',
+							moveDestinationType: 'cell:empty',
 							priority: -1,
 						},
 						{
 							location: { fixture: 'cell', data: [1] },
-							moveDestinationType: 'cell',
+							moveDestinationType: 'cell:empty',
 							priority: -1,
 						},
 						{
 							location: { fixture: 'cell', data: [2] },
-							moveDestinationType: 'cell',
+							moveDestinationType: 'cell:empty',
 							priority: -1,
 						},
 						{
 							location: { fixture: 'cell', data: [3] },
-							moveDestinationType: 'cell',
+							moveDestinationType: 'cell:empty',
 							priority: -1,
 						},
 						{
@@ -1718,42 +1718,42 @@ describe('game.touch', () => {
 						expect(game.availableMoves).toEqual([
 							{
 								location: { fixture: 'cell', data: [0] },
-								moveDestinationType: 'cell',
+								moveDestinationType: 'cell:empty',
 								priority: -1,
 							},
 							{
 								location: { fixture: 'cell', data: [1] },
-								moveDestinationType: 'cell',
+								moveDestinationType: 'cell:empty',
 								priority: -1,
 							},
 							{
 								location: { fixture: 'cell', data: [2] },
-								moveDestinationType: 'cell',
+								moveDestinationType: 'cell:empty',
 								priority: -1,
 							},
 							{
 								location: { fixture: 'cell', data: [3] },
-								moveDestinationType: 'cell',
+								moveDestinationType: 'cell:empty',
 								priority: -1,
 							},
 							{
 								location: { fixture: 'foundation', data: [0] },
-								moveDestinationType: 'foundation',
+								moveDestinationType: 'foundation:any',
 								priority: 4,
 							},
 							{
 								location: { fixture: 'foundation', data: [1] },
-								moveDestinationType: 'foundation',
+								moveDestinationType: 'foundation:any',
 								priority: 3,
 							},
 							{
 								location: { fixture: 'foundation', data: [2] },
-								moveDestinationType: 'foundation',
+								moveDestinationType: 'foundation:any',
 								priority: 2,
 							},
 							{
 								location: { fixture: 'foundation', data: [3] },
-								moveDestinationType: 'foundation',
+								moveDestinationType: 'foundation:any',
 								priority: 1,
 							},
 						]);
@@ -1812,22 +1812,22 @@ describe('game.touch', () => {
 							expect(game.availableMoves).toEqual([
 								{
 									location: { fixture: 'cell', data: [0] },
-									moveDestinationType: 'cell',
+									moveDestinationType: 'cell:empty',
 									priority: -1,
 								},
 								{
 									location: { fixture: 'cell', data: [1] },
-									moveDestinationType: 'cell',
+									moveDestinationType: 'cell:empty',
 									priority: -1,
 								},
 								{
 									location: { fixture: 'cell', data: [2] },
-									moveDestinationType: 'cell',
+									moveDestinationType: 'cell:empty',
 									priority: -1,
 								},
 								{
 									location: { fixture: 'cell', data: [3] },
-									moveDestinationType: 'cell',
+									moveDestinationType: 'cell:empty',
 									priority: -1,
 								},
 								{
@@ -1893,22 +1893,22 @@ describe('game.touch', () => {
 								expect(game.availableMoves).toEqual([
 									{
 										location: { fixture: 'cell', data: [0] },
-										moveDestinationType: 'cell',
+										moveDestinationType: 'cell:empty',
 										priority: -1,
 									},
 									{
 										location: { fixture: 'cell', data: [1] },
-										moveDestinationType: 'cell',
+										moveDestinationType: 'cell:empty',
 										priority: -1,
 									},
 									{
 										location: { fixture: 'cell', data: [2] },
-										moveDestinationType: 'cell',
+										moveDestinationType: 'cell:empty',
 										priority: -1,
 									},
 									{
 										location: { fixture: 'cell', data: [3] },
-										moveDestinationType: 'cell',
+										moveDestinationType: 'cell:empty',
 										priority: -1,
 									},
 									{
@@ -1989,22 +1989,22 @@ describe('game.touch', () => {
 						expect(game.availableMoves).toEqual([
 							{
 								location: { fixture: 'cell', data: [0] },
-								moveDestinationType: 'cell',
+								moveDestinationType: 'cell:empty',
 								priority: -1,
 							},
 							{
 								location: { fixture: 'cell', data: [1] },
-								moveDestinationType: 'cell',
+								moveDestinationType: 'cell:empty',
 								priority: -1,
 							},
 							{
 								location: { fixture: 'cell', data: [2] },
-								moveDestinationType: 'cell',
+								moveDestinationType: 'cell:empty',
 								priority: -1,
 							},
 							{
 								location: { fixture: 'cell', data: [3] },
-								moveDestinationType: 'cell',
+								moveDestinationType: 'cell:empty',
 								priority: -1,
 							},
 							{

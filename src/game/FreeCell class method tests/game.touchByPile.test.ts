@@ -81,8 +81,8 @@ describe('game.touchByPile', () => {
 					peekOnly: false,
 				});
 				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
-					['a', 'cell', -1],
-					['d', 'cell', -1],
+					['a', 'cell:empty', -1],
+					['d', 'cell:empty', -1],
 					['5', 'cascade:empty', 8],
 				]);
 			});
@@ -131,9 +131,9 @@ describe('game.touchByPile', () => {
 					peekOnly: false,
 				});
 				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
-					['a', 'cell', 4],
-					['b', 'cell', 3],
-					['d', 'cell', 1],
+					['a', 'cell:empty', 4],
+					['b', 'cell:empty', 3],
+					['d', 'cell:empty', 1],
 				]);
 			});
 

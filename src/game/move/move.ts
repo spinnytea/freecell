@@ -31,18 +31,8 @@ import { _parseShorthandMove, PreviousActionType } from '@/game/move/history';
 
 	Moving cards to the deck isn't a standard move.
 	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveSourceType.
-
-	- TODO (techdebt) (refactor-rename) make these shorthands explicit
-	   - `deck` is shorthand for `deck:single` (can only move single cards from the deck)
-	   - `cell` is shorthand for `cell:single` (cells only have one card)
-	   - `foundation` is shorthand for `foundation:single`
-	- TODO (techdebt) remove `foundation` from MoveSourceType
-	   - now that it's more advanced, `GameFunction` seems like a much better way to handle foundation→any
-	   - consider this alongside PreaviousActionType of illegal
-	   - we do not need to include illegal moves in `MoveSourceType` nor {@linkcode MoveDestinationType}
-	- TODO (drag-and-drop) (test) test drag-and-drop for every MoveSourceType ⨉ MoveDestinationType
 */
-export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' | 'cascade:sequence';
+export type MoveSourceType = 'cell:single' | 'cascade:single' | 'cascade:sequence';
 
 /**
 	used to determind {@linkcode MoveDestinationTypePriorities}
@@ -50,22 +40,15 @@ export type MoveSourceType = 'deck' | 'cell' | 'foundation' | 'cascade:single' |
 	Moving cards to the deck isn't a standard move.
 	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveDestinationType.
 
-	- TODO (techdebt) (refactor-rename) make these shorthands explicit
-	   - `cell` is shorthand for `cell:empty` (can only move cards to an empty cell)
-	   - `foundation` is shorthand for `foundation:sequence`
-	   - (caveat: ace is `foundation:empty`, {@linkcode canStackFoundation} is a cleaner approach to being more specific)
-	- IDEA (gameplay) `foundation:sequence`
-	   - autofoundation and other tools are just sugar
-	   - cascade:sequence is _also_ just sugar
-	   - so what would foundation:sequence even look like, that'd be a whole new type of move
-		- would it be "autoFoundation limit:none"?
+	- TODO (click-to-move) (controls) 'cascade:single' is the tail card _also_ stacked? or it a all alone
 */
-export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cascade:sequence';
+export type MoveDestinationType =
+	'cell:empty' | 'foundation:any' | 'cascade:empty' | 'cascade:sequence';
 
 /**
 	higher priorities take precidence
 
-	- TODO (click-to-move) (controls) (settings) multiple MoveDestinationTypePriorities
+	- TODO (click-to-move) (controls) (settings) multiple MoveDestinationTypePriorities configurations
 	   - grow cascades vs empty cascades
 	   - these priorities favor "growing cascades", my preference
 	   - another play enjoys "getting the cards off the board"
@@ -74,43 +57,37 @@ export type MoveDestinationType = 'cell' | 'foundation' | 'cascade:empty' | 'cas
 	      - cell → foundation
 	      - cascade:single → foundation
 	- IDEA (click-to-move) (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
+	- TODO (drag-and-drop) (test) test drag-and-drop for every MoveSourceType ⨉ MoveDestinationType
 */
 export const MoveDestinationTypePriorities: {
 	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
 } = {
-	// XXX (click-to-move) (controls) MoveSourceType deck: move from the deck directly is not a valid move
-	'deck': {
-		'cell': 1,
-		'foundation': 4,
-		'cascade:empty': 2,
-		'cascade:sequence': 3,
-	},
-	'cell': {
-		'cell': 1,
-		'foundation': 3,
+	'cell:single': {
+		'cell:empty': 1,
+		'foundation:any': 3,
 		'cascade:empty': 2,
 		'cascade:sequence': 4,
 	},
-	// XXX (click-to-move) (controls) MoveSourceType foundation: once on the foundation, a card cannot be removed
-	'foundation': {
-		'cell': 1,
-		'foundation': 4,
-		'cascade:empty': 2,
-		'cascade:sequence': 3,
-	},
 	'cascade:single': {
-		'cell': 2,
-		'foundation': 3,
+		'cell:empty': 2,
+		'foundation:any': 3,
 		'cascade:empty': 1,
 		'cascade:sequence': 4,
 	},
 	'cascade:sequence': {
-		'cell': 1,
-		'foundation': 2,
+		'cell:empty': 1,
+		'foundation:any': 2,
 		'cascade:empty': 3,
 		'cascade:sequence': 4,
 	},
 };
+
+/**
+	for when we need to boost the priority
+
+	`Object.keys(MoveDestinationTypePriorities['cell:single']).length`
+*/
+const MoveDestinationTypeCount = 4;
 
 /**
 	{@linkcode MoveDestinationTypePriorities} is good as a general rule of thumb,
@@ -138,14 +115,16 @@ function calcMoveDestinationTypePriority(
 				if (!isQueenInFoundation) {
 					return {
 						...MoveDestinationTypePriority,
-						'cascade:empty': MoveDestinationTypePriority['cascade:empty'] + 4,
+						'cascade:empty':
+							MoveDestinationTypePriority['cascade:empty'] + MoveDestinationTypeCount,
 					};
 				}
 			} else if (moving_card.rank === 'ace') {
 				// aces always go to the foundation
 				return {
 					...MoveDestinationTypePriority,
-					foundation: MoveDestinationTypePriority.foundation + 4,
+					'foundation:any':
+						MoveDestinationTypePriority['foundation:any'] + MoveDestinationTypeCount,
 				};
 			}
 
@@ -155,7 +134,8 @@ function calcMoveDestinationTypePriority(
 			if (foundationCanAcceptCards(game, selectionIdx, 'opp+2')) {
 				return {
 					...MoveDestinationTypePriority,
-					foundation: MoveDestinationTypePriority.foundation + 4,
+					'foundation:any':
+						MoveDestinationTypePriority['foundation:any'] + MoveDestinationTypeCount,
 				};
 			}
 		}
@@ -349,34 +329,31 @@ export function findAvailableMoves(
 	const head_card = selection.cards[0];
 
 	if (selection.cards.length === 1) {
-		// REVIEW (controls) if multiple, move last card?
+		// REVIEW (2-priority) (controls) if multiple, move last card?
 		//  - do not allow autoMove to move a sequence to a cell
 		game.cells.forEach((card, idx) => {
 			if (!card) {
 				availableMoves.push({
 					location: { fixture: 'cell', data: [idx] },
-					moveDestinationType: 'cell',
+					moveDestinationType: 'cell:empty',
 					priority: -1,
 				});
 			}
 		});
 
-		// REVIEW (controls) if multiple, move last card?
+		// REVIEW (2-priority) (controls) if multiple, move last card?
 		//  - do not allow autoMove to move a single card when a sequence is selected
 		game.foundations.forEach((card, idx) => {
 			if (canStackFoundation(card, head_card)) {
 				availableMoves.push({
 					location: { fixture: 'foundation', data: [idx] },
-					moveDestinationType: 'foundation',
+					moveDestinationType: 'foundation:any',
 					priority: -1,
 				});
 			}
 		});
 	}
 
-	// IDEA (controls) sequence from root of cascade (the entire cascade) can freely move to cascade:empty
-	//  - sorting cascades doesn't "change" the game
-	//  - this needs to be a setting, disabled by default
 	const mmsl = maxMovableSequenceLength(game);
 	game.tableau.forEach((cascade, idx) => {
 		const tail_card = cascade[cascade.length - 1];
@@ -405,7 +382,7 @@ export function findAvailableMoves(
 /**
 	update the AvailableMove priority (in place)
 
-	- REVIEW (click-to-move) (controls) cycle (cell, cascade:empty) as one group?
+	- REVIEW (click-to-move) (controls) cycle (cell:empty, cascade:empty) as one group?
 	   - a->b->c->d -> 1->2->5->8 -> a->b->c->d
 */
 function prioritizeAvailableMoves(
@@ -416,6 +393,8 @@ function prioritizeAvailableMoves(
 	if (!availableMoves.length) return;
 
 	const moveSourceType = getMoveSourceType(selection);
+	if (!moveSourceType) return;
+
 	const sourceD0 = selection.location.data[0];
 	const MoveDestinationTypePriority = calcMoveDestinationTypePriority(
 		game,
@@ -435,8 +414,8 @@ function prioritizeAvailableMoves(
 	);
 
 	switch (moveDestinationType) {
-		case 'cell': {
-			const useSourceD0 = moveSourceType === 'cell' ? sourceD0 : undefined;
+		case 'cell:empty': {
+			const useSourceD0 = moveSourceType === 'cell:single' ? sourceD0 : undefined;
 			availableMoves.forEach((availableMove) => {
 				availableMove.priority = linearAvailableMovesPriority(
 					game.cells.length,
@@ -447,13 +426,12 @@ function prioritizeAvailableMoves(
 			break;
 		}
 
-		case 'foundation': {
-			const useSourceD0 = moveSourceType === 'foundation' ? sourceD0 : undefined;
+		case 'foundation:any': {
 			availableMoves.forEach((availableMove) => {
 				availableMove.priority = linearAvailableMovesPriority(
 					game.foundations.length,
 					availableMove.location.data[0],
-					useSourceD0
+					undefined
 				);
 			});
 			break;
@@ -526,12 +504,13 @@ function prioritizeAvailableMoves(
 	}
 }
 
-function getMoveSourceType(selection: CardSequence): MoveSourceType {
+function getMoveSourceType(selection: CardSequence): MoveSourceType | undefined {
 	switch (selection.location.fixture) {
 		case 'deck':
-		case 'cell':
 		case 'foundation':
-			return selection.location.fixture;
+			return undefined;
+		case 'cell':
+			return 'cell:single';
 		case 'cascade':
 			return selection.cards.length === 1 ? 'cascade:single' : 'cascade:sequence';
 	}

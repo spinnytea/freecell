@@ -12,18 +12,17 @@
 
 ## Top-Level TODOs
 
+FIXME (click-to-move) ← particularly in bug_reports and move.ts
+
 > There isn't currently anything marked with a priority.
 > Some next tasks could be:
 >
-> 1. review all 390 task tags
->    - if motivation and techdebt are first, maybe they need to be capitalized?
->    - when we "copy the same idea" multiple times, maybe we need to make a common label for it?
-> 2. actaully learn gsap, then do the `(refactor-timeline)`
+> 1. actaully learn gsap, then do the `(refactor-timeline)`
 >    - it would be nice to get the `useCardPositionAnimations` tests in good shape
 >    - which might also lead into the "all action text" tests
-> 3. `notes/bug_reports`
-> 4. (settings) need to start the ui, and account for `new Freecell()`, `game._clone`
-> 5. print/parse discrepancies for "non-standard" gameplay
+> 2. `notes/bug_reports`
+> 3. (settings) need to start the ui, and account for `new Freecell()`, `game._clone`
+> 4. print/parse discrepancies for "non-standard" gameplay
 
 - TODO (gsap) review how we use gsap, right now it feels like magic
 - TODO (techdebt) switch from nextjs to vite

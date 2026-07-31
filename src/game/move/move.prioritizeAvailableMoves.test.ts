@@ -139,11 +139,11 @@ describe('prioritizeAvailableMoves', () => {
 			game = game.touch();
 			expect(game.previousAction.text).toBe('select 4⡀ JS');
 			expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
-				['a', 'cell', -1],
-				['b', 'cell', -1],
-				['c', 'cell', -1],
-				['d', 'cell', -1],
-				['h⡃', 'foundation', -1],
+				['a', 'cell:empty', -1],
+				['b', 'cell:empty', -1],
+				['c', 'cell:empty', -1],
+				['d', 'cell:empty', -1],
+				['h⡃', 'foundation:any', -1],
 				['1', 'cascade:empty', -1],
 				['3⡀', 'cascade:sequence', 13],
 				['5', 'cascade:empty', -1],
