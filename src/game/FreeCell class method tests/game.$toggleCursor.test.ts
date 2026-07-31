@@ -141,7 +141,8 @@ describe('game.$toggleCursor', () => {
 			expect(gameDealMost.$toggleCursor().$toggleCursor().$toggleCursor().previousAction.text).toBe('cursor set k⡇ 2S');
 		});
 
-		test('allowEmptyDeck', () => {
+		/*
+		t('allowEmptyDeck', () => {
 			// dealing all cards moves the cursor to a cell
 			const gameAllCards = new FreeCell().dealAll();
 			expect(gameAllCards.deck.length).toBe(0);
@@ -158,6 +159,7 @@ describe('game.$toggleCursor', () => {
 			expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).previousAction.text).toEqual('cursor set k');
 			expect(gameAllCards.$toggleCursor({ allowEmptyDeck: true }).$toggleCursor({ allowEmptyDeck: true }).previousAction.text).toEqual('cursor set a');
 		});
+		*/
 	});
 
 	describe('foundation', () => {

@@ -945,14 +945,14 @@ export class FreeCell {
 		I tend to pick apart a single cascade for a bit before moving on to the next.
 		So going back to the same cascade helps a LOT. For me.
 	*/
-	$toggleCursor({ allowEmptyDeck = false }: { allowEmptyDeck?: boolean } = {}): FreeCell | this {
+	$toggleCursor(): FreeCell | this {
 		const actionText = this.history.at(-1);
 		const after = parseCursorFromPreviousActionText(actionText, this.cards);
 		if (!after) return this;
 		if (!isLocationEqual(this.__clampCursor(after), this.cursor))
 			// REVIEW (optimize) (deck) only deck needs to __clampCursor
 			return this.setCursor(after);
-		const before = parseAltCursorFromPreviousActionText(actionText, this.cards, allowEmptyDeck);
+		const before = parseAltCursorFromPreviousActionText(actionText, this.cards);
 		if (!before) return this;
 		return this.setCursor(before);
 	}
@@ -1489,12 +1489,14 @@ export class FreeCell {
 			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
 
-		// TODO (techdebt) copy-pasta, same as `undo`
+		// TODO (techdebt) (parse) (undo) copy-pasta, same as `undo`
 		if (
 			game.previousAction.type === 'move-foundation' &&
 			!game.previousAction.tweenCards &&
 			history.length
 		) {
+			// TODO (optimize) (parse) (undo) do we really need to call undo during parse?
+			//  - is there a cleaner way to recover the tween cards?
 			const secondUndo = game.undo({ skipActionPrev: true });
 			const { fromLocation, toLocation } = parseActionTextMove(game.previousAction.text);
 			game.previousAction.tweenCards = getCardsThatMoved(
@@ -1505,6 +1507,8 @@ export class FreeCell {
 		if (verifyActionTextToRecoverCoords) {
 			const move = parseMoveFromActionText(actionText);
 			if (move) {
+				// TODO (optimize) (parse) (undo) is there a better way to get the coords?
+				//  - do we _really_ need the coords this badly?
 				const undid = game.undo();
 				if (undid.previousAction.type === 'invalid') return undid;
 

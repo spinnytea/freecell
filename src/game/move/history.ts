@@ -222,6 +222,9 @@ export function parseCursorFromPreviousActionText(
 	switch (parsePreviousActionType(actionText).type) {
 		case 'init':
 		case 'shuffle':
+			if (!cards.some(({ location }) => location.fixture === 'deck')) {
+				return DEFAULT_CURSOR_LOCATION;
+			}
 			return INIT_CURSOR_LOCATION;
 		case 'deal':
 			if (/^deal \d+ cards?/.test(actionText)) return INIT_CURSOR_LOCATION;
@@ -358,15 +361,14 @@ export function parseCursorFromPreviousActionText(
 */
 export function parseAltCursorFromPreviousActionText(
 	actionText: string | undefined,
-	cards: Card[],
-	allowEmptyDeck = false
+	cards: Card[]
 ): CardLocation | undefined {
 	if (!actionText) return undefined;
 	switch (parsePreviousActionType(actionText).type) {
 		case 'init':
 		case 'shuffle':
 		case 'deal':
-			if (!allowEmptyDeck && !cards.some(({ location }) => location.fixture === 'deck')) {
+			if (!cards.some(({ location }) => location.fixture === 'deck')) {
 				return DEFAULT_CURSOR_LOCATION;
 			}
 			return INIT_CURSOR_LOCATION;
@@ -405,7 +407,7 @@ export function parseAltCursorFromPreviousActionText(
 				return undefined;
 			}
 			if (actionText.startsWith('invalid')) {
-				return parseAltCursorFromPreviousActionText(actionText.substring(8), cards, allowEmptyDeck);
+				return parseAltCursorFromPreviousActionText(actionText.substring(8), cards);
 			}
 			return undefined;
 		case 'cursor':

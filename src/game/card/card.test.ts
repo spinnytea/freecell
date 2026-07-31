@@ -70,6 +70,9 @@ describe('game/card', () => {
 			expect(deckShorthand(deck)).toBe(INIT_DECK_SHORTHAND);
 			expect(deckShorthand(game.cards)).toBe(INIT_DECK_SHORTHAND);
 			expect(deckShorthand(deck)).toBe(deckShorthand(game.cards));
+
+			// some arbitrary technical limit, see BOTTOM_OF_CASCADE docs for details
+			expect(deck.length).toBeLessThan(BOTTOM_OF_CASCADE);
 		});
 
 		test('sortCardsOG', () => {

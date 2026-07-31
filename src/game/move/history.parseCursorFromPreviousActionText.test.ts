@@ -50,7 +50,7 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 		test.each`
 			actionText                                      | cards          | after                                    | before
 			${'init'}                                       | ${someCards_1} | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'deck', data: [99] }}
-			${'init with invalid history'}                  | ${[]}          | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'cell', data: [0] }}
+			${'init with invalid history'}                  | ${[]}          | ${{ fixture: 'cell', data: [0] }}        | ${{ fixture: 'cell', data: [0] }}
 			${'init partial'}                               | ${someCards_1} | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'deck', data: [99] }}
 			${'shuffle deck (1)'}                           | ${someCards_1} | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'deck', data: [99] }}
 			${'deal 1 card'}                                | ${someCards_1} | ${{ fixture: 'deck', data: [99] }}       | ${{ fixture: 'deck', data: [99] }}

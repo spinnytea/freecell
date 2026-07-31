@@ -175,12 +175,6 @@ export function initializeDeckOfCards(includeJoker = false): Card[] {
 		});
 	});
 
-	// some arbitrary technical limit, see BOTTOM_OF_CASCADE docs for details
-	// TODO (2-priority) (optimize) (refactor-no-throw) (refactor-test) move this to a unit test, it doesn't need to be in production
-	if (deck.length > BOTTOM_OF_CASCADE) {
-		throw new Error('there are too many cards for the system to handle');
-	}
-
 	return deck;
 }
 

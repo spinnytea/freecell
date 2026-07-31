@@ -9,6 +9,7 @@ const outputPath = path.join(root, 'README-todo-labels.md');
 const pattern = /\b(FIXME|BUG|HACK|TODO|XXX|REVIEW|IDEA)\b((?:\s+\([\w\d\-]+\))+)/g;
 const excludeDirs = new Set(['coverage', '.git', 'node_modules', '.next', '.turbo']);
 const labels = new Map();
+let taskCount = 0;
 
 function walk(dir) {
 	for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -29,6 +30,7 @@ function walk(dir) {
 		try {
 			const text = readFileSync(fullPath, 'utf8');
 			for (const match of text.matchAll(pattern)) {
+				taskCount++;
 				const tagGroup = match[2];
 				for (const labelGroup of tagGroup.matchAll(/\(([\w\d\-]+)\)/g)) {
 					const label = labelGroup[1];
@@ -50,3 +52,5 @@ const output =
 	sortedLabels.map(([label, count]) => `${String(count).padStart(3)} (${label})`).join('\n') +
 	'\n';
 writeFileSync(outputPath, output, 'utf8');
+
+console.log(`${taskCount} tasks, ${sortedLabels.length} labels`);

@@ -277,9 +277,8 @@ describe('game.undo (+ history)', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' KC    QC    JC KD KH KS \n' +
+						'>KC    QC    JC KD KH KS \n' +
 						'                         \n' +
-						':d>   \n' +
 						' hand-jammed'
 				);
 				expect(game.print({ includeHistory: true })).toBe(
@@ -288,7 +287,7 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						' hand-jammed'
 				);
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(game.history).toEqual(['hand-jammed']);
 			});
 
@@ -325,9 +324,8 @@ describe('game.undo (+ history)', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' KC    QC    JC KD KH KS \n' +
+						'>KC    QC    JC KD KH KS \n' +
 						'                         \n' +
-						':d>   \n' +
 						' hand-jammed'
 				);
 				expect(game.print({ includeHistory: true })).toBe(
@@ -336,7 +334,7 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						' hand-jammed'
 				);
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(game.history).toEqual(['hand-jammed']);
 			});
 
@@ -373,9 +371,8 @@ describe('game.undo (+ history)', () => {
 
 				expect(game.print()).toBe(
 					'' + //
-						' KC    QC    JC KD KH KS \n' +
+						'>KC    QC    JC KD KH KS \n' +
 						'                         \n' +
-						':d>   \n' +
 						' hand-jammed'
 				);
 				expect(game.print({ includeHistory: true })).toBe(
@@ -384,7 +381,7 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						' hand-jammed'
 				);
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(game.history).toEqual(['hand-jammed']);
 			});
 
@@ -726,9 +723,8 @@ describe('game.undo (+ history)', () => {
 						);
 						expect(game.undo().print()).toBe(
 							'' + //
-								' KC          JC QD KH KS \n' +
+								'>KC          JC QD KH KS \n' +
 								' QC KD                   \n' +
-								':d>   \n' +
 								' hand-jammed'
 						);
 					});
@@ -752,9 +748,8 @@ describe('game.undo (+ history)', () => {
 							);
 							expect(game.undo().print()).toBe(
 								'' + //
-									' KC          JC QD KH KS \n' +
+									'>KC          JC QD KH KS \n' +
 									' QC KD                   \n' +
-									':d>   \n' +
 									' hand-jammed'
 							);
 						});
@@ -833,11 +828,10 @@ describe('game.undo (+ history)', () => {
 									game = game.undo();
 									expect(game.print()).toBe(
 										'' + //
-											'             TC 8D KH KS \n' +
+											'>            TC 8D KH KS \n' +
 											'    TD KC KD    9D       \n' +
 											'       QD QC             \n' +
 											'       JC JD             \n' +
-											':d>   \n' +
 											' hand-jammed'
 									);
 									expect(game.print({ includeHistory: true })).toBe(
@@ -1077,7 +1071,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed']);
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 
 			test('flourish', () => {
@@ -1136,7 +1130,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed']);
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 				expect(game.selection).toBe(null);
 				expect(game.availableMoves).toBe(null);
 			});
@@ -1293,7 +1287,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed']);
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 
 			test('flourish', () => {
@@ -1328,7 +1322,7 @@ describe('game.undo (+ history)', () => {
 					gameFunction: 'undo',
 				});
 				expect(game.history).toEqual(['hand-jammed']);
-				expect(game.cursor).toEqual({ fixture: 'deck', data: [0] });
+				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 
 			test('52-card flourish', () => {
@@ -1414,12 +1408,6 @@ describe('game.undo (+ history)', () => {
 		test.todo('undo autoFoundationAll');
 
 		test.todo('parse without history (nothing to undo)');
-
-		// TODO (2-priority) (history) move, <cannot undo>, move, undo undo undo
-		//  - the card marches down the cascade??
-		//  - this was a bug before auto-foundation was undoable (if parseAndUndoPreviousActionText returns null)
-		//  - ^^ so now, uh, verify or delete
-		test.todo('if we reach a move it cannot undo, it should not break');
 	});
 
 	describe('collapse history', () => {
@@ -1929,21 +1917,19 @@ describe('game.undo (+ history)', () => {
 
 			expect(gameStateOne.print()).toBe(
 				'' + //
-					'             QC TD KH 9S \n' +
+					'>            QC TD KH 9S \n' +
 					' QS KC       TS          \n' +
 					' JD QD       KS          \n' +
 					' KD JS                   \n' +
-					':d>   \n' +
 					' hand-jammed'
 			);
 			expect(gameStateOne.print({ includeHistory: true })).toBe(gamePrintHist);
 			expect(gameStateThree.print()).toBe(
 				'' + //
-					'             QC TD KH 9S \n' +
+					'>            QC TD KH 9S \n' +
 					' QS KC       TS          \n' +
 					' JD QD       KS          \n' +
 					' KD JS                   \n' +
-					':d>   \n' +
 					' hand-jammed'
 			);
 			expect(gameStateThree.print({ includeHistory: true })).toBe(gamePrintHist);
