@@ -746,6 +746,447 @@ describe('prioritizeAvailableMoves', () => {
 					' move 4h TH→9H (auto-foundation 14362273 JH,JS,QD,QH,QS,KD,KH,KS)'
 			);
 		});
+
+		test('traced #10347', () => {
+			// we can safely move 3C to the founcation
+			// 2D is up, 2H will auto-foundation as soon as it's revealed
+			// AS, 2S, 3S are entirely unrelated to 3C
+			// AS will auto-foundation
+			// 2S may need to stack on 3D, 3H, which are both still in play
+			const gameExample = FreeCell.parse(
+				'' + //
+					' 9H 4D    TH 3C 2D AH    \n' +
+					' 5S AS 9C 6D QS QD 6C 6S \n' +
+					' KH 6H 7C 2S JH    5D 5H \n' +
+					' 8S 7H JS 3S       4C    \n' +
+					' 2H 7D TC 3H       3D    \n' +
+					' 5C KD 8H KC             \n' +
+					' 4S QC KS                \n' +
+					' 4H JD QH                \n' +
+					'    TS JC                \n' +
+					'    9D TD                \n' +
+					'    8C 9S                \n' +
+					'       8D                \n' +
+					'       7S                \n' +
+					' move 6h 3C→2C\n' +
+					':h shuffle32 10347\n' +
+					' 3a 53 53 83 73 72 76 72 \n' +
+					' 42 42 67 5b 5c 57 56 8d \n' +
+					' 85 85 83 a3 62 c8 6a 68 \n' +
+					' 6h '
+			);
+			expect(gameExample.history.length).toBe(27);
+			expect(gameExample.previousAction.text).toBe('move 6⡁h⡀ 3C→2C');
+
+			const game = gameExample.undo();
+			expect(game.previousAction.text).toBe('move 6⡂8⡀ 5H→6S');
+			expect(availableMovesMinimized(game.touchByPile('6').availableMoves, true)).toEqual([
+				['c', 'cell:empty', -1],
+				['h⡀', 'foundation:any', 4],
+				['1⡆', 'cascade:sequence', -1],
+			]);
+			expect(game.moveByShorthand('6c').previousAction.text).toBe('move 6⡁c 3C→cell');
+			expect(game.moveByShorthand('6h').previousAction.text).toBe('move 6⡁h⡀ 3C→2C');
+			expect(game.moveByShorthand('61').previousAction.text).toBe('move 6⡁1⡆ 3C→4H');
+
+			// this is what we want
+			expect(game.$touchAndMove('3C').previousAction.text).toBe('move 6⡁h⡀ 3C→2C');
+		});
+
+		// BUG (click-to-move) (controls) examples of misbehavior, too greedy
+		describe('bugfix: too greedy', () => {
+			test('traced #4335 a', () => {
+				const game = FreeCell.parse(
+					'' + //
+						' 7S 7D 3C 2H 2S AD 2C    \n' +
+						' KH KD    QS 7C KS 3H 2D \n' +
+						' AH 8H    JD 6H KC 8S 5S \n' +
+						' 4D 3S    TS 5C QD 4H TC \n' +
+						' 8D 4S    9D    JS QC 5H \n' +
+						' 6D 6S          TD JH 9H \n' +
+						' 8C QH                9S \n' +
+						' 7H JC                   \n' +
+						' 6C TH                   \n' +
+						' 5D 9C                   \n' +
+						' 4C                      \n' +
+						' 3D                      \n' +
+						' move 36 TD→JS\n' +
+						':h shuffle32 4335\n' +
+						' 32 72 63 6a 61 41 4b 47 \n' +
+						' 46 41 4c 4d b4 d4 56 5b \n' +
+						' 54 31 34 53 5d d5 a3 35 \n' +
+						' 3a 3d 36 '
+				);
+				expect(game.history.length).toBe(29);
+				expect(game.previousAction.text).toBe('move 3⡀6⡃ TD→JS');
+				expect(availableMovesMinimized(game.touchByPile('c').availableMoves, true)).toEqual([
+					['h⡂', 'foundation:any', 2],
+					['3', 'cascade:empty', -1],
+				]);
+				expect(game.moveByShorthand('ch').previousAction.text).toBe('move ch⡂ 3C→2C');
+				expect(game.moveByShorthand('c3').previousAction.text).toBe('move c3 3C→cascade');
+
+				// FIXME .not.toBe
+				// in a previous life, this is what happened when you $touchAndMove('3C')
+				expect(game.$touchAndMove('3C').previousAction.text).toBe('move ch⡂ 3C→2C');
+				expect(game.moveByShorthand('c3').$touchAndMove('3C').previousAction.text).toBe('move ch⡂ 3C→2C');
+
+				// FIXME $touchAndMove
+				//  - we don't want to put up 3C because… 3S is not available to stack
+				const gameResult = game.moveByShorthand('c3'); //.$touchAndMove('3C');
+				expect(gameResult.previousAction.text).toBe('move c3 3C→cascade');
+
+				// because the next move we want is
+				const gameNext = gameResult.$touchAndMove('2H');
+				expect(gameNext.previousAction.text).toBe('move d3⡀ 2H→3C');
+				expect(gameNext.print()).toBe(
+					'' + //
+						' 7S 7D       2S AD 2C    \n' +
+						' KH KD>3C QS 7C KS 3H 2D \n' +
+						' AH 8H 2H JD 6H KC 8S 5S \n' +
+						' 4D 3S    TS 5C QD 4H TC \n' +
+						' 8D 4S    9D    JS QC 5H \n' +
+						' 6D 6S          TD JH 9H \n' +
+						' 8C QH                9S \n' +
+						' 7H JC                   \n' +
+						' 6C TH                   \n' +
+						' 5D 9C                   \n' +
+						' 4C                      \n' +
+						' 3D                      \n' +
+						' move d3 2H→3C'
+				);
+			});
+
+			test('traced #10712', () => {
+				const gameExample = FreeCell.parse(
+					'' + //
+						' KS TH       2H 3D 4C    \n' +
+						' 4S    8S 9C KC 8D 3H JC \n' +
+						' 5D    7D AS QC 7C 2S 6C \n' +
+						' TS    6S KH 7H 6H    9H \n' +
+						' JD    5H KD    5S    QS \n' +
+						' QH       TC    4H    JH \n' +
+						' QD       9D             \n' +
+						' JS       8C             \n' +
+						' TD                      \n' +
+						' 9S                      \n' +
+						' 8H                      \n' +
+						' 7S                      \n' +
+						' 6D                      \n' +
+						' 5C                      \n' +
+						' 4D                      \n' +
+						' 3S                      \n' +
+						' move 5h 4C→3C\n' +
+						':h shuffle32 10712\n' +
+						' 38 6a 81 6b 6c 61 31 31 \n' +
+						' 53 68 81 b8 2h 42 34 7b \n' +
+						' 7d a6 36 c3 26 2a 32 b3 \n' +
+						' 23 21 d1 5b 5h '
+				);
+				expect(gameExample.history.length).toBe(31);
+				// in a previous life, this is what happened when you $touchAndMove('4C')
+				expect(gameExample.previousAction.text).toBe('move 5⡃h⡂ 4C→3C');
+
+				const game = gameExample.undo();
+				expect(game.previousAction.text).toBe('move 5⡄b TH→cell');
+				expect(availableMovesMinimized(game.touchByPile('5').availableMoves, true)).toEqual([
+					['c', 'cell:empty', -1],
+					['d', 'cell:empty', -1],
+					['h⡂', 'foundation:any', 2],
+					['2', 'cascade:empty', -1],
+					['3⡃', 'cascade:sequence', -1],
+				]);
+				expect(game.moveByShorthand('5c').previousAction.text).toBe('move 5⡃c 4C→cell');
+				expect(game.moveByShorthand('5d').previousAction.text).toBe('move 5⡃d 4C→cell');
+				expect(game.moveByShorthand('5h').previousAction.text).toBe('move 5⡃h⡂ 4C→3C');
+				expect(game.moveByShorthand('52').previousAction.text).toBe('move 5⡃2 4C→cascade');
+				expect(game.moveByShorthand('53').previousAction.text).toBe('move 5⡃3⡃ 4C→5H');
+
+				// FIXME $touchAndMove
+				//  - we don't want to put up 4C because… 4S is not available to stack
+				const gameResult = game.moveByShorthand('53'); //.$touchAndMove('4C');
+				expect(gameResult.previousAction.text).toBe('move 5⡃3⡃ 4C→5H');
+
+				// because the next move we want is
+				const gameNext = gameResult.$touchAndMove('3H');
+				expect(gameNext.previousAction.text).toBe('move 7⡀3⡄ 3H-2S→4C');
+				expect(gameNext.print()).toBe(
+					'' + //
+						' KS TH       2H 3D 3C    \n' +
+						' 4S    8S 9C KC 8D    JC \n' +
+						' 5D    7D AS QC 7C    6C \n' +
+						' TS    6S KH 7H 6H    9H \n' +
+						' JD    5H KD    5S    QS \n' +
+						' QH   >4C TC    4H    JH \n' +
+						' QD    3H 9D             \n' +
+						' JS    2S 8C             \n' +
+						' TD                      \n' +
+						' 9S                      \n' +
+						' 8H                      \n' +
+						' 7S                      \n' +
+						' 6D                      \n' +
+						' 5C                      \n' +
+						' 4D                      \n' +
+						' 3S                      \n' +
+						' move 73 3H-2S→4C'
+				);
+			});
+
+			test('traced #27521', () => {
+				const gameExample = FreeCell.parse(
+					'' + //
+						' 7S    JH    3D          \n' +
+						' TH 7D 8D 5S KH 9C JS 9S \n' +
+						' KS 8S TD 4C QS KC AS 8H \n' +
+						' 9D 5H 4D 6D JD QD QH 7C \n' +
+						' 6S    AC 3C TC JC AH    \n' +
+						' 2C    4S    9H    KD    \n' +
+						' TS    6H    8C    QC    \n' +
+						' 3H    5C    7H          \n' +
+						' 2S    4H    6C          \n' +
+						'       3S    5D          \n' +
+						'       2H                \n' +
+						' move 4h 3D→2D\n' +
+						':h shuffle32 27521\n' +
+						' 6a 5b 56 5c 56 5d c5 45 \n' +
+						' b4 d4 5b 5c a5 65 6a 6d \n' +
+						' c6 b6 85 3b 83 8c 82 a2 \n' +
+						' 8a 81 d8 b8 a8 23 7a 27 \n' +
+						' 25 45 4h '
+				);
+				expect(gameExample.history.length).toBe(37);
+				// in a previous life, this is what happened when you $touchAndMove('3D')
+				expect(gameExample.previousAction.text).toBe('move 4⡄h⡀ 3D→2D');
+
+				const game = gameExample.undo();
+				expect(game.previousAction.text).toBe('move 4⡅5⡅ 7H-6C-5D→8C');
+				expect(availableMovesMinimized(game.touchByPile('4').availableMoves, true)).toEqual([
+					['b', 'cell:empty', -1],
+					['d', 'cell:empty', -1],
+					['h⡀', 'foundation:any', 4],
+				]);
+				expect(game.moveByShorthand('4b').previousAction.text).toBe('move 4⡄b 3D→cell');
+				expect(game.moveByShorthand('4d').previousAction.text).toBe('move 4⡄d 3D→cell');
+				expect(game.moveByShorthand('4h').previousAction.text).toBe('move 4⡄h⡀ 3D→2D');
+
+				// we still need 3D in play because we may need it to stack 2C,2S; they cannot auto-foundation yet
+				// FIXME $touchAndMove
+				const gameResult = game.moveByShorthand('4b'); //.$touchAndMove('3D');
+				expect(gameResult.previousAction.text).toBe('move 4⡄b 3D→cell');
+				expect(gameResult.print()).toBe(
+					'' + //
+						' 7S>3D JH    2D          \n' +
+						' TH 7D 8D 5S KH 9C JS 9S \n' +
+						' KS 8S TD 4C QS KC AS 8H \n' +
+						' 9D 5H 4D 6D JD QD QH 7C \n' +
+						' 6S    AC 3C TC JC AH    \n' +
+						' 2C    4S    9H    KD    \n' +
+						' TS    6H    8C    QC    \n' +
+						' 3H    5C    7H          \n' +
+						' 2S    4H    6C          \n' +
+						'       3S    5D          \n' +
+						'       2H                \n' +
+						' move 4b 3D→cell'
+				);
+			});
+
+			test('traced #30255', () => {
+				const gameExample = FreeCell.parse(
+					'' + //
+						' JS 3C 6D    2H 4S 3D    \n' +
+						' 4H 6H 9C 7S AC TC KC    \n' +
+						' TH 5C 8H 7C 5H KH       \n' +
+						' KS 4D    4C 7H 5S       \n' +
+						' QD       QH JH 9D       \n' +
+						' JC       QC KD 8S       \n' +
+						' TD       6C QS          \n' +
+						' 9S       3H JD          \n' +
+						' 8D       2C TS          \n' +
+						'             9H          \n' +
+						'             8C          \n' +
+						'             7D          \n' +
+						'             6S          \n' +
+						'             5D          \n' +
+						' move 8h 4S→3S\n' +
+						':h shuffle32 30255\n' +
+						' 27 75 27 32 1a 18 31 35 \n' +
+						' 85 35 3b 23 25 65 27 24 \n' +
+						' 8c 78 78 a2 7h 72 12 16 \n' +
+						' 81 87 8a 8h '
+				);
+				expect(gameExample.history.length).toBe(30);
+				// in a previous life, this is what happened when you $touchAndMove('4S')
+				expect(gameExample.previousAction.text).toBe('move 8⡀h⡁ 4S→3S');
+
+				const game = gameExample.undo();
+				expect(game.previousAction.text).toBe('move 8⡁a JS→cell');
+				expect(availableMovesMinimized(game.touchByPile('8').availableMoves, true)).toEqual([
+					['d', 'cell:empty', -1],
+					['h⡁', 'foundation:any', 3],
+					['5⡌', 'cascade:sequence', -1],
+				]);
+				expect(game.moveByShorthand('8d').previousAction.text).toBe('move 8⡀d 4S→cell');
+				expect(game.moveByShorthand('8h').previousAction.text).toBe('move 8⡀h⡁ 4S→3S');
+				expect(game.moveByShorthand('85').previousAction.text).toBe('move 8⡀5⡌ 4S→5D');
+
+				// FIXME $touchAndMove
+				//  - there is a 4C around, but it's not available yet
+				const gameResult = game.moveByShorthand('85'); //.$touchAndMove('4S');
+				expect(gameResult.previousAction.text).toBe('move 8⡀5⡌ 4S→5D');
+
+				// because the next move we want is
+				const gameNext = gameResult.$touchAndMove('3H');
+				expect(gameNext.previousAction.text).toBe('move 4⡆5⡍ 3H-2C→4S');
+				expect(gameNext.print()).toBe(
+					'' + //
+						' JS 3C 6D    2H 3S 3D    \n' +
+						' 4H 6H 9C 7S AC TC KC    \n' +
+						' TH 5C 8H 7C 5H KH       \n' +
+						' KS 4D    4C 7H 5S       \n' +
+						' QD       QH JH 9D       \n' +
+						' JC       QC KD 8S       \n' +
+						' TD       6C QS          \n' +
+						' 9S          JD          \n' +
+						' 8D          TS          \n' +
+						'             9H          \n' +
+						'             8C          \n' +
+						'             7D          \n' +
+						'             6S          \n' +
+						'             5D          \n' +
+						'            >4S          \n' +
+						'             3H          \n' +
+						'             2C          \n' +
+						' move 45 3H-2C→4S'
+				);
+			});
+		});
+
+		// BUG (click-to-move) (controls) examples of misbehavior, not greedy enough
+		describe('bugfix: not greedy enough', () => {
+			test('traced #4335 b', () => {
+				const gameExample = FreeCell.parse(
+					'' + //
+						'    9D 5H 5S AS 3C 2H 2D \n' +
+						' KH KD       2S KS 3H    \n' +
+						' QS 8H       7C KC 8S    \n' +
+						' JH 3S       6H QD 4H    \n' +
+						' TC 4S       TS JS QC    \n' +
+						' 9H 6S       7D TD JD    \n' +
+						' 8C QH       6C 9C       \n' +
+						' 7H JC       5D 8D       \n' +
+						'    TH       4C 7S       \n' +
+						'    9S       3D 6D       \n' +
+						'                5C       \n' +
+						'                4D       \n' +
+						' move a5 3D→4C\n' +
+						':h shuffle32 4335\n' +
+						' 83 32 18 3a 3b 13 31 12 \n' +
+						' 16 35 4c 41 41 54 62 c6 \n' +
+						' 65 46 45 4h 76 26 47 84 \n' +
+						' 8c 81 41 8d a5 '
+				);
+				expect(gameExample.history.length).toBe(31);
+				// in a previous life, this is what happened when you $touchAndMove('4C')
+				expect(gameExample.previousAction.text).toBe('move a5⡇ 3D→4C');
+
+				const game = gameExample.undo();
+				expect(game.previousAction.text).toBe('move 8⡁d 5S→cell (auto-foundation 8 2D)');
+				expect(availableMovesMinimized(game.touchByPile('a').availableMoves, true)).toEqual([
+					['h⡃', 'foundation:any', -1],
+					['3', 'cascade:empty', -1],
+					['4', 'cascade:empty', -1],
+					['5⡇', 'cascade:sequence', 4],
+					['8', 'cascade:empty', -1],
+				]);
+				expect(game.moveByShorthand('ah').previousAction.text).toBe('move ah⡃ 3D→2D');
+				expect(game.moveByShorthand('a3').previousAction.text).toBe('move a3 3D→cascade');
+				expect(game.moveByShorthand('a4').previousAction.text).toBe('move a4 3D→cascade');
+				expect(game.moveByShorthand('a5').previousAction.text).toBe('move a5⡇ 3D→4C');
+				expect(game.moveByShorthand('a8').previousAction.text).toBe('move a8 3D→cascade');
+
+				// FIXME $touchAndMove
+				const gameResult = game.moveByShorthand('ah'); //.$touchAndMove('3D');
+				expect(gameResult.previousAction.text).toBe('move ah⡃ 3D→2D');
+				expect(gameResult.print()).toBe(
+					'' + //
+						'    9D 5H 5S AS 3C 2H>3D \n' +
+						' KH KD       2S KS 3H    \n' +
+						' QS 8H       7C KC 8S    \n' +
+						' JH 3S       6H QD 4H    \n' +
+						' TC 4S       TS JS QC    \n' +
+						' 9H 6S       7D TD JD    \n' +
+						' 8C QH       6C 9C       \n' +
+						' 7H JC       5D 8D       \n' +
+						'    TH       4C 7S       \n' +
+						'    9S          6D       \n' +
+						'                5C       \n' +
+						'                4D       \n' +
+						' move ah 3D→2D'
+				);
+			});
+
+			test('traced #28307', () => {
+				const gameExample = FreeCell.parse(
+					'' + //
+						'    8D JS    4H 2S 3C 3D \n' +
+						'    QD 4D 9D JD KH 7C TS \n' +
+						'    8C 6D 6C QH QC 5D 4C \n' +
+						'    KD 6H JC 8H    KS KC \n' +
+						'    7H 4S 3S QS    9C 5H \n' +
+						'    TH 9S 5C 9H    5S 7S \n' +
+						'       TD    8S       6S \n' +
+						'       JH    7D          \n' +
+						'       TC                \n' +
+						' move ah 4H→3H\n' +
+						':h shuffle32 28307\n' +
+						' 6a 63 16 15 45 1b 1c 1h \n' +
+						' ah '
+				);
+				expect(gameExample.history.length).toBe(11);
+				// this is the desired behavior
+				expect(gameExample.previousAction.text).toBe('move ah⡀ 4H→3H');
+
+				const game = gameExample.undo();
+				expect(game.previousAction.text).toBe('move 1⡁h⡂ 3C→2C (auto-foundation 14 2D,3D)');
+				expect(availableMovesMinimized(game.touchByPile('a').availableMoves, true)).toEqual([
+					['d', 'cell:empty', -1],
+					['h⡀', 'foundation:any', -1],
+					['1', 'cascade:empty', -1],
+					['4⡄', 'cascade:sequence', 5],
+					['7⡄', 'cascade:sequence', 2],
+				]);
+				expect(game.moveByShorthand('ad').previousAction.text).toBe('move ad 4H→cell');
+				expect(game.moveByShorthand('ah').previousAction.text).toBe('move ah⡀ 4H→3H');
+				expect(game.moveByShorthand('a1').previousAction.text).toBe('move a1 4H→cascade');
+				expect(game.moveByShorthand('a4').previousAction.text).toBe('move a4⡄ 4H→5C');
+				expect(game.moveByShorthand('a7').previousAction.text).toBe('move a7⡄ 4H→5S');
+
+				// FIXME wrong, should be ah
+				expect(game.$touchAndMove('4H').previousAction.text).toBe('move a4⡄ 4H→5C');
+
+				const gameFurtherBack = game.undo();
+				expect(gameFurtherBack.print()).toBe(
+					'' + //
+						' 4H 8D>JS    3H 2S 2C AD \n' +
+						' 2D QD 4D 9D JD KH 7C TS \n' +
+						' 3C 8C 6D 6C QH QC 5D 4C \n' +
+						'    KD 6H JC 8H    KS KC \n' +
+						'    7H 4S 3S QS    9C 5H \n' +
+						'    TH 9S 5C 9H    5S 7S \n' +
+						'       TD 3D 8S       6S \n' +
+						'       JH    7D          \n' +
+						'       TC                \n' +
+						' move 1c JS→cell'
+				);
+
+				// here, it shouldn't go up yet, since we _might_ need to stack 4H-3S-2D
+				// FIXME is it opp+2,oppopp+1
+				expect(gameFurtherBack.moveByShorthand('a4').previousAction.text).toBe('invalid move a4⡅ 4H→3D');
+				expect(gameFurtherBack.moveByShorthand('a7').previousAction.text).toBe('move a7⡄ 4H→5S');
+				expect(gameFurtherBack.moveByShorthand('ah').previousAction.text).toBe('move ah⡀ 4H→3H');
+				expect(gameFurtherBack.$touchAndMove('4H').previousAction.text).toBe('move a7⡄ 4H→5S');
+			});
+		});
 	});
 
 	/**

@@ -380,10 +380,12 @@ export function findAvailableMoves(
 }
 
 /**
-	update the AvailableMove priority (in place)
+	this is the cornerstone for click-to-move
 
 	- REVIEW (click-to-move) (controls) cycle (cell:empty, cascade:empty) as one group?
 	   - a->b->c->d -> 1->2->5->8 -> a->b->c->d
+
+	@modifies `availableMoves.priority`
 */
 function prioritizeAvailableMoves(
 	game: FreeCell,

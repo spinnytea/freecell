@@ -12,7 +12,7 @@
 
 ## Top-Level TODOs
 
-FIXME (click-to-move) ← particularly in bug_reports and move.ts
+FIXME (click-to-move) ← these
 
 > There isn't currently anything marked with a priority.
 > Some next tasks could be:
