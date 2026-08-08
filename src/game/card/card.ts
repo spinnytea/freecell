@@ -12,6 +12,19 @@ export function isSuit(val: string | undefined): val is Suit {
 	return (SuitList as readonly string[]).includes(val);
 }
 export const isRed = (suit: Suit) => suit === 'diamonds' || suit === 'hearts';
+/** @deprecated FIXME are you sure? */
+export function getAdj(suit: Suit): Suit {
+	switch (suit) {
+		case 'clubs':
+			return 'spades';
+		case 'diamonds':
+			return 'hearts';
+		case 'hearts':
+			return 'diamonds';
+		case 'spades':
+			return 'clubs';
+	}
+}
 type SuitSH = 'C' | 'D' | 'H' | 'S';
 
 export const RankList = [
@@ -280,7 +293,8 @@ export function isLocationEqual(a: CardLocation, b: CardLocation): boolean {
 	return a.fixture === b.fixture && a.data[0] === b.data[0] && a.data[1] === b.data[1];
 }
 
-export function getCardAt(game: FreeCell, location: CardLocation): Card | null {
+/** FIXME are you sure? about d1delta */
+export function getCardAt(game: FreeCell, location: CardLocation, d1delta = 0): Card | null {
 	const [d0] = location.data;
 
 	switch (location.fixture) {
@@ -293,7 +307,7 @@ export function getCardAt(game: FreeCell, location: CardLocation): Card | null {
 		case 'cascade': {
 			const d1 = location.data[1];
 			const cascade = game.tableau.at(d0);
-			return cascade?.at(d1) ?? null;
+			return cascade?.at(d1 + d1delta) ?? null;
 		}
 	}
 
