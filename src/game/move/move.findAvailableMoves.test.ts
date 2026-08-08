@@ -208,6 +208,7 @@ describe('game/move.findAvailableMoves', () => {
 		});
 	});
 
+	// XXX (move-foundation) practical examples
 	describe('deprecated: allow foundation to move when collapse', () => {
 		test('$touchAndMove(4D) ⇒ move 4d 4D→cell', () => {
 			const game = FreeCell.parse(

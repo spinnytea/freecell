@@ -45,7 +45,16 @@ function walk(dir) {
 
 walk(root);
 
-const sortedLabels = Array.from(labels.entries()).sort(([a], [b]) => a.localeCompare(b));
+const IS_PRIORITY_REGEX = /^\d+-priority$/;
+/** 5 to 2 (or really any number high to low) */
+const priorityLabels = Array.from(labels.entries())
+	.filter(([label]) => IS_PRIORITY_REGEX.test(label))
+	.sort(([a], [b]) => Number(b.split('-')[0]) - Number(a.split('-')[0]));
+/** a to z (alphabetical) */
+const otherLabels = Array.from(labels.entries())
+	.filter(([label]) => !IS_PRIORITY_REGEX.test(label))
+	.sort(([a], [b]) => a.localeCompare(b));
+const sortedLabels = [...priorityLabels, ...otherLabels];
 const output =
 	'> generated file \\\n' +
 	'> rebuild with `node scripts/find-task-labels.mjs`\n\n' +

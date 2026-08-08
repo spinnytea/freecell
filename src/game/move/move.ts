@@ -5,6 +5,7 @@ import {
 	CardSequence,
 	cloneCards,
 	findCard,
+	getAdj,
 	getCardAt,
 	getRankForCompare,
 	getSequenceAt,
@@ -21,6 +22,11 @@ import {
 } from '@/game/card/card';
 import { FreeCell } from '@/game/game';
 import { _parseShorthandMove, PreviousActionType } from '@/game/move/history';
+import {
+	MoveDestinationTypePriorities,
+	MoveDestinationTypePrioritiesForKingSingle,
+	MoveDestinationTypePrioritiesForLowSingle,
+} from '@/game/move/move.autoMovePriorities';
 
 /* *********** */
 /* DEFINITIONS */
@@ -46,43 +52,6 @@ export type MoveDestinationType =
 	'cell:empty' | 'foundation:any' | 'cascade:empty' | 'cascade:sequence';
 
 /**
-	higher priorities take precidence
-
-	- TODO (click-to-move) (controls) (settings) multiple MoveDestinationTypePriorities configurations
-	   - grow cascades vs empty cascades
-	   - these priorities favor "growing cascades", my preference
-	   - another play enjoys "getting the cards off the board"
-	   - make another set of MoveDestinationTypePriorities with a different goal in mind
-	   - e.g. "empty cascades" would favor
-	      - cell → foundation
-	      - cascade:single → foundation
-	- IDEA (click-to-move) (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
-	- TODO (drag-and-drop) (test) test drag-and-drop for every MoveSourceType ⨉ MoveDestinationType
-*/
-export const MoveDestinationTypePriorities: {
-	[moveSourceType in MoveSourceType]: { [moveDestinationType in MoveDestinationType]: number };
-} = {
-	'cell:single': {
-		'cell:empty': 1,
-		'foundation:any': 3,
-		'cascade:empty': 2,
-		'cascade:sequence': 4,
-	},
-	'cascade:single': {
-		'cell:empty': 2,
-		'foundation:any': 3,
-		'cascade:empty': 1,
-		'cascade:sequence': 4,
-	},
-	'cascade:sequence': {
-		'cell:empty': 1,
-		'foundation:any': 2,
-		'cascade:empty': 3,
-		'cascade:sequence': 4,
-	},
-};
-
-/**
 	for when we need to boost the priority
 
 	`Object.keys(MoveDestinationTypePriorities['cell:single']).length`
@@ -97,51 +66,63 @@ const MoveDestinationTypeCount = 4;
 	we are picking which {@linkcode MoveDestinationType} is best
 
 	this is simple, in concept, but gnarly to look at
+
+	- IDEA (click-to-move) (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
+	- TODO (drag-and-drop) (test) test drag-and-drop for every MoveSourceType ⨉ MoveDestinationType
 */
 function calcMoveDestinationTypePriority(
 	game: FreeCell,
 	selection: CardSequence,
 	moveSourceType: MoveSourceType
 ) {
-	const MoveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
+	const moveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
 
 	if (selection.cards.length === 1) {
 		const moving_card = selection.cards[0];
-		if (moveSourceType === 'cascade:single') {
-			if (moving_card.rank === 'king') {
-				const isQueenInFoundation = game.foundations.some(
-					(c) => c?.rank === 'queen' && c.suit === moving_card.suit
-				);
-				if (!isQueenInFoundation) {
-					return {
-						...MoveDestinationTypePriority,
-						'cascade:empty':
-							MoveDestinationTypePriority['cascade:empty'] + MoveDestinationTypeCount,
-					};
-				}
-			} else if (moving_card.rank === 'ace') {
-				// aces always go to the foundation
-				return {
-					...MoveDestinationTypePriority,
-					'foundation:any':
-						MoveDestinationTypePriority['foundation:any'] + MoveDestinationTypeCount,
-				};
-			}
+		if (moving_card.rank === 'king') {
+			// TODO (joker) don't forget to test with jokers
+			return MoveDestinationTypePrioritiesForKingSingle;
+		}
+		if (moving_card.rank === 'ace' || moving_card.rank === '2') {
+			return MoveDestinationTypePrioritiesForLowSingle;
+		}
 
+		if (moveSourceType !== 'cascade:sequence') {
 			// prioritize *:single→foundation, if opp+2 would auto-foundation
 			// XXX (optimize) (settings) skip this if game settings are opp+2 or none
-			const selectionIdx = game.foundations.findIndex((c) => c?.suit === moving_card.suit);
-			if (foundationCanAcceptCards(game, selectionIdx, 'opp+2')) {
+			// FIXME don't we want this?
+			// const selectionIdx = game.foundations.findIndex((c) => c?.suit === moving_card.suit);
+			// if (foundationCanAcceptCards(game, selectionIdx, 'opp+2')) {
+			// 	return {
+			// 		...moveDestinationTypePriority,
+			// 		'foundation:any':
+			// 			moveDestinationTypePriority['foundation:any'] + MoveDestinationTypeCount,
+			// 	};
+			// }
+
+			// FIXME are you sure?
+			const adjacent_card = findCard(game.cards, {
+				rank: moving_card.rank,
+				suit: getAdj(moving_card.suit),
+			});
+			const adjacent_card_stacked = getCardAt(game, adjacent_card.location, 1);
+			const adjacent_card_is_available =
+				adjacent_card.location.fixture === 'cell' ||
+				(adjacent_card.location.fixture === 'cascade' &&
+					(!adjacent_card_stacked ||
+						isAdjacent({ max: adjacent_card.rank, min: adjacent_card_stacked.rank })));
+
+			if (adjacent_card_is_available) {
 				return {
-					...MoveDestinationTypePriority,
+					...moveDestinationTypePriority,
 					'foundation:any':
-						MoveDestinationTypePriority['foundation:any'] + MoveDestinationTypeCount,
+						moveDestinationTypePriority['foundation:any'] + MoveDestinationTypeCount,
 				};
 			}
 		}
 	}
 
-	return MoveDestinationTypePriority;
+	return moveDestinationTypePriority;
 }
 
 export interface AvailableMove {

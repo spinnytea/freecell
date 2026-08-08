@@ -24,6 +24,7 @@ FIXME (click-to-move) ← these
 > 3. (settings) need to start the ui, and account for `new Freecell()`, `game._clone`
 > 4. print/parse discrepancies for "non-standard" gameplay
 
+- TODO (5-priority) `next lint` is deprecated and will be removed in Next.js 16.
 - TODO (gsap) review how we use gsap, right now it feels like magic
 - TODO (techdebt) switch from nextjs to vite
   - https://vite.dev/guide/build.html#multi-page-app
