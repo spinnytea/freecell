@@ -6,7 +6,6 @@ import {
 	CardShorthand,
 	cloneCards,
 	findCard,
-	getCardAt,
 	getSequenceAt,
 	initializeDeckOfCards,
 	isLocationEqual,
@@ -490,39 +489,36 @@ export class FreeCell {
 			return movedGame;
 		}
 
-		if (!stopWithInvalid) {
-			// we should't be able to get this part of the code without a selection
-			// however, IFF we change things and it's possible later,
-			// then this will infinte loop (clearSelection is a noop without a selection)
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-			if (this.selection) {
-				// FIXME (sequence-to-single) review impl
-				if (
-					this.selection.cards.length > 1 &&
-					!(this.cursor.fixture === 'cascade' && !getCardAt(this, this.cursor))
-				) {
-					// if we have selected a sequence and it fails to move, and the destination is not a skip cascade:empty
-					// try moving only the last card
-					const game = this.$selectCard(shorthandCard(this.selection.cards.at(-1)))
-						.setCursor(this.cursor)
-						.touch();
-					if (
-						game.previousAction.type === 'move' ||
-						game.previousAction.type === 'move-foundation'
-					) {
-						return game;
-					}
-				}
+		/*
+			we should't be able to get this part of the code without a selection
+			however, IFF we change things and it's possible later,
+			then this will infinte loop (clearSelection is a noop without a selection)
+			plus, i just want documentation this far removed from the check
+		*/
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		if (!stopWithInvalid && this.selection) {
+			const isSourceSequence = this.selection.cards.length > 1;
+			const isDestinationCascadeEmpty =
+				this.cursor.fixture === 'cascade' && !this.tableau[this.cursor.data[0]].length;
+			if (isSourceSequence && !isDestinationCascadeEmpty) {
+				const game = this.$selectCard(shorthandCard(this.selection.cards.at(-1)))
+					.setCursor(this.cursor)
+					.touch();
 
-				// keep the game flowing rather than complaning
-				const game = this.clearSelection().touch({ allowSelectFoundation });
-				if (game.previousAction.type !== 'invalid') {
+				const moved = game.previousAction.type === 'move';
+				const autoFounded = game.previousAction.type === 'move-foundation';
+				if (moved || autoFounded) {
 					return game;
 				}
-
-				// continue with current invalid action result
-				// we don't want to mask the current action, if we can't do something better
 			}
+			// keep the game flowing rather than complaning
+			const game = this.clearSelection().touch({ allowSelectFoundation });
+			if (game.previousAction.type !== 'invalid') {
+				return game;
+			}
+
+			// continue with current invalid action result
+			// we don't want to mask the current action, if we can't do something better
 		}
 
 		const nextAction: PreviousAction = { text: 'invalid ' + actionText, type: 'invalid' };

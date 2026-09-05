@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outputPath = path.join(root, 'README-todo-labels.md');
 const pattern = /\b(FIXME|BUG|HACK|TODO|XXX|REVIEW|IDEA)\b((?:\s+\([\w\d-]+\))+)/g;
-const excludeDirs = new Set(['coverage', '.git', 'node_modules', '.next', '.turbo']);
+const excludeDirs = new Set(['.git', '.next', '.vscode', 'coverage', 'node_modules', 'out']);
 const labels = new Map();
 let taskCount = 0;
 
