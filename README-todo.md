@@ -12,8 +12,6 @@
 
 ## Top-Level TODOs
 
-FIXME (click-to-move) ← these
-
 > There isn't currently anything marked with a priority.
 > Some next tasks could be:
 >

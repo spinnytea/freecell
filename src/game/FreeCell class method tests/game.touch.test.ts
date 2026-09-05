@@ -2212,6 +2212,10 @@ describe('game.touch', () => {
 				});
 
 				describe('to: cell', () => {
+					// TODO (4-priority) (gameplay) (sequence-to-single) allow moving 8C (bottom of selected sequence) to cell
+					//  - this would be frustrating if "click on sequence" activated "click-to-move" instead of select
+					//  - don't make this an availble move
+					//  - add special logic to game.touch: valid || fakeValid || sequenceToSingle
 					test('empty', () => {
 						const game = FreeCell.parse(
 							'' + //
@@ -2247,6 +2251,11 @@ describe('game.touch', () => {
 				describe('to: foundation', () => {
 					test.todo('empty');
 
+					// TODO (4-priority) (gameplay) (sequence-to-single) allow moving 8C (bottom of selected sequence) to foundation
+					//  - this would be frustrating if "click on sequence" activated "click-to-move" instead of select
+					//  - don't make this an availble move
+					//  - add special logic to game.touch: valid || fakeValid || sequenceToSingle
+					// TODO (4-priority) (gameplay) (sequence-to-single) allow moving 9D as well (evaluate all cards in sequence)
 					test('not empty', () => {
 						const game = FreeCell.parse(
 							'' + //
@@ -2264,6 +2273,36 @@ describe('game.touch', () => {
 								'   |8C|   JD             \n' +
 								':d KH KC QH QD JC TD 9C \n' +
 								' invalid move 2h TC-9D-8C→7C'
+						);
+						expect(game.print({ includeHistory: true })).toBe(
+							'' + //
+								'             7C 8D TH KS \n' +
+								'    TC    KD JH          \n' +
+								'    9D    QC             \n' +
+								'    8C    JD             \n' +
+								':d KH KC QH QD JC TD 9C \n' +
+								' hand-jammed'
+						);
+					});
+
+					// REVIEW (gameplay) consider moveByShorthand('2h') vs moveByShorthand('2⡀h⡁')
+					test('wrong target', () => {
+						const game = FreeCell.parse(
+							'' + //
+								'             7C>8D TH KS \n' +
+								'   |TC|   KD JH          \n' +
+								'   |9D|   QC             \n' +
+								'   |8C|   JD             \n' +
+								' hand-jammed'
+						).touch();
+						expect(game.print()).toBe(
+							'' + //
+								'             7C>8D TH KS \n' +
+								'   |TC|   KD JH          \n' +
+								'   |9D|   QC             \n' +
+								'   |8C|   JD             \n' +
+								':d KH KC QH QD JC TD 9C \n' +
+								' invalid move 2h TC-9D-8C→8D'
 						);
 						expect(game.print({ includeHistory: true })).toBe(
 							'' + //

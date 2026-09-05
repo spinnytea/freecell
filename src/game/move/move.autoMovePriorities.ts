@@ -2,7 +2,13 @@ import type { MoveDestinationType, MoveSourceType } from '@/game/move/move';
 
 type MoveDestinationTypePriority = Record<MoveDestinationType, number>;
 
-/** higher priorities take precidence */
+/**
+	higher priorities take precidence
+
+	For each source type, priorities are unique values in the range `1..MoveDestinationTypeList.length`.
+	- (unique) equal priorities make the result order-dependent
+	- (value constrained) we will apply custom rule to boost these, so the max here needs to be obvious
+*/
 export const MoveDestinationTypePriorities: Record<MoveSourceType, MoveDestinationTypePriority> = {
 	'cell:single': {
 		'cell:empty': 1,
@@ -17,9 +23,9 @@ export const MoveDestinationTypePriorities: Record<MoveSourceType, MoveDestinati
 		'cascade:sequence': 4,
 	},
 	'cascade:sequence': {
-		'cell:empty': 1, // FIXME review gameplay for this situation (bottom card?)
-		'foundation:any': 2, // FIXME review gameplay for this situation (bottom card? all cards that can (unless bottom card matches specific h#)?)
-		'cascade:empty': 3, // FIXME review gameplay for this situation (move maximum allowable cards if selection is too large?)
+		'cell:empty': 1,
+		'foundation:any': 2,
+		'cascade:empty': 3,
 		'cascade:sequence': 4,
 	},
 };

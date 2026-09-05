@@ -5,7 +5,6 @@ import {
 	CardSequence,
 	cloneCards,
 	findCard,
-	getAdj,
 	getCardAt,
 	getRankForCompare,
 	getSequenceAt,
@@ -35,28 +34,33 @@ import {
 /**
 	used to determind {@linkcode MoveDestinationTypePriorities}
 
-	Moving cards to the deck isn't a standard move.
+	we only categorize "valid moves", not "any given selection"
+
+	Moving cards from the deck isn't a standard move.
 	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveSourceType.
+
+	Moving cards from the foundation ins't a standard move.
+	REVIEW (move-foundation) update this comment if/when we impl it
 */
 export type MoveSourceType = 'cell:single' | 'cascade:single' | 'cascade:sequence';
 
 /**
 	used to determind {@linkcode MoveDestinationTypePriorities}
 
+	we only categorize "valid moves", not "any given destination"
+
 	Moving cards to the deck isn't a standard move.
 	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveDestinationType.
 
-	- TODO (click-to-move) (controls) 'cascade:single' is the tail card _also_ stacked? or it a all alone
+	- TODO (6-priority) (click-to-move) (controls) 'cascade:single' is the tail card _also_ stacked? or it a all alone
 */
-export type MoveDestinationType =
-	'cell:empty' | 'foundation:any' | 'cascade:empty' | 'cascade:sequence';
-
-/**
-	for when we need to boost the priority
-
-	`Object.keys(MoveDestinationTypePriorities['cell:single']).length`
-*/
-const MoveDestinationTypeCount = 4;
+const MoveDestinationTypeList = [
+	'cell:empty',
+	'foundation:any',
+	'cascade:empty',
+	'cascade:sequence',
+] as const;
+export type MoveDestinationType = (typeof MoveDestinationTypeList)[number];
 
 /**
 	{@linkcode MoveDestinationTypePriorities} is good as a general rule of thumb,
@@ -67,7 +71,7 @@ const MoveDestinationTypeCount = 4;
 
 	this is simple, in concept, but gnarly to look at
 
-	- IDEA (click-to-move) (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
+	- IDEA (6-priority) (click-to-move) (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
 	- TODO (drag-and-drop) (test) test drag-and-drop for every MoveSourceType ⨉ MoveDestinationType
 */
 function calcMoveDestinationTypePriority(
@@ -75,8 +79,6 @@ function calcMoveDestinationTypePriority(
 	selection: CardSequence,
 	moveSourceType: MoveSourceType
 ) {
-	const moveDestinationTypePriority = MoveDestinationTypePriorities[moveSourceType];
-
 	if (selection.cards.length === 1) {
 		const moving_card = selection.cards[0];
 		if (moving_card.rank === 'king') {
@@ -87,39 +89,18 @@ function calcMoveDestinationTypePriority(
 			return MoveDestinationTypePrioritiesForLowSingle;
 		}
 
-		// XXX (optimize) (settings) skip this clause if game settings are opp+2 or none
-		if (moveSourceType !== 'cascade:sequence') {
-			const selectionIdx = game.foundations.findIndex((c) => c?.suit === moving_card.suit);
-			if (foundationCanAcceptCards(game, selectionIdx, 'opp+2|oppopp+1')) {
+		// XXX (optimize) (settings) skip this clause if game settings are opp+2|oppopp+1, opp+2, or none
+		if (moveSourceType === 'cell:single' || moveSourceType === 'cascade:single') {
+			if (foundationCanAcceptCards(game, moving_card.suit, 'opp+2|oppopp+1')) {
 				return {
-					...moveDestinationTypePriority,
-					'foundation:any':
-						moveDestinationTypePriority['foundation:any'] + MoveDestinationTypeCount,
-				};
-			}
-
-			const adjacent_card = findCard(game.cards, {
-				rank: moving_card.rank,
-				suit: getAdj(moving_card.suit),
-			});
-			const adjacent_card_stacked = getCardAt(game, adjacent_card.location, 1);
-			const adjacent_card_is_available =
-				adjacent_card.location.fixture === 'cell' ||
-				(adjacent_card.location.fixture === 'cascade' &&
-					(!adjacent_card_stacked ||
-						isAdjacent({ max: adjacent_card.rank, min: adjacent_card_stacked.rank })));
-
-			if (foundationCanAcceptCards(game, selectionIdx, 'opp+2') && adjacent_card_is_available) {
-				return {
-					...moveDestinationTypePriority,
-					'foundation:any':
-						moveDestinationTypePriority['foundation:any'] + MoveDestinationTypeCount,
+					...MoveDestinationTypePriorities[moveSourceType],
+					'foundation:any': MoveDestinationTypeList.length + 1,
 				};
 			}
 		}
 	}
 
-	return moveDestinationTypePriority;
+	return MoveDestinationTypePriorities[moveSourceType];
 }
 
 export interface AvailableMove {
@@ -210,9 +191,12 @@ export function maxMovableSequenceLength(game: FreeCell): number {
 
 export function foundationCanAcceptCards(
 	game: FreeCell,
-	index: number,
+	index: number | Suit,
 	limit: AutoFoundationLimit
 ): boolean {
+	if (typeof index !== 'number') {
+		index = game.foundations.findIndex((foundationCard) => foundationCard?.suit === index);
+	}
 	if (!(index in game.foundations)) return false;
 	if (
 		game.selection?.location.fixture === 'foundation' &&
@@ -223,9 +207,7 @@ export function foundationCanAcceptCards(
 
 	const card = game.foundations[index];
 	if (!card) return true; // empty can always accept an ace
-	// FIXME should we remove the limit checks? is any limit allowed?
-	if ((limit === 'opp+1' || limit === 'opp+2' || limit === 'opp+2|oppopp+1') && card.rank === 'ace')
-		return true; // we will never want to "hold a 2 so we can stack aces"
+	if (limit !== 'rank' && card.rank === 'ace') return true; // we will never want to "hold a 2 so we can stack aces"
 	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
 	const card_rank_idx = getRankForCompare(card.rank);
 
@@ -244,21 +226,26 @@ export function foundationCanAcceptCards(
 			return getFoundationRankForColor(game, card) >= card_rank_idx;
 		case 'opp+2':
 			return getFoundationRankForColor(game, card) + 1 >= card_rank_idx;
+
+		// reads: opp+2 given oppopp+1
+		// but really is: opp+2 AND oppopp+1
 		case 'opp+2|oppopp+1': {
-			const oppositeCardsCanAdvance = game.cards
+			// opp+2
+			if (!(getFoundationRankForColor(game, card) + 1 >= card_rank_idx)) {
+				return false;
+			}
+
+			// oppopp+1
+			return game.cards
 				.filter(
 					(oppositeCard) =>
 						isRed(oppositeCard.suit) !== isRed(card.suit) && oppositeCard.rank === card.rank
 				)
 				.every((oppositeCard) => {
 					if (oppositeCard.location.fixture === 'foundation') return true;
-					const oppositeFoundationIdx = game.foundations.findIndex(
-						(foundationCard) => foundationCard?.suit === oppositeCard.suit
-					);
-					return foundationCanAcceptCards(game, oppositeFoundationIdx, 'opp+1');
+					if (oppositeCard.rank === 'ace') return true;
+					return foundationCanAcceptCards(game, oppositeCard.suit, 'opp+1');
 				});
-
-			return getFoundationRankForColor(game, card) + 1 >= card_rank_idx && oppositeCardsCanAdvance;
 		}
 	}
 }
@@ -328,7 +315,7 @@ export function findAvailableMoves(
 	const head_card = selection.cards[0];
 
 	if (selection.cards.length === 1) {
-		// REVIEW (2-priority) (controls) if multiple, move last card?
+		// REVIEW (2-priority) (controls) (sequence-to-single) if multiple, move last card?
 		//  - do not allow autoMove to move a sequence to a cell
 		game.cells.forEach((card, idx) => {
 			if (!card) {
@@ -340,7 +327,7 @@ export function findAvailableMoves(
 			}
 		});
 
-		// REVIEW (2-priority) (controls) if multiple, move last card?
+		// REVIEW (2-priority) (controls) (sequence-to-single) if multiple, move last card?
 		//  - do not allow autoMove to move a single card when a sequence is selected
 		game.foundations.forEach((card, idx) => {
 			if (canStackFoundation(card, head_card)) {
@@ -381,7 +368,7 @@ export function findAvailableMoves(
 /**
 	this is the cornerstone for click-to-move
 
-	- REVIEW (click-to-move) (controls) cycle (cell:empty, cascade:empty) as one group?
+	- REVIEW (6-priority) (click-to-move) (controls) cycle (cell:empty, cascade:empty) as one group?
 	   - a->b->c->d -> 1->2->5->8 -> a->b->c->d
 
 	@modifies `availableMoves.priority`
@@ -431,8 +418,7 @@ function prioritizeAvailableMoves(
 			availableMoves.forEach((availableMove) => {
 				availableMove.priority = linearAvailableMovesPriority(
 					game.foundations.length,
-					availableMove.location.data[0],
-					undefined
+					availableMove.location.data[0]
 				);
 			});
 			break;

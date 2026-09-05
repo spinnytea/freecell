@@ -207,7 +207,7 @@ describe('prioritizeAvailableMoves', () => {
 			);
 		});
 
-		// REVIEW (techdebt) (click-to-move) (controls) this one is just back and forth, there may be nothing we can do
+		// REVIEW (6-priority) (techdebt) (click-to-move) (controls) this one is just back and forth, there may be nothing we can do
 		// start at 0, move to stacked, move to another sequence (3S -> 4D ??)
 		test('empty to one sequence', () => {
 			let game = FreeCell.parse(
@@ -1055,7 +1055,6 @@ describe('prioritizeAvailableMoves', () => {
 			});
 		});
 
-		// BUG (click-to-move) (controls) examples of misbehavior, not greedy enough
 		describe('bugfix: not greedy enough', () => {
 			test('traced #4335 b', () => {
 				const gameExample = FreeCell.parse(
