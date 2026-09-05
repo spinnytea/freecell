@@ -609,7 +609,7 @@ export class FreeCell {
 
 		- REVIEW (history) (settings) standard move notation can only be used when `limit = 'opp+1'` for all moves
 		   - historyIsInvalidAtIdx?
-		- REVIEW (gameplay) (settings) should we just remove all other limit options?
+		- REVIEW (gameplay) (settings) expose the non-standard limits as settings
 	*/
 	autoFoundationAll({
 		limit = 'opp+1',

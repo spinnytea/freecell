@@ -54,10 +54,10 @@ describe('game/move.findAvailableMoves', () => {
 				});
 				expect(game.cells[0]).toBe(null);
 				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
-					['a', 'cell', -1],
-					['b', 'cell', -1],
-					['c', 'cell', -1],
-					['d', 'cell', -1],
+					['a', 'cell:empty', -1],
+					['b', 'cell:empty', -1],
+					['c', 'cell:empty', -1],
+					['d', 'cell:empty', -1],
 					['7⡅', 'cascade:sequence', 10],
 				]);
 			});
@@ -89,10 +89,10 @@ describe('game/move.findAvailableMoves', () => {
 				});
 				expect(game.foundations[0]).toBe(null);
 				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
-					['a', 'cell', -1],
-					['b', 'cell', -1],
-					['c', 'cell', -1],
-					['d', 'cell', -1],
+					['a', 'cell:empty', -1],
+					['b', 'cell:empty', -1],
+					['c', 'cell:empty', -1],
+					['d', 'cell:empty', -1],
 					['7⡅', 'cascade:sequence', 4],
 				]);
 			});
@@ -109,14 +109,14 @@ describe('game/move.findAvailableMoves', () => {
 				});
 				// XXX (techdebt) unsure if we should prefer foundation or cells
 				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
-					['a', 'cell', -1],
-					['b', 'cell', -1],
-					['c', 'cell', -1],
-					['d', 'cell', -1],
-					['h⡀', 'foundation', 4],
-					['h⡁', 'foundation', 3],
-					['h⡂', 'foundation', 2],
-					['h⡃', 'foundation', 1],
+					['a', 'cell:empty', -1],
+					['b', 'cell:empty', -1],
+					['c', 'cell:empty', -1],
+					['d', 'cell:empty', -1],
+					['h⡀', 'foundation:any', 4],
+					['h⡁', 'foundation:any', 3],
+					['h⡂', 'foundation:any', 2],
+					['h⡃', 'foundation:any', 1],
 				]);
 			});
 
@@ -154,7 +154,7 @@ describe('game/move.findAvailableMoves', () => {
 					location: { fixture: 'foundation', data: [2] },
 				});
 				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
-					['h⡂', 'foundation', -1],
+					['h⡂', 'foundation:any', -1],
 					['5⡄', 'cascade:sequence', 4],
 				]);
 			});
@@ -183,10 +183,10 @@ describe('game/move.findAvailableMoves', () => {
 					location: { fixture: 'cascade', data: [6, 5] },
 				});
 				expect(availableMovesMinimized(game.availableMoves, true)).toEqual([
-					['a', 'cell', -1],
-					['b', 'cell', -1],
-					['c', 'cell', -1],
-					['d', 'cell', -1],
+					['a', 'cell:empty', -1],
+					['b', 'cell:empty', -1],
+					['c', 'cell:empty', -1],
+					['d', 'cell:empty', -1],
 					['7⡅', 'cascade:sequence', 4],
 				]);
 			});
@@ -208,6 +208,7 @@ describe('game/move.findAvailableMoves', () => {
 		});
 	});
 
+	// XXX (move-foundation) practical examples
 	describe('deprecated: allow foundation to move when collapse', () => {
 		test('$touchAndMove(4D) ⇒ move 4d 4D→cell', () => {
 			const game = FreeCell.parse(
@@ -235,8 +236,8 @@ describe('game/move.findAvailableMoves', () => {
 
 			const gameUndid = game.undo();
 			expect(availableMovesMinimized(gameUndid.$selectCard('4D').availableMoves, true)).toEqual([
-				['d', 'cell', -1], // this is a possible move
-				['h⡃', 'foundation', 1], // we pick this one as the best option (fair)
+				['d', 'cell:empty', 1],
+				['h⡃', 'foundation:any', -1], // we [used to] pick this one as the best option (fair)
 			]);
 			// if we move it specifically, this is the resulting text (a bit redundant of a test)
 			expect(gameUndid.moveByShorthand('4d').previousAction.text).toBe('move 4⡁d 4D→cell');
@@ -300,9 +301,9 @@ describe('game/move.findAvailableMoves', () => {
 
 			const gameUndid = game.undo();
 			expect(availableMovesMinimized(gameUndid.$selectCard('3H').availableMoves, true)).toEqual([
-				['c', 'cell', -1], // this is a possible move
-				['d', 'cell', -1],
-				['h⡀', 'foundation', 4], // we pick this one as the best option (fair)
+				['c', 'cell:empty', -1], // this is a possible move
+				['d', 'cell:empty', -1],
+				['h⡀', 'foundation:any', 4], // we pick this one as the best option (fair)
 			]);
 			// if we move it specifically, this is the resulting text (a bit redundant of a test)
 			expect(gameUndid.moveByShorthand('1c').previousAction.text).toBe('move 1⡅c 3H→cell (auto-foundation 133 AD,2D,3C)');

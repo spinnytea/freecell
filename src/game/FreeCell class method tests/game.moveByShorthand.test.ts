@@ -262,10 +262,10 @@ describe('game.moveByShorthand', () => {
 					' deal all cards'
 			);
 			expect(game.$selectCard('2H').availableMoves).toEqual([
-				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell', priority: 4 },
-				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell', priority: 3 },
-				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell', priority: 2 },
-				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell', priority: 1 },
+				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell:empty', priority: 4 },
+				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell:empty', priority: 3 },
+				{ location: { fixture: 'cell', data: [2] }, moveDestinationType: 'cell:empty', priority: 2 },
+				{ location: { fixture: 'cell', data: [3] }, moveDestinationType: 'cell:empty', priority: 1 },
 			]);
 			expect(game.moveByShorthand('34').previousAction).toEqual({
 				text: 'invalid move 3⡆4⡆ 2H→6H',

@@ -2,13 +2,16 @@
 
 More control over where next card moves (i.e. cannot move to foundation if multiple valid moves)
 
-- which is really because click-to-move is the only available control scheme on mobile
+- ~~which is really because click-to-move is the only available control scheme on mobile~~
+  - drag-and-drop is much betta' now
 - this is solved with click-to-select, any keyboard, and drag-and-drop
 - Can't put 3D in the foundation, it just waffles between 4S and 4C
+- is this just the nature of click-to-move?
+- is it sometimes impossible to win with _only_ click to move? (this is possibly why i don't like it?)
 
 ## Labels
 
-TODO (click-to-move) (controls) (mobile)
+TODO (click-to-move) (controls) (optional-complexity)
 
 ### Game State
 
