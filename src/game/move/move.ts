@@ -51,8 +51,6 @@ export type MoveSourceType = 'cell:single' | 'cascade:single' | 'cascade:sequenc
 
 	Moving cards to the deck isn't a standard move.
 	With intention, GameFunction: 'recall-or-bury' allows 'deck' as a MoveDestinationType.
-
-	- TODO (6-priority) (click-to-move) (controls) 'cascade:single' is the tail card _also_ stacked? or it a all alone
 */
 const MoveDestinationTypeList = [
 	'cell:empty',
@@ -71,7 +69,6 @@ export type MoveDestinationType = (typeof MoveDestinationTypeList)[number];
 
 	this is simple, in concept, but gnarly to look at
 
-	- IDEA (6-priority) (click-to-move) (controls) if back and forth, then move to foundation instead (e.g. 3D 4S->4C->4S->2D)
 	- TODO (drag-and-drop) (test) test drag-and-drop for every MoveSourceType ⨉ MoveDestinationType
 */
 function calcMoveDestinationTypePriority(
@@ -367,9 +364,6 @@ export function findAvailableMoves(
 
 /**
 	this is the cornerstone for click-to-move
-
-	- REVIEW (6-priority) (click-to-move) (controls) cycle (cell:empty, cascade:empty) as one group?
-	   - a->b->c->d -> 1->2->5->8 -> a->b->c->d
 
 	@modifies `availableMoves.priority`
 */
