@@ -16,9 +16,9 @@ mkdirSync(dirname(outputServiceWorkerPath), { recursive: true });
 writeFileSync(outputServiceWorkerPath, rendered);
 try {
 	unlinkSync(outdatedServiceWorkerPath);
-} catch (e) {
-	if (err.code !== 'ENOENT') {
-		throw err; // re-throw any unexpected errors
+} catch (error) {
+	if (error.code !== 'ENOENT') {
+		throw error; // re-throw any unexpected errors
 	}
 	// silent if re-run
 }

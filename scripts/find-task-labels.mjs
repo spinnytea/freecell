@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outputPath = path.join(root, 'README-todo-labels.md');
-const pattern = /\b(FIXME|BUG|HACK|TODO|XXX|REVIEW|IDEA)\b((?:\s+\([\w\d\-]+\))+)/g;
+const pattern = /\b(FIXME|BUG|HACK|TODO|XXX|REVIEW|IDEA)\b((?:\s+\([\w\d-]+\))+)/g;
 const excludeDirs = new Set(['coverage', '.git', 'node_modules', '.next', '.turbo']);
 const labels = new Map();
 let taskCount = 0;
@@ -32,7 +32,7 @@ function walk(dir) {
 			for (const match of text.matchAll(pattern)) {
 				taskCount++;
 				const tagGroup = match[2];
-				for (const labelGroup of tagGroup.matchAll(/\(([\w\d\-]+)\)/g)) {
+				for (const labelGroup of tagGroup.matchAll(/\(([\w\d-]+)\)/g)) {
 					const label = labelGroup[1];
 					labels.set(label, (labels.get(label) || 0) + 1);
 				}

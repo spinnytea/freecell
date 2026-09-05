@@ -249,7 +249,7 @@ export function foundationCanAcceptCards(
 
 /** helper for foundationCanAcceptCards */
 function getFoundationRankForColor(game: FreeCell, card: Card): number {
-	const ranks: { [suit in Suit]: number } = {
+	const ranks: Record<Suit, number> = {
 		clubs: -1,
 		diamonds: -1,
 		hearts: -1,

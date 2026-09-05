@@ -11,25 +11,25 @@ import { hearts } from '@/app/components/cards/smol/hearts';
 import { spades } from '@/app/components/cards/smol/spades';
 import { isRed, Rank, Suit } from '@/game/card/card';
 
-const SYMBOLS: { [suit in Suit]: ReactElement } = {
+const SYMBOLS: Record<Suit, ReactElement> = {
 	clubs,
 	diamonds,
 	hearts,
 	spades,
 };
-const ACE_SYMBOL_DEFS: { [suit in Suit]: ReactElement } = {
+const ACE_SYMBOL_DEFS: Record<Suit, ReactElement> = {
 	clubs: ace_of_clubs_defs,
 	diamonds: ace_of_diamonds_defs,
 	hearts: ace_of_hearts_defs,
 	spades: ace_of_spades_defs,
 };
-const ACE_SYMBOLS: { [suit in Suit]: ReactElement } = {
+const ACE_SYMBOLS: Record<Suit, ReactElement> = {
 	clubs: ace_of_clubs,
 	diamonds: ace_of_diamonds,
 	hearts: ace_of_hearts,
 	spades: ace_of_spades,
 };
-const TEXT: { [rank in Rank]: string } = {
+const TEXT: Record<Rank, string> = {
 	'ace': 'A',
 	'2': '2',
 	'3': '3',

@@ -29,7 +29,6 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
 	const request = event.request;
-	const isNavigationRequest = request.mode === 'navigate';
 
 	if (request.method !== 'GET') {
 		return;

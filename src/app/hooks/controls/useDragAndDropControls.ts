@@ -27,6 +27,7 @@ import { useClickToMoveControls } from '@/app/hooks/controls/useClickToMoveContr
 import { useRefCurrent } from '@/app/hooks/useRefCurrent';
 import {
 	CardLocation,
+	Fixture,
 	getCardAt,
 	isLocationEqual,
 	shorthandCard,
@@ -404,12 +405,18 @@ export function _checkIfValid(
 
 	// XXX (techdebt) move to helper method?
 	const allMoveLocations: CardLocation[] = [
-		...game.cells.map((_, d0) => ({ fixture: 'cell', data: [d0] }) as CardLocation),
-		...game.foundations.map((_, d0) => ({ fixture: 'foundation', data: [d0] }) as CardLocation),
-		...game.tableau.map(
-			(cascade, d0) =>
-				({ fixture: 'cascade', data: [d0, Math.max(0, cascade.length - 1)] }) as CardLocation
-		),
+		...game.cells.map((_, d0) => ({
+			fixture: 'cell' as const satisfies Fixture,
+			data: [d0],
+		})),
+		...game.foundations.map((_, d0) => ({
+			fixture: 'foundation' as const satisfies Fixture,
+			data: [d0],
+		})),
+		...game.tableau.map((cascade, d0) => ({
+			fixture: 'cascade' as const satisfies Fixture,
+			data: [d0, Math.max(0, cascade.length - 1)],
+		})),
 	].filter(
 		// omit the current location
 		//  - e.g. invalid move 22 7H-6C-5D-4S→4S
