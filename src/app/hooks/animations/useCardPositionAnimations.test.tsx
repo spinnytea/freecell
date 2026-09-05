@@ -579,7 +579,7 @@ describe('useCardPositionAnimations', () => {
 					test('empty', () => {
 						gameStateOne = gameStateOne.setCursor({ fixture: 'cascade', data: [0, 0] }).touch();
 						expect(gameStateOne.previousAction.text).toBe('select 1⡀ KC-QD-JC');
-						const gameStateTwo = gameStateOne.setCursor({ fixture: 'cell', data: [2] }).touch();
+						const gameStateTwo = gameStateOne.setCursor({ fixture: 'cell', data: [2] }).touch({ stopWithInvalid: true });
 						expect(gameStateTwo.previousAction.text).toBe('invalid move 1⡀c KC-QD-JC→cell');
 
 						gsapUtilsRandom.mockReturnValueOnce(true); // animShakePile

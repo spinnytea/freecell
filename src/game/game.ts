@@ -6,6 +6,7 @@ import {
 	CardShorthand,
 	cloneCards,
 	findCard,
+	getCardAt,
 	getSequenceAt,
 	initializeDeckOfCards,
 	isLocationEqual,
@@ -495,17 +496,31 @@ export class FreeCell {
 			// then this will infinte loop (clearSelection is a noop without a selection)
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (this.selection) {
-				// TODO (techdebt) we need to unit test this?
-				//  - we don't need any of the arguments to touch
-				//    autoFoundation: we don't have a selection / are only selecting
-				//    stopWithInvalid: only for moves, doesn't really apply to selections
-				//    allowSelectFoundation: …
-				//    selectionOnly: is a given
+				// FIXME (sequence-to-single) review impl
+				if (
+					this.selection.cards.length > 1 &&
+					!(this.cursor.fixture === 'cascade' && !getCardAt(this, this.cursor))
+				) {
+					// if we have selected a sequence and it fails to move, and the destination is not a skip cascade:empty
+					// try moving only the last card
+					const game = this.$selectCard(shorthandCard(this.selection.cards.at(-1)))
+						.setCursor(this.cursor)
+						.touch();
+					if (
+						game.previousAction.type === 'move' ||
+						game.previousAction.type === 'move-foundation'
+					) {
+						return game;
+					}
+				}
+
+				// keep the game flowing rather than complaning
 				const game = this.clearSelection().touch({ allowSelectFoundation });
 				if (game.previousAction.type !== 'invalid') {
 					return game;
 				}
-				// otherwise, continue with current invalid action result
+
+				// continue with current invalid action result
 				// we don't want to mask the current action, if we can't do something better
 			}
 		}
