@@ -1142,12 +1142,12 @@ describe('game.touch', () => {
 								{
 									location: { fixture: 'foundation', data: [1] },
 									moveDestinationType: 'foundation:any',
-									priority: -1,
+									priority: 3,
 								},
 								{
 									location: { fixture: 'cascade', data: [0, 2] },
 									moveDestinationType: 'cascade:sequence',
-									priority: 8,
+									priority: -1,
 								},
 								{
 									location: { fixture: 'cascade', data: [1, 0] },

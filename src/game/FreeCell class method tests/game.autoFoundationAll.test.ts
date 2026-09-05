@@ -5,12 +5,13 @@ import { AutoFoundationLimit } from '@/game/move/move';
 describe('game.autoFoundationAll', () => {
 	describe('limits all', () => {
 		test.each`
-			limit       | homeStr
-			${'none'}   | ${'>            3H KS KD KC '}
-			${'opp+2'}  | ${'>            3H 5S 7D 5C '}
-			${'opp+1'}  | ${'>            3H 4S 5D 4C '}
-			${'rank+1'} | ${'>            3H 5S 5D 5C '}
-			${'rank'}   | ${'>            3H 4S 4D 4C '}
+			limit               | homeStr
+			${'none'}           | ${'>            3H KS KD KC '}
+			${'opp+2'}          | ${'>            3H 5S 7D 5C '}
+			${'opp+2|oppopp+1'} | ${'>            3H 5S 6D 5C '}
+			${'opp+1'}          | ${'>            3H 4S 5D 4C '}
+			${'rank+1'}         | ${'>            3H 5S 5D 5C '}
+			${'rank'}           | ${'>            3H 4S 4D 4C '}
 		`('$limit', ({ limit, homeStr }: { limit: AutoFoundationLimit; homeStr: string }) => {
 			const game = FreeCell.parse(
 				'' + //

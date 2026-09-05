@@ -390,15 +390,15 @@ describe('game.autoMove', () => {
 								.print()
 						).toBe(
 							'' + //
-								' JC 9C    4S AH 2C>3S    \n' +
-								'    TH 4C JS KD 2H QD 5H \n' +
+								' JC 9C    4S AH 2C 2S    \n' +
+								'>3S TH 4C JS KD 2H QD 5H \n' +
 								'    7C 6D KH QH 6S 4D 5S \n' +
 								'    AD    9D 8H TC KC 7H \n' +
 								'    6C    5C 8C QC 9H 3H \n' +
 								'    TD    JD QS KS 8S 4H \n' +
 								'    5D    TS 3C JH 7S 9S \n' +
 								'    7D    3D 2D    6H 8D \n' +
-								' move ch 3S→2S'
+								' move c1 3S→cascade'
 						);
 					});
 				});

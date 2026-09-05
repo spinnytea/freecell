@@ -87,20 +87,17 @@ function calcMoveDestinationTypePriority(
 			return MoveDestinationTypePrioritiesForLowSingle;
 		}
 
+		// XXX (optimize) (settings) skip this clause if game settings are opp+2 or none
 		if (moveSourceType !== 'cascade:sequence') {
-			// prioritize *:single→foundation, if opp+2 would auto-foundation
-			// XXX (optimize) (settings) skip this if game settings are opp+2 or none
-			// FIXME don't we want this?
-			// const selectionIdx = game.foundations.findIndex((c) => c?.suit === moving_card.suit);
-			// if (foundationCanAcceptCards(game, selectionIdx, 'opp+2')) {
-			// 	return {
-			// 		...moveDestinationTypePriority,
-			// 		'foundation:any':
-			// 			moveDestinationTypePriority['foundation:any'] + MoveDestinationTypeCount,
-			// 	};
-			// }
+			const selectionIdx = game.foundations.findIndex((c) => c?.suit === moving_card.suit);
+			if (foundationCanAcceptCards(game, selectionIdx, 'opp+2|oppopp+1')) {
+				return {
+					...moveDestinationTypePriority,
+					'foundation:any':
+						moveDestinationTypePriority['foundation:any'] + MoveDestinationTypeCount,
+				};
+			}
 
-			// FIXME are you sure?
 			const adjacent_card = findCard(game.cards, {
 				rank: moving_card.rank,
 				suit: getAdj(moving_card.suit),
@@ -112,7 +109,7 @@ function calcMoveDestinationTypePriority(
 					(!adjacent_card_stacked ||
 						isAdjacent({ max: adjacent_card.rank, min: adjacent_card_stacked.rank })));
 
-			if (adjacent_card_is_available) {
+			if (foundationCanAcceptCards(game, selectionIdx, 'opp+2') && adjacent_card_is_available) {
 				return {
 					...moveDestinationTypePriority,
 					'foundation:any':
@@ -148,28 +145,31 @@ export interface AvailableMove {
 }
 
 // TODO (gameplay) (settings) these _exist_, but we need to be able to pick them
-//  - or should we just remove them?
 export type AutoFoundationLimit =
-	// move all cards that can go up
-	// i.e. 3KKK
+	// allow all cards that can
+	// i.e. 3H KS KD KC
 	| 'none'
 
-	// 3s are set, all 4s can go up so all red 5s do, black 7 can go up since red 6s can
-	// i.e. 3575
-	// (the best we can safely do)
+	// 3s are set, allow 4s and 5s, allow black 7 since black 5s are up (since black 6s can)
+	// i.e. 3H 5S 7D 5C
 	| 'opp+2'
 
-	// 3s are set, all the 4s and 5s, red 6s IFF black 5s are up
-	// i.e. 3565
+	// 3s are set, allow the 4s and 5s, red 6s IFF black 5s are up
+	// i.e. 3H 5S 6D 5C
+	// (the best we can safely do)
+	| 'opp+2|oppopp+1'
+
+	// 3s are set, allow the 4s, red 5s IFF black 5s are up
+	// i.e. 3H 4S 5D 4C
 	// (this is standard gameplay)
 	| 'opp+1'
 
-	// 3s are set, all the 4s and 5s, but not 6s
-	// i.e. 3555
+	// 3s are set, allow the 4s and 5s, but not 6s
+	// i.e. 3H 5S 5D 5C
 	| 'rank+1'
 
-	// 3s are set, all the 4s before any 5
-	// i.e. 3444
+	// 3s are set, allow the 4s before any 5
+	// i.e. 3H 4S 4D 4C
 	| 'rank';
 
 /* *************** */
@@ -223,7 +223,9 @@ export function foundationCanAcceptCards(
 
 	const card = game.foundations[index];
 	if (!card) return true; // empty can always accept an ace
-	if ((limit === 'opp+1' || limit === 'opp+2') && card.rank === 'ace') return true; // we will never want to "hold a 2 so we can stack aces"
+	// FIXME should we remove the limit checks? is any limit allowed?
+	if ((limit === 'opp+1' || limit === 'opp+2' || limit === 'opp+2|oppopp+1') && card.rank === 'ace')
+		return true; // we will never want to "hold a 2 so we can stack aces"
 	if (card.rank === 'king') return false; // king is last, so nothing else can be accepted
 	const card_rank_idx = getRankForCompare(card.rank);
 
@@ -242,6 +244,22 @@ export function foundationCanAcceptCards(
 			return getFoundationRankForColor(game, card) >= card_rank_idx;
 		case 'opp+2':
 			return getFoundationRankForColor(game, card) + 1 >= card_rank_idx;
+		case 'opp+2|oppopp+1': {
+			const oppositeCardsCanAdvance = game.cards
+				.filter(
+					(oppositeCard) =>
+						isRed(oppositeCard.suit) !== isRed(card.suit) && oppositeCard.rank === card.rank
+				)
+				.every((oppositeCard) => {
+					if (oppositeCard.location.fixture === 'foundation') return true;
+					const oppositeFoundationIdx = game.foundations.findIndex(
+						(foundationCard) => foundationCard?.suit === oppositeCard.suit
+					);
+					return foundationCanAcceptCards(game, oppositeFoundationIdx, 'opp+1');
+				});
+
+			return getFoundationRankForColor(game, card) + 1 >= card_rank_idx && oppositeCardsCanAdvance;
+		}
 	}
 }
 

@@ -669,9 +669,8 @@ describe('prioritizeAvailableMoves', () => {
 		});
 	});
 
-	// FIXME test.skip
 	describe('*:single→foundation, if opp+2 would auto-foundation', () => {
-		test.skip('previous test, cascade:single→foundation', () => {
+		test('previous test, cascade:single→foundation', () => {
 			const game = FreeCell.parse(
 				'' + //
 					'             KC JD JH TS \n' +
@@ -748,7 +747,7 @@ describe('prioritizeAvailableMoves', () => {
 			);
 		});
 
-		test.skip('traced #10347', () => {
+		test('traced #10347', () => {
 			// we can safely move 3C to the founcation
 			// 2D is up, 2H will auto-foundation as soon as it's revealed
 			// AS, 2S, 3S are entirely unrelated to 3C
@@ -929,8 +928,7 @@ describe('prioritizeAvailableMoves', () => {
 				);
 			});
 
-			// FIXME now i'm just asking it to play the game for me
-			test.skip('traced #27521', () => {
+			test('traced #27521', () => {
 				const gameExample = FreeCell.parse(
 					'' + //
 						' 7S    JH    3D          \n' +
@@ -1088,10 +1086,10 @@ describe('prioritizeAvailableMoves', () => {
 				const game = gameExample.undo();
 				expect(game.previousAction.text).toBe('move 8⡁d 5S→cell (auto-foundation 8 2D)');
 				expect(availableMovesMinimized(game.touchByPile('a').availableMoves, true)).toEqual([
-					['h⡃', 'foundation:any', -1],
+					['h⡃', 'foundation:any', 1],
 					['3', 'cascade:empty', -1],
 					['4', 'cascade:empty', -1],
-					['5⡇', 'cascade:sequence', 4],
+					['5⡇', 'cascade:sequence', -1],
 					['8', 'cascade:empty', -1],
 				]);
 				expect(game.moveByShorthand('ah').previousAction.text).toBe('move ah⡃ 3D→2D');
@@ -1100,8 +1098,7 @@ describe('prioritizeAvailableMoves', () => {
 				expect(game.moveByShorthand('a5').previousAction.text).toBe('move a5⡇ 3D→4C');
 				expect(game.moveByShorthand('a8').previousAction.text).toBe('move a8 3D→cascade');
 
-				// FIXME $touchAndMove
-				const gameResult = game.moveByShorthand('ah'); //.$touchAndMove('3D');
+				const gameResult = game.$touchAndMove('3D');
 				expect(gameResult.previousAction.text).toBe('move ah⡃ 3D→2D');
 				expect(gameResult.print()).toBe(
 					'' + //
@@ -1146,10 +1143,10 @@ describe('prioritizeAvailableMoves', () => {
 				expect(game.previousAction.text).toBe('move 1⡁h⡂ 3C→2C (auto-foundation 14 2D,3D)');
 				expect(availableMovesMinimized(game.touchByPile('a').availableMoves, true)).toEqual([
 					['d', 'cell:empty', -1],
-					['h⡀', 'foundation:any', -1],
+					['h⡀', 'foundation:any', 4],
 					['1', 'cascade:empty', -1],
-					['4⡄', 'cascade:sequence', 5],
-					['7⡄', 'cascade:sequence', 2],
+					['4⡄', 'cascade:sequence', -1],
+					['7⡄', 'cascade:sequence', -1],
 				]);
 				expect(game.moveByShorthand('ad').previousAction.text).toBe('move ad 4H→cell');
 				expect(game.moveByShorthand('ah').previousAction.text).toBe('move ah⡀ 4H→3H');
@@ -1157,8 +1154,7 @@ describe('prioritizeAvailableMoves', () => {
 				expect(game.moveByShorthand('a4').previousAction.text).toBe('move a4⡄ 4H→5C');
 				expect(game.moveByShorthand('a7').previousAction.text).toBe('move a7⡄ 4H→5S');
 
-				// FIXME wrong, should be ah
-				expect(game.$touchAndMove('4H').previousAction.text).toBe('move a4⡄ 4H→5C');
+				expect(game.$touchAndMove('4H').previousAction.text).toBe('move ah⡀ 4H→3H');
 
 				const gameFurtherBack = game.undo();
 				expect(gameFurtherBack.print()).toBe(
@@ -1176,7 +1172,6 @@ describe('prioritizeAvailableMoves', () => {
 				);
 
 				// here, it shouldn't go up yet, since we _might_ need to stack 4H-3S-2D
-				// FIXME is it opp+2,oppopp+1
 				expect(gameFurtherBack.moveByShorthand('a4').previousAction.text).toBe('invalid move a4⡅ 4H→3D');
 				expect(gameFurtherBack.moveByShorthand('a7').previousAction.text).toBe('move a7⡄ 4H→5S');
 				expect(gameFurtherBack.moveByShorthand('ah').previousAction.text).toBe('move ah⡀ 4H→3H');

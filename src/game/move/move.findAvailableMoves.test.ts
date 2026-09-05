@@ -236,8 +236,8 @@ describe('game/move.findAvailableMoves', () => {
 
 			const gameUndid = game.undo();
 			expect(availableMovesMinimized(gameUndid.$selectCard('4D').availableMoves, true)).toEqual([
-				['d', 'cell:empty', -1], // this is a possible move
-				['h⡃', 'foundation:any', 1], // we pick this one as the best option (fair)
+				['d', 'cell:empty', 1],
+				['h⡃', 'foundation:any', -1], // we [used to] pick this one as the best option (fair)
 			]);
 			// if we move it specifically, this is the resulting text (a bit redundant of a test)
 			expect(gameUndid.moveByShorthand('4d').previousAction.text).toBe('move 4⡁d 4D→cell');
