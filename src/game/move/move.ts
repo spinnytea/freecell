@@ -312,8 +312,6 @@ export function findAvailableMoves(
 	const head_card = selection.cards[0];
 
 	if (selection.cards.length === 1) {
-		// REVIEW (2-priority) (controls) (sequence-to-single) if multiple, move last card?
-		//  - do not allow autoMove to move a sequence to a cell
 		game.cells.forEach((card, idx) => {
 			if (!card) {
 				availableMoves.push({
@@ -324,8 +322,6 @@ export function findAvailableMoves(
 			}
 		});
 
-		// REVIEW (2-priority) (controls) (sequence-to-single) if multiple, move last card?
-		//  - do not allow autoMove to move a single card when a sequence is selected
 		game.foundations.forEach((card, idx) => {
 			if (canStackFoundation(card, head_card)) {
 				availableMoves.push({
@@ -833,7 +829,7 @@ export function parseShorthandMove(
 		from_location.data[1] = Math.max(0, game.tableau[from_location.data[0]].length - 1);
 
 		if (to_location.fixture === 'cascade') {
-			// adjust selection until stackable on target
+			// adjust selection until stackable on destination
 			const tail_card = game.tableau[to_location.data[0]].at(to_location.data[1]);
 			let d1 = from_location.data[1];
 			if (tail_card) {
@@ -870,7 +866,7 @@ export function parseShorthandMove(
 	// clean up to_location based on MoveDestinationType
 	// (pick the right foundation idx)
 	if (to_location.fixture === 'foundation') {
-		// adjust selection until stackable on target
+		// adjust selection until stackable on destination
 		// i.e. 2S can stack on AS, find that foundation
 		// i.e. AC can go in any _empty_ foundation, find that one
 		const from_sequence = getSequenceAt(game, from_location);
@@ -978,7 +974,7 @@ export function parseShorthandPileForMove(
 			if (to_location.data[0] >= game.cells.length) return null;
 			break;
 		case 'foundation': {
-			// adjust selection until stackable on target
+			// adjust selection until stackable on destination
 			// i.e. 2S can stack on AS, find that foundation
 			// i.e. AC can go in any _empty_ foundation, find that one
 			const tail_card = selection.cards[selection.cards.length - 1];

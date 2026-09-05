@@ -311,7 +311,7 @@ describe('game.touch', () => {
 				cards: [{ rank: '2', suit: 'spades', location: { fixture: 'cascade', data: [4, 5] } }],
 				peekOnly: false,
 			});
-			// AS is a valid target
+			// AS is a valid destination
 			expect(game.availableMoves).toEqual([
 				{ location: { fixture: 'cell', data: [0] }, moveDestinationType: 'cell:empty', priority: -1 },
 				{ location: { fixture: 'cell', data: [1] }, moveDestinationType: 'cell:empty', priority: -1 },
@@ -718,7 +718,7 @@ describe('game.touch', () => {
 
 	// TODO (test) list out every single, uh, "type" of location, and then ensure we have a complete cross product from ⨉ to
 	//  - cell (empty, not empty)
-	//  - foundation (empty (specific, pile, wrong target), not empty (each limit, pile, wrong target))
+	//  - foundation (empty (specific, pile, invalid destination), not empty (each limit, pile, invalid destination))
 	//  - cascade (empty, not empty (before, single, sequence (first, middle, last), pile))
 	//  - deck (empty, not empty (pile, first, middle, last))
 	// ---
@@ -2212,10 +2212,6 @@ describe('game.touch', () => {
 				});
 
 				describe('to: cell', () => {
-					// TODO (4-priority) (gameplay) (sequence-to-single) allow moving 8C (bottom of selected sequence) to cell
-					//  - this would be frustrating if "click on sequence" activated "click-to-move" instead of select
-					//  - don't make this an availble move
-					//  - add special logic to game.touch: valid || fakeValid || sequenceToSingle
 					test('empty', () => {
 						const game = FreeCell.parse(
 							'' + //
@@ -2227,20 +2223,21 @@ describe('game.touch', () => {
 						).touch();
 						expect(game.print()).toBe(
 							'' + //
-								'>            7C 8D TH KS \n' +
-								'   |TC|   KD JH          \n' +
-								'   |9D|   QC             \n' +
-								'   |8C|   JD             \n' +
+								'>            8C 9D TH KS \n' +
+								'    TC    KD JH          \n' +
+								'          QC             \n' +
+								'          JD             \n' +
 								':d KH KC QH QD JC TD 9C \n' +
-								' invalid move 2a TC-9D-8C→cell'
+								' move 2a 8C→cell (auto-foundation a2 8C,9D)'
 						);
 						expect(game.print({ includeHistory: true })).toBe(
 							'' + //
-								'             7C 8D TH KS \n' +
+								'             8C 9D TH KS \n' +
 								'    TC    KD JH          \n' +
-								'    9D    QC             \n' +
-								'    8C    JD             \n' +
+								'          QC             \n' +
+								'          JD             \n' +
 								':d KH KC QH QD JC TD 9C \n' +
+								' move 2⡂a 8C→cell (auto-foundation a2 8C,9D)\n' +
 								' hand-jammed'
 						);
 					});
@@ -2251,11 +2248,6 @@ describe('game.touch', () => {
 				describe('to: foundation', () => {
 					test.todo('empty');
 
-					// TODO (4-priority) (gameplay) (sequence-to-single) allow moving 8C (bottom of selected sequence) to foundation
-					//  - this would be frustrating if "click on sequence" activated "click-to-move" instead of select
-					//  - don't make this an availble move
-					//  - add special logic to game.touch: valid || fakeValid || sequenceToSingle
-					// TODO (4-priority) (gameplay) (sequence-to-single) allow moving 9D as well (evaluate all cards in sequence)
 					test('not empty', () => {
 						const game = FreeCell.parse(
 							'' + //
@@ -2267,26 +2259,27 @@ describe('game.touch', () => {
 						).touch();
 						expect(game.print()).toBe(
 							'' + //
-								'            >7C 8D TH KS \n' +
-								'   |TC|   KD JH          \n' +
-								'   |9D|   QC             \n' +
-								'   |8C|   JD             \n' +
+								'            >8C 9D TH KS \n' +
+								'    TC    KD JH          \n' +
+								'          QC             \n' +
+								'          JD             \n' +
 								':d KH KC QH QD JC TD 9C \n' +
-								' invalid move 2h TC-9D-8C→7C'
+								' move 2h 8C→7C (auto-foundation 2 9D)'
 						);
 						expect(game.print({ includeHistory: true })).toBe(
 							'' + //
-								'             7C 8D TH KS \n' +
+								'             8C 9D TH KS \n' +
 								'    TC    KD JH          \n' +
-								'    9D    QC             \n' +
-								'    8C    JD             \n' +
+								'          QC             \n' +
+								'          JD             \n' +
 								':d KH KC QH QD JC TD 9C \n' +
+								' move 2⡂h⡀ 8C→7C (auto-foundation 2 9D)\n' +
 								' hand-jammed'
 						);
 					});
 
 					// REVIEW (gameplay) consider moveByShorthand('2h') vs moveByShorthand('2⡀h⡁')
-					test('wrong target', () => {
+					test('invalid destination', () => {
 						const game = FreeCell.parse(
 							'' + //
 								'             7C>8D TH KS \n' +
@@ -2579,11 +2572,83 @@ describe('game.touch', () => {
 
 					describe('too tall', () => {
 						// same as ^^ game.touch > select > cascade > sequence too tall
-						test.todo('too tall for anything');
+						test('cascade:empty', () => {
+							const game = FreeCell.parse(
+								'' + //
+									'    8S 8H    5C AH 4D AS \n' +
+									' 6H    TC QC KS KH 9H 4H \n' +
+									' 7H    7D JH    JS 8C 6S \n' +
+									' TH    5H TS    JD    9S \n' +
+									' 3S    2S       QH   >KC|\n' +
+									' 2H    9D       KD   |QD|\n' +
+									' 6C    7C       QS   |JC|\n' +
+									' 5D    8D            |TD|\n' +
+									' 4S    7S            |9C|\n' +
+									' 3H    6D                \n' +
+									'       5S                \n' +
+									' select 8 KC-QD-JC-TD-9C'
+							);
+							expect(game.availableMoves).toEqual([]);
 
-						test.todo('too tall for target cascade');
+							expect(game.setCursor({ fixture: 'cascade', data: [1, 0] }).touch().previousAction).toEqual({
+								text: 'invalid move 8⡃2 KC-QD-JC-TD-9C→cascade',
+								type: 'invalid',
+							});
+						});
 
-						test.todo('enough for cascade, but not for empty cascade');
+						test('cascade:sequence', () => {
+							const game = FreeCell.parse(
+								'' + //
+									'    8S       5C AH 4D AS \n' +
+									' 6H TS TC QC KS KH 9H 4H \n' +
+									' 7H    7D JH    JS 8C 6S \n' +
+									' TH    5H       JD    9S \n' +
+									' 3S    2S       QH    KC \n' +
+									' 2H    9D       KD   >QD|\n' +
+									' 6C    7C       QS   |JC|\n' +
+									' 5D    8D            |TD|\n' +
+									' 4S    7S            |9C|\n' +
+									' 3H    6D            |8H|\n' +
+									'       5S                \n' +
+									' select 8 KC-QD-JC-TD-9C-8H'
+							);
+							expect(game.availableMoves).toEqual([]);
+
+							expect(game.setCursor({ fixture: 'cascade', data: [4, 0] }).touch().previousAction).toEqual({
+								text: 'select 5⡀ KS',
+								type: 'select',
+							});
+						});
+
+						// could move to a sequence (given that a cascade is available for part of it)
+						// cannot move to the empty cascade itself (since it's the actual destination)
+						test('enough for cascade:sequence, but not for cascade:empty', () => {
+							const game = FreeCell.parse(
+								'' + //
+									'    8S       5C AH 4D AS \n' +
+									' 6H    TC QC KS KH 9H 4H \n' +
+									' 7H    7D JH    JS 8C 6S \n' +
+									' TH    5H TS    JD    9S \n' +
+									' 3S    2S       QH    KC \n' +
+									' 2H    9D       KD   >QD|\n' +
+									' 6C    7C       QS   |JC|\n' +
+									' 5D    8D            |TD|\n' +
+									' 4S    7S            |9C|\n' +
+									' 3H    6D            |8H|\n' +
+									'       5S                \n' +
+									' select 8 QD-JC-TD-9C-8H'
+							);
+							expect(game.availableMoves).toEqual([{ location: { fixture: 'cascade', data: [4, 0] }, moveDestinationType: 'cascade:sequence', priority: 4 }]);
+
+							expect(game.setCursor({ fixture: 'cascade', data: [4, 0] }).touch().previousAction).toEqual({
+								text: 'move 8⡄5⡀ QD-JC-TD-9C-8H→KS',
+								type: 'move',
+							});
+							expect(game.setCursor({ fixture: 'cascade', data: [1, 0] }).touch().previousAction).toEqual({
+								text: 'invalid move 8⡄2 QD-JC-TD-9C-8H→cascade',
+								type: 'invalid',
+							});
+						});
 					});
 				});
 			});

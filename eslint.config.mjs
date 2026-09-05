@@ -17,7 +17,15 @@ export default compat.config({
 	env: {
 		es2021: true,
 	},
-	ignorePatterns: ['.next/', '.vscode/', 'coverage/', 'node_modules/', 'out/', 'next-env.d.ts'],
+	ignorePatterns: [
+		'.git',
+		'.next/',
+		'.vscode/',
+		'coverage/',
+		'node_modules/',
+		'out/',
+		'next-env.d.ts',
+	],
 	settings: {
 		'import/ignore': ['node_modules'],
 	},

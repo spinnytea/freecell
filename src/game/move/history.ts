@@ -247,7 +247,7 @@ export function parseCursorFromPreviousActionText(
 					//  - RS→foundation, RS→RS
 					//  - for arbitrary ace positions and collisions
 					//  - where the source suit may or may not be in the foundation
-					//  - where the source suit may or may not match the target suit
+					//  - where the source suit may or may not match the destination suit
 
 					if (toShorthand === 'foundation') {
 						const shorthand = parseShorthandCard(fromShorthand);
@@ -808,7 +808,7 @@ export function getCardsFromInvalid(previousAction: PreviousAction): {
 	const fromShorthands = fromShorthand.split('-');
 	if (toShorthand.length === 2 || toShorthand.includes('-')) {
 		// TODO (motivation) (animation) if attempting to stack onto a sequence, shake the whole sequence
-		//  - should we add the whole sequence to the actionText, instead of just the one target card?
+		//  - should we add the whole sequence to the actionText, instead of just the one destination card?
 		return { fromShorthands, toShorthands: toShorthand.split('-') };
 	} else if (isFixture(toShorthand)) {
 		// `toShorthand` could be 'cell' or 'cascade' or 'foundation' and not an actual shorthand
