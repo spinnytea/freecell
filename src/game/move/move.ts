@@ -439,7 +439,7 @@ function prioritizeAvailableMoves(
 				}
 			}
 		}
-		// eslint-disable-next-line no-fallthrough -- REVIEW (techdebt) (lint) is this on purpose? explain it to me like i'm five
+		// eslint-disable-next-line no-fallthrough -- cascade:sequence and cascade:empty generally have the same logic; but cascade:sequence first fusses with the availableMove priority
 		case 'cascade:empty': {
 			const moving_card = selection.cards[0];
 			const moveFromAsDestType: MoveDestinationType =

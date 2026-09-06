@@ -12,6 +12,7 @@ import {
 	parsePreviousActionMoveShorthands,
 	PreviousAction,
 } from '@/game/move/history';
+import { utils } from '@/utils';
 
 export interface UpdateCardPositionsType extends TLZR {
 	shorthand: string;
@@ -132,34 +133,30 @@ export function calcUpdatedCardPositions({
 				calcTLZRForCard,
 			});
 
-			let anyMissing = false;
-			const a = moveShorthands.map((sh) => {
-				const position = prevUpdateCardPositions.find(({ shorthand }) => shorthand === sh);
-				if (!position) anyMissing = true;
-				return position;
-			});
+			const a = utils.mapAndFilter(moveShorthands, (sh) =>
+				prevUpdateCardPositions.find(({ shorthand }) => shorthand === sh)
+			);
 
-			// filter items from updateCardPositions if they are in A and have exactly the same position
-			// if secondMustComeAfter, that means the second animation must start after the first has entirely finished
-			// if not, they can overlap a little
-			// (e.g. do we wait for the auto-foundation animation to start AFTER the move animation, or in the middle of it)
-			// the overlap feels nice when we can do it, so this is worth the complexity
-			let secondMustComeAfter = false;
-			const b = updateCardPositions.filter(({ shorthand, top, left }) => {
-				const found = a.find((_a) => _a?.shorthand === shorthand);
-				if (!found) return true;
-				if (found.top !== top || found.left !== left) {
-					secondMustComeAfter = true;
-					return true;
-				}
-				return false;
-			});
+			if (a.length === moveShorthands.length) {
+				// filter items from updateCardPositions if they are in A and have exactly the same position
+				// if secondMustComeAfter, that means the second animation must start after the first has entirely finished
+				// if not, they can overlap a little
+				// (e.g. do we wait for the auto-foundation animation to start AFTER the move animation, or in the middle of it)
+				// the overlap feels nice when we can do it, so this is worth the complexity
+				let secondMustComeAfter = false;
+				const b = updateCardPositions.filter(({ shorthand, top, left }) => {
+					const found = a.find((_a) => _a.shorthand === shorthand);
+					if (!found) return true;
+					if (found.top !== top || found.left !== left) {
+						secondMustComeAfter = true;
+						return true;
+					}
+					return false;
+				});
 
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- XXX (techdebt) (lint) rewrite this with .map and .some
-			if (!anyMissing) {
 				return {
 					updateCardPositions: b,
-					updateCardPositionsPrev: a as UpdateCardPositionsType[],
+					updateCardPositionsPrev: a,
 					secondMustComeAfter,
 					unmovedCards,
 				};
