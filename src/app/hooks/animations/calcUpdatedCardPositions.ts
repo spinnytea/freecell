@@ -155,7 +155,7 @@ export function calcUpdatedCardPositions({
 				return false;
 			});
 
-			// XXX (techdebt) rewrite this with .map and .some
+			// XXX (techdebt) (lint) rewrite this with .map and .some
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (!anyMissing) {
 				return {

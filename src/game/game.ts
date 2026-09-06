@@ -278,8 +278,10 @@ export class FreeCell {
 		// HACK (actionText) (test) record every actionText during unit tests
 		// prettier-ignore
 		if (process.env.NODE_ENV === 'test') {
+			// XXX (techdebt) (lint) remove this lint skip
 			// eslint-disable-next-line
 			const tempLogPath = require('node:path').join(process.cwd(), '.temp-test-recorded-action-text.txt');
+			// XXX (techdebt) (lint) remove this lint skip
 			// eslint-disable-next-line
 			require('node:fs').appendFileSync(tempLogPath, action.text + '\n', 'utf8');
 		}
@@ -490,10 +492,10 @@ export class FreeCell {
 		}
 
 		/*
-			we should't be able to get this part of the code without a selection
+			[LINT] we should't be able to get this part of the code without a selection
 			however, IFF we change things and it's possible later,
 			then this will infinte loop (clearSelection is a noop without a selection)
-			plus, i just want documentation this far removed from the check
+			plus, i just want documentation this situation so far removed from the previous check
 		*/
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (!stopWithInvalid && this.selection) {

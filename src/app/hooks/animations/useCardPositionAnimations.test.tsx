@@ -897,16 +897,15 @@ describe('useCardPositionAnimations', () => {
 		});
 	});
 
-	// TODO (techdebt) rewrite this: all the eslint markers are obnoxious
+	// TODO (techdebt) (lint) rewrite this: all the eslint markers are obnoxious
 	describe('actionText examples', () => {
 		const skipThrow = true; // TODO (techdebt) remove after we finish all tests
 		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES);
 		afterAll(() => {
-			// eslint-disable-next-line @vitest/no-standalone-expect, @typescript-eslint/no-unnecessary-condition
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (!skipThrow) expect(actionTextExamples).toEqual([]);
 		});
 		beforeEach(() => {
-			// eslint-disable-next-line @vitest/no-standalone-expect
 			const actionText = (/·(.*)$/.exec(expect.getState().currentTestName ?? '')?.[1] ?? '').trim();
 			if (actionText) {
 				pullActionTextExamples(actionTextExamples, actionText);

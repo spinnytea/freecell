@@ -90,6 +90,12 @@ export default compat.config({
 			},
 			plugins: ['@vitest'],
 			extends: ['plugin:@vitest/legacy-recommended'],
+			rules: {
+				'@vitest/no-standalone-expect': [
+					'error',
+					{ additionalTestBlockFunctions: ['beforeAll', 'beforeEach', 'afterAll', 'afterEach'] },
+				],
+			},
 		},
 		{
 			files: ['*.config.mts'],

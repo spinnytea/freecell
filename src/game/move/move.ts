@@ -439,6 +439,7 @@ function prioritizeAvailableMoves(
 				}
 			}
 		}
+		// REVIEW (techdebt) (lint) is this on purpose? explain it to me like i'm five
 		// eslint-disable-next-line no-fallthrough
 		case 'cascade:empty': {
 			const moving_card = selection.cards[0];

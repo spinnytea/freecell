@@ -24,6 +24,7 @@ export function useKeybaordArrowControls() {
 				case 'A':
 					// disable WASD controls when Hotkeys are enabled
 					if (enableHotkeys) break;
+				// [LINT] while fallthroughs are generally confusing, this one just makes sense
 				// eslint-disable-next-line no-fallthrough
 				case 'ArrowLeft':
 					consumed = true;
@@ -33,6 +34,7 @@ export function useKeybaordArrowControls() {
 				case 'D':
 					// disable WASD controls when Hotkeys are enabled
 					if (enableHotkeys) break;
+				// [LINT] while fallthroughs are generally confusing, this one just makes sense
 				// eslint-disable-next-line no-fallthrough
 				case 'ArrowRight':
 					consumed = true;
@@ -42,6 +44,7 @@ export function useKeybaordArrowControls() {
 				case 'W':
 					// disable WASD controls when Hotkeys are enabled
 					if (enableHotkeys) break;
+				// [LINT] while fallthroughs are generally confusing, this one just makes sense
 				// eslint-disable-next-line no-fallthrough
 				case 'ArrowUp':
 					consumed = true;
@@ -51,6 +54,7 @@ export function useKeybaordArrowControls() {
 				case 'S':
 					// disable WASD controls when Hotkeys are enabled
 					if (enableHotkeys) break;
+				// [LINT] while fallthroughs are generally confusing, this one just makes sense
 				// eslint-disable-next-line no-fallthrough
 				case 'ArrowDown':
 					consumed = true;

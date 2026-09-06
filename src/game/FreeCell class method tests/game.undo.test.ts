@@ -56,7 +56,7 @@ describe('game.undo (+ history)', () => {
 				expect(game.undo()).toBe(game);
 			});
 
-			// TODO (techdebt) this would be super cool to pull off
+			// TODO (techdebt) (lint) this would be super cool to pull off
 			// eslint-disable-next-line @vitest/no-disabled-tests
 			test.skip('init without history, but last move is legible', () => {
 				const gamePrint =

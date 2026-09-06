@@ -30,6 +30,7 @@ export interface GameBoardDisplayOptions {
 
 const nextUid = (function* () {
 	let id = 0;
+	// [LINT] this is supposed to loop forever; passing lint just makes it confusing
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 	while (true) {
 		yield id.toString(16);

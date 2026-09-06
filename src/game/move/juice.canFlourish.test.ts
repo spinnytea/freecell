@@ -621,7 +621,7 @@ describe('move.juice', () => {
 	});
 
 	describe('checkGames', () => {
-		// XXX (benchmark) juice.canFlourish:  730 seconds (12 minutes) … 7.2 seconds
+		// XXX (benchmark) (lint) juice.canFlourish:  730 seconds (12 minutes) … 7.2 seconds
 		// eslint-disable-next-line @vitest/no-disabled-tests
 		test.skip('canFlourish', () => {
 			// const flourishSeeds: number[] = [];
@@ -638,7 +638,7 @@ describe('move.juice', () => {
 			expect(flourishCount).toBe(28843);
 		});
 
-		// XXX (benchmark) juice.canFlourish52: 94 seconds … 2.0 seconds
+		// XXX (benchmark) (lint) juice.canFlourish52: 94 seconds … 2.0 seconds
 		// eslint-disable-next-line @vitest/no-disabled-tests
 		test.skip('canFlourish52', () => {
 			const catalogSeeds = getSeedsByTag('canFlourish52');

@@ -364,7 +364,7 @@ describe('game.touchByPile', () => {
 					expect(game).toMatchSnapshot();
 				});
 
-				// XXX (motivation) (deck) it's a lot of exceptions to get this to work
+				// XXX (motivation) (deck) (lint) it's a lot of exceptions to get this to work
 				// eslint-disable-next-line @vitest/no-disabled-tests
 				test.skip('not empty (fixed)', () => {
 					const game = new FreeCell()

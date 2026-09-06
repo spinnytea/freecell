@@ -8,8 +8,9 @@ const TEXT_FAILURE = 'Failed';
 
 function checkClipboardAvailable(): boolean {
 	return (
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		navigator?.clipboard?.writeText !== undefined &&
+		typeof navigator !== 'undefined' &&
+		'clipboard' in navigator &&
+		'writeText' in navigator.clipboard &&
 		typeof navigator.clipboard.writeText === 'function'
 	);
 }
