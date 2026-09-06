@@ -24,6 +24,7 @@
   3 (icons)
  21 (joker)
  10 (keyboard)
+  4 (lint)
  30 (manualtesting)
   2 (mobile)
  24 (motivation)

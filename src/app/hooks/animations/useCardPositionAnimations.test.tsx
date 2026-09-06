@@ -897,27 +897,27 @@ describe('useCardPositionAnimations', () => {
 		});
 	});
 
-	// TODO (techdebt) rewrite this: all the eslint markers are obnoxious
+	// TODO (techdebt) (lint) rewrite this: all the eslint markers are obnoxious
+	//  - handle all "wip, see above"
 	describe('actionText examples', () => {
 		const skipThrow = true; // TODO (techdebt) remove after we finish all tests
 		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES);
 		afterAll(() => {
-			// eslint-disable-next-line @vitest/no-standalone-expect, @typescript-eslint/no-unnecessary-condition
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 			if (!skipThrow) expect(actionTextExamples).toEqual([]);
 		});
 		beforeEach(() => {
-			// eslint-disable-next-line @vitest/no-standalone-expect
 			const actionText = (/·(.*)$/.exec(expect.getState().currentTestName ?? '')?.[1] ?? '').trim();
 			if (actionText) {
 				pullActionTextExamples(actionTextExamples, actionText);
 			}
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init with invalid history');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init partial');
 		describe('animate init', () => {
 			test.todo('· init');
@@ -927,13 +927,13 @@ describe('useCardPositionAnimations', () => {
 			test.todo('· init partial');
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal 1 card');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal 2 cards');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal 44 cards');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal all cards');
 		describe('game setup', () => {
 			test('· shuffle deck (1)', () => {
@@ -1015,11 +1015,11 @@ describe('useCardPositionAnimations', () => {
 		];
 		describe('move and undo', () => {
 			describe('add to the each', () => {
-				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 				if (skipThrow) pullActionTextExamples(actionTextExamples, 'move 8h AD→foundation');
-				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 				if (skipThrow) pullActionTextExamples(actionTextExamples, 'move 57 KS→cascade');
-				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 				if (skipThrow) pullActionTextExamples(actionTextExamples, 'move 78 JH-TC-9H-8S-7H→QS');
 				test.todo('· move 8h AD→foundation');
 				test.todo('· move 57 KS→cascade');
@@ -1160,9 +1160,9 @@ describe('useCardPositionAnimations', () => {
 			just autoFoundation when we've previously skipped it
 			we can't get here through normal gameplay
 		*/
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'auto-foundation 56 KD,KS');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'flourish 56 KD,KS');
 		describe('autoFoundationAll', () => {
 			test.todo('· auto-foundation 56 KD,KS');
@@ -1171,19 +1171,19 @@ describe('useCardPositionAnimations', () => {
 		});
 
 		/** singular animation */
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'peek 8 QS');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'peek 8 4D-3S-2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 8 7C');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 8 4D-3S-2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 6 2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 6 4D-3S-2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'invalid move 86 7D→9C');
 		describe('animate', () => {
 			// peekOnly
@@ -1268,51 +1268,51 @@ describe('useCardPositionAnimations', () => {
 			});
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set KH');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set b');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set h⡂');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set h AD');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set 6 2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set 3');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor up');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor left');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor down');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor right');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor up wrap');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor left wrap');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor down wrap');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor right wrap');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop KH');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop b');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop h⡂');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop h AD');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop 6 2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop 3');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
 		if (skipThrow) pullActionTextExamples(actionTextExamples, 'touch stop');
 		describe('do not animate', () => {
 			test.todo('· cursor set');

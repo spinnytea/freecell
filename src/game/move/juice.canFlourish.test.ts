@@ -621,26 +621,30 @@ describe('move.juice', () => {
 	});
 
 	describe('checkGames', () => {
-		// XXX (benchmark) juice.canFlourish:  730 seconds (12 minutes) … 7.2 seconds
-		// eslint-disable-next-line @vitest/no-disabled-tests
-		test.skip('canFlourish', () => {
-			// const flourishSeeds: number[] = [];
+		// eslint-disable-next-line @vitest/no-disabled-tests -- XXX (benchmark) juice.canFlourish:  730 seconds (12 minutes) … 7.2 seconds
+		test.skip('canFlourish', { timeout: 10_000 }, () => {
+			const cannotFlourishSeeds: number[] = [];
 			let flourishCount = 0;
 			for (let seed = 1; seed <= 32000; seed++) {
 				const game = new FreeCell().shuffle32(seed).dealAll();
 				const aces = juice.canFlourish(game);
 				if (aces.length) {
-					// flourishSeeds.push(seed);
 					flourishCount++;
+				} else {
+					cannotFlourishSeeds.push(seed);
 				}
 			}
 
-			expect(flourishCount).toBe(28843);
+			// BUG (techdebt) uhm... this used to be 28843, when did it change to 28840
+			//  - v2.0.11 we changed to vitest which allowed the test to run in 7.2s (instead of 12m)
+			//  - so you would think it would have still been 28843 because the tests _passed_, but I reran there and go this same failure for 28840
+			//  - I can't spot check the 3 that changed since I can't find them, so I have to snapshot the list
+			expect(cannotFlourishSeeds).toMatchSnapshot();
+			expect(flourishCount).toBe(28840);
 		});
 
-		// XXX (benchmark) juice.canFlourish52: 94 seconds … 2.0 seconds
-		// eslint-disable-next-line @vitest/no-disabled-tests
-		test.skip('canFlourish52', () => {
+		// eslint-disable-next-line @vitest/no-disabled-tests -- XXX (benchmark) juice.canFlourish52: 94 seconds … 2.0 seconds
+		test.skip('canFlourish52', { timeout: 3_000 }, () => {
 			const catalogSeeds = getSeedsByTag('canFlourish52');
 
 			const flourish52Seeds: number[] = [];

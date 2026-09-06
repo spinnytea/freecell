@@ -7,7 +7,6 @@ describe('game/history.getCardsFromInvalid', () => {
 	describe('specific cases', () => {
 		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES).filter((actionText) => parsePreviousActionType(actionText).type === 'invalid');
 		afterAll(() => {
-			// eslint-disable-next-line @vitest/no-standalone-expect
 			expect(actionTextExamples).toEqual([]);
 		});
 

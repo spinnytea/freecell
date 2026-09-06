@@ -34,7 +34,17 @@ function randomInteger(max = Number.MAX_SAFE_INTEGER): number {
 	return Math.min(Math.max(1, val), max);
 }
 
+/** @return array.map(callback).filter((a): a is R => !!a); */
+function mapAndFilter<T, R>(array: T[], callback: (item: T) => R | undefined | null | false): R[] {
+	return array.reduce<R[]>((acc, item) => {
+		const mapped = callback(item);
+		if (mapped) acc.push(mapped);
+		return acc;
+	}, []);
+}
+
 export const utils = {
 	sortedDiff,
 	randomInteger,
+	mapAndFilter,
 };

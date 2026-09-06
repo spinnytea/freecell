@@ -42,7 +42,6 @@ describe('game/history.parseCursorFromPreviousActionText', () => {
 	describe('specific cases', () => {
 		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES);
 		afterAll(() => {
-			// eslint-disable-next-line @vitest/no-standalone-expect
 			expect(actionTextExamples).toEqual([]);
 		});
 

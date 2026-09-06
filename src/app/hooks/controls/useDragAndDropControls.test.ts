@@ -67,14 +67,12 @@ describe('useDragAndDropControls', () => {
 					}));
 
 					beforeAll(() => {
-						// eslint-disable-next-line @vitest/no-standalone-expect
 						expect(dropTargets.map((dropTarget) => dropTarget.cardCoords)).toEqual([
 							{ top: 20, left: 20, width: 10, height: 20 },
 							{ top: 20, left: 30, width: 10, height: 20 },
 							{ top: 20, left: 40, width: 10, height: 20 },
 							{ top: 20, left: 50, width: 10, height: 20 },
 						]);
-						// eslint-disable-next-line @vitest/no-standalone-expect
 						expect(countOverlapping(dropTargets)).toBe(0);
 					});
 
@@ -124,14 +122,12 @@ describe('useDragAndDropControls', () => {
 					}));
 
 					beforeAll(() => {
-						// eslint-disable-next-line @vitest/no-standalone-expect
 						expect(dropTargets.map((dropTarget) => dropTarget.cardCoords)).toEqual([
 							{ top: 20, left: 20, width: 10, height: 20 },
 							{ top: 20, left: 30, width: 10, height: 20 },
 							{ top: 20, left: 40, width: 10, height: 20 },
 							{ top: 20, left: 50, width: 10, height: 20 },
 						]);
-						// eslint-disable-next-line @vitest/no-standalone-expect
 						expect(countOverlapping(dropTargets)).toBe(0);
 					});
 

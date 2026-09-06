@@ -24,7 +24,7 @@ export function useKeybaordArrowControls() {
 				case 'A':
 					// disable WASD controls when Hotkeys are enabled
 					if (enableHotkeys) break;
-				// eslint-disable-next-line no-fallthrough
+				// eslint-disable-next-line no-fallthrough -- while fallthroughs are generally confusing, this one just makes sense
 				case 'ArrowLeft':
 					consumed = true;
 					setGame((g) => g.moveCursor('left'));
@@ -33,7 +33,7 @@ export function useKeybaordArrowControls() {
 				case 'D':
 					// disable WASD controls when Hotkeys are enabled
 					if (enableHotkeys) break;
-				// eslint-disable-next-line no-fallthrough
+				// eslint-disable-next-line no-fallthrough -- while fallthroughs are generally confusing, this one just makes sense
 				case 'ArrowRight':
 					consumed = true;
 					setGame((g) => g.moveCursor('right'));
@@ -42,7 +42,7 @@ export function useKeybaordArrowControls() {
 				case 'W':
 					// disable WASD controls when Hotkeys are enabled
 					if (enableHotkeys) break;
-				// eslint-disable-next-line no-fallthrough
+				// eslint-disable-next-line no-fallthrough -- while fallthroughs are generally confusing, this one just makes sense
 				case 'ArrowUp':
 					consumed = true;
 					setGame((g) => g.moveCursor('up'));
@@ -51,7 +51,7 @@ export function useKeybaordArrowControls() {
 				case 'S':
 					// disable WASD controls when Hotkeys are enabled
 					if (enableHotkeys) break;
-				// eslint-disable-next-line no-fallthrough
+				// eslint-disable-next-line no-fallthrough -- while fallthroughs are generally confusing, this one just makes sense
 				case 'ArrowDown':
 					consumed = true;
 					setGame((g) => g.moveCursor('down'));

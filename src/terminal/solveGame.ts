@@ -171,11 +171,7 @@ tryUntilDone()
 				out.push(JSON.stringify(hueristicScoreGame(bestFrontier), null, 2));
 				out.push(bestFrontier.print({ includeHistory: true }));
 			} catch (e: unknown) {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				const getMsg = (): string => e.message || 'No message'; // eslint-disable-line @typescript-eslint/no-unsafe-return
-
-				out.push(getMsg());
+				out.push(e instanceof Error ? e.message : 'No message');
 			}
 
 			writeFileSync(`solveGame-${GAME_NUMBER}.out`, out.join('\n\n'));
