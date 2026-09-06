@@ -439,8 +439,7 @@ function prioritizeAvailableMoves(
 				}
 			}
 		}
-		// REVIEW (techdebt) (lint) is this on purpose? explain it to me like i'm five
-		// eslint-disable-next-line no-fallthrough
+		// eslint-disable-next-line no-fallthrough -- REVIEW (techdebt) (lint) is this on purpose? explain it to me like i'm five
 		case 'cascade:empty': {
 			const moving_card = selection.cards[0];
 			const moveFromAsDestType: MoveDestinationType =

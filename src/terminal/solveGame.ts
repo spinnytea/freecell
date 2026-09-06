@@ -171,10 +171,9 @@ tryUntilDone()
 				out.push(JSON.stringify(hueristicScoreGame(bestFrontier), null, 2));
 				out.push(bestFrontier.print({ includeHistory: true }));
 			} catch (e: unknown) {
-				// XXX (techdebt) (lint) can we do better than simply ignore everything?
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- XXX (techdebt) (lint) can we do better than simply ignore everything?
 				// @ts-ignore
-				const getMsg = (): string => e.message || 'No message'; // eslint-disable-line @typescript-eslint/no-unsafe-return
+				const getMsg = (): string => e.message || 'No message'; // eslint-disable-line @typescript-eslint/no-unsafe-return -- XXX (techdebt) (lint) can we do better
 
 				out.push(getMsg());
 			}

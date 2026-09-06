@@ -10,7 +10,13 @@ const compat = new FlatCompat({
 });
 
 export default compat.config({
-	extends: ['eslint:recommended', 'next/core-web-vitals', 'plugin:import/recommended', 'prettier'],
+	extends: [
+		'eslint:recommended',
+		'next/core-web-vitals',
+		'plugin:eslint-comments/recommended',
+		'plugin:import/recommended',
+		'prettier',
+	],
 	globals: {
 		React: 'readonly',
 	},
@@ -30,6 +36,7 @@ export default compat.config({
 		'import/ignore': ['node_modules'],
 	},
 	rules: {
+		'eslint-comments/require-description': 'error',
 		'prefer-const': ['error', { destructuring: 'all' }],
 		'import/order': [
 			'warn',
