@@ -1,3 +1,4 @@
+import { omit as _omit } from 'lodash';
 import { describe, expect, test } from 'vitest';
 import { FreeCell } from '@/game/game';
 
@@ -102,13 +103,14 @@ describe('game.$checkCanFlourish', () => {
 			// make sure the parse game is the same-ish (and doesn't blow up)
 			let copy = game.__copy();
 			expect(copy).not.toBe(game);
+			expect(copy.flashCards).toBe(game.flashCards);
 			expect(copy.previousAction).not.toBe(game.previousAction);
 			expect(copy.history).not.toBe(game.history);
 			expect(copy).toEqual(game);
 			let parsed = FreeCell.parse(game.print());
 			// parsed is missing some info
-			expect(parsed.flashCards).toBe(null); // TODO (motivation) (flourish-anim) recover this, since it's int he print
-			expect(parsed.history).toEqual([]); // does not include history
+			expect(parsed.flashCards).toBe(null); // TODO (motivation) (flourish-anim) recover this, since it's in the print
+			expect(parsed.history).toEqual(['init without history']);
 			expect(parsed.previousAction).toEqual({
 				text: 'juice flash AH,AS',
 				type: 'juice',
@@ -124,13 +126,15 @@ describe('game.$checkCanFlourish', () => {
 				gameFunction: 'check-can-flourish',
 			});
 			expect(copy.history).toEqual(['shuffle deck (5)', 'deal all cards']);
-			copy.flashCards = null;
-			copy.history.splice(0);
-			expect(parsed).toEqual(copy);
+
+			expect(copy).toEqual(game);
+			expect(_omit(parsed, 'history', 'flashCards')).toEqual(_omit(copy, 'history', 'flashCards'));
+			expect(_omit(parsed, 'history', 'flashCards')).toEqual(_omit(game, 'history', 'flashCards'));
 
 			// make sure the parse game is the same-ish (and doesn't blow up)
 			copy = game.__copy();
 			expect(copy).not.toBe(game);
+			expect(copy.flashCards).toBe(game.flashCards);
 			expect(copy.previousAction).not.toBe(game.previousAction);
 			expect(copy.history).not.toBe(game.history);
 			expect(copy).toEqual(game);
@@ -152,11 +156,10 @@ describe('game.$checkCanFlourish', () => {
 				gameFunction: 'check-can-flourish',
 			});
 			expect(copy.history).toEqual(['shuffle deck (5)', 'deal all cards']);
-			copy.flashCards = null;
-			copy.previousAction.text = 'deal all cards';
-			copy.previousAction.type = 'deal';
-			delete copy.previousAction.gameFunction;
-			expect(parsed).toEqual(copy);
+
+			expect(copy).toEqual(game);
+			expect(_omit(parsed, 'history', 'previousAction', 'flashCards')).toEqual(_omit(copy, 'history', 'previousAction', 'flashCards'));
+			expect(_omit(parsed, 'history', 'previousAction', 'flashCards')).toEqual(_omit(game, 'history', 'previousAction', 'flashCards'));
 		});
 
 		describe('does not impact game', () => {
@@ -281,7 +284,7 @@ describe('game.$checkCanFlourish', () => {
 			let parsed = FreeCell.parse(game.print());
 			// parsed is missing some info
 			expect(parsed.flashCards).toBe(null); // TODO (motivation) (flourish-anim) (parse) recover this, since it's in the print
-			expect(parsed.history).toEqual([]); // does not include history
+			expect(parsed.history).toEqual(['init without history']);
 			expect(parsed.previousAction).toEqual({
 				text: 'juice flash *AS*',
 				type: 'juice',
@@ -294,9 +297,10 @@ describe('game.$checkCanFlourish', () => {
 				gameFunction: 'check-can-flourish52',
 			});
 			expect(copy.history).toEqual(['shuffle deck (23190)', 'deal all cards']);
-			copy.flashCards = null;
-			copy.history.splice(0);
-			expect(parsed).toEqual(copy);
+
+			expect(copy).toEqual(game);
+			expect(_omit(parsed, 'history', 'flashCards')).toEqual(_omit(copy, 'history', 'flashCards'));
+			expect(_omit(parsed, 'history', 'flashCards')).toEqual(_omit(game, 'history', 'flashCards'));
 
 			// make sure the parse game is the same-ish (and doesn't blow up)
 			copy = game.__copy();
@@ -315,11 +319,10 @@ describe('game.$checkCanFlourish', () => {
 				gameFunction: 'check-can-flourish52',
 			});
 			expect(copy.history).toEqual(['shuffle deck (23190)', 'deal all cards']);
-			copy.flashCards = null;
-			copy.previousAction.text = 'deal all cards';
-			copy.previousAction.type = 'deal';
-			delete copy.previousAction.gameFunction;
-			expect(parsed).toEqual(copy);
+
+			expect(copy).toEqual(game);
+			expect(_omit(parsed, 'history', 'previousAction', 'flashCards')).toEqual(_omit(copy, 'history', 'previousAction', 'flashCards'));
+			expect(_omit(parsed, 'history', 'previousAction', 'flashCards')).toEqual(_omit(game, 'history', 'previousAction', 'flashCards'));
 		});
 	});
 });

@@ -29,7 +29,7 @@ describe('game.undo (+ history)', () => {
 			});
 
 			test('init with invalid history replay', () => {
-				let game = FreeCell.parse(
+				const game = FreeCell.parse(
 					'' + //
 						'             AD 2C       \n' +
 						' AH 8S 2D QS 4C    2S 3D \n' +
@@ -46,14 +46,7 @@ describe('game.undo (+ history)', () => {
 						//53 6a 65 67 85 a8 68 27 // clipped most of the action
 						' 67 '
 				);
-				expect(game.history).toEqual(['init with invalid history replay cards', 'move 6⡀7⡇ 9H→TC']);
-				game = game.undo();
-				expect(game.history).toEqual(['init with invalid history replay cards']);
-				expect(game.previousAction).toEqual({
-					text: 'init with invalid history replay cards',
-					type: 'init',
-					gameFunction: 'undo',
-				});
+				expect(game.history).toEqual(['init with invalid history replay cards', 'invalid move 67 9H→TC']);
 				expect(game.undo()).toBe(game);
 			});
 
@@ -1361,7 +1354,7 @@ describe('game.undo (+ history)', () => {
 					text: 'touch stop',
 					type: 'invalid',
 				});
-				expect(game.history).toEqual(['init with invalid history replay action text', 'touch stop']);
+				expect(game.history).toEqual(['init with invalid history replay action text']);
 				expect(() => game.undo()).not.toThrow();
 				expect(game.undo()).toBe(game);
 			});
@@ -1833,35 +1826,33 @@ describe('game.undo (+ history)', () => {
 
 	describe('bugfixes', () => {
 		test('broken game', () => {
-			const game = FreeCell.parse(
-				'' + //
-					'             AD 2C       \n' +
-					' AH 8S 2D QS 4C 9H 2S 3D \n' + // 9H is in the wrong place
-					' 5C AS 9C KH 4D    3C 4S \n' +
-					' 3S 5D KC 3H KD    6S 8D \n' +
-					' TD 7S JD 7H 8H    JC 7D \n' +
-					' 5S QH 8C 9D KS    4H 6C \n' +
-					' 2H    TH 6D QD    QC 5H \n' +
-					' 9S    7C TS JS    JH    \n' +
-					'       6H          TC    \n' +
-					//                  9H
-					' move 67 9H→TC\n' +
-					':h shuffle32 5\n' +
-					' 53 6a 65 67 85 a8 68 27 \n' +
-					' 67 '
-			);
-			expect(game.history).toEqual(['init with invalid history replay cards', 'move 67 9H→TC']);
-			expect(() => game.undo({ throwError: true })).toThrow('invalid first card pile: move 67 9H→TC; 6 !== 7');
-			const gameUndid = game.undo();
-			expect(gameUndid.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
-			expect(gameUndid.previousAction).toEqual({
-				text: 'invalid move 67 9H→TC',
-				type: 'invalid',
-				gameFunction: 'undo',
-			});
+			const gamePrint =
+				'             AD 2C       \n' +
+				' AH 8S 2D QS 4C 9H 2S 3D \n' + // 9H is in the wrong place
+				' 5C AS 9C KH 4D    3C 4S \n' +
+				' 3S 5D KC 3H KD    6S 8D \n' +
+				' TD 7S JD 7H 8H    JC 7D \n' +
+				' 5S QH 8C 9D KS    4H 6C \n' +
+				' 2H    TH 6D QD    QC 5H \n' +
+				' 9S    7C TS JS    JH    \n' +
+				'       6H          TC    \n' +
+				//                  9H
+				' move 67 9H→TC\n' +
+				':h shuffle32 5\n' +
+				' 53 6a 65 67 85 a8 68 27 \n' +
+				' 67 ';
+			// move is already marked as invalid, so we don't check it with an undo
+			expect(() => FreeCell.parse(gamePrint, { throwError: true })).not.toThrow();
+			const game = FreeCell.parse(gamePrint);
+			expect(game.history).toEqual(['init with invalid history replay cards', 'invalid move 67 9H→TC']);
+			expect(game.undo()).toBe(game);
 
-			// undoing again should just return the same game, since we can't undo past the invalid move
-			expect(gameUndid.undo()).toBe(gameUndid);
+			// … but we really want to check this exception
+			// XXX (techdebt) (optimize) (undo) should we remove this throws case? is it still possible to get here?
+			//  - i think.. if we can't get here without mangling the history, then it should go
+			//  - when it was written, we had an "real life" example, now this is a forced situation
+			game.history[1] = 'move 67 9H→TC';
+			expect(() => game.undo({ throwError: true })).toThrow('invalid first card pile: move 67 9H→TC; 6 !== 7');
 		});
 
 		test('undo to init (hand-jammed)', () => {

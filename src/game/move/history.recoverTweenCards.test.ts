@@ -146,8 +146,7 @@ describe('game/history.recoverTweenCards', () => {
 					' select 7 AS'
 			).$touchAndMove({ fixture: 'cascade', data: [6, 5] });
 			beforeEach(() => {
-				// FIXME init without history
-				expect(game.history).toEqual(['move 7⡅6 8H-7C→cascade (auto-foundation 77c AS,AD,2S)']);
+				expect(game.history).toEqual(['init without history', 'move 7⡅6 8H-7C→cascade (auto-foundation 77c AS,AD,2S)']);
 				expect(game.previousAction).toEqual({
 					text: 'move 7⡅6 8H-7C→cascade (auto-foundation 77c AS,AD,2S)',
 					type: 'move-foundation',
@@ -173,10 +172,9 @@ describe('game/history.recoverTweenCards', () => {
 			});
 
 			test('parse', () => {
-				// FIXME init without history
-				// const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
-				// expect(gameWithHist.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
-				// expect(gameWithHist).toEqual(game);
+				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
+				expect(gameWithHist.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+				expect(gameWithHist).toEqual(game);
 
 				const gameNoHist = FreeCell.parse(game.print());
 				expect(gameNoHist.print()).toBe(game.print());
