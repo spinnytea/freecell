@@ -118,11 +118,11 @@ export interface PreviousAction {
 		producing a final combined move of `move 2⡆a 4S→cell (auto-foundation 56 AH,2H)`.
 		`tweenCards` contains the location of 4S after the user move, before the final location produced by the system move.
 
-		we are keeping track of which cards we part of "move",
+		We are keeping track of which cards we part of "move",
 		specifically so we have {@linkcode Card.location},
-		so we can use that for animations
-
-		this is out-of-scope of a standard {@linkcode FreeCell}, but his is the best time to calc and store it
+		so we can use that for animations.
+		All cards that are part of the first move must be in tweenCards,
+		so we can perform a two-part animation.
 
 		- TODO (techdebt) (combine-move-auto-foundation) (refactor-rename) currently only used for move-foundation
 		   - maybe we should rename this variable?
@@ -440,7 +440,7 @@ export function _parseShorthandMove(shorthandMove: string) {
 	throw new Error(`invalid shorthandMove ${shorthandMove}`);
 }
 
-export function parseActionTextMove(actionText: string) {
+function parseActionTextMove(actionText: string) {
 	const result = _parseActionTextMove(actionText) ?? _parseActionTextMoveFoundation(actionText);
 	if (result) return result;
 	// REVIEW (parse) (refactor-no-throw) where is this used?
@@ -880,4 +880,22 @@ export function unDealAll(game: FreeCell): Card[] {
 	}
 
 	return deckOfCards;
+}
+
+export function recoverTweenCards(game: FreeCell) {
+	if (
+		game.previousAction.type === 'move-foundation' &&
+		!game.previousAction.tweenCards &&
+		history.length
+	) {
+		// TODO (optimize) (parse) (undo) do we really need to call undo during parse?
+		//  - is there a cleaner way to recover the tween cards?
+		// FIXME if there is no overlap between the two parts, we can skip the undo
+		//  - the cards from the first part don't move, so their locations are accurate after the second
+		const undid = game.undo({ skipActionPrev: true });
+		const { fromLocation, toLocation } = parseActionTextMove(game.previousAction.text);
+		game.previousAction.tweenCards = getCardsThatMoved(
+			undid.moveByShorthand(fromLocation + toLocation, { autoFoundation: false })
+		);
+	}
 }

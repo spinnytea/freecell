@@ -24,7 +24,6 @@ import {
 	appendActionToHistory,
 	GameFunction,
 	getCardsThatMoved,
-	parseActionTextMove,
 	parseAltCursorFromPreviousActionText,
 	parseAndUndoPreviousActionText,
 	parseCursorFromPreviousActionText,
@@ -35,6 +34,7 @@ import {
 	PREVIOUS_ACTION_TYPE_IS_MOVE,
 	PREVIOUS_ACTION_TYPE_IS_START_OF_GAME,
 	PreviousAction,
+	recoverTweenCards,
 } from '@/game/move/history';
 import { juice } from '@/game/move/juice';
 import { KeyboardArrowDirection, moveCursorWithBasicArrows } from '@/game/move/keyboard';
@@ -577,18 +577,8 @@ export class FreeCell {
 				didUndo.previousAction.text = 'init';
 			}
 
-			// TODO (techdebt) (optimize) (parse) (undo) copy-pasta, same as in `parse`
-			// redo single move
-			if (
-				!skipActionPrev &&
-				didUndo.previousAction.type === 'move-foundation' &&
-				!didUndo.previousAction.tweenCards
-			) {
-				const secondUndo = didUndo.undo({ skipActionPrev: true });
-				const { fromLocation, toLocation } = parseActionTextMove(didUndo.previousAction.text);
-				didUndo.previousAction.tweenCards = getCardsThatMoved(
-					secondUndo.moveByShorthand(fromLocation + toLocation, { autoFoundation: false })
-				);
+			if (!skipActionPrev) {
+				recoverTweenCards(didUndo);
 			}
 
 			return didUndo;
@@ -1501,20 +1491,7 @@ export class FreeCell {
 			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
 
-		// TODO (techdebt) (optimize) (parse) (undo) copy-pasta, same as in `undo`
-		if (
-			game.previousAction.type === 'move-foundation' &&
-			!game.previousAction.tweenCards &&
-			history.length
-		) {
-			// TODO (optimize) (parse) (undo) do we really need to call undo during parse?
-			//  - is there a cleaner way to recover the tween cards?
-			const secondUndo = game.undo({ skipActionPrev: true });
-			const { fromLocation, toLocation } = parseActionTextMove(game.previousAction.text);
-			game.previousAction.tweenCards = getCardsThatMoved(
-				secondUndo.moveByShorthand(fromLocation + toLocation, { autoFoundation: false })
-			);
-		}
+		recoverTweenCards(game);
 
 		if (verifyActionTextToRecoverCoords) {
 			const move = parseMoveFromActionText(actionText);
