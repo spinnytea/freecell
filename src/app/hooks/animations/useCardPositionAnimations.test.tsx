@@ -408,7 +408,14 @@ describe('useCardPositionAnimations', () => {
 					peekOnly: true,
 				});
 				const gameStateTwo = gameStateOne.$touchAndMove({ fixture: 'cascade', data: [6, 5] });
-				expect(gameStateTwo.previousAction.text).toBe('move 7⡅6 8H-7C→cascade (auto-foundation 77c AS,AD,2S)');
+				expect(gameStateTwo.previousAction).toEqual({
+					text: 'move 7⡅6 8H-7C→cascade (auto-foundation 77c AS,AD,2S)',
+					type: 'move-foundation',
+					tweenCards: [
+						{ rank: '8', suit: 'hearts', location: { fixture: 'cascade', data: [5, 0] } },
+						{ rank: '7', suit: 'clubs', location: { fixture: 'cascade', data: [5, 1] } },
+					],
+				});
 
 				// BUG (techdebt) (animation) (gameplay) finish test
 				//  - yes we animate 8H-7C→cascade

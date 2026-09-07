@@ -939,10 +939,10 @@ describe('game.parse', () => {
 						'                   9H    \n' +
 						' move 65 KS-QD-JS→8H' // this is an illegal move
 				);
+				// XXX (optional-complexity) (undo) init with invalid move?
 				expect(game.history).toEqual(['init without history']);
+
 				const gameUndid = game.undo();
-				// REVIEW (undo) this message is invalid? why is the previous action the move we just undid?
-				//  - why isn't the text 'init without history' ?
 				expect(gameUndid.print()).toBe(
 					'' + //
 						'             AD 2C       \n' +
@@ -957,6 +957,7 @@ describe('game.parse', () => {
 						'                   9H    \n' +
 						' invalid move 65 KS-QD-JS→8H'
 				);
+
 				// trying to replay the move is invalid
 				// XXX (optional-complexity) (undo) should we block the undo since the redo is invalid?
 				expect(gameUndid.moveByShorthand('65').print()).toBe(

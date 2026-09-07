@@ -1236,16 +1236,14 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +
-						' move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)\n' +
-						' hand-jammed'
+						' move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)'
 				);
-				// XXX (coords) (undo) game.previousAction.text doesn't need coords (compare to the others that do)
 				expect(game.previousAction).toEqual({
 					text: 'move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: 'king', suit: 'spades', location: { fixture: 'cell', data: [1] } }],
 				});
-				expect(game.history).toEqual(['hand-jammed', 'move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)']);
+				expect(game.history).toEqual(['init without history', 'move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)']);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 
 				game = game.undo();
@@ -1253,14 +1251,14 @@ describe('game.undo (+ history)', () => {
 					'' + //
 						' KS          JC JD JH TS \n' +
 						' KC KD KH JS QC QD QH QS \n' +
-						' hand-jammed'
+						' init without history'
 				);
 				expect(game.previousAction).toEqual({
-					text: 'hand-jammed',
+					text: 'init without history',
 					type: 'init',
 					gameFunction: 'undo',
 				});
-				expect(game.history).toEqual(['hand-jammed']);
+				expect(game.history).toEqual(['init without history']);
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 
@@ -1271,16 +1269,14 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +
-						' move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)\n' +
-						' hand-jammed'
+						' move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)'
 				);
-				// XXX (coords) (undo) game.previousAction.text is missing coords
 				expect(game.previousAction).toEqual({
-					text: 'move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)',
+					text: 'move 7⡀8 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [7, 0] } }],
 				});
-				expect(game.history).toEqual(['hand-jammed', 'move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)']);
+				expect(game.history).toEqual(['init without history', 'move 7⡀8 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)']);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 
 				game = game.undo();
@@ -1289,14 +1285,14 @@ describe('game.undo (+ history)', () => {
 						'                KH KD KC \n' +
 						' KS JS 9S 7S 5S 3S AS    \n' +
 						' QS TS 8S 6S 4S 2S       \n' +
-						' hand-jammed'
+						' init without history'
 				);
 				expect(game.previousAction).toEqual({
-					text: 'hand-jammed',
+					text: 'init without history',
 					type: 'init',
 					gameFunction: 'undo',
 				});
-				expect(game.history).toEqual(['hand-jammed']);
+				expect(game.history).toEqual(['init without history']);
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 
@@ -1307,18 +1303,16 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +
-						' move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)\n' +
-						' deal all cards'
+						' move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)'
 				);
-				// XXX (coords) (undo) game.previousAction.text is missing coords
 				expect(game.previousAction).toEqual({
-					text: 'move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
+					text: 'move 4⡆6⡅ AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [5, 6] } }],
 				});
 				expect(game.history).toEqual([
-					'deal all cards',
-					'move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
+					'init without history',
+					'move 4⡆6⡅ AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
 				]);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 
@@ -1333,14 +1327,14 @@ describe('game.undo (+ history)', () => {
 						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
 						' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
 						' AS AH AD AC             \n' +
-						' deal all cards'
+						' init without history'
 				);
 				expect(game.previousAction).toEqual({
-					text: 'deal all cards',
-					type: 'deal',
+					text: 'init without history',
+					type: 'init',
 					gameFunction: 'undo',
 				});
-				expect(game.history).toEqual(['deal all cards']);
+				expect(game.history).toEqual(['init without history']);
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 		});

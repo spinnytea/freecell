@@ -3,10 +3,8 @@ import { beforeEach, describe, expect, test } from 'vitest';
 import { FreeCell } from '@/game/game';
 
 describe('game/history.recoverTweenCards', () => {
-	// FIXME examples with sequence
 	describe('no card overlap', () => {
 		const game = new FreeCell({ cellCount: 6, cascadeCount: 10 }).shuffle32(25759).dealAll().moveByShorthand('42').moveByShorthand('4a');
-
 		beforeEach(() => {
 			expect(game.print()).toBe(
 				'' + //
@@ -53,7 +51,6 @@ describe('game/history.recoverTweenCards', () => {
 
 	describe('card overlap', () => {
 		const game = new FreeCell().shuffle32(6893).dealAll().moveByShorthand('82');
-
 		beforeEach(() => {
 			expect(game.print()).toBe(
 				'' + //
@@ -95,6 +92,97 @@ describe('game/history.recoverTweenCards', () => {
 			expect(gameNoHist.print()).toBe(game.print());
 			expect(gameNoHist.history).toEqual(['init without history', 'move 8⡅2⡆ AD→2S (auto-foundation 272 AD,AS,2S)']);
 			expect(_omit(gameNoHist, 'history')).toEqual(_omit(game, 'history'));
+		});
+	});
+
+	describe('move-foundation from useCardPositionAnimations', () => {
+		describe('one and one', () => {
+			const game = new FreeCell().shuffle32(5).dealAll().moveByShorthand('53');
+			beforeEach(() => {
+				expect(game.previousAction).toEqual({
+					text: 'move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)',
+					type: 'move-foundation',
+					tweenCards: [{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } }],
+				});
+			});
+
+			test('undo', () => {
+				const gameUndid = game.moveByShorthand('1a').undo();
+				expect(gameUndid.previousAction).toEqual({
+					text: 'move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)',
+					type: 'move-foundation',
+					tweenCards: [{ rank: '6', suit: 'hearts', location: { fixture: 'cascade', data: [2, 7] } }],
+					gameFunction: 'undo',
+				});
+				expect(_omit(gameUndid, 'previousAction.gameFunction')).toEqual(_omit(game, 'previousAction.gameFunction'));
+			});
+
+			test('parse', () => {
+				const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
+				expect(gameWithHist.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+				expect(gameWithHist).toEqual(game);
+
+				const gameNoHist = FreeCell.parse(game.print());
+				expect(gameNoHist.print()).toBe(game.print());
+				expect(gameNoHist.history).toEqual(['init without history', 'move 5⡅3⡆ 6H→7C (auto-foundation 2 AD)']);
+				expect(_omit(gameNoHist, 'history')).toEqual(_omit(game, 'history'));
+			});
+		});
+
+		describe('selection goes to foundation', () => {
+			const game = FreeCell.parse(
+				'' + //
+					' 4S 7S 2S    AH          \n' +
+					' 8D 6C JS 3D 3H    8C 6S \n' +
+					' 2H 9S QC 9C 7D    9H JD \n' +
+					' 2C AC 5D 5C TS    QH KH \n' +
+					' TH 6D 5H 4H TD    AD 6H \n' +
+					' 7H 8S KS 3S KC   >AS|3C \n' +
+					'    2D KD    QD    8H 4C \n' +
+					'    5S QS    JC    7C    \n' +
+					'    4D JH                \n' +
+					'       TC                \n' +
+					'       9D                \n' +
+					' select 7 AS'
+			).$touchAndMove({ fixture: 'cascade', data: [6, 5] });
+			beforeEach(() => {
+				// FIXME init without history
+				expect(game.history).toEqual(['move 7⡅6 8H-7C→cascade (auto-foundation 77c AS,AD,2S)']);
+				expect(game.previousAction).toEqual({
+					text: 'move 7⡅6 8H-7C→cascade (auto-foundation 77c AS,AD,2S)',
+					type: 'move-foundation',
+					tweenCards: [
+						{ rank: '8', suit: 'hearts', location: { fixture: 'cascade', data: [5, 0] } },
+						{ rank: '7', suit: 'clubs', location: { fixture: 'cascade', data: [5, 1] } },
+					],
+				});
+			});
+
+			test('undo', () => {
+				const gameUndid = game.moveByShorthand('1c').undo();
+				expect(gameUndid.previousAction).toEqual({
+					text: 'move 7⡅6 8H-7C→cascade (auto-foundation 77c AS,AD,2S)',
+					type: 'move-foundation',
+					tweenCards: [
+						{ rank: '8', suit: 'hearts', location: { fixture: 'cascade', data: [5, 0] } },
+						{ rank: '7', suit: 'clubs', location: { fixture: 'cascade', data: [5, 1] } },
+					],
+					gameFunction: 'undo',
+				});
+				expect(_omit(gameUndid, 'previousAction.gameFunction')).toEqual(_omit(game, 'previousAction.gameFunction'));
+			});
+
+			test('parse', () => {
+				// FIXME init without history
+				// const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
+				// expect(gameWithHist.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+				// expect(gameWithHist).toEqual(game);
+
+				const gameNoHist = FreeCell.parse(game.print());
+				expect(gameNoHist.print()).toBe(game.print());
+				expect(gameNoHist.history).toEqual(['init without history', 'move 7⡅6 8H-7C→cascade (auto-foundation 77c AS,AD,2S)']);
+				expect(_omit(gameNoHist, 'history')).toEqual(_omit(game, 'history'));
+			});
 		});
 	});
 });

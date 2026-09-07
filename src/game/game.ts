@@ -1494,8 +1494,6 @@ export class FreeCell {
 		if (verifyActionTextToRecoverCoords) {
 			const move = parseMoveFromActionText(actionText);
 			if (move) {
-				// TODO (optimize) (parse) (undo) is there a better way to get the coords?
-				//  - do we _really_ need the coords this badly?
 				const undid = game.undo();
 				if (undid.previousAction.type === 'invalid') return undid;
 
@@ -1509,7 +1507,7 @@ export class FreeCell {
 						availableMoves: null,
 					});
 				}
-				if (actionText === redid.previousAction.text) return game; // XXX (test) e.g. ab
+
 				if (removeBraille(actionText) === removeBraille(redid.previousAction.text)) {
 					return game.__clone({
 						action: redid.previousAction,
@@ -1518,8 +1516,6 @@ export class FreeCell {
 				}
 			}
 		} else {
-			// we shouldn't need this (verifyActionTextToRecoverCoords should trigger)
-			// better to keep it just in case
 			recoverTweenCards(game);
 		}
 
