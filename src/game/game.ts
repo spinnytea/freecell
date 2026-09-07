@@ -1491,8 +1491,6 @@ export class FreeCell {
 			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
 
-		recoverTweenCards(game);
-
 		if (verifyActionTextToRecoverCoords) {
 			const move = parseMoveFromActionText(actionText);
 			if (move) {
@@ -1519,6 +1517,10 @@ export class FreeCell {
 					});
 				}
 			}
+		} else {
+			// we shouldn't need this (verifyActionTextToRecoverCoords should trigger)
+			// better to keep it just in case
+			recoverTweenCards(game);
 		}
 
 		return game;

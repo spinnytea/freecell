@@ -888,14 +888,25 @@ export function recoverTweenCards(game: FreeCell) {
 		!game.previousAction.tweenCards &&
 		history.length
 	) {
-		// TODO (optimize) (parse) (undo) do we really need to call undo during parse?
-		//  - is there a cleaner way to recover the tween cards?
-		// FIXME if there is no overlap between the two parts, we can skip the undo
-		//  - the cards from the first part don't move, so their locations are accurate after the second
-		const undid = game.undo({ skipActionPrev: true });
-		const { fromLocation, toLocation } = parseActionTextMove(game.previousAction.text);
-		game.previousAction.tweenCards = getCardsThatMoved(
-			undid.moveByShorthand(fromLocation + toLocation, { autoFoundation: false })
-		);
+		const result = _parseActionTextMoveFoundation(game.previousAction.text);
+		if (result) {
+			const { fromLocation, toLocation, fromShorthand, autoShorthand } = result;
+			const fromShorthands = fromShorthand.split('-');
+			const hasCardsInBothPhases = autoShorthand.some((sh) => fromShorthands.includes(sh));
+
+			if (!hasCardsInBothPhases) {
+				// no overlapping cards, so where they are now is accurate
+				game.previousAction.tweenCards = fromShorthands.map((rs) =>
+					findCard(game.cards, parseShorthandCard(rs))
+				);
+			} else {
+				// cards moved in both steps, it's non-trivial to recover their originals state
+				// (e.g. 52-card flourish, moving moved that fourth (or first) card to auto-foundation)
+				const redid = game
+					.undo({ skipActionPrev: true })
+					.moveByShorthand(fromLocation + toLocation, { autoFoundation: false });
+				game.previousAction.tweenCards = getCardsThatMoved(redid);
+			}
+		}
 	}
 }

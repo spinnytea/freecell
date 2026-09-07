@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, test } from 'vitest';
 import { FreeCell } from '@/game/game';
 
 describe('game/history.recoverTweenCards', () => {
+	// FIXME examples with sequence
 	describe('no card overlap', () => {
 		const game = new FreeCell({ cellCount: 6, cascadeCount: 10 }).shuffle32(25759).dealAll().moveByShorthand('42').moveByShorthand('4a');
 

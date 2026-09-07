@@ -1,3 +1,4 @@
+import { omit as _omit } from 'lodash';
 import { describe, expect, test } from 'vitest';
 import { availableMovesMinimized } from '@/app/testUtils';
 import { FreeCell } from '@/game/game';
@@ -640,8 +641,14 @@ describe('game.autoMove', () => {
 			});
 			expect(game.history).toEqual(['hand-jammed', 'move 2⡁5⡀ QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)']);
 
-			expect(FreeCell.parse(game.print({ includeHistory: true })).print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
-			expect(FreeCell.parse(game.print({ includeHistory: true }))).toEqual(game);
+			const gameWithHist = FreeCell.parse(game.print({ includeHistory: true }));
+			expect(gameWithHist.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
+			expect(gameWithHist).toEqual(game);
+
+			const gameNoHist = FreeCell.parse(game.print());
+			expect(gameNoHist.print()).toBe(game.print());
+			expect(gameNoHist.history).toEqual(['init without history', 'move 2⡁5⡀ QD-JS→KS (auto-foundation 1551215 JD,JS,QD,QS,KC,KD,KS)']);
+			expect(_omit(gameNoHist, 'history')).toEqual(_omit(game, 'history'));
 		});
 
 		test('auto-foundation', () => {
