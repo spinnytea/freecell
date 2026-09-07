@@ -1503,29 +1503,27 @@ export class FreeCell {
 			PREVIOUS_ACTION_TYPE_IN_HISTORY.has(game.previousAction.type) &&
 			game.previousAction.type !== 'invalid'
 		) {
+			// REVIEW (techdebt) (undo) this block needs more scrutiny
+			//  - it's right to have it (validate the previous action)
+			//  - are there other situations we can ignore, beyond replayedGameForHistroy
+			//  - each of the returns is… hacked in and not thought out
 			const move = parseMoveFromActionText(actionText);
 			if (move) {
 				const undid = game.undo({ throwError });
+				if (undid === game) return game; // invalid, but no new information
 				if (undid.previousAction.type === 'invalid') {
-					let initMove = game.history.at(0);
-					if (!initMove?.startsWith('init with invalid')) {
-						initMove = 'init with invalid move';
-					}
 					delete undid.previousAction.gameFunction;
-					return new FreeCell({
-						...game,
+					return game.__clone({
 						action: undid.previousAction,
-						history: [initMove, undid.previousAction.text],
+						history: ['init with invalid move'],
 					});
 				}
 
 				const redid = undid.moveByShorthand(move);
 				if (redid.previousAction.type === 'invalid') {
-					return undid.__clone({
+					return game.__clone({
 						action: redid.previousAction,
-						cursor: redid.cursor,
-						cards: redid.cards,
-						history: ['init with invalid move', redid.previousAction.text],
+						history: ['init with invalid move'],
 						selection: null,
 						availableMoves: null,
 					});

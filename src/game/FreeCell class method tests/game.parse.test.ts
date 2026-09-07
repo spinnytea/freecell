@@ -974,6 +974,43 @@ describe('game.parse', () => {
 				expect(game.undo()).toBe(game);
 			});
 
+			test('invalid as-stated', () => {
+				const game = FreeCell.parse(
+					'' + //
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C    2S 3D \n' +
+						' 5C AS 9C KH 4D    3C 4S \n' +
+						' 3S 5D KC 3H KD    6S 8D \n' +
+						' TD 7S JD 7H 8H    JC 7D \n' +
+						' 5S QH 8C 9D>KS|   4H 6C \n' +
+						' 2H    TH 6D|QD|   QC 5H \n' +
+						' 9S    7C TS|JS|   JH    \n' +
+						'       6H          TC    \n' +
+						'                   9H    \n' +
+						' invalid move 54 KS-QD-JS→TS'
+				);
+				expect(game.history).toEqual(['init without history']);
+				expect(game.previousAction).toEqual({
+					text: 'invalid move 54 KS-QD-JS→TS',
+					type: 'invalid',
+				});
+				expect(game.print()).toBe(
+					'' + //
+						'             AD 2C       \n' +
+						' AH 8S 2D QS 4C    2S 3D \n' +
+						' 5C AS 9C KH 4D    3C 4S \n' +
+						' 3S 5D KC 3H KD    6S 8D \n' +
+						' TD 7S JD 7H 8H    JC 7D \n' +
+						' 5S QH 8C 9D>KS|   4H 6C \n' +
+						' 2H    TH 6D|QD|   QC 5H \n' +
+						' 9S    7C TS|JS|   JH    \n' +
+						'       6H          TC    \n' +
+						'                   9H    \n' +
+						' invalid move 54 KS-QD-JS→TS'
+				);
+				expect(game.undo()).toBe(game);
+			});
+
 			describe('invalid move (illegal move)', () => {
 				test('undo successful', () => {
 					const game = FreeCell.parse(
@@ -990,26 +1027,26 @@ describe('game.parse', () => {
 							'                   9H    \n' +
 							' move 65 KS-QD-JS→8H' // this is an illegal move
 					);
-					expect(game.history).toEqual(['init with invalid move', 'invalid move 6⡀5⡃ KS-QD-JS→8H']);
+					expect(game.history).toEqual(['init with invalid move']);
 					expect(game.previousAction).toEqual({
 						text: 'invalid move 6⡀5⡃ KS-QD-JS→8H',
 						type: 'invalid',
 					});
-					// FIXME should parse _change_ the board state?
 					expect(game.print()).toBe(
 						'' + //
 							'             AD 2C       \n' +
-							' AH 8S 2D QS 4C KS 2S 3D \n' +
-							' 5C AS 9C KH 4D QD 3C 4S \n' +
-							' 3S 5D KC 3H KD JS 6S 8D \n' +
-							' TD 7S JD 7H>8H    JC 7D \n' +
-							' 5S QH 8C 9D       4H 6C \n' +
-							' 2H    TH 6D       QC 5H \n' +
-							' 9S    7C TS       JH    \n' +
+							' AH 8S 2D QS 4C    2S 3D \n' +
+							' 5C>AS 9C KH 4D    3C 4S \n' +
+							' 3S 5D KC 3H KD    6S 8D \n' +
+							' TD 7S JD 7H 8H    JC 7D \n' +
+							' 5S QH 8C 9D KS    4H 6C \n' +
+							' 2H    TH 6D QD    QC 5H \n' +
+							' 9S    7C TS JS    JH    \n' +
 							'       6H          TC    \n' +
 							'                   9H    \n' +
 							' invalid move 65 KS-QD-JS→8H'
 					);
+					expect(game.undo()).toBe(game);
 				});
 
 				test('undo unsuccessful', () => {
@@ -1027,7 +1064,7 @@ describe('game.parse', () => {
 							'                   9H    \n' +
 							' move 21 AS→9S' // this is an illegal move
 					);
-					expect(game.history).toEqual(['init with invalid move', 'invalid move 21 AS→9S']);
+					expect(game.history).toEqual(['init with invalid move']);
 					expect(game.previousAction).toEqual({
 						text: 'invalid move 21 AS→9S',
 						type: 'invalid',
@@ -1046,6 +1083,7 @@ describe('game.parse', () => {
 							'                   9H    \n' +
 							' invalid move 21 AS→9S'
 					);
+					expect(game.undo()).toBe(game);
 				});
 			});
 
@@ -1065,7 +1103,7 @@ describe('game.parse', () => {
 						' move ab 9H→TC'; // this is wrong (cursor is on '7 TC', ab are cells)
 					expect(() => FreeCell.parse(gamePrint, { throwError: true })).toThrow('invalid first card pile: move ab 9H→TC; 7 !== b');
 					const game = FreeCell.parse(gamePrint);
-					expect(game.history).toEqual(['init with invalid move', 'invalid move ab 9H→TC']);
+					expect(game.history).toEqual(['init with invalid move']);
 					expect(game.undo()).toBe(game);
 				});
 
@@ -1084,7 +1122,7 @@ describe('game.parse', () => {
 						' move a7 9H-8C→TC'; // this is wrong (this isn't the sequence in the cascade)
 					expect(() => FreeCell.parse(gamePrint, { throwError: true })).toThrow('invalid sequence: move a7 9H-8C→TC; 9H !== 9H-8C');
 					const game = FreeCell.parse(gamePrint);
-					expect(game.history).toEqual(['init with invalid move', 'invalid move a7 9H-8C→TC']);
+					expect(game.history).toEqual(['init with invalid move']);
 					expect(game.undo()).toBe(game);
 				});
 			});
