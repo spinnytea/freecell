@@ -577,6 +577,7 @@ export class FreeCell {
 				didUndo.previousAction.text = 'init';
 			}
 
+			// TODO (techdebt) (optimize) (parse) (undo) copy-pasta, same as in `parse`
 			// redo single move
 			if (
 				!skipActionPrev &&
@@ -1500,7 +1501,7 @@ export class FreeCell {
 			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
 
-		// TODO (techdebt) (parse) (undo) copy-pasta, same as `undo`
+		// TODO (techdebt) (optimize) (parse) (undo) copy-pasta, same as in `undo`
 		if (
 			game.previousAction.type === 'move-foundation' &&
 			!game.previousAction.tweenCards &&

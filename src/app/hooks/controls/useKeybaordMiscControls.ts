@@ -11,7 +11,7 @@ import { PREVIOUS_ACTION_TYPE_IS_START_OF_GAME } from '@/game/move/history';
 */
 function ignoreTarget(target: EventTarget | null): boolean {
 	if (target) {
-		// don't activate space/enter when focused on a button (undo) or checkbox (show debug controls)
+		// don't activate space/enter when focused on a button (e.g. undo) or checkbox (e.g. show debug controls)
 		const targetTagName = (target as HTMLElement).tagName.toLowerCase();
 		return ['button', 'input'].includes(targetTagName);
 	}

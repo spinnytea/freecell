@@ -111,7 +111,12 @@ export interface PreviousAction {
 	type: PreviousActionType;
 
 	/**
-		just the cards that moved during an in-between step (i.e. move -> auto-foundation)
+		just the cards that moved during an in-between step (i.e. move -> auto-foundation).
+
+		For example: a user performs a move: `move 2⡆a 4S→cell`,
+		and the system chains on: `auto-foundation 56 AH,2H`,
+		producing a final combined move of `move 2⡆a 4S→cell (auto-foundation 56 AH,2H)`.
+		`tweenCards` contains the location of 4S after the user move, before the final location produced by the system move.
 
 		we are keeping track of which cards we part of "move",
 		specifically so we have {@linkcode Card.location},

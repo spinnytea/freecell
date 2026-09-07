@@ -14,9 +14,10 @@ function undoUntilStart(game: FreeCell): FreeCell {
 
 // TODO (techdebt) confirm all MoveSourceType ⨉ MoveDestinationType
 //  - make a generic helper (like actionText-examples)
-// XXX (techdebt) (history) (undo) ACTION_TEXT_EXAMPLES
-//  - although, many of these don't end up in the history, so we can't really undo them
-//  - i guess this is a "but what if they _were_ in the history"
+// TODO (techdebt) (history) (undo) ACTION_TEXT_EXAMPLES
+//  - filter by what ends up in the history
+// XXX (history) (optional-complexity) (undo) ACTION_TEXT_EXAMPLES
+//  - but what if they _were_ in the history
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
 		describe('init', () => {
