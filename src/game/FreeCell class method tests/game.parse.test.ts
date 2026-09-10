@@ -1,6 +1,7 @@
 import { omit as _omit } from 'lodash';
-import { describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { CardLocation } from '@/game/card/card';
+import { ACTION_TEXT_EXAMPLES, FIFTY_TWO_CARD_FLOURISH } from '@/game/catalog/actionText-examples';
 import { FreeCell } from '@/game/game';
 import { PREVIOUS_ACTION_TYPE_IS_START_OF_GAME } from '@/game/move/history';
 
@@ -198,6 +199,51 @@ describe('game.parse', () => {
 					type: 'cursor',
 				});
 				expect(game.undo()).toBe(game);
+			});
+		});
+
+		describe('recursion', () => {
+			test('without history', () => {
+				const parseSpy = vi.spyOn(FreeCell, 'parse');
+				const undoSpy = vi.spyOn(FreeCell.prototype, 'undo');
+
+				const gamePrint = new FreeCell({ cellCount: 1, cascadeCount: 4 }).dealAll().$touchAndMove('AS').print();
+				expect(parseSpy).toHaveBeenCalledTimes(0);
+				expect(undoSpy).toHaveBeenCalledTimes(0);
+
+				const game = FreeCell.parse(gamePrint);
+				expect(game.print()).toBe(gamePrint);
+				expect(parseSpy).toHaveBeenCalledTimes(1);
+				expect(undoSpy).toHaveBeenCalledTimes(1);
+			});
+
+			test('with history', () => {
+				const parseSpy = vi.spyOn(FreeCell, 'parse');
+				const undoSpy = vi.spyOn(FreeCell.prototype, 'undo');
+
+				const gamePrint = ACTION_TEXT_EXAMPLES[FIFTY_TWO_CARD_FLOURISH];
+				expect(parseSpy).toHaveBeenCalledTimes(0);
+				expect(undoSpy).toHaveBeenCalledTimes(0);
+
+				const game = FreeCell.parse(gamePrint);
+				expect(game).toBeInstanceOf(FreeCell);
+				expect(game.print({ includeHistory: true })).toBe(gamePrint);
+				expect(parseSpy).toHaveBeenCalledTimes(1);
+				expect(undoSpy).toHaveBeenCalledTimes(0);
+			});
+
+			test('with invalid history', () => {
+				const parseSpy = vi.spyOn(FreeCell, 'parse');
+				const undoSpy = vi.spyOn(FreeCell.prototype, 'undo');
+
+				const gamePrint = new FreeCell({ cellCount: 1, cascadeCount: 4 }).dealAll().$touchAndMove('AS').print({ includeHistory: true });
+				expect(parseSpy).toHaveBeenCalledTimes(0);
+				expect(undoSpy).toHaveBeenCalledTimes(0);
+
+				const game = FreeCell.parse(gamePrint);
+				expect(game.print({ includeHistory: true })).toBe(gamePrint);
+				expect(parseSpy).toHaveBeenCalledTimes(1);
+				expect(undoSpy).toHaveBeenCalledTimes(1);
 			});
 		});
 	});
@@ -1027,7 +1073,7 @@ describe('game.parse', () => {
 							'                   9H    \n' +
 							' move 65 KS-QD-JS→8H' // this is an illegal move
 					);
-					expect(game.history).toEqual(['init with invalid move']);
+					expect(game.history).toEqual(['init with invalid move redid']);
 					expect(game.previousAction).toEqual({
 						text: 'invalid move 6⡀5⡃ KS-QD-JS→8H',
 						type: 'invalid',
@@ -1064,7 +1110,7 @@ describe('game.parse', () => {
 							'                   9H    \n' +
 							' move 21 AS→9S' // this is an illegal move
 					);
-					expect(game.history).toEqual(['init with invalid move']);
+					expect(game.history).toEqual(['init with invalid move undid']);
 					expect(game.previousAction).toEqual({
 						text: 'invalid move 21 AS→9S',
 						type: 'invalid',
@@ -1103,7 +1149,7 @@ describe('game.parse', () => {
 						' move ab 9H→TC'; // this is wrong (cursor is on '7 TC', ab are cells)
 					expect(() => FreeCell.parse(gamePrint, { throwError: true })).toThrow('invalid first card pile: move ab 9H→TC; 7 !== b');
 					const game = FreeCell.parse(gamePrint);
-					expect(game.history).toEqual(['init with invalid move']);
+					expect(game.history).toEqual(['init with invalid move undid']);
 					expect(game.undo()).toBe(game);
 				});
 
@@ -1122,7 +1168,7 @@ describe('game.parse', () => {
 						' move a7 9H-8C→TC'; // this is wrong (this isn't the sequence in the cascade)
 					expect(() => FreeCell.parse(gamePrint, { throwError: true })).toThrow('invalid sequence: move a7 9H-8C→TC; 9H !== 9H-8C');
 					const game = FreeCell.parse(gamePrint);
-					expect(game.history).toEqual(['init with invalid move']);
+					expect(game.history).toEqual(['init with invalid move undid']);
 					expect(game.undo()).toBe(game);
 				});
 			});
@@ -1496,13 +1542,6 @@ describe('game.parse', () => {
 		});
 
 		describe('various valid selections', () => {
-			const game = FreeCell.parse(
-				'' + //
-					'>9C 9D 9H 9S 8C 8D 8H 8S \n' +
-					' JC JD JH JS TC TD TH TS \n' +
-					' KC KD KH KS QC QD QH QS \n' +
-					' hand-jammed'
-			);
 			const cursor_locations = [
 				'{ "fixture": "cell", "data": [0] }',
 				'{ "fixture": "cell", "data": [1] }',
@@ -1530,6 +1569,16 @@ describe('game.parse', () => {
 				'{ "fixture": "cascade", "data": [7, 1] }',
 			];
 			const selection_locations = cursor_locations.filter((l) => !l.includes('foundation'));
+			let game: FreeCell;
+			beforeEach(() => {
+				game = FreeCell.parse(
+					'' + //
+						'>9C 9D 9H 9S 8C 8D 8H 8S \n' +
+						' JC JD JH JS TC TD TH TS \n' +
+						' KC KD KH KS QC QD QH QS \n' +
+						' hand-jammed'
+				);
+			});
 
 			describe.each(selection_locations)('selection %s', (s) => {
 				test.each(cursor_locations)('cursor %s', (c) => {

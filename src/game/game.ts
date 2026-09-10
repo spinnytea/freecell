@@ -1503,33 +1503,36 @@ export class FreeCell {
 			PREVIOUS_ACTION_TYPE_IN_HISTORY.has(game.previousAction.type) &&
 			game.previousAction.type !== 'invalid'
 		) {
-			// REVIEW (techdebt) (undo) this block needs more scrutiny
-			//  - it's right to have it (validate the previous action)
-			//  - are there other situations we can ignore, beyond replayedGameForHistroy
-			//  - each of the returns is… hacked in and not thought out
+			// check the previousAction
+			//  - we may need to calculate coords for the actionText
+			//  - we may need to calculate tweenCards
+			//  - the actionText, as stated, may be invalid
 			const move = parseMoveFromActionText(actionText);
 			if (move) {
 				const undid = game.undo({ throwError });
-				if (undid === game) return game; // invalid, but no new information
+				if (undid === game) return game; // no new information
 				if (undid.previousAction.type === 'invalid') {
-					delete undid.previousAction.gameFunction;
+					const action: PreviousAction = { ...undid.previousAction };
+					delete action.gameFunction;
+					// XXX (parse) (test) do not change game state: selection, flashCards
 					return game.__clone({
-						action: undid.previousAction,
-						history: ['init with invalid move'],
+						action,
+						history: ['init with invalid move undid'],
 					});
 				}
 
 				const redid = undid.moveByShorthand(move);
+				if (redid === game) return game; // TODO (parse) (test) (undo) invalid starting selection that we were able to undo?
 				if (redid.previousAction.type === 'invalid') {
+					// XXX (parse) (test) do not change game state: selection, flashCards
 					return game.__clone({
 						action: redid.previousAction,
-						history: ['init with invalid move'],
-						selection: null,
-						availableMoves: null,
+						history: ['init with invalid move redid'],
 					});
 				}
 
 				if (removeBraille(actionText) === removeBraille(redid.previousAction.text)) {
+					// XXX (parse) (test) do not change game state: selection, flashCards
 					return game.__clone({
 						action: redid.previousAction,
 						history: redid.history.slice(0, -1),
