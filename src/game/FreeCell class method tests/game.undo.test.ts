@@ -14,9 +14,10 @@ function undoUntilStart(game: FreeCell): FreeCell {
 
 // TODO (techdebt) confirm all MoveSourceType ⨉ MoveDestinationType
 //  - make a generic helper (like actionText-examples)
-// XXX (techdebt) (history) (undo) ACTION_TEXT_EXAMPLES
-//  - although, many of these don't end up in the history, so we can't really undo them
-//  - i guess this is a "but what if they _were_ in the history"
+// TODO (techdebt) (history) (undo) ACTION_TEXT_EXAMPLES
+//  - filter by what ends up in the history
+// XXX (history) (optional-complexity) (undo) ACTION_TEXT_EXAMPLES
+//  - but what if they _were_ in the history
 describe('game.undo (+ history)', () => {
 	describe('PreviousActionType', () => {
 		describe('init', () => {
@@ -28,7 +29,7 @@ describe('game.undo (+ history)', () => {
 			});
 
 			test('init with invalid history replay', () => {
-				let game = FreeCell.parse(
+				const game = FreeCell.parse(
 					'' + //
 						'             AD 2C       \n' +
 						' AH 8S 2D QS 4C    2S 3D \n' +
@@ -45,14 +46,7 @@ describe('game.undo (+ history)', () => {
 						//53 6a 65 67 85 a8 68 27 // clipped most of the action
 						' 67 '
 				);
-				expect(game.history).toEqual(['init with invalid history replay cards', 'move 6⡀7⡇ 9H→TC']);
-				game = game.undo();
-				expect(game.history).toEqual(['init with invalid history replay cards']);
-				expect(game.previousAction).toEqual({
-					text: 'init with invalid history replay cards',
-					type: 'init',
-					gameFunction: 'undo',
-				});
+				expect(game.history).toEqual(['init with invalid history replay cards', 'invalid move 67 9H→TC']);
 				expect(game.undo()).toBe(game);
 			});
 
@@ -1235,15 +1229,14 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +
-						' move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)\n' +
-						' hand-jammed'
+						' move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)'
 				);
 				expect(game.previousAction).toEqual({
 					text: 'move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: 'king', suit: 'spades', location: { fixture: 'cell', data: [1] } }],
 				});
-				expect(game.history).toEqual(['hand-jammed', 'move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)']);
+				expect(game.history).toEqual(['init without history', 'move ab KS→cell (auto-foundation 54678123b QC,JS,QD,QH,QS,KC,KD,KH,KS)']);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 
 				game = game.undo();
@@ -1251,14 +1244,14 @@ describe('game.undo (+ history)', () => {
 					'' + //
 						' KS          JC JD JH TS \n' +
 						' KC KD KH JS QC QD QH QS \n' +
-						' hand-jammed'
+						' init without history'
 				);
 				expect(game.previousAction).toEqual({
-					text: 'hand-jammed',
+					text: 'init without history',
 					type: 'init',
 					gameFunction: 'undo',
 				});
-				expect(game.history).toEqual(['hand-jammed']);
+				expect(game.history).toEqual(['init without history']);
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 
@@ -1269,15 +1262,14 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +
-						' move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)\n' +
-						' hand-jammed'
+						' move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)'
 				);
 				expect(game.previousAction).toEqual({
-					text: 'move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)',
+					text: 'move 7⡀8 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [7, 0] } }],
 				});
-				expect(game.history).toEqual(['hand-jammed', 'move 78 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)']);
+				expect(game.history).toEqual(['init without history', 'move 7⡀8 AS→cascade (flourish 8665544332211 AS,2S,3S,4S,5S,6S,7S,8S,9S,TS,JS,QS,KS)']);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 
 				game = game.undo();
@@ -1286,14 +1278,14 @@ describe('game.undo (+ history)', () => {
 						'                KH KD KC \n' +
 						' KS JS 9S 7S 5S 3S AS    \n' +
 						' QS TS 8S 6S 4S 2S       \n' +
-						' hand-jammed'
+						' init without history'
 				);
 				expect(game.previousAction).toEqual({
-					text: 'hand-jammed',
+					text: 'init without history',
 					type: 'init',
 					gameFunction: 'undo',
 				});
-				expect(game.history).toEqual(['hand-jammed']);
+				expect(game.history).toEqual(['init without history']);
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 
@@ -1304,17 +1296,16 @@ describe('game.undo (+ history)', () => {
 						'                         \n' +
 						':    Y O U   W I N !    :\n' +
 						'                         \n' +
-						' move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)\n' +
-						' deal all cards'
+						' move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)'
 				);
 				expect(game.previousAction).toEqual({
-					text: 'move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
+					text: 'move 4⡆6⡅ AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
 					type: 'move-foundation',
 					tweenCards: [{ rank: 'ace', suit: 'clubs', location: { fixture: 'cascade', data: [5, 6] } }],
 				});
 				expect(game.history).toEqual([
-					'deal all cards',
-					'move 46 AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
+					'init without history',
+					'move 4⡆6⡅ AC→2H (flourish52 1236567812345678123456781234567812345678123456781234 AS,AH,AD,AC,2S,2H,2D,2C,3S,3H,3D,3C,4S,4H,4D,4C,5S,5H,5D,5C,6S,6H,6D,6C,7S,7H,7D,7C,8S,8H,8D,8C,9S,9H,9D,9C,TS,TH,TD,TC,JS,JH,JD,JC,QS,QH,QD,QC,KS,KH,KD,KC)',
 				]);
 				expect(game.cursor).toEqual({ fixture: 'foundation', data: [0] });
 
@@ -1329,14 +1320,14 @@ describe('game.undo (+ history)', () => {
 						' 5S 5H 5D 5C 4S 4H 4D 4C \n' +
 						' 3S 3H 3D 3C 2S 2H 2D 2C \n' +
 						' AS AH AD AC             \n' +
-						' deal all cards'
+						' init without history'
 				);
 				expect(game.previousAction).toEqual({
-					text: 'deal all cards',
-					type: 'deal',
+					text: 'init without history',
+					type: 'init',
 					gameFunction: 'undo',
 				});
-				expect(game.history).toEqual(['deal all cards']);
+				expect(game.history).toEqual(['init without history']);
 				expect(game.cursor).toEqual({ fixture: 'cell', data: [0] });
 			});
 		});
@@ -1363,7 +1354,7 @@ describe('game.undo (+ history)', () => {
 					text: 'touch stop',
 					type: 'invalid',
 				});
-				expect(game.history).toEqual(['init with invalid history replay action text', 'touch stop']);
+				expect(game.history).toEqual(['init with invalid history replay action text']);
 				expect(() => game.undo()).not.toThrow();
 				expect(game.undo()).toBe(game);
 			});
@@ -1835,35 +1826,33 @@ describe('game.undo (+ history)', () => {
 
 	describe('bugfixes', () => {
 		test('broken game', () => {
-			const game = FreeCell.parse(
-				'' + //
-					'             AD 2C       \n' +
-					' AH 8S 2D QS 4C 9H 2S 3D \n' + // 9H is in the wrong place
-					' 5C AS 9C KH 4D    3C 4S \n' +
-					' 3S 5D KC 3H KD    6S 8D \n' +
-					' TD 7S JD 7H 8H    JC 7D \n' +
-					' 5S QH 8C 9D KS    4H 6C \n' +
-					' 2H    TH 6D QD    QC 5H \n' +
-					' 9S    7C TS JS    JH    \n' +
-					'       6H          TC    \n' +
-					//                  9H
-					' move 67 9H→TC\n' +
-					':h shuffle32 5\n' +
-					' 53 6a 65 67 85 a8 68 27 \n' +
-					' 67 '
-			);
-			expect(game.history).toEqual(['init with invalid history replay cards', 'move 67 9H→TC']);
-			expect(() => game.undo({ throwError: true })).toThrow('invalid first card pile: move 67 9H→TC; 6 !== 7');
-			const gameUndid = game.undo();
-			expect(gameUndid.print({ includeHistory: true })).toBe(game.print({ includeHistory: true }));
-			expect(gameUndid.previousAction).toEqual({
-				text: 'invalid move 67 9H→TC',
-				type: 'invalid',
-				gameFunction: 'undo',
-			});
+			const gamePrint =
+				'             AD 2C       \n' +
+				' AH 8S 2D QS 4C 9H 2S 3D \n' + // 9H is in the wrong place
+				' 5C AS 9C KH 4D    3C 4S \n' +
+				' 3S 5D KC 3H KD    6S 8D \n' +
+				' TD 7S JD 7H 8H    JC 7D \n' +
+				' 5S QH 8C 9D KS    4H 6C \n' +
+				' 2H    TH 6D QD    QC 5H \n' +
+				' 9S    7C TS JS    JH    \n' +
+				'       6H          TC    \n' +
+				//                  9H
+				' move 67 9H→TC\n' +
+				':h shuffle32 5\n' +
+				' 53 6a 65 67 85 a8 68 27 \n' +
+				' 67 ';
+			// move is already marked as invalid, so we don't check it with an undo
+			expect(() => FreeCell.parse(gamePrint, { throwError: true })).not.toThrow();
+			const game = FreeCell.parse(gamePrint);
+			expect(game.history).toEqual(['init with invalid history replay cards', 'invalid move 67 9H→TC']);
+			expect(game.undo()).toBe(game);
 
-			// undoing again should just return the same game, since we can't undo past the invalid move
-			expect(gameUndid.undo()).toBe(gameUndid);
+			// … but we really want to check this exception
+			// XXX (techdebt) (optimize) (undo) should we remove this throws case? is it still possible to get here?
+			//  - i think.. if we can't get here without mangling the history, then it should go
+			//  - when it was written, we had an "real life" example, now this is a forced situation
+			game.history[1] = 'move 67 9H→TC';
+			expect(() => game.undo({ throwError: true })).toThrow('invalid first card pile: move 67 9H→TC; 6 !== 7');
 		});
 
 		test('undo to init (hand-jammed)', () => {

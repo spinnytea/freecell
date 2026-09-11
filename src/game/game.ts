@@ -24,7 +24,6 @@ import {
 	appendActionToHistory,
 	GameFunction,
 	getCardsThatMoved,
-	parseActionTextMove,
 	parseAltCursorFromPreviousActionText,
 	parseAndUndoPreviousActionText,
 	parseCursorFromPreviousActionText,
@@ -35,6 +34,7 @@ import {
 	PREVIOUS_ACTION_TYPE_IS_MOVE,
 	PREVIOUS_ACTION_TYPE_IS_START_OF_GAME,
 	PreviousAction,
+	recoverTweenCards,
 } from '@/game/move/history';
 import { juice } from '@/game/move/juice';
 import { KeyboardArrowDirection, moveCursorWithBasicArrows } from '@/game/move/keyboard';
@@ -577,17 +577,8 @@ export class FreeCell {
 				didUndo.previousAction.text = 'init';
 			}
 
-			// redo single move
-			if (
-				!skipActionPrev &&
-				didUndo.previousAction.type === 'move-foundation' &&
-				!didUndo.previousAction.tweenCards
-			) {
-				const secondUndo = didUndo.undo({ skipActionPrev: true });
-				const { fromLocation, toLocation } = parseActionTextMove(didUndo.previousAction.text);
-				didUndo.previousAction.tweenCards = getCardsThatMoved(
-					secondUndo.moveByShorthand(fromLocation + toLocation, { autoFoundation: false })
-				);
+			if (!skipActionPrev) {
+				recoverTweenCards(didUndo);
 			}
 
 			return didUndo;
@@ -1174,7 +1165,7 @@ export class FreeCell {
 		   - since it's an entry point from something that ought to be correct
 		   - but if we do, we need to wrap every parse in a try catch in deployment code
 	*/
-	static parse(print: string, { invalidFoundations = false } = {}): FreeCell {
+	static parse(print: string, { invalidFoundations = false, throwError = false } = {}): FreeCell {
 		if (!print) throw new Error('No game string provided.');
 
 		// REVIEW (joker) (settings) how do we know if we should include jokers?
@@ -1330,9 +1321,9 @@ export class FreeCell {
 		});
 
 		line.pop();
-		const actionText = line.slice(0).reverse().join('') || 'init';
-		const previousAction = parsePreviousActionType(actionText);
-		let verifyActionTextToRecoverCoords = false;
+		let actionText = line.slice(0).reverse().join('') || 'init';
+		let previousAction = parsePreviousActionType(actionText);
+		let replayedGameForHistroy = false;
 
 		// attempt to parse the history
 		const history: string[] = [];
@@ -1362,6 +1353,7 @@ export class FreeCell {
 				deckLength,
 				actionText,
 			});
+			replayedGameForHistroy = true;
 
 			if (!errorMessage && replayGameForHistroy) {
 				// we have the whole game, so we can simply return it now
@@ -1374,8 +1366,13 @@ export class FreeCell {
 				// Array.prototype.push.apply(history, replayGameForHistroy.history);
 			} else {
 				history.push(errorMessage ?? 'init with invalid history error');
-				history.push(actionText);
-				verifyActionTextToRecoverCoords = true;
+				if (PREVIOUS_ACTION_TYPE_IS_MOVE.has(parsePreviousActionType(actionText).type)) {
+					actionText = 'invalid ' + actionText;
+					previousAction = parsePreviousActionType(actionText);
+					history.push(actionText);
+				} else if (PREVIOUS_ACTION_TYPE_IN_HISTORY.has(parsePreviousActionType(actionText).type)) {
+					history.push(actionText);
+				}
 			}
 		} else {
 			// parse the history (lines) of the game
@@ -1402,7 +1399,8 @@ export class FreeCell {
 			} else if (PREVIOUS_ACTION_TYPE_IN_HISTORY.has(previousAction.type)) {
 				history.push('init without history');
 				history.push(actionText);
-				verifyActionTextToRecoverCoords = true;
+			} else {
+				history.push('init without history');
 			}
 		}
 
@@ -1500,47 +1498,49 @@ export class FreeCell {
 			game.availableMoves = findAvailableMoves(game, game.selection);
 		}
 
-		// TODO (techdebt) (parse) (undo) copy-pasta, same as `undo`
 		if (
-			game.previousAction.type === 'move-foundation' &&
-			!game.previousAction.tweenCards &&
-			history.length
+			!replayedGameForHistroy &&
+			PREVIOUS_ACTION_TYPE_IN_HISTORY.has(game.previousAction.type) &&
+			game.previousAction.type !== 'invalid'
 		) {
-			// TODO (optimize) (parse) (undo) do we really need to call undo during parse?
-			//  - is there a cleaner way to recover the tween cards?
-			const secondUndo = game.undo({ skipActionPrev: true });
-			const { fromLocation, toLocation } = parseActionTextMove(game.previousAction.text);
-			game.previousAction.tweenCards = getCardsThatMoved(
-				secondUndo.moveByShorthand(fromLocation + toLocation, { autoFoundation: false })
-			);
-		}
-
-		if (verifyActionTextToRecoverCoords) {
+			// check the previousAction
+			//  - we may need to calculate coords for the actionText
+			//  - we may need to calculate tweenCards
+			//  - the actionText, as stated, may be invalid
 			const move = parseMoveFromActionText(actionText);
 			if (move) {
-				// TODO (optimize) (parse) (undo) is there a better way to get the coords?
-				//  - do we _really_ need the coords this badly?
-				const undid = game.undo();
-				if (undid.previousAction.type === 'invalid') return undid;
-
-				const redid = undid.moveByShorthand(move);
-				if (redid.previousAction.type === 'invalid') {
-					return undid.__clone({
-						action: redid.previousAction,
-						cursor: redid.cursor,
-						cards: redid.cards,
-						selection: null,
-						availableMoves: null,
+				const undid = game.undo({ throwError });
+				if (undid === game) return game; // no new information
+				if (undid.previousAction.type === 'invalid') {
+					const action: PreviousAction = { ...undid.previousAction };
+					delete action.gameFunction;
+					// XXX (flourish-anim) (parse) (test) do not change game state: selection, flashCards
+					return game.__clone({
+						action,
+						history: ['init with invalid move undid'],
 					});
 				}
-				if (actionText === redid.previousAction.text) return game; // XXX (test) e.g. ab
+
+				const redid = undid.moveByShorthand(move);
+				if (redid === game) return game; // TODO (parse) (test) (undo) invalid starting selection that we were able to undo?
+				if (redid.previousAction.type === 'invalid') {
+					// XXX (flourish-anim) (parse) (test) do not change game state: selection, flashCards
+					return game.__clone({
+						action: redid.previousAction,
+						history: ['init with invalid move redid'],
+					});
+				}
+
 				if (removeBraille(actionText) === removeBraille(redid.previousAction.text)) {
+					// XXX (flourish-anim) (parse) (test) do not change game state: selection, flashCards
 					return game.__clone({
 						action: redid.previousAction,
 						history: redid.history.slice(0, -1),
 					});
 				}
 			}
+		} else {
+			recoverTweenCards(game);
 		}
 
 		return game;
