@@ -111,7 +111,7 @@ export interface PreviousAction {
 	type: PreviousActionType;
 
 	/**
-		just the cards that moved during an in-between step (i.e. move -> auto-foundation).
+		just the cards that moved during an in-between step (i.e. move -> auto-foundation)
 
 		For example: a user performs a move: `move 2⡆a 4S→cell`,
 		and the system chains on: `auto-foundation 56 AH,2H`,

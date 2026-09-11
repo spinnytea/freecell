@@ -1323,11 +1323,11 @@ export class FreeCell {
 		line.pop();
 		let actionText = line.slice(0).reverse().join('') || 'init';
 		let previousAction = parsePreviousActionType(actionText);
+		let replayedGameForHistroy = false;
 
 		// attempt to parse the history
 		const history: string[] = [];
 		const popped = lines.pop();
-		let replayedGameForHistroy = false;
 		if (!popped) {
 			const previousActionType = previousAction.type;
 			if (previousActionType === 'init') {
@@ -1514,7 +1514,7 @@ export class FreeCell {
 				if (undid.previousAction.type === 'invalid') {
 					const action: PreviousAction = { ...undid.previousAction };
 					delete action.gameFunction;
-					// XXX (parse) (test) do not change game state: selection, flashCards
+					// XXX (flourish-anim) (parse) (test) do not change game state: selection, flashCards
 					return game.__clone({
 						action,
 						history: ['init with invalid move undid'],
@@ -1524,7 +1524,7 @@ export class FreeCell {
 				const redid = undid.moveByShorthand(move);
 				if (redid === game) return game; // TODO (parse) (test) (undo) invalid starting selection that we were able to undo?
 				if (redid.previousAction.type === 'invalid') {
-					// XXX (parse) (test) do not change game state: selection, flashCards
+					// XXX (flourish-anim) (parse) (test) do not change game state: selection, flashCards
 					return game.__clone({
 						action: redid.previousAction,
 						history: ['init with invalid move redid'],
@@ -1532,7 +1532,7 @@ export class FreeCell {
 				}
 
 				if (removeBraille(actionText) === removeBraille(redid.previousAction.text)) {
-					// XXX (parse) (test) do not change game state: selection, flashCards
+					// XXX (flourish-anim) (parse) (test) do not change game state: selection, flashCards
 					return game.__clone({
 						action: redid.previousAction,
 						history: redid.history.slice(0, -1),

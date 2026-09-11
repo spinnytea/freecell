@@ -1542,7 +1542,7 @@ describe('game.parse', () => {
 		});
 
 		describe('various valid selections', () => {
-			const cursor_locations = [
+			const cursor_locations = Object.freeze([
 				'{ "fixture": "cell", "data": [0] }',
 				'{ "fixture": "cell", "data": [1] }',
 				'{ "fixture": "cell", "data": [2] }',
@@ -1567,8 +1567,8 @@ describe('game.parse', () => {
 				'{ "fixture": "cascade", "data": [5, 1] }',
 				'{ "fixture": "cascade", "data": [6, 1] }',
 				'{ "fixture": "cascade", "data": [7, 1] }',
-			];
-			const selection_locations = cursor_locations.filter((l) => !l.includes('foundation'));
+			]);
+			const selection_locations = Object.freeze(cursor_locations.filter((l) => !l.includes('foundation')));
 			let game: FreeCell;
 			beforeEach(() => {
 				game = FreeCell.parse(

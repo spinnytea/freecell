@@ -16,7 +16,7 @@
  15 (drag-and-drop)
  10 (dragndrop-bugs)
   1 (flash-rank)
-  9 (flourish-anim)
+ 12 (flourish-anim)
  24 (gameplay)
  12 (gsap)
  15 (history)
