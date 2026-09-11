@@ -160,6 +160,7 @@ const CURSOR_REGEX =
 	/^cursor (set|up|left|down|right|stop)( wrap)?( ([abcdefhk1234567890][\u2840-\u28FF]?))?( (\w\w))?$/;
 const SELECT_REGEX =
 	/^(select|peek|deselect)( ([abcdefhk1234567890])([\u2840-\u28FF]?))? ([\w-]+)$/;
+const JUICE_FLASH_REGEX = /^juice flash \*?(\w\w(,\w\w)*)\*?$/;
 
 /**
 	quick-and-dirty check to ensure that, during game replays from history, the `moveByShorthand` actually occurred
@@ -511,6 +512,18 @@ function parseActionTextSelect(actionText: string) {
 	}
 	// REVIEW (parse) (refactor-no-throw) where is this used?
 	throw new Error('invalid de/select actionText: ' + actionText);
+}
+
+export function parseActionTextJuiceFlash(actionText: string) {
+	const match = JUICE_FLASH_REGEX.exec(actionText);
+	if (match) {
+		const [, shs] = match;
+		return {
+			shs: shs.split(',') as CardSH[],
+		};
+	}
+	// REVIEW (parse) (refactor-no-throw) where is this used?
+	throw new Error('invalid juice actionText: ' + actionText);
 }
 
 function parseActionTextInvalidMove(actionText: string) {

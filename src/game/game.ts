@@ -24,6 +24,7 @@ import {
 	appendActionToHistory,
 	GameFunction,
 	getCardsThatMoved,
+	parseActionTextJuiceFlash,
 	parseAltCursorFromPreviousActionText,
 	parseAndUndoPreviousActionText,
 	parseCursorFromPreviousActionText,
@@ -1063,6 +1064,7 @@ export class FreeCell {
 				type: 'juice',
 				gameFunction,
 			},
+			// clear selection, too much optional-complexity to support selection+flashCards
 			selection: null,
 			availableMoves: null,
 			flashCards: aces,
@@ -1484,6 +1486,18 @@ export class FreeCell {
 			}
 		}
 
+		// check for flashCards
+		// REVIEW (6-priority) is this the best place for everything?
+		let flashCards: Card[] | null = null;
+		if (
+			previousAction.gameFunction === 'check-can-flourish' ||
+			previousAction.gameFunction === 'check-can-flourish52'
+		) {
+			// REVIEW (6-priority) should findCard also accept a CardSH??
+			const { shs } = parseActionTextJuiceFlash(actionText);
+			flashCards = shs.map((sh) => findCard(cards, parseShorthandCard(sh)));
+		}
+
 		// REVIEW (techdebt) (joker) (settings) settings for new game?
 		const game = new FreeCell({
 			action: previousAction,
@@ -1491,6 +1505,7 @@ export class FreeCell {
 			cascadeCount,
 			cards,
 			cursor,
+			flashCards,
 			history,
 		});
 		if (selection_location) {
