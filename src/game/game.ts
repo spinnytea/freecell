@@ -1489,10 +1489,11 @@ export class FreeCell {
 		// check for flashCards
 		// REVIEW (6-priority) is this the best place for everything?
 		let flashCards: Card[] | null = null;
-		if (
-			previousAction.gameFunction === 'check-can-flourish' ||
-			previousAction.gameFunction === 'check-can-flourish52'
-		) {
+		const shouldCheckForFlashCards =
+			!selection_location &&
+			(previousAction.gameFunction === 'check-can-flourish' ||
+				previousAction.gameFunction === 'check-can-flourish52');
+		if (shouldCheckForFlashCards) {
 			// REVIEW (6-priority) should findCard also accept a CardSH??
 			const { shs } = parseActionTextJuiceFlash(actionText);
 			flashCards = shs.map((sh) => findCard(cards, parseShorthandCard(sh)));
