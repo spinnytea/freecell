@@ -2,6 +2,8 @@ import { omit as _omit } from 'lodash';
 import { describe, expect, test } from 'vitest';
 import { FreeCell } from '@/game/game';
 
+// TODO (6-priority) print/parse each of these
+// TODO (6-priority) parse with hand-jammed flashCards (does not match the actual check)
 describe('game.$checkCanFlourish', () => {
 	test('noop', () => {
 		const game = new FreeCell().shuffle32(3).dealAll();

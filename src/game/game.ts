@@ -1514,7 +1514,7 @@ export class FreeCell {
 				if (undid.previousAction.type === 'invalid') {
 					const action: PreviousAction = { ...undid.previousAction };
 					delete action.gameFunction;
-					// XXX (flourish-anim) (parse) (test) do not change game state: selection, flashCards
+					// XXX (6-priority) (flourish-anim) (parse) (test) do not change game state: selection, flashCards
 					return game.__clone({
 						action,
 						history: ['init with invalid move undid'],
@@ -1524,7 +1524,7 @@ export class FreeCell {
 				const redid = undid.moveByShorthand(move);
 				if (redid === game) return game; // TODO (parse) (test) (undo) invalid starting selection that we were able to undo?
 				if (redid.previousAction.type === 'invalid') {
-					// XXX (flourish-anim) (parse) (test) do not change game state: selection, flashCards
+					// XXX (6-priority) (flourish-anim) (parse) (test) do not change game state: selection, flashCards
 					return game.__clone({
 						action: redid.previousAction,
 						history: ['init with invalid move redid'],
@@ -1532,7 +1532,7 @@ export class FreeCell {
 				}
 
 				if (removeBraille(actionText) === removeBraille(redid.previousAction.text)) {
-					// XXX (flourish-anim) (parse) (test) do not change game state: selection, flashCards
+					// XXX (6-priority) (flourish-anim) (parse) (test) do not change game state: selection, flashCards
 					return game.__clone({
 						action: redid.previousAction,
 						history: redid.history.slice(0, -1),
