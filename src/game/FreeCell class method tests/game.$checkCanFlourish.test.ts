@@ -18,6 +18,7 @@ describe('game.$checkCanFlourish', () => {
 		expect(once).toEqual(twice);
 	});
 
+	// it would be _fun_ but it's way too much optional-complexity to support selection+flashCards
 	test('skips if selection', () => {
 		const game = new FreeCell().shuffle32(5).dealAll().touchByPile('1').$checkCanFlourish();
 		expect(game.print()).toBe(
@@ -96,9 +97,7 @@ describe('game.$checkCanFlourish', () => {
 					' deal all cards\n' +
 					':h shuffle32 5'
 			);
-			const { cards, deck, cells, foundations, tableau, ...simplified } = game;
-			(void cards, deck, cells, foundations, tableau);
-			expect(simplified).toMatchSnapshot();
+			expect(_omit(game, 'cards', 'deck', 'cells', 'foundations', 'tableau')).toMatchSnapshot();
 
 			// make sure the parse game is the same-ish (and doesn't blow up)
 			let copy = game.__copy();
@@ -109,7 +108,10 @@ describe('game.$checkCanFlourish', () => {
 			expect(copy).toEqual(game);
 			let parsed = FreeCell.parse(game.print());
 			// parsed is missing some info
-			expect(parsed.flashCards).toBe(null); // TODO (motivation) (flourish-anim) recover this, since it's in the print
+			expect(parsed.flashCards).toEqual([
+				{ rank: 'ace', suit: 'hearts', location: { fixture: 'cascade', data: [0, 0] } },
+				{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [1, 1] } },
+			]);
 			expect(parsed.history).toEqual(['init without history']);
 			expect(parsed.previousAction).toEqual({
 				text: 'juice flash AH,AS',
@@ -128,8 +130,8 @@ describe('game.$checkCanFlourish', () => {
 			expect(copy.history).toEqual(['shuffle deck (5)', 'deal all cards']);
 
 			expect(copy).toEqual(game);
-			expect(_omit(parsed, 'history', 'flashCards')).toEqual(_omit(copy, 'history', 'flashCards'));
-			expect(_omit(parsed, 'history', 'flashCards')).toEqual(_omit(game, 'history', 'flashCards'));
+			expect(_omit(parsed, 'history')).toEqual(_omit(copy, 'history'));
+			expect(_omit(parsed, 'history')).toEqual(_omit(game, 'history'));
 
 			// make sure the parse game is the same-ish (and doesn't blow up)
 			copy = game.__copy();
@@ -275,15 +277,13 @@ describe('game.$checkCanFlourish', () => {
 					' deal all cards\n' +
 					':h shuffle32 23190'
 			);
-			const { cards, deck, cells, foundations, tableau, ...simplified } = game;
-			(void cards, deck, cells, foundations, tableau);
-			expect(simplified).toMatchSnapshot();
+			expect(_omit(game, 'cards', 'deck', 'cells', 'foundations', 'tableau')).toMatchSnapshot();
 
 			// make sure the parse game is the same-ish (and doesn't blow up)
 			let copy = game.__copy();
 			let parsed = FreeCell.parse(game.print());
 			// parsed is missing some info
-			expect(parsed.flashCards).toBe(null); // TODO (motivation) (flourish-anim) (parse) recover this, since it's in the print
+			expect(parsed.flashCards).toEqual([{ rank: 'ace', suit: 'spades', location: { fixture: 'cascade', data: [2, 2] } }]);
 			expect(parsed.history).toEqual(['init without history']);
 			expect(parsed.previousAction).toEqual({
 				text: 'juice flash *AS*',
@@ -299,8 +299,8 @@ describe('game.$checkCanFlourish', () => {
 			expect(copy.history).toEqual(['shuffle deck (23190)', 'deal all cards']);
 
 			expect(copy).toEqual(game);
-			expect(_omit(parsed, 'history', 'flashCards')).toEqual(_omit(copy, 'history', 'flashCards'));
-			expect(_omit(parsed, 'history', 'flashCards')).toEqual(_omit(game, 'history', 'flashCards'));
+			expect(_omit(parsed, 'history')).toEqual(_omit(copy, 'history'));
+			expect(_omit(parsed, 'history')).toEqual(_omit(game, 'history'));
 
 			// make sure the parse game is the same-ish (and doesn't blow up)
 			copy = game.__copy();
