@@ -1243,7 +1243,7 @@ describe('game.parse', () => {
 					' 5S QH 8C 9D KS QD 4H AC \n' +
 					' 2H TC TH 6D 6H 6C QC JS \n' +
 					' 9S*AD*7C TS             \n' +
-					' juice flash AD'
+					' invalid juice flash AD'
 			);
 		});
 
@@ -1272,7 +1272,7 @@ describe('game.parse', () => {
 					' 5S QH 8C 9D KS QD 4H AC \n' +
 					' 2H TC TH 6D 6H 6C QC JS \n' +
 					' 9S*AD*7C TS             \n' +
-					' juice flash *AD*'
+					' invalid juice flash *AD*'
 			);
 		});
 
@@ -1300,7 +1300,7 @@ describe('game.parse', () => {
 					' 5S QH 8C 9D KS QD 4H AC \n' +
 					' 2H TC TH 6D 6H 6C QC JS \n' +
 					' 9S AD 7C TS             \n' +
-					' juice flash *KH*'
+					' invalid juice flash *KH*'
 			);
 
 			// TODO (flourish-anim) (test) check flashCards with useCardPositionAnimations
@@ -1327,7 +1327,7 @@ describe('game.parse', () => {
 					' 5S QH 8C 9D KS QD 4H AC \n' +
 					' 2H TC TH 6D 6H 6C QC JS \n' +
 					' 9S AD 7C TS             \n' +
-					' juice flash AH,8S,2D,QS,4C,9H,2S,3D'
+					' invalid juice flash AH,8S,2D,QS,4C,9H,2S,3D'
 			);
 
 			// TODO (flourish-anim) (test) check flashCards with useCardPositionAnimations
@@ -1354,7 +1354,7 @@ describe('game.parse', () => {
 					' 5S QH 8C 9D KS QD 4H AC \n' +
 					' 2H TC TH 6D 6H 6C QC JS \n' +
 					' 9S AD 7C TS             \n' +
-					' juice flash AH,AS,2D,KH,4C,2C,2S,4S'
+					' invalid juice flash AH,AS,2D,KH,4C,2C,2S,4S'
 			);
 
 			// TODO (flourish-anim) (test) check flashCards with useCardPositionAnimations
@@ -1381,7 +1381,7 @@ describe('game.parse', () => {
 					'*5S*QH 8C 9D KS QD 4H AC \n' +
 					'*2H*TC TH 6D 6H 6C QC JS \n' +
 					'*9S*AD 7C TS             \n' +
-					' juice flash AH,5C,3S,TD,5S,2H,9S'
+					' invalid juice flash AH,5C,3S,TD,5S,2H,9S'
 			);
 		});
 

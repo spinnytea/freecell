@@ -1511,6 +1511,12 @@ export class FreeCell {
 		if (selection_location) {
 			game.selection = getSequenceAt(game, selection_location);
 			game.availableMoves = findAvailableMoves(game, game.selection);
+		} else if (shouldCheckForFlashCards) {
+			if (game.$checkCanFlourish().previousAction.text !== actionText) {
+				game.previousAction.text = `invalid ${game.previousAction.text}`;
+				game.previousAction.type = 'invalid';
+				delete game.previousAction.gameFunction;
+			}
 		}
 
 		if (
