@@ -2,9 +2,6 @@ import { omit as _omit } from 'lodash';
 import { describe, expect, test } from 'vitest';
 import { FreeCell } from '@/game/game';
 
-// TODO (6-priority) parse with hand-jammed flashCards (does not match the actual check)
-//  - also check the running checkCanFlourish against the invalid flash
-//  - also check invalid card HK, YT, __, etc
 describe('game.$checkCanFlourish', () => {
 	test('noop', () => {
 		const game = new FreeCell().shuffle32(3).dealAll();

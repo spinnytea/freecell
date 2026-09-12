@@ -1487,14 +1487,13 @@ export class FreeCell {
 		}
 
 		// check for flashCards
-		// REVIEW (6-priority) is this the best place for everything?
+		// REVIEW (refactor) is this the best place for everything?
 		let flashCards: Card[] | null = null;
 		const shouldCheckForFlashCards =
 			!selection_location &&
 			(previousAction.gameFunction === 'check-can-flourish' ||
 				previousAction.gameFunction === 'check-can-flourish52');
 		if (shouldCheckForFlashCards) {
-			// REVIEW (6-priority) should findCard also accept a CardSH??
 			const { shs } = parseActionTextJuiceFlash(actionText);
 			flashCards = shs.map((sh) => findCard(cards, parseShorthandCard(sh)));
 		}
@@ -1530,7 +1529,7 @@ export class FreeCell {
 				if (undid.previousAction.type === 'invalid') {
 					const action: PreviousAction = { ...undid.previousAction };
 					delete action.gameFunction;
-					// XXX (6-priority) (flourish-anim) (parse) (test) do not change game state: selection, flashCards
+					// do not change game state: selection, flashCards
 					return game.__clone({
 						action,
 						history: ['init with invalid move undid'],
@@ -1540,7 +1539,7 @@ export class FreeCell {
 				const redid = undid.moveByShorthand(move);
 				if (redid === game) return game; // TODO (parse) (test) (undo) invalid starting selection that we were able to undo?
 				if (redid.previousAction.type === 'invalid') {
-					// XXX (6-priority) (flourish-anim) (parse) (test) do not change game state: selection, flashCards
+					// do not change game state: selection, flashCards
 					return game.__clone({
 						action: redid.previousAction,
 						history: ['init with invalid move redid'],
@@ -1548,7 +1547,7 @@ export class FreeCell {
 				}
 
 				if (removeBraille(actionText) === removeBraille(redid.previousAction.text)) {
-					// XXX (6-priority) (flourish-anim) (parse) (test) do not change game state: selection, flashCards
+					// do not change game state: selection, flashCards
 					return game.__clone({
 						action: redid.previousAction,
 						history: redid.history.slice(0, -1),
