@@ -1302,6 +1302,8 @@ describe('game.parse', () => {
 					' 9S AD 7C TS             \n' +
 					' juice flash *KH*'
 			);
+
+			// TODO (flourish-anim) (test) check flashCards with useCardPositionAnimations
 			expect(
 				FreeCell.parse(
 					'' + //
@@ -1327,6 +1329,77 @@ describe('game.parse', () => {
 					' 9S AD 7C TS             \n' +
 					' juice flash AH,8S,2D,QS,4C,9H,2S,3D'
 			);
+
+			// TODO (flourish-anim) (test) check flashCards with useCardPositionAnimations
+			expect(
+				FreeCell.parse(
+					'' + //
+						'>                        \n' +
+						'*AH*8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C*AS*9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH 6D 6H 6C QC JS \n' +
+						' 9S AD 7C TS             \n' +
+						' juice flash AH,AS,2D,KH,4C,2C,2S,4S'
+				).print()
+			).toBe(
+				'' + //
+					'>                        \n' +
+					'*AH*8S*2D*QS*4C*9H*2S*3D \n' +
+					' 5C*AS*9C*KH*4D*2C*3C*4S*\n' +
+					' 3S 5D KC 3H KD 5H 6S 8D \n' +
+					' TD 7S JD 7H 8H JH JC 7D \n' +
+					' 5S QH 8C 9D KS QD 4H AC \n' +
+					' 2H TC TH 6D 6H 6C QC JS \n' +
+					' 9S AD 7C TS             \n' +
+					' juice flash AH,AS,2D,KH,4C,2C,2S,4S'
+			);
+
+			// TODO (flourish-anim) (test) check flashCards with useCardPositionAnimations
+			expect(
+				FreeCell.parse(
+					'' + //
+						'>                        \n' +
+						'*AH*8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C*AS*9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH 6D 6H 6C QC JS \n' +
+						' 9S AD 7C TS             \n' +
+						' juice flash AH,5C,3S,TD,5S,2H,9S'
+				).print()
+			).toBe(
+				'' + //
+					'>                        \n' +
+					'*AH*8S 2D QS 4C 9H 2S 3D \n' +
+					'*5C*AS 9C KH 4D 2C 3C 4S \n' +
+					'*3S*5D KC 3H KD 5H 6S 8D \n' +
+					'*TD*7S JD 7H 8H JH JC 7D \n' +
+					'*5S*QH 8C 9D KS QD 4H AC \n' +
+					'*2H*TC TH 6D 6H 6C QC JS \n' +
+					'*9S*AD 7C TS             \n' +
+					' juice flash AH,5C,3S,TD,5S,2H,9S'
+			);
+		});
+
+		test('invalid flash text', () => {
+			expect(() =>
+				FreeCell.parse(
+					'' + //
+						'>                        \n' +
+						'*AH*8S 2D QS 4C 9H 2S 3D \n' +
+						' 5C*AS*9C KH 4D 2C 3C 4S \n' +
+						' 3S 5D KC 3H KD 5H 6S 8D \n' +
+						' TD 7S JD 7H 8H JH JC 7D \n' +
+						' 5S QH 8C 9D KS QD 4H AC \n' +
+						' 2H TC TH 6D 6H 6C QC JS \n' +
+						' 9S AD 7C TS             \n' +
+						' juice flash 9@'
+				)
+			).toThrow('invalid juice actionText: juice flash 9@');
 		});
 
 		test('flash invalid cards', () => {

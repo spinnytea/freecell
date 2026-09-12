@@ -160,7 +160,7 @@ const CURSOR_REGEX =
 	/^cursor (set|up|left|down|right|stop)( wrap)?( ([abcdefhk1234567890][\u2840-\u28FF]?))?( (\w\w))?$/;
 const SELECT_REGEX =
 	/^(select|peek|deselect)( ([abcdefhk1234567890])([\u2840-\u28FF]?))? ([\w-]+)$/;
-// XXX (techdebt) (refactor) there isn't a good reason for JUICE_FLASH_REGEX to be here
+// XXX (parse) (refactor) there isn't a good reason for JUICE_FLASH_REGEX to be here
 //  - maybe it should be in juice
 //  - maybe it should be in parse?
 //  - it just follows the pattern of parsing actionText

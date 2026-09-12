@@ -1487,7 +1487,7 @@ export class FreeCell {
 		}
 
 		// check for flashCards
-		// REVIEW (refactor) is this the best place for everything?
+		// REVIEW (parse) (refactor) is this the best place for everything?
 		let flashCards: Card[] | null = null;
 		const shouldCheckForFlashCards =
 			!selection_location &&
