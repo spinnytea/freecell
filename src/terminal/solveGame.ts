@@ -10,7 +10,8 @@ import { writeFileSync } from 'node:fs';
 	`nodemon --watch src/terminal --ext ts --exec npm run solveGame`
 */
 
-// XXX (techdebt) console argument
+// TODO (solve-game) The shortest known FreeCell game in the classic Microsoft 32,000 deal set is Game #10913, which can be solved in just 19 manual moves.
+// XXX (solve-game) console argument
 const GAME_NUMBER = 6893;
 
 let remainingAttempts = 10000;

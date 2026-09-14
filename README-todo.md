@@ -93,6 +93,9 @@
   - [FreeCell lists of difficult (and extra easy) deals](https://www.solitairelaboratory.com/fclists.html)
   - Some games require no free cells :D - so make a 0 cells version restricted to these games
   - Same with a list for solvable 1-cell games
+- TODO (settings) Setting for "disable super move" (called "Manual Moves")
+  - setup a manualtesting example
+  - have a toggle to enable/disable it (history? disable undo, or put them side-by-side)
 - TODO (animation) animations after/during win state (celbration, like fireworks or card explosions)
 - TODO (deployment) (settings) UI render for all options, hidden options, controls (keyboard, keyboard+selection, keyboard hotkeys, mouse click, mouse drag) w/ settings to enable/disable
 - TODO (settings) disable "select-to-peek card" i.e. selecting cards that cannot move
@@ -151,6 +154,17 @@
 - TODO (motivation) (documentation) update `/manualtesting`
   - ensure current is accurate, review gaps/tasks
   - add (documentation) label
+- IDEA (motivation) (gameplay) (solve-game) game replay + move efficiency - hyper collapse move
+  - not just "combine these moves"
+  - is there a shorter set of moves that would get you to the same game state
+  - I can think of 2 modes to start with:
+    1. clip 3 moves to 2 (or 3-5 to 2-3), called the "flustered shuffle"
+    2. endgame flourish, fewer moves to the same auto foundation count (cards in different places, but effectively the same cards auto foundation)
+  - the endgame could slowly grow to straight up "shortest gameplay to win, using this solution to narrow the search space
+  - the OG point of this freeceel was to learn GSAP, and to _play_ the game
+  - autosolver has never been a priority (game representation isn't efficient for that)
+  - but ... there's no reason we can't do a complete solver as a separate toy
+  - (path from start, path from end, meet in the middle?)
 
 ## Discarded TODOs
 

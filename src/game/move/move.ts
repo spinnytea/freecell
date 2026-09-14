@@ -391,6 +391,11 @@ function prioritizeAvailableMoves(
 		(availableMove) => availableMove.moveDestinationType === moveDestinationType
 	);
 
+	// TODO (controls) (optional-complexity) "on base of Cascade" when picking a sequence to stack
+	//  - prioritize king
+	//  - then Cascade
+	//  - then height
+	//  - then nearest
 	switch (moveDestinationType) {
 		case 'cell:empty': {
 			const useSourceD0 = moveSourceType === 'cell:single' ? sourceD0 : undefined;
