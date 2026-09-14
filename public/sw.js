@@ -1,4 +1,5 @@
 const CACHE_NAME = 'freecell-offline-v__VERSION__'; // @see write-service-worker.mjs
+const NAVIGATION_TIMEOUT_MS = 5000;
 const APP_SHELL_PREFETCH = [
 	'/freecell/',
 	'/freecell/manifest.webmanifest',
@@ -36,10 +37,19 @@ self.addEventListener('fetch', (event) => {
 
 	if (request.mode === 'navigate') {
 		event.respondWith(
-			fetch(request).catch(() => {
-				// Fallback: If network fails, serve the cached offline page/app shell
-				return caches.match('/freecell/');
-			})
+			(async () => {
+				const controller = new AbortController();
+				const timeout = setTimeout(() => controller.abort(), NAVIGATION_TIMEOUT_MS);
+
+				try {
+					return await fetch(request, { signal: controller.signal });
+				} catch {
+					// Fallback: If network fails or times out, serve the cached offline page/app shell
+					return caches.match('/freecell/');
+				} finally {
+					clearTimeout(timeout);
+				}
+			})()
 		);
 	} else {
 		event.respondWith(
