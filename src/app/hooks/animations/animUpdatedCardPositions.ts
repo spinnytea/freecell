@@ -67,9 +67,9 @@ export function animUpdatedCardPositions({
 					index === 0 ? `>${overlap.toFixed(3)}` : `<${overlap.toFixed(3)}`
 				);
 			}
-			// REVIEW (anim-zindex) (animation) (gsap) zIndex boost while in flight?
-			//  - as soon as it starts moving, set 100 + Math.max(prevZIndex, zIndex)
-			//  - as soon as it finishes animating, set it to the correct value
+			// TODO (anim-zindex) (animation) (gsap) define and implement stacking order while state-driven cards are in flight.
+			//  - the destination zIndex tween alone can let cards pass under/over the wrong cards during moves and undo/redo
+			//  - use a temporary flight order, then restore the destination order when each card finishes
 			// timeline.fromTo(cardIdSelector, { zIndex: zIndex + 100 }, { zIndex, duration, ease: 'power4.out' }, `<`);
 			if (prevTLZR.zIndex !== zIndex) {
 				timeline.to(cardIdSelector, { zIndex, duration: duration / 2, ease: 'none' }, `<`);

@@ -38,6 +38,16 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 		if we have one running when we start a new one,
 		then finish it and kill it immediately
 		this is a user-interactive game, and we want to prioritize responsiveness
+
+		- TODO (gsap) (refactor-timeline) make this the coordinator for every state-driven card tlzr change
+		   - when a new action arrives mid-animation, interrupt the old transition and animate from each card's actual rendered tlzr, not just the stored value
+		   - DOM data attributes currently record target poses, so they are not necessarily the in-flight poses
+		   - ¿remove stored tlzr?
+		   - ¿DOM tlzr vs in-flight tlzr?
+		- TODO (gsap) (refactor-timeline) redo previousTimeline as global object, not created/destroyed per timeline
+		   - define timeline ownership/cleanup across `useGSAP` updates
+			- prevent stale completion callbacks from clearing the current timeline
+			- (race condition around onComplete; clears newer reference; timeline ownership and cleanup needs deliberate handling)
 	*/
 	const previousTimeline = useRef<gsap.core.Timeline | null>(null);
 
@@ -52,6 +62,9 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 
 	useGSAP(
 		() => {
+			// TODO (gsap) (refactor-timeline) define timeline ownership and cleanup across useGSAP dependency updates.
+			//  - contexts are retained between updates unless revertOnUpdate is enabled, which would also kill the previous timeline
+			//  - guard completion callbacks so an older timeline cannot clear the newer previousTimeline ref
 			const timeline = gsap.timeline({
 				onComplete: () => {
 					previousTimeline.current = null;
@@ -91,6 +104,9 @@ export function useCardPositionAnimations(gameBoardIdRef?: MutableRefObject<stri
 
 			if (updateCardPositions.length) {
 				if (previousTimeline.current && previousTimeline.current !== timeline) {
+					// TODO (gsap) (refactor-timeline) preserve the finish-fast policy without letting old and new timelines compete.
+					//  - timeScale speeds up the old timeline but does not make this new timeline wait for it
+					//  - explicitly sequence/hand off overlapping card properties; reset or resync when the action is a new game or the rendered pose is unknown
 					if (process.env.NODE_ENV === 'test') {
 						console.debug('speedup updateCardPositions', previousAction.type);
 					}

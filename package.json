@@ -7,7 +7,7 @@
     "start": "next dev",
     "prebuild": "npm run fix && npm run test:cov",
     "build": "next build && node scripts/write-service-worker.mjs",
-    "prerelease": "npm prune && npm run clean",
+    "prerelease": "npm prune --no-audit --no-fund && npm run clean",
     "release": "npm run build",
     "serve": "npx http-server -a localhost -p 8080 -o /freecell/manualtesting out",
     "fix": "npm run lint && npm run format && npm run gen:task-labels",

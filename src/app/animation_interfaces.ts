@@ -1,3 +1,4 @@
+// REVIEW (refactor) rename to Pose
 export interface TLZR {
 	top: number;
 	left: number;

@@ -40,6 +40,9 @@ export function WinMessage() {
 					//  - useCardPositionAnimations is a good start,
 					//  - but we need to move that timeline to a context and share it…
 					//  - well maybe that's the only way we interact with gsap
+					// ---
+					//  - git the dome element an ID (with with gameBoardId)
+					//  - move animation to another animFile looped into useCardPositionAnimations
 					const color = { h: 0, s: 100, l: 44 }; /* #df0000 */
 					const applyColor: gsap.Callback = () => {
 						if (elementRef.current) {

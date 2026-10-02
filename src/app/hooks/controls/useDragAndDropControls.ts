@@ -230,6 +230,9 @@ export function useDragAndDropControls(
 								);
 
 								// drag-drop using the tween selection state
+								// TODO (drag-and-drop) (gsap) make the handoff from drag-preview tweens to the state-driven card timeline explicit.
+								//  - drag directly manipulates card transforms, while useCardPositionAnimations reads stored DOM tlzr attributes
+								//  - ensure drop/cancel clears drag ownership and lets the next state transition start from the rendered tlzr
 								contextSafe(animDragSequencePivot)({
 									list: shorthands,
 									firstCardTLZR: tlzr,
