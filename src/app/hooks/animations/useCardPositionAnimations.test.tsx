@@ -5,6 +5,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, type Mock, test, vi 
 import { MULTI_ANIMATION_TIMESCALE } from '@/app/animation_constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import { useCardPositionAnimations } from '@/app/hooks/animations/useCardPositionAnimations';
+import { calcFixtureSizes, type FixtureSizes } from '@/app/hooks/contexts/FixtureSizes/FixtureSizes';
+import { FixtureSizesContext } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContext';
 import { FixtureSizesContextProvider } from '@/app/hooks/contexts/FixtureSizes/FixtureSizesContextProvider';
 import { StaticGameContextProvider } from '@/app/hooks/contexts/Game/StaticGameContextProvider';
 import { ManualTestingSettingsContextProvider } from '@/app/hooks/contexts/Settings/ManualTestingSettingsContextProvider';
@@ -51,15 +53,23 @@ vi.mock('@/app/hooks/animations/animShuffleCards.ts', () => {
 	};
 });
 
-function MockGamePage({ games }: { games: (FreeCell | string)[] }) {
+function MockGamePage({ games, fixtureSizes }: { games: (FreeCell | string)[]; fixtureSizes?: FixtureSizes }) {
 	// TODO (techdebt) use StaticFixtureSizesContextProvider
 	return (
 		<StaticGameContextProvider games={games}>
-			<FixtureSizesContextProvider gameBoardRef={{ current: null }} fixtureLayout="portrait">
-				<ManualTestingSettingsContextProvider>
-					<MockGameBoard />
-				</ManualTestingSettingsContextProvider>
-			</FixtureSizesContextProvider>
+			{fixtureSizes ? (
+				<FixtureSizesContext.Provider value={fixtureSizes}>
+					<ManualTestingSettingsContextProvider>
+						<MockGameBoard />
+					</ManualTestingSettingsContextProvider>
+				</FixtureSizesContext.Provider>
+			) : (
+				<FixtureSizesContextProvider gameBoardRef={{ current: null }} fixtureLayout="portrait">
+					<ManualTestingSettingsContextProvider>
+						<MockGameBoard />
+					</ManualTestingSettingsContextProvider>
+				</FixtureSizesContextProvider>
+			)}
 		</StaticGameContextProvider>
 	);
 }
@@ -90,7 +100,27 @@ describe('useCardPositionAnimations', () => {
 		({ fromToSpy, toSpy, setSpy, addLabelSpy, addSpy, timeScaleSpy, consoleDebugSpy, mockReset, mockCallTimes } = spyOnGsap(gsap));
 	});
 
-	test.todo('change fixtureSizes');
+	test('repositions all cards together when fixture sizes change', () => {
+		const game = new FreeCell().dealAll();
+		const initialFixtureSizes = calcFixtureSizes({
+			boardWidth: 800,
+			boardHeight: 600,
+			fixtureLayout: 'portrait',
+		});
+		const resizedFixtureSizes = calcFixtureSizes({
+			boardWidth: 600,
+			boardHeight: 600,
+			fixtureLayout: 'portrait',
+		});
+		const { rerender } = render(<MockGamePage games={[game, game]} fixtureSizes={initialFixtureSizes} />);
+
+		mockReset();
+		rerender(<MockGamePage games={[game, game]} fixtureSizes={resizedFixtureSizes} />);
+
+		expect(fromToSpy).toHaveBeenCalledTimes(52);
+		const positions = fromToSpy.mock.calls.map((call: unknown[]) => call[3]);
+		expect(new Set(positions)).toEqual(new Set(['>0', '<0.000']));
+	});
 
 	// REVIEW (animation) all of (each PreviousActionType) should be on manualtesting/page
 	describe('game (each PreviousActionType)', () => {
@@ -1444,7 +1474,7 @@ describe('useCardPositionAnimations', () => {
 			const gameStateTwo_2S = gameStateTwo.cards.find(({ rank, suit }) => rank === '2' && suit === 'spades');
 			expect(gameStateOne_2S?.location).toEqual({ fixture: 'foundation', data: [3] });
 			expect(gameStateTwo_2S?.location).toEqual({ fixture: 'foundation', data: [3] });
-			expect(gameStateOne_2S?.location).toBe(gameStateOne_2S?.location);
+			expect(gameStateTwo_2S?.location).toBe(gameStateOne_2S?.location);
 
 			const { rerender } = render(<MockGamePage games={[gameStateOne, gameStateTwo]} />);
 			mockReset();
