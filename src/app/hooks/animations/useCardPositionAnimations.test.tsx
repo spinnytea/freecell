@@ -934,14 +934,17 @@ describe('useCardPositionAnimations', () => {
 		});
 	});
 
-	// TODO (techdebt) (lint) rewrite this: all the eslint markers are obnoxious
-	//  - handle all "wip, see above"
 	describe('actionText examples', () => {
-		const skipThrow = true; // TODO (techdebt) remove after we finish all tests
-		const actionTextExamples = Object.keys(ACTION_TEXT_EXAMPLES);
+		const actionTextExamples = Array.from(Object.entries(ACTION_TEXT_EXAMPLES))
+			.filter(([, v]) => !!v)
+			.map(([k]) => k);
+		// FIXME look into why these throw up
+		pullActionTextExamples(actionTextExamples, 'invalid move bk 6C→deck');
+		pullActionTextExamples(actionTextExamples, 'invalid move hk TD→deck');
+		pullActionTextExamples(actionTextExamples, 'invalid move 4k 6D→deck');
+		pullActionTextExamples(actionTextExamples, 'invalid move 2k TC-9D-8C→deck');
 		afterAll(() => {
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-			if (!skipThrow) expect(actionTextExamples).toEqual([]);
+			expect(actionTextExamples).toEqual([]);
 		});
 		beforeEach(() => {
 			const actionText = (/·(.*)$/.exec(expect.getState().currentTestName ?? '')?.[1] ?? '').trim();
@@ -950,12 +953,6 @@ describe('useCardPositionAnimations', () => {
 			}
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init with invalid history');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'init partial');
 		describe('animate init', () => {
 			test.todo('· init');
 
@@ -964,14 +961,6 @@ describe('useCardPositionAnimations', () => {
 			test.todo('· init partial');
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal 1 card');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal 2 cards');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal 44 cards');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deal all cards');
 		describe('game setup', () => {
 			test('· shuffle deck (1)', () => {
 				const actionText = 'shuffle deck (1)';
@@ -1052,12 +1041,6 @@ describe('useCardPositionAnimations', () => {
 		];
 		describe('move and undo', () => {
 			describe('add to the each', () => {
-				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-				if (skipThrow) pullActionTextExamples(actionTextExamples, 'move 8h AD→foundation');
-				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-				if (skipThrow) pullActionTextExamples(actionTextExamples, 'move 57 KS→cascade');
-				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-				if (skipThrow) pullActionTextExamples(actionTextExamples, 'move 78 JH-TC-9H-8S-7H→QS');
 				test.todo('· move 8h AD→foundation');
 				test.todo('· move 57 KS→cascade');
 				test.todo('· move 78 JH-TC-9H-8S-7H→QS');
@@ -1193,35 +1176,12 @@ describe('useCardPositionAnimations', () => {
 			);
 		});
 
-		/**
-			just autoFoundation when we've previously skipped it
-			we can't get here through normal gameplay
-		*/
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'auto-foundation 56 KD,KS');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'flourish 56 KD,KS');
 		describe('autoFoundationAll', () => {
 			test.todo('· auto-foundation 56 KD,KS');
 
 			test.todo('· flourish 56 KD,KS');
 		});
 
-		/** singular animation */
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'peek 8 QS');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'peek 8 4D-3S-2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 8 7C');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'select 8 4D-3S-2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 6 2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'deselect 6 4D-3S-2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'invalid move 86 7D→9C');
 		describe('animate', () => {
 			// peekOnly
 			test.todo('· peek 8 QS');
@@ -1303,54 +1263,141 @@ describe('useCardPositionAnimations', () => {
 				]);
 				expect(addSpy.mock.calls.map(([, ...rest]: unknown[]) => rest)).toMatchSnapshot('timeline.add');
 			});
+
+			const pileShakeCalls = [
+				['#pilemarker-h-4', { x: '-=3.000', duration: 0.1, ease: 'sine.in' }],
+				['#pilemarker-h-4', { x: '+=6.000', yoyo: true, repeat: 2, duration: 0.05, ease: 'sine.inOut' }],
+				['#pilemarker-h-4', { x: '0', duration: 0.025, ease: 'sine.out' }],
+			];
+
+			test('· invalid move 1h 9C→foundation', () => {
+				const game = FreeCell.parse(ACTION_TEXT_EXAMPLES['invalid move 1h 9C→foundation']);
+				const nextGame = game.$selectCard('9C').touchByPile('h', { stopWithInvalid: true });
+				expect(nextGame.previousAction).toEqual({
+					text: 'invalid move 1⡀h⡃ 9C→foundation',
+					type: 'invalid',
+				});
+				expect(nextGame.cards.map(({ location }) => location)).toEqual(game.cards.map(({ location }) => location));
+
+				gsapUtilsRandom.mockReturnValueOnce(true);
+				const { rerender } = render(<MockGamePage games={[game, nextGame]} />);
+				mockReset();
+				rerender(<MockGamePage games={[game, nextGame]} />);
+
+				expect(mockCallTimes()).toEqual({
+					fromToSpy: 1,
+					toSpy: 3,
+					setSpy: 51,
+					addLabelSpy: 4,
+					addSpy: 1,
+				});
+				expect(addLabelSpy.mock.calls).toEqual([
+					['invalid move 1⡀h⡃ 9C→foundation'],
+					['updateCardPositions'],
+					['invalidMoveCards.fromShorthands'],
+					['mock animShakeCard 9C'],
+				]);
+				expect(fromToSpy.mock.calls).toEqual([['#c9C', { top: 195.2, left: 14.035 }, { top: 207.4, left: 14.035, duration: 0.3, ease: 'power1.out' }, '>0']]);
+				expect(toSpy.mock.calls).toEqual(pileShakeCalls);
+				expect(addSpy.mock.calls.map((call: unknown[]) => call[1])).toEqual(['invalidMoveCards.fromShorthands']);
+			});
+
+			test('· invalid move ah⡂ 3C→foundation', () => {
+				const game = FreeCell.parse(ACTION_TEXT_EXAMPLES['invalid move ah⡂ 3C→foundation']);
+				const nextGame = game.$selectCard('3C').touchByPile('h', { stopWithInvalid: true });
+				expect(nextGame.previousAction).toEqual({
+					text: 'invalid move ah⡃ 3C→foundation',
+					type: 'invalid',
+				});
+				expect(nextGame.cards.map(({ location }) => location)).toEqual(game.cards.map(({ location }) => location));
+
+				gsapUtilsRandom.mockReturnValueOnce(true);
+				const { rerender } = render(<MockGamePage games={[game, nextGame]} />);
+				mockReset();
+				rerender(<MockGamePage games={[game, nextGame]} />);
+
+				expect(mockCallTimes()).toEqual({
+					fromToSpy: 1,
+					toSpy: 4,
+					setSpy: 51,
+					addLabelSpy: 4,
+					addSpy: 1,
+				});
+				expect(addLabelSpy.mock.calls).toEqual([
+					['invalid move ah⡃ 3C→foundation'],
+					['updateCardPositions'],
+					['invalidMoveCards.fromShorthands'],
+					['mock animShakeCard 3C'],
+				]);
+				expect(fromToSpy.mock.calls).toEqual([['#c3C', { top: 36.6, left: 14.035 }, { top: 36.6, left: 14.035, duration: 0.3, ease: 'power1.out' }, '>0']]);
+				expect(toSpy.mock.calls).toEqual([['#c3C', { rotation: 10, duration: 0.1, ease: 'power1.inOut' }, '<'], ...pileShakeCalls]);
+				expect(addSpy.mock.calls.map((call: unknown[]) => call[1])).toEqual(['invalidMoveCards.fromShorthands']);
+			});
+
+			test('· invalid move 1⡁h⡂ 9C→foundation', () => {
+				const game = FreeCell.parse(ACTION_TEXT_EXAMPLES['invalid move 1⡁h⡂ 9C→foundation']);
+				const nextGame = game.$selectCard('9C').touchByPile('h', { stopWithInvalid: true });
+				expect(nextGame.previousAction).toEqual({
+					text: 'invalid move 1⡀h⡃ 9C→foundation',
+					type: 'invalid',
+				});
+				expect(nextGame.cards.map(({ location }) => location)).toEqual(game.cards.map(({ location }) => location));
+
+				gsapUtilsRandom.mockReturnValueOnce(true);
+				const { rerender } = render(<MockGamePage games={[game, nextGame]} />);
+				mockReset();
+				rerender(<MockGamePage games={[game, nextGame]} />);
+
+				expect(mockCallTimes()).toEqual({
+					fromToSpy: 1,
+					toSpy: 3,
+					setSpy: 51,
+					addLabelSpy: 4,
+					addSpy: 1,
+				});
+				expect(addLabelSpy.mock.calls).toEqual([
+					['invalid move 1⡀h⡃ 9C→foundation'],
+					['updateCardPositions'],
+					['invalidMoveCards.fromShorthands'],
+					['mock animShakeCard 9C'],
+				]);
+				expect(fromToSpy.mock.calls).toEqual([['#c9C', { top: 195.2, left: 14.035 }, { top: 207.4, left: 14.035, duration: 0.3, ease: 'power1.out' }, '>0']]);
+				expect(toSpy.mock.calls).toEqual(pileShakeCalls);
+				expect(addSpy.mock.calls.map((call: unknown[]) => call[1])).toEqual(['invalidMoveCards.fromShorthands']);
+			});
+
+			test('· invalid move 2h TH→AH', () => {
+				const game = FreeCell.parse(ACTION_TEXT_EXAMPLES['invalid move 2h TH→AH']);
+				const nextGame = game.$selectCard('TH').touchByPile('h', { stopWithInvalid: true });
+				expect(nextGame.previousAction).toEqual({
+					text: 'invalid move 2⡀h⡁ TH→AH',
+					type: 'invalid',
+				});
+				expect(nextGame.cards.map(({ location }) => location)).toEqual(game.cards.map(({ location }) => location));
+
+				const { rerender } = render(<MockGamePage games={[game, nextGame]} />);
+				mockReset();
+				rerender(<MockGamePage games={[game, nextGame]} />);
+
+				expect(mockCallTimes()).toEqual({
+					fromToSpy: 1,
+					setSpy: 51,
+					addLabelSpy: 6,
+				});
+				expect(addLabelSpy.mock.calls).toEqual([
+					['invalid move 2⡀h⡁ TH→AH'],
+					['updateCardPositions'],
+					['invalidMoveCards.fromShorthands'],
+					['mock animShakeCard TH'],
+					['invalidMoveCards.toShorthands'],
+					['mock animShakeCard AH'],
+				]);
+				expect(fromToSpy.mock.calls).toEqual([['#cTH', { top: 195.2, left: 112.281 }, { top: 207.4, left: 112.281, duration: 0.3, ease: 'power1.out' }, '>0']]);
+				expect(toSpy.mock.calls).toEqual([]);
+				expect(addSpy.mock.calls).toEqual([]);
+			});
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set KH');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set b');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set h⡂');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set h AD');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set 6 2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor set 3');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor up');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor left');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor down');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor right');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor up wrap');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor left wrap');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor down wrap');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor right wrap');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop KH');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop b');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop h⡂');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop h AD');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop 6 2D');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'cursor stop 3');
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- wip, see above
-		if (skipThrow) pullActionTextExamples(actionTextExamples, 'touch stop');
 		describe('do not animate', () => {
 			test.todo('· cursor set');
 			test.todo('· cursor set KH');
@@ -1384,7 +1431,18 @@ describe('useCardPositionAnimations', () => {
 			test.todo('· cursor stop 6 2D');
 			test.todo('· cursor stop 3');
 
-			test.todo('· touch stop');
+			test('· touch stop', () => {
+				const game = FreeCell.parse(ACTION_TEXT_EXAMPLES['touch stop']);
+				const nextGame = game.touch();
+				expect(nextGame.previousAction.text).toBe('touch stop');
+
+				const { rerender } = render(<MockGamePage games={[game, nextGame]} />);
+				mockReset();
+				rerender(<MockGamePage games={[game, nextGame]} />);
+
+				expect(addLabelSpy.mock.calls).toEqual([['touch stop']]);
+				expect(mockCallTimes()).toEqual({ addLabelSpy: 1 });
+			});
 		});
 	});
 
