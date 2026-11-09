@@ -67,7 +67,7 @@ export function animUpdatedCardPositions({
 					index === 0 ? `>${overlap.toFixed(3)}` : `<${overlap.toFixed(3)}`
 				);
 			}
-			// TODO (anim-zindex) (animation) (gsap) define and implement stacking order while state-driven cards are in flight.
+			// FIXME (anim-zindex) (animation) (gsap) define and implement stacking order while state-driven cards are in flight.
 			//  - the destination zIndex tween alone can let cards pass under/over the wrong cards during moves and undo/redo
 			//  - use a temporary flight order, then restore the destination order when each card finishes
 			// timeline.fromTo(cardIdSelector, { zIndex: zIndex + 100 }, { zIndex, duration, ease: 'power4.out' }, `<`);

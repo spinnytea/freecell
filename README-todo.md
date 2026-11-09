@@ -112,7 +112,7 @@
 - TODO (motivation) (deployment) (offline) continue researching PWA (progressive web app), sing SW (service worker)
   - https://dev.to/stephengade/pwa-build-installable-nextjs-app-that-works-offline-3fff
   - Progressive Web App, using service workers
-- TODO (anim-zindex) (animation) (gsap) If you undo too quickly, you can mess up zindex
+- FIXME (anim-zindex) (animation) (gsap) If you undo too quickly, you can mess up zindex
   - properly chain speed up anim and/or reset zindex on complete?
 - IDEA (gameplay) (settings) Alt rules: hard mode: move each and once (only only head of stack?)
   - e.g. 9H>TS, TS-9H>JH, but not then 9H>TC

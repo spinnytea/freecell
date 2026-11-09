@@ -9,7 +9,7 @@ drag-and-drop KS h
 
 ## Labels
 
-TODO (anim-zindex) (animation) (gsap)
+FIXME (anim-zindex) (animation) (gsap)
 
 ### Game State
 

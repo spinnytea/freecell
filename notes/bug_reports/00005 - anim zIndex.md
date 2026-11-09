@@ -4,7 +4,7 @@ ZIndex shuffles weird, drag-and-drop, move 2h 4H→3H
 
 ## Labels
 
-TODO (anim-zindex) (animation) (drag-and-drop) (gsap)
+FIXME (anim-zindex) (animation) (drag-and-drop) (gsap)
 
 ### Game State
 
