@@ -3,18 +3,19 @@ import { gsap } from 'gsap/all';
 import { beforeEach, describe, expect, type Mock, test, vi } from 'vitest';
 import { ErrorBoundary } from '@/app/hooks/ErrorBoundary';
 import Page from '@/app/page';
-import { getPropertiesFromFromToSpy, getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';
+import { collectSetSpyGroups, getPropertiesFromFromToSpy, getPropertiesFromSpy, spyOnGsap } from '@/app/testUtils';
 import { utils } from '@/utils';
 
 describe('page', () => {
 	let fromToSpy: Mock;
+	let setSpy: Mock;
 	let toSpy: Mock;
 	let addLabelSpy: Mock;
 	let mockReset: (runOnComplete?: boolean) => void;
 	let mockCallTimes: () => Record<string, number>;
 	let randomIntegerSpy: Mock;
 	beforeEach(() => {
-		({ fromToSpy, toSpy, addLabelSpy, mockCallTimes, mockReset } = spyOnGsap(gsap));
+		({ fromToSpy, setSpy, toSpy, addLabelSpy, mockCallTimes, mockReset } = spyOnGsap(gsap));
 		randomIntegerSpy = vi.spyOn(utils, 'randomInteger').mockImplementation(() => {
 			throw new Error('you MUST mock utils.randomInteger');
 		});
@@ -43,7 +44,8 @@ describe('page', () => {
 		expect(addLabelSpy.mock.calls).toEqual([['gameFunction check-can-flourish'], ['updateCardPositions']]);
 		expect(mockCallTimes()).toEqual({
 			fromToSpy: 52,
-			toSpy: 53,
+			setSpy: 104, // FIXME should be 52
+			toSpy: 2,
 			addLabelSpy: 2,
 		});
 		expect(getPropertiesFromFromToSpy(fromToSpy)).toEqual({
@@ -56,8 +58,8 @@ describe('page', () => {
 				left: 52,
 			},
 		});
+		expect(collectSetSpyGroups(setSpy)).toEqual([['zIndex']]);
 		expect(getPropertiesFromSpy(toSpy)).toEqual({
-			zIndex: 51,
 			rotation: 2,
 		});
 

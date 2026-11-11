@@ -14,22 +14,13 @@ exports[`animUpdatedCardPositions > basic > timeline.fromTo 1`] = `
       "left": 0,
       "top": 0,
     },
-    ">0",
+    604471010,
   ],
 ]
 `;
 
 exports[`animUpdatedCardPositions > basic > timeline.to 1`] = `
 [
-  [
-    "#cKH",
-    {
-      "duration": 0.15,
-      "ease": "none",
-      "zIndex": 0,
-    },
-    "<",
-  ],
   [
     "#cKH",
     {

@@ -4,7 +4,7 @@ So much zindex flicker: undo/redo
 
 ## Labels
 
-FIXME (anim-zindex) (animation) (gsap)
+FIXME (anim-zindex) (animation) (gsap) (test)
 
 ### Game State
 

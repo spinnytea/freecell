@@ -8,7 +8,7 @@ import {
 	TOTAL_DEFAULT_MOVEMENT_DURATION,
 } from '@/app/animation_constants';
 import { TLZR } from '@/app/animation_interfaces';
-import { BOTTOM_OF_CASCADE } from '@/app/components/cards/constants';
+import { BOTTOM_OF_CASCADE, FOUNDATION_BASE_Z_INDEX } from '@/app/components/cards/constants';
 import { domUtils } from '@/app/components/element/domUtils';
 import styles_pilemarkers from '@/app/components/pilemarkers.module.css';
 import { DropTarget } from '@/app/hooks/controls/useDragAndDropControls';
@@ -36,8 +36,7 @@ export function animDragSequence({
 		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 		// do not animate zIndex, it causes bugs
 		// FIXME (anim-zindex) but why does zIndex animation cause bugs?
-		// needs a double boost for foundation
-		gsap.set(cardIdSelector, { zIndex: BOTTOM_OF_CASCADE + BOTTOM_OF_CASCADE + index });
+		gsap.set(cardIdSelector, { zIndex: BOTTOM_OF_CASCADE + FOUNDATION_BASE_Z_INDEX + index });
 		if (index === 0) {
 			transform = gsap.getProperty(cardIdSelector, 'transform');
 		} else {

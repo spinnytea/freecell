@@ -8,6 +8,7 @@ import {
 	TOTAL_DEFAULT_MOVEMENT_DURATION,
 } from '@/app/animation_constants';
 import { TLZR } from '@/app/animation_interfaces';
+import { BOTTOM_OF_CASCADE, FOUNDATION_BASE_Z_INDEX } from '@/app/components/cards/constants';
 import { UpdateCardPositionsType } from '@/app/hooks/animations/calcUpdatedCardPositions';
 import { calcCardId } from '@/game/card/card';
 
@@ -43,11 +44,15 @@ export function animUpdatedCardPositions({
 	if (fixtureSizesChanged) {
 		overlap = 0;
 	}
-	list.forEach(({ shorthand, top, left, zIndex, rotation }, index) => {
+	const flightStart = timeline.duration() + (pause ? overlap : 0);
+	let movingIndex = 0;
+	list.forEach(({ shorthand, top, left, zIndex, rotation }) => {
 		const cardIdSelector = '#' + calcCardId(shorthand, gameBoardIdRef?.current);
 		const prevTLZR = nextTLZR.get(shorthand);
 		nextTLZR.set(shorthand, { top, left, zIndex, rotation });
 		if (prevTLZR) {
+			const position = flightStart + movingIndex * overlap;
+			movingIndex++;
 			if (!pause) {
 				// bugfix: timeline.to should be enough, but mobile sometimes remakes cards at 0,0
 				//  - timeline.fromTo ensures we start the animation from the actual previous place
@@ -55,25 +60,25 @@ export function animUpdatedCardPositions({
 					cardIdSelector,
 					{ top: prevTLZR.top, left: prevTLZR.left },
 					{ top, left, duration, ease: 'power1.out' },
-					index === 0 ? `>0` : `<${overlap.toFixed(3)}`
+					position
 				);
 			} else {
 				// bugfix: but if the same card is moving in two animations,
 				// we need to wait for the first to finish before we can start the second
 				// and the `.fromTo` is screwing with things, so fall back to just a `.to`
-				timeline.to(
-					cardIdSelector,
-					{ top, left, duration, ease: 'power1.out' },
-					index === 0 ? `>${overlap.toFixed(3)}` : `<${overlap.toFixed(3)}`
-				);
+				timeline.to(cardIdSelector, { top, left, duration, ease: 'power1.out' }, position);
 			}
-			// FIXME (anim-zindex) (animation) (gsap) define and implement stacking order while state-driven cards are in flight.
-			//  - the destination zIndex tween alone can let cards pass under/over the wrong cards during moves and undo/redo
-			//  - use a temporary flight order, then restore the destination order when each card finishes
-			// timeline.fromTo(cardIdSelector, { zIndex: zIndex + 100 }, { zIndex, duration, ease: 'power4.out' }, `<`);
-			if (prevTLZR.zIndex !== zIndex) {
-				timeline.to(cardIdSelector, { zIndex, duration: duration / 2, ease: 'none' }, `<`);
-			}
+			// FIXME do not boost if tl do not change - test with "checkCanFlourish", first move that resets flashCards
+			// All moving cards elevate when the animation starts.
+			timeline.set(
+				cardIdSelector,
+				{ zIndex: zIndex + BOTTOM_OF_CASCADE + FOUNDATION_BASE_Z_INDEX },
+				flightStart
+			);
+			// Each card returns to its destination z-index when its own animation finishes.
+			// FIXME sequences don't always animate "top down" or "bottom up", final zIndex needs to be a flightEnd
+			//  - test with "drop-drop to invalid target"
+			timeline.set(cardIdSelector, { zIndex }, position + duration);
 			if (prevTLZR.rotation !== rotation) {
 				timeline.to(
 					cardIdSelector,

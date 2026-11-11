@@ -16,6 +16,10 @@ Bump the version in package.json. Make and push version tags with `git tag v1.3.
 
 `npx npm-check-updates --interactive --format group`
 
+## Development notes
+
+Game rules and state live in `src/game`; the browser UI and interactions live in `src/app`. When fixing bug reports in [`notes/bug_reports`](./notes/bug_reports/), add or update a test that reproduces it.
+
 ## Terms
 
 **Foundation** - The four spaces to place cards, in order, from Ace - King. \

@@ -27,6 +27,7 @@ export function spyOnGsap(_gsap: typeof gsap) {
 			add: addSpy,
 			timeScale: timeScaleSpy,
 			killTweensOf: killTweensOfSpy,
+			duration: () => 604471010,
 		};
 		return timelineMock as gsap.core.Timeline;
 	});
@@ -114,7 +115,6 @@ export function getPropertiesFromFromToSpy(spy: Mock): {
 	);
 	return { from, to };
 }
-
 function accumulateGsapTweenVars(list: gsap.TweenVars[]): Record<string, number> {
 	const counts = list.reduce<Record<string, number>>((acc, properties) => {
 		Object.keys(properties).forEach((key) => {
@@ -126,6 +126,21 @@ function accumulateGsapTweenVars(list: gsap.TweenVars[]): Record<string, number>
 	delete counts.duration;
 	delete counts.ease;
 	return counts;
+}
+
+export function collectSetSpyGroups(spy: Mock): string[][] {
+	return accumulateGsapTweenPropGroups(
+		spy.mock.calls.map(([, properties]) => properties as gsap.TweenVars)
+	);
+}
+function accumulateGsapTweenPropGroups(list: gsap.TweenVars[]): string[][] {
+	return list.reduce<string[][]>((acc, properties) => {
+		const props = Object.keys(properties).sort();
+		if (JSON.stringify(acc.at(-1)) !== JSON.stringify(props)) {
+			acc.push(props);
+		}
+		return acc;
+	}, []);
 }
 
 export function availableMovesMinimized(availableMoves: AvailableMove[] | null, all = false) {
